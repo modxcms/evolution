@@ -173,11 +173,18 @@ class DocumentParser
     public $old;
 
     /**
+     * Hold the class instance.
+     * @var DocumentParser
+     */
+    private static $instance = null;
+
+    /**
      * Document constructor
+     * PUBLIC access for backward compatibility !!!!
      *
      * @return DocumentParser
      */
-    public function __construct()
+    final public function __construct()
     {
         if ($this->isLoggedIn()) {
             ini_set('display_errors', 1);
@@ -196,6 +203,22 @@ class DocumentParser
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
+    }
+
+    final private function __clone()
+    {
+    }
+
+    /**
+     * @return DocumentParser
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new DocumentParser();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -247,6 +270,7 @@ class DocumentParser
         if (is_scalar($connector) && !empty($connector) && isset($this->{$connector}) && $this->{$connector} instanceof DBAPI) {
             $flag = (bool)$this->{$connector}->conn;
         }
+
         return $flag;
     }
 
@@ -278,6 +302,7 @@ class DocumentParser
         if ($out && !in_array($extname, $this->extensions)) {
             $this->extensions[] = $extname;
         }
+
         return $out;
     }
 
@@ -289,6 +314,7 @@ class DocumentParser
     public function getMicroTime()
     {
         list ($usec, $sec) = explode(' ', microtime());
+
         return ((float)$usec + (float)$sec);
     }
 
@@ -346,7 +372,7 @@ class DocumentParser
             header($responseCode);
         }
 
-        if(!empty($header)) {
+        if (!empty($header)) {
             header($header);
         }
 
@@ -438,7 +464,8 @@ class DocumentParser
         $this->config['site_manager_url'] = MODX_MANAGER_URL;
         $this->config['site_manager_path'] = MODX_MANAGER_PATH;
         $this->error_reporting = $this->config['error_reporting'];
-        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['filemanager_path']);
+        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH,
+            $this->config['filemanager_path']);
         $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
 
         if (!isset($this->config['enable_at_syntax'])) {
@@ -562,7 +589,8 @@ class DocumentParser
         }
 
         $this->config = array_merge($this->config, $usrSettings);
-        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['filemanager_path']);
+        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH,
+            $this->config['filemanager_path']);
         $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
 
         return $usrSettings;
@@ -701,18 +729,24 @@ class DocumentParser
             $this->virtualDir = '';
         }
 
-        if (preg_match('@^[1-9][0-9]*$@', $q) && !isset($this->documentListing[$q])) { /* we got an ID returned, check to make sure it's not an alias */
+        if (preg_match('@^[1-9][0-9]*$@',
+                $q) && !isset($this->documentListing[$q])) { /* we got an ID returned, check to make sure it's not an alias */
             /* FS#476 and FS#308: check that id is valid in terms of virtualDir structure */
             if ($this->config['use_alias_path'] == 1) {
-                if (($this->virtualDir != '' && !isset($this->documentListing[$this->virtualDir . '/' . $q]) || ($this->virtualDir == '' && !isset($this->documentListing[$q]))) && (($this->virtualDir != '' && isset($this->documentListing[$this->virtualDir]) && in_array($q, $this->getChildIds($this->documentListing[$this->virtualDir], 1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1))))) {
+                if (($this->virtualDir != '' && !isset($this->documentListing[$this->virtualDir . '/' . $q]) || ($this->virtualDir == '' && !isset($this->documentListing[$q]))) && (($this->virtualDir != '' && isset($this->documentListing[$this->virtualDir]) && in_array($q,
+                                $this->getChildIds($this->documentListing[$this->virtualDir],
+                                    1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1))))) {
                     $this->documentMethod = 'id';
+
                     return $q;
                 } else { /* not a valid id in terms of virtualDir, treat as alias */
                     $this->documentMethod = 'alias';
+
                     return $q;
                 }
             } else {
                 $this->documentMethod = 'id';
+
                 return $q;
             }
         } else { /* we didn't get an ID back, so instead we assume it's an alias */
@@ -720,6 +754,7 @@ class DocumentParser
                 $q = $qOrig;
             }
             $this->documentMethod = 'alias';
+
             return $q;
         }
     }
@@ -745,24 +780,26 @@ class DocumentParser
      * @param $id
      * @return array|mixed|null|string
      */
-    public function makePageCacheKey($id){
+    public function makePageCacheKey($id)
+    {
         $hash = $id;
         $tmp = null;
         $params = array();
-        if(!empty($this->systemCacheKey)){
+        if (!empty($this->systemCacheKey)) {
             $hash = $this->systemCacheKey;
-        }else {
+        } else {
             if (!empty($_GET)) {
                 // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
                 $params = $_GET;
                 ksort($params);
-                $hash .= '_'.md5(http_build_query($params));
+                $hash .= '_' . md5(http_build_query($params));
             }
         }
-        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
-        if (is_array($evtOut) && count($evtOut) > 0){
+        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array("hash" => $hash, "id" => $id, 'params' => $params));
+        if (is_array($evtOut) && count($evtOut) > 0) {
             $tmp = array_pop($evtOut);
         }
+
         return empty($tmp) ? $hash : $tmp;
     }
 
@@ -794,6 +831,7 @@ class DocumentParser
 
         if (!is_file($cache_path)) {
             $this->documentGenerated = 1;
+
             return '';
         }
         $content = file_get_contents($cache_path, false);
@@ -860,6 +898,7 @@ class DocumentParser
         // invoke OnLoadWebPageCache  event
         $this->documentContent = $result;
         $this->invokeEvent('OnLoadWebPageCache');
+
         return $result;
     }
 
@@ -983,7 +1022,8 @@ class DocumentParser
                 $sc .= sprintf("%s. %s (%s)<br>", $s, $sname, sprintf("%2.2f ms", $t)); // currentSnippet
                 $tt += $t;
             }
-            echo "<fieldset><legend><b>Snippets</b> (" . count($this->snippetsTime) . " / " . sprintf("%2.2f ms", $tt) . ")</legend>{$sc}</fieldset><br />";
+            echo "<fieldset><legend><b>Snippets</b> (" . count($this->snippetsTime) . " / " . sprintf("%2.2f ms",
+                    $tt) . ")</legend>{$sc}</fieldset><br />";
             echo $this->snippetsCode;
         }
         if ($this->dumpPlugins) {
@@ -993,7 +1033,8 @@ class DocumentParser
                 $ps .= "$s (" . sprintf("%2.2f ms", $t * 1000) . ")<br>";
                 $tt += $t;
             }
-            echo "<fieldset><legend><b>Plugins</b> (" . count($this->pluginsTime) . " / " . sprintf("%2.2f ms", $tt * 1000) . ")</legend>{$ps}</fieldset><br />";
+            echo "<fieldset><legend><b>Plugins</b> (" . count($this->pluginsTime) . " / " . sprintf("%2.2f ms",
+                    $tt * 1000) . ")</legend>{$ps}</fieldset><br />";
             echo $this->pluginsCode;
         }
 
@@ -1007,6 +1048,7 @@ class DocumentParser
     public function RecoveryEscapedTags($contents)
     {
         list($sTags, $rTags) = $this->getTagsForEscape();
+
         return str_replace($rTags, $sTags, $contents);
     }
 
@@ -1021,6 +1063,7 @@ class DocumentParser
         foreach ($srcTags as $tag) {
             $repTags[] = '\\' . $tag[0] . '\\' . $tag[1];
         }
+
         return array($srcTags, $repTags);
     }
 
@@ -1156,6 +1199,7 @@ class DocumentParser
             $tags[0][] = "{$left}{$v}{$right}";
             $tags[1][] = $v;
         }
+
         return $tags;
     }
 
@@ -1171,10 +1215,18 @@ class DocumentParser
             return array();
         }
         $spacer = md5('<<<EVO>>>');
-        if($left==='{{' && strpos($content,';}}')!==false)  $content = str_replace(';}}', sprintf(';}%s}',   $spacer),$content);
-        if($left==='{{' && strpos($content,'{{}}')!==false) $content = str_replace('{{}}',sprintf('{%$1s{}%$1s}',$spacer),$content);
-        if($left==='[[' && strpos($content,']]]]')!==false) $content = str_replace(']]]]',sprintf(']]%s]]',  $spacer),$content);
-        if($left==='[[' && strpos($content,']]]')!==false)  $content = str_replace(']]]', sprintf(']%s]]',   $spacer),$content);
+        if ($left === '{{' && strpos($content, ';}}') !== false) {
+            $content = str_replace(';}}', sprintf(';}%s}', $spacer), $content);
+        }
+        if ($left === '{{' && strpos($content, '{{}}') !== false) {
+            $content = str_replace('{{}}', sprintf('{%$1s{}%$1s}', $spacer), $content);
+        }
+        if ($left === '[[' && strpos($content, ']]]]') !== false) {
+            $content = str_replace(']]]]', sprintf(']]%s]]', $spacer), $content);
+        }
+        if ($left === '[[' && strpos($content, ']]]') !== false) {
+            $content = str_replace(']]]', sprintf(']%s]]', $spacer), $content);
+        }
 
         $pos['<![CDATA['] = strpos($content, '<![CDATA[');
         $pos[']]>'] = strpos($content, ']]>');
@@ -1244,9 +1296,12 @@ class DocumentParser
                 }
             }
         }
-        foreach($tags as $i=>$tag) {
-            if(strpos($tag,$spacer)!==false) $tags[$i] = str_replace($spacer, '', $tag);
+        foreach ($tags as $i => $tag) {
+            if (strpos($tag, $spacer) !== false) {
+                $tags[$i] = str_replace($spacer, '', $tag);
+            }
         }
+
         return $tags;
     }
 
@@ -1285,7 +1340,9 @@ class DocumentParser
         }
 
         foreach ($matches[1] as $i => $key) {
-            if(strpos($key,'[+')!==false) continue; // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
+            if (strpos($key, '[+') !== false) {
+                continue;
+            } // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
             if (substr($key, 0, 1) == '#') {
                 $key = substr($key, 1);
             } // remove # for QuickEdit format
@@ -1317,7 +1374,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeDocumentContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1439,6 +1496,7 @@ class DocumentParser
         } else {
             $value = '';
         }
+
         return $value;
     }
 
@@ -1485,10 +1543,11 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeSettingsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
+
         return $content;
     }
 
@@ -1554,10 +1613,11 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeChunkContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
+
         return $content;
     }
 
@@ -1613,10 +1673,11 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergePlaceholderContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
+
         return $content;
     }
 
@@ -1628,8 +1689,13 @@ class DocumentParser
      * @param string $endiftag
      * @return mixed|string
      */
-    public function mergeConditionalTagsContent($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
-    {
+    public function mergeConditionalTagsContent(
+        $content,
+        $iftag = '<@IF:',
+        $elseiftag = '<@ELSEIF:',
+        $elsetag = '<@ELSE>',
+        $endiftag = '<@ENDIF>'
+    ) {
         if (strpos($content, '@IF') !== false) {
             $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
         }
@@ -1639,7 +1705,8 @@ class DocumentParser
         }
 
         $sp = '#' . md5('ConditionalTags' . $_SERVER['REQUEST_TIME']) . '#';
-        $content = str_replace(array('<?php', '<?=', '<?', '?>'), array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"), $content);
+        $content = str_replace(array('<?php', '<?=', '<?', '?>'), array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"),
+            $content);
 
         $pieces = explode('<@IF:', $content);
         foreach ($pieces as $i => $split) {
@@ -1668,7 +1735,8 @@ class DocumentParser
         ob_start();
         $content = eval('?>' . $content);
         $content = ob_get_clean();
-        $content = str_replace(array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"), array('<?php', '<?=', '<?', '?>'), $content);
+        $content = str_replace(array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"), array('<?php', '<?=', '<?', '?>'),
+            $content);
 
         return $content;
     }
@@ -1681,8 +1749,13 @@ class DocumentParser
      * @param string $endiftag
      * @return mixed
      */
-    private function _prepareCTag($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
-    {
+    private function _prepareCTag(
+        $content,
+        $iftag = '<@IF:',
+        $elseiftag = '<@ELSEIF:',
+        $elsetag = '<@ELSE>',
+        $endiftag = '<@ENDIF>'
+    ) {
         if (strpos($content, '<!--@IF ') !== false) {
             $content = str_replace('<!--@IF ', $iftag, $content);
         } // for jp
@@ -1706,6 +1779,7 @@ class DocumentParser
         }
         $tags = array($iftag, $elseiftag, $elsetag, $endiftag);
         $content = str_ireplace($tags, $tags, $content); // Change to capital letters
+
         return $content;
     }
 
@@ -1798,6 +1872,7 @@ class DocumentParser
                 $content = str_replace($matches[0], '', $content);
             }
         }
+
         return $content;
     }
 
@@ -1824,10 +1899,11 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $v, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('ignoreCommentedTagsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
+
         return $content;
     }
 
@@ -1848,6 +1924,7 @@ class DocumentParser
         } elseif ($this->config['error_reporting'] == 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT)) {
             $detected = true;
         }
+
         return $detected;
     }
 
@@ -1887,7 +1964,8 @@ class DocumentParser
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
                 $msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin', $error_info['message'], $error_info['line'], $msg);
+                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin',
+                    $error_info['message'], $error_info['line'], $msg);
                 if ($this->isBackend()) {
                     $this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
                 }
@@ -1933,7 +2011,8 @@ class DocumentParser
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
                 $echo = ($echo === false) ? 'ob_get_contents() error' : $echo;
-                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $echo);
+                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet',
+                    $error_info['message'], $error_info['line'], $echo);
                 if ($this->isBackend()) {
                     $this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $echo . $return . '</p>');
                 }
@@ -1968,7 +2047,8 @@ class DocumentParser
 
         $this->snipLapCount++;
         if ($this->dumpSnippets) {
-            $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
+            $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>',
+                $this->snipLapCount);
         }
 
         foreach ($matches[1] as $i => $call) {
@@ -1981,7 +2061,7 @@ class DocumentParser
                 }
                 if (strpos($content, $s) !== false) {
                     $content = str_replace($s, $value, $content);
-                } elseif($this->debug) {
+                } elseif ($this->debug) {
                     $this->addLog('evalSnippetsSGVar parse error', $_SERVER['REQUEST_URI'] . $s, 2);
                 }
                 continue;
@@ -1993,7 +2073,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -2038,6 +2118,7 @@ class DocumentParser
         if ($modifiers !== false) {
             $value = $this->applyFilter($value, $modifiers, $key);
         }
+
         return $value;
     }
 
@@ -2085,10 +2166,13 @@ class DocumentParser
             $eventtime = sprintf('%2.2f ms', $eventtime * 1000);
             $code = str_replace("\t", '  ', $this->htmlspecialchars($value));
             $piece = str_replace("\t", '  ', $this->htmlspecialchars($piece));
-            $print_r_params = str_replace("\t", '  ', $this->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
-            $this->snippetsCode .= sprintf('<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>', $snippetObject['name'], $eventtime, $piece, $print_r_params, $code);
+            $print_r_params = str_replace("\t", '  ',
+                $this->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
+            $this->snippetsCode .= sprintf('<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>',
+                $snippetObject['name'], $eventtime, $piece, $print_r_params, $code);
             $this->snippetsTime[] = array('sname' => $key, 'time' => $eventtime);
         }
+
         return $value;
     }
 
@@ -2215,6 +2299,7 @@ class DocumentParser
                 $params[$k] = current($p);
             }
         }
+
         return $params;
     }
 
@@ -2272,6 +2357,7 @@ class DocumentParser
                 break;
             }
         }
+
         return $pos;
     }
 
@@ -2322,7 +2408,8 @@ class DocumentParser
             }
         } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[trim($snip_name, '@')])) {
             $snippetObject['name'] = trim($snip_name, '@');
-            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));', trim($snip_name, '@'));
+            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));',
+                trim($snip_name, '@'));
             $snippetObject['properties'] = '';
         } else {
             $where = sprintf("name='%s' AND disabled=0", $this->db->escape($snip_name));
@@ -2345,6 +2432,7 @@ class DocumentParser
             $this->snippetCache[$snip_name] = $snip_content;
             $this->snippetCache["{$snip_name}Props"] = $snip_prop;
         }
+
         return $snippetObject;
     }
 
@@ -2355,7 +2443,16 @@ class DocumentParser
     public function toAlias($text)
     {
         $suff = $this->config['friendly_url_suffix'];
-        return str_replace(array('.xml' . $suff, '.rss' . $suff, '.js' . $suff, '.css' . $suff, '.txt' . $suff, '.json' . $suff, '.pdf' . $suff), array('.xml', '.rss', '.js', '.css', '.txt', '.json', '.pdf'), $text);
+
+        return str_replace(array(
+            '.xml' . $suff,
+            '.rss' . $suff,
+            '.js' . $suff,
+            '.css' . $suff,
+            '.txt' . $suff,
+            '.json' . $suff,
+            '.pdf' . $suff
+        ), array('.xml', '.rss', '.js', '.css', '.txt', '.json', '.pdf'), $text);
     }
 
     /**
@@ -2391,7 +2488,7 @@ class DocumentParser
         }
 
         $evtOut = $this->invokeEvent('OnMakeDocUrl', array(
-            'id' => $id,
+            'id'  => $id,
             'url' => $url
         ));
 
@@ -2424,7 +2521,8 @@ class DocumentParser
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
-                    $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
+                    $res = $this->db->select("id,alias,isfolder,parent,alias_visible",
+                        $this->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
                     while ($row = $this->db->getRow($res)) {
                         if ($this->config['use_alias_path'] == '1' && $row['parent'] != 0) {
                             $parent = $row['parent'];
@@ -2447,19 +2545,23 @@ class DocumentParser
             $isfriendly = ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref = $this->config['friendly_url_prefix'];
             $suff = $this->config['friendly_url_suffix'];
-            $documentSource = preg_replace_callback($in, function ($m) use ($aliases, $isfolder, $isfriendly, $pref, $suff) {
-                global $modx;
-                $thealias = $aliases[$m[1]];
-                $thefolder = $isfolder[$m[1]];
-                if ($isfriendly && isset($thealias)) {
-                    //found friendly url
-                    $out = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
-                } else {
-                    //not found friendly url
-                    $out = $modx->makeFriendlyURL($pref, $suff, $m[1]);
-                }
-                return $out;
-            }, $documentSource);
+            $documentSource = preg_replace_callback($in,
+                function ($m) use ($aliases, $isfolder, $isfriendly, $pref, $suff) {
+                    $modx = evolutionCMS();
+                    $thealias = $aliases[$m[1]];
+                    $thefolder = $isfolder[$m[1]];
+                    if ($isfriendly && isset($thealias)) {
+                        //found friendly url
+                        $out = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff,
+                            $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder,
+                            $m[1]));
+                    } else {
+                        //not found friendly url
+                        $out = $modx->makeFriendlyURL($pref, $suff, $m[1]);
+                    }
+
+                    return $out;
+                }, $documentSource);
 
         } else {
             $in = '!\[\~([0-9]+)\~\]!is';
@@ -2504,7 +2606,8 @@ class DocumentParser
             if ($requestedURL != $this->config['site_url']) {
                 // Force redirect of site start
                 // $this->sendErrorPage();
-                $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string) : ''; // Strip conflicting id/q from query string
+                $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '',
+                    $url_query_string) : ''; // Strip conflicting id/q from query string
                 if ($qstring) {
                     $url = "{$site_url}?{$qstring}";
                 } else {
@@ -2534,6 +2637,7 @@ class DocumentParser
             $this->sendRedirect($url, 0, 'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
             exit(0);
         }
+
         return;
     }
 
@@ -2561,7 +2665,8 @@ class DocumentParser
             $identifier = $this->cleanDocumentIdentifier($identifier);
             $method = $this->documentMethod;
         }
-        if ($method == 'alias' && $this->config['use_alias_path'] && array_key_exists($identifier, $this->documentListing)) {
+        if ($method == 'alias' && $this->config['use_alias_path'] && array_key_exists($identifier,
+                $this->documentListing)) {
             $method = 'id';
             $identifier = $this->documentListing[$identifier];
         }
@@ -2583,7 +2688,8 @@ class DocumentParser
                 if ($this->config['unauthorized_page']) {
                     // method may still be alias, while identifier is not full path alias, e.g. id not found above
                     if ($method === 'alias') {
-                        $secrs = $this->db->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc", "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
+                        $secrs = $this->db->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc",
+                            "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
                     } else {
                         $secrs = $this->db->select('count(id)', $tbldg, "document = '{$identifier}'", '', 1);
                     }
@@ -2611,9 +2717,11 @@ class DocumentParser
             }
             if ($documentObject['template']) {
                 // load TVs and merge with document - Orig by Apodigm - Docvars
-                $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getFullTableName("site_tmplvars") . " tv
+                $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+                    $this->getFullTableName("site_tmplvars") . " tv
                 INNER JOIN " . $this->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
-                LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
+                LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'",
+                    "tvtpl.templateid = '{$documentObject['template']}'");
                 $tmplvars = array();
                 while ($row = $this->db->getRow($rs)) {
                     $tmplvars[$row['name']] = array(
@@ -2688,6 +2796,7 @@ class DocumentParser
                 } // if content change then increase passes because
             } // we have not yet reached maxParserPasses
         }
+
         return $source;
     }
 
@@ -2760,7 +2869,8 @@ class DocumentParser
 
                         $docAlias = $this->db->escape($this->documentIdentifier);
 
-                        $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
+                        $rs = $this->db->select('id', $tbl_site_content,
+                            "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if ($this->db->getRecordCount($rs) == 0) {
                             $this->sendErrorPage();
                         }
@@ -2807,7 +2917,8 @@ class DocumentParser
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
                 } else {
                     $docAlias = $this->db->escape($this->documentIdentifier);
-                    $rs = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+                    $rs = $this->db->select('id', $this->getFullTableName('site_content'),
+                        "deleted=0 and alias='{$docAlias}'");
                     $this->documentIdentifier = (int)$this->db->getValue($rs);
                 }
             }
@@ -2831,6 +2942,7 @@ class DocumentParser
     public function mb_basename($path, $suffix = null)
     {
         $exp = explode('/', $path);
+
         return str_replace($suffix, '', end($exp));
     }
 
@@ -2863,6 +2975,7 @@ class DocumentParser
         }
         $_SERVER['PHP_SELF'] = $this->config['base_url'] . $qp['path'];
         $this->q = $qp['path'];
+
         return $qp['path'];
     }
 
@@ -2891,7 +3004,8 @@ class DocumentParser
 
         if ($this->documentContent == '') {
             // get document object from DB
-            $this->documentObject = $this->getDocumentObject($this->documentMethod, $this->documentIdentifier, 'prepareResponse');
+            $this->documentObject = $this->getDocumentObject($this->documentMethod, $this->documentIdentifier,
+                'prepareResponse');
 
             // write the documentName to the object
             $this->documentName = &$this->documentObject['pagetitle'];
@@ -3021,6 +3135,7 @@ class DocumentParser
             }
             $parents[$thisid] = $id;
         }
+
         return $parents;
     }
 
@@ -3039,6 +3154,7 @@ class DocumentParser
             $id = $this->aliasListing[$id]['parent'];
             $i++;
         }
+
         return $id;
     }
 
@@ -3060,7 +3176,8 @@ class DocumentParser
 
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
+            $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),
+                "parent IN (" . $id . ") AND deleted = '0'");
             $idx = array();
             while ($row = $this->db->getRow($res)) {
                 $pAlias = '';
@@ -3081,6 +3198,7 @@ class DocumentParser
                 }
             }
             $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
+
             return $children;
 
         } else {
@@ -3112,6 +3230,7 @@ class DocumentParser
                 }
             }
             $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
+
             return $children;
 
         }
@@ -3162,6 +3281,7 @@ class DocumentParser
         if ($pms) {
             $state = ((bool)$pms[$pm] === true);
         }
+
         return (int)$state;
     }
 
@@ -3214,9 +3334,9 @@ class DocumentParser
             foreach ($this->lockedElements as $elType => $elements) {
                 foreach ($elements as $elId => $el) {
                     $lockedElements[$elType][$elId] = array(
-                        'username' => $el['username'],
+                        'username'   => $el['username'],
                         'lasthit_df' => $el['lasthit_df'],
-                        'state' => $this->determineLockState($el['internalKey'])
+                        'state'      => $this->determineLockState($el['internalKey'])
                     );
                 }
             }
@@ -3243,18 +3363,19 @@ class DocumentParser
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
-            $rs = $this->db->select('sid,internalKey,elementType,elementId,lasthit,username', $this->getFullTableName('active_user_locks') . " ul
+            $rs = $this->db->select('sid,internalKey,elementType,elementId,lasthit,username',
+                $this->getFullTableName('active_user_locks') . " ul
                 LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id");
             while ($row = $this->db->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
-                    'sid' => $row['sid'],
+                    'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
-                    'username' => $row['username'],
+                    'username'    => $row['username'],
                     'elementType' => $row['elementType'],
-                    'elementId' => $row['elementId'],
-                    'lasthit' => $row['lasthit'],
-                    'lasthit_df' => $this->toDateFormat($row['lasthit']),
-                    'state' => $this->determineLockState($row['sid'])
+                    'elementId'   => $row['elementId'],
+                    'lasthit'     => $row['lasthit'],
+                    'lasthit_df'  => $this->toDateFormat($row['lasthit']),
+                    'state'       => $this->determineLockState($row['sid'])
                 );
             }
         }
@@ -3305,7 +3426,8 @@ class DocumentParser
             }
         }
 
-        $rs = $this->db->select("sid,internalKey,lasthit", "{$this->getFullTableName('active_users')}", "", "lasthit DESC");
+        $rs = $this->db->select("sid,internalKey,lasthit", "{$this->getFullTableName('active_users')}", "",
+            "lasthit DESC");
         if ($this->db->getRecordCount($rs)) {
             $rs = $this->db->makeArray($rs);
             $internalKeyCount = array();
@@ -3316,7 +3438,8 @@ class DocumentParser
                 }
                 $internalKeyCount[$row['internalKey']]++;
 
-                if ($internalKeyCount[$row['internalKey']] > 1 && !in_array($row['sid'], $activeUserSids) && $row['lasthit'] < $validSessionTimeLimit) {
+                if ($internalKeyCount[$row['internalKey']] > 1 && !in_array($row['sid'],
+                        $activeUserSids) && $row['lasthit'] < $validSessionTimeLimit) {
                     $deleteSids .= $deleteSids == '' ? '' : ' OR ';
                     $deleteSids .= "sid='{$row['sid']}'";
                 };
@@ -3350,6 +3473,7 @@ class DocumentParser
                 }
             }
         }
+
         return $state;
     }
 
@@ -3370,7 +3494,8 @@ class DocumentParser
         }
 
         $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
-                VALUES (%d, %d, %d, %d, \'%s\')', $this->getFullTableName('active_user_locks'), $userId, $type, $id, $this->time, $this->sid);
+                VALUES (%d, %d, %d, %d, \'%s\')', $this->getFullTableName('active_user_locks'), $userId, $type, $id,
+            $this->time, $this->sid);
         $this->db->query($sql);
     }
 
@@ -3392,9 +3517,11 @@ class DocumentParser
         }
 
         if (!$includeAllUsers) {
-            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;', $this->getFullTableName('active_user_locks'), $userId, $type, $id);
+            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;',
+                $this->getFullTableName('active_user_locks'), $userId, $type, $id);
         } else {
-            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;', $this->getFullTableName('active_user_locks'), $type, $id);
+            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;',
+                $this->getFullTableName('active_user_locks'), $type, $id);
         }
         $this->db->query($sql);
     }
@@ -3424,7 +3551,8 @@ class DocumentParser
         $_SESSION['ip'] = $ip;
 
         $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
-            VALUES (%d, %d, \'%s\', \'%s\')', $this->getFullTableName('active_user_sessions'), $userId, $this->time, $ip, $this->sid);
+            VALUES (%d, %d, \'%s\', \'%s\')', $this->getFullTableName('active_user_sessions'), $userId, $this->time,
+            $ip, $this->sid);
         $this->db->query($sql);
     }
 
@@ -3464,21 +3592,21 @@ class DocumentParser
         }
 
         $this->db->insert(array(
-            'eventid' => $evtid,
-            'type' => $type,
-            'createdon' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
-            'source' => $esc_source,
+            'eventid'     => $evtid,
+            'type'        => $type,
+            'createdon'   => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
+            'source'      => $esc_source,
             'description' => $msg,
-            'user' => $LoginUserID,
-            'usertype' => $usertype
+            'user'        => $LoginUserID,
+            'usertype'    => $usertype
         ), $this->getFullTableName("event_log"));
 
         if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
             if ($this->config['send_errormail'] <= $type) {
                 $this->sendmail(array(
                     'subject' => 'MODX System Error on ' . $this->config['site_name'],
-                    'body' => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
-                    'type' => 'text'
+                    'body'    => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
+                    'type'    => 'text'
                 ));
             }
         }
@@ -3570,6 +3698,7 @@ class DocumentParser
             }
         }
         $rs = $this->mail->send();
+
         return $rs;
     }
 
@@ -3611,7 +3740,7 @@ class DocumentParser
      */
     public function isFrontend()
     {
-        return ! $this->isBackend();
+        return !$this->isBackend();
     }
 
     /**
@@ -3625,8 +3754,12 @@ class DocumentParser
      * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
      * @return array
      */
-    public function getAllChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
-    {
+    public function getAllChildren(
+        $id = 0,
+        $sort = 'menuindex',
+        $dir = 'ASC',
+        $fields = 'id, pagetitle, description, parent, alias, menutitle'
+    ) {
 
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
@@ -3645,9 +3778,11 @@ class DocumentParser
         // build query
         $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
         $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$id}' AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
+                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$id}' AND ({$access}) GROUP BY sc.id",
+            "{$sort} {$dir}");
         $resourceArray = $this->db->makeArray($result);
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
+
         return $resourceArray;
     }
 
@@ -3662,8 +3797,12 @@ class DocumentParser
      * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
      * @return array
      */
-    public function getActiveChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
-    {
+    public function getActiveChildren(
+        $id = 0,
+        $sort = 'menuindex',
+        $dir = 'ASC',
+        $fields = 'id, pagetitle, description, parent, alias, menutitle'
+    ) {
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
             return $this->tmpCache[__FUNCTION__][$cacheKey];
@@ -3682,7 +3821,8 @@ class DocumentParser
         // build query
         $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
         $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$id}' AND sc.published=1 AND sc.deleted=0 AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
+                LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+            "sc.parent = '{$id}' AND sc.published=1 AND sc.deleted=0 AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
         $resourceArray = $this->db->makeArray($result);
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
@@ -3707,8 +3847,16 @@ class DocumentParser
      *
      * @return {array; false} - Result array, or false.
      */
-    public function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = '')
-    {
+    public function getDocumentChildren(
+        $parentid = 0,
+        $published = 1,
+        $deleted = 0,
+        $fields = '*',
+        $where = '',
+        $sort = 'menuindex',
+        $dir = 'ASC',
+        $limit = ''
+    ) {
 
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
@@ -3738,7 +3886,9 @@ class DocumentParser
         $tbldg = $this->getFullTableName('document_groups');
 
         $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
+                LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+            "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
+            ($sort ? "{$sort} {$dir}" : ""), $limit);
 
         $resourceArray = $this->db->makeArray($result);
 
@@ -3764,8 +3914,16 @@ class DocumentParser
      *
      * @return {array; false} - Result array with documents, or false.
      */
-    public function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = '')
-    {
+    public function getDocuments(
+        $ids = array(),
+        $published = 1,
+        $deleted = 0,
+        $fields = '*',
+        $where = '',
+        $sort = 'menuindex',
+        $dir = 'ASC',
+        $limit = ''
+    ) {
 
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
@@ -3781,6 +3939,7 @@ class DocumentParser
         }
         if (count($ids) == 0) {
             $this->tmpCache[__FUNCTION__][$cacheKey] = false;
+
             return false;
         } else {
             // modify field names to use sc. table reference
@@ -3804,7 +3963,9 @@ class DocumentParser
             $tbldg = $this->getFullTableName('document_groups');
 
             $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
-                    LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',', $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
+                    LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',',
+                    $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+                ($sort ? "{$sort} {$dir}" : ""), $limit);
 
             $resourceArray = $this->db->makeArray($result);
 
@@ -3915,7 +4076,8 @@ class DocumentParser
                 $docgrp = implode(",", $docgrp);
             }
             $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $result = $this->db->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
+            $result = $this->db->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+                "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
             $pageInfo = $this->db->getRow($result);
 
             $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
@@ -3940,15 +4102,19 @@ class DocumentParser
     {
         if ($pid == -1) {
             $pid = $this->documentObject['parent'];
+
             return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
-        } else if ($pid == 0) {
-            return false;
         } else {
-            // first get the child document
-            $child = $this->getPageInfo($pid, $active, "parent");
-            // now return the child's parent
-            $pid = ($child['parent']) ? $child['parent'] : 0;
-            return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
+            if ($pid == 0) {
+                return false;
+            } else {
+                // first get the child document
+                $child = $this->getPageInfo($pid, $active, "parent");
+                // now return the child's parent
+                $pid = ($child['parent']) ? $child['parent'] : 0;
+
+                return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
+            }
         }
     }
 
@@ -3966,6 +4132,7 @@ class DocumentParser
                 return $snippetId;
             }
         }
+
         return 0;
     }
 
@@ -4123,7 +4290,7 @@ class DocumentParser
         }
 
         $evtOut = $this->invokeEvent('OnMakeDocUrl', array(
-            'id' => $id,
+            'id'  => $id,
             'url' => $url
         ));
 
@@ -4147,9 +4314,9 @@ class DocumentParser
             if ($this->db->getRecordCount($q) == '1') {
                 $q = $this->db->getRow($q);
                 $this->aliasListing[$id] = array(
-                    'id' => (int)$q['id'],
-                    'alias' => $q['alias'] == '' ? $q['id'] : $q['alias'],
-                    'parent' => (int)$q['parent'],
+                    'id'       => (int)$q['id'],
+                    'alias'    => $q['alias'] == '' ? $q['id'] : $q['alias'],
+                    'parent'   => (int)$q['parent'],
                     'isfolder' => (int)$q['isfolder'],
                 );
                 if ($this->aliasListing[$id]['parent'] > 0) {
@@ -4166,6 +4333,7 @@ class DocumentParser
                 $out = $this->aliasListing[$id];
             }
         }
+
         return $out;
     }
 
@@ -4206,6 +4374,7 @@ class DocumentParser
             $this->version['full_appname'] = isset($modx_full_appname) ? $modx_full_appname : '';
             $this->version['new_version'] = isset($this->config['newversiontext']) ? $this->config['newversiontext'] : '';
         }
+
         return (!is_null($data) && is_array($this->version) && isset($this->version[$data])) ? $this->version[$data] : $this->version;
     }
 
@@ -4227,7 +4396,8 @@ class DocumentParser
             if ($this->db->getRecordCount($result) == 1) {
                 $row = $this->db->getRow($result);
                 $snippet = $this->snippetCache[$snippetName] = $row['snippet'];
-                $mergedProperties = array_merge($this->parseProperties($row['properties']), $this->parseProperties($row['sharedproperties']));
+                $mergedProperties = array_merge($this->parseProperties($row['properties']),
+                    $this->parseProperties($row['sharedproperties']));
                 $properties = $this->snippetCache[$snippetName . "Props"] = json_encode($mergedProperties);
             } else {
                 $snippet = $this->snippetCache[$snippetName] = "return false;";
@@ -4256,18 +4426,21 @@ class DocumentParser
         }
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
-        } else if (stripos($chunkName, '@FILE') === 0) {
-            $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
-            $rs = $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
-            if ($this->db->getRecordCount($rs) == 1) {
-                $row = $this->db->getRow($rs);
-                $out = $this->chunkCache[$chunkName] = $row['snippet'];
+            if (stripos($chunkName, '@FILE') === 0) {
+                $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
             } else {
-                $out = $this->chunkCache[$chunkName] = null;
+                $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
+                $rs = $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
+                if ($this->db->getRecordCount($rs) == 1) {
+                    $row = $this->db->getRow($rs);
+                    $out = $this->chunkCache[$chunkName] = $row['snippet'];
+                } else {
+                    $out = $this->chunkCache[$chunkName] = null;
+                }
             }
         }
+
         return $out;
     }
 
@@ -4331,7 +4504,7 @@ class DocumentParser
             }
             if (strpos($tpl, $s) !== false) {
                 $tpl = str_replace($s, $value, $tpl);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('parseText parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -4398,6 +4571,7 @@ class DocumentParser
                     $template = $tpl;
                 }
         }
+
         return $template;
     }
 
@@ -4440,6 +4614,7 @@ class DocumentParser
         } elseif ($mode == 'formatOnly') {
             $strTime = $dateFormat;
         }
+
         return $strTime;
     }
 
@@ -4489,6 +4664,7 @@ class DocumentParser
         }
         $timeStamp = mktime($H, $M, $S, $m, $d, $Y);
         $timeStamp = (int)$timeStamp;
+
         return $timeStamp;
     }
 
@@ -4516,8 +4692,16 @@ class DocumentParser
      *                      Default: ASC
      * @return array|bool
      */
-    public function getDocumentChildrenTVars($parentid = 0, $tvidnames = array(), $published = 1, $docsort = "menuindex", $docsortdir = "ASC", $tvfields = "*", $tvsort = "rank", $tvsortdir = "ASC")
-    {
+    public function getDocumentChildrenTVars(
+        $parentid = 0,
+        $tvidnames = array(),
+        $published = 1,
+        $docsort = "menuindex",
+        $docsortdir = "ASC",
+        $tvfields = "*",
+        $tvsort = "rank",
+        $tvsortdir = "ASC"
+    ) {
         $docs = $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
         if (!$docs) {
             return false;
@@ -4544,7 +4728,8 @@ class DocumentParser
             if ($tvidnames == "*") {
                 $query = "tv.id<>0";
             } else {
-                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
+                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','",
+                        $tvidnames) . "')";
             }
 
             $this->getUserDocGroups();
@@ -4555,7 +4740,8 @@ class DocumentParser
 
                 $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
                         INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
-                        LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'", "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
+                        LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
+                    "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
                 $tvs = $this->db->makeArray($rs);
 
                 // get default/built-in template variables
@@ -4569,6 +4755,7 @@ class DocumentParser
                     $result[] = $tvs;
                 }
             }
+
             return $result;
         }
     }
@@ -4596,8 +4783,15 @@ class DocumentParser
      * @return array {array; false} - Result array, or false.
      * - Result array, or false.
      */
-    public function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id')
-    {
+    public function getDocumentChildrenTVarOutput(
+        $parentid = 0,
+        $tvidnames = array(),
+        $published = 1,
+        $sortBy = 'menuindex',
+        $sortDir = 'ASC',
+        $where = '',
+        $resultKey = 'id'
+    ) {
         $docs = $this->getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
 
         if (!$docs) {
@@ -4613,9 +4807,11 @@ class DocumentParser
                         $tvidnames[] = $resultKey;
                         $unsetResultKey = true;
                     }
-                } else if ($tvidnames != '*' && $tvidnames != $resultKey) {
-                    $tvidnames = array($tvidnames, $resultKey);
-                    $unsetResultKey = true;
+                } else {
+                    if ($tvidnames != '*' && $tvidnames != $resultKey) {
+                        $tvidnames = array($tvidnames, $resultKey);
+                        $unsetResultKey = true;
+                    }
                 }
             }
 
@@ -4659,7 +4855,9 @@ class DocumentParser
         if ($idname == "") {
             return false;
         } else {
-            $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "", ""); //remove sorting for speed
+            $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "",
+                ""); //remove sorting for speed
+
             return ($result != false) ? $result[0] : false;
         }
     }
@@ -4681,14 +4879,20 @@ class DocumentParser
      *
      * @return {array; false} - Result array, or false.
      */
-    public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC')
-    {
+    public function getTemplateVars(
+        $idnames = array(),
+        $fields = '*',
+        $docid = '',
+        $published = 1,
+        $sort = 'rank',
+        $dir = 'ASC'
+    ) {
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (($idnames != '*' && !is_array($idnames)) || empty($idnames) ) {
+        if (($idnames != '*' && !is_array($idnames)) || empty($idnames)) {
             return false;
         } else {
 
@@ -4701,12 +4905,14 @@ class DocumentParser
 
                 if (!$docRow) {
                     $this->tmpCache[__FUNCTION__][$cacheKey] = false;
+
                     return false;
                 }
             }
 
             // get user defined template variables
-            $fields = ($fields == '') ? 'tv.*' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
+            $fields = ($fields == '') ? 'tv.*' : 'tv.' . implode(',tv.',
+                    array_filter(array_map('trim', explode(',', $fields))));
             $sort = ($sort == '') ? '' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
 
             if ($idnames == '*') {
@@ -4715,20 +4921,22 @@ class DocumentParser
                 $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
             }
 
-            $rs = $this->db->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getFullTableName('site_tmplvars') . " tv
+            $rs = $this->db->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
+                $this->getFullTableName('site_tmplvars') . " tv
                     INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
-                    LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'", "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
+                    LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
+                "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
 
             $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
-            if(is_array($docRow)){
+            if (is_array($docRow)) {
                 ksort($docRow);
 
                 foreach ($docRow as $key => $value) {
                     if ($idnames == '*' || in_array($key, $idnames)) {
                         array_push($result, array(
-                            'name' => $key,
+                            'name'  => $key,
                             'value' => $value
                         ));
                     }
@@ -4760,7 +4968,7 @@ class DocumentParser
      */
     public function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
-        if (is_array($idnames) && empty($idnames) ) {
+        if (is_array($idnames) && empty($idnames)) {
             return false;
         } else {
             $output = array();
@@ -4783,7 +4991,8 @@ class DocumentParser
                     if (!isset($row['id']) or !$row['id']) {
                         $output[$row['name']] = $row['value'];
                     } else {
-                        $output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+                        $output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'],
+                            $row['display_params'], $row['type'], $docid, $sep);
                     }
                 }
 
@@ -4880,6 +5089,7 @@ class DocumentParser
     {
         global $base_url;
         $pth = $base_url . $this->getCacheFolder();
+
         return $pth;
     }
 
@@ -4909,13 +5119,13 @@ class DocumentParser
         }
         // insert a new message into user_messages
         $this->db->insert(array(
-            'type' => $type,
-            'subject' => $subject,
-            'message' => $msg,
-            'sender' => $from,
-            'recipient' => $to,
-            'private' => $private,
-            'postdate' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
+            'type'        => $type,
+            'subject'     => $subject,
+            'message'     => $msg,
+            'sender'      => $from,
+            'recipient'   => $to,
+            'private'     => $private,
+            'postdate'    => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
             'messageread' => 0,
         ), $this->getFullTableName('user_messages'));
     }
@@ -4946,6 +5156,7 @@ class DocumentParser
                 }
             }
         }
+
         return $out;
     }
 
@@ -4975,6 +5186,7 @@ class DocumentParser
                 }
             }
         }
+
         return $out;
     }
 
@@ -5033,11 +5245,13 @@ class DocumentParser
     public function getWebUserInfo($uid)
     {
         $rs = $this->db->select('wu.username, wu.password, wua.*', $this->getFullTableName("web_users") . " wu
-                INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id", "wu.id='{$uid}'");
+                INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id",
+            "wu.id='{$uid}'");
         if ($row = $this->db->getRow($rs)) {
             if (!isset($row['usertype']) or !$row["usertype"]) {
                 $row["usertype"] = "web";
             }
+
             return $row;
         }
     }
@@ -5056,30 +5270,38 @@ class DocumentParser
         if ($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
             $dg = $_SESSION['webDocgroups'];
             $dgn = isset($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
-        } else if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
-            $dg = $_SESSION['mgrDocgroups'];
-            $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
         } else {
-            $dg = '';
+            if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
+                $dg = $_SESSION['mgrDocgroups'];
+                $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
+            } else {
+                $dg = '';
+            }
         }
         if (!$resolveIds) {
             return $dg;
-        } else if (is_array($dgn)) {
-            return $dgn;
-        } else if (is_array($dg)) {
-            // resolve ids to names
-            $dgn = array();
-            $ds = $this->db->select('name', $this->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
-            while ($row = $this->db->getRow($ds)) {
-                $dgn[] = $row['name'];
-            }
-            // cache docgroup names to session
-            if ($this->isFrontend()) {
-                $_SESSION['webDocgrpNames'] = $dgn;
+        } else {
+            if (is_array($dgn)) {
+                return $dgn;
             } else {
-                $_SESSION['mgrDocgrpNames'] = $dgn;
+                if (is_array($dg)) {
+                    // resolve ids to names
+                    $dgn = array();
+                    $ds = $this->db->select('name', $this->getFullTableName("documentgroup_names"),
+                        "id IN (" . implode(",", $dg) . ")");
+                    while ($row = $this->db->getRow($ds)) {
+                        $dgn[] = $row['name'];
+                    }
+                    // cache docgroup names to session
+                    if ($this->isFrontend()) {
+                        $_SESSION['webDocgrpNames'] = $dgn;
+                    } else {
+                        $_SESSION['mgrDocgrpNames'] = $dgn;
+                    }
+
+                    return $dgn;
+                }
             }
-            return $dgn;
         }
     }
 
@@ -5110,10 +5332,11 @@ class DocumentParser
                         ), $tbl, "id='" . $this->getLoginUserID() . "'");
                         // invoke OnWebChangePassword event
                         $this->invokeEvent("OnWebChangePassword", array(
-                            "userid" => $row["id"],
-                            "username" => $row["username"],
+                            "userid"       => $row["id"],
+                            "username"     => $row["username"],
                             "userpassword" => $newPwd
                         ));
+
                         return true;
                     }
                 } else {
@@ -5121,6 +5344,7 @@ class DocumentParser
                 }
             }
         }
+
         return $rt;
     }
 
@@ -5149,6 +5373,7 @@ class DocumentParser
                 return true;
             }
         }
+
         return false;
     }
 
@@ -5195,8 +5420,11 @@ class DocumentParser
      * @param boolean $startup Default: false
      * @return string
      */
-    public function regClientScript($src, $options = array('name' => '', 'version' => '0', 'plaintext' => false), $startup = false)
-    {
+    public function regClientScript(
+        $src,
+        $options = array('name' => '', 'version' => '0', 'plaintext' => false),
+        $startup = false
+    ) {
         if (empty($src)) {
             return '';
         } // nothing to register
@@ -5263,6 +5491,7 @@ class DocumentParser
         $this->loadedjscripts[$key]['version'] = $version;
         $this->loadedjscripts[$key]['startup'] = $startup;
         $this->loadedjscripts[$key]['pos'] = $pos;
+
         return '';
     }
 
@@ -5302,6 +5531,7 @@ class DocumentParser
         $t = preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t = preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t = preg_replace('~{{(.*?)}}~', "", $t); //chunks
+
         return $t;
     }
 
@@ -5320,6 +5550,7 @@ class DocumentParser
         if (!array_key_exists($evtName, $this->pluginEvent)) {
             $this->pluginEvent[$evtName] = array();
         }
+
         return array_push($this->pluginEvent[$evtName], $pluginName); // return array count
     }
 
@@ -5396,7 +5627,8 @@ class DocumentParser
 
             if ($this->dumpPlugins) {
                 $eventtime = $this->getMicroTime() - $eventtime;
-                $this->pluginsCode .= sprintf('<fieldset><legend><b>%s / %s</b> (%2.2f ms)</legend>', $evtName, $pluginName, $eventtime * 1000);
+                $this->pluginsCode .= sprintf('<fieldset><legend><b>%s / %s</b> (%2.2f ms)</legend>', $evtName,
+                    $pluginName, $eventtime * 1000);
                 foreach ($parameter as $k => $v) {
                     $this->pluginsCode .= "{$k} => " . print_r($v, true) . '<br>';
                 }
@@ -5412,6 +5644,7 @@ class DocumentParser
         }
 
         $e->activePlugin = '';
+
         return $results;
     }
 
@@ -5429,7 +5662,8 @@ class DocumentParser
             $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
         } else {
             $pluginName = $this->db->escape($pluginName);
-            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"),
+                "name='{$pluginName}' AND disabled=0");
             if ($row = $this->db->getRow($result)) {
                 $pluginCode = $this->pluginCache[$row['name']] = $row['plugincode'];
                 $pluginProperties = $this->pluginCache[$row['name'] . "Props"] = $row['properties'];
@@ -5496,18 +5730,20 @@ class DocumentParser
                 }
             }
             // new json-format
-        } else if (!empty($jsonFormat)) {
-            foreach ($jsonFormat as $key => $row) {
-                if (!empty($key)) {
-                    if (is_array($row)) {
-                        if (isset($row[0]['value'])) {
-                            $value = $row[0]['value'];
+        } else {
+            if (!empty($jsonFormat)) {
+                foreach ($jsonFormat as $key => $row) {
+                    if (!empty($key)) {
+                        if (is_array($row)) {
+                            if (isset($row[0]['value'])) {
+                                $value = $row[0]['value'];
+                            }
+                        } else {
+                            $value = $row;
                         }
-                    } else {
-                        $value = $row;
-                    }
-                    if (isset($value) && $value !== '') {
-                        $property[$key] = $value;
+                        if (isset($value) && $value !== '') {
+                            $property[$key] = $value;
+                        }
                     }
                 }
             }
@@ -5515,8 +5751,8 @@ class DocumentParser
         if (!empty($elementName) && !empty($elementType)) {
             $out = $this->invokeEvent('OnParseProperties', array(
                 'element' => $elementName,
-                'type' => $elementType,
-                'args' => $property
+                'type'    => $elementType,
+                'args'    => $property
             ));
             if (is_array($out)) {
                 $out = array_pop($out);
@@ -5525,6 +5761,7 @@ class DocumentParser
                 $property = $out;
             }
         }
+
         return $property;
     }
 
@@ -5552,7 +5789,8 @@ class DocumentParser
 
                 while (!feof($tpl)) {
                     $line = fgets($tpl);
-                    $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
+                    $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found,
+                        $docblock_end_found);
                     $docblock_start_found = $r['docblock_start_found'];
                     $name_found = $r['name_found'];
                     $description_found = $r['description_found'];
@@ -5579,6 +5817,7 @@ class DocumentParser
                 @fclose($tpl);
             }
         }
+
         return $params;
     }
 
@@ -5602,7 +5841,8 @@ class DocumentParser
             $arrayParams = array('author', 'documentation', 'reportissues', 'link');
 
             foreach ($exp as $line) {
-                $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
+                $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found,
+                    $docblock_end_found);
                 $docblock_start_found = $r['docblock_start_found'];
                 $name_found = $r['name_found'];
                 $description_found = $r['description_found'];
@@ -5627,6 +5867,7 @@ class DocumentParser
                 }
             }
         }
+
         return $params;
     }
 
@@ -5641,8 +5882,13 @@ class DocumentParser
      * @param boolean $docblock_end_found
      * @return array Associative array in the form property name => property value
      */
-    public function parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found)
-    {
+    public function parseDocBlockLine(
+        $line,
+        $docblock_start_found,
+        $name_found,
+        $description_found,
+        $docblock_end_found
+    ) {
         $param = '';
         $val = '';
         $ma = null;
@@ -5682,13 +5928,14 @@ class DocumentParser
                 $docblock_end_found = true;
             }
         }
+
         return array(
             'docblock_start_found' => $docblock_start_found,
-            'name_found' => $name_found,
-            'description_found' => $description_found,
-            'docblock_end_found' => $docblock_end_found,
-            'param' => $param,
-            'val' => $val
+            'name_found'           => $name_found,
+            'description_found'    => $description_found,
+            'docblock_end_found'   => $docblock_end_found,
+            'param'                => $param,
+            'val'                  => $val
         );
     }
 
@@ -5713,7 +5960,8 @@ class DocumentParser
                 foreach ($val as $key2 => $val2) {
                     $val2 = $this->parseText($val2, $ph);
                     if (preg_match($regexUrl, $val2, $url)) {
-                        $val2 = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val2);
+                        $val2 = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ",
+                            $val2);
                     }
                     if (preg_match($regexEmail, $val2, $url)) {
                         $val2 = preg_replace($regexEmail, '<a href="mailto:\\1' . $emailSubject . '">\\1</a>', $val2);
@@ -5734,13 +5982,14 @@ class DocumentParser
 
         $arrayParams = array(
             'documentation' => $_lang['documentation'],
-            'reportissues' => $_lang['report_issues'],
-            'link' => $_lang['further_info'],
-            'author' => $_lang['author_infos']
+            'reportissues'  => $_lang['report_issues'],
+            'link'          => $_lang['further_info'],
+            'author'        => $_lang['author_infos']
         );
 
         $nl = "\n";
-        $list = isset($parsed['logo']) ? '<img src="' . $this->config['base_url'] . ltrim($parsed['logo'], "/") . '" style="float:right;max-width:100px;height:auto;" />' . $nl : '';
+        $list = isset($parsed['logo']) ? '<img src="' . $this->config['base_url'] . ltrim($parsed['logo'],
+                "/") . '" style="float:right;max-width:100px;height:auto;" />' . $nl : '';
         $list .= '<p>' . $nl;
         $list .= isset($parsed['name']) ? '<strong>' . $parsed['name'] . '</strong><br/>' . $nl : '';
         $list .= isset($parsed['description']) ? $parsed['description'] . $nl : '';
@@ -5820,6 +6069,7 @@ class DocumentParser
             }
         }
         $this->config['enable_filter'] = $enable_filter;
+
         return $content;
     }
 
@@ -5832,6 +6082,7 @@ class DocumentParser
     {
         $str = strip_tags($str, $allowable_tags);
         modx_sanitize_gpc($str);
+
         return $str;
     }
 
@@ -5889,6 +6140,7 @@ class DocumentParser
             $msg = $phpcode . "\n" . $this->currentSnippet . "\n" . print_r($_SERVER, true);
             $title = sprintf('Unknown eval was executed (%s)', $this->htmlspecialchars(substr(trim($phpcode), 0, 50)));
             $this->messageQuit($title, '', true, '', '', 'Parser', $msg);
+
             return;
         }
 
@@ -5902,6 +6154,7 @@ class DocumentParser
 
         $output = $echo . $return;
         modx_sanitize_gpc($output);
+
         return $this->htmlspecialchars($output); // Maybe, all html tags are dangerous
     }
 
@@ -5945,6 +6198,7 @@ class DocumentParser
                     return false;
             }
         }
+
         return true;
     }
 
@@ -5955,7 +6209,13 @@ class DocumentParser
     public function atBindFileContent($str = '')
     {
 
-        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'] . 'files/', '');
+        $search_path = array(
+            'assets/tvs/',
+            'assets/chunks/',
+            'assets/templates/',
+            $this->config['rb_base_url'] . 'files/',
+            ''
+        );
 
         if (stripos($str, '@FILE') !== 0) {
             return $str;
@@ -6084,8 +6344,17 @@ class DocumentParser
      * @param string $output
      * @return bool
      */
-    public function messageQuit($msg = 'unspecified error', $query = '', $is_error = true, $nr = '', $file = '', $source = '', $text = '', $line = '', $output = '')
-    {
+    public function messageQuit(
+        $msg = 'unspecified error',
+        $query = '',
+        $is_error = true,
+        $nr = '',
+        $file = '',
+        $source = '',
+        $text = '',
+        $line = '',
+        $output = ''
+    ) {
 
         if (0 < $this->messageQuitCount) {
             return;
@@ -6124,21 +6393,21 @@ class DocumentParser
         }
 
         $errortype = array(
-            E_ERROR => "ERROR",
-            E_WARNING => "WARNING",
-            E_PARSE => "PARSING ERROR",
-            E_NOTICE => "NOTICE",
-            E_CORE_ERROR => "CORE ERROR",
-            E_CORE_WARNING => "CORE WARNING",
-            E_COMPILE_ERROR => "COMPILE ERROR",
-            E_COMPILE_WARNING => "COMPILE WARNING",
-            E_USER_ERROR => "USER ERROR",
-            E_USER_WARNING => "USER WARNING",
-            E_USER_NOTICE => "USER NOTICE",
-            E_STRICT => "STRICT NOTICE",
+            E_ERROR             => "ERROR",
+            E_WARNING           => "WARNING",
+            E_PARSE             => "PARSING ERROR",
+            E_NOTICE            => "NOTICE",
+            E_CORE_ERROR        => "CORE ERROR",
+            E_CORE_WARNING      => "CORE WARNING",
+            E_COMPILE_ERROR     => "COMPILE ERROR",
+            E_COMPILE_WARNING   => "COMPILE WARNING",
+            E_USER_ERROR        => "USER ERROR",
+            E_USER_WARNING      => "USER WARNING",
+            E_USER_NOTICE       => "USER NOTICE",
+            E_STRICT            => "STRICT NOTICE",
             E_RECOVERABLE_ERROR => "RECOVERABLE ERROR",
-            E_DEPRECATED => "DEPRECATED",
-            E_USER_DEPRECATED => "USER DEPRECATED"
+            E_DEPRECATED        => "DEPRECATED",
+            E_USER_DEPRECATED   => "USER DEPRECATED"
         );
 
         if (!empty($nr) || !empty($file)) {
@@ -6189,12 +6458,18 @@ class DocumentParser
         if (preg_match('@^[0-9]+@', $this->documentIdentifier)) {
             $resource = $this->getDocumentObject('id', $this->documentIdentifier);
             $url = $this->makeUrl($this->documentIdentifier, '', '', 'full');
-            $table[] = array('Resource', '[' . $this->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>');
+            $table[] = array(
+                'Resource',
+                '[' . $this->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>'
+            );
         }
         $table[] = array('Referer', $referer);
         $table[] = array('User Agent', $ua);
         $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time', date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time']));
+        $table[] = array(
+            'Current time',
+            date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'])
+        );
         $str .= $MakeTable->create($table, array('Basic info', ''));
         $str .= "<br />";
 
@@ -6339,7 +6614,8 @@ class DocumentParser
                         break;
                     }
                     case is_scalar($arg): {
-                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
+                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->htmlspecialchars(str_replace("'",
+                                "\\'", $arg)) . "'");
                         break;
                     }
                     case is_bool($arg): {
@@ -6359,6 +6635,7 @@ class DocumentParser
                     }
                 }
                 $tmp++;
+
                 return $out;
             }, $args);
             $line = array(
@@ -6367,6 +6644,7 @@ class DocumentParser
             );
             $table[] = array(implode("<br />", $line));
         }
+
         return $MakeTable->create($table, array('Backtrace'));
     }
 
@@ -6406,6 +6684,7 @@ class DocumentParser
             $alias = preg_replace('/\s+/', '-', $alias); // convert white-space to dash
             $alias = preg_replace('/-+/', '-', $alias);  // convert multiple dashes to one
             $alias = trim($alias, '-'); // trim excess
+
             return $alias;
         }
     }
@@ -6424,6 +6703,7 @@ class DocumentParser
             }
             $precisions--;
         }
+
         return '0 b';
     }
 
@@ -6499,6 +6779,7 @@ class DocumentParser
                 $id = false;
             }
         }
+
         return $id;
     }
 
@@ -6546,6 +6827,7 @@ class DocumentParser
         if (!$content && $result) {
             $content = $result;
         }
+
         return $content;
     }
 
@@ -6560,6 +6842,7 @@ class DocumentParser
     public function htmlspecialchars($str, $flags = ENT_COMPAT, $encode = '')
     {
         $this->loadExtension('PHPCOMPAT');
+
         return $this->phpcompat->htmlspecialchars($str, $flags, $encode);
     }
 
@@ -6571,6 +6854,7 @@ class DocumentParser
     public function isJson($string, $returnData = false)
     {
         $data = json_decode($string, true);
+
         return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
     }
 
@@ -6610,6 +6894,7 @@ class DocumentParser
         }
 
         $this->loadExtension('MODIFIERS');
+
         return $this->filter->phxFilter($key, $value, $modifiers);
     }
 

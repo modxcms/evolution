@@ -109,7 +109,7 @@ if (isset($coreClass) && class_exists($coreClass)) {
 }
 if (!isset($modx) || !($modx instanceof \DocumentParser)) {
 	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = new \DocumentParser;
+	$modx = DocumentParser::getInstance();
 }
 
 // set some parser options
