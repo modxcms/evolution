@@ -1,24 +1,19 @@
 <?php
-//:: MODX Installer Setup file
+//:: EVO Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-define('MGR_DIR', 'manager');
+if (is_file($base_path . 'assets/cache/siteManager.php')) {
+    include_once($base_path . 'assets/cache/siteManager.php');
 }
+if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
+
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODX";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = "setup.sql";
-$moduleSQLDataFile = "setup.data.sql";
-$chunkPath = $setupPath .'/assets/chunks';
-$snippetPath = $setupPath .'/assets/snippets';
-$pluginPath = $setupPath .'/assets/plugins';
-$modulePath = $setupPath .'/assets/modules';
-$templatePath = $setupPath .'/assets/templates';
-$tvPath = $setupPath .'/assets/tvs';
+$chunkPath    = $base_path .'install/assets/chunks';
+$snippetPath  = $base_path .'install/assets/snippets';
+$pluginPath   = $base_path .'install/assets/plugins';
+$modulePath   = $base_path .'install/assets/modules';
+$templatePath = $base_path .'install/assets/templates';
+$tvPath = $base_path .'install/assets/tvs';
 
 // setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
 $mt = &$moduleTemplates;
@@ -40,7 +35,8 @@ if(is_dir($templatePath) && is_readable($templatePath)) {
                 "$templatePath/{$params['filename']}",
                 $params['modx_category'],
                 $params['lock_template'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : NULL // Nessecary to fix template-ID for demo-site
             );
         }
     }
@@ -144,7 +140,7 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
                 $params['modx_category'],
                 $params['legacy_names'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                intval($params['disabled'])
+                (int)$params['disabled']
             );
         }
     }
@@ -169,13 +165,13 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
                 "$modulePath/{$params['filename']}",
                 $params['properties'],
                 $params['guid'],
-                intval($params['shareparams']),
+                (int)$params['shareparams'],
                 $params['modx_category'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
             );
         }
-		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
-			$dependencies = explode(',', $dependencies);
+		if ((int)$params['shareparams'] || !empty($params['dependencies'])) {
+			$dependencies = explode(',', $params['dependencies']);
 			foreach ($dependencies as $dependency) {
 				$dependency = explode(':', $dependency);
 				switch (trim($dependency[0])) {
@@ -247,11 +243,6 @@ $callBackFnc = "clean_up";
 
 function clean_up($sqlParser) {
     $ids = array();
-    $mysqlVerOk = -1;
-
-    if(function_exists("mysqli_get_server_info")) {
-        $mysqlVerOk = (version_compare(mysqli_get_server_info($sqlParser->conn),"4.0.2")>=0);
-    }
 
     // secure web documents - privateweb
     mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1");
@@ -302,7 +293,6 @@ function parse_docblock($element_dir, $filename) {
             $docblock_start_found = false;
             $name_found = false;
             $description_found = false;
-            $docblock_end_found = false;
 
             while(!feof($tpl)) {
                 $line = fgets($tpl);
@@ -348,7 +338,6 @@ function parse_docblock($element_dir, $filename) {
                             $params[$param] = $val;
                         }
                     } elseif(preg_match("/^\s*\*\/\s*$/", $line)) {
-                        $docblock_end_found = true;
                         break;
                     }
                 }

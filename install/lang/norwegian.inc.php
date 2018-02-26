@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author Bjørn Erik Sandbakk (Sylvaticus)
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Norsk
  * @package modx
@@ -117,7 +117,7 @@ $_lang["modules"] = 'Moduler';
 $_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med enerett. MODX er lisensiert under GNU GPL.';
 $_lang["modx_footer2"] = 'MODX er fri programvare. Vi oppmuntrer deg til &aring; v&aelig;re kreativ og bruke MODX p&aring; hvilken m&aring;te du vil. V&aelig;r bare n&oslash;ye med &aring; beholde kildekoden fri om du gj&oslash;r endringer og siden velger &aring; omdistribuere din modifiserte versjon av MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installasjon';
-$_lang["modx_requires_php"] = ', og MODX krever PHP 5.3 eller senere.';
+$_lang["modx_requires_php"] = ', og MODX krever PHP [+min_version+] eller senere.';
 $_lang["mysql_5051"] = ' MySQL server versjon er 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Det er kjente problemer med MySQL 5.0.51. Det anbefales at du oppgraderer f&oslash;r du fortsetter.';
 $_lang["mysql_version_is"] = ' Din MySQL versjon er: ';
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'mislyktes!';
 $_lang["status_failed_could_not_create_database"] = 'mislyktes - kunne ikke opprette database';
 $_lang["status_failed_database_collation_does_not_match"] = 'mislyktes - database collation ulikhet; bruk SET NAMES eller velg %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'mislyktes - tabellprefixet er allerede i bruk!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'godkjent - databasen valgt';
 $_lang["status_passed_database_created"] = 'godkjent - database opprettet';
 $_lang["status_passed_server"] = 'godkjent - kollasjoneringer er n&aring; tilgjengelig';

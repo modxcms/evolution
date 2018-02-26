@@ -4,11 +4,11 @@ class DocManagerBackend {
 	var $dm = null;
 	var $modx = null;
 
-    function DocManagerBackend(&$dm, &$modx) {
+    function __construct(&$dm, &$modx) {
     	$this->dm = &$dm;
     	$this->modx = &$modx;
     }
-    
+
     function handlePostback() {
     	switch($_POST['tabAction']) {
     		case 'changeTemplate':
@@ -24,81 +24,17 @@ class DocManagerBackend {
     		case 'changeOther':
     			echo $this->changeOther($_POST['pids']);
     			break;
-    		case 'sortMenu':
-    			echo $this->showSortList($_POST['new_parent']);
-    			break;
-    		case 'sortList':
-    			echo $this->changeSort($_POST['list']);
-    			break;
     	}
     }
-    
-    function showSortList($id) {
-        $this->dm->ph['sort.disable_tree_select'] = 'false';
-    	$this->dm->ph['sort.options'] = '';
-    	$this->dm->ph['sort.save'] = '';
-    	$resource = array();
 
-    	if (is_numeric($id)) {
-			$rs = $this->modx->db->select('id, pagetitle, parent, menuindex, published, hidemenu, deleted', $this->modx->getFullTableName('site_content'), "parent='{$id}'", 'menuindex ASC');
-			$resource = $this->modx->db->makeArray($rs);
-		} elseif ($id == '') {
-			$noId = true;
-			$this->dm->ph['sort.disable_tree_select'] = 'true';
-			$this->dm->ph['sort.save'] = 'none';
-			$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_noid'];
-		}
-
-		if (!$noId) {
-			$cnt = count($resource);
-			if ($cnt < 1) {
-			    $this->dm->ph['sort.disable_tree_select'] = 'true';
-				$this->dm->ph['sort.save'] = 'none';
-				$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_nochildren'];
-			} else {
-				foreach ($resource as $item) {
-                    // Add classes to determine whether it's published, deleted, not in the menu
-                    // or has children.
-                    // Use class names which match the classes in the document tree
-                    $classes = '';
-                    $classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode' ;
-                    $classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ' ;
-                    $classes = ($item['deleted']) ? ' deletedNode ' : $classes ;
-                    $classes .= (count($this->modx->getChildIds($item['id'], 1)) > 0) ? ' hasChildren ' : ' noChildren ';
-                    $this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'">' . $item['pagetitle'] . '</li>';
-				}
-			}
-		}
-		return $this->dm->parseTemplate('sort_list.tpl', $this->dm->ph);
-    }
-    
-    function changeSort($items) {
-    	if (strlen($items) > 0) {
-    		$items = explode(';', $items);
-    		foreach ($items as $key => $value) {
-    			$id = ltrim($value, 'item_');
-    			if (is_numeric($id)) {
-	    			$this->modx->db->update(array('menuindex'=>$key), $this->modx->getFullTableName('site_content'), "id='{$id}'");
-    			}
-    		}
-    		$this->logDocumentChange('sortmenu');
-    	}
-    	$this->dm->ph['sort.message'] = $this->dm->lang['DM_sort_updated'];
-    	$this->dm->ph['sort.save'] = 'none';
-    	$this->dm->ph['sort.disable_tree_select'] = 'true';
- 		return $this->dm->parseTemplate('sort_list.tpl', $this->dm->ph);
-    }
-    
-    function changeTemplate($pids, $template) {	
+    function changeTemplate($pids, $template) {
 		$results = $this->processRange($pids, 'id', 1);
 		$pids = $results[0];
 		$error = $results[1];
 
-		if ($pids !== '' && $template !== '') {	
+		if ($pids !== '' && $template !== '') {
 			$values = rtrim($pids, ' OR ');
-			$fields = array (
-				'template' => intval($template
-			));
+			$fields = array ('template' => (int)$template);
 			$this->modx->db->update($fields, $this->modx->getFullTableName('site_content'), $values);
 		} else {
 			$error .= '<br />' . $this->dm->lang['DM_process_noselection'] . '<br />';
@@ -110,15 +46,15 @@ class DocManagerBackend {
 			$this->dm->ph['update.message'] = $this->dm->lang['DM_process_update_error'] . '<br />' . $error;
 		}
 		$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_tpl_results_message'];
-										
+
 		$this->modx->clearCache('full');
 		$this->logDocumentChange('template');
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
-	
+
 	function changeTemplateVariables($pids) {
 		$updateError = '';
-	
+
 		/*
         $ignoreList = array();
 		if (trim($_POST['ignoreTV']) <> '') {
@@ -128,7 +64,7 @@ class DocManagerBackend {
 			}
 		}
 		 */
-	
+
 		$results = $this->processRange($pids, 'id', 0);
 		$pids = $results[0];
 		$error = $results[1];
@@ -141,7 +77,7 @@ class DocManagerBackend {
 					$tvKeyName = substr($key, 10);
 					//if (strpos($key,'_prefix') !== false)
 					//	continue;
-					
+
 					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), "id='{$tvKeyName}'");
 					$row = $this->modx->db->getRow($typeSQL);
 					if ($row['type'] == 'url') {
@@ -170,7 +106,7 @@ class DocManagerBackend {
 					$tmplVars["{$tvKeyName}"] = $tmplvar;
 				}
 			}
-		
+
 			foreach ($pids as $docID) {
 				$tempSQL = $this->modx->db->select('template', $this->modx->getFullTableName('site_content'), "id='{$docID}'");
 				if ($row = $this->modx->db->getRow($tempSQL)) {
@@ -197,16 +133,16 @@ class DocManagerBackend {
                                         $sign = trim(substr($newTvVal, 6, 1));
                                         $op = trim(substr($newTvVal, 7));
                                         switch ($sign) {
-                                            case '+':   
+                                            case '+':
                                                 $newTvVal = $checkRow['value'] + $op;
                                                 break;
-                                            case '-':   
+                                            case '-':
                                                 $newTvVal = $checkRow['value'] - $op;
                                                 break;
-                                            case '*':   
+                                            case '*':
                                                 $newTvVal = $checkRow['value'] * $op;
                                                 break;
-                                            case '/':   
+                                            case '/':
                                                 $newTvVal = $checkRow['value'] / $op;
                                                 break;
 
@@ -250,33 +186,33 @@ class DocManagerBackend {
 		} else {
 			$updateError .= $this->dm->lang['DM_tv_no_docs'] . '<br />';
 		}
-	
+
 		if ($updated) {
 			$this->logDocumentChange('templatevariables');
 		}
-	
+
 		if ($error == '' && $updateError == '') {
 			$this->dm->ph['update.message'] = $this->dm->lang['DM_process_update_success'];
 		} else {
 			$this->dm->ph['update.message'] = $this->dm->lang['DM_process_update_error'] . '<br />' . $error;
 		}
-	
+
 		if ($updateError <> '') {
 			$this->dm->ph['update.message'] .= '<br />' . $updateError;
 		}
 		$this->dm->ph['update.message'] .= '<br />'. $this->dm->lang['DM_tpl_results_message'];
-	
+
 		$this->modx->clearCache();
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
-	
+
 	function changeDocGroups($pids, $docgroup, $action) {
 		$doc_id = array ();
 		$this->dm->ph['update.message'] = '';
 		$doc_vals = $this->processRange($pids, '', 0);
 		$doc_id = $doc_vals[0];
 		$error = $doc_vals[1];
-		
+
 		if (!empty($docgroup)) {
 			switch ($action) {
 				case 'pushDocGroup' :
@@ -299,7 +235,7 @@ class DocManagerBackend {
 							}
 						}
 					}
-					
+
 					break;
 				case 'pullDocGroup' :
 					if (count($doc_id) > 0) {
@@ -322,17 +258,17 @@ class DocManagerBackend {
 		} else {
 			$error = $this->dm->lang['DM_doc_no_docs'];
 		}
-	
+
 		if ($error == '') {
 			$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_process_update_success'];
 		} else {
 			$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_process_update_error'] . '<br />' . $error;
 		}
-	
+
 		$this->logDocumentChange('docpermissions');
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
-	
+
 	function changeOther($pids) {
 		session_start();
 
@@ -341,7 +277,7 @@ class DocManagerBackend {
 			case 1:
 				$fieldval = 'published';
 				$secondaryFields = array (
-					'publishedon' => (($_POST['newvalue'] == '1') ? time() : 0), 
+					'publishedon' => (($_POST['newvalue'] == '1') ? time() : 0),
 					'publishedby' => (($_POST['newvalue'] == '1') ? $_SESSION['mgrInternalKey'] : 0)
 				);
 				$this->logDocumentChange('publish');
@@ -373,10 +309,10 @@ class DocManagerBackend {
 			default:
 				break;
 		}
-	
+
 		/* document date settings */
 		$dateval = array();
-	
+
 		if ($_POST['pubdate'] <> '')
 			$dateval['pub_date'] = $this->modx->toTimeStamp($_POST['pubdate']);
 		if ($_POST['unpubdate'] <> '')
@@ -385,14 +321,14 @@ class DocManagerBackend {
 			$dateval['createdon'] = $this->modx->toTimeStamp($_POST['createdon']);
 		if ($_POST['editedon'] <> '')
 			$dateval['editedon'] = $this->modx->toTimeStamp($_POST['editedon']);
-	
+
 		/* document author settings */
 		$authorval = array ();
 		if ($_POST['author_createdby'] <> 0)
-			$authorval['createdby'] = intval($_POST['author_createdby']);
+			$authorval['createdby'] = (int)$_POST['author_createdby'];
 		if ($_POST['author_editedby'] <> 0)
-			$authorval['editedby'] = intval($_POST['author_editedby']);
-	
+			$authorval['editedby'] = (int)$_POST['author_editedby'];
+
 		$new = false;
 		$results = $this->processRange($pids, 'id', 1);
 		$pids = $results[0];
@@ -400,9 +336,7 @@ class DocManagerBackend {
 		$values = rtrim($pids, ' OR ');
 
 		if ($pids !== '' && $_POST['newvalue'] !== '') {
-			$fields = array (
-				$fieldval => intval($_POST['newvalue'])
-			);
+			$fields = array ($fieldval => (int)$_POST['newvalue']);
 			if (isset ($secondaryFields) && is_array($secondaryFields)) {
 				$fields = array_merge($fields, $secondaryFields);
 			}
@@ -426,27 +360,27 @@ class DocManagerBackend {
 		if (!$new) {
 			$error .= '<br />' . $this->dm->lang['DM_process_noselection'] . '<br />';
 		}
-	
+
 		if ($error == '') {
 			$this->dm->ph['update.message'] = '<br />' . $this->dm->lang['DM_process_update_success'];
 		} else {
 			$this->dm->ph['update.message'] = '<br />' . $this->dm->lang['DM_process_update_error'] . '<br />' . $error;
 		}
-	
+
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
-    
+
     function processRange($pids, $column, $returnval = 1) {
 		$values = array();
 		$error = '';
-	
+
 		if (trim($pids) <> '') {
 			$values = explode(',', $pids);
 		} else {
 			$error .= $this->dm->lang['DM_process_novalues'];
 		}
 		$pids = '';
-		
+
 		/* parse values, and check for invalid entries */
 		foreach ($values as $key => $value) {
 			/* value is a range */
@@ -456,7 +390,7 @@ class DocManagerBackend {
 				if (($match[1] - $match[0]) < 0) {
 					$error = $this->dm->lang['DM_process_limits_error'] . $value . '<br />';
 				}
-				
+
 				$loop = $match[1] - $match[0];
 				for ($i = 0; $i <= $loop; $i++) {
 					if ($returnval == 0) {
@@ -466,11 +400,11 @@ class DocManagerBackend {
 					}
 				}
 			}
-	
+
 			/* value is a group for immediate children */
 			elseif (preg_match('/^[\d]+\*$/', trim($value), $match)) {
 				$match = rtrim($match[0], '*');
-	
+
 				$group = $this->modx->db->select('id', $this->modx->getFullTablename('site_content'), "parent='{$match}'");
 
 				if ($returnval == 0) {
@@ -514,7 +448,7 @@ class DocManagerBackend {
 				$error .= $this->dm->lang['DM_process_invalid_error'] . $value . '<br />';
 			}
 		}
-		
+
 		if ($returnval == 0) {
 			$results[] = $idarray;
 			$results[] = $error;
@@ -522,10 +456,10 @@ class DocManagerBackend {
 			$results[] = $pids;
 			$results[] = $error;
 		}
-		
+
 		return $results;
 	}
-    
+
     function getTemplateVarIds($tvNames = array (), $documentId, $ignoreList=array()) {
 		$output = array ();
 		if (count($tvNames) > 0) {
@@ -548,8 +482,8 @@ class DocManagerBackend {
 		}
 		return $output;
 	}
-    
-    function secureWebDocument($docId = '') {	
+
+    function secureWebDocument($docId = '') {
 		$rs = $this->modx->db->select(
 			'DISTINCT sc.id',
 			$this->modx->getFullTableName("site_content") . " sc
@@ -564,8 +498,8 @@ class DocManagerBackend {
 			$this->modx->db->update(array('privateweb'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privateweb = 1"));
 		}
 	}
-	
-	function secureMgrDocument($docId = '') {	
+
+	function secureMgrDocument($docId = '') {
 		$rs = $this->modx->db->select(
 			'DISTINCT sc.id',
 			$this->modx->getFullTableName("site_content") . " sc
@@ -580,11 +514,11 @@ class DocManagerBackend {
 			$this->modx->db->update(array('privatemgr'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privatemgr = 1"));
 		}
 	}
-	
+
 	function logDocumentChange($action) {
 		include_once MODX_MANAGER_PATH.'includes/log.class.inc.php';
 		$log = new logHandler;
-	
+
 		switch ($action) {
 			case 'template' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_template']);
@@ -594,19 +528,19 @@ class DocManagerBackend {
 				break;
 			case 'docpermissions' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_docpermissions']);
-				break;	
+				break;
 			case 'sortmenu' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_sortmenu']);
-				break;	
+				break;
 			case 'publish' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_publish']);
-				break;	
+				break;
 			case 'hidemenu' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_hidemenu']);
 				break;
 			case 'search' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_search']);
-				break;	
+				break;
 			case 'cache' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_cache']);
 				break;
@@ -615,7 +549,7 @@ class DocManagerBackend {
 				break;
 			case 'delete' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_delete']);
-				break;	
+				break;
 			case 'dates' :
 				$log->initAndWriteLog($this->dm->lang['DM_log_richtext']);
 				break;

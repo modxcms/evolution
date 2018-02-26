@@ -1,4 +1,4 @@
-/**
+﻿/**
  * mm_rules
  *
  * Default ManagerManager rules.
@@ -18,3 +18,17 @@ if ($modx->db->getValue($modx->db->select('count(id)', $modx->getFullTableName('
 	mm_widget_tags('documentTags', ' '); // Give blog tag editing capabilities to the 'documentTags (3)' TV
 }
 mm_widget_showimagetvs(); // Always give a preview of Image TVs
+
+mm_createTab('SEO', 'seo', '', '', '', '');
+mm_moveFieldsToTab('titl,keyw,desc,seoOverride,noIndex,sitemap_changefreq,sitemap_priority,sitemap_exclude', 'seo', '', '');
+mm_widget_tags('keyw',','); // Give blog tag editing capabilities to the 'documentTags (3)' TV
+
+
+//mm_createTab('Images', 'photos', '', '', '', '850');
+//mm_moveFieldsToTab('images,photos', 'photos', '', '');
+
+//mm_hideFields('longtitle,description,link_attributes,menutitle,content', '', '6,7');
+
+//mm_hideTemplates('0,5,8,9,11,12', '2,3');
+
+//mm_hideTabs('settings, access', '2');

@@ -2,22 +2,21 @@
 /**
  * session_keepalive.php
  *
- * This page is requested once in awhile to keep the session alive and kicking.
+ * This page is requested every 10min to keep the session alive and kicking
  */
-include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
-require_once(dirname(__FILE__).'/protect.inc.php');
-
+define('IN_MANAGER_MODE', true);
+define('MODX_API_MODE', true);
+include_once('../../index.php');
+$modx->db->connect();
+$modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
 $ok = false;
-if ($rt = @ include_once('config.inc.php')) {
-// Keep it alive
-  startCMSSession();
-  if($_GET['tok'] == md5(session_id())) {
-      $ok = true;
-  }
+
+if (isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
+    $ok = true;
+    $modx->updateValidatedUserSession();
 }
+
 header('Content-type: application/json');
-if($ok) {
-    echo '{status:"ok"}';
-} else {
-  echo '{status:"null"}';
-}
+
+echo $ok ? '{"status":"ok"}' : '{"status":"null"}';

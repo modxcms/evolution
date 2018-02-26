@@ -4,13 +4,31 @@
 // SNUFFKIN/ Alex 2004
 
 class SqlParser {
-	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
-	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
-	var $mode, $fileManagerPath, $imgPath, $imgUrl;
-	var $dbVersion;
-    var $connection_charset, $connection_method;
+	public $host;
+	public $dbname;
+	public $prefix;
+	public $user;
+	public $password;
+	public $mysqlErrors;
+	public $conn;
+	public $installFailed;
+	public $sitename;
+	public $adminname;
+	public $adminemail;
+	public $adminpass;
+	public $managerlanguage;
+	public $mode;
+	public $fileManagerPath;
+	public $imgPath;
+	public $imgUrl;
+	public $dbMODx;
+	public $dbVersion;
+    public $connection_charset;
+    public $connection_method;
+    public $ignoreDuplicateErrors;
+    public $autoTemplateLogic;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
+	public function __construct($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -26,7 +44,7 @@ class SqlParser {
         $this->autoTemplateLogic = $auto_template_logic;
 	}
 
-	function connect() {
+	public function connect() {
 		$this->conn = mysqli_connect($this->host, $this->user, $this->password);
 		mysqli_select_db($this->conn, $this->dbname);
 		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
@@ -41,8 +59,8 @@ class SqlParser {
         mysqli_query($this->conn,"{$this->connection_method} {$this->connection_charset}");
 	}
 
-	function process($filename) {
-	    global $modx_version;
+    public function process($filename) {
+	    global $custom_placeholders;
 
 		// check to make sure file exists
 		if (!file_exists($filename)) {
@@ -62,11 +80,13 @@ class SqlParser {
 		$idata = str_replace("\r", '', $idata);
 
 		// check if in upgrade mode
-		if ($this->mode=="upd") {
+		if ($this->mode === 'upd') {
 			// remove non-upgradeable parts
-			$s = strpos($idata,"non-upgrade-able[[");
-			$e = strpos($idata,"]]non-upgrade-able")+17;
-			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);
+			$s = strpos($idata,'non-upgrade-able[[');
+			$e = strpos($idata,']]non-upgrade-able') + 17;
+			if($s && $e) {
+			    $idata = str_replace(substr($idata, $s,$e-$s),' Removed non upgradeable items', $idata);
+            }
 		}
 
 		// replace {} tags
@@ -74,12 +94,19 @@ class SqlParser {
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
 		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
 		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
-		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
-		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
+		$idata = str_replace('{IMAGEPATH}', $this->imgPath, $idata);
+		$idata = str_replace('{IMAGEURL}', $this->imgUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
 		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
+
+		// Replace custom placeholders
+		foreach($custom_placeholders as $key=>$val) {
+			if (strpos($idata, '{'.$key.'}') !== false) {
+				$idata = str_replace('{'.$key.'}', $val, $idata);
+			}
+		}
 
 		$sql_array = explode("\n\n", $idata);
 
@@ -102,7 +129,7 @@ class SqlParser {
 			if(mysqli_error($this->conn)) {
 				// Ignore duplicate and drop errors - Raymond
 				if ($this->ignoreDuplicateErrors){
-					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1091) continue;
+					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1062 ||mysqli_errno($this->conn) == 1091) continue;
 				}
 				// End Ignore duplicate
 				$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
@@ -111,9 +138,7 @@ class SqlParser {
 		}
 	}
 
-	function close() {
+    public function close() {
 		mysqli_close($this->conn);
 	}
 }
-
-?>

@@ -1,0 +1,21 @@
+<html>
+<body>
+<div style="max-width:1100px;margin:auto;font-family:sans-serif">
+    <p><strong>if 1.4</strong></p>
+    <p>[[if? &amp;is=`[*id*]:is:4:or:[*parent*]:in:5,6,5,7,8,9` &amp;then=`[[if? &amp;is=`0||is||0` &amp;then=`true` &amp;else=`false` &amp;separator=`||`]]` &amp;else=`@TPL:else`]]<br />[[if? &amp;is=`[*id*]:is:1:or:[*id*]:is:2:and:[*parent*]:is:5:or:[*parent*]:in:2,3,4` &amp;then=`true` &amp;else=`false`]]</p>
+    <p>All expressions are logically (....:or:is:.... ) :and: (...:!empty:.....)<br />expression and divides the condition into 2 parts, which in the end compared to the true</p>
+    <p><strong>Example 1</strong><br />Output action is necessary only in the parent ID = 5<br />[[if? &amp;is=`[*parent*]:is:5` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Example 2</strong><br />Output action is necessary only in the parent ID = 5 or template IDs in (7,8,9)<br />[[if? &amp;is=`[*parent*]:is:5:or:[*template*]:in:7,8,9` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Example 3</strong><br />Output action is necessary only in the parent ID = 5 and only the resource with the template ID = 7<br />[[if? &amp;is=`[*parent*]:is:5:and:[*template*]:is:7` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Example 4</strong><br />Output action is necessary only in the parent ID = 5 and (only in the template ID = 7 or in other templates but with TV `new` = 1<br />[[if? &amp;is=`[*parent*]:is:5:and:[*template*]:is:7:or:[*new*]:is:1` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Example 5</strong><br />Output share for the goods with a price in the range of &gt; 300 &lt;= 700<br />[[if? &amp;is=`[*price*]:gt:300:and:[*price*]:lte:700` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Example 6</strong><br />Output in the multiplicity of records Ditto 3<br />[[if? &amp;is=`[+ditto_iteration+]:%:3` &amp;then=`true` &amp;else=`false`]]</p>
+    <p><strong>Example 7</strong><br />Output in the multiplicity of records Ditto 3 but by multiplying the<br />[[if? &amp;is=`[+ditto_iteration+]*2:%:3` &amp;then=`true` &amp;else=`false` &amp;math=`on`]]</p>
+    <p><strong>Example 8</strong><br />Print the value of the mathematical expression<br />[[if? &amp;is=`[+ditto_iteration+]*2` &amp;math=`on`]]</p>
+    <p><strong>Example 9</strong><br />Output if pagetitle contains "string"<br />[[if? &amp;is=`[*pagetitle*]:contains:string` &amp;then=`@TPL:chunk-name`]]</p>
+    <p><strong>Operator:</strong><br />(is,=) , (not,!=) , (gt,&gt;) , (lt,&lt;) , (gte,&gt;=) , (&lt;=,lte) , (isempty,empty) , (notempty,!empty)<br />(null, is_null) , (in_array, inarray, in) , (not_in,!in) , (contains)</p>
+    <p><strong>More Examples</strong><br />[[if? &amp;is=`eval('global $iteration;$iteration++;echo $iteration;')` &amp;math=`on`]] // iteration in Ditto,Wayfinder and others<br />[[if? &amp;is=`:is:` &amp;then=`@eval: echo str_replace('&lt;br/&gt;','','[*pagetitle*]');`]] // 'our&lt;br/&gt;works' -&gt; 'our works'<br />[[if? &amp;is=`:is:` &amp;then=`@eval: echo number_format('[*price*]', 2, ',', ' ');`]] // '1000000,89' -&gt; '1 000 000,89'</p>
+    <p><strong>Custom Conditions</strong><br />See assets/snippets/if/custom/if.fileExists.php for more information.<br/><br/>[[if? &amp;is=`[*filename*]:fileExists` &amp;custom=`fileExists` &amp;then=`@TPL:chunk-name`]]</p>
+</div>
+</body>
+</html>

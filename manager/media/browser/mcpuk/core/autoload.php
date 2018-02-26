@@ -25,11 +25,11 @@ include_once('../../../includes/config.inc.php');
 include_once('../../../includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
-startCMSSession(); 
+startCMSSession();
 if(!isset($_SESSION['mgrValidated'])) {
-        die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+        die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-define('IN_MANAGER_MODE', "true");
+define('IN_MANAGER_MODE', true);
 $modx->getSettings();
 
 $manager_language = $modx->config['manager_language'];
@@ -71,7 +71,7 @@ function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
             'image_imagick' => '/../lib/class_image_imagick.php',
             'image_gmagick' => '/../lib/class_image_gmagick.php',
             'image_gd' => '/../lib/class_image_gd.php',
-            'fastImage' => '/../lib/class_fastImage.php'  
+            'fastImage' => '/../lib/class_fastImage.php'
         );
     }
     if (isset($classes[$class])) {
@@ -219,5 +219,3 @@ new SessionSaveHandler();
 
 
 // PUT YOUR ADDITIONAL CODE HERE
-
-?>

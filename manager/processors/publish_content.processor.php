@@ -1,10 +1,12 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id'])? (int)$_REQUEST['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
@@ -55,10 +57,6 @@ $_SESSION['itemname'] = $content['pagetitle'];
 // empty cache
 $modx->clearCache('full');
 
-//$header="Location: index.php?r=1&id=$id&a=7";
-
-// webber
-$header="Location: index.php?r=1&id=$pid&a=7&dv=1".$add_path;
+$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
 
 header($header);
-?>

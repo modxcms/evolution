@@ -462,7 +462,7 @@ $_lang["login_captcha_message"] = 'Моля, въведете Кода за Си
 $_lang["login_homepage"] = 'Вход в начална страница';
 $_lang["login_homepage_message"] = 'Въведете ID на Документа, който желаете да изпратите на потребителя след влизането му. <b>ЗАБЕЛЕЖКА: Уверете се, че ID, което сте въвели принадлежи на съществуващ документ, както и че той е публикуван и достъпен за този потребител!</b>';
 $_lang["login_message"] = 'Моля, въведете Потребителско име и Парола. Внимание - големи и малки букви са от значение!';
-$_lang["logo_slogan"] = 'MODX Content Manager - \nCreate and do more with less';
+$_lang["logo_slogan"] = 'EVO Content Manager - \nCreate and do more with less';
 $_lang["logout"] = 'Изход';
 $_lang["long_title"] = 'Дълго заглавие';
 $_lang["mail_check_timeperiod_message"] = 'На колко време да се проверява пощата на Мениджъра, в секунди.';
@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = 'Създаване/редактиране на плъгин';
 $_lang["preview"] = 'Преглед';
-$_lang["preview_msg"] = 'Това е преглед на последно съхранените промени. Щракнете <a href="#" onclick="saveRefreshPreview();">Съхранение и Обновяване</a> на текущите промени';
+$_lang["preview_msg"] = 'Това е преглед на последно съхранените промени. Щракнете <a href="javascript:;" onclick="saveRefreshPreview();">Съхранение и Обновяване</a> на текущите промени';
 $_lang["preview_resource"] = 'Преглед на документ';
 $_lang["private"] = 'Частен';
 $_lang["public"] = 'Публичен';
@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Преглед на екрана с приключи�
 $_lang["role_bk_manager"] = 'Използване на Мениджъра за съхранение';
 $_lang["role_cache_refresh"] = 'Изчистване на кеша на сайта';
 $_lang["role_change_password"] = 'Смяна на паролата';
+$_lang["role_change_resourcetype"] = 'Промяна Вид документ';
 $_lang["role_chunk_management"] = 'Управление на чънковете';
 $_lang["role_config_management"] = 'Управление на конфигурацията';
 $_lang["role_content_management"] = 'Управление на съдържанието';
@@ -838,10 +839,10 @@ $_lang["role_view_logs"] = 'Преглед на системните логов�
 $_lang["role_view_unpublished"] = 'Преглед на непубликувани документи';
 $_lang["role_web_access_persmissions"] = 'Права за уеб достъп';
 $_lang["role_web_user_management"] = 'Управление на уеб потребителите';
-$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/evocms-release-news';
 $_lang["rss_url_news_message"] = 'Въвеждане на URL адрес за MODX Новините.';
 $_lang["rss_url_news_title"] = 'RSS на Новините';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/evocms-security-news';
 $_lang["rss_url_security_message"] = 'Въвеждане на URL адрес за MODX Сигурността.';
 $_lang["rss_url_security_title"] = 'RSS на Сигурността';
 $_lang["run_module"] = 'Стартиране на модул';
@@ -1154,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'При активиране РНх плъгин, вградени филтри са изключени по подразбиране';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1167,7 +1169,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Връщане на тези данни';
+$_lang["bkmgr_restore_confirm"] = 'Сигурни ли сте, че искате да се върнете архивиране\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';

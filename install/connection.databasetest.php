@@ -20,14 +20,6 @@ if (!$conn = mysqli_connect($host, $uid, $pwd)) {
     $output .= '<span id="database_fail" style="color:#FF0000;">'.$_lang['status_failed'].'</span>';
 }
 else {
-    if (version_compare(phpversion(), "5.3") < 0) {
-        if(get_magic_quotes_gpc()) {
-            $_POST['database_name'] = stripslashes($_POST['database_name']);
-            $_POST['tableprefix'] = stripslashes($_POST['tableprefix']);
-            $_POST['database_collation'] = stripslashes($_POST['database_collation']);
-            $_POST['database_connection_method'] = stripslashes($_POST['database_connection_method']);
-        }
-    }
     $database_name = mysqli_real_escape_string($conn, $_POST['database_name']);
     $database_name = str_replace("`", "", $database_name);
     $tableprefix = mysqli_real_escape_string($conn, $_POST['tableprefix']);
@@ -58,4 +50,3 @@ else {
 }
 
 echo $output;
-?>

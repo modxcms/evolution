@@ -401,7 +401,7 @@ $.ddMM.mm_ddMultipleFields = {
 		//Специально для полей, содержащих изображения необходимо инициализировать
 		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');
 		
-		if (!returnOnly) $fieldBlock.appendTo($("tbody",_ddField));
+		if (!returnOnly) $fieldBlock.appendTo($(">tbody",_ddField));
 		_this.numberingRows(id);
 		return $fieldBlock;
 	},
@@ -410,7 +410,7 @@ $.ddMM.mm_ddMultipleFields = {
 		var _inst = this.instances[id];
 		if (_inst.options && _inst.options.showIndex===false) return;
 		var _ddField = $('#' + id + 'ddMultipleField');
-		$("tbody tr",_ddField).each(function(){
+		$(">tbody tr",_ddField).each(function(){
 			var t=$(this);
 			t.find("td:first *:not(:has(*))").html(t.index()+1);
 		})
@@ -477,7 +477,7 @@ $.ddMM.mm_ddMultipleFields = {
 			//Вешаем на кнопку создание дубликата текущей строки
 		var _this = this;
 		var fieldBlocks = $('#' + id + 'ddMultipleField .ddFieldBlock');
-		var fieldBlocksLen = fieldBlocks.size();
+		var fieldBlocksLen = fieldBlocks.length;
 		var _inst = _this.instances[id];
 		return $('<input/>').attr({
 			"class": "ddCloneButton",
@@ -527,11 +527,6 @@ $.ddMM.mm_ddMultipleFields = {
 	makeDate: function(value, title, $fieldCol){
 		//name нужен для DatePicker`а
 		var $field = $('<input type="text" title="' + title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(value).appendTo($fieldCol);
-
-		new DatePicker($field.get(0), {
-			'yearOffset': $.ddMM.config.datepicker_offset,
-			'format': $.ddMM.config.datetime_format + ' hh:mm:00'
-		});
 		
 		return $field;
 	},
@@ -546,10 +541,10 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		$('<div class="ddFieldCol_edit"><a class="false" href="#">' + $.ddMM.lang.edit + '</a></div>').appendTo($fieldCol).find('a').on('click', function(event){
 			_this.richtextWindow = window.open($.ddMM.config.site_url + $.ddMM.urls.mm + 'widgets/ddmultiplefields/richtext/index.php', 'mm_ddMultipleFields_richtext', new Array(
-				'width=600',
-				'height=550',
-				'left=' + (($.ddTools.windowWidth - 600) / 2),
-				'top=' + (($.ddTools.windowHeight - 550) / 2),
+				'width=700',
+				'height=600',
+				'left=' + (($.ddTools.windowWidth - 700) / 2),
+				'top=' + (($.ddTools.windowHeight - 600) / 2),
 				'menubar=no',
 				'toolbar=no',
 				'location=no',

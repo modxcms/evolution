@@ -1,38 +1,43 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('change_password')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 ?>
 
-<h1><?php echo $_lang['change_password']?></h1>
-<div id="actions">
-	<ul class="actionButtons">
-		<li><a href="javascript:void(0)" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?></a></li>
-	  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-	</ul>
-</div>
-<div class="section">
-<div class="sectionHeader"><?php echo $_lang['change_password']?></div>
-<div class="sectionBody">
-	<form action="index.php?a=34" method="post" name="userform">
-	<input type="hidden" name="id" value="<?php echo $_GET['id']?>" />
+<script type="text/javascript">
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			document.userform.save.click();
+		},
+		cancel: function() {
+			documentDirty = false;
+			document.location.href = 'index.php?a=2';
+		}
+	}
+</script>
 
-	<p><?php echo $_lang['change_password_message']?></p>
+<h1><?php echo $_style['page_change_password']; echo $_lang['change_password'] ?></h1>
 
-	<table border="0" cellspacing="0" cellpadding="4">
-	<tr>
-		<td><?php echo $_lang['change_password_new']?>:</td>
-		<td>&nbsp;</td>
-		<td><input type="password" name="pass1" class="inputBox" style="width:150px" value=""></td>
-	</tr><tr>
-		<td><?php echo $_lang['change_password_confirm']?>:</td>
-		<td>&nbsp;</td>
-		<td><input type="password" name="pass2" class="inputBox" style="width:150px" value=""></td>
-	</tr>
-	</table>
+<?php echo $_style['actionbuttons']['dynamic']['save'] ?>
 
-	<input type="submit" name="save" style="display:none">
-</form>
-</div>
+<div class="tab-page">
+	<div class="contaier container-body">
+		<form action="index.php?a=34" method="post" name="userform">
+			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<p><?php echo $_lang['change_password_message'] ?></p>
+			<div class="row form-row">
+				<div class="col-sm-3 col-md-2"><?php echo $_lang['change_password_new'] ?>:</div>
+				<div class="col-sm-4 col-md-3"><input type="password" name="pass1" class="form-control" value="" /></div>
+			</div>
+			<div class="row form-row">
+				<div class="col-sm-3 col-md-2"><?php echo $_lang['change_password_confirm'] ?>:</div>
+				<div class="col-sm-4 col-md-3"><input type="password" name="pass2" class="form-control" value="" /></div>
+			</div>
+			<input type="submit" name="save" style="display:none">
+		</form>
+	</div>
 </div>

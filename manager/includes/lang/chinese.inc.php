@@ -675,7 +675,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = '建立/编辑插件';
 $_lang["preview"] = '预览';
-$_lang["preview_msg"] = '这个是你最后一次改动的预览. 点击这里 <a href="#" onclick="saveRefreshPreview();">保存刷新</a>你现在的页面';
+$_lang["preview_msg"] = '这个是你最后一次改动的预览. 点击这里 <a href="javascript:;" onclick="saveRefreshPreview();">保存刷新</a>你现在的页面';
 $_lang["preview_resource"] = 'Preview Resource';
 $_lang["private"] = '私有的';
 $_lang["public"] = '公共的';
@@ -763,6 +763,7 @@ $_lang["role_actionok"] = '查看完成行为';
 $_lang["role_bk_manager"] = '使用备份管理';
 $_lang["role_cache_refresh"] = '清空站点cache';
 $_lang["role_change_password"] = '改变密码';
+$_lang["role_change_resourcetype"] = '更改資源類型';
 $_lang["role_chunk_management"] = 'Chunk management';
 $_lang["role_config_management"] = '管理配置';
 $_lang["role_content_management"] = '管理内容';
@@ -839,10 +840,10 @@ $_lang["role_view_logs"] = '查看系统日志';
 $_lang["role_view_unpublished"] = '查看未发布文档';
 $_lang["role_web_access_persmissions"] = '网站访问许可';
 $_lang["role_web_user_management"] = '网站用户管理';
-$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/evocms-release-news';
 $_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/evocms-security-news';
 $_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = '运行模块';
@@ -1155,6 +1156,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Database tables could be restored by SQL:</p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1169,6 +1171,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved in and
 $_lang["bkmgr_snapshot_submit"] = 'Add Snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshots';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_confirm"] = 'Are you sure you want to revert backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshots available';
 
 $_lang["files.dynamic.php1"] = 'New Text File';

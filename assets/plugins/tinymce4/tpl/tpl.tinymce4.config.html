@@ -1,0 +1,26 @@
+<script>
+    var config_[+editorKey+]_[+themeKey+] = {
+[+configString+],
+        file_browser_callback: function (field, url, type, win) {
+            if (type == 'image') {
+                type = 'images';
+            }
+            if (type == 'file') {
+                type = 'files';
+            }
+            tinyMCE.activeEditor.windowManager.open({
+                file: '[+site_manager_url+]media/browser/[+which_browser+]/browse.php?opener=tinymce4&field=' + field + '&type=' + type,
+                title: 'KCFinder',
+                width: 840,
+                height: 600,
+                inline: true,
+                close_previous: false
+            }, {
+                window: win,
+                input: field
+            });
+            return false;
+        }
+        [+pp.customParams+]
+    }
+</script>

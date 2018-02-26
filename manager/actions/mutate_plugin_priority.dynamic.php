@@ -1,166 +1,125 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('save_plugin')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+if (!$modx->hasPermission('save_plugin')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
 
-if(isset($_POST['listSubmitted'])) {
-    $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
-	$tbl = $modx->getFullTableName('site_plugin_events');
+if (isset($_POST['listSubmitted'])) {
+    $updateMsg .= '<span class="text-success" id="updated">' . $_lang['sort_updated'] . '</span>';
+    $tbl = $modx->getFullTableName('site_plugin_events');
 
-	foreach ($_POST as $listName=>$listValue) {
-        if ($listName == 'listSubmitted') continue;
-    	$orderArray = explode(',', $listValue);
-    	$listName = ltrim($listName, 'list_');
-    	if (count($orderArray) > 0) {
-	    	foreach($orderArray as $key => $item) {
-	    		if ($item == '') continue;
-	    		$pluginId = ltrim($item, 'item_');
-	    		$modx->db->update(array('priority'=>$key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
-	    	}
-    	}
+    foreach ($_POST as $listName => $listValue) {
+        if ($listName == 'listSubmitted') {
+            continue;
+        }
+        $orderArray = explode(',', $listValue);
+        $listName = ltrim($listName, 'list_');
+        if (count($orderArray) > 0) {
+            foreach ($orderArray as $key => $item) {
+                if ($item == '') {
+                    continue;
+                }
+                $pluginId = ltrim($item, 'item_');
+                $modx->db->update(array('priority' => $key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
+            }
+        }
     }
     // empty cache
     $modx->clearCache('full');
 }
 
-$rs = $modx->db->select(
-	"sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled",
-	$modx->getFullTableName('system_eventnames')." sysevt
-		INNER JOIN ".$modx->getFullTableName('site_plugin_events')." pe ON pe.evtid = sysevt.id
-		INNER JOIN ".$modx->getFullTableName('site_plugins')." plugs ON plugs.id = pe.pluginid",
-	'',
-	'sysevt.name,pe.priority'
-	);
+$rs = $modx->db->select("sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled", $modx->getFullTableName('system_eventnames') . " sysevt
+		INNER JOIN " . $modx->getFullTableName('site_plugin_events') . " pe ON pe.evtid = sysevt.id
+		INNER JOIN " . $modx->getFullTableName('site_plugins') . " plugs ON plugs.id = pe.pluginid", '', 'sysevt.name,pe.priority');
 
 $insideUl = 0;
 $preEvt = '';
-$evtLists = '';
+$sortableList = '';
 $sortables = array();
-    while ($plugins = $modx->db->getRow($rs)) {
-        if ($preEvt !== $plugins['evtid']) {
-            $sortables[] = $plugins['evtid'];
-            $evtLists .= $insideUl? '</ul><br />': '';
-            $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
-            $insideUl = 1;
-        }
-        $evtLists .= '<li id="item_'.$plugins['pluginid'].'"'.($plugins['disabled']?' style="color:#AAA"':'').'>'.$plugins['name'].($plugins['disabled']?' (hide)':'').'</li>';
-        $preEvt = $plugins['evtid'];
+
+while ($plugins = $modx->db->getRow($rs)) {
+    if ($preEvt !== $plugins['evtid']) {
+        $sortables[] = $plugins['evtid'];
+        $sortableList .= $insideUl ? '</ul></div>' : '';
+        $sortableList .= '<div class="form-group clearfix"><strong>' . $plugins['evtname'] . '</strong><ul id="' . $plugins['evtid'] . '" class="sortableList">';
+        $insideUl = 1;
     }
-    if ($insideUl) $evtLists .= '</ul>';
-
-
-$header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-	<title>MODX</title>
-	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-	<link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
-	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
-
-	<style type="text/css">
-        .topdiv {
-			border: 0;
-		}
-
-		.subdiv {
-			border: 0;
-		}
-
-		li {list-style:none;}
-
-		.tplbutton {
-			text-align: right;
-		}
-
-		ul.sortableList {
-			padding-left: 20px;
-			margin: 0px;
-			width: 300px;
-			font-family: Arial, sans-serif;
-		}
-
-		ul.sortableList li {
-            font-weight: bold;
-            cursor: move;
-            color: #444444;
-            padding: 3px 5px;
-            margin: 4px 0px;
-            border: 1px solid #CCCCCC;
-			background-image: url("'.$_style['fade'].'");
-			background-repeat: repeat-x;
-		}
-
-        #sortableListForm {display:none;}
-	</style>
-    <script type="text/javascript">
-        function save() {
-        	setTimeout("document.sortableListForm.submit()",1000);
-    	}
-    		
-    	window.addEvent(\'domready\', function() {';
-foreach ($sortables as $list) {
-	
-	$header .= 'new Sortables($(\''.$list.'\'), {
-	               initialize: function() {
-                        $$(\'#'.$list.' li\').each(function(el, i)
-                        {
-                            el.setStyle(\'padding\', \'3px 5px\');
-                            el.setStyle(\'font-weight\', \'bold\');
-                            el.setStyle(\'width\', \'300px\');
-                            el.setStyle(\'background-color\', \'#ccc\');
-                            el.setStyle(\'cursor\', \'move\');
-                        });
-                    }
-                    ,onComplete: function() {
-                       	var id = null;
-                       	var list = this.serialize(function(el) {
-                            id = el.getParent().id;
-                           	return el.id;
-                        });
-                       $(\'list_\' + id).value = list;
-                    }
-                });' ."\n";
+    $sortableList .= '<li id="item_' . $plugins['pluginid'] . '"' . ($plugins['disabled'] ? ' class="disabledPlugin"' : '') . '><i class="fa fa-plug"></i> ' . $plugins['name'] . ($plugins['disabled'] ? ' (hide)' : '') . '</li>';
+    $preEvt = $plugins['evtid'];
 }
-	$header .= '});
-</script>
-</head>
-<body ondragstart="return false;">
-
-<h1>'.$_lang['plugin_priority_title'].'</h1>
-
-<div id="actions"
-   <ul class="actionButtons">
-       	<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
-	</ul>
-</div>
-
-<div class="section">
-<div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
-<div class="sectionBody">
-<p>'.$_lang['plugin_priority_instructions'].'</p>
-';
-
-echo $header;
-
-echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...<br /><br /> </span>";
-
-echo $evtLists;
-
-echo '<form action="" method="post" name="sortableListForm" style="display: none;">
-            <input type="hidden" name="listSubmitted" value="true" />';
-            
-foreach ($sortables as $list) {
-	echo '<input type="text" id="list_'.$list.'" name="list_'.$list.'" value="" />';
+if ($insideUl) {
+    $sortableList .= '</ul></div>';
 }
-            
-echo '	</form>
-	</div>
-</div>
-';
+
+require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 ?>
+
+<script type="text/javascript">
+
+    var actions = {
+        save: function() {
+            var el = document.getElementById('updated');
+            if (el) {
+                el.style.display = 'none';
+            }
+            el = document.getElementById('updating');
+            if (el) {
+                el.style.display = 'block';
+            }
+            setTimeout('document.sortableListForm.submit()', 1000);
+        }, cancel: function() {
+            window.location.href = 'index.php?a=76';
+        },
+    };
+
+</script>
+
+<h1>
+    <i class="fa fa-sort-numeric-asc"></i><?= $_lang['plugin_priority_title'] ?>
+</h1>
+
+<?= $_style['actionbuttons']['dynamic']['save'] ?>
+
+<div class="tab-page">
+    <div class="container container-body">
+        <b><?= $_lang['plugin_priority'] ?></b>
+        <p><?= $_lang['plugin_priority_instructions'] ?></p>
+
+        <?= $updateMsg ?>
+
+        <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
+
+        <?= $sortableList ?>
+    </div>
+</div>
+
+<form action="" method="post" name="sortableListForm">
+    <input type="hidden" name="listSubmitted" value="true" />
+    <?php
+    foreach ($sortables as $list) {
+    ?>
+    <input type="hidden" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
+    <?php
+    }
+    ?>
+</form>
+
+<script type="text/javascript">
+
+    evo.sortable('.sortableList > li', {
+        complete: function(a) {
+            let list = [];
+            for (let i = 0; i < a.parentNode.childNodes.length; i++) {
+                list.push(a.parentNode.childNodes[i].id);
+            }
+            document.getElementById('list_' + a.parentNode.id).value = list.join(',');
+        },
+    });
+
+</script>

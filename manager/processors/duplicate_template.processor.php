@@ -1,13 +1,21 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('new_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
+
+// count duplicates
+$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$count = $modx->db->getRecordCount($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "templatename LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+if($count>=1) $count = ' '.($count+1);
+else $count = '';
 
 // duplicate template
 $newid = $modx->db->insert(
@@ -17,7 +25,7 @@ $newid = $modx->db->insert(
 		'content'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_templates'), // Insert into
-	"CONCAT('Duplicate of ',templatename) AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
+	"CONCAT(templatename, ' {$_lang['duplicated_el_suffix']}{$count}') AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
 
 // duplicate TV values
 $modx->db->insert(
@@ -35,4 +43,3 @@ $_SESSION['itemname'] = $name;
 // finish duplicating - redirect to new template
 $header="Location: index.php?r=2&a=16&id=$newid";
 header($header);
-?>

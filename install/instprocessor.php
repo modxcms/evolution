@@ -9,6 +9,7 @@ global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;
 global $moduleSQLDataFile;
+global $moduleSQLResetFile;
 
 global $moduleChunks;
 global $moduleTemplates;
@@ -27,7 +28,7 @@ $create = false;
 
 echo "<p>{$_lang['setup_database']}</p>\n";
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 //if ($installMode == 1) {
@@ -47,6 +48,7 @@ $adminname = $_POST['cmsadmin'];
 $adminemail = $_POST['cmsadminemail'];
 $adminpass = $_POST['cmspassword'];
 $managerlanguage = $_POST['managerlanguage'];
+$custom_placeholders = array();
 //}
 
 // set session name variable
@@ -71,10 +73,10 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 // connect to the database
 echo "<p>". $_lang['setup_database_create_connection'];
 if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
-    echo "<span class=\"notok\">".$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
+    echo '<span class="notok">'.$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
     return;
 } else {
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // select database
@@ -85,7 +87,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
 } else {
 	if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
     mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // try to create the database
@@ -93,19 +95,19 @@ if ($create) {
     echo "<p>".$_lang['setup_database_creation']. str_replace("`", "", $dbase) . "`: ";
     //	if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-        echo "<span class=\"notok\">".$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
+        echo '<span class="notok">'.$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
         $errors += 1;
 ?>
         <pre>
-        database charset = <?php $database_charset ?>
-        database collation = <?php $database_collation ?>
+        database charset = <?php echo $database_charset ?>
+        database collation = <?php echo $database_collation ?>
         </pre>
         <p><?php echo $_lang['setup_database_creation_failed_note2']?></p>
 <?php
 
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -113,23 +115,29 @@ if ($create) {
 if ($installMode == 0) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
     if (@ $rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
+        echo '<span class="notok">' . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
 if(!function_exists('parseProperties')) {
-    // parses a resource property string and returns the result as an array
-    // duplicate of method in documentParser class
+    /**
+     * parses a resource property string and returns the result as an array
+     * duplicate of method in documentParser class
+     *
+     * @param string $propertyString
+     * @return array
+     */
     function parseProperties($propertyString) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
+            $countParams = count($tmpParams);
+            for ($x= 0; $x < $countParams; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
                     $pTmp= explode("=", $tmpParams[$x]);
                     $pvTmp= explode(";", trim($pTmp[1]));
@@ -201,7 +209,7 @@ if ($moduleSQLBaseFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -214,125 +222,21 @@ if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
 
 // write the config.inc.php file if new installation
 echo "<p>" . $_lang['writing_config_file'];
-$configString = '<?php
-/**
- * MODX Configuration file
- */
-$database_type = \'mysqli\';
-$database_server = \'' . $database_server . '\';
-$database_user = \'' . mysqli_real_escape_string($conn, $database_user) . '\';
-$database_password = \'' . mysqli_real_escape_string($conn, $database_password) . '\';
-$database_connection_charset = \'' . $database_connection_charset . '\';
-$database_connection_method = \'' . $database_connection_method . '\';
-$dbase = \'`' . str_replace("`", "", $dbase) . '`\';
-$table_prefix = \'' . $table_prefix . '\';
 
-$lastInstallTime = '.time().';
+$confph = array();
+$confph['database_server']    = $database_server;
+$confph['user_name']          = mysqli_real_escape_string($conn, $database_user);
+$confph['password']           = mysqli_real_escape_string($conn, $database_password);
+$confph['connection_charset'] = $database_connection_charset;
+$confph['connection_method']  = $database_connection_method;
+$confph['dbase']              = str_replace('`', '', $dbase);
+$confph['table_prefix']       = $table_prefix;
+$confph['lastInstallTime']    = time();
+$confph['site_sessionname']   = $site_sessionname;
 
-$site_sessionname = \'' . $site_sessionname . '\';
-$https_port = \'443\';
+$configString = file_get_contents('config.inc.tpl');
+$configString = parse($configString, $confph);
 
-if(!defined(\'MGR_DIR\'))
-'.$mgrdir.'
-
-// automatically assign base_path and base_url
-if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
-    $sapi= \'undefined\';
-    if (!strstr($_SERVER[\'PHP_SELF\'], $_SERVER[\'SCRIPT_NAME\']) && ($sapi= @ php_sapi_name()) == \'cgi\') {
-        $script_name= $_SERVER[\'PHP_SELF\'];
-    } else {
-        $script_name= $_SERVER[\'SCRIPT_NAME\'];
-    }
-    $script_name = str_replace("\\\\", "/", dirname($script_name));
-    if(strpos($script_name,MGR_DIR)!==false)
-        $separator = MGR_DIR;
-    elseif(strpos($script_name,\'/assets/\')!==false)
-        $separator = \'assets\';
-    else $separator = \'\';
-
-    if($separator!==\'\') $a= explode(\'/\'.$separator, $script_name);
-    else $a = array($script_name);
-
-    if (count($a) > 1)
-        array_pop($a);
-    $url= implode($separator, $a);
-    reset($a);
-    $a= explode(MGR_DIR, str_replace("\\\\", "/", dirname(__FILE__)));
-    if (count($a) > 1)
-        array_pop($a);
-    $pth= implode(MGR_DIR, $a);
-    unset ($a);
-    $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
-    $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
-}
-
-// check for valid hostnames
-$site_hostname = str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $_SERVER[\'HTTP_HOST\']);
-if (!defined(\'MODX_SITE_HOSTNAMES\')) {
-	$site_hostnames_path = $base_path . \'assets/cache/siteHostnames.php\';
-	if (is_file($site_hostnames_path)) {
-		include_once($site_hostnames_path);
-	} else {
-		define(\'MODX_SITE_HOSTNAMES\', \'\');
-	}
-}
-$site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
-if (!empty($site_hostnames[0]) && !in_array($site_hostname, $site_hostnames)) {
-    $site_hostname = $site_hostnames[0];
-}
-
-// assign site_url
-$site_url= ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'https://\' : \'http://\';
-$site_url .= $site_hostname;
-if ($_SERVER[\'SERVER_PORT\'] != 80)
-    $site_url= str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $site_url); // remove port from HTTP_HOST  
-$site_url .= ($_SERVER[\'SERVER_PORT\'] == 80 || (isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'\' : \':\' . $_SERVER[\'SERVER_PORT\'];
-$site_url .= $base_url;
-
-if (!defined(\'MODX_BASE_PATH\')) define(\'MODX_BASE_PATH\', $base_path);
-if (!defined(\'MODX_BASE_URL\')) define(\'MODX_BASE_URL\', $base_url);
-if (!defined(\'MODX_SITE_URL\')) define(\'MODX_SITE_URL\', $site_url);
-if (!defined(\'MODX_MANAGER_PATH\')) define(\'MODX_MANAGER_PATH\', $base_path.MGR_DIR.\'/\');
-if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.MGR_DIR.\'/\');
-
-// start cms session
-if(!function_exists(\'startCMSSession\')) {
-    function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
-      if (isset($storage[$session_name]) && $storage[$session_name] === \'\')
-      {
-        unset($storage[$session_name]);
-      }
-    }
-    function removeInvalidCmsSessionIds($session_name) {
-        // session ids is invalid iff it is empty string
-        // storage priorioty can see in PHP source ext/session/session.c
-        removeInvalidCmsSessionFromStorage($_COOKIE, $session_name);
-        removeInvalidCmsSessionFromStorage($_GET, $session_name);
-        removeInvalidCmsSessionFromStorage($_POST, $session_name);
-    }
-    function startCMSSession(){
-        global $site_sessionname, $https_port;
-        session_name($site_sessionname);
-        removeInvalidCmsSessionIds($site_sessionname);
-        session_start();
-        $cookieExpiration= 0;
-        if (isset ($_SESSION[\'mgrValidated\']) || isset ($_SESSION[\'webValidated\'])) {
-            $contextKey= isset ($_SESSION[\'mgrValidated\']) ? \'mgr\' : \'web\';
-            if (isset ($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']) && is_numeric($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\'])) {
-                $cookieLifetime= intval($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']);
-            }
-            if ($cookieLifetime) {
-                $cookieExpiration= time() + $cookieLifetime;
-            }
-            if (!isset($_SESSION[\'modx.session.created.time\'])) {
-              $_SESSION[\'modx.session.created.time\'] = time();
-            }
-        }
-        $secure = ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port);
-        setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
-    }
-}';
-$configString .= "\n?>";
 $filename = '../'.MGR_DIR.'/includes/config.inc.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
@@ -349,7 +253,7 @@ if (@ fwrite($handle, $configString) === FALSE) {
 $chmodSuccess = @chmod($filename, 0404);
 
 if ($configFileFailed == true) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+    echo '<span class="notok">' . $_lang['failed'] . "</span></p>";
     $errors += 1;
 ?>
     <p><?php echo $_lang['cant_write_config_file']?><span class="mono"><?php echo MGR_DIR; ?>/includes/config.inc.php</span></p>
@@ -360,13 +264,13 @@ if ($configFileFailed == true) {
 <?php
     return;
 } else {
-    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
-// generate new site_id and set manager theme to MODxRE
+// generate new site_id and set manager theme to default
 if ($installMode == 0) {
     $siteid = uniqid('');
-    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxRE')");
+    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')");
 } else {
     // update site_id if missing
     $ds = mysqli_query($sqlParser->conn, "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'");
@@ -380,6 +284,26 @@ if ($installMode == 0) {
     }
 }
 
+// Reset database for installation of demo-site
+if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
+	echo "<p>" . $_lang['resetting_database'];
+	$sqlParser->process($moduleSQLResetFile);
+	// display database results
+	if ($sqlParser->installFailed == true) {
+		$errors += 1;
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
+		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+		}
+		echo "</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
+		return;
+	} else {
+		echo '<span class="ok">'.$_lang['ok']."</span></p>";
+	}
+}
 
 // Install Templates
 if (isset ($_POST['template']) || $installData) {
@@ -393,6 +317,7 @@ if (isset ($_POST['template']) || $installData) {
             $category = mysqli_real_escape_string($conn, $moduleTemplate[4]);
             $locked = mysqli_real_escape_string($conn, $moduleTemplate[5]);
             $filecontent = $moduleTemplate[3];
+            $save_sql_id_as = $moduleTemplate[7]; // Nessecary for demo-site
             if (!file_exists($filecontent)) {
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             } else {
@@ -407,10 +332,18 @@ if (isset ($_POST['template']) || $installData) {
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'");
 
                 if (mysqli_num_rows($rs)) {
-                    if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name';")) {
+                    if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name' LIMIT 1;")) {
                         $errors += 1;
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
+                    }
+                    if(!is_null($save_sql_id_as)) {
+                        $sql_id = @mysqli_insert_id($sqlParser->conn);
+                        if(!$sql_id) {
+                            $idQuery = mysqli_fetch_assoc(mysqli_query($sqlParser->conn, "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name' LIMIT 1;"));
+                            $sql_id = $idQuery['id'];
+                        }
+                        $custom_placeholders[$save_sql_id_as] = $sql_id;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
@@ -419,6 +352,7 @@ if (isset ($_POST['template']) || $installData) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
                     }
+                    if(!is_null($save_sql_id_as)) $custom_placeholders[$save_sql_id_as] = @mysqli_insert_id($sqlParser->conn);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -503,6 +437,7 @@ if (isset ($_POST['chunk']) || $installData) {
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
+        $count_new_name = 0;
         if($installSample || in_array($k, $selChunks)) {
 
             $name = mysqli_real_escape_string($conn, $moduleChunk[0]);
@@ -561,7 +496,7 @@ if (isset ($_POST['module']) || $installData) {
             $name = mysqli_real_escape_string($conn, $moduleModule[0]);
             $desc = mysqli_real_escape_string($conn, $moduleModule[1]);
             $filecontent = $moduleModule[2];
-            $properties = mysqli_real_escape_string($conn, $moduleModule[3]);
+            $properties = $moduleModule[3];
             $guid = mysqli_real_escape_string($conn, $moduleModule[4]);
             $shared = mysqli_real_escape_string($conn, $moduleModule[5]);
             $category = mysqli_real_escape_string($conn, $moduleModule[6]);
@@ -573,19 +508,19 @@ if (isset ($_POST['module']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
+                // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
                 $module = mysqli_real_escape_string($conn, $module);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
                     $row = mysqli_fetch_assoc($rs);
-                    $props = propUpdate($properties,mysqli_real_escape_string($conn, $row['properties']));
+                    $props = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                     if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
+                    $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
                     if (!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', $category);")) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
@@ -607,7 +542,7 @@ if (isset ($_POST['plugin']) || $installData) {
             $name = mysqli_real_escape_string($conn, $modulePlugin[0]);
             $desc = mysqli_real_escape_string($conn, $modulePlugin[1]);
             $filecontent = $modulePlugin[2];
-            $properties = mysqli_real_escape_string($conn, $modulePlugin[3]);
+            $properties = $modulePlugin[3];
             $events = explode(",", $modulePlugin[4]);
             $guid = mysqli_real_escape_string($conn, $modulePlugin[5]);
             $category = mysqli_real_escape_string($conn, $modulePlugin[6]);
@@ -631,14 +566,13 @@ if (isset ($_POST['plugin']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
+                $plugin = removeDocblock($plugin, 'plugin');
                 $plugin = mysqli_real_escape_string($conn, $plugin);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
                     $insert = true;
                     while($row = mysqli_fetch_assoc($rs)) {
-                        $props = propUpdate($properties,mysqli_real_escape_string($conn, $row['properties']));
+                        $props = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                         if($row['description'] == $desc){
                             if (! mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id={$row['id']};")) {
                                 echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
@@ -653,6 +587,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
                     }
                     if($insert === true) {
+                        $properties = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                         if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
                             echo "<p>".mysqli_error($sqlParser->conn)."</p>";
                             return;
@@ -660,6 +595,7 @@ if (isset ($_POST['plugin']) || $installData) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
+                    $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
                     if (!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category,disabled) VALUES('$name','$desc','$plugin','$properties','$guid',$category,$disabled);")) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
@@ -693,7 +629,7 @@ if (isset ($_POST['snippet']) || $installData) {
             $name = mysqli_real_escape_string($conn, $moduleSnippet[0]);
             $desc = mysqli_real_escape_string($conn, $moduleSnippet[1]);
             $filecontent = $moduleSnippet[2];
-            $properties = mysqli_real_escape_string($conn, $moduleSnippet[3]);
+            $properties = $moduleSnippet[3];
             $category = mysqli_real_escape_string($conn, $moduleSnippet[4]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -703,19 +639,19 @@ if (isset ($_POST['snippet']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
-                // remove installer docblock
-                $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
+                $snippet = removeDocblock($snippet, 'snippet');
                 $snippet = mysqli_real_escape_string($conn, $snippet);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
                     $row = mysqli_fetch_assoc($rs);
-                    $props = propUpdate($properties,mysqli_real_escape_string($conn, $row['properties']));
+                    $props = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                     if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
+                    $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
                     if (!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
@@ -727,7 +663,7 @@ if (isset ($_POST['snippet']) || $installData) {
     }
 }
 
-// install data
+// Install demo-site
 if ($installData && $moduleSQLDataFile) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($moduleSQLDataFile);
@@ -744,7 +680,14 @@ if ($installData && $moduleSQLDataFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'", $sqlParser->prefix);
+        $rs = mysqli_query($sqlParser->conn, $sql);
+        if(mysqli_num_rows($rs)) {
+            $row = mysqli_fetch_assoc($rs);
+            $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix, $row['id']);
+            mysqli_query($sqlParser->conn, $sql);
+        }
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -842,37 +785,104 @@ if ($installMode == 0) {
     echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
 
-// Property Update function
+/**
+ * Property Update function
+ *
+ * @param string $new
+ * @param string $old
+ * @return string
+ */
 function propUpdate($new,$old){
-    // Split properties up into arrays
-    $returnArr = array();
-    $newArr = explode("&",$new);
-    $oldArr = explode("&",$old);
-
-    foreach ($newArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
+    $newArr = parseProperties($new);
+    $oldArr = parseProperties($old);
+    foreach ($oldArr as $k => $v){
+        if (isset($v['0']['options'])){
+            $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
         }
     }
-    foreach ($oldArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
-        }
-    }
-
-    // Make unique array
-    $returnArr = array_unique($returnArr);
-
-    // Build new string for new properties value
-    foreach ($returnArr as $k => $v) {
-        $return .= "&$k=$v ";
-    }
-
+    $return = $oldArr + $newArr;
+    $return = json_encode($return, JSON_UNESCAPED_UNICODE);
+    $return = ($return !== '[]') ? $return : '';
     return $return;
 }
 
+/**
+ * @param string $propertyString
+ * @param bool|mixed $json
+ * @return string
+ */
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
+    $propertyString = str_replace('} {', ',', $propertyString );
+
+    if(empty($propertyString)) return array();
+    if($propertyString=='{}' || $propertyString=='[]') return array();
+
+    $jsonFormat = isJson($propertyString, true);
+    $property = array();
+    // old format
+    if ( $jsonFormat === false) {
+        $props= explode('&', $propertyString);
+        foreach ($props as $prop) {
+            $prop = trim($prop);
+            if($prop === '') {
+                continue;
+            }
+
+            $arr = explode(';', $prop);
+            if( ! is_array($arr)) {
+                $arr = array();
+            }
+            $key = explode('=', isset($arr[0]) ? $arr[0] : '');
+            if( ! is_array($key) || empty($key[0])) {
+                continue;
+            }
+
+            $property[$key[0]]['0']['label'] = isset($key[1]) ? trim($key[1]) : '';
+            $property[$key[0]]['0']['type'] = isset($arr[1]) ? trim($arr[1]) : '';
+            switch ($property[$key[0]]['0']['type']) {
+                case 'list':
+                case 'list-multi':
+                case 'checkbox':
+                case 'radio':
+                case 'menu':
+                    $property[$key[0]]['0']['value'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    $property[$key[0]]['0']['options'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    break;
+                default:
+                    $property[$key[0]]['0']['value'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[2]) ? trim($arr[2]) : '';
+            }
+            $property[$key[0]]['0']['desc'] = '';
+
+        }
+    // new json-format
+    } else if(!empty($jsonFormat)){
+        $property = $jsonFormat;
+    }
+    if ($json) {
+        $property = json_encode($property, JSON_UNESCAPED_UNICODE);
+    }
+    $property = ($property !== '[]') ? $property : '';
+    return $property;
+}
+
+/**
+ * @param string $string
+ * @param bool $returnData
+ * @return bool|mixed
+ */
+function isJson($string, $returnData=false) {
+    $data = json_decode($string, true);
+    return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+}
+
+/**
+ * @param string|int $category
+ * @param SqlParser $sqlParser
+ * @return int
+ */
 function getCreateDbCategory($category, $sqlParser) {
     $dbase = $sqlParser->dbname;
     $dbase = '`' . trim($dbase,'`') . '`';
@@ -892,4 +902,39 @@ function getCreateDbCategory($category, $sqlParser) {
         }
     }
     return $category_id;
+}
+
+/**
+ * Remove installer Docblock only from components using plugin FileSource / fileBinding
+ *
+ * @param string $code
+ * @param string $type
+ * @return string
+ */
+function removeDocblock($code, $type) {
+
+    $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
+
+    // Procedure taken from plugin.filesource.php
+    switch($type) {
+        case 'snippet':
+            $elm_name = 'snippets';
+            $include = 'return require';
+            $count = 47;
+            break;
+
+        case 'plugin':
+            $elm_name = 'plugins';
+            $include = 'require';
+            $count = 39;
+            break;
+
+        default:
+            return $cleaned;
+    };
+    if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
+        return $cleaned;
+
+    // fileBinding not found - return code incl docblock
+    return $code;
 }

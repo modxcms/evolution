@@ -1,5 +1,3 @@
-<?php
-
 /** This file is part of KCFinder project
   *
   *      @desc Miscellaneous functionality
@@ -10,7 +8,7 @@
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
-  */?>
+  */
 
 browser.drag = function(ev, dd) {
     var top = dd.offsetY,

@@ -1,9 +1,9 @@
 <?php
 /**
  * ManagerManager plugin
- * @version 0.6.2 (2014-05-28)
+ * @version 0.6.3 (2018-01-22)
  * 
- * @for MODx Evolution 1.0.x
+ * @for Evo 1.4.x
  * 
  * @desc Used to manipulate the display of document fields in the manager.
  * 
@@ -19,7 +19,7 @@
  */
 
 global $mm_version;
-$mm_version = '0.6.2';
+$mm_version = '0.6.3';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 
@@ -31,7 +31,7 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
 	'jq' => array(
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.min.js',
 		'name' => 'jquery',
 		'version' => '1.9.1'
 	),

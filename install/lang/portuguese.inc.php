@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author davaeron
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language English
  * @package modx
@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = 'Checando se o diretórios <span class=\"
 $_lang["checking_if_config_exist_and_writable"] = 'Checando se o arquivo <span class=\"mono\">manager/includes/config.inc.php</span> existe e está liberado pra escrita: ';
 $_lang["checking_if_export_exists"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> está liberado pra escrita: ';
-$_lang["checking_if_images_exist"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> existir: ';
-$_lang["checking_if_images_writable"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> está liberado pra escrita: ';
+$_lang["checking_if_images_exist"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> existir: ';
+$_lang["checking_if_images_writable"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> está liberado pra escrita: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checando versão do PHP: ';
@@ -117,7 +117,7 @@ $_lang["modules"] = 'Modulos';
 $_lang["modx_footer1"] = '&copy; 2005-[+current_year+] o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODX é licensiado pela GNU GPL.';
 $_lang["modx_footer2"] = 'MODX é um software livre.  Nós indicamos o uso do MODX do modo que for mais conveniente para você. Apenas, sempre que redistribuir versões modificadas do MODX incluir uma cópia original do código-fonte gratuitamente!';
 $_lang["modx_install"] = 'MODX &raquo; Instalação';
-$_lang["modx_requires_php"] = ', e o MODX requer PHP 5.3 ou mais recente';
+$_lang["modx_requires_php"] = ', e o MODX requer PHP [+min_version+] ou mais recente';
 $_lang["mysql_5051"] = 'Aviso : Versão do MySQL no servidor é 5.0.51';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'falhou!';
 $_lang["status_failed_could_not_create_database"] = 'falhou - não foi possível criar a base de dadose';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'falhou - o table prefix já está em uso!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'sucesso - Base de Dados selecionada';
 $_lang["status_passed_database_created"] = 'sucesso - Base de Dados criada';
 $_lang["status_passed_server"] = 'sucesso - collations agora disponíveis';

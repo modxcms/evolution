@@ -1,0 +1,20 @@
+<form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
+    <input name="<?php echo $view->get('request_key'); ?>[categorize][submit]" type="hidden" value="1" />
+    <div class="form-group">
+        <a class="btn btn-success btn-sm" id="categorize-submit" href="javascript:;" onclick="document.getElementById('categorize-form').submit();return false;"><i class="fa fa-save"></i> <?php echo $view->txt('cm_save_categorization'); ?></a>
+        <a class="btn btn-secondary btn-sm" href="javascript:;" id="categorize-help" onclick="document.querySelector('#categorize-info').classList.toggle('show')"><i class="fa fa-question-circle"></i> <?php echo $_lang['help']; ?></a>
+    </div>
+    <p id="categorize-info" class="element-edit-message">
+        Categorize elements easily by dragging them into categories.
+    </p>
+    <div style="margin-bottom: 10px;">
+        <?php $view->renderView('chunks/categorize/elements_select'); ?>
+    </div>
+    <div id="categorize-elements" class="grid hidden clearfix">
+        <div class="gridItem">
+            <div id="categorize-workbench" style="position:relative"></div>
+            <div id="log"></div>
+        </div>
+    </div>
+    <fieldset id="categorize-formfields" class="hidden"></fieldset>
+</form>

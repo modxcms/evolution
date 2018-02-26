@@ -6,10 +6,9 @@ class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
-	var $dbVersion;
     var $connection_charset, $connection_method;
 
-	function SqlParser( ) {
+	public function __construct() {
 		$adminname='';
 		$adminemail=''; 
 		$adminpass='';		
@@ -73,7 +72,7 @@ class SqlParser {
 			if (preg_match('/^\#/', $sql_do)) continue;
 
 			// strip out comments and \n for mysql 3.x
-			if ($this->dbVersion <4.0) {
+			if ( floatval( $modx->db->getVersion() ) < 4.0 ) {
 				$sql_do = preg_replace("~COMMENT.*[^']?'.*[^']?'~","",$sql_do);
 				$sql_do = str_replace('\r', "", $sql_do);
 				$sql_do = str_replace('\n', "", $sql_do);
@@ -81,16 +80,7 @@ class SqlParser {
 
 
 			$num = $num + 1;
-			if ($sql_do) $modx->db->query($sql_do);
-			if(mysql_error()) {
-				// Ignore duplicate and drop errors - Raymond
-				if ($this->ignoreDuplicateErrors){
-					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
-				}
-				// End Ignore duplicate
-				$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);
-				$this->installFailed = true;
-			}
+			if ($sql_do) $modx->db->query($sql_do, false);
 		}
 		
 		

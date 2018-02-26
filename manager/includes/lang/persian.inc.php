@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'مرور صفحه ی عملکردهای تکمیل ش
 $_lang["role_bk_manager"] = 'استفاده از مدیریت پشتیبانی داده';
 $_lang["role_cache_refresh"] = 'تخلیه ی کامل ذخیره یا کش وبگاه';
 $_lang["role_change_password"] = 'تغییر کلمه ی عبور';
+$_lang["role_change_resourcetype"] = 'تغییر نوع منبع';
 $_lang["role_chunk_management"] = 'مدیریت چانک';
 $_lang["role_config_management"] = 'مدیریت تنظیمات';
 $_lang["role_content_management"] = 'مدیریت محتوا';
@@ -838,10 +839,10 @@ $_lang["role_view_logs"] = 'مرور ثبت یا لاگ سیستم';
 $_lang["role_view_unpublished"] = 'مرور پرونده های منتشر نشده';
 $_lang["role_web_access_persmissions"] = 'سطوح دسترسی وب';
 $_lang["role_web_user_management"] = 'مدیریت کاربر وب';
-$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/evocms-release-news';
 $_lang["rss_url_news_message"] = 'URL منبع آخرین اخبار مادایکس.';
 $_lang["rss_url_news_title"] = 'RSS اخبار';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/evocms-security-news';
 $_lang["rss_url_security_message"] = 'URL منبع اخبار امنیتی.';
 $_lang["rss_url_security_title"] = 'RSS امنیتی';
 $_lang["run_module"] = 'اجرای ماژول';
@@ -1154,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1168,6 +1170,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and re
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_confirm"] = 'Are you sure you want to revert backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';

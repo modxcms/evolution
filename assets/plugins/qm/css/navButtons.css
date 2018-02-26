@@ -1,0 +1,91 @@
+/* Action buttons based Manager nav */
+#qmEditor, #qmEditorClosed {padding:0!important; border: 0;}
+#qmEditor ul 
+{ /* .actionButtons --> #qmEditor */
+	margin: 0;
+	padding: 0px 10px 0px 0px;
+	list-style-type: none;
+}
+
+#qmEditor li 
+{
+	margin: 0 1px 0 0;
+	float: left;
+	height: 34px;
+	line-height: 30px;
+    padding: 4px 3px 4px 2px;
+    list-style-type: none;
+    width: auto;
+    background: none;
+    border: 0;
+    list-style-image:none;
+}
+#qmEditor li:hover {background-color: rgba(255,255,255,.1);}
+  
+
+.qmId, #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+{
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: none;
+  background: transparent;
+  filter: none;
+  padding: 0px 3px;
+  margin: 0 1px;
+  color: #bbb !important;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
+  transition: none;
+}
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+{
+  padding: 7px 9px;
+}
+.qm-tv a, .qm-save a, .qm-cancel a
+{
+  padding: 9px 10px;
+}
+#qmEditor .qmButton.qmClose
+{
+    padding: 3px 10px 6px 10px;
+    color: #dedede!important;
+    background-color: Transparent;
+    border:none;
+}
+#qmEditor .qmButton.qmClose:hover
+{
+    color: #fff!important;
+    background-color: Transparent;
+}
+#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover
+{
+  text-decoration: none;
+  color: #fff!important;
+}
+.qm-cancel a:hover, .qm-save a:hover    
+{
+  color: #FFF !important;
+}
+a.colorbox.cboxElement{color:#FFF!important; background-color:rgba(57, 81, 93, 0.8);border-color: rgba(255, 255, 255, 0.8)}
+a.colorbox.cboxElement:hover{color:#FFF!important; background-color:rgba(57, 81, 93,.4); border-color: rgba(255, 255, 255, 1)}
+
+
+#qmEditor .qmButton:active 
+{
+  border-color: #3189ba;
+}
+
+.qm-save a
+{
+  color: #fff;
+  border-color: #32AB9A;
+  background-color: #32AB9A;
+  background-image: linear-gradient(#32AB9A, #00948E);
+}
+.qm-save a:hover 
+{
+  background-color: #2b9385;
+  background-image: linear-gradient(#2b9385, #007571);
+  border-color: #2b9385;
+}
+#qmEditor i.fa {font-size:24px;}

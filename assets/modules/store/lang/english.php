@@ -35,6 +35,12 @@ $_Lang['s2_1_up'] = "Descending";
 $_Lang['s2_2_down'] = "Ascending";
 $_Lang['search'] = "Search in category: ";
 
+/* Installation by file-upload */
+$_Lang['install_file'] = "Install by file";
+$_Lang['choose_file_msg'] = "Choose a file to upload and install";
+$_Lang['install_file_btn'] = "Install";
+$_Lang['install_file_success'] = "Installation successful";
+
 /* faq */
 $_Lang['faq'] = '
 <li><a href="http://extras.evolution-cms.com/faq/whatfor.html" target="_blank">Why do you need repository</a></li>

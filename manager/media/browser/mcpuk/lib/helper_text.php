@@ -75,5 +75,3 @@ class text {
         return $code;
     }
 }
-
-?>

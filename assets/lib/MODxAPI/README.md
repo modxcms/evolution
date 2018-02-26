@@ -24,7 +24,6 @@ if(!isset($modx->doc)){
 ```
 * После чего создается сниппет допустим DocInfo
 ```php
-<?php
 $id = isset($id) ? (int)$id : $modx->documentObject['id'];
 $field = isset($field) ? (string)$field : 'id';
 if($field == 'id'){

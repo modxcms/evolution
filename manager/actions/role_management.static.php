@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('edit_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -7,31 +9,57 @@ if(!$modx->hasPermission('edit_user')) {
 ?>
 <!-- User Roles -->
 
-<h1><?php echo $_lang['role_management_title']; ?></h1>
-<div class="section">
-<div class="sectionBody">
-<p><?php echo $_lang['role_management_msg']; ?></p>
+<h1>
+	<i class="fa fa-legal"></i><?= $_lang['role_management_title'] ?>
+</h1>
 
-<ul class="actionButtons">
-	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
-</ul>
-<?php
-
-$rs = $modx->db->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
-$limit = $modx->db->getRecordCount($rs);
-if($limit<1){
-	echo "<p>The request returned no roles!</p>";
-} else {
-	echo "<ul>";
-	while ($row = $modx->db->getRow($rs)) {
-		if($row['id']==1) {
-			echo '<li><span style="width: 200px"><i>' . $row['name'] . '</i></span> - <i>' . $_lang['administrator_role_message'] . '</i></li>';
-		} else {
-			echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=35">' . $row['name'] . '</a></span> - ' . $row['description'] . '</li>';
-		}
-	}
-	echo "</ul>";
-}
-?>
-</div>
+<div class="tab-page">
+	<div class="container container-body">
+		<div class="form-group"><?= $_lang['role_management_msg'] ?> <a class="btn btn-secondary btn-sm" href="index.php?a=38"><i class="<?= $_style["actions_new"] ?> hide4desktop"></i> <?= $_lang['new_role'] ?></a></div>
+		<div class="form-group">
+			<?php
+			$rs = $modx->db->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
+			$limit = $modx->db->getRecordCount($rs);
+			if($limit < 1) {
+				?>
+				<p><?= $_lang["no_records_found"] ?></p>
+				<?php
+			} else {
+				?>
+				<div class="row">
+					<div class="table-responsive">
+						<table class="table data">
+							<thead>
+								<tr>
+									<td><?= $_lang['role'] ?></td>
+									<td><?= $_lang["description"] ?></td>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							while($row = $modx->db->getRow($rs)) {
+								if($row['id'] == 1) {
+									?>
+									<tr class="text-muted disabled">
+										<td><b><?= $row['name'] ?></b></td>
+										<td><span><?= $_lang['administrator_role_message'] ?></span></td>
+									</tr>
+									<?php
+								} else {
+									?>
+									<tr>
+										<td><a class="text-primary" href="index.php?id=<?= $row['id'] ?>&a=35"><?= $row['name'] ?></a></td>
+										<td><?= $row['description'] ?></td>
+									</tr>
+									<?php
+								}
+							}
+							?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			<?php } ?>
+		</div>
+	</div>
 </div>

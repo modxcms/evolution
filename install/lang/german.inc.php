@@ -4,8 +4,8 @@
  *
  * @author Marc Hinse
  * @author Bogdan Günther
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language German
  * @package modx
@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Überprüfe ob die Ordner <span class="m
 $_lang["checking_if_config_exist_and_writable"] = 'Überprüfe ob die Datei <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 $_lang["checking_if_export_exists"] = 'Überprüfe ob der Ordner <span class="mono">/assets/export</span> existiert: ';
 $_lang["checking_if_export_writable"] = 'Überprüfe ob der Ordner <span class="mono">assets/export</span> beschreibbar ist: ';
-$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
-$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
+$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
+$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
 $_lang["checking_mysql_strict_mode"] = 'Überprüfe MySQL Strict-Mode: ';
 $_lang["checking_mysql_version"] = 'Überprüfe MySQL-Version: ';
 $_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';
@@ -51,7 +51,7 @@ $_lang["checking_registerglobals"] = 'Überprüfe ob PHP register_globals ausges
 $_lang["checking_registerglobals_note"] = 'Diese Konfiguration macht Ihre Website angreifbarer für Cross Site Scripting (XSS) Attacken. Sie sollten mit Ihrem Provider sprechen, ob diese Einstellung geändert werden kann. Es gibt normalerweise drei Möglichkeiten: Ändern der globalen php.ini, Hinzufügen von Regeln zu der .htaccess-Datei im Root-Verzeichnis der MODX-Installation oder durch Hinzufügen einer angepassten php.ini in jedem Verzeichnis Ihrer MODX-Installation. Sie können MODX trotzdem installieren, aber Sie müssen sich den möglichen Sicherheitsrisiken bewusst sein.';
 $_lang["checking_sessions"] = 'Überprüfe ob die Sessions sauber definiert sind: ';
 $_lang["checking_table_prefix"] = 'Überprüfe Tabellen-Präfix `';
-$_lang["choose_language"] = 'Sprache wählen';
+$_lang["choose_language"] = 'Sprache auswählen';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitte eine leere Datei <span class="mono">config.inc.php</span> im Ordner <span class="mono">/[+MGR_DIR+]/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
 $_lang["connection_screen_collation"] = 'Kollation:';
@@ -115,10 +115,10 @@ $_lang["installing_demo_site"] = 'Installiere Beispiel-Website: ';
 $_lang["language_code"] = 'de';
 $_lang["loading"] = 'Laden …';
 $_lang["modules"] = 'Module';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist lizensiert gemäß GNU GPL.';
 $_lang["modx_footer2"] = 'MODX ist freie Software.  Wir ermutigen Sie, kreativ zu sein und MODX so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quellcodes und der Weiterverbreitung der modifizierten MODX-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
-$_lang["modx_requires_php"] = ', und MODx benötigt PHP 5.3 oder höher';
+$_lang["modx_requires_php"] = ', und MODx benötigt PHP [+min_version+] oder höher';
 $_lang["mysql_5051"] = 'Warnung: MySQL-Server-Version ist 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL-Server-Version ist 5.0.51 hat bekannte Bugs. Es wird empfohlen ein Update auf eine neuere Version durchzuführen, bevor Sie fortfahren.';
 $_lang["mysql_version_is"] = ' Ihre MySQL-Version ist: ';
@@ -133,11 +133,14 @@ $_lang["please_correct_error"] = '. Bitte beheben Sie den Fehler';
 $_lang["please_correct_errors"] = '. Bitte beheben Sie die Fehler';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Prüfung vor der Installation';
+$_lang["recommend_collation"] = 'utf8_general_ci';
+$_lang["recommend_collations_order"] = 'utf8mb4_unicode_ci,utf8mb4_general_ci,utf8_unicode_ci,utf8_general_ci,utf8mb4_bin,utf8_bin,utf8mb4_unicode_520_ci,utf8_unicode_520_ci,utf8_general_mysql500_ci';
 $_lang["recommend_setting_change_title"] = 'Empfohlene Änderung der Konfiguration';
 $_lang["recommend_setting_change_validate_referer_confirmation"] = 'Einstellung aktivieren: <em>HTTP_REFERER-Header überprüfen?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Ihre Seite überprüft momentan nicht die HTTP_REFERER von eingehenden Requests. Wir empfehlen dringend, diese Einstellung vorzunehmen, um das Risiko von CSFR-Attacken (Cross Site Request Forgery) zu reduzieren.';
 $_lang["remove_install_folder_auto"] = 'Installationsordner löschen<br />(Dies erfordert die entsprechenden Zugriffsrechte um den Ordner löschen zu können).';
 $_lang["remove_install_folder_manual"] = 'Bitte denken Sie daran den Ordner <b>install</b> zu löschen bevor Sie sich im MODX-Manager anmelden.';
+$_lang["resetting_database"] = 'Datenbank wurde für die Demoseite zurückgesetzt:';
 $_lang["retry"] = 'Erneut versuchen';
 $_lang["running_database_updates"] = 'Führe Datenbank-Updates durch: ';
 $_lang["sample_web_site"] = 'Beispiel-Website';
@@ -166,6 +169,7 @@ $_lang["status_failed"] = 'fehlgeschlagen!';
 $_lang["status_failed_could_not_create_database"] = 'fehlgeschlagen – konnte Datenbank nicht erstellen';
 $_lang["status_failed_database_collation_does_not_match"] = 'fehlgeschlagen – Unterschied in der Datenbank-Kollation; benutzen Sie SET NAMES oder wählen Sie %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fehlgeschlagen – Tabellen-Präfix bereits verwendet!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'In Ordnung – Datenbank ausgewählt';
 $_lang["status_passed_database_created"] = 'In Ordnung – Datenbank erstellt';
 $_lang["status_passed_server"] = 'In Ordung – Kollationen sind nun auswählbar';

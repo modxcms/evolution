@@ -686,14 +686,14 @@ class browser extends uploader {
             return "{$file['name']}: " . $this->label("Cannot move uploaded file to target folder.");
         } elseif (function_exists('chmod'))
             chmod($target, $this->config['filePerms']);
-        
+
         $this->modx->invokeEvent('OnFileBrowserUpload',array(
             'filepath'=>realpath($dir),
             'filename'=>str_replace("/","",str_replace($dir,"",realpath($target)))
         ));
-        
+
         $this->makeThumb($target);
-        
+
         return "/" . basename($target);
     }
 
@@ -724,8 +724,8 @@ class browser extends uploader {
 				$size = @getimagesize($file);
 				if (is_array($size) && count($size)) {
 					$thumb_file = "$thumbDir/" . basename($file);
-					if (!is_file($thumb_file))
-						$this->makeThumb($file, false);
+					if (!is_file($thumb_file) || filemtime($file) > filemtime($thumb_file))
+						$this->makeThumb($file);
 					$smallThumb =
 						($size[0] <= $this->config['thumbWidth']) &&
 						($size[1] <= $this->config['thumbHeight']) &&
@@ -884,5 +884,3 @@ class browser extends uploader {
         }
     }
 }
-
-?>

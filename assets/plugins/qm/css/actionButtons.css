@@ -1,0 +1,86 @@
+/* Action buttons based on MODxRE Theme */
+
+#qmEditor ul 
+{ /* .actionButtons --> #qmEditor */
+	margin: 0;
+	padding: 0px 10px 0px 0px;
+	list-style-type: none;
+}
+
+#qmEditor li 
+{
+	margin: 0 8px 0 0;
+	float: left;
+	height: 13px;
+	line-height: 15px;
+	padding: 0;
+    list-style-type: none;
+    height: auto;
+    width: auto;
+    background: none;
+    border: 0;
+    list-style-image:none;
+}
+
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+{
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: none;
+  background: #fff;
+  filter: none;
+  color: #555;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E4E4E4;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
+  transition: none;
+}
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+{
+  padding: 4px 10px;
+}
+.qm-tv a, .qm-save a, .qm-cancel a
+{
+  padding: 9px 10px;
+}
+#qmEditor .qmButton.qmClose
+{
+    padding: 3px 15px 6px 10px;
+    color: #dedede;
+    background-color: Transparent;
+    border:none;
+}
+#qmEditor .qmButton.qmClose:hover
+{
+    color: #fff;
+    background-color: Transparent;
+}
+a.colorbox.cboxElement:hover, #qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover
+{
+  background: none;
+  filter: none;
+  color: #292b2c; background-color: #e6e6e6; border-color: #adadad
+  transition: none;
+  text-decoration: none;
+}
+ .qm-cancel a:hover, .qm-save a:hover    
+{
+  color: #FFF !important;
+}
+#qmEditor .qmButton:active 
+{
+  background-color: #3189ba;
+  border-color: #3189ba;
+}
+
+#qmEditor .qmButton.primary, .qm-save a
+{
+  color: #fff; background-color: #0275d8; border-color: #0275d8
+}
+#qmEditor .qmButton.primary:hover, .qm-save a:hover 
+{
+  background-color: #025aa5; border-color: #01549b
+}
+#qmEditor i.fa {font-size:24px;}

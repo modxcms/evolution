@@ -52,8 +52,7 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 				//break;
 				
 				case 'which_editor':
-					$output .= '$j("select#which_editor").prev("span.warning").hide();'."\n";
-					$output .= '$j("select#which_editor").hide();'."\n";
+					$output .= '$j("select#which_editor").parent("label").hide();'."\n";
 				break;
 				
 				case 'content':
@@ -61,6 +60,8 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 					$output .= '$j("#sectionContentHeader, #sectionContentBody").hide();'."\n";
 					//For 1.0.1
 					$output .= '$j("#ta").parent("div").parent("div").hide().prev("div").hide();'."\n";
+					//For 1.4
+					$output .= '$j("#ta").parent("div").parent("div").parent("td").hide();'."\n";
 				break;
 				
 				case 'pub_date':

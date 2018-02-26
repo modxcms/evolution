@@ -1,11 +1,11 @@
 <?php
 /**
- * MODX Installer
+ * EVO Installer
  */
-// do a little bit of environment cleanup if possible
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
+
+$autoloader = realpath(__DIR__.'/../vendor/autoload.php');
+if (file_exists($autoloader) && is_readable($autoloader)) {
+    include_once($autoloader);
 }
 
 $self = 'install/index.php';
@@ -31,11 +31,12 @@ session_start();
 $_SESSION['test'] = 1;
 install_sessionCheck();
 
-$moduleName = "MODX";
+$moduleName = "EVO";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
+$moduleSQLResetFile = "setup.data.reset.sql";
 
 $moduleChunks = array (); // chunks - array : name, description, type - 0:file or 1:content, file or content
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content
@@ -51,19 +52,13 @@ $errors= 0;
 // get post back status
 $isPostBack = (count($_POST));
 
-$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
-
-// make sure they agree to the license
-#if (!in_array($action, array ('language', 'welcome', 'connection', 'options', 'license', 'mode', 'summary'))) {
-#    if (!isset ($_POST['chkagree'])) $action= 'license';
-#}
-
 $ph = ph();
 $ph = array_merge($ph,$_lang);
 $ph['install_language'] = $install_language;
 
 ob_start();
-if (!@include_once("action.{$action}.php")) {
+$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
+if (!@include_once("actions/action_{$action}.php")) {
     die ("Invalid install action attempted. [action={$action}]");
 }
 $ph['content'] = ob_get_contents();

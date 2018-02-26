@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author MODX Team
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Bulgarian
  * @package modx
@@ -117,7 +117,7 @@ $_lang["modules"] = 'Модули';
 $_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) проект. Всички права запазени. MODX е лицензиран под GNU GPL.';
 $_lang["modx_footer2"] = 'MODX е свободен софтуер.  Бъдете креативни и свикнете да работите с MODX. Имайте предвид, че ако решите да правите промени и да предоставяте копие от вашия модифициран MODX, изходния код трябва да е свободен!';
 $_lang["modx_install"] = 'MODX &raquo; Инсталиране';
-$_lang["modx_requires_php"] = ', и MODX върви на PHP 5.3 или по-висока';
+$_lang["modx_requires_php"] = ', и MODX върви на PHP [+min_version+] или по-висока';
 $_lang["mysql_5051"] = ' MySQL версията на сървъра е 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Има известни спорни въпроси с MySQL 5.0.51. Препоръчително е да обновите преди да продължите.';
 $_lang["mysql_version_is"] = ' MySQL версията ви е: ';
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'Неуспешно!';
 $_lang["status_failed_could_not_create_database"] = 'Неуспешно - не може да бъде създадена БД';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'Неуспешно - префикса на таблицата вече се използва!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'Успешно - БД е избрана';
 $_lang["status_passed_database_created"] = 'Успешно - БД е създадена';
 $_lang["status_passed_server"] = 'Успешно - колациите са достъпни';

@@ -1,0 +1,280 @@
+@charset "utf-8";
+
+/**
+    $Id: module.css 3 2009-10-07 20:55:13Z stefan $
+----------------------------------------------------------------------------- */
+
+h1 span.version {
+  font-size: .6em;
+  margin-left: 3px;
+}
+
+div#section-body-categories .hidden {
+  display: none;
+}
+
+/* FONT AWESOME */
+
+div#section-body-categories div.messages ul li:before,
+div#section-body-categories div.ok:before,
+div#section-body-categories div.nok,
+div#section-body-categories .ajax_loading {
+    font-family: 'FontAwesome';
+    font-style: normal;
+    display: inline;
+    text-decoration: inherit;
+    color:#fff;
+    font-weight:normal;
+    float:left;
+    margin-right:5px;
+}
+
+div#section-body-categories div.messages {
+  max-height: 100px;
+  overflow: auto;
+  padding: 6px;
+  padding-left: 0px;
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #748394
+}
+
+div#section-body-categories div.messages ul {
+  margin: 0;
+  padding: 0
+}
+
+div#section-body-categories div.messages ul li {
+  list-style-type: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 5px;
+}
+
+div#section-body-categories div.messages ul li:before {
+    content: "\f00c";
+    color:#3697CD;
+}
+
+div#section-body-categories div.messages ul li span.highlight {
+  background-color: #f5f5f5;
+  color: #222;
+  padding: 1px 3px;
+}
+
+div#section-body-categories fieldset {
+  margin: 0;
+  padding: 10px 0;
+}
+
+div#section-body-categories table tr td.gridHeader {
+  padding: 3px 5px;
+}
+
+div#section-body-categories table tr td.submit {
+  border-top: 1px solid #748394;
+  padding: 5px;
+  text-align: right;
+}
+
+div#section-body-categories table tr td.assigned {
+  width: 150px;
+}
+
+div#section-body-categories table tr td.assigned img {
+  cursor: help
+}
+
+div#section-body-categories table tr td.assigned div.assigned_elements {
+  display: none;
+}
+
+
+/* Translations */
+
+div#section-body-categories table tr td.native {
+  width: 30%
+}
+
+div#section-body-categories table tr td.translation input {
+  width: 90%;
+}
+
+div#section-body-categories table tr td.translation textarea {
+  background-color: #fff;
+  height: 3em;
+  width: 95%;
+}
+
+
+/* Edit */
+
+.assigned-tip {
+  z-index: 13000;
+}
+
+.assigned-tip,
+div#section-body-categories div.assigned_elements {
+  background-color: #fff;
+  border: 1px solid #748394;
+  padding: 10px 10px;
+}
+
+.assigned-tip h4,
+div#section-body-categories div.assigned_elements h4 {
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.assigned-tip ul,
+div#section-body-categories div.assigned_elements ul {
+  margin-left:1.5em;
+}
+
+.assigned-tip ul li,
+div#section-body-categories div.assigned_elements ul li { }
+
+.assigned-tip p.no_assigned_elements,
+div#section-body-categories div.assigned_elements p.no_assigned_elements {
+  color: #aaa;
+}
+
+div#section-body-categories tr.move td {
+  background-color: #3697CD;
+  color: #fff;
+}
+
+div#section-body-categories table#category-edit td.input input {
+  width: 90%;
+}
+
+div#section-body-categories table#category-edit td.delete a img {
+  vertical-align: middle;
+}
+
+div#section-body-categories table#category-edit td.delete a {
+  display: inline-block;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  background: #32AB9A;
+  padding: 4px 6px;
+  white-space: nowrap;
+  text-decoration: none;
+  border: none;
+  border-radius: 3px !important;
+  outline: none;
+}
+
+div#section-body-categories table#category-edit td.delete a:hover {
+  color: #fff;
+  background: #35baa8;
+}
+
+
+/* Categorization */
+
+div#section-body-categories div#categorize-workbench {
+  min-height: 50px;
+}
+
+div#section-body-categories div.drag {
+  padding: 2px 5px;
+  background-color:#3697CD;
+  cursor: move;
+  position: relative;
+  float: left;
+  margin: 4px 0 4px 8px;
+}
+
+div#section-body-categories div.drag h4 {
+  margin: 3px;
+  font-size: 1em;
+  color:#fff;
+}
+
+div#section-body-categories div.drag p {
+  display: none;
+  position: absolute;
+  z-index: 10000;
+  width: 250px;
+  background-color: #fff;
+  top: 30px;
+  left: 30px;
+  padding: 5px;
+  border: 1px solid #88939E;
+}
+
+div#section-body-categories div.drag:hover p {
+  /*display: block;*/
+}
+
+div#section-body-categories div.uncategorized_elements,
+div#section-body-categories div.drop {
+  width: 32%;
+  float: left;
+  min-height: 50px;
+  margin: .5%;
+  border: 1px solid #C3C3C3;
+  background-color:#fff;
+  position: relative;
+  padding-bottom:4px;
+}
+
+div#section-body-categories div.uncategorized_elements {
+  width: auto;
+}
+
+div#section-body-categories div.uncategorized_elements h2,
+div#section-body-categories div.drop h2 {
+  padding: 5px 7px 6px 7px;
+  color: #3697CD;
+  border-bottom:2px solid #3697CD;
+  margin:0 4px 4px 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+div#section-body-categories div {
+    
+}
+div#section-body-categories div.over {
+  background-color: rgba(54,151,204,.2);
+}
+
+div#section-body-categories .ajax_loading:before {
+    content: "\f110";
+    color:#3697CD;
+}
+
+div#section-body-categories div.ok {
+    background-color: #37bdf4;
+    
+}
+div#section-body-categories div.ok:before {
+    content: "\f00c";
+}
+
+div#section-body-categories div.nok {
+    content: "\f06a";
+    color:#C9302C;
+}
+
+/* Avoid jumping when Tooltip is longer than viewport-bottom */
+html { overflow-y:scroll; }
+.grid { background-color: #f2f2f2; }
+.gridItem { background-color: transparent; }
+.drag h4 { float:left; }
+.inputBox { width:100%; }
+#categories-sort tr:hover td { color:#fff; background-color: #37bdf4; }
+td.assigned > button.btn { display:inline-block; width:auto; border-radius:3px !important; color:#fff; padding: 4px 6px; font-size:12px; }
+td.assigned > button.btn.collapsed {  background-color:#3697CD; }
+td.assigned > button.btn,
+td.assigned > button.btn:hover { background-color:#37bdf4; }
+
+/* FIX BOOTSTRAP H1 BACK TO MODxRE2 */
+/*h1 {
+    font-size: 1.8em;
+    line-height: 35px;
+    margin: 15px 15px 10px 15px;
+}*/
+
+#category-edit table.grid .gridAltItem { background-color:#fff; }
