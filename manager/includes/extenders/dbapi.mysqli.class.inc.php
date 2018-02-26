@@ -49,7 +49,7 @@ class DBAPI
      */
     public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $uid = $uid ? $uid : $this->config['user'];
         $pwd = $pwd ? $pwd : $this->config['pass'];
         $host = $host ? $host : $this->config['host'];
@@ -144,7 +144,7 @@ class DBAPI
      */
     public function query($sql, $watchError = true)
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         if ( ! ($this->conn instanceof mysqli)) {
             $this->connect();
         }
@@ -215,7 +215,7 @@ class DBAPI
      */
     public function delete($from, $where = '', $orderBy = '', $limit = '')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $out = false;
         if (!$from) {
             $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
@@ -249,7 +249,7 @@ class DBAPI
      */
     public function select($fields = "*", $from = "", $where = "", $orderBy = "", $limit = "")
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
 
         if (is_array($fields)) {
             $fields = $this->_getFieldsStringFromArray($fields);
@@ -292,7 +292,7 @@ class DBAPI
      */
     public function update($fields, $table, $where = "")
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $out = false;
         if (!$table) {
             $modx->messageQuit('Empty '.$table.' parameter in DBAPI::update().');
@@ -330,7 +330,7 @@ class DBAPI
      */
     public function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "")
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $out = false;
         if (!$intotable) {
             $modx->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
@@ -504,7 +504,7 @@ class DBAPI
                     $out = $ds->fetch_array(MYSQLI_BOTH);
                     break;
                 default:
-                    $modx = DocumentParser::getInstance();
+                    $modx = evolutionCMS();
                     $modx->messageQuit("Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num' or 'both'.");
 
             }

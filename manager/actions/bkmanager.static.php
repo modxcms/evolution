@@ -556,7 +556,7 @@ class Mysqldumper
      */
     public function createDump($callBack)
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $createtable = array();
 
         // Set line feed
@@ -670,7 +670,7 @@ class Mysqldumper
      */
     public function result2Array($numinarray = 0, $resource)
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $array = array();
         while ($row = $modx->db->getRow($resource, 'num')) {
             $array[] = $row[$numinarray];
@@ -694,7 +694,7 @@ class Mysqldumper
      */
     public function loadObjectList($key = '', $resource)
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $array = array();
         while ($row = $modx->db->getRow($resource, 'object')) {
             if ($key) {
@@ -734,7 +734,7 @@ class Mysqldumper
  */
 function import_sql($source, $result_code = 'import_ok')
 {
-    $modx = DocumentParser::getInstance(); global $e;
+    $modx = evolutionCMS(); global $e;
 
     $rs = null;
     if ($modx->getLockedElements() !== array()) {
@@ -772,7 +772,7 @@ function import_sql($source, $result_code = 'import_ok')
  */
 function dumpSql(&$dumpstring)
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $today = $modx->toDateFormat(time(), 'dateOnly');
     $today = str_replace('/', '-', $today);
     $today = strtolower($today);
@@ -805,7 +805,7 @@ function snapshot(&$dumpstring)
  */
 function getSettings()
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $tbl_system_settings = $modx->getFullTableName('system_settings');
 
     $rs = $modx->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -829,7 +829,7 @@ function getSettings()
  */
 function restoreSettings($settings)
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $tbl_system_settings = $modx->getFullTableName('system_settings');
 
     foreach ($settings as $k => $v) {

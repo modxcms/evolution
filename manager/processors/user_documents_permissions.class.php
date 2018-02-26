@@ -26,7 +26,7 @@ class udperms
     {
 
         global $udperms_allowroot;
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
 
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');

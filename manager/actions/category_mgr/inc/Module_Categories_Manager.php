@@ -48,7 +48,7 @@ class Module_Categories_Manager extends Categories
      */
     public function get($key)
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
 
         if (isset($this->params[$key])) {
             return $this->params[$key];

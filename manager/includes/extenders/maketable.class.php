@@ -555,7 +555,7 @@ class MakeTable
      */
     public function createPageLink($link = '', $pageNum, $displayText, $currentPage = false, $qs = '')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $orderBy = !empty($_GET['orderby']) ? '&orderby=' . $_GET['orderby'] : '';
         $orderDir = !empty($_GET['orderdir']) ? '&orderdir=' . $_GET['orderdir'] : '';
         if (!empty($qs)) {
@@ -630,7 +630,7 @@ class MakeTable
      */
     public function prepareOrderByLink($key, $text, $qs = '')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         if (!empty($_GET['orderdir'])) {
             $orderDir = strtolower($_GET['orderdir']) == 'desc' ? '&orderdir=asc' : '&orderdir=desc';
         } else {

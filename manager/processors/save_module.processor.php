@@ -185,7 +185,7 @@ switch ($_POST['mode']) {
  */
 function saveUserGroupAccessPermissons()
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     global $id, $newid;
     global $use_udperms;
 

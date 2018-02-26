@@ -62,7 +62,7 @@ class errorHandler
      */
     public function include_lang($context = 'common')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
         $_lang = array();
 
         $context = trim($context, '/');

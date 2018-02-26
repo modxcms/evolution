@@ -90,7 +90,7 @@ class DataSetPager {
 	}
 
     public function render() {
-		$modx = DocumentParser::getInstance(); global $_PAGE;
+		$modx = evolutionCMS(); global $_PAGE;
 
 		$isDataset = $modx->db->isResult($this->ds);
 

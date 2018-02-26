@@ -366,7 +366,7 @@ class uploader {
 
 
 	protected function getTransaliasSettings() {
-		$modx = DocumentParser::getInstance();
+		$modx = evolutionCMS();
 
 		// Cleaning uploaded filename?
 		$setting = $modx->db->select('count(*)', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');

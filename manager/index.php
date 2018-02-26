@@ -143,7 +143,7 @@ if (isset($coreClass) && class_exists($coreClass)) {
 }
 if (!isset($modx) || !($modx instanceof DocumentParser)) {
 	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = DocumentParser::getInstance();
+	$modx = evolutionCMS();
 }
 
 $modx->loadExtension("ManagerAPI");

@@ -23,7 +23,7 @@ include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
 require_once('../../../includes/protect.inc.php');
 include_once('../../../includes/config.inc.php');
 include_once('../../../includes/document.parser.class.inc.php');
-$modx = DocumentParser::getInstance();
+$modx = evolutionCMS();
 $modx->db->connect();
 startCMSSession();
 if(!isset($_SESSION['mgrValidated'])) {

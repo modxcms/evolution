@@ -9,7 +9,7 @@
  */
 function newCategory($newCat)
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $useTable = $modx->getFullTableName('categories');
     $categoryId = $modx->db->insert(
         array(
@@ -30,7 +30,7 @@ function newCategory($newCat)
  */
 function checkCategory($newCat = '')
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $newCat = $modx->db->escape($newCat);
     $cats = $modx->db->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
     if ($cat = $modx->db->getValue($cats)) {
@@ -63,7 +63,7 @@ function getCategory($category = '')
  */
 function getCategories()
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     $useTable = $modx->getFullTableName('categories');
     $cats = $modx->db->select('id, category', $modx->getFullTableName('categories'), '', 'category');
     $resourceArray = array();
@@ -82,7 +82,7 @@ function getCategories()
  */
 function deleteCategory($catId = 0)
 {
-    $modx = DocumentParser::getInstance();
+    $modx = evolutionCMS();
     if ($catId) {
         $resetTables = array(
             'site_plugins',

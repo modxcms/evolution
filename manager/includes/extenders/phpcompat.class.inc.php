@@ -13,7 +13,7 @@ class PHPCOMPAT
      */
     public function htmlspecialchars($str = '', $flags = ENT_COMPAT, $encode = '')
     {
-        $modx = DocumentParser::getInstance();
+        $modx = evolutionCMS();
 
         if ($str == '') {
             return '';
