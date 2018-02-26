@@ -12,7 +12,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function makeHTML($indent, $parent, $expandAll, $hereid = '')
 {
-    $modx = evolutionCMS(); global $icons, $_style, $_lang, $opened, $opened2, $closed2, $modx_textdir;
+    global $modx, $icons, $_style, $_lang, $opened, $opened2, $closed2, $modx_textdir;
 
     $output = '';
 
@@ -480,7 +480,7 @@ function getIconInfo($_style)
  */
 function getNodeTitle($nodeNameSource, $row)
 {
-    $modx = evolutionCMS();
+    global $modx;
 
     switch ($nodeNameSource) {
         case 'menutitle':
@@ -551,7 +551,7 @@ function isDateNode($nodeNameSource)
  */
 function checkIsFolder($parent = 0, $isfolder = 1)
 {
-    $modx = evolutionCMS();
+    global $modx;
 
     return (int)$modx->db->getValue($modx->db->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
 }
@@ -562,7 +562,7 @@ function checkIsFolder($parent = 0, $isfolder = 1)
  */
 function _htmlentities($array)
 {
-    $modx = evolutionCMS();
+    global $modx;
 
     $array = json_encode($array, JSON_UNESCAPED_UNICODE);
     $array = htmlentities($array, ENT_COMPAT, $modx->config['modx_charset']);

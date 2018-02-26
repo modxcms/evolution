@@ -149,7 +149,7 @@ switch ($_POST['mode']) {
  */
 function saveTemplateAccess($id)
 {
-    $modx = evolutionCMS();
+    global $modx;
     if ($_POST['tvsDirty'] == 1) {
         $newAssignedTvs = $_POST['assignedTv'];
 

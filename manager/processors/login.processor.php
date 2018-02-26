@@ -297,7 +297,7 @@ if($id > 0) {
  * @param string $msg
  */
 function jsAlert($msg) {
-	$modx = evolutionCMS();
+	global $modx;
 	if($_POST['ajax'] != 1) {
 		echo "<script>window.setTimeout(\"alert('" . addslashes($modx->db->escape($msg)) . "')\",10);history.go(-1)</script>";
 	} else {
@@ -312,7 +312,7 @@ function jsAlert($msg) {
  * @return bool
  */
 function login($username, $givenPassword, $dbasePassword) {
-	$modx = evolutionCMS();
+	global $modx;
 	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
 }
 
@@ -324,7 +324,7 @@ function login($username, $givenPassword, $dbasePassword) {
  * @return bool
  */
 function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
-	$modx = evolutionCMS();
+	global $modx;
 
 	$user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
 
@@ -354,7 +354,7 @@ function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
  * @return bool
  */
 function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
-	$modx = evolutionCMS();
+	global $modx;
 
 	if($dbasePassword != md5($givenPassword)) {
 		return false;
@@ -368,7 +368,7 @@ function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
  * @param string $password
  */
 function updateNewHash($username, $password) {
-	$modx = evolutionCMS();
+	global $modx;
 
 	$field = array();
 	$field['password'] = $modx->phpass->HashPassword($password);
@@ -382,7 +382,7 @@ function updateNewHash($username, $password) {
  * @param int $blocked_minutes
  */
 function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes) {
-	$modx = evolutionCMS();
+	global $modx;
 
 	$failedlogins += 1;
 

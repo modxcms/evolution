@@ -454,7 +454,7 @@ function getTplWidget() { // recent document info
 }
 
 function getRecentInfo() { // recent document info
-	$modx = evolutionCMS();
+	global $modx;
 
 	$modx->addSnippet('recentInfoList', 'getRecentInfoList');
 
@@ -480,7 +480,7 @@ function getRecentInfo() { // recent document info
 }
 
 function getRecentInfoList() {
-	$modx = evolutionCMS();
+	global $modx;
 
 	$rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
 

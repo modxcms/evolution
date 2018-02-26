@@ -49,7 +49,7 @@ $children = array();
  */
 function getChildren($parent) {
 
-	$modx = evolutionCMS();
+	global $modx;
 	global $children;
 	global $deltime;
 

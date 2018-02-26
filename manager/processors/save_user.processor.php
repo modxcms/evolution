@@ -357,7 +357,7 @@ switch($input['mode']) {
  * @param string $ufn
  */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	$modx = evolutionCMS(); global $_lang, $signupemail_message;
+	global $modx, $_lang, $signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name;
 	$manager_url = MODX_MANAGER_URL;
@@ -390,7 +390,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
  * @param int $id
  */
 function saveUserSettings($id) {
-	$modx = evolutionCMS();
+	global $modx;
 	$tbl_user_settings = $modx->getFullTableName('user_settings');
 
 	$ignore = array(

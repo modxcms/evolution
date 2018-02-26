@@ -890,7 +890,7 @@ function rrmdir($dir)
  */
 function fileupload()
 {
-    $modx = evolutionCMS(); global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
+    global $modx, $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
     $msg = '';
     foreach ($_FILES['userfile']['name'] as $i => $name) {
         if (empty($_FILES['userfile']['tmp_name'][$i])) continue;

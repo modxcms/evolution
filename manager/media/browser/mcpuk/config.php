@@ -16,7 +16,7 @@
 // you are using session configuration.
 // See http://kcfinder.sunhater.com/install for setting descriptions
 
-$modx = evolutionCMS();
+global $modx;
 $_CONFIG = array(
 
     'disabled' => false,

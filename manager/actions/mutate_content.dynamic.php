@@ -1536,7 +1536,7 @@ if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager
  * @return string
  */
 function getDefaultTemplate() {
-	$modx = evolutionCMS();
+	global $modx;
 
     $default_template = '';
 	switch($modx->config['auto_template_logic']) {

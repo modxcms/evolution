@@ -59,7 +59,8 @@ class MODIFIERS {
      */
     public function __construct()
     {
-        $modx = evolutionCMS();
+        global $modx;
+
         if (function_exists('mb_internal_encoding')) mb_internal_encoding($modx->config['modx_charset']);
         $this->condModifiers = '=,is,eq,equals,ne,neq,notequals,isnot,isnt,not,%,isempty,isnotempty,isntempty,>=,gte,eg,gte,greaterthan,>,gt,isgreaterthan,isgt,lowerthan,<,lt,<=,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
@@ -72,7 +73,7 @@ class MODIFIERS {
      */
     public function phxFilter($key,$value,$modifiers)
     {
-        $modx = evolutionCMS();
+        global $modx;
         if(substr($modifiers,0,3)!=='id(') $value = $this->parseDocumentSource($value);
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
@@ -159,7 +160,7 @@ class MODIFIERS {
     }
 
     public function splitEachModifiers($modifiers) {
-        $modx = evolutionCMS();
+        global $modx;
 
         $cmd = '';
         $bt = '';
@@ -229,7 +230,7 @@ class MODIFIERS {
 
     public function parsePhx($key,$value,$modifiers)
     {
-        $modx = evolutionCMS();
+        global $modx;
         $lastKey = '';
         $cacheKey = md5(sprintf('parsePhx#%s#%s#%s',$key,$value,print_r($modifiers,true)));
         if(isset($this->tmpCache[$cacheKey])) return $this->tmpCache[$cacheKey];
@@ -257,7 +258,7 @@ class MODIFIERS {
     // Parser: modifier detection and eXtended processing if needed
     public function Filter($key, $value, $cmd, $opt='')
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         if($key==='documentObject') $value = $modx->documentIdentifier;
         $cmd = $this->parseDocumentSource($cmd);
@@ -295,7 +296,7 @@ class MODIFIERS {
 
     public function getValueFromPreset($key, $value, $cmd, $opt)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         if($this->isEmpty($cmd,$value)) return '';
 
@@ -979,7 +980,7 @@ class MODIFIERS {
     }
 
     public function includeMdfFile($cmd) {
-        $modx = evolutionCMS();
+        global $modx;
         $key = $this->key;
         $value  = $this->value;
         $opt    = $this->opt;
@@ -988,7 +989,7 @@ class MODIFIERS {
 
     public function getValueFromElement($key, $value, $cmd, $opt)
     {
-        $modx = evolutionCMS();
+        global $modx;
         if( isset($modx->snippetCache[$this->elmName]) )
         {
             $php = $modx->snippetCache[$this->elmName];
@@ -1069,7 +1070,7 @@ class MODIFIERS {
 
     public function parseDocumentSource($content='')
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
 
@@ -1095,7 +1096,7 @@ class MODIFIERS {
 
     public function getDocumentObject($target='',$field='pagetitle')
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         $target = trim($target);
         if(empty($target)) $target = $modx->config['site_start'];
@@ -1139,7 +1140,7 @@ class MODIFIERS {
 
     //mbstring
     public function substr($str, $s, $l = null) {
-        $modx = evolutionCMS();
+        global $modx;
         if(is_null($l)) $l = $this->strlen($str);
         if (function_exists('mb_substr'))
         {
@@ -1150,12 +1151,12 @@ class MODIFIERS {
         return substr($str, $s, $l);
     }
     public function strpos($haystack,$needle,$offset=0) {
-        $modx = evolutionCMS();
+        global $modx;
         if (function_exists('mb_strpos')) return mb_strpos($haystack,$needle,$offset,$modx->config['modx_charset']);
         return strpos($haystack,$needle,$offset);
     }
     public function strlen($str) {
-        $modx = evolutionCMS();
+        global $modx;
         if (function_exists('mb_strlen')) return mb_strlen(str_replace("\r\n", "\n", $str),$modx->config['modx_charset']);
         return strlen($str);
     }
@@ -1195,7 +1196,7 @@ class MODIFIERS {
         return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
     }
     public function strip_tags($value,$params='') {
-        $modx = evolutionCMS();
+        global $modx;
 
         if(stripos($params,'style')===false && stripos($value,'</style>')!==false) {
             $value = preg_replace('@<style.*?>.*?</style>@is', '', $value);
