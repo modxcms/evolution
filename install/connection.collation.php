@@ -32,7 +32,7 @@ if (mysqli_num_rows($rs) > 0) {
         $_[$row[0]] = '';
     }
 
-    $database_collation = htmlentities($_POST['database_collation']);
+    $database_collation = isset($_POST['database_collation']) ? htmlentities($_POST['database_collation']) : '';
     $recommend_collation = $_lang['recommend_collation'];
 
     if (isset($_[$recommend_collation])) {
@@ -41,7 +41,7 @@ if (mysqli_num_rows($rs) > 0) {
         $_['utf8mb4_general_ci'] = ' selected';
     } elseif (isset($_['utf8_general_ci'])) {
         $_['utf8_general_ci']    = ' selected';
-    } elseif (isset($_[$database_collation])) {
+    } elseif (!empty($database_collation) && isset($_[$database_collation])) {
         $_[$database_collation]  = ' selected';
     }
 
