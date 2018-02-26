@@ -141,9 +141,9 @@ include_once "config.inc.php";
 if (isset($coreClass) && class_exists($coreClass)) {
 	$modx = new $coreClass;
 }
-if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+if (!isset($modx) || !($modx instanceof DocumentParser)) {
 	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = new \DocumentParser;
+	$modx = DocumentParser::getInstance();
 }
 
 $modx->loadExtension("ManagerAPI");

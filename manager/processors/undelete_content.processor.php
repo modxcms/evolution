@@ -49,7 +49,7 @@ $children = array();
  */
 function getChildren($parent) {
 
-	global $modx;
+	$modx = DocumentParser::getInstance();
 	global $children;
 	global $deltime;
 

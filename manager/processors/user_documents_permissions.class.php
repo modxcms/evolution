@@ -26,7 +26,7 @@ class udperms
     {
 
         global $udperms_allowroot;
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');

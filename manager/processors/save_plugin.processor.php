@@ -173,7 +173,7 @@ switch ($_POST['mode']) {
 # Save Plugin Event Listeners
 function saveEventListeners($id, $sysevents, $mode)
 {
-    global $modx;
+    $modx = DocumentParser::getInstance();
     // save selected system events
     $formEventList = array();
     foreach ($sysevents as $evtId) {
@@ -219,7 +219,7 @@ function saveEventListeners($id, $sysevents, $mode)
  */
 function getEventIdByName($name)
 {
-    global $modx;
+    $modx = DocumentParser::getInstance();
     static $eventIds=array();
 
     if(isset($eventIds[$name])) return $eventIds[$name];

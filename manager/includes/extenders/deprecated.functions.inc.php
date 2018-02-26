@@ -10,7 +10,7 @@ class OldFunctions
      */
     public function dbConnect()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
         $modx->db->connect();
         $modx->rs = $modx->db->conn;
     }
@@ -23,7 +23,7 @@ class OldFunctions
      */
     public function dbQuery($sql)
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->db->query($sql);
     }
@@ -36,7 +36,7 @@ class OldFunctions
      */
     public function recordCount($rs)
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->db->getRecordCount($rs);
     }
@@ -50,7 +50,7 @@ class OldFunctions
      */
     public function fetchRow($rs, $mode = 'assoc')
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->db->getRow($rs, $mode);
     }
@@ -63,7 +63,7 @@ class OldFunctions
      */
     public function affectedRows($rs)
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->db->getAffectedRows($rs);
     }
@@ -76,7 +76,7 @@ class OldFunctions
      */
     public function insertId($rs)
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->db->getInsertId($rs);
     }
@@ -88,7 +88,7 @@ class OldFunctions
      */
     public function dbClose()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
         $modx->db->disconnect();
     }
 
@@ -178,7 +178,7 @@ class OldFunctions
      */
     public function putChunk($chunkName)
     { // alias name >.<
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->getChunk($chunkName);
     }
@@ -190,7 +190,7 @@ class OldFunctions
      */
     public function getDocGroups()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->getUserDocGroups();
     }
@@ -204,7 +204,7 @@ class OldFunctions
      */
     public function changePassword($o, $n)
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         return $modx->changeWebUserPassword($o, $n);
     }
@@ -216,7 +216,7 @@ class OldFunctions
      */
     public function userLoggedIn()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
         $userdetails = array();
         if ($modx->isFrontend() && isset ($_SESSION['webValidated'])) {
             // web user
@@ -253,7 +253,7 @@ class OldFunctions
     public function getFormVars($method = "", $prefix = "", $trim = "", $REQUEST_METHOD)
     {
         //  function to retrieve form results into an associative array
-        global $modx;
+        $modx = DocumentParser::getInstance();
         $results = array();
         $method = strtoupper($method);
         if ($method == "") {
@@ -294,7 +294,7 @@ class OldFunctions
      */
     public function webAlert($msg, $url = "")
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
         $msg = addslashes($modx->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $act = "__WebAlert();";

@@ -25,7 +25,7 @@ class synccache
      */
     public function __construct()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
     }
@@ -80,7 +80,7 @@ class synccache
      */
     public function getParents($id, $path = '')
     { // modx:returns child's parent
-        global $modx;
+        $modx = DocumentParser::getInstance();
         if (empty($this->aliases)) {
             $f = "id, IF(alias='', id, alias) AS alias, parent, alias_visible";
             $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0');
@@ -194,7 +194,7 @@ class synccache
      */
     public function getCacheRefreshTime()
     {
-        global $modx;
+        $modx = DocumentParser::getInstance();
 
         // update publish time file
         $timesArr = array();

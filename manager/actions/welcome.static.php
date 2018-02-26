@@ -454,7 +454,7 @@ function getTplWidget() { // recent document info
 }
 
 function getRecentInfo() { // recent document info
-	global $modx;
+	$modx = DocumentParser::getInstance();
 
 	$modx->addSnippet('recentInfoList', 'getRecentInfoList');
 
@@ -480,7 +480,7 @@ function getRecentInfo() { // recent document info
 }
 
 function getRecentInfoList() {
-	global $modx;
+	$modx = DocumentParser::getInstance();
 
 	$rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
 

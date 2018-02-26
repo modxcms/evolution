@@ -43,7 +43,7 @@ header($header);
  * @return int
  */
 function duplicateDocument($docid, $parent=null, $_toplevel=0) {
-	global $modx, $_lang;
+	$modx = DocumentParser::getInstance(); global $_lang;
 
 	// invoke OnBeforeDocDuplicate event
 	$evtOut = $modx->invokeEvent('OnBeforeDocDuplicate', array(
@@ -149,7 +149,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
  * @param int $newid
  */
 function duplicateTVs($oldid, $newid){
-	global $modx;
+	$modx = DocumentParser::getInstance();
 
 	$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 
@@ -169,7 +169,7 @@ function duplicateTVs($oldid, $newid){
  * @param int $newid
  */
 function duplicateAccess($oldid, $newid){
-	global $modx;
+	$modx = DocumentParser::getInstance();
 
 	$tbldg = $modx->getFullTableName('document_groups');
 

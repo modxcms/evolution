@@ -93,7 +93,7 @@ class DataGrid {
 	}
 
     public function render() {
-		global $modx;
+        $modx = DocumentParser::getInstance();
 		$columnHeaderStyle = ($this->columnHeaderStyle) ? "style='" . $this->columnHeaderStyle . "'" : '';
 		$columnHeaderClass = ($this->columnHeaderClass) ? "class='" . $this->columnHeaderClass . "'" : "";
 		$cssStyle = ($this->cssStyle) ? "style='" . $this->cssStyle . "'" : '';

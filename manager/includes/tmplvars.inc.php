@@ -13,7 +13,7 @@
  * @return string
  */
 function renderFormElement($field_type, $field_id, $default_text = '', $field_elements = '', $field_value = '', $field_style = '', $row = array(), $tvsArray = array()) {
-	global $modx;
+    $modx = DocumentParser::getInstance();
 	global $_style;
 	global $_lang;
 	global $content;
@@ -385,7 +385,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
  * @return array
  */
 function ParseIntputOptions($v) {
-	global $modx;
+    $modx = DocumentParser::getInstance();
 	$a = array();
 	if(is_array($v)) {
 		return $v;

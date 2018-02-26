@@ -360,7 +360,7 @@ function save_user_quoted_printable($string) {
  * @param string $ufn
  */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	global $modx, $_lang, $websignupemail_message;
+	$modx = DocumentParser::getInstance(); global $_lang, $websignupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_url;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
@@ -388,7 +388,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 
 // Save User Settings
 function saveUserSettings($id) {
-	global $modx;
+	$modx = DocumentParser::getInstance();
 	$tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
 
 	$settings = array(
@@ -436,7 +436,7 @@ function generate_password($length = 10) {
 }
 
 function sanitize($str = '', $safecount = 0) {
-	global $modx;
+	$modx = DocumentParser::getInstance();
 	$safecount++;
 	if(1000 < $safecount) {
 		exit("error too many loops '{$safecount}'");

@@ -173,11 +173,18 @@ class DocumentParser
     public $old;
 
     /**
+     * Hold the class instance.
+     * @var DocumentParser
+     */
+    private static $instance = null;
+
+    /**
      * Document constructor
+     * PUBLIC access for backward compatibility !!!!
      *
      * @return DocumentParser
      */
-    public function __construct()
+    final public function __construct()
     {
         if ($this->isLoggedIn()) {
             ini_set('display_errors', 1);
@@ -196,6 +203,20 @@ class DocumentParser
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
+    }
+
+    final private function __clone() {}
+
+    /**
+     * @return DocumentParser
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new DocumentParser();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -2447,7 +2468,7 @@ class DocumentParser
             $pref = $this->config['friendly_url_prefix'];
             $suff = $this->config['friendly_url_suffix'];
             $documentSource = preg_replace_callback($in, function ($m) use ($aliases, $isfolder, $isfriendly, $pref, $suff) {
-                global $modx;
+                $modx = DocumentParser::getInstance();
                 $thealias = $aliases[$m[1]];
                 $thefolder = $isfolder[$m[1]];
                 if ($isfriendly && isset($thealias)) {

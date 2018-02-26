@@ -71,7 +71,7 @@ include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
  * @return string
  */
 function evalModule($moduleCode,$params){
-	global $modx;
+	$modx = DocumentParser::getInstance();
 	$modx->event->params = &$params; // store params inside event object
 	if(is_array($params)) {
 		extract($params, EXTR_SKIP);
