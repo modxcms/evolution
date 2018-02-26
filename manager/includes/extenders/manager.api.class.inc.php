@@ -136,7 +136,7 @@ class ManagerAPI
      */
     public function genV1Hash($password, $seed = '1')
     { // $seed is user_id basically
-        global $modx;
+        $modx = evolutionCMS();
 
         if (isset($modx->config['pwd_hash_algo']) && !empty($modx->config['pwd_hash_algo'])) {
             $algorithm = $modx->config['pwd_hash_algo'];
@@ -181,7 +181,7 @@ class ManagerAPI
      */
     public function getV1UserHashAlgorithm($uid)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $tbl_manager_users = $modx->getFullTableName('manager_users');
         $uid = $modx->db->escape($uid);
         $rs = $modx->db->select('password', $tbl_manager_users, "id='{$uid}'");
@@ -292,7 +292,7 @@ class ManagerAPI
      */
     public function setSystemChecksum($checksum)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $tbl_system_settings = $modx->getFullTableName('system_settings');
         $sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->db->escape($checksum) . "')";
         $modx->db->query($sql);
@@ -303,7 +303,7 @@ class ManagerAPI
      */
     public function checkSystemChecksum()
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if (!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) {
             return '0';
@@ -335,7 +335,7 @@ class ManagerAPI
      */
     public function getLastUserSetting($key = false)
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         $rs = $modx->db->select('*', $modx->getFullTableName('user_settings'),
             "user = '{$_SESSION['mgrInternalKey']}'");
@@ -361,7 +361,7 @@ class ManagerAPI
      */
     public function saveLastUserSetting($settings, $val = '')
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if (!empty($settings)) {
             if (!is_array($settings)) {
@@ -387,7 +387,7 @@ class ManagerAPI
      */
     public function loadDatePicker($path)
     {
-        global $modx;
+        $modx = evolutionCMS();
         include_once($path);
         $dp = new DATEPICKER();
 

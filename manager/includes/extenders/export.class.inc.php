@@ -48,7 +48,7 @@ class EXPORT_SITE
      */
     public function __construct()
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if (!defined('MODX_BASE_PATH')) {
             return false;
@@ -90,7 +90,7 @@ class EXPORT_SITE
      */
     public function setUrlMode()
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if ($modx->config['friendly_urls'] == 0) {
             $modx->config['friendly_urls'] = 1;
@@ -107,7 +107,7 @@ class EXPORT_SITE
      */
     public function getTotal($ignore_ids = '', $noncache = '0')
     {
-        global $modx;
+        $modx = evolutionCMS();
         $tbl_site_content = $modx->getFullTableName('site_content');
 
         $ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
@@ -172,7 +172,7 @@ class EXPORT_SITE
      */
     public function makeFile($docid, $filepath)
     {
-        global $modx, $_lang;
+        $modx = evolutionCMS(); global $_lang;
         $file_permission = octdec($modx->config['new_file_permissions']);
         if ($this->generate_mode === 'direct') {
             $back_lang = $_lang;
@@ -212,7 +212,7 @@ class EXPORT_SITE
      */
     public function getFileName($docid, $alias = '', $prefix, $suffix)
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if ($alias === '') {
             $filename = $prefix . $docid . $suffix;
@@ -233,7 +233,7 @@ class EXPORT_SITE
     public function run($parent = 0)
     {
         global $_lang;
-        global $modx;
+        $modx = evolutionCMS();
 
         $tbl_site_content = $modx->getFullTableName('site_content');
 
