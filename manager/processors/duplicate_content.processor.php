@@ -43,7 +43,7 @@ header($header);
  * @return int
  */
 function duplicateDocument($docid, $parent=null, $_toplevel=0) {
-	$modx = evolutionCMS(); global $_lang;
+	global $modx, $_lang;
 
 	// invoke OnBeforeDocDuplicate event
 	$evtOut = $modx->invokeEvent('OnBeforeDocDuplicate', array(
@@ -149,7 +149,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
  * @param int $newid
  */
 function duplicateTVs($oldid, $newid){
-	$modx = evolutionCMS();
+	global $modx;
 
 	$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 
@@ -169,7 +169,7 @@ function duplicateTVs($oldid, $newid){
  * @param int $newid
  */
 function duplicateAccess($oldid, $newid){
-	$modx = evolutionCMS();
+	global $modx;
 
 	$tbldg = $modx->getFullTableName('document_groups');
 

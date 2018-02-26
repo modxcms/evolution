@@ -105,7 +105,7 @@ $allowedfiles = array(
  * @return string
  */
 function run() {
-	$modx = evolutionCMS(); global $_lang;
+	global $modx, $_lang;
 
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$output = '';
@@ -172,7 +172,7 @@ function run() {
  * @param string $mode
  */
 function importFiles($parent, $filedir, $files, $mode) {
-	$modx = evolutionCMS();
+	global $modx;
 	global $_lang, $allowedfiles;
 	global $search_default, $cache_default, $publish_default;
 
@@ -384,7 +384,7 @@ function pop_index($array) {
  * @return array
  */
 function treatContent($src, $filename, $alias) {
-	$modx = evolutionCMS();
+	global $modx;
 
 	$src = mb_convert_encoding($src, $modx->config['modx_charset'], 'UTF-8,SJIS-win,eucJP-win,SJIS,EUC-JP,ASCII');
 
@@ -428,7 +428,7 @@ function treatContent($src, $filename, $alias) {
  * @return void
  */
 function convertLink() {
-	$modx = evolutionCMS();
+	global $modx;
 	$tbl_site_content = $modx->getFullTableName('site_content');
 
 	$rs = $modx->db->select('id,content', $tbl_site_content);

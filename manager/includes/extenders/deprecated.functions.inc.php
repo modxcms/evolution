@@ -10,7 +10,7 @@ class OldFunctions
      */
     public function dbConnect()
     {
-        $modx = evolutionCMS();
+        global $modx;
         $modx->db->connect();
         $modx->rs = $modx->db->conn;
     }
@@ -23,7 +23,7 @@ class OldFunctions
      */
     public function dbQuery($sql)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->db->query($sql);
     }
@@ -36,7 +36,7 @@ class OldFunctions
      */
     public function recordCount($rs)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->db->getRecordCount($rs);
     }
@@ -50,7 +50,7 @@ class OldFunctions
      */
     public function fetchRow($rs, $mode = 'assoc')
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->db->getRow($rs, $mode);
     }
@@ -63,7 +63,7 @@ class OldFunctions
      */
     public function affectedRows($rs)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->db->getAffectedRows($rs);
     }
@@ -76,7 +76,7 @@ class OldFunctions
      */
     public function insertId($rs)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->db->getInsertId($rs);
     }
@@ -88,7 +88,7 @@ class OldFunctions
      */
     public function dbClose()
     {
-        $modx = evolutionCMS();
+        global $modx;
         $modx->db->disconnect();
     }
 
@@ -178,7 +178,7 @@ class OldFunctions
      */
     public function putChunk($chunkName)
     { // alias name >.<
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->getChunk($chunkName);
     }
@@ -190,7 +190,7 @@ class OldFunctions
      */
     public function getDocGroups()
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->getUserDocGroups();
     }
@@ -204,7 +204,7 @@ class OldFunctions
      */
     public function changePassword($o, $n)
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         return $modx->changeWebUserPassword($o, $n);
     }
@@ -216,7 +216,7 @@ class OldFunctions
      */
     public function userLoggedIn()
     {
-        $modx = evolutionCMS();
+        global $modx;
         $userdetails = array();
         if ($modx->isFrontend() && isset ($_SESSION['webValidated'])) {
             // web user
@@ -253,7 +253,7 @@ class OldFunctions
     public function getFormVars($method = "", $prefix = "", $trim = "", $REQUEST_METHOD)
     {
         //  function to retrieve form results into an associative array
-        $modx = evolutionCMS();
+        global $modx;
         $results = array();
         $method = strtoupper($method);
         if ($method == "") {
@@ -294,7 +294,7 @@ class OldFunctions
      */
     public function webAlert($msg, $url = "")
     {
-        $modx = evolutionCMS();
+        global $modx;
         $msg = addslashes($modx->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $act = "__WebAlert();";

@@ -23,7 +23,7 @@ $BINDINGS = array (
  * @return string
  */
 function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
-    $modx = evolutionCMS();
+    global $modx;
     $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
@@ -167,7 +167,7 @@ function ParseCommand($binding_string)
  */
 function parseTvValues($param, $tvsArray)
 {
-    $modx = evolutionCMS();
+	global $modx;
 	$tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
 	if (strpos($param, '[*') !== false) {
 		$matches = $modx->getTagsFromContent($param, '[*', '*]');

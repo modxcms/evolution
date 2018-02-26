@@ -85,7 +85,7 @@ class mgrResources {
      * @return bool
      */
     public function hasAnyPermissions($permissions) {
-		$modx = evolutionCMS();
+		global $modx;
 
 		foreach($permissions as $p)
 			if($modx->hasPermission($p)) return true;
@@ -99,7 +99,7 @@ class mgrResources {
      * @return array|bool
      */
     public function queryResources($resourceTable, $nameField = 'name') {
-		$modx = evolutionCMS(); global $_lang;
+		global $modx, $_lang;
 
         $allowed = array(
             'site_htmlsnippets',

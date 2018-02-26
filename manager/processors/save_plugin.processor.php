@@ -173,7 +173,7 @@ switch ($_POST['mode']) {
 # Save Plugin Event Listeners
 function saveEventListeners($id, $sysevents, $mode)
 {
-    $modx = evolutionCMS();
+    global $modx;
     // save selected system events
     $formEventList = array();
     foreach ($sysevents as $evtId) {
@@ -219,7 +219,7 @@ function saveEventListeners($id, $sysevents, $mode)
  */
 function getEventIdByName($name)
 {
-    $modx = evolutionCMS();
+    global $modx;
     static $eventIds=array();
 
     if(isset($eventIds[$name])) return $eventIds[$name];

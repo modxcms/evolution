@@ -14,7 +14,7 @@ class Categories
 
     public function __construct()
     {
-        $modx = evolutionCMS();
+        global $modx;
 
         $this->db = &$modx->db;
         $this->db_tbl['categories'] = $modx->getFullTableName('categories');
