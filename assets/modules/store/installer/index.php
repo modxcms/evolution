@@ -5,6 +5,7 @@ define('MODX_BASE_PATH',realpath('../../../../').'/');
 include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
 define('MODX_API_MODE', true);
+define('IN_MANAGER_MODE', true);
 include_once (MODX_BASE_PATH . 'index.php');
 $modx->db->connect();
 $modx->getSettings();
