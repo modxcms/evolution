@@ -25,7 +25,7 @@ if (!defined('MGR_DIR')) {
 if (defined('MODX_CLI')) {
     throw new RuntimeException("MODX_CLI");
 } else {
-    define('MODX_CLI', !(php_sapi_name() !== 'cli' && !(is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
+    define('MODX_CLI', (php_sapi_name() === 'cli' && (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
 }
 
 if (MODX_CLI) {
