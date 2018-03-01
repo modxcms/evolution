@@ -56,11 +56,11 @@ $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
 if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
-	define('MGR_DIR','manager');
+	define('MGR_DIR', 'manager');
 if(is_file($base_path . 'assets/cache/siteHostnames.php'))
     include_once($base_path . 'assets/cache/siteHostnames.php');
 if(!defined('MODX_SITE_HOSTNAMES'))
-	define('MODX_SITE_HOSTNAMES','');
+	define('MODX_SITE_HOSTNAMES', '');
 
 // get start time
 $mstart = memory_get_usage();
@@ -82,9 +82,9 @@ ob_start();
  *	Function: This file loads and executes the parser. *
  */
 
-define("IN_PARSER_MODE", true);
-if (!defined('IN_MANAGER_MODE')) {
-	define("IN_MANAGER_MODE", false);
+define('IN_PARSER_MODE', true);
+if ( ! defined('IN_MANAGER_MODE')) {
+	define('IN_MANAGER_MODE', false);
 }
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
@@ -100,12 +100,17 @@ if(!isset($database_user) || $database_user=="") {
 	}
 }
 
-// start session 
+// start session
 startCMSSession();
 
 // initiate a new document parser
-include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-$modx = new DocumentParser;
+if (isset($coreClass) && class_exists($coreClass)) {
+	$modx = new $coreClass;
+}
+if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
+	$modx = new \DocumentParser;
+}
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes
@@ -124,8 +129,12 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
     @ini_set("display_errors","0");
 }
 
+if(MODX_CLI){
+    @set_time_limit(0);
+    @ini_set('max_execution_time',0);
+}
+
 // execute the parser if index.php was not included
 if (!MODX_API_MODE) {
     $modx->executeParser();
 }
-?>
