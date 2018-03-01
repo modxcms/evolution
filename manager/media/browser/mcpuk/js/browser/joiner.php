@@ -31,5 +31,3 @@ httpCache::checkMTime($mtime);
 header("Content-Type: text/javascript");
 foreach ($files as $file)
     require $file;
-
-?>

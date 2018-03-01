@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked

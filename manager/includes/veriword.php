@@ -50,6 +50,7 @@ class VeriWord {
     public $word       = "";
     public $im_width   = 0;
     public $im_height  = 0;
+    public $im;
 
     public function __construct($w=200, $h=80) {
         /* create session to set word for verification */
@@ -125,13 +126,13 @@ class VeriWord {
 
         /* draw text into canvas */
         imagettftext    (   $im_text,
-                            $text_size,
-                            $text_angle,
-                            $text_x,
-                            $text_y,
-                            $text_color,
-                            $text_font,
-                            $this->word);
+            $text_size,
+            $text_angle,
+            $text_x,
+            $text_y,
+            $text_color,
+            $text_font,
+            $this->word);
 
         /* remove background color */
         imagecolortransparent($im_text, $bg_color);
@@ -152,20 +153,20 @@ class VeriWord {
         /* resize the background image to fit the size of image output */
         $this->im       = imagecreatetruecolor($this->im_width,$this->im_height);
         imagecopyresampled ($this->im,
-                            $noise_img,
-                            0, 0, 0, 0,
-                            $this->im_width,
-                            $this->im_height,
-                            $noise_width,
-                            $noise_height);
+            $noise_img,
+            0, 0, 0, 0,
+            $this->im_width,
+            $this->im_height,
+            $noise_width,
+            $noise_height);
 
         /* put text image into background image */
         imagecopymerge (    $this->im,
-                            $this->draw_text(),
-                            0, 0, 0, 0,
-                            $this->im_width,
-                            $this->im_height,
-                            70 );
+            $this->draw_text(),
+            0, 0, 0, 0,
+            $this->im_width,
+            $this->im_height,
+            70 );
 
         return $this->im;
     }

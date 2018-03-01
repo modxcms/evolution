@@ -11,14 +11,12 @@ $modx->db->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 $ok = false;
-if(isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
-  $ok = true;
-  $modx->updateValidatedUserSession();
+
+if (isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
+    $ok = true;
+    $modx->updateValidatedUserSession();
 }
 
 header('Content-type: application/json');
-if($ok) {
-    echo '{"status":"ok"}';
-} else {
-  echo '{"status":"null"}';
-}
+
+echo $ok ? '{"status":"ok"}' : '{"status":"null"}';

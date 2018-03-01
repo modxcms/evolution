@@ -1,16 +1,28 @@
 <?php
 
-/*
-menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex')
-*/
-
+/**
+ * menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex')
+ */
 class EVOmenu
 {
-    var $defaults = array();
-    var $menu;
-    var $output;
+    /**
+     * @var array
+     */
+    public $defaults = array();
+    /**
+     * @var
+     */
+    public $menu;
+    /**
+     * @var
+     */
+    public $output;
 
-    function Build($menu, $setting = array())
+    /**
+     * @param $menu
+     * @param array $setting
+     */
+    public function Build($menu, $setting = array())
     {
         $this->defaults['outerClass'] = 'nav';
         $this->defaults['parentClass'] = 'dropdown';
@@ -25,8 +37,12 @@ class EVOmenu
         echo $this->output;
     }
 
-    function Structurise($menu)
+    /**
+     * @param array $menu
+     */
+    public function Structurise($menu)
     {
+        $new = array();
         foreach ($menu as $key => $row) {
             $data[$key] = $row[9];
         }
@@ -40,7 +56,12 @@ class EVOmenu
         $this->menu = $new;
     }
 
-    function DrawSub($parentid, $level)
+    /**
+     * @param int $parentid
+     * @param int $level
+     * @return string
+     */
+    public function DrawSub($parentid, $level)
     {
         global $modx;
 
@@ -48,6 +69,7 @@ class EVOmenu
 
         if (isset($this->menu[$parentid])) {
 
+            $ph = array();
             $countChild = 0;
             $itemTpl = '
 			<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]" onclick="[+onclick+]"[+a_class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
@@ -81,17 +103,21 @@ class EVOmenu
                     $ph['DrawSub'] = $this->DrawSub($id, $level);
                     $level--;
                     // Optional buttons
-                } else if (isset($value[11]) && !empty($value[11])) {
-                    $optionalButton = '';
-                    if (is_array($value[11])) {
-                        foreach ($value[11] as $opt) {
-                            $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                } else {
+                    if (isset($value[11]) && !empty($value[11])) {
+                        $optionalButton = '';
+                        if (is_array($value[11])) {
+                            foreach ($value[11] as $opt) {
+                                $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
+                                    $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                            }
+                        } else {
+                            $opt = $value[11];
+                            $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
+                                $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
                         }
-                    } else {
-                        $opt = $value[11];
-                        $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                        $ph['DrawSub'] = $optionalButton;
                     }
-                    $ph['DrawSub'] = $optionalButton;
                 }
 
                 $output .= $modx->parseText($itemTpl, $ph);
@@ -105,10 +131,15 @@ class EVOmenu
                 $output = $modx->parseText($outerTpl, $ph);
             }
         }
+
         return $output;
     }
 
-    function get_li_class($id)
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function get_li_class($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentClass'] . ' ';
@@ -117,7 +148,11 @@ class EVOmenu
         }
     }
 
-    function get_a_class($id)
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function get_a_class($id)
     {
         if (isset($this->menu[$id])) {
             return ' class="' . $this->defaults['parentLinkClass'] . '"';
@@ -126,7 +161,11 @@ class EVOmenu
         }
     }
 
-    function getLinkAttr($id)
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getLinkAttr($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentLinkAttr'];
@@ -135,7 +174,11 @@ class EVOmenu
         }
     }
 
-    function getItemName($id)
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getItemName($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentLinkIn'];

@@ -84,7 +84,6 @@ $c['session_timeout']          = 15;
 $c['site_unavailable_message'] = $_lang['siteunavailable_message_default'];
 $c['allow_eval']               = 'with_scan';
 $c['safe_functions_at_eval']   = 'time,date,strtotime,strftime';
-$c['track_visitors']           = '0';
 $c['use_udperms']              = '1';
 $c['email_method']             = 'mail';
 $c['smtp_auth']                = '0';

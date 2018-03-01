@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
@@ -38,7 +38,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
 $tbl_categories = $modx->getFullTableName('categories');
@@ -136,7 +136,7 @@ if(!isset ($_REQUEST['id'])) {
 		$modx->config['auto_menuindex'] = 1;
 	}
 	if($modx->config['auto_menuindex']) {
-		$pid = intval($_REQUEST['pid']);
+		$pid = (int)$_REQUEST['pid'];
 		$rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
 		$content['menuindex'] = $modx->db->getValue($rs);
 	} else {
@@ -1120,9 +1120,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                     $templateVariables .= '
                         <!-- end Template Variables -->' . "\n";
-                                } else {
-                                    // There aren't any Template Variables
-                                    //$templateVariables .= "\t<p>" . $_lang['tmplvars_novars'] . "</p>\n";
                                 }
                             }
 
@@ -1535,9 +1532,13 @@ if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager
 	}
 }
 
+/**
+ * @return string
+ */
 function getDefaultTemplate() {
 	global $modx;
 
+    $default_template = '';
 	switch($modx->config['auto_template_logic']) {
 		case 'sibling':
 			if(!isset($_GET['pid']) || empty($_GET['pid'])) {
@@ -1573,9 +1574,6 @@ function getDefaultTemplate() {
 		default: // default_template is already set
 			$default_template = $modx->config['default_template'];
 	}
-	if(!isset($default_template)) {
-		$default_template = $modx->config['default_template'];
-	} // default_template is already set
 
-	return $default_template;
+	return empty($default_template) ? $modx->config['default_template'] : $default_template;
 }

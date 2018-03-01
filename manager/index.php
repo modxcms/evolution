@@ -79,8 +79,8 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
-if (!defined('IN_MANAGER_MODE')) {
-	define("IN_MANAGER_MODE", true);
+if ( ! defined('IN_MANAGER_MODE')) {
+	define('IN_MANAGER_MODE', true);
 }
 
 // harden it
@@ -117,13 +117,13 @@ if(!function_exists('iconv')) {
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
-if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
-if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
-if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
+if (!defined('ENT_COMPAT')) define('ENT_COMPAT', 2);
+if (!defined('ENT_NOQUOTES')) define('ENT_NOQUOTES', 0);
+if (!defined('ENT_QUOTES')) define('ENT_QUOTES', 3);
 
 // set the document_root :|
-if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
-	$_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
+if(!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
+	$_SERVER['DOCUMENT_ROOT'] = str_replace($_SERVER['PATH_INFO'], "", preg_replace("/\\\\/", "/", $_SERVER['PATH_TRANSLATED']))."/";
 }
 
 // include_once config file
@@ -138,8 +138,14 @@ if (!file_exists($config_filename)) {
 include_once "config.inc.php";
 
 // initiate the content manager class
-include_once "document.parser.class.inc.php";
-$modx = new DocumentParser;
+if (isset($coreClass) && class_exists($coreClass)) {
+	$modx = new $coreClass;
+}
+if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
+	$modx = new \DocumentParser;
+}
+
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $modx->tstart = $tstart;
@@ -163,7 +169,7 @@ if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".
 	$manager_language = "english"; // if not set, get the english language file.
 }
 
-// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer) 
+// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
 if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
 	include_once "lang/".$manager_language.".inc.php";
@@ -238,7 +244,7 @@ if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 $modx->manager->action = $action;
 
 // attempt to foil some simple types of CSRF attacks
-if (isset($modx->config['validate_referer']) && intval($modx->config['validate_referer'])) {
+if (isset($modx->config['validate_referer']) && (int)$modx->config['validate_referer']) {
 	if (isset($_SERVER['HTTP_REFERER'])) {
 		$referer = $_SERVER['HTTP_REFERER'];
 

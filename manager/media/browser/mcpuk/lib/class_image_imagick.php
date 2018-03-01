@@ -240,7 +240,7 @@ class image_imagick extends image {
 
     static function checkImage($file) {
         try {
-            $img = new Imagic($file);
+            new Imagick($file);
         } catch (Exception $e) {
             return false;
         }
@@ -301,5 +301,3 @@ class image_imagick extends image {
     }
 
 }
-
-?>

@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('save_user')) {
@@ -14,7 +14,7 @@ $tbl_member_groups = $modx->getFullTableName('member_groups');
 
 $input = $_POST;
 
-$id = intval($input['id']);
+$id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $fullname = $input['fullname'];
@@ -145,7 +145,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
-					$f['user_group'] = intval($user_groups[$i]);
+					$f['user_group'] = (int)$user_groups[$i];
 					$f['member'] = $internalKey;
 					$modx->db->insert($f, $tbl_member_groups);
 				}
@@ -292,7 +292,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['user_group'] = intval($user_groups[$i]);
+					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
 					$modx->db->insert($field, $tbl_member_groups);
 				}
@@ -348,7 +348,14 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-// Send an email to the user
+/**
+ * Send an email to the user
+ *
+ * @param string $email
+ * @param string $uid
+ * @param string $pwd
+ * @param string $ufn
+ */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx, $_lang, $signupemail_message;
 	global $emailsubject, $emailsender;
@@ -377,7 +384,11 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	}
 }
 
-// Save User Settings
+/**
+ * Save User Settings
+ *
+ * @param int $id
+ */
 function saveUserSettings($id) {
 	global $modx;
 	$tbl_user_settings = $modx->getFullTableName('user_settings');
@@ -461,7 +472,11 @@ function saveUserSettings($id) {
 	}
 }
 
-// Web alert -  sends an alert to web browser
+/**
+ * Web alert -  sends an alert to web browser
+ *
+ * @param $msg
+ */
 function webAlertAndQuit($msg) {
 	global $id, $modx;
 	$mode = $_POST['mode'];
@@ -469,7 +484,12 @@ function webAlertAndQuit($msg) {
 	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
 }
 
-// Generate password
+/**
+ * Generate password
+ *
+ * @param int $length
+ * @return string
+ */
 function generate_password($length = 10) {
 	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 	$ps_len = strlen($allowable_characters);

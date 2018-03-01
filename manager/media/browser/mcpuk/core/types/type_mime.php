@@ -43,5 +43,3 @@ class type_mime {
             : true;
     }
 }
-
-?>

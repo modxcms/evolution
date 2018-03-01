@@ -2,103 +2,123 @@
 /**
  * Class for MODx Categories Manager
  */
-if( !is_object( $modx )
-    || $modx->isBackend() === false )
-{
+if (!is_object($modx)
+    || $modx->isBackend() === false) {
     die('Please use the MODx Backend.');
 }
 
-require_once realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'Categories.php';
+require_once realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Categories.php';
 
 class Module_Categories_Manager extends Categories
 {
-    var $params           = array();
-    var $translations     = array();
-    var $new_translations = array();
+    /**
+     * @var array
+     */
+    public $params = array();
+    /**
+     * @var array
+     */
+    public $translations = array();
+    /**
+     * @var array
+     */
+    public $new_translations = array();
 
 
     /**
      * Set a paramter key and its value
-     * 
-     * @return null 
-     * @param string    $key    paramter key
-     * @param mixed     $value  parameter value - could be mixed value-types
+     *
+     * @return null
+     * @param string $key paramter key
+     * @param mixed $value parameter value - could be mixed value-types
      */
-    function set($key, $value)
+    public function set($key, $value)
     {
         $this->params[$key] = $value;
+
         return null;
     }
 
 
     /**
      * Get a parameter value
-     * 
-     * @return  mixed           return the parameter value if exists, otherwise false
-     * @param   string  $key    Paramter-key
+     *
+     * @return  string           return the parameter value if exists, otherwise false
+     * @param   string $key Paramter-key
      */
-    function get( $key )
+    public function get($key)
     {
         global $modx;
-        
-        if( isset( $this->params[$key] ) )
-        {
+
+        if (isset($this->params[$key])) {
             return $this->params[$key];
-        }
-        elseif( isset( $modx->config[$key] ) )
-        {
+        } elseif (isset($modx->config[$key])) {
             return $modx->config[$key];
-        }
-        elseif( isset( $modx->event->params[$key] ) )
-        {
+        } elseif (isset($modx->event->params[$key])) {
             return $modx->event->params[$key];
         }
+
         return false;
     }
 
-    
-    function addMessage( $message, $namespace = 'default' )
+
+    /**
+     * @param string $message
+     * @param string $namespace
+     */
+    public function addMessage($message, $namespace = 'default')
     {
-        $this->params['messages'][$namespace][] = $message;   
+        $this->params['messages'][$namespace][] = $message;
     }
 
 
-    function getMessages( $namespace = 'default' )
+    /**
+     * @param string $namespace
+     * @return bool
+     */
+    public function getMessages($namespace = 'default')
     {
-        if( isset( $this->params['messages'][$namespace] ) )
-        {
+        if (isset($this->params['messages'][$namespace])) {
             return $this->params['messages'][$namespace];
         }
+
         return false;
     }
 
 
-    function renderView( $view_name, $data = array() )
+    /**
+     * @param string $view_name
+     * @param array $data
+     */
+    public function renderView($view_name, $data = array())
     {
         global $_lang, $_style;
-    
-        $filename = trim( $view_name ) . '.tpl.phtml';
-        $file     = self::get('views_dir') . $filename;
-        $view     = & $this;
 
-        if( is_file( $file ) 
-            && is_readable( $file ) )
-        {
+        $filename = trim($view_name) . '.tpl.phtml';
+        $file = self::get('views_dir') . $filename;
+        $view = &$this;
+
+        if (is_file($file)
+            && is_readable($file)) {
             include $file;
-        }
-        else
-        {
+        } else {
             echo sprintf(
                 'View "%s<strong>%s</strong>" not found.',
-                self::get('views_dir'), 
+                self::get('views_dir'),
                 $filename
             );
         }
     }
 
-    function updateElement( $element, $element_id, $category_id )
+    /**
+     * @param string $element
+     * @param int $element_id
+     * @param int $category_id
+     * @return bool
+     */
+    public function updateElement($element, $element_id, $category_id)
     {
- 
+
         $_update = array(
             'id'       => (int)$element_id,
             'category' => (int)$category_id
@@ -110,18 +130,21 @@ class Module_Categories_Manager extends Categories
             "`id` = '" . (int)$element_id . "'"
         );
 
-        if( $this->db->getAffectedRows() === 1 )
-        {
-            return true;
-        }
-        return false;
+        return $this->db->getAffectedRows() === 1;
     }
 
 
-    function txt( $txt )
+    /**
+     * @param string $txt
+     * @return string
+     */
+    public function txt($txt)
     {
         global $_lang;
-        if(isset($_lang[$txt])) return $_lang[$txt];
+        if (isset($_lang[$txt])) {
+            return $_lang[$txt];
+        }
+
         return $txt;
     }
 }
