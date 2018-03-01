@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+}
 
 error_reporting(E_ALL & ~E_NOTICE);
 define('MGR',MODX_BASE_PATH.MGR_DIR);
@@ -47,7 +49,7 @@ $create = false;
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = 1;
 
 // set session name variable
@@ -214,7 +216,7 @@ if (count($moduleTVs )>0) {
                        }
                     }
                 }
-            }    
+            }
         //}
     }
 }
@@ -358,7 +360,7 @@ if (count($modulePlugins )>0) {
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                 $plugin = $modx->db->escape($plugin);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name'");
-                
+
                 if ($modx->db->getRecordCount($rs)) {
                     $insert = true;
                     while($row = $modx->db->getRow($rs,'assoc')) {
@@ -390,7 +392,7 @@ if (count($modulePlugins )>0) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
-                            
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -435,9 +437,9 @@ if (count($moduleSnippets ) > 0) {
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
                 $snippet = $modx->db->escape($snippet);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
-                
+
                 if ($modx->db->getRecordCount($rs)) {
-                
+
                     $row = $modx->db->getRow($rs,'assoc');
                     $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
@@ -445,8 +447,8 @@ if (count($moduleSnippets ) > 0) {
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {  
-                    $properties = $modx->db->escape(parseProperties($properties, true));  
+                } else {
+                    $properties = $modx->db->escape(parseProperties($properties, true));
                     if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -509,13 +511,13 @@ function propUpdate($new,$old){
     return $return;
 }
 
-function parseProperties($propertyString, $json=false) {  
-    $propertyString = str_replace('{}', '', $propertyString ); 
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
     if($propertyString=='{}' || $propertyString=='[]') return array();
-    
+
     $jsonFormat = isJson($propertyString, true);
     $property = array();
     // old format
@@ -545,7 +547,7 @@ function parseProperties($propertyString, $json=false) {
                 }
                 $property[$key['0']]['0']['desc'] = '';
             }
-            
+
         }
     // new json-format
     } else if(!empty($jsonFormat)){
@@ -564,7 +566,7 @@ function isJson($string, $returnData=false) {
 }
 
 function getCreateDbCategory($category) {
-    
+
     global $modx;
     $dbase = $modx->db->config['dbase'];
     $table_prefix = $modx->db->config['table_prefix'];
