@@ -3,8 +3,8 @@
  * EVO Installer language file
  *
  * @author marc
- * @version 1.4
- * @date 2017/12/13
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Dutch
  * @package evo

@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Japanese
  * @package modx

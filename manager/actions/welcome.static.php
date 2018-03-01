@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
@@ -28,7 +28,7 @@ if($modx->hasPermission('messages')) {
 	$nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>' : '0';
 	$welcome_messages = sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages);
 	$msg[] = sprintf('<span class="comment">%s</span>', $welcome_messages);
-	$ph['MessageInfo'] = join("\n", $msg);
+	$ph['MessageInfo'] = implode("\n", $msg);
 }
 
 // setup icons
@@ -320,7 +320,7 @@ $widgets['welcome'] = array(
 					</table>
 				</div>
 		',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
@@ -329,7 +329,7 @@ $widgets['onlineinfo'] = array(
 	'icon' => 'fa-user',
 	'title' => '[%onlineusers_title%]',
 	'body' => '<div class="userstable">[+OnlineInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['recentinfo'] = array(
 	'menuindex' => '30',
@@ -338,7 +338,7 @@ $widgets['recentinfo'] = array(
 	'icon' => 'fa-pencil-square-o',
 	'title' => '[%activity_title%]',
 	'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 if ($modx->config['rss_url_news']) {
     $widgets['news'] = array(
@@ -561,7 +561,7 @@ function getRecentInfoList() {
 
 		$output[] = $modx->parseText($tpl, $ph);
 	}
-	return join("\n", $output);
+	return implode("\n", $output);
 }
 
 function getRecentInfoRowTpl() {

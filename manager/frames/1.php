@@ -1,6 +1,5 @@
 <?php
-
-if (IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 header("X-XSS-Protection: 0");
@@ -519,9 +518,15 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
     </div>
 
     <?php
+    /**
+     * @param string $action
+     * @param string $img
+     * @param string $text
+     * @param bool $allowed
+     */
     function constructLink($action, $img, $text, $allowed)
     {
-        if ($allowed == 1) {
+        if ((bool)$allowed) {
             echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
             echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
         }

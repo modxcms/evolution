@@ -50,4 +50,3 @@ else {
 }
 
 echo $output;
-?>
