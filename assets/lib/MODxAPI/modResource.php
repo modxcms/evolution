@@ -516,7 +516,7 @@ class modResource extends MODxAPI
 
         $this->invokeEvent('OnBeforeDocFormSave', array(
             'mode'   => $this->newDoc ? "new" : "upd",
-            'id'     => $this->id ? $this->id : '',
+            'id'     => isset($this->id) ? $this->id : '',
             'doc'    => $this->toArray(),
             'docObj' => $this
         ), $fire_events);
@@ -614,10 +614,12 @@ class modResource extends MODxAPI
             $this->newDoc = false;
         }
 
-        if ($this->groupIds) $this->setDocumentGroups($this->id, $this->groupIds);
+        if (!empty($this->groupIds)) {
+            $this->setDocumentGroups($this->id, $this->groupIds);
+        }
         $this->invokeEvent('OnDocFormSave', array(
             'mode'   => $this->mode,
-            'id'     => $this->id,
+            'id'     => isset($this->id) ? $this->id : '',
             'doc'    => $this->toArray(),
             'docObj' => $this
         ), $fire_events);
@@ -634,7 +636,8 @@ class modResource extends MODxAPI
      * @param $tvId
      * @return bool
      */
-    protected function belongsToTemplate($tvId) {
+    protected function belongsToTemplate($tvId)
+    {
         $template = $this->get('template');
 
         return isset($this->tvTpl[$template]) && in_array($tvId, $this->tvTpl[$template]);
@@ -797,6 +800,7 @@ class modResource extends MODxAPI
      */
     protected function get_TV($reload = false)
     {
+        $this->modx->_TVnames = array();
         if (empty($this->modx->_TVnames) || $reload) {
             $result = $this->query('SELECT `id`,`name`,`type` FROM ' . $this->makeTable('site_tmplvars'));
             while ($row = $this->modx->db->GetRow($result)) {
@@ -815,7 +819,9 @@ class modResource extends MODxAPI
                 $arrayTVs[] = $name;
             }
         }
-        if (empty($this->tvaFields)) $this->tvaFields = $arrayTVs;
+        if (empty($this->tvaFields)) {
+            $this->tvaFields = $arrayTVs;
+        }
         $this->loadTVTemplate()->loadTVDefault(array_values($this->tv));
 
         return $this;
@@ -1001,7 +1007,7 @@ class modResource extends MODxAPI
         if ($this->isEncodableField($field)) {
             $data = $this->get($field);
             if ($this->isTVarrayField($field)) {
-                $out = is_array($data) ? implode('||', $data) : $data;
+                $out = is_array($data) ? implode('||', $data) : (string)$data;
             } else {
                 $out = json_encode($data);
             }
@@ -1055,7 +1061,8 @@ class modResource extends MODxAPI
     /**
      * @param int $docId
      */
-    public function getDocumentGroups($docId = 0) {
+    public function getDocumentGroups($docId = 0)
+    {
         $out = array();
         $doc = $this->switchObject($docId);
         if (null !== $doc->getID()) {
@@ -1081,7 +1088,9 @@ class modResource extends MODxAPI
      */
     public function setDocumentGroups($docId = 0, $groupIds = array())
     {
-        if (!is_array($groupIds)) return $this;
+        if (!is_array($groupIds)) {
+            return $this;
+        }
         if ($this->newDoc && $docId == 0) {
             $this->groupIds = $groupIds;
         } else {

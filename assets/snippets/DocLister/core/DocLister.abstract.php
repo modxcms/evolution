@@ -51,6 +51,13 @@ abstract class DocLister
     protected $modx = null;
 
     /**
+     * Шаблонизатор чанков
+     * @var DLTemplate
+     * @access protected
+     */
+    protected $DLTemplate = null;
+
+    /**
      * Массив загруженных экстендеров
      * @var array
      * @access protected
@@ -259,6 +266,15 @@ abstract class DocLister
         }
         $this->_filters = $this->getFilters($this->getCFGDef('filters', ''));
         $this->ownerTPL = $this->getCFGDef("ownerTPL", "");
+        $DLTemplate = DLTemplate::getInstance($modx);
+        if ($path = $this->getCFGDef('templatePath')) {
+            $DLTemplate->setTemplatePath($path);
+        }
+        if ($ext = $this->getCFGDef('templateExtension')) {
+            $DLTemplate->setTemplateExtension($ext);
+        }
+        $DLTemplate->setTwigTemplateVars(array('DocLister' => $this));
+        $this->DLTemplate = $DLTemplate;
     }
 
     /**
@@ -712,16 +728,16 @@ abstract class DocLister
      * Если данные в виде строки, то происходит попытка сформировать массив из этой строки по разделителю $sep
      * Точно по тому, по которому потом данные будут собраны обратно
      *
-     * @param mixed $data данные для обработки
+     * @param integer|string|array $data данные для обработки
      * @param string $sep разделитель
      * @param boolean $quote заключать ли данные на выходе в кавычки
      * @return string обработанная строка
      */
     public function sanitarIn($data, $sep = ',', $quote = true)
     {
-        if (!is_array($data)) {
-            $data = explode($sep, $data);
-        }
+        if(is_scalar($data)) $data = explode($sep, $data);
+        if(!is_array($data)) $data = array(); //@TODO: throw
+
         $out = array();
         foreach ($data as $item) {
             if ($item !== '') {
@@ -919,22 +935,15 @@ abstract class DocLister
      * @param bool $parseDocumentSource render html template via DocumentParser::parseDocumentSource()
      * @return string html template with data without placeholders
      */
-    public function parseChunk($name, $data, $parseDocumentSource = false)
+    public function parseChunk($name, $data = array(), $parseDocumentSource = false)
     {
         $this->debug->debug(
             array("parseChunk" => $name, "With data" => print_r($data, 1)),
             "parseChunk",
             2, array('html', null)
         );
-        $DLTemplate = DLTemplate::getInstance($this->getMODX());
-        if ($path = $this->getCFGDef('templatePath')) {
-            $DLTemplate->setTemplatePath($path);
-        }
-        if ($ext = $this->getCFGDef('templateExtension')) {
-            $DLTemplate->setTemplateExtension($ext);
-        }
-        $DLTemplate->setTwigTemplateVars(array('DocLister' => $this));
-        $out = $DLTemplate->parseChunk($name, $data, $parseDocumentSource);
+
+        $out = $this->DLTemplate->parseChunk($name, $data, $parseDocumentSource);
         $out = $this->parseLang($out);
         if (empty($out)) {
             $this->debug->debug("Empty chunk: " . $this->debug->dumpData($name), '', 2);
@@ -1357,7 +1366,7 @@ abstract class DocLister
      * Выборка документов которые являются дочерними относительно $id документа и в тоже время
      * являются родителями для каких-нибудь других документов
      *
-     * @param string $id значение PrimaryKey родителя
+     * @param string|array $id значение PrimaryKey родителя
      * @return array массив документов
      */
     abstract public function getChildrenFolder($id);
@@ -1721,7 +1730,7 @@ abstract class DocLister
         if (!$out) {
             $this->debug->error("Error load Filter: '{$this->debug->dumpData($filter)}'", 'Filter');
         }
-            
+
         $this->debug->debugEnd("loadFilter");
 
         return $out;
