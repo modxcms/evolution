@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MODX Content Manager</title>
+	<title>EVO Content Manager</title>
 	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 	<meta name="robots" content="noindex, nofollow" />
 	<style type="text/css">

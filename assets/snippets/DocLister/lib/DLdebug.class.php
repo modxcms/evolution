@@ -77,7 +77,7 @@ class DLdebug
      * @param $message
      * @param null $key
      * @param int $mode
-     * @param bool $format
+     * @param bool|array|string $format
      */
     public function debug($message, $key = null, $mode = 0, $format = false)
     {

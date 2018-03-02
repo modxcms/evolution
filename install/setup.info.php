@@ -140,7 +140,7 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
                 $params['modx_category'],
                 $params['legacy_names'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                intval($params['disabled'])
+                (int)$params['disabled']
             );
         }
     }
@@ -165,12 +165,12 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
                 "$modulePath/{$params['filename']}",
                 $params['properties'],
                 $params['guid'],
-                intval($params['shareparams']),
+                (int)$params['shareparams'],
                 $params['modx_category'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
             );
         }
-		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
+		if ((int)$params['shareparams'] || !empty($params['dependencies'])) {
 			$dependencies = explode(',', $params['dependencies']);
 			foreach ($dependencies as $dependency) {
 				$dependency = explode(':', $dependency);
@@ -243,11 +243,6 @@ $callBackFnc = "clean_up";
 
 function clean_up($sqlParser) {
     $ids = array();
-    $mysqlVerOk = -1;
-
-    if(function_exists("mysqli_get_server_info")) {
-        $mysqlVerOk = (version_compare(mysqli_get_server_info($sqlParser->conn),"4.0.2")>=0);
-    }
 
     // secure web documents - privateweb
     mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1");
@@ -298,7 +293,6 @@ function parse_docblock($element_dir, $filename) {
             $docblock_start_found = false;
             $name_found = false;
             $description_found = false;
-            $docblock_end_found = false;
 
             while(!feof($tpl)) {
                 $line = fgets($tpl);
@@ -344,7 +338,6 @@ function parse_docblock($element_dir, $filename) {
                             $params[$param] = $val;
                         }
                     } elseif(preg_match("/^\s*\*\/\s*$/", $line)) {
-                        $docblock_end_found = true;
                         break;
                     }
                 }

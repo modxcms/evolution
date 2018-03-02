@@ -256,6 +256,10 @@
     color: #bbb;
     font-weight: normal;
 }
+#qmEditor .qmId:hover {
+    background-color:inherit!important;
+    cursor:default!important;
+}
 #qmEditor .qmButton span
 {
 
@@ -289,6 +293,10 @@ div#qmEditorClosed:hover:after
     margin-right: -2px !important;
     color: #bbb;
     font-size: 13px;
+}
+#qmUser:hover {
+    background-color:inherit!important;
+    cursor:default!important;
 }
 
 a#qmLogoClose

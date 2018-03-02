@@ -34,7 +34,7 @@ if ($e->name == 'OnWebLogin') {
 }
 if ($e->name == 'OnWebPageInit' || $e->name == 'OnPageNotFound') {
     $user = new \modUsers($modx);
-    if ($modx->getLoginUserID('web')) {
+    if ($uid = $modx->getLoginUserID('web')) {
         if (isset($_REQUEST[$logoutKey])) {
             $user->logOut($cookieName, true);
             $page = $modx->config['site_url'] . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
@@ -42,6 +42,8 @@ if ($e->name == 'OnWebPageInit' || $e->name == 'OnPageNotFound') {
             unset($query[$logoutKey], $query['q']);
             if ($query) $page . '?' . http_build_query($query);
             $modx->sendRedirect($page);
+        } elseif (!$user->edit($uid)->getID() || $user->checkBlock($uid)) {
+            $user->logOut($cookieName, true);
         }
     } else {
         $user->AutoLogin($cookieLifetime, $cookieName, true);

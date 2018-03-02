@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('edit_template') && $modx->manager->action == '301') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -9,9 +9,9 @@ if(!$modx->hasPermission('new_template') && $modx->manager->action == '300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
-$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
-$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : NULL;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
+$origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
+$originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : NULL;
 
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
@@ -44,7 +44,7 @@ if(isset($_GET['id'])) {
 	$content['name'] = $_REQUEST['itemname'];
 } else {
 	$_SESSION['itemname'] = $_lang["new_tmplvars"];
-	$content['category'] = intval($_REQUEST['catid']);
+	$content['category'] = (int)$_REQUEST['catid'];
 }
 
 if($modx->manager->hasFormValues()) {
@@ -107,7 +107,7 @@ if(is_array($evtOut)) {
 		},
 		cancel: function() {
 			documentDirty = false;
-			document.location.href = 'index.php?a=<?= $origin ?><?=($originId != NULL ? '&id=' . $originId : '') ?>';
+			document.location.href = 'index.php?a=<?= $origin ?><?=(empty($originId) ? '' : '&id=' . $originId) ?>';
 		}
 	};
 
@@ -491,7 +491,7 @@ if(is_array($evtOut)) {
 					if($row['id'] == $modx->config['default_template']) {
 						$tplInfo[] = $_lang['defaulttemplate_title'];
 					}
-					$tplInfo = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
+					$tplInfo = !empty($tplInfo) ? ' <em>(' . implode(', ', $tplInfo) . ')</em>' : '';
 
 					$tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;"> %s%s%s%s</label></li>', $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo);
 					$tplList .= '</li>';

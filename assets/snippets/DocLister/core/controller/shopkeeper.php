@@ -66,7 +66,7 @@ class shopkeeperDocLister extends site_contentDocLister
                 $extJotCount = $this->getCFGdef('jotcount', 0) ? $this->getExtender('jotcount', true) : null;
 
                 if ($extJotCount) {
-                    $comments = $extJotCount->countComments(array_keys($this->_docs));
+                    $extJotCount->init($this);
                 }
 
                 $this->skippedDocs = 0;
@@ -77,10 +77,6 @@ class shopkeeperDocLister extends site_contentDocLister
                     }
 
                     $item['summary'] = $extSummary ? $this->getSummary($item, $extSummary, '', 'content') : '';
-
-                    if ($extJotCount) {
-                        $item['jotcount'] = APIHelpers::getkey($comments, $item['id'], 0);
-                    }
 
                     $item = array_merge($item,
                         $sysPlh); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
@@ -269,7 +265,7 @@ class shopkeeperDocLister extends site_contentDocLister
     }
 
     /**
-     * @param $id
+     * @param $id|array
      * @return array
      */
     public function getChildrenFolder($id)

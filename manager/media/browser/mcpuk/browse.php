@@ -25,5 +25,3 @@ if( $_GET['type'] == 'files'  && !$modx->hasPermission('file_manager') && !$modx
 
 $browser = new browser($modx);
 $browser->action();
-
-?>

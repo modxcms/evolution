@@ -20,4 +20,4 @@ foreach($lines as $i=>$line)
     }
     $lines[$i] = "{$line}<br />";
 }
-return join("\n", $lines);
+return implode("\n", $lines);

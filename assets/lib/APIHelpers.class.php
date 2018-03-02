@@ -1,5 +1,5 @@
 <?php
-// extension_loaded('mbstring') ???
+
 /**
  * Class APIhelpers
  */
@@ -65,7 +65,7 @@ class APIhelpers
      * @param Closure $validate null функция дополнительной валидации значения (должна возвращать true или false)
      * @return mixed
      */
-    public static function getkey($data, $key, $default = null)
+    public static function getkey($data, $key, $default = null, $validate = null)
     {
         $out = $default;
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {

@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 // action list
 $GLOBALS['action_list'] = array(
@@ -118,7 +120,7 @@ $GLOBALS['action_list'] = array(
 	'116'	=> 'Delete event log',
 	'117'   => 'Editing tv rank',
 	'118'   => 'Call settings ajax include',
-	'119'   => 'Login Fail (Temporary Block)',	
+	'119'   => 'Login Fail (Temporary Block)',
 
 	'300'	=> 'Create Template Variable',
 	'301'	=> 'Edit Template Variable',
@@ -132,6 +134,11 @@ $GLOBALS['action_list'] = array(
 	'999'	=> 'Viewing test page',
 );
 
+/**
+ * @param string $actionId
+ * @param string $itemid
+ * @return string
+ */
 function getAction($actionId, $itemid='') {
 	global $action_list;
 

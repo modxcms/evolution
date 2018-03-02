@@ -4,8 +4,8 @@
  *  Build and return document tree view nodes
  *
  */
-if (IN_MANAGER_MODE != 'true') {
-    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
 include_once('nodes.functions.inc.php');
@@ -18,11 +18,10 @@ if (isset($_REQUEST['savestateonly'])) {
     exit('send some data');
 } //??
 
-$indent = intval($_REQUEST['indent']);
-$parent = intval($_REQUEST['parent']);
-$expandAll = intval($_REQUEST['expandAll']);
+$indent = (int)$_REQUEST['indent'];
+$parent = (int)$_REQUEST['parent'];
+$expandAll = (int)$_REQUEST['expandAll'];
 $output = '';
-$theme = $manager_theme . "/";
 $hereid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : '';
 
 if (isset($_REQUEST['showonlyfolders'])) {
@@ -44,7 +43,6 @@ foreach ($sortParams as $param) {
 
 // icons by content type
 $icons = getIconInfo($_style);
-$iconsPrivate = getPrivateIconInfo($_style);
 
 if (isset($_SESSION['openedArray'])) {
     $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
@@ -55,8 +53,8 @@ if (isset($_SESSION['openedArray'])) {
 $opened2 = array();
 $closed2 = array();
 
-//makeHTML($indent, $parent, $expandAll, $theme, $hereid);
-echo makeHTML($indent, $parent, $expandAll, $theme, $hereid);
+//makeHTML($indent, $parent, $expandAll, $hereid);
+echo makeHTML($indent, $parent, $expandAll, $hereid);
 
 // check for deleted documents on reload
 if ($expandAll == 2) {

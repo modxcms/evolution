@@ -5,9 +5,10 @@
  * Time: 14:16
  */
 
-if (!include_once MODX_MANAGER_PATH . 'includes/extenders/manager.api.class.inc.php'){
+if (!include_once MODX_MANAGER_PATH . 'includes/extenders/manager.api.class.inc.php') {
     return false;
-}else{
-    $this->manager= new ManagerAPI;
+} else {
+    $this->manager = new ManagerAPI;
+
     return true;
 }

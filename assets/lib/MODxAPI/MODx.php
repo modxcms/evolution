@@ -88,7 +88,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     protected $default_field = array();
 
     /**
-     * @var null
+     * @var null|integer|string
      */
     protected $id = null;
 
@@ -272,8 +272,7 @@ abstract class MODxAPI extends MODxAPIhelpers
      */
     final public function invokeEvent($name, $data = array(), $flag = false)
     {
-        $flag = (isset($flag) && $flag != '') ? (bool)$flag : false;
-        if ($flag) {
+        if ((bool)$flag === true) {
             $this->modx->invokeEvent($name, $data);
         }
 
@@ -808,11 +807,11 @@ abstract class MODxAPI extends MODxAPIhelpers
     abstract public function edit($id);
 
     /**
-     * @param null $fire_events
+     * @param bool $fire_events
      * @param bool $clearCache
      * @return mixed
      */
-    abstract public function save($fire_events = null, $clearCache = false);
+    abstract public function save($fire_events = false, $clearCache = false);
 
     /**
      * @param $ids

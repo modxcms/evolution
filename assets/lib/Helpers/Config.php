@@ -13,9 +13,14 @@ class Config
     protected $fs = null;
     protected $path = '';
 
+    /**
+     * Config constructor.
+     *
+     * @param array $cfg
+     */
     public function __construct($cfg = array())
     {
-        if ($cfg) {
+        if (!empty($cfg)) {
             $this->setConfig($cfg);
         }
         $this->fs = FS::getInstance();

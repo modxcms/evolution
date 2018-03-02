@@ -1,37 +1,11 @@
 <?php
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+}
 
 $_POST['installmode'] = 1;
 //$_POST['installdata'] = 0;
 $sqlParser = '';
-
-define('MODX_API_MODE', true);
-$autoloader = realpath(MODX_BASE_PATH .'vendor/autoload.php');
-if (file_exists($autoloader) && is_readable($autoloader)) {
-    include_once($autoloader);
-}
-include_once MGR.'/includes/protect.inc.php';
-include_once MGR.'/includes/config.inc.php';
-include_once MGR.'/includes/document.parser.class.inc.php';
-$modx = new DocumentParser;
-$modx->db->connect();
-$modx->getSettings();
-startCMSSession();
-$modx->minParserPasses=2;
-$modx->invokeEvent('OnManagerPageInit');
-global $moduleName;
-global $moduleVersion;
-global $moduleSQLBaseFile;
-global $moduleSQLDataFile;
-
-global $moduleChunks;
-global $moduleTemplates;
-global $moduleSnippets;
-global $modulePlugins;
-global $moduleModules;
-global $moduleTVs;
-
-global $errors;
 
 $create = false;
 
@@ -39,7 +13,7 @@ $create = false;
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 // set session name variable
@@ -205,7 +179,7 @@ if (isset ($_POST['tv']) || $installData) {
                        }
                     }
                 }
-            }   
+            }
         }
     }
 }
@@ -380,7 +354,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
-                    
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -405,7 +379,7 @@ if (isset ($_POST['snippet']) || $installData) {
     echo "<h3>" . $_lang['snippets'] . ":</h3> ";
     $selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k=>$moduleSnippet) {
-
+        if (!is_array($moduleSnippet) || !isset($moduleSnippet[5]) || !is_array($moduleSnippet[5])) continue;
         $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         if($installSample || in_array($k, $selSnips)) {
             $name = $modx->db->escape($moduleSnippet[0]);
@@ -425,9 +399,9 @@ if (isset ($_POST['snippet']) || $installData) {
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
                 $snippet = $modx->db->escape($snippet);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
-                
+
                 if ($modx->db->getRecordCount($rs)) {
-                
+
                     $row = $modx->db->getRow($rs,'assoc');
                     $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
@@ -435,7 +409,7 @@ if (isset ($_POST['snippet']) || $installData) {
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {    
+                } else {
                     $properties = $modx->db->escape(parseProperties($properties, true));
                     if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties','$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
@@ -501,13 +475,13 @@ function propUpdate($new,$old){
     return $return;
 }
 
-function parseProperties($propertyString, $json=false) {  
-    $propertyString = str_replace('{}', '', $propertyString ); 
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
     if($propertyString=='{}' || $propertyString=='[]') return array();
-    
+
     $jsonFormat = isJson($propertyString, true);
     $property = array();
     // old format
@@ -537,7 +511,7 @@ function parseProperties($propertyString, $json=false) {
                 }
                 $property[$key['0']]['0']['desc'] = '';
             }
-            
+
         }
     // new json-format
     } else if(!empty($jsonFormat)){
@@ -556,7 +530,7 @@ function isJson($string, $returnData=false) {
 }
 
 function getCreateDbCategory($category, $sqlParser) {
-    
+
     global $modx;
     $dbase = $modx->db->config['dbase'];
     $table_prefix = $modx->db->config['table_prefix'];

@@ -1,6 +1,5 @@
 <?php
-
-if (IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 header("X-XSS-Protection: 0");
@@ -100,6 +99,8 @@ if ($modx->config['manager_theme'] == 'default') {
     }
 }
 
+$modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['role'] == 1 || $modx->hasPermission('edit_template') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_plugin')));
+
 ?>
 <!DOCTYPE html>
 <html <?= (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"' ?>>
@@ -148,7 +149,8 @@ if ($modx->config['manager_theme'] == 'default') {
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',
-          global_tabs: <?= $modx->config['global_tabs'] && $user['role'] == 1 ? 1 : 0 ?>
+          global_tabs: <?= $modx->config['global_tabs'] ?>
+
         },
         lang: {
           already_deleted: "<?= $_lang['already_deleted'] ?>",
@@ -211,6 +213,7 @@ if ($modx->config['manager_theme'] == 'default') {
         plugins: {
           ElementsInTree: <?= isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
           EVOmodal: <?= isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
+
         },
         extend: function() {
           for (var i = 1; i < arguments.length; i++) {
@@ -251,7 +254,7 @@ if ($modx->config['manager_theme'] == 'default') {
     ?>
 </head>
 <body class="<?= $body_class ?>">
-<input type="hidden" name="sessToken" id="sessTokenInput" value="<?= md5(session_id()) ?>" />
+<input type="hidden" name="sessToken" id="sessTokenInput" value="<?= isset($_SESSION['mgrToken']) ? $_SESSION['mgrToken'] : '' ?>" />
 <div id="frameset">
     <div id="mainMenu" class="dropdown">
         <div class="container">
@@ -273,7 +276,7 @@ if ($modx->config['manager_theme'] == 'default') {
                         </li>
                         <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
                             <?php if ($modx->hasPermission('new_document')) { ?>
-                                <li class="dropdown newresource">
+                                <li id="newresource" class="dropdown newresource">
                                     <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
                                     <ul class="dropdown-menu">
                                         <?php if ($modx->hasPermission('new_document')) { ?>
@@ -306,13 +309,13 @@ if ($modx->config['manager_theme'] == 'default') {
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                        <li>
+                        <li id="preview">
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
                                 <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
-                            <li class="dropdown">
+                            <li id="system" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
@@ -358,7 +361,7 @@ if ($modx->config['manager_theme'] == 'default') {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <li class="dropdown account">
+                        <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
                                 <span class="username"><?= $user['username'] ?></span>
                                 <?php if ($user['photo']) { ?>
@@ -409,7 +412,7 @@ if ($modx->config['manager_theme'] == 'default') {
         <?php include('tree.php') ?>
     </div>
     <div id="main">
-        <?php if ($modx->config['global_tabs'] && $user['role'] == 1): ?>
+        <?php if ($modx->config['global_tabs']): ?>
             <div class="tab-row-container evo-tab-row">
                 <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
             </div>
@@ -515,9 +518,15 @@ if ($modx->config['manager_theme'] == 'default') {
     </div>
 
     <?php
+    /**
+     * @param string $action
+     * @param string $img
+     * @param string $text
+     * @param bool $allowed
+     */
     function constructLink($action, $img, $text, $allowed)
     {
-        if ($allowed == 1) {
+        if ((bool)$allowed) {
             echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
             echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
         }
@@ -526,64 +535,64 @@ if ($modx->config['manager_theme'] == 'default') {
     ?>
 
     <script type="text/javascript">
-        <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
-        if (document.getElementById('treeMenu')) {
+      if (document.getElementById('treeMenu')) {
+          <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
-          document.getElementById('treeMenu_openelements').onclick = function(e) {
-            e.preventDefault();
-            if (modx.config.global_tabs && !e.shiftKey) {
-              modx.tabs({url: '<?= MODX_MANAGER_URL ?>index.php?a=76', title: '<?= $_lang["elements"] ?>'});
-            } else {
-              var randomNum = '<?= $_lang["elements"] ?>';
-              if (e.shiftKey) {
-                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
-              }
-              modx.openWindow({
-                url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
-                title: randomNum
-              });
+        document.getElementById('treeMenu_openelements').onclick = function(e) {
+          e.preventDefault();
+          if (modx.config.global_tabs && !e.shiftKey) {
+            modx.tabs({url: '<?= MODX_MANAGER_URL ?>index.php?a=76', title: '<?= $_lang["elements"] ?>'});
+          } else {
+            var randomNum = '<?= $_lang["elements"] ?>';
+            if (e.shiftKey) {
+              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
             }
-          };
-            <?php } ?>
-            <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+            modx.openWindow({
+              url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
+              title: randomNum
+            });
+          }
+        };
+          <?php } ?>
+          <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
 
-          document.getElementById('treeMenu_openimages').onclick = function(e) {
-            e.preventDefault();
-            if (modx.config.global_tabs && !e.shiftKey) {
-              modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=images', title: '<?= $_lang["images_management"] ?>'});
-            } else {
-              var randomNum = '<?= $_lang["files_files"] ?>';
-              if (e.shiftKey) {
-                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
-              }
-              modx.openWindow({
-                url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
-                title: randomNum
-              });
+        document.getElementById('treeMenu_openimages').onclick = function(e) {
+          e.preventDefault();
+          if (modx.config.global_tabs && !e.shiftKey) {
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=images' ?>', title: '<?= $_lang["images_management"] ?>'});
+          } else {
+            var randomNum = '<?= $_lang["files_files"] ?>';
+            if (e.shiftKey) {
+              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
             }
-          };
-            <?php } ?>
-            <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+            modx.openWindow({
+              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
+              title: randomNum
+            });
+          }
+        };
+          <?php } ?>
+          <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
 
-          document.getElementById('treeMenu_openfiles').onclick = function(e) {
-            e.preventDefault();
-            if (modx.config.global_tabs && !e.shiftKey) {
-              modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=files', title: '<?= $_lang["files_files"] ?>'});
-            } else {
-              var randomNum = '<?= $_lang["files_files"] ?>';
-              if (e.shiftKey) {
-                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
-              }
-              modx.openWindow({
-                url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
-                title: randomNum
-              });
+        document.getElementById('treeMenu_openfiles').onclick = function(e) {
+          e.preventDefault();
+          if (modx.config.global_tabs && !e.shiftKey) {
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=files' ?>', title: '<?= $_lang["files_files"] ?>'});
+          } else {
+            var randomNum = '<?= $_lang["files_files"] ?>';
+            if (e.shiftKey) {
+              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
             }
-          };
-            <?php } ?>
+            modx.openWindow({
+              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
+              title: randomNum
+            });
+          }
+        };
+          <?php } ?>
 
-        }
+      }
 
     </script>
     <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>

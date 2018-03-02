@@ -1,49 +1,48 @@
 <?php
 /*
 *************************************************************************
-	MODX Content Management System and PHP Application Framework
-	Managed and maintained by Raymond Irving, Ryan Thrash and the
-	MODX community
+	EVO Content Management System and PHP Application Framework ("EVO")
+	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
-	MODX is an opensource PHP/MySQL content management system and content
+	EVO is an opensource PHP/MySQL content management system and content
 	management framework that is flexible, adaptable, supports XHTML/CSS
-	layouts, and works with most web browsers, including Safari.
+	layouts, and works with most web browsers.
 
-	MODX is distributed under the GNU General Public License
+	EVO is distributed under the GNU General Public License
 *************************************************************************
 
-	MODX CMS and Application Framework ("MODX")
-	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
-	All rights reserved.
+	This file and all related or dependant files distributed with this file
+	are considered as a whole to make up EVO.
 
-	This file and all related or dependant files distributed with this filie
-	are considered as a whole to make up MODX.
-
-	MODX is free software; you can redistribute it and/or modify
+	EVO is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	MODX is distributed in the hope that it will be useful,
+	EVO is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with MODX (located in "/assets/docs/"); if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+	along with EVO (located in "/assets/docs/"); if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
 
-	For more information on MODX please visit http://modx.com/
+	For more information on EVO please visit https://evo.im/
+	Github: https://github.com/evolution-cms/evolution/
 
 **************************************************************************
-	Originally based on Etomite by Alex Butter
+	Based on MODX Evolution CMS and Application Framework
+	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
+	All rights reserved.
+
+	MODX Evolution is originally based on Etomite by Alex Butter
 **************************************************************************
 */
 
-
 /**
  *  Filename: index.php
- *  Function: This file is the main root file for MODX. It is
+ *  Function: This file is the main root file for EVO. It is
  *          only file that will be directly requested, and
  *          depending on the request, will branch different
  *          content
@@ -80,8 +79,8 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
-if (!defined('IN_MANAGER_MODE')) {
-	define("IN_MANAGER_MODE", "true");
+if ( ! defined('IN_MANAGER_MODE')) {
+	define('IN_MANAGER_MODE', true);
 }
 
 // harden it
@@ -100,7 +99,7 @@ header('X-XSS-Protection: 0');
 $_lang = array();
 include_once "includes/lang/english.inc.php";
 
-// check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
+// check PHP version. EVO is compatible with php 5 (5.0.0+)
 $php_ver_comp =  version_compare(phpversion(), "5.0.0");
 		// -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
@@ -118,13 +117,13 @@ if(!function_exists('iconv')) {
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
-if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
-if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
-if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
+if (!defined('ENT_COMPAT')) define('ENT_COMPAT', 2);
+if (!defined('ENT_NOQUOTES')) define('ENT_NOQUOTES', 0);
+if (!defined('ENT_QUOTES')) define('ENT_QUOTES', 3);
 
 // set the document_root :|
-if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
-	$_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
+if(!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
+	$_SERVER['DOCUMENT_ROOT'] = str_replace($_SERVER['PATH_INFO'], "", preg_replace("/\\\\/", "/", $_SERVER['PATH_TRANSLATED']))."/";
 }
 
 // include_once config file
@@ -139,8 +138,14 @@ if (!file_exists($config_filename)) {
 include_once "config.inc.php";
 
 // initiate the content manager class
-include_once "document.parser.class.inc.php";
-$modx = new DocumentParser;
+if (isset($coreClass) && class_exists($coreClass)) {
+	$modx = new $coreClass;
+}
+if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
+	$modx = new \DocumentParser;
+}
+
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $modx->tstart = $tstart;
@@ -164,13 +169,13 @@ if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".
 	$manager_language = "english"; // if not set, get the english language file.
 }
 
-// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer) 
+// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
 if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
 	include_once "lang/".$manager_language.".inc.php";
 }
 
-// allow custom language overrides not altered by future MODX-updates
+// allow custom language overrides not altered by future EVO-updates
 if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
 	include_once "lang/override/".$manager_language.".inc.php";
 }
@@ -239,7 +244,7 @@ if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 $modx->manager->action = $action;
 
 // attempt to foil some simple types of CSRF attacks
-if (isset($modx->config['validate_referer']) && intval($modx->config['validate_referer'])) {
+if (isset($modx->config['validate_referer']) && (int)$modx->config['validate_referer']) {
 	if (isset($_SERVER['HTTP_REFERER'])) {
 		$referer = $_SERVER['HTTP_REFERER'];
 

@@ -42,7 +42,7 @@ class site_contentDocLister extends DocLister
         if ($tvlist == '') {
             $tvlist = $this->getCFGDef('tvList', '');
         }
-        
+
         $this->extTV->getAllTV_Name();
 
         /**
@@ -56,8 +56,6 @@ class site_contentDocLister extends DocLister
 
         if ($this->extPaginate = $this->getExtender('paginate')) {
             $this->extPaginate->init($this);
-        } else {
-            $this->config->setConfig(array('start' => 0));
         }
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();
@@ -227,7 +225,7 @@ class site_contentDocLister extends DocLister
                 if (isset($row[$date])) {
                     if (!$row[$date] && $date == 'pub_date' && isset($row['createdon'])) {
                         $date = 'createdon';
-                    }   
+                    }
                     $_date = is_numeric($row[$date]) && $row[$date] == (int)$row[$date] ? $row[$date] : strtotime($row[$date]);
                     if ($_date !== false) {
                         $_date = $_date + $this->modx->config['server_offset_time'];
@@ -415,7 +413,7 @@ class site_contentDocLister extends DocLister
     }
 
     /**
-     * @param string $id
+     * @param string|array $id
      * @return array
      */
     public function getChildrenFolder($id)

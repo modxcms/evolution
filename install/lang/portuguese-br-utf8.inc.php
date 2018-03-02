@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author Daniel Miguel de Melo
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Português do Brasil
  * @package modx
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'falhou!';
 $_lang["status_failed_could_not_create_database"] = 'falhou - não foi possível criar a base de dadose';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'falhou - o table prefix já está em uso!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'sucesso - Base de Dados selecionada';
 $_lang["status_passed_database_created"] = 'sucesso - Base de Dados criada';
 $_lang["status_passed_server"] = 'sucesso - collations agora disponíveis';

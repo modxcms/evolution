@@ -66,7 +66,7 @@ class Activate extends Form
     {
         $hash = $this->getField('hash');
         $uid = $this->getField('id');
-        if ($hash && $hash == $this->getUserHash($uid)) {
+        if (is_scalar($hash) && $hash && $hash == $this->getUserHash($uid)) {
             $this->process();
         } else {
             $this->addMessage($this->lexicon->getMsg('activate.update_failed'));
