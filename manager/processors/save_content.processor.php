@@ -656,15 +656,7 @@ switch ($actionToTake) {
 
         if ($syncsite == 1) {
             // empty cache
-            $keys = array('alias','parent','published','isfolder','menuindex','alias_visible');
-            $flag = '';
-            foreach($keys as $key) {
-                if ($existingDocument[$key]===$_POST[$key]) continue;
-                $flag = 'full';
-                break;
-            }
-            if($flag==='full') $modx->clearCache('full');
-            else               $modx->clearCache($id);
+            $modx->clearCache('full');
         }
 
         if ($_POST['refresh_preview'] == '1')

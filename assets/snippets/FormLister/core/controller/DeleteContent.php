@@ -31,7 +31,7 @@ class DeleteContent extends Form
             $this->log('Lexicon loaded', array('lexicon' => $lang));
         }
         $idField = $this->getCFGDef('idField','id');
-        if (isset($_REQUEST[$idField])) {
+        if (isset($_REQUEST[$idField]) && is_scalar($_REQUEST[$idField])) {
             $this->id = (int)$_REQUEST[$idField];
         }
         $this->config->setConfig(array(

@@ -2817,6 +2817,10 @@ class DocumentParser
         //$this->_fixURI();
         // invoke OnWebPageInit event
         $this->invokeEvent("OnWebPageInit");
+        // invoke OnLogPageView event
+        if ($this->config['track_visitors'] == 1) {
+            $this->invokeEvent("OnLogPageHit");
+        }
         if ($this->config['seostrict'] === '1') {
             $this->sendStrictURI();
         }

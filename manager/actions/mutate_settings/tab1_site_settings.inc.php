@@ -285,6 +285,14 @@ table.sysSettings tr.noborder td {border:none;}
       	<div class="comment"><?php echo $_lang['rss_url_news_message'] ?></div>
       </td>
     </tr>
+    <tr>
+     <th><?php echo $_lang['track_visitors_title'] ?><br><small>[(track_visitors)]</small></th>
+     <td>
+         <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
+         <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
+         <div class="comment"><?php echo $_lang['track_visitors_message'] ?></div>
+     </td>
+   </tr>
   <tr class="noborder">
     <th><?php echo $_lang['top_howmany_title'] ?><br><small>[(top_howmany)]</small></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" />

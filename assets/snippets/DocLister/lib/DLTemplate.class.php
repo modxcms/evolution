@@ -24,7 +24,7 @@ class DLTemplate
     protected $templateExtension = 'html';
 
     /**
-     * @var null twig object
+     * @var null|Twig_Environment twig object
      */
     protected $twig = null;
 
@@ -378,7 +378,13 @@ class DLTemplate
         } else {
             $twig = $this->twig;
         }
-        if ($twig) $twig->getLoader()->addLoader(new Twig_Loader_Array(array(md5($name)=>$tpl)));
+        if ($twig && class_exists('Twig_Loader_Array')) {
+            $twig->getLoader()->addLoader(
+                new Twig_Loader_Array(array(
+                    md5($name) => $tpl
+                ))
+            );
+        }
         return $twig;
     }
 
