@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -51,7 +53,7 @@ if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_them
 }
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
-$data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
+$data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']);
 
 if (isset($data) && count($data) > 0) {
 	if(isset($data['manager_language'])) {
@@ -64,7 +66,7 @@ if (isset($data) && count($data) > 0) {
 	}
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
-	$data['mail_check_timeperiod'] = intval($data['mail_check_timeperiod']) < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
+	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {
             case 'settings_version':{
@@ -80,7 +82,7 @@ if (isset($data) && count($data) > 0) {
 				$v = $data['site_start'];
 			}
 			break;
-	
+
 			case 'lst_custom_contenttype':
 			case 'txt_custom_contenttype':
 				// Skip these
@@ -120,33 +122,33 @@ if (isset($data) && count($data) > 0) {
 				break;
 			case 'session_timeout':
 				$mail_check_timeperiod = $data['mail_check_timeperiod'];
-				$v = intval($v) < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
+				$v = (int)$v < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
 				break;
 			default:
 			break;
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
-		
+
 		$modx->config[$k] = $v;
-		
+
 		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
-	
+
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
 	$modx->db->query($sql);
-	
+
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
-		$newtemplate = intval($data['default_template']);
-		$oldtemplate = intval($data['old_template']);
+		$newtemplate = (int)$data['default_template'];
+		$oldtemplate = (int)$data['old_template'];
 		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
 		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
 		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
 	}
-	
+
 	// empty cache
 	$modx->clearCache('full');
 }

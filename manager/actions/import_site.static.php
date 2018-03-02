@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('import_static')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -101,8 +101,11 @@ $allowedfiles = array(
 	</div>
 
 <?php
+/**
+ * @return string
+ */
 function run() {
-	global $modx;
+	global $modx, $_lang;
 
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$output = '';
@@ -124,13 +127,15 @@ function run() {
 		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
 	}
 
-	$parent = intval($_POST['parent']);
+	$parent = (int)$_POST['parent'];
 
 	if(is_dir(MODX_BASE_PATH . 'temp/import')) {
 		$filedir = MODX_BASE_PATH . 'temp/import/';
 	} elseif(is_dir(MODX_BASE_PATH . 'assets/import')) {
 		$filedir = MODX_BASE_PATH . 'assets/import/';
-	}
+	} else {
+        $filedir = '';
+    }
 
 	$filesfound = 0;
 
@@ -142,7 +147,7 @@ function run() {
 
 	// import files
 	if(0 < count($files)) {
-		$rs = $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+		$modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
 		importFiles($parent, $filedir, $files, 'root');
 	}
 
@@ -160,6 +165,12 @@ function run() {
 	return $output;
 }
 
+/**
+ * @param int $parent
+ * @param string $filedir
+ * @param array $files
+ * @param string $mode
+ */
 function importFiles($parent, $filedir, $files, $mode) {
 	global $modx;
 	global $_lang, $allowedfiles;
@@ -168,12 +179,11 @@ function importFiles($parent, $filedir, $files, $mode) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$tbl_system_settings = $modx->getFullTableName('system_settings');
 
-	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if(!is_array($files)) {
 		return;
 	}
-	if($_POST['object'] == 'all') {
+	if($_POST['object'] === 'all') {
 		$modx->config['default_template'] = '0';
 		$richtext = '0';
 	} else {
@@ -302,11 +312,17 @@ function importFiles($parent, $filedir, $files, $mode) {
 	}
 }
 
+/**
+ * @param string $directory
+ * @param array $listing
+ * @param int $count
+ * @return array
+ */
 function getFiles($directory, $listing = array(), $count = 0) {
 	global $_lang;
 	global $filesfound;
 	$dummy = $count;
-	if($files = scandir($directory)) {
+	if( ! empty($directory) && $files = scandir($directory)) {
 		foreach($files as $file) {
 			if($file == '.' || $file == '..') {
 				continue;
@@ -326,6 +342,10 @@ function getFiles($directory, $listing = array(), $count = 0) {
 	return ($listing);
 }
 
+/**
+ * @param string $filepath
+ * @return bool|string
+ */
 function getFileContent($filepath) {
 	global $_lang;
 	// get the file
@@ -336,6 +356,10 @@ function getFileContent($filepath) {
 	}
 }
 
+/**
+ * @param array $array
+ * @return array
+ */
 function pop_index($array) {
 	$new_array = array();
 	foreach($array as $k => $v) {
@@ -353,6 +377,12 @@ function pop_index($array) {
 	return $new_array;
 }
 
+/**
+ * @param string $src
+ * @param string $filename
+ * @param string $alias
+ * @return array
+ */
 function treatContent($src, $filename, $alias) {
 	global $modx;
 
@@ -394,11 +424,17 @@ function treatContent($src, $filename, $alias) {
 	);
 }
 
+/**
+ * @return void
+ */
 function convertLink() {
 	global $modx;
 	$tbl_site_content = $modx->getFullTableName('site_content');
 
 	$rs = $modx->db->select('id,content', $tbl_site_content);
+	$p = array();
+    $target = array();
+	$dir = '';
 	while($row = $modx->db->getRow($rs)) {
 		$id = $row['id'];
 		$array = explode('<a href=', $row['content']);

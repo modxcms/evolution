@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy and Nicola1971 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.9 updated 28/09/2017
+ * @version     1.5.10 updated 02/02/2018
  */
 
 if(!class_exists('Qm')) {
@@ -355,7 +355,7 @@ class Qm {
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext"> '.$_lang['edit_resource'].'</span></a>
+                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         

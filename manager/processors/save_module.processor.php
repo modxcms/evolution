@@ -1,18 +1,18 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_module')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $resourcefile = $modx->db->escape($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource'] == 'on' ? 1 : 0;
 $icon = $modx->db->escape($_POST['icon']);
-//$category = intval($_POST['category']);
+//$category = (int)$_POST['category'];
 $disabled = $_POST['disabled'] == 'on' ? 1 : 0;
 $wrap = $_POST['wrap'] == 'on' ? 1 : 0;
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
@@ -25,7 +25,7 @@ $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
@@ -45,7 +45,7 @@ if ($parse_docblock) {
     $name = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties = isset($parsed['properties']) ? $parsed['properties'] : $properties;
     $guid = isset($parsed['guid']) ? $parsed['guid'] : $guid;
-    $enable_sharedparams = isset($parsed['shareparams']) ? intval($parsed['shareparams']) : $enable_sharedparams;
+    $enable_sharedparams = isset($parsed['shareparams']) ? (int)$parsed['shareparams'] : $enable_sharedparams;
 
     $description = isset($parsed['description']) ? $parsed['description'] : $description;
     $version = isset($parsed['version']) ? '<b>' . $parsed['version'] . '</b> ' : '';
@@ -180,7 +180,9 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
-// saves module user group access
+/**
+ * saves module user group access
+ */
 function saveUserGroupAccessPermissons()
 {
     global $modx;

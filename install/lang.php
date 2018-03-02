@@ -6,7 +6,7 @@
  * @author davaeron
  * @package EVO
  * @version 1.0
- * 
+ *
  * Filename:       /install/lang.php
  */
 
@@ -43,7 +43,7 @@ if (!empty($_langFiles[$_langISO6391]))  $install_language = $_langFiles[$_langI
 if (isset($_POST['language']) && !stristr($_POST['language'],"..")) {
 	$install_language = $_POST['language'];
 } else {
-	if (isset($_GET['language']) && !stristr($_GET['language'],"..")) 
+	if (isset($_GET['language']) && !stristr($_GET['language'],".."))
 		$install_language = $_GET['language'];
 }
 # load language file
@@ -55,7 +55,7 @@ $manager_language = $install_language;
 if (isset($_POST['managerlanguage']) && !stristr($_POST['managerlanguage'],"..")) {
 	$manager_language = $_POST['managerlanguage'];
 } else {
-	if (isset($_GET['managerlanguage']) && !stristr($_GET['managerlanguage'],"..")) 
+	if (isset($_GET['managerlanguage']) && !stristr($_GET['managerlanguage'],".."))
 		$manager_language = $_GET['managerlanguage'];
 }
 
@@ -64,4 +64,3 @@ foreach($_lang as $k=>$v)
 	if(strpos($v,'[+MGR_DIR+]')!==false)
 		$_lang[$k] = str_replace('[+MGR_DIR+]', MGR_DIR, $v);
 }
-?>

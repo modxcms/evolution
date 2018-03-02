@@ -469,7 +469,7 @@ $_lang["login_captcha_message"] = '画像で表示されるセキュリティコ
 $_lang["login_homepage"] = 'ログイン後に表示するページ';
 $_lang["login_homepage_message"] = 'ログインしたウェブユーザーに対して表示するリソースのIDを入力してください。<br /><strong>※非公開のリソースは指定できません。また該当ユーザーがアクセス権限をもつリソースに限ります。</strong>';
 $_lang["login_message"] = 'ログイン名とパスワードは大文字・小文字を区別します。';
-$_lang["logo_slogan"] = 'MODX Content Manager - \nCreate and do more with less';
+$_lang["logo_slogan"] = 'EVO Content Manager - \nCreate and do more with less';
 $_lang["logout"] = 'ログアウト';
 $_lang["long_title"] = 'タイトル';
 $_lang["mail_check_timeperiod_message"] = '<a href="index.php?a=10">メッセージ機能</a>のメッセージチェックの間隔を「秒」で指定します';

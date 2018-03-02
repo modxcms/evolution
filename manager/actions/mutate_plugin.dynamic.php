@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 switch ($modx->manager->action) {
@@ -18,7 +18,7 @@ switch ($modx->manager->action) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_site_plugins = $modx->getFullTableName('site_plugins');
 $tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
     $content['properties'] = str_replace("&", "&amp;", $content['properties']);
 } else {
     $_SESSION['itemname'] = $_lang["new_plugin"];
-    $content['category'] = intval($_REQUEST['catid']);
+    $content['category'] = (int)$_REQUEST['catid'];
 }
 
 if ($modx->manager->hasFormValues()) {
@@ -58,13 +58,13 @@ $lockElementId = $id;
 $lockElementType = 5;
 require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
+/**
+ * @param bool $cond
+ * @return string
+ */
 function bold($cond = false)
 {
-    if ($cond !== false) {
-        return ' style="background-color:#777;color:#fff;"';
-    } else {
-        return;
-    }
+    return ($cond !== false) ? ' style="background-color:#777;color:#fff;"' : '';
 }
 
 ?>
@@ -283,6 +283,8 @@ function bold($cond = false)
         td = document.getElementById('displayparams');
         td.innerHTML = t;
         tr.style.display = '';
+        if(JSON.stringify(currentParams) === '{}')return;
+
 
         implodeParameters();
     }
@@ -623,6 +625,7 @@ function bold($cond = false)
             <div class="container container-body">
                 <p><?= $_lang['plugin_event_msg'] ?></p>
                 <?php
+
                 // get selected events
                 if (is_numeric($id) && $id > 0) {
                     $rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");

@@ -857,7 +857,7 @@ class Snoopy
                 if (isset($this->capath))
                     $context_opts['ssl']['capath'] = $this->capath;
             }
-                    
+
             $host = 'ssl://' . $host;
         }
 
@@ -997,5 +997,3 @@ class Snoopy
         return $this->results;
     }
 }
-
-?>

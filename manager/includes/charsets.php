@@ -87,4 +87,4 @@ foreach($_ as $value=>$label) {
     $selected = $value===$modx_charset ? 'selected' : '';
     $options[] = sprintf($tpl, $value, $selected, $label);
 }
-echo join("\n", $options);
+echo implode("\n", $options);

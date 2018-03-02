@@ -2,16 +2,14 @@
 /**
  * This file includes slightly modified code from the MODX core distribution.
  */
-
-include_once("../../cache/siteManager.php");
-
-require_once '../../../' . MGR_DIR . '/includes/protect.inc.php';
-include_once('../../../' . MGR_DIR . '/includes/config.inc.php');
-include_once(MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
-include_once(MODX_BASE_PATH . 'assets/modules/docmanager/classes/docmanager.class.php');
-$modx = new DocumentParser;
+define('MODX_API_MODE', true);
+include_once ('../../../index.php');
+$modx->db->connect();
 $modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
+if (!isset($_SESSION['mgrValidated'])) die('');
 
+include_once(MODX_BASE_PATH . 'assets/modules/docmanager/classes/docmanager.class.php');
 $dm = new DocManager($modx);
 $dm->getLang();
 $dm->getTheme();

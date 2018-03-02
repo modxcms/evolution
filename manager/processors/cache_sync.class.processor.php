@@ -2,50 +2,83 @@
 
 class synccache
 {
-    var $cachePath;
-    var $showReport;
-    var $deletedfiles = array();
-    var $aliases = array();
-    var $parents = array();
-    var $aliasVisible = array();
-    var $request_time;
+    public $cachePath;
+    public $showReport;
+    public $deletedfiles = array();
+    /**
+     * @var array
+     */
+    public $aliases = array();
+    /**
+     * @var array
+     */
+    public $parents = array();
+    /**
+     * @var array
+     */
+    public $aliasVisible = array();
+    public $request_time;
+    public $cacheRefreshTime;
 
-
-    function __construct()
+    /**
+     * synccache constructor.
+     */
+    public function __construct()
     {
         global $modx;
 
         $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
     }
 
-    function setCachepath($path)
+    /**
+     * @param string $path
+     */
+    public function setCachepath($path)
     {
         $this->cachePath = $path;
     }
 
-    function setReport($bool)
+    /**
+     * @param bool $bool
+     */
+    public function setReport($bool)
     {
         $this->showReport = $bool;
     }
 
-    function escapeSingleQuotes($s)
+    /**
+     * @param string $s
+     * @return string
+     */
+    public function escapeSingleQuotes($s)
     {
-        if ($s == '') {
+        if ($s === '') {
             return $s;
         }
         $q1 = array("\\", "'");
         $q2 = array("\\\\", "\\'");
+
         return str_replace($q1, $q2, $s);
     }
 
-    function escapeDoubleQuotes($s)
+    /**
+     * @param string $s
+     * @return string
+     */
+    public function escapeDoubleQuotes($s)
     {
         $q1 = array("\\", "\"", "\r", "\n", "\$");
         $q2 = array("\\\\", "\\\"", "\\r", "\\n", "\\$");
+
         return str_replace($q1, $q2, $s);
     }
 
-    function getParents($id, $path = '')
+    /**
+     * @param int|string $id
+     * @param string $path
+     * @return string
+     */
+    public function getParents($id, $path = '')
     { // modx:returns child's parent
         global $modx;
         if (empty($this->aliases)) {
@@ -66,14 +99,19 @@ class synccache
                     $path = $this->aliases[$id];
                 }
             }
+
             return $this->getParents($this->parents[$id], $path);
         }
+
         return $path;
     }
 
-    function emptyCache($modx = null)
+    /**
+     * @param null|DocumentParser $modx
+     */
+    public function emptyCache($modx = null)
     {
-        if (is_a($modx, 'DocumentParser') === false || get_class($modx) !== 'DocumentParser') {
+        if (!($modx instanceof DocumentParser)) {
             $modx = $GLOBALS['modx'];
         }
         if (!isset($this->cachePath)) {
@@ -93,7 +131,7 @@ class synccache
             }
         }
 
-        if(function_exists('opcache_get_status')) {
+        if (function_exists('opcache_get_status')) {
             $opcache = opcache_get_status();
             if (!empty($opcache['opcache_enabled'])) {
                 opcache_reset();
@@ -122,6 +160,9 @@ class synccache
         }
     }
 
+    /**
+     * @param string|int $cacheRefreshTime
+     */
     public function publishTimeConfig($cacheRefreshTime = '')
     {
         $cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
@@ -148,6 +189,9 @@ class synccache
         }
     }
 
+    /**
+     * @return int
+     */
     public function getCacheRefreshTime()
     {
         global $modx;
@@ -155,7 +199,8 @@ class synccache
         // update publish time file
         $timesArr = array();
 
-        $result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>' . $this->request_time);
+        $result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content',
+            'pub_date>' . $this->request_time);
         if (!$result) {
             echo "Couldn't determine next publish event!";
         }
@@ -165,7 +210,8 @@ class synccache
             $timesArr[] = $minpub;
         }
 
-        $result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>' . $this->request_time);
+        $result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content',
+            'unpub_date>' . $this->request_time);
         if (!$result) {
             echo "Couldn't determine next unpublish event!";
         }
@@ -184,12 +230,13 @@ class synccache
         } else {
             $cacheRefreshTime = 0;
         }
+
         return $cacheRefreshTime;
     }
 
     /**
      * build siteCache file
-     * @param  DocumentParser $modx
+     * @param DocumentParser $modx
      * @return boolean success
      */
     public function buildCache($modx)
@@ -309,11 +356,12 @@ class synccache
             }
             $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
-                $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
-                if ($modx->config['minifyphp_incache']) {
-                    $properties = $this->php_strip_whitespace($properties);
+                $properties = $modx->parseProperties($row['properties']);
+                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                $properties = array_merge($sharedproperties, $properties);
+                if (0 < count($properties)) {
+                    $content .= '$p[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
-                $content .= '$p[\'' . $key . 'Props\']=\'' . $properties . '\';';
             }
         }
 
@@ -335,7 +383,8 @@ class synccache
         }
         foreach ($events as $evtname => $pluginnames) {
             $events[$evtname] = $pluginnames;
-            $content .= '$e[\'' . $evtname . '\']=array(\'' . implode('\',\'', $this->escapeSingleQuotes($pluginnames)) . '\');';
+            $content .= '$e[\'' . $evtname . '\']=array(\'' . implode('\',\'',
+                    $this->escapeSingleQuotes($pluginnames)) . '\');';
         }
 
         $content .= "\n";
@@ -364,8 +413,13 @@ class synccache
         return true;
     }
 
-    // ref : http://php.net/manual/en/tokenizer.examples.php
-    function php_strip_whitespace($source)
+    /**
+     * @param string $source
+     * @return string
+     *
+     * @see http://php.net/manual/en/tokenizer.examples.php
+     */
+    public function php_strip_whitespace($source)
     {
 
         $source = trim($source);
@@ -403,7 +457,8 @@ class synccache
                     }
                     $lastChar = substr($_, -1);
                     if (!in_array($lastChar, $chars)) {// ,320,327,288,284,289
-                        if (!in_array($prev_token, array(T_FOREACH, T_WHILE, T_FOR, T_BOOLEAN_AND, T_BOOLEAN_OR, T_DOUBLE_ARROW))) {
+                        if (!in_array($prev_token,
+                            array(T_FOREACH, T_WHILE, T_FOR, T_BOOLEAN_AND, T_BOOLEAN_OR, T_DOUBLE_ARROW))) {
                             $_ .= ' ';
                         }
                     }
@@ -426,8 +481,10 @@ class synccache
                     $_ .= $text;
             }
         }
-        $source = preg_replace(array('@^<\?php@i', '|\s+|', '|<!--|', '|-->|', '|-->\s+<!--|'), array('', ' ', "\n" . '<!--', '-->' . "\n", '-->' . "\n" . '<!--'), $_);
+        $source = preg_replace(array('@^<\?php@i', '|\s+|', '|<!--|', '|-->|', '|-->\s+<!--|'),
+            array('', ' ', "\n" . '<!--', '-->' . "\n", '-->' . "\n" . '<!--'), $_);
         $source = trim($source);
+
         return $source;
     }
 }

@@ -1,12 +1,12 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 $helpBasePath = "actions/help/";
 ?>
 
 <h1>
-	<i class="fa fa-question-circle"></i><?php echo $_lang['help']; ?>
+	<?php echo $_style['page_help'];  echo $_lang['help']; ?>
 </h1>
 
 <div class="sectionBody">

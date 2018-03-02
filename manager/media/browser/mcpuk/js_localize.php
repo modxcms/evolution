@@ -34,5 +34,3 @@ header("Content-Type: text/javascript; charset={$lang['_charset']}");
 foreach ($lang as $english => $native)
     if (substr($english, 0, 1) != "_")
         echo "browser.labels['" . text::jsValue($english) . "']=\"" . text::jsValue($native) . "\";";
-
-?>

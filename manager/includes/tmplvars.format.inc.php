@@ -5,12 +5,23 @@
  */
 
 // Added by Raymond 20-Jan-2005
+/**
+ * @param string $name
+ * @param string $value
+ * @param string $format
+ * @param string $paramstring
+ * @param string $tvtype
+ * @param string $docid
+ * @param string $sep
+ * @return mixed|string
+ */
 function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype = "", $docid = "", $sep = '') {
 
 	global $modx;
+    $o = '';
 
-	// process any TV commands in value
-	$docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
+    // process any TV commands in value
+	$docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
 	$value = ProcessTVCommand($value, $name, $docid);
 
 	$params = array();
@@ -29,7 +40,6 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 	switch($format) {
 		case 'image':
 			$images = parseInput($value, '||', 'array');
-			$o = '';
 			foreach($images as $image) {
 				if(!is_array($image)) {
 					$image = explode('==', $image);
@@ -99,7 +109,8 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 		case "hyperlink":
 			$value = parseInput($value, "||", "array");
 			$o = '';
-			for($i = 0; $i < count($value); $i++) {
+			$countValue = count($value);
+			for($i = 0; $i < $countValue; $i++) {
 				list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
 				if(!$url) {
 					$url = $name;
@@ -132,7 +143,8 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 			$tagname = ($params['tagname']) ? $params['tagname'] : 'div';
 			$o = '';
 			// Loop through a list of tags
-			for($i = 0; $i < count($value); $i++) {
+            $countValue = count($value);
+			for($i = 0; $i < $countValue; $i++) {
 				$tagvalue = is_array($value[$i]) ? implode(' ', $value[$i]) : $value[$i];
 				if(!$tagvalue) {
 					continue;
@@ -325,13 +337,24 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 	return $o;
 }
 
+/**
+ * @param string $s
+ * @return string
+ */
 function decodeParamValue($s) {
 	$s = str_replace("%3D", '=', $s); // =
-	$s = str_replace("%26", '&', $s); // &
-	return $s;
+	return str_replace("%26", '&', $s); // &
 }
 
-// returns an array if a delimiter is present. returns array is a recordset is present
+/**
+ * returns an array if a delimiter is present. returns array is a recordset is present
+ *
+ * @param $src
+ * @param string $delim
+ * @param string $type
+ * @param bool $columns
+ * @return array|string
+ */
 function parseInput($src, $delim = "||", $type = "string", $columns = true) { // type can be: string, array
 	global $modx;
 	if($modx->db->isResult($src)) {
@@ -349,6 +372,10 @@ function parseInput($src, $delim = "||", $type = "string", $columns = true) { //
 	}
 }
 
+/**
+ * @param string $value
+ * @return bool|false|int
+ */
 function getUnixtimeFromDateString($value) {
 	$timestamp = false;
 	// Check for MySQL or legacy style date

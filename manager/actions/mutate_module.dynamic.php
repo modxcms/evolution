@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 switch($modx->manager->action) {
 	case 107:
@@ -16,7 +16,7 @@ switch($modx->manager->action) {
 	default:
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // Get table names (alphabetical)
 $tbl_membergroup_names = $modx->getFullTableName('membergroup_names');
 $tbl_site_content = $modx->getFullTableName('site_content');
@@ -28,7 +28,11 @@ $tbl_site_plugins = $modx->getFullTableName('site_plugins');
 $tbl_site_snippets = $modx->getFullTableName('site_snippets');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-// create globally unique identifiers (guid)
+/**
+ * create globally unique identifiers (guid)
+ *
+ * @return string
+ */
 function createGUID() {
 	srand((double) microtime() * 1000000);
 	$r = rand();

@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 $logo= '<img src="media/style/default/images/misc/login-logo.png" height="54" width="358" border="0">';
 $downloadLinks = array(
 	0=>array('title'=>$_lang["information"],'link'=>'https://evo.im/'),
@@ -16,6 +18,11 @@ $translationLinks = array(
 	1=>array('title'=>$_lang["extras"],'link'=>'https://www.transifex.com/evolutioncms/extras/'),
 );
 
+/**
+ * @param string $sectionHeader
+ * @param array $linkArr
+ * @return string
+ */
 function createList($sectionHeader, $linkArr) {
 	$output = '<div class="sectionHeader">'.$sectionHeader.'</div><div class="sectionBody">'."\n";
 	$output .= '<table width="500"  border="0" cellspacing="0" cellpadding="0">'."\n";

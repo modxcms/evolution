@@ -83,10 +83,10 @@ class SummaryText
      */
     protected function dotted($scheme = 0)
     {
-        if (($scheme == 1 && ($this->_useCut || $this->_useSubstr)) || ($scheme == 2 && $this->_useSubstr && !$this->_useCut)) {
+        if (($scheme == 1 && ($this->_useCut === true || $this->_useSubstr)) || ($scheme == 2 && $this->_useSubstr && $this->_useCut !== true)) {
             $this->_cfg['content'] .= '&hellip;'; //...
         } else {
-            if ($scheme && (!$this->_useCut || $scheme != 2)) {
+            if ($scheme && ($this->_useCut !== true|| $scheme != 2)) {
                 $this->_cfg['content'] .= '.';
             }
         }
@@ -295,7 +295,7 @@ class SummaryText
     protected function rTriming($str)
     {
         $str = preg_replace('/[\r\n]++/', ' ', $str);
-        if (!$this->_useCut || $this->_dotted != 2) {
+        if ($this->_useCut !== true || $this->_dotted != 2) {
             $str = preg_replace("/(([\.,\-:!?;\s])|(&\w+;))+$/ui", "", $str);
         }
 

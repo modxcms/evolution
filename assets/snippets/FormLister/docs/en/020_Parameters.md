@@ -45,6 +45,13 @@ Possible values:
 - 1: json array with form data;
 - 2: json array with form data and html.
 
+### apiFormat
+Output format.
+
+Possible value - json or array.
+
+Defaut value - json.
+
 ### debug
 Enables debug mode. Debug data is sent to MODX events log.
 

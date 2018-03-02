@@ -77,7 +77,7 @@ class Reminder extends Form
     {
         $hash = $this->getField($this->hashField);
         $uid = $this->getField($this->getCFGDef('uidName', $this->uidField));
-        if ($hash && $hash == $this->getUserHash($uid)) {
+        if (is_scalar($hash) && $hash && $hash == $this->getUserHash($uid)) {
             if ($this->getCFGDef('resetTpl')) {
                 $this->setField('user.hash', $hash);
                 $this->setField('user.id', $uid);
