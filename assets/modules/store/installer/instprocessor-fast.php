@@ -1,15 +1,10 @@
 <?php
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+}
 
 error_reporting(E_ALL & ~E_NOTICE);
-define('MODX_BASE_PATH',realpath('../../../../').'/');
-include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
-
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
-}
 $moduleurl = 'assets/modules/store/installer/index.php';
 $modulePath = dirname(__FILE__);
 $self = $modulePath.'/index.php';
@@ -18,14 +13,11 @@ require_once($modulePath."/functions.php");
 $_lang = array();
 $_params = array();
 require_once($modulePath."/lang/russian-UTF8.inc.php");
-include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
-require_once(MGR.'/includes/version.inc.php');
 
 // start session
 //session_start();
 $_SESSION['test'] = 1;
 install_sessionCheck();
-
 $moduleName = "MODX";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
@@ -51,38 +43,13 @@ $isPostBack = (count($_POST));
 $_POST['installmode'] = 1;
 //$_POST['installdata'] = 0;
 $sqlParser = '';
-
-
-define('MODX_API_MODE', true);
-include_once MGR.'/includes/config.inc.php';
-include_once MGR.'/includes/document.parser.class.inc.php';
-$modx = new DocumentParser;
-$modx->db->connect();
-$modx->getSettings();
-startCMSSession();
-$modx->minParserPasses=2;
-
-global $moduleName;
-global $moduleVersion;
-global $moduleSQLBaseFile;
-global $moduleSQLDataFile;
-
-global $moduleChunks;
-global $moduleTemplates;
-global $moduleSnippets;
-global $modulePlugins;
-global $moduleModules;
-global $moduleTVs;
-
-global $errors;
-
 $create = false;
 
 // set timout limit
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = 1;
 
 // set session name variable
@@ -249,7 +216,7 @@ if (count($moduleTVs )>0) {
                        }
                     }
                 }
-            }    
+            }
         //}
     }
 }
@@ -356,7 +323,6 @@ if (count($moduleModules )>0) {
 }
 
 // Install Plugins
-
 if (count($modulePlugins )>0) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
     $selPlugs = $_POST['plugin'];
@@ -394,7 +360,7 @@ if (count($modulePlugins )>0) {
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                 $plugin = $modx->db->escape($plugin);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name'");
-                
+
                 if ($modx->db->getRecordCount($rs)) {
                     $insert = true;
                     while($row = $modx->db->getRow($rs,'assoc')) {
@@ -426,7 +392,7 @@ if (count($modulePlugins )>0) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
-                            
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -471,9 +437,9 @@ if (count($moduleSnippets ) > 0) {
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
                 $snippet = $modx->db->escape($snippet);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
-                
+
                 if ($modx->db->getRecordCount($rs)) {
-                
+
                     $row = $modx->db->getRow($rs,'assoc');
                     $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
@@ -481,8 +447,8 @@ if (count($moduleSnippets ) > 0) {
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {  
-                    $properties = $modx->db->escape(parseProperties($properties, true));  
+                } else {
+                    $properties = $modx->db->escape(parseProperties($properties, true));
                     if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -545,13 +511,13 @@ function propUpdate($new,$old){
     return $return;
 }
 
-function parseProperties($propertyString, $json=false) {  
-    $propertyString = str_replace('{}', '', $propertyString ); 
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
     if($propertyString=='{}' || $propertyString=='[]') return array();
-    
+
     $jsonFormat = isJson($propertyString, true);
     $property = array();
     // old format
@@ -581,7 +547,7 @@ function parseProperties($propertyString, $json=false) {
                 }
                 $property[$key['0']]['0']['desc'] = '';
             }
-            
+
         }
     // new json-format
     } else if(!empty($jsonFormat)){
@@ -600,7 +566,7 @@ function isJson($string, $returnData=false) {
 }
 
 function getCreateDbCategory($category) {
-    
+
     global $modx;
     $dbase = $modx->db->config['dbase'];
     $table_prefix = $modx->db->config['table_prefix'];

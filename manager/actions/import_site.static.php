@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('import_static')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -14,9 +14,16 @@ $allowedfiles = array(
 	'xml'
 );
 ?>
+	<script language="javascript">
+		var actions = {
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?a=2';
+			}
+		};
 
-	<script type="text/javascript">
 		parent.tree.ca = "parent";
+
 		function setParent(pId, pName) {
 			document.importFrm.parent.value = pId;
 			document.getElementById('parentName').innerHTML = pId + " (" + pName + ")";
@@ -28,79 +35,61 @@ $allowedfiles = array(
 	</script>
 
 	<h1>
-		<i class="fa fa-upload"></i><?php echo $_lang['import_site_html']; ?>
+		<i class="fa fa-upload"></i><?= $_lang['import_site_html'] ?>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;window.location.href='index.php?a=2';">
-					<i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a>
-			</li>
-		</ul>
-	</div>
+<?= $_style['actionbuttons']['static']['cancel'] ?>
 
-	<div class="section">
-		<div class="sectionBody">
+	<div class="tab-page">
+		<div class="container container-body">
 			<?php
-
 			if(!isset($_POST['import'])) {
 				echo "<div class=\"element-edit-message\">" . $_lang['import_site_message'] . "</div>";
 				?>
-
-				<fieldset style="padding:10px;border:1px solid #ccc;background-color:#fff;">
-					<legend><?php echo $_lang['import_site']; ?></legend>
-					<form action="index.php" method="post" name="importFrm">
-						<input type="hidden" name="import" value="import" />
-						<input type="hidden" name="a" value="95" />
-						<input type="hidden" name="parent" value="0" />
-						<table border="0" cellspacing="0" cellpadding="2">
-							<tr>
-								<td nowrap="nowrap"><b><?php echo $_lang['import_parent_resource']; ?></b></td>
-								<td>&nbsp;</td>
-								<td><b><span id="parentName">0 (<?php echo $site_name; ?>)</span></b></td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?php echo $_lang['import_site_maxtime']; ?></b></td>
-								<td>&nbsp;</td>
-								<td><input type="text" name="maxtime" value="30" />
-									<br />
-									<?php echo $_lang['import_site_maxtime_message']; ?>
-								</td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?php echo $_lang["import_site.static.php1"]; ?></b></td>
-								<td>&nbsp;</td>
-								<td><input type="checkbox" id="reset" name="reset" value="on" />
-									<br />
-									<?php echo $_lang["import_site.static.php2"]; ?>
-								</td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?php echo $_lang["import_site.static.php3"]; ?></b></td>
-								<td>&nbsp;</td>
-								<td>
-									<label><input type="radio" name="object" value="body" /> <?php echo $_lang["import_site.static.php4"]; ?></label>
-									<label><input type="radio" name="object" value="all" checked="checked" /> <?php echo $_lang["import_site.static.php5"]; ?></label>
-									<br />
-								</td>
-							</tr>
-						</table>
-						<ul class="actionButtons">
-							<li><a href="javascript:;" class="default" onclick="window.importFrm.submit();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang["import_site_start"]; ?></a>
-							</li>
-						</ul>
-					</form>
-				</fieldset>
-
+				<form action="index.php" method="post" name="importFrm">
+					<input type="hidden" name="import" value="import" />
+					<input type="hidden" name="a" value="95" />
+					<input type="hidden" name="parent" value="0" />
+					<table border="0" cellspacing="0" cellpadding="2">
+						<tr>
+							<td nowrap="nowrap"><b><?= $_lang['import_parent_resource'] ?></b></td>
+							<td>&nbsp;</td>
+							<td><b><span id="parentName">0 (<?= $site_name ?>)</span></b></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang['import_site_maxtime'] ?></b></td>
+							<td>&nbsp;</td>
+							<td><input type="text" name="maxtime" value="30" />
+								<br />
+								<?= $_lang['import_site_maxtime_message'] ?>
+							</td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php1"] ?></b></td>
+							<td>&nbsp;</td>
+							<td><input type="checkbox" id="reset" name="reset" value="on" />
+								<br />
+								<?= $_lang["import_site.static.php2"] ?>
+							</td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php3"] ?></b></td>
+							<td>&nbsp;</td>
+							<td>
+								<label><input type="radio" name="object" value="body" /> <?= $_lang["import_site.static.php4"] ?></label>
+								<label><input type="radio" name="object" value="all" checked="checked" /> <?= $_lang["import_site.static.php5"] ?></label>
+								<br />
+							</td>
+						</tr>
+					</table>
+					<a href="javascript:;" class="btn btn-primary" onclick="window.importFrm.submit();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["import_site_start"] ?></a>
+				</form>
 			<?php
 			} else {
 			run();
 			$modx->clearCache('full');
 			?>
-				<ul class="actionButtons">
-					<li><a href="javascript:;" onclick="window.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_close"] ?>"></i> <?php echo $_lang["close"]; ?></a>
-					</li>
-				</ul>
+				<a href="javascript:;" class="btn btn-primary" onclick="window.location.href='index.php?a=2';"><i class="<?= $_style["actions_close"] ?>"></i> <?= $_lang["close"] ?></a>
 				<script type="text/javascript">
 					top.mainMenu.reloadtree();
 					parent.tree.ca = 'open';
@@ -112,16 +101,20 @@ $allowedfiles = array(
 	</div>
 
 <?php
+/**
+ * @return string
+ */
 function run() {
-	global $modx;
+	global $modx, $_lang;
+
 	$tbl_site_content = $modx->getFullTableName('site_content');
-
 	$output = '';
-
 	$maxtime = $_POST['maxtime'];
+
 	if(!is_numeric($maxtime)) {
 		$maxtime = 30;
 	}
+
 	@set_time_limit($maxtime);
 
 	$mtime = microtime();
@@ -134,13 +127,15 @@ function run() {
 		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
 	}
 
-	$parent = intval($_POST['parent']);
+	$parent = (int)$_POST['parent'];
 
 	if(is_dir(MODX_BASE_PATH . 'temp/import')) {
 		$filedir = MODX_BASE_PATH . 'temp/import/';
 	} elseif(is_dir(MODX_BASE_PATH . 'assets/import')) {
 		$filedir = MODX_BASE_PATH . 'assets/import/';
-	}
+	} else {
+        $filedir = '';
+    }
 
 	$filesfound = 0;
 
@@ -152,7 +147,7 @@ function run() {
 
 	// import files
 	if(0 < count($files)) {
-		$rs = $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+		$modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
 		importFiles($parent, $filedir, $files, 'root');
 	}
 
@@ -170,6 +165,12 @@ function run() {
 	return $output;
 }
 
+/**
+ * @param int $parent
+ * @param string $filedir
+ * @param array $files
+ * @param string $mode
+ */
 function importFiles($parent, $filedir, $files, $mode) {
 	global $modx;
 	global $_lang, $allowedfiles;
@@ -178,12 +179,11 @@ function importFiles($parent, $filedir, $files, $mode) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$tbl_system_settings = $modx->getFullTableName('system_settings');
 
-	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if(!is_array($files)) {
 		return;
 	}
-	if($_POST['object'] == 'all') {
+	if($_POST['object'] === 'all') {
 		$modx->config['default_template'] = '0';
 		$richtext = '0';
 	} else {
@@ -312,11 +312,17 @@ function importFiles($parent, $filedir, $files, $mode) {
 	}
 }
 
+/**
+ * @param string $directory
+ * @param array $listing
+ * @param int $count
+ * @return array
+ */
 function getFiles($directory, $listing = array(), $count = 0) {
 	global $_lang;
 	global $filesfound;
 	$dummy = $count;
-	if($files = scandir($directory)) {
+	if( ! empty($directory) && $files = scandir($directory)) {
 		foreach($files as $file) {
 			if($file == '.' || $file == '..') {
 				continue;
@@ -336,6 +342,10 @@ function getFiles($directory, $listing = array(), $count = 0) {
 	return ($listing);
 }
 
+/**
+ * @param string $filepath
+ * @return bool|string
+ */
 function getFileContent($filepath) {
 	global $_lang;
 	// get the file
@@ -346,6 +356,10 @@ function getFileContent($filepath) {
 	}
 }
 
+/**
+ * @param array $array
+ * @return array
+ */
 function pop_index($array) {
 	$new_array = array();
 	foreach($array as $k => $v) {
@@ -363,6 +377,12 @@ function pop_index($array) {
 	return $new_array;
 }
 
+/**
+ * @param string $src
+ * @param string $filename
+ * @param string $alias
+ * @return array
+ */
 function treatContent($src, $filename, $alias) {
 	global $modx;
 
@@ -404,11 +424,17 @@ function treatContent($src, $filename, $alias) {
 	);
 }
 
+/**
+ * @return void
+ */
 function convertLink() {
 	global $modx;
 	$tbl_site_content = $modx->getFullTableName('site_content');
 
 	$rs = $modx->db->select('id,content', $tbl_site_content);
+	$p = array();
+    $target = array();
+	$dir = '';
 	while($row = $modx->db->getRow($rs)) {
 		$id = $row['id'];
 		$array = explode('<a href=', $row['content']);

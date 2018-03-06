@@ -4,19 +4,34 @@ global $ContextMenuCnt;
 $ContextMenuCnt = 0;
 
 class ContextMenu {
-	var $id;
+	public $id;
+    /**
+     * @var string
+     */
+	public $html = '';
+    /**
+     * @var bool
+     */
+	public $visible = false;
+    /**
+     * @var int
+     */
+	public $width = 120;
 
-	function __construct($id = '', $width = 120, $visible = false) {
+    public function __construct($id = '', $width = 120, $visible = false) {
 		global $ContextMenuCnt;
 		$ContextMenuCnt++;
 		$this->html = "";
 		$this->visible = $visible ? $visible : false;
-		$this->width = is_numeric($width) ? intval($width) : 120;
+		$this->width = is_numeric($width) ? (int)$width : 120;
 		$this->id = $id ? $id : "cntxMnu" . $ContextMenuCnt;    // set id
 	}
 
-	function addItem($text, $action = "", $img = "", $disabled = 0) {
+    public function addItem($text, $action = "", $img = "", $disabled = 0) {
 		global $base_url, $_style;
+        if($disabled) {
+            return;
+        }
 		if(!$img) {
 			$img = $base_url . $_style['tx'];
 		}
@@ -28,25 +43,22 @@ class ContextMenu {
 			$action = "window.location.href='" . $action . "'";
 		}
 		$action = " onmouseover=\"this.className='cntxMnuItemOver';\" onmouseout=\"this.className='cntxMnuItem';\" onclick=\"$action; hideCntxMenu('" . $this->id . "');\"";
-		if($disabled) {
-			$action = "";
-		}
 		$this->html .= "<div class='" . ($disabled ? "cntxMnuItemDisabled" : "cntxMnuItem") . "' $action>";
-		if(substr($img, 0, 6) == 'media/') {
-			$img = '<img src="' . $img . '" />';
-		} else if(strpos($img, '<') !== 0) {
-			$img = '<i class="' . $img . '"></i>';
-		}
+        if(substr($img, 0, 5) == 'fa fa') {
+            $img = '<i class="' . $img . '"></i>';
+        } else if(substr($img, 0, 1) != '<') {
+            $img = '<img src="' . $img . '" />';
+        }
 		$this->html .= $img . '&nbsp;' . $text . '</div>';
 	}
 
-	function addSeparator() {
+    public function addSeparator() {
 		$this->html .= "
 			<div class='cntxMnuSeparator'></div>
 		";
 	}
 
-	function render() {
+    public function render() {
 		global $ContextMenuScript;
 
 		$html = $ContextMenuScript . "<div id='" . $this->id . "' class='contextMenu' style='width:" . $this->width . "px; visibility:" . ($this->visible ? 'visible' : 'hidden') . "'>" . $this->html . "</div>";
@@ -54,7 +66,7 @@ class ContextMenu {
 		return $html;
 	}
 
-	function getClientScriptObject() {
+    public function getClientScriptObject() {
 		return "getCntxMenu('" . $this->id . "')";
 	}
 }

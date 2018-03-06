@@ -1,157 +1,109 @@
-
-//window.addEvent('domready',function(){
-
 /**
- * Tips
+ *
+ * Select Categories
  */
-new Tips($$('.mootooltip'),{className:'custom'} );
-new MooTips($$('.mootooltip_dom'), {
-    className :'assigned',
-    showOnClick: true,
-    showOnMouseEnter: true,
-    showDelay: 200,
-    hideDelay: 200,
-    offsets: {'x': 20, 'y': 20},
-    fixed: true
-});
+let ajax_url = 'index.php?a=121';
+let categorizeWorkbench = document.getElementById('categorize-workbench');
+document.getElementById('elements-select').onchange = function(e) {
+  categorizeWorkbench.innerHTML = '';
+  categorizeWorkbench.classList.add('ajax_loading');
+  document.getElementById('categorize-elements').classList.remove('hidden');
+  document.getElementById('categorize-formfields').innerHTML = '';
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', ajax_url, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      categorizeWorkbench.classList.remove('ajax_loading');
+      categorizeWorkbench.innerHTML = this.responseText;
+      evo.tooltips('#categorize-elements [data-tooltip]');
+      evo.draggable('.drag', {
+        handle: {
+          start: function() {
+            this.style.opacity = '.5';
+            this.style.zIndex = 10000;
+          }, end: function() {
+            this.style.opacity = 1;
+            this.style.zIndex = 1000;
+          },
+        }, container: {
+          className: 'drop', classOver: 'over', over: function() {
+            this.classList.add('over');
+          }, leave: function() {
+            this.classList.remove('over');
+          }, drop: function(drag) {
+            this.classList.remove('over');
+            drag.classList.add('ok');
+          },
+        },
+      });
+    }
+  };
+  xhr.send(request_key + '[ajax]=1&' + request_key + '[task]=categorize_load_elements&' + request_key + '[elements]=' + e.target.value);
+};
 
 /**
  * Sort Categories
  */
-new Sortables($('categories-sort'), {
-    //handles:'span.handle',
-    onStart: function(element){
-        element.toggleClass('move');
-    },
-    onComplete: function(element){
-        element.toggleClass('move');
-        // reorder the indexes
-        this.list.getChildren().each(function(element, i){
-            element.getElement('input.sort').setProperty( 'value', (i+1) );
-            element.getElement('span.sort').setHTML( (i+1) );
-            element.getElements('td').each(function(td){
-                td.removeClass('gridItem').removeClass('gridAltItem');
-                td.addClass( ( i%2===0 ) ? 'gridItem' : 'gridAltItem' );
-            });
-        });
+evo.sortable('.table-sortable tbody > tr', {
+  complete: function() {
+    let els = document.querySelectorAll('.table-sortable tbody > tr');
+    for (let i = 0; i < els.length; i++) {
+      els[i].querySelector('input.sort').value = i + 1;
+      els[i].querySelector('span.sort').innerHTML = i + 1;
     }
+  },
 });
-
-/**
- * Categorization
- */
-var reset_position = function( drag ) {
-    drag.setStyles({ left:0+"px", top:0+"px"  });
-}
-          
-var optDrop = {
-    over: function(drag) {
-        this.addClass('over');
-        drag.addClass('ok');
-    },
-    leave: function(drag) {
-        this.removeClass('over');
-        drag.removeClass('ok');
-    },
-    drop: function(drag) {
-        this.removeClass('over');      
-        drag.injectInside(this);
-        reset_position(drag);
-    }
-}
-
-var optDrag = {
-    onStart: function(drag) {
-        drag.setOpacity(.5).setStyle('z-index', 10000);
-    },
-    onComplete: function(drag) {
-        drag.setOpacity(1).setStyle('z-index', 1000);
-        reset_position(drag);
-    }
-}
-    
-var init_drag = function() {
-
-    optDrag.droppables = $$('div.drop').addEvents( optDrop );
-    $$('div#categorize-workbench div.drag').makeDraggable( optDrag );
-    $$('div#categorize-workbench div.drag').each(function(element){ reset_position(element) });
-
-    /**
-     * Make container uncategorized elements movable.... but for what
-    
-    if( $('categorize-category-0') !== null ){
-        var first_click = true;
-        var container_uncategorized = $('categorize-category-0');
-        container_uncategorized.getElement('h2').addEvent('click',function(){
-            if( first_click === true ) {
-                this.getParent().setStyles({
-                    'top' : '-50px',
-                    'left': '0'
-                });
-                new Drag.Move(container_uncategorized, {
-                    handle: container_uncategorized.getElement('h2')
-                });
-                first_click = false;
-            }
-        });
-    }
-    
-    */
-}
 
 /**
  * collect the categorization in formfields
- * 
+ *
  * @TODO collect them within a object and send by jason-request.
- */    
-$('categorize-submit').addEvent('mouseenter',function() {
+ */
+document.getElementById('categorize-submit').addEventListener('mouseenter', function() {
+  this.disabled = 'disabled';
+  this.value = 'wait...';
+  let categorizeFormfields = document.getElementById('categorize-formfields');
+  categorizeFormfields.innerHTML = '';
 
-    this.setProperty('disabled','disabled');
-    this.setProperty('value','wait...');
+  [].slice.call(document.querySelectorAll('div.categorize_category')).forEach(function(a) {
+    let category_id = a.id.split('-')[2];
+    let category_name = a.querySelector('h2').innerText.replace(/^\s+|\s+$/g, '');
+    let elements = a.querySelectorAll('div.drag');
 
-    $('categorize-formfields').empty();
+    if (elements.length > 0) {
+      elements.forEach(function(element) {
+        let element_id = element.id.split('-')[2];
+        let element_name = element.querySelector('h4').innerText.replace(/^\s+|\s+$/g, '');
+        let id_input_element = 'input-element-' + element_id;
+        let id_input_element_name = 'input-element-name-' + element_id;
+        let id_input_category_name = 'input-category-name-' + element_id;
 
-    $$('div.categorize_category').each(function(drop) {
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.id = id_input_element_name;
+        input.name = request_key + '[categorize][elements][' + element_id + '][element_name]';
+        input.value = element_name;
+        categorizeFormfields.appendChild(input);
 
-        category_id   = drop.getProperty('id').split('-')[2];
-        category_name = drop.getElement('h2').getText().trim();
-        elements      = drop.getElements('div.drag');
-        
-        if( elements.length > 0 ) {
-            elements.each(function(element,index) {
-                var element_id             = element.getProperty('id').split('-')[2];
-                var element_name           = element.getElement('h4').getText();
-                var id_input_element       = 'input-element-'+element_id;
-                var id_input_element_name  = 'input-element-name-'+element_id;
-                var id_input_category_name = 'input-category-name-'+element_id;
+        input = document.createElement('input');
+        input.type = 'text';
+        input.id = id_input_element;
+        input.name = request_key + '[categorize][elements][' + element_id + '][category_id]';
+        input.value = category_id;
+        categorizeFormfields.appendChild(input);
 
-                new Element( 'input', {
-                    'type' : 'text',
-                    'id'   : id_input_element_name,
-                    'name' : request_key + '[categorize][elements]['+element_id+'][element_name]',
-                    'value': element_name.trim()
-                }).injectInside( $('categorize-formfields') );
-                
-                new Element( 'input', {
-                    'type' : 'text',
-                    'id'   : id_input_element,
-                    'name' : request_key + '[categorize][elements]['+element_id+'][category_id]',
-                    'value': category_id
-                }).injectInside( $('categorize-formfields') );
+        input = document.createElement('input');
+        input.type = 'text';
+        input.id = id_input_category_name;
+        input.name = request_key + '[categorize][elements][' + element_id + '][category_name]';
+        input.value = category_name;
+        categorizeFormfields.appendChild(input);
+      });
+    }
+  });
 
-                new Element( 'input', {
-                    'type' : 'text',
-                    'id'   : id_input_category_name,
-                    'name' : request_key + '[categorize][elements]['+element_id+'][category_name]',
-                    'value': category_name.trim()
-                }).injectInside( $('categorize-formfields') );
+  this.disabled = '';
+  this.value = 'Save categorization';
 
-            });
-        }
-    });
-
-    this.removeProperty('disabled');
-    this.setProperty('value','Save categorization');
 });
-
-//});

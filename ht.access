@@ -35,6 +35,12 @@ RewriteRule .* - [F,L]
 #RewriteCond %{HTTP_HOST} ^www.(.*)$ [NC]
 #RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
+# 301 that removes index.php?q= from all urls
+#RewriteCond %{THE_REQUEST} \s/+index\.php\?&q=([^\s&]+) [NC]
+#RewriteRule ^ /%1? [R=301,L]
+#RewriteCond %{THE_REQUEST} \s/+index\.php\?q=([^\s&]+) [NC]
+#RewriteRule ^ /%1? [R=301,L]
+
 # Exclude /assets and /manager directories and images from rewrite rules
 RewriteRule ^(manager|assets|js|css|images|img)/.*$ - [L]
 RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]

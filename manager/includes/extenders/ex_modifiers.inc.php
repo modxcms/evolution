@@ -5,8 +5,10 @@
  * Time: 10:00
  */
 
-if (is_object($this->filter)) return true;
+if (isset($this->filter) && is_object($this->filter)) {
+    return true;
+}
 
-include_once(MODX_MANAGER_PATH.'includes/extenders/modifiers.class.inc.php');
-$this->filter= new MODIFIERS;
+include_once(MODX_MANAGER_PATH . 'includes/extenders/modifiers.class.inc.php');
+$this->filter = new MODIFIERS;
 return true;

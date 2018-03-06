@@ -6,9 +6,11 @@
  * Time: 14:17
  */
 
-if (!include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php')){
+if (!include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php')) {
     return false;
-}else{
+} else {
     $this->mail = new MODxMailer;
+    $this->mail->init($this);
+
     return true;
 }

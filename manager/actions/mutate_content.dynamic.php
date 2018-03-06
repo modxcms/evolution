@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 /********************/
@@ -38,7 +38,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
 $tbl_categories = $modx->getFullTableName('categories');
@@ -46,11 +46,7 @@ $tbl_document_group_names = $modx->getFullTableName('documentgroup_names');
 $tbl_member_groups = $modx->getFullTableName('member_groups');
 $tbl_membergroup_access = $modx->getFullTableName('membergroup_access');
 $tbl_document_groups = $modx->getFullTableName('document_groups');
-$tbl_keyword_xref = $modx->getFullTableName('keyword_xref');
 $tbl_site_content = $modx->getFullTableName('site_content');
-$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
-$tbl_site_keywords = $modx->getFullTableName('site_keywords');
-$tbl_site_metatags = $modx->getFullTableName('site_metatags');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_access = $modx->getFullTableName('site_tmplvar_access');
 $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
@@ -140,7 +136,7 @@ if(!isset ($_REQUEST['id'])) {
 		$modx->config['auto_menuindex'] = 1;
 	}
 	if($modx->config['auto_menuindex']) {
-		$pid = intval($_REQUEST['pid']);
+		$pid = (int)$_REQUEST['pid'];
 		$rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
 		$content['menuindex'] = $modx->db->getValue($rs);
 	} else {
@@ -172,37 +168,51 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			documentDirty = true;
 		}
 
-		function deletedocument() {
-			if(confirm("<?php echo $_lang['confirm_delete_resource']?>") === true) {
-				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?php echo $add_path; ?>";
+		var actions = {
+			save: function() {
+				documentDirty = false;
+				form_save = true;
+				document.mutate.save.click();
+			},
+			delete: function() {
+				if(confirm("<?= $_lang['confirm_delete_resource']?>") === true) {
+					document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?= $add_path ?>";
+				}
+			},
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?<?=($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
+			},
+			duplicate: function() {
+				if(confirm("<?= $_lang['confirm_resource_duplicate']?>") === true) {
+					document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94<?= $add_path ?>";
+				}
+			},
+			view: function() {
+				window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : $modx->config['site_url'] . 'index.php?id=' . $id ?>', 'previeWin');
 			}
-		}
-
-		function duplicatedocument() {
-			if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>") === true) {
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=94<?php echo $add_path; ?>";
-			}
-		}
+		};
 
 		var allowParentSelection = false;
 		var allowLinkSelection = false;
 
 		function enableLinkSelection(b) {
-			parent.tree.ca = "link";
 			var llock = document.getElementById('llock');
 			if(b) {
-				llock.className = "<?php echo $_style["actions_chain_broken"] ?>";
+				parent.tree.ca = "link";
+				llock.className = "<?= $_style["actions_chain_broken"] ?>";
 				allowLinkSelection = true;
 			}
 			else {
-				llock.className = "<?php echo $_style["actions_chain"] ?>";
+				parent.tree.ca = "open";
+				llock.className = "<?= $_style["actions_chain"] ?>";
 				allowLinkSelection = false;
 			}
 		}
 
 		function setLink(lId) {
 			if(!allowLinkSelection) {
-				window.location.href = "index.php?a=3&id=" + lId + "<?php echo $add_path; ?>";
+				window.location.href = "index.php?a=3&id=" + lId + "<?= $add_path ?>";
 			}
 			else {
 				documentDirty = true;
@@ -211,21 +221,22 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		function enableParentSelection(b) {
-			parent.tree.ca = "parent";
 			var plock = document.getElementById('plock');
 			if(b) {
-				plock.className = "<?php echo $_style["actions_folder_open"] ?>";
+				parent.tree.ca = "parent";
+				plock.className = "<?= $_style["actions_folder_open"] ?>";
 				allowParentSelection = true;
 			}
 			else {
-				plock.className = "<?php echo $_style["actions_folder"] ?>";
+				parent.tree.ca = "open";
+				plock.className = "<?= $_style["actions_folder"] ?>";
 				allowParentSelection = false;
 			}
 		}
 
 		function setParent(pId, pName) {
 			if(!allowParentSelection) {
-				window.location.href = "index.php?a=3&id=" + pId + "<?php echo $add_path; ?>";
+				window.location.href = "index.php?a=3&id=" + pId + "<?= $add_path ?>";
 			}
 			else {
 				if(pId === 0 || checkParentChildRelation(pId, pName)) {
@@ -247,7 +258,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			var pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
 			if(!pn) return;
 			if(pn.id.substr(4) === id) {
-				alert("<?php echo $_lang['illegal_parent_self']?>");
+				alert("<?= $_lang['illegal_parent_self']?>");
 				return;
 			}
 			else {
@@ -255,7 +266,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					pId = pn.getAttribute("p");
 					pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
 					if(pn.id.substr(4) === id) {
-						alert("<?php echo $_lang['illegal_parent_child']?>");
+						alert("<?= $_lang['illegal_parent_child']?>");
 						return;
 					}
 				}
@@ -263,22 +274,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return true;
 		}
 
-		function clearKeywordSelection() {
-			var opt = document.mutate.elements["keywords[]"].options;
-			for(var i = 0; i < opt.length; i++) {
-				opt[i].selected = false;
-			}
-		}
-
-		function clearMetatagSelection() {
-			var opt = document.mutate.elements["metatags[]"].options;
-			for(var i = 0; i < opt.length; i++) {
-				opt[i].selected = false;
-			}
-		}
-
 		var curTemplate = -1;
 		var curTemplateIndex = 0;
+
 		function storeCurTemplate() {
 			var dropTemplate = document.getElementById('template');
 			if(dropTemplate) {
@@ -308,9 +306,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			}
 
 			if(documentDirty === true) {
-				if(confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
+				if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
 					documentDirty = false;
-					document.mutate.a.value = <?php echo $modx->manager->action; ?>;
+					document.mutate.a.value = <?= $modx->manager->action ?>;
 					document.mutate.newtemplate.value = newTemplate;
 					document.mutate.submit();
 				} else {
@@ -318,7 +316,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				}
 			}
 			else {
-				document.mutate.a.value = <?php echo $modx->manager->action; ?>;
+				document.mutate.a.value = <?= $modx->manager->action ?>;
 				document.mutate.newtemplate.value = newTemplate;
 				document.mutate.submit();
 			}
@@ -348,7 +346,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			}
 
 			documentDirty = false;
-			document.mutate.a.value = <?php echo $modx->manager->action; ?>;
+			document.mutate.a.value = <?= $modx->manager->action ?>;
 			document.mutate.newtemplate.value = newTemplate;
 			document.mutate.which_editor.value = newEditor;
 			document.mutate.submit();
@@ -368,7 +366,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			cp = {};
 			currentParams = {}; // reset;
 
-			if(ctrl) {
+			if(ctrl && ctrl.form) {
 				f = ctrl.form;
 			} else {
 				f = document.forms['mutate'];
@@ -389,7 +387,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			// setup parameters
 			var t, dp = (snippetParams[df]) ? snippetParams[df].split("&") : [""];
 			if(dp) {
-				t = '<table width="100%" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']?><\/td><td width="50%"><?php echo $_lang['value']?><\/td><\/tr><\/thead>';
+				t = '<table width="100%" class="displayparams"><thead><tr><td width="50%"><?= $_lang['parameter']?><\/td><td width="50%"><?= $_lang['value']?><\/td><\/tr><\/thead>';
 				for(p = 0; p < dp.length; p++) {
 					dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
 					ar = dp[p].split("=");
@@ -480,10 +478,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
-		function setLastClickedElement(type, id) {
-			localStorage.setItem('MODX_lastClickedElement', '[' + type + ',' + id + ']');
-		}
-
 		<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 		var lastImageCtrl;
 		var lastFileCtrl;
@@ -505,14 +499,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			lastImageCtrl = ctrl;
 			var w = screen.width * 0.5;
 			var h = screen.height * 0.5;
-			OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=images', w, h);
+			OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=images', w, h);
 		}
 
 		function BrowseFileServer(ctrl) {
 			lastFileCtrl = ctrl;
 			var w = screen.width * 0.5;
 			var h = screen.height * 0.5;
-			OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=files', w, h);
+			OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=files', w, h);
 		}
 
 		function SetUrlChange(el) {
@@ -569,14 +563,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		?>
 		<input type="hidden" name="a" value="5" />
-		<input type="hidden" name="id" value="<?php echo $content['id'] ?>" />
-		<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
-		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576 ?>" />
+		<input type="hidden" name="id" value="<?= $content['id'] ?>" />
+		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
+		<input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
 		<input type="hidden" name="refresh_preview" value="0" />
 		<input type="hidden" name="newtemplate" value="" />
-		<input type="hidden" name="dir" value="<?php echo $dir; ?>" />
-		<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
-		<input type="hidden" name="page" value="<?php echo $page; ?>" />
+		<input type="hidden" name="dir" value="<?= $dir ?>" />
+		<input type="hidden" name="sort" value="<?= $sort ?>" />
+		<input type="hidden" name="page" value="<?= $page ?>" />
 
 		<fieldset id="create_edit">
 
@@ -584,9 +578,17 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
 					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
-					echo $_lang['create_resource_title'];
+				    if ($modx->manager->action == '4') {
+                        echo $_lang['add_resource'];
+                    } else if ($modx->manager->action == '72') {
+                        echo $_lang['add_weblink'];
+                    } else {
+                        echo $_lang['create_resource_title'];
+                    }
 				} ?>
 			</h1>
+
+			<?= $_style['actionbuttons']['dynamic']['document'] ?>
 
 			<?php
 			// breadcrumbs
@@ -623,56 +625,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			}
 			?>
 
-			<div id="actions">
-				<ul class="actionButtons">
-					<li id="Button1">
-						<a href="javascript:;" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-							<i class="<?php echo $_style["actions_save"] ?>"></i><?php echo $_lang['save']; ?></a>
-						<span class="plus"> + </span>
-						<select id="stay" name="stay">
-							<?php if($modx->hasPermission('new_document')) { ?>
-								<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-							<?php } ?>
-							<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-							<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-						</select>
-					</li>
-					<?php if($modx->manager->action == '4' || $modx->manager->action == '72') { ?>
-						<li id="Button6" class="disabled">
-							<a href="javascript:;" onclick="duplicatedocument();">
-								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
-						</li>
-						<li id="Button3" class="disabled">
-							<a href="javascript:;" onclick="deletedocument();">
-								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
-						</li>
-					<?php } else { ?>
-						<li id="Button6">
-							<a href="javascript:;" onclick="setLastClickedElement(0,0);duplicatedocument();">
-								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
-						</li>
-						<li id="Button3">
-							<a href="javascript:;" onclick="setLastClickedElement(0,0);deletedocument();">
-								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
-						</li>
-					<?php } ?>
-					<li id="Button5">
-						<a href="javascript:;" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id == 0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id" . htmlspecialchars($add_path) . "';" ?>">
-							<i class="<?php echo $_style["actions_cancel"] ?>"></i><?php echo $_lang['cancel'] ?></a>
-					</li>
-					<li id="Button4">
-						<a href="javascript:;" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');">
-							<i class="<?php echo $_style["actions_preview"] ?>"></i><?php echo $_lang['preview'] ?></a>
-					</li>
-				</ul>
-			</div>
-
 			<!-- start main wrapper -->
 			<div class="sectionBody">
 
 				<div class="tab-pane" id="documentPane">
 					<script type="text/javascript">
-						tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+						var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 					</script>
 
 					<!-- General -->
@@ -685,66 +643,66 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					} else {
 						?>
 						<div class="tab-page" id="tabGeneral">
-							<h2 class="tab"><?php echo $_lang['settings_general'] ?></h2>
+							<h2 class="tab"><?= $_lang['settings_general'] ?></h2>
 							<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabGeneral"));</script>
 
 							<table>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_title_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_title'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="pagetitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+										<input name="pagetitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 										<script>document.getElementsByName("pagetitle")[0].focus();</script>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['long_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_long_title_help'] ?>"></i>
+										<span class="warning"><?= $_lang['long_title'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_long_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="longtitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<span class="warning"><?php echo $_lang['resource_description'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_description_help'] ?>"></i>
-									</td>
-									<td>
-										<input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+										<input name="longtitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_alias'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_alias_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_description'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_description_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="alias" type="text" maxlength="100" value="<?php echo stripslashes($content['alias']) ?>" class="inputBox" onchange="documentDirty=true;" />
+										<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['link_attributes'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['link_attributes_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_alias'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_alias_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="link_attributes" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
+										<input name="alias" type="text" maxlength="100" value="<?= stripslashes($content['alias']) ?>" class="inputBox" onchange="documentDirty=true;" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="warning"><?= $_lang['link_attributes'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['link_attributes_help'] ?>"></i>
+									</td>
+									<td>
+										<input name="link_attributes" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 
 								<?php if($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 
 									<tr>
-										<td><span class="warning"><?php echo $_lang['weblink'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_weblink_help'] ?>"></i>
+										<td><span class="warning"><?= $_lang['weblink'] ?></span>
+											<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_weblink_help'] ?>"></i>
 										</td>
 										<td>
-											<i id="llock" class="<?php echo $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
-											<input name="ta" id="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?php echo $_lang['insert'] ?>" onclick="BrowseFileServer('ta')" />
+											<i id="llock" class="<?= $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
+											<input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? stripslashes($content['content']) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?= $_lang['insert'] ?>" onclick="BrowseFileServer('ta')" />
 										</td>
 									</tr>
 
@@ -752,17 +710,17 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 								<tr>
 									<td valign="top">
-										<span class="warning"><?php echo $_lang['resource_summary'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
+										<span class="warning"><?= $_lang['resource_summary'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
 									</td>
 									<td valign="top">
-										<textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
+										<textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['page_data_template'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_template_help'] ?>"></i>
+										<span class="warning"><?= $_lang['page_data_template'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_template_help'] ?>"></i>
 									</td>
 									<td>
 										<select id="template" name="template" class="inputBox" onchange="templateWarning();">
@@ -803,37 +761,37 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_menu_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_menu_title_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_opt_menu_title'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_menu_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="menutitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_menu_index'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_menu_index_help'] ?>"></i>
-									</td>
-									<td>
-										<input name="menuindex" type="text" maxlength="6" value="<?php echo $content['menuindex'] ?>" class="inputBox" onchange="documentDirty=true;" />
-										<a href="javascript:;" class="btn btn-default" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?php echo $_style['actions_angle_left'] ?>"></i></a>
-										<a href="javascript:;" class="btn btn-default" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?php echo $_style['actions_angle_right'] ?>"></i></a>
+										<input name="menutitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_show_menu'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_show_menu_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_opt_menu_index'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_menu_index_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu'] != 1 ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu'] == 1) ? 1 : 0 ?>" />
+										<input name="menuindex" type="text" maxlength="6" value="<?= $content['menuindex'] ?>" class="inputBox" onchange="documentDirty=true;" />
+										<a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['actions_angle_left'] ?>"></i></a>
+										<a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['actions_angle_right'] ?>"></i></a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="warning"><?= $_lang['resource_opt_show_menu'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_show_menu_help'] ?>"></i>
+									</td>
+									<td>
+										<input name="hidemenucheck" type="checkbox" class="checkbox" <?= ($content['hidemenu'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?= ($content['hidemenu'] == 1 ? 1 : 0) ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td valign="top">
-										<span class="warning"><?php echo $_lang['resource_parent'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_parent_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_parent'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_parent_help'] ?>"></i>
 									</td>
 									<td valign="top">
 										<?php
@@ -868,11 +826,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											}
 										}
 										?>
-										<i id="plock" class="<?php echo $_style["actions_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
-										<b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent'] ?> (<?php echo $parentname ?>)</span></b>
-										<input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent'] ?>" onchange="documentDirty=true;" />
+										<i id="plock" class="<?= $_style["actions_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
+										<b><span id="parentName"><?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?> (<?= $parentname ?>)</span></b>
+										<input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
+								<tr></tr>
 								<?php
 								/*
 								if($content['type'] == 'reference' || $modx->manager->action == '72') {
@@ -884,7 +843,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</tr>
 									<tr>
 										<td>
-											<span class="warning"><?php echo $_lang['which_editor_title'] ?></span></td>
+											<span class="warning"><?= $_lang['which_editor_title'] ?></span></td>
 										<td>
 											<select id="which_editor" name="which_editor" onchange="changeRTE();">
 												<?php
@@ -909,29 +868,31 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<td colspan="2">
 											<hr>
 											<!-- Content -->
-											<label id="content_header"><?php echo $_lang['resource_content'] ?></label>
+											<div class="clearfix">
+												<span id="content_header"><?= $_lang['resource_content'] ?></span>
+												<label class="float-xs-right"><?= $_lang['which_editor_title'] ?>
+													<select id="which_editor" class="form-control form-control-sm" size="1" name="which_editor" onchange="changeRTE();">
+													<option value="none"><?= $_lang['none'] ?></option>
+														<?php
+														// invoke OnRichTextEditorRegister event
+														$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+														if(is_array($evtOut)) {
+															for($i = 0; $i < count($evtOut); $i++) {
+																$editor = $evtOut[$i];
+																echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+															}
+														}
+														?>
+													</select>
+												</label>
+											</div>
 											<div id="content_body">
 												<?php
 												if(($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
 													$htmlContent = $content['content'];
 													?>
-													<div>
-														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent) ?></textarea>
-														<span class="warning"><?php echo $_lang['which_editor_title'] ?></span>
-
-														<select id="which_editor" name="which_editor" onchange="changeRTE();">
-															<option value="none"><?php echo $_lang['none'] ?></option>
-															<?php
-															// invoke OnRichTextEditorRegister event
-															$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-															if(is_array($evtOut)) {
-																for($i = 0; $i < count($evtOut); $i++) {
-																	$editor = $evtOut[$i];
-																	echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
-																}
-															}
-															?>
-														</select>
+													<div class="section-editor clearfix">
+														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($htmlContent) ?></textarea>
 													</div>
 													<?php
 													// Richtext-[*content*]
@@ -940,7 +901,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 													$richtexteditorIds[$modx->config['which_editor']][] = 'ta';
 													$richtexteditorOptions[$modx->config['which_editor']]['ta'] = '';
 												} else {
-													echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" onchange="documentDirty=true;">', $modx->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
+													echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
 												}
 												?>
 											</div>
@@ -950,148 +911,275 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php } ?>
 							</table>
 
-							<?php if(($content['type'] == 'document' || $modx->manager->action == '4') || ($content['type'] == 'reference' || $modx->manager->action == 72)) { ?>
-								<?php
-								$template = $default_template;
-								if(isset ($_REQUEST['newtemplate'])) {
-									$template = $_REQUEST['newtemplate'];
-								} else {
-									if(isset ($content['template'])) {
-										$template = $content['template'];
-									}
-								}
+                            <?php
 
-								$field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
-								$vs = array(
-									$tbl_site_tmplvars,
-									$tbl_site_tmplvar_templates,
-									$tbl_site_tmplvar_contentvalues,
-									$id,
-									$tbl_site_tmplvar_access
-								);
-								$from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
-                         LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
-                         LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
-								$dgs = $docgrp ? " OR tva.documentgroup IN ({$docgrp})" : '';
-								$vs = array(
-									$template,
-									$_SESSION['mgrRole'],
-									$dgs
-								);
-								$where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
-								$rs = $modx->db->select($field, $from, $where, 'tvtpl.rank,tv.rank, tv.id');
-								$limit = $modx->db->getRecordCount($rs);
-								if($limit > 0) {
-									?>
-									<!-- Template Variables -->
-									<div class="sectionHeader" id="tv_header"><?php echo $_lang['settings_templvars'] ?></div>
-									<div class="sectionBody tmplvars" id="tv_body">
-										<?php
+                            $templateVariables = '';
 
-										$tvsArray = $modx->db->makeArray($rs, 'name');
-										echo "\t" . '<table>' . "\n";
-										require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
-										require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-										$i = 0;
-										foreach($tvsArray as $row) {
-											// Go through and display all Template Variables
-											if($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
-												// determine TV-options
-												$tvOptions = $modx->parseProperties($row['elements']);
-												if(!empty($tvOptions)) {
-													// Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
-													$editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->config['which_editor'];
-												};
-												// Add richtext editor to the list
-												$richtexteditorIds[$editor][] = "tv" . $row['id'];
-												$richtexteditorOptions[$editor]["tv" . $row['id']] = $tvOptions;
-											}
-											// splitter
-											if($i++ > 0) {
-												echo "\t\t", '<tr><td colspan="2"><div class="split"></div></td></tr>', "\n";
-											}
+                            if (($content['type'] == 'document' || $modx->manager->action == '4') || ($content['type'] == 'reference' || $modx->manager->action == 72)) {
+                                $template = $default_template;
+                                $group_tvs = empty($modx->config['group_tvs']) ? 0 : (int)$modx->config['group_tvs'];
+                                if (isset ($_REQUEST['newtemplate'])) {
+                                    $template = $_REQUEST['newtemplate'];
+                                } else {
+                                    if (isset ($content['template'])) {
+                                        $template = $content['template'];
+                                    }
+                                }
 
-											// post back value
-											if(array_key_exists('tv' . $row['id'], $_POST)) {
-												if(is_array($_POST['tv' . $row['id']])) {
-													$tvPBV = implode('||', $_POST['tv' . $row['id']]);
-												} else {
-													$tvPBV = $_POST['tv' . $row['id']];
-												}
-											} else {
-												$tvPBV = $row['value'];
-											}
+                                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                                $vs = array(
+                                    $tbl_site_tmplvars,
+                                    $tbl_site_tmplvar_templates,
+                                    $tbl_site_tmplvar_contentvalues,
+                                    $id,
+                                    $tbl_site_tmplvar_access
+                                );
+                                $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
+                                LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
+                                LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
+                                $dgs = $docgrp ? " OR tva.documentgroup IN ({$docgrp})" : '';
+                                $vs = array(
+                                    $template,
+                                    $_SESSION['mgrRole'],
+                                    $dgs
+                                );
+                                $sort = 'tvtpl.rank,tv.rank, tv.id';
+                                if ($group_tvs) {
+                                    $field .= ', IFNULL(tv.category,0) as category_id, IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
+                                    $from .= '
+                                    LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
+                                    $sort = 'cat.rank,cat.id,' . $sort;
+                                }
+                                $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
+                                $rs = $modx->db->select($field, $from, $where, $sort);
+                                if ($modx->db->getRecordCount($rs)) {
+                                    $templateVariables .= '
+                        <!-- Template Variables -->' . "\n";
+                                    if (!$group_tvs) {
+                                        $templateVariables .= '
+                                    <div class="sectionHeader" id="tv_header">' . $_lang['settings_templvars'] . '</div>
+                                        <div class="sectionBody tmplvars">
+                                            <table>';
+                                    } else if ($group_tvs == 2) {
+                                        $templateVariables .= '
+                    <div class="tab-section">
+                        <div class="tab-header" id="tv_header">' . $_lang['settings_templvars'] . '</div>
+                        <div class="tab-pane" id="paneTemplateVariables">
+                            <script type="text/javascript">
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
+                            </script>';
+                                    } else if ($group_tvs == 3) {
+                                        $templateVariables .= '
+                        <div id="templateVariables" class="tab-page tmplvars">
+                            <h2 class="tab">' . $_lang['settings_templvars'] . '</h2>
+                            <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'templateVariables\'));</script>';
+                                    } else if ($group_tvs == 4) {
+                                        $templateVariables .= '
+                    <div id="templateVariables" class="tab-page tmplvars">
+                        <h2 class="tab">' . $_lang['settings_templvars'] . '</h2>
+                        <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'templateVariables\'));</script>
+                        
+                        <div class="tab-pane" id="paneTemplateVariables">
+                            <script type="text/javascript">
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
+                            </script>';
+                                    }
 
-											$tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
-											$tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-											$tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
+                                    $tvsArray = $modx->db->makeArray($rs, 'name');
+                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
+                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                                    $i = 0;
+                                    $tab = '';
+                                    foreach ($tvsArray as $row) {
+                                        if ($tab !== $row['category_id']) {
+                                            if ($group_tvs == 1 || $group_tvs == 3) {
+                                                if ($i === 0) {
+                                                    $templateVariables .= '
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
+                                <div class="tab-header">' . $row['category'] . '</div>
+                                <div class="tab-body tmplvars">
+                                    <table>' . "\n";
+                                                } else {
+                                                    $templateVariables .= '
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
+                                <div class="tab-header">' . $row['category'] . '</div>
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                }
+                                            } else if ($group_tvs == 2 || $group_tvs == 4) {
+                                                if ($i === 0) {
+                                                    $templateVariables .= '
+                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                <h2 class="tab">' . $row['category'] . '</h2>
+                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                } else {
+                                                    $templateVariables .= '
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                <h2 class="tab">' . $row['category'] . '</h2>
+                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                }
+                                            } else if ($group_tvs == 5) {
+                                                if ($i === 0) {
+                                                    $templateVariables .= '
+                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                    <h2 class="tab">' . $row['category'] . '</h2>
+                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                    <table>';
+                                                } else {
+                                                    $templateVariables .= '
+                                    </table>
+                                </div>
+                                
+                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                    <h2 class="tab">' . $row['category'] . '</h2>
+                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                    
+                                    <table>';
+                                                }
+                                            }
+                                            $split = 0;
+                                        } else {
+                                            $split = 1;
+                                        }
+                                        // Go through and display all Template Variables
+                                        if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                                            // determine TV-options
+                                            $tvOptions = $modx->parseProperties($row['elements']);
+                                            if (!empty($tvOptions)) {
+                                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->config['which_editor'];
+                                            };
+                                            // Add richtext editor to the list
+                                            $richtexteditorIds[$editor][] = "tv" . $row['id'];
+                                            $richtexteditorOptions[$editor]["tv" . $row['id']] = $tvOptions;
+                                        }
+                                        // splitter
+                                        if ($group_tvs) {
+                                            if ($split && $i) {
+                                                $templateVariables .= '
+                                            <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
+                                            }
+                                        } else if ($i) {
+                                            $templateVariables .= '
+                                        <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
+                                        }
 
-											echo "\t\t", '<tr><td><span class="warning">', $row['caption'] . $tvName, "</span>\n", "\t\t\t", $tvDescription, $tvInherited, "</td>\n", "\t\t\t", '<td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' . "\n", "\t\t\t" . renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray) . "\n" . "\t\t</div></td></tr>\n";
-										}
-										echo "\t</table>\n";
-										?>
-									</div>
-									<!-- end .sectionBody .tmplvars -->
+                                        // post back value
+                                        if (array_key_exists('tv' . $row['id'], $_POST)) {
+                                            if (is_array($_POST['tv' . $row['id']])) {
+                                                $tvPBV = implode('||', $_POST['tv' . $row['id']]);
+                                            } else {
+                                                $tvPBV = $_POST['tv' . $row['id']];
+                                            }
+                                        } else {
+                                            $tvPBV = $row['value'];
+                                        }
 
-									<?php
-								} else {
-									// There aren't any Template Variables
-									//echo "\t<p>" . $_lang['tmplvars_novars'] . "</p>\n";
-								}
-								?>
-							<?php } ?>
+                                        $tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
+                                        $tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
+                                        $tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
+
+                                        $templateVariables .= '
+                                        <tr>
+                                            <td><span class="warning">' . $row['caption'] . $tvName . '</span>' . $tvDescription . $tvInherited . '</td>
+                                            <td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' . renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray) . '</div></td>
+                                        </tr>';
+
+                                        $tab = $row['category_id'];
+                                        $i++;
+                                    }
+                                    $templateVariables .= '
+                                    </table>
+                                </div>' . "\n";
+                                    if ($group_tvs == 1) {
+                                        $templateVariables .= '
+                            </div>' . "\n";
+                                    } else if ($group_tvs == 2 || $group_tvs == 4) {
+                                        $templateVariables .= '
+                            </div>
+                        </div>
+                    </div>' . "\n";
+                                    } else if ($group_tvs == 3) {
+                                        $templateVariables .= '
+                            </div>
+                        </div>' . "\n";
+                                    }
+                                    $templateVariables .= '
+                        <!-- end Template Variables -->' . "\n";
+                                }
+                            }
+
+                            // Template Variables
+                            if ($modx->config['group_tvs'] < 3) {
+                                echo $templateVariables;
+                            }
+                            ?>
 
 						</div>
 						<!-- end #tabGeneral -->
 
 						<!-- Settings -->
 						<div class="tab-page" id="tabSettings">
-							<h2 class="tab"><?php echo $_lang['settings_page_settings'] ?></h2>
+							<h2 class="tab"><?= $_lang['settings_page_settings'] ?></h2>
 							<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabSettings"));</script>
 
 							<table>
-								<?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" '; ?>
+								<?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" ' ?>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_published'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_published_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_opt_published'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_published_help'] ?>"></i>
 									</td>
 									<td>
-										<input <?php echo $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
-										<input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? 1 : 0 ?>" />
+										<input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
+										<input type="hidden" name="published" value="<?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? 1 : 0 ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['page_data_publishdate'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_publishdate_help'] ?>"></i>
+										<span class="warning"><?= $_lang['page_data_publishdate'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_publishdate_help'] ?>"></i>
 									</td>
 									<td>
-										<input type="text" id="pub_date" <?php echo $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?php echo $content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date']) ?>" onblur="documentDirty=true;" />
-										<a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-											<i class="<?php echo $_style["actions_calendar"] ?>" title="<?php echo $_lang['remove_date'] ?>"></i></a>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-										<em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td>
-								</tr>
-								<tr>
-									<td>
-										<span class="warning"><?php echo $_lang['page_data_unpublishdate'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_unpublishdate_help'] ?>"></i>
-									</td>
-									<td>
-										<input type="text" id="unpub_date" <?php echo $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date']) ?>" onblur="documentDirty=true;" />
-										<a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-											<i class="<?php echo $_style["actions_calendar"] ?>" title="<?php echo $_lang['remove_date'] ?>"></i></a>
+										<input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ($content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
+										<a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
+											<i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
 									</td>
 								</tr>
 								<tr>
 									<td></td>
 									<td>
-										<em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em>
+										<em> <?= $modx->config['datetime_format'] ?> HH:MM:SS</em></td>
+								</tr>
+								<tr>
+									<td>
+										<span class="warning"><?= $_lang['page_data_unpublishdate'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_unpublishdate_help'] ?>"></i>
+									</td>
+									<td>
+										<input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ($content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
+										<a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
+											<i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										<em> <?= $modx->config['datetime_format'] ?> HH:MM:SS</em>
 									</td>
 								</tr>
 								<tr>
@@ -1106,21 +1194,21 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									?>
 									<tr>
 										<td>
-											<span class="warning"><?php echo $_lang['resource_type'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_type_message'] ?>"></i>
+											<span class="warning"><?= $_lang['resource_type'] ?></span>
+											<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_type_message'] ?>"></i>
 										</td>
 										<td>
 											<select name="type" class="inputBox" onchange="documentDirty=true;">
-												<option value="document"<?php echo(($content['type'] == "document" || $modx->manager->action == '85' || $modx->manager->action == '4') ? ' selected="selected"' : ""); ?> ><?php echo $_lang["resource_type_webpage"]; ?></option>
-												<option value="reference"<?php echo(($content['type'] == "reference" || $modx->manager->action == '72') ? ' selected="selected"' : ""); ?> ><?php echo $_lang["resource_type_weblink"]; ?></option>
+												<option value="document"<?= (($content['type'] == "document" || $modx->manager->action == '85' || $modx->manager->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
+												<option value="reference"<?= (($content['type'] == "reference" || $modx->manager->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
 											</select>
 										</td>
 									</tr>
 
 									<tr>
 										<td>
-											<span class="warning"><?php echo $_lang['page_data_contentType'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_contentType_help'] ?>"></i>
+											<span class="warning"><?= $_lang['page_data_contentType'] ?></span>
+											<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_contentType_help'] ?>"></i>
 										</td>
 										<td>
 											<select name="contentType" class="inputBox" onchange="documentDirty=true;">
@@ -1139,13 +1227,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</tr>
 									<tr>
 										<td>
-											<span class="warning"><?php echo $_lang['resource_opt_contentdispo'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_contentdispo_help'] ?>"></i>
+											<span class="warning"><?= $_lang['resource_opt_contentdispo'] ?></span>
+											<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_contentdispo_help'] ?>"></i>
 										</td>
 										<td>
 											<select name="content_dispo" class="inputBox" size="1" onchange="documentDirty=true;">
-												<option value="0"<?php echo !$content['content_dispo'] ? ' selected="selected"' : '' ?>><?php echo $_lang['inline'] ?></option>
-												<option value="1"<?php echo $content['content_dispo'] == 1 ? ' selected="selected"' : '' ?>><?php echo $_lang['attachment'] ?></option>
+												<option value="0"<?= (!$content['content_dispo'] ? ' selected="selected"' : '') ?>><?= $_lang['inline'] ?></option>
+												<option value="1"<?= ($content['content_dispo'] == 1 ? ' selected="selected"' : '') ?>><?= $_lang['attachment'] ?></option>
 											</select>
 										</td>
 									</tr>
@@ -1160,9 +1248,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									if($content['type'] != 'reference' && $modx->manager->action != '72') {
 										// non-admin managers creating or editing a document resource
 										?>
-										<input type="hidden" name="contentType" value="<?php echo isset($content['contentType']) ? $content['contentType'] : "text/html" ?>" />
+										<input type="hidden" name="contentType" value="<?= (isset($content['contentType']) ? $content['contentType'] : "text/html") ?>" />
 										<input type="hidden" name="type" value="document" />
-										<input type="hidden" name="content_dispo" value="<?php echo isset($content['content_dispo']) ? $content['content_dispo'] : '0' ?>" />
+										<input type="hidden" name="content_dispo" value="<?= (isset($content['content_dispo']) ? $content['content_dispo'] : '0') ?>" />
 										<?php
 									} else {
 										// non-admin managers creating or editing a reference (weblink) resource
@@ -1176,68 +1264,68 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_folder'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_folder_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_opt_folder'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_folder_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder'] == 1 || $modx->manager->action == '85') ? "checked" : '' ?> onclick="changestate(document.mutate.isfolder);" />
-										<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder'] == 1 || $modx->manager->action == '85') ? 1 : 0 ?>" onchange="documentDirty=true;" />
-									</td>
-								</tr>
-
-								<tr>
-									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_alvisibled'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_alvisibled_help'] ?>"></i>
-									</td>
-									<td>
-										<input name="alias_visible_check" type="checkbox" class="checkbox" <?php echo (!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.alias_visible);" /><input type="hidden" name="alias_visible" value="<?php echo (!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? 1 : 0 ?>" />
+										<input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
+										<input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_richtext'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_richtext_help'] ?>"></i>
+										<span class="warning"><?= $_lang['resource_opt_alvisibled'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_alvisibled_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext'] == 0 && $modx->manager->action == '27' ? '' : "checked" ?> onclick="changestate(document.mutate.richtext);" />
-										<input type="hidden" name="richtext" value="<?php echo $content['richtext'] == 0 && $modx->manager->action == '27' ? 0 : 1 ?>" onchange="documentDirty=true;" />
+										<input name="alias_visible_check" type="checkbox" class="checkbox" <?= ((!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? "checked" : '') ?> onclick="changestate(document.mutate.alias_visible);" /><input type="hidden" name="alias_visible" value="<?= ((!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? 1 : 0) ?>" />
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<span class="warning"><?= $_lang['resource_opt_richtext'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_richtext_help'] ?>"></i>
+									</td>
+									<td>
+										<input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
+										<input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['track_visitors_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_trackvisit_help'] ?>"></i>
+										<span class="warning"><?= $_lang['track_visitors_title'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_trackvisit_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="donthitcheck" type="checkbox" class="checkbox" <?php echo ($content['donthit'] != 1) ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit'] == 1) ? 1 : 0 ?>" onchange="documentDirty=true;" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<span class="warning"><?php echo $_lang['page_data_searchable'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_searchable_help'] ?>"></i>
-									</td>
-									<td>
-										<input name="searchablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? 1 : 0 ?>" onchange="documentDirty=true;" />
+										<input name="donthitcheck" type="checkbox" class="checkbox" <?= ($content['donthit'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= ($content['donthit'] == 1 ? 1 : 0) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['page_data_cacheable'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_cacheable_help'] ?>"></i>
+										<span class="warning"><?= $_lang['page_data_searchable'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_searchable_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="cacheablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.cacheable);" />
-										<input type="hidden" name="cacheable" value="<?php echo (isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? 1 : 0 ?>" onchange="documentDirty=true;" />
+										<input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? 1 : 0) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<span class="warning"><?php echo $_lang['resource_opt_emptycache'] ?></span>
+										<span class="warning"><?= $_lang['page_data_cacheable'] ?></span>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_cacheable_help'] ?>"></i>
+									</td>
+									<td>
+										<input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
+										<input type="hidden" name="cacheable" value="<?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? 1 : 0) ?>" onchange="documentDirty=true;" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="warning"><?= $_lang['resource_opt_emptycache'] ?></span>
 										<input type="hidden" name="syncsite" value="1" />
-										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_emptycache_help'] ?>"></i>
+										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_emptycache_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="syncsitecheck" type="checkbox" class="checkbox" checked="checked" onclick="changestate(document.mutate.syncsite);" />
@@ -1247,82 +1335,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</div><!-- end #tabSettings -->
 					<?php } ?>
 
-					<!-- :TODO  tab META deleted in the future-->
-
-					<?php if($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
-						// get list of site keywords
-						$keywords = array();
-						$ds = $modx->db->select('id, keyword', $tbl_site_keywords, '', 'keyword ASC');
-						while($row = $modx->db->getRow($ds)) {
-							$keywords[$row['id']] = $row['keyword'];
-						}
-						// get selected keywords using document's id
-						if(isset ($content['id']) && count($keywords) > 0) {
-							$keywords_selected = array();
-							$ds = $modx->db->select('keyword_id', $tbl_keyword_xref, "content_id='{$content['id']}'");
-							while($row = $modx->db->getRow($ds)) {
-								$keywords_selected[$row['keyword_id']] = ' selected="selected"';
-							}
-						}
-
-						// get list of site META tags
-						$metatags = array();
-						$ds = $modx->db->select('id, name', $tbl_site_metatags);
-						while($row = $modx->db->getRow($ds)) {
-							$metatags[$row['id']] = $row['name'];
-						}
-						// get selected META tags using document's id
-						if(isset ($content['id']) && count($metatags) > 0) {
-							$metatags_selected = array();
-							$ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, "content_id='{$content['id']}'");
-							while($row = $modx->db->getRow($ds)) {
-								$metatags_selected[$row['metatag_id']] = ' selected="selected"';
-							}
-						}
-						?>
-						<!-- META Keywords -->
-						<div class="tab-page" id="tabMeta">
-							<h2 class="tab"><?php echo $_lang['meta_keywords'] ?></h2>
-							<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabMeta"));</script>
-
-							<table>
-								<tr>
-									<td><?php echo $_lang['resource_metatag_help'] ?><br /><br />
-										<table>
-											<tr>
-												<td><span class="warning"><?php echo $_lang['keywords'] ?></span><br />
-													<select name="keywords[]" multiple="multiple" size="16" class="inputBox" onchange="documentDirty=true;">
-														<?php
-														foreach($keywords as $key => $value) {
-															$selected = $keywords_selected[$key];
-															echo "\t\t\t\t" . '<option value="' . $key . '"' . $selected . '>' . $value . "</option>\n";
-														}
-														?>
-													</select>
-													<br />
-													<input type="button" value="<?php echo $_lang['deselect_keywords'] ?>" onclick="clearKeywordSelection();" />
-												</td>
-												<td><span class="warning"><?php echo $_lang['metatags'] ?></span><br />
-													<select name="metatags[]" multiple="multiple" size="16" class="inputBox" onchange="documentDirty=true;">
-														<?php
-														foreach($metatags as $key => $value) {
-															$selected = $metatags_selected[$key];
-															echo "\t\t\t\t" . '<option value="' . $key . '"' . $selected . '>' . $value . "</option>\n";
-														}
-														?>
-													</select>
-													<br />
-													<input type="button" value="<?php echo $_lang['deselect_metatags'] ?>" onclick="clearMetatagSelection();" />
-												</td>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</div><!-- end #tabMeta -->
+                    <?php
+                    //Template Variables
+                    if ($modx->config['group_tvs'] > 2) {
+                        echo $templateVariables;
+                    }
+                    ?>
 
 						<?php
-					}
-
 					/*******************************
 					 * Document Access Permissions */
 					if($use_udperms == 1) {
@@ -1431,7 +1451,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							?>
 							<!-- Access Permissions -->
 							<div class="tab-page" id="tabAccess">
-								<h2 class="tab" id="tab_access_header"><?php echo $_lang['access_permissions'] ?></h2>
+								<h2 class="tab" id="tab_access_header"><?= $_lang['access_permissions'] ?></h2>
 								<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabAccess"));</script>
 								<script type="text/javascript">
 									/* <![CDATA[ */
@@ -1453,18 +1473,19 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											chkpub.checked = true;
 										}
 									}
+
 									/* ]]> */
 								</script>
-								<p><?php echo $_lang['access_permissions_docs_message'] ?></p>
+								<p><?= $_lang['access_permissions_docs_message'] ?></p>
 								<ul>
-									<?php echo implode("\n", $permissions) . "\n"; ?>
+									<?= implode("\n", $permissions) . "\n" ?>
 								</ul>
 							</div><!--div class="tab-page" id="tabAccess"-->
 							<?php
 						} // !empty($permissions)
 						elseif($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0) && ($_SESSION['mgrPermissions']['access_permissions'] == 1 || $_SESSION['mgrPermissions']['web_access_permissions'] == 1)) {
 							?>
-							<p><?php echo $_lang["access_permissions_docs_collision"]; ?></p>
+							<p><?= $_lang["access_permissions_docs_collision"] ?></p>
 							<?php
 
 						}
@@ -1511,9 +1532,13 @@ if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager
 	}
 }
 
+/**
+ * @return string
+ */
 function getDefaultTemplate() {
 	global $modx;
 
+    $default_template = '';
 	switch($modx->config['auto_template_logic']) {
 		case 'sibling':
 			if(!isset($_GET['pid']) || empty($_GET['pid'])) {
@@ -1549,9 +1574,6 @@ function getDefaultTemplate() {
 		default: // default_template is already set
 			$default_template = $modx->config['default_template'];
 	}
-	if(!isset($default_template)) {
-		$default_template = $modx->config['default_template'];
-	} // default_template is already set
 
-	return $default_template;
+	return empty($default_template) ? $modx->config['default_template'] : $default_template;
 }

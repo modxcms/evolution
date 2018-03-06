@@ -1,12 +1,12 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-$helpBasePath = MODX_BASE_PATH . "assets/templates/help/";
+$helpBasePath = "actions/help/";
 ?>
 
 <h1>
-	<i class="fa fa-question-circle"></i><?php echo $_lang['help']; ?>
+	<?php echo $_style['page_help'];  echo $_lang['help']; ?>
 </h1>
 
 <div class="sectionBody">
@@ -16,7 +16,7 @@ $helpBasePath = MODX_BASE_PATH . "assets/templates/help/";
 		</script>
 
 		<?php
-		if($handle = opendir(MODX_BASE_PATH . 'assets/templates/help')) {
+		if($handle = opendir('actions/help')) {
 			while(false !== ($file = readdir($handle))) {
 				if($file != "." && $file != ".." && $file != ".svn" && $file != 'index.html' && !is_dir($helpBasePath . $file)) {
 					$help[] = $file;

@@ -143,7 +143,7 @@ class FS
 
     /**
      * @param $file
-     * @param bool $format
+     * @param bool|array $format
      * @return int|string
      */
     public function fileSize($file, $format = false)
@@ -152,12 +152,14 @@ class FS
         if ($this->checkFile($file)) {
             $out = filesize(MODX_BASE_PATH . $this->relativePath($file));
         }
-        if ($format) {
-            $types = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        
+        if($format === true) $format = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        if (is_array($format)) {
             $size = $out > 0 ? floor(log($out, 1024)) : 0;
-            $out = number_format($out / pow(1024, $size), 2, '.', ',') . ' ' . $types[$size];
+            $type = isset($format[$size]) ? ' '.$format[$size] : '';
+            $out = number_format($out / pow(1024, $size), 2, '.', ',') . $type;
         }
-
+        
         return $out;
     }
 
@@ -290,8 +292,9 @@ class FS
         if (is_null($owner)) {
             $owner = MODX_BASE_PATH;
         }
+        $path = str_replace('\\', '/', $path);
         if (!(empty($path) || !is_scalar($path)) && !preg_match("/^http(s)?:\/\/\w+/", $path)) {
-            $path = trim(preg_replace("#^" . $owner . "#", '', $path), '/');
+            $path = trim(preg_replace("#^" . preg_quote($owner) . "#", '', $path), DIRECTORY_SEPARATOR);
         } else {
             $path = '';
         }

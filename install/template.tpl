@@ -14,14 +14,13 @@
 
 <div id="header">
 	<div class="container_10">
-		<span class="help"><a href="[+help_link+]" target="_blank" title="[+help_title+]">[+help+]</a></span>
 		<span class="version">[+version+] ([+release_date+])</span>
 	</div>
 </div>
 
 <div id="mainheader">
 	<div class="container_10">
-    <img id="logo" src="img/logo.png" alt="MODX CMS">
+    <img id="logo" src="img/logo.png" alt="EVO CMS">
   </div>
 </div>
 

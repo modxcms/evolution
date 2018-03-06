@@ -1,9 +1,0 @@
-[+error:isnotempty=`
-<div class="error">[+error+]</div>`+]
-<form method="POST" [+authPage:isnotempty=`action="[+authPage+]"`+]>
-    <input type="hidden" name="backUrl" value="[+backUrl+]"/>
-    <input type="hidden" name="method" value="[+method+]"/>
-    Email: <input type="text" name="[+emailField+]" value="[+emailValue+]"/><br/>
-    Password: <input type="password" name="[+pwdField+]" value=""/><br/>
-    <input type="submit" value="Войти"/>
-</form>

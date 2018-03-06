@@ -31,12 +31,13 @@ class Reminder extends Form
             $this->log('Lexicon loaded', array('lexicon' => $lang));
         }
         $hashField = $this->getCFGDef('hashField', 'hash');
-        $uidField = $this->getCFGDef('uidField', 'id');
+        $uidField = $this->getCFGDef('uidField', $this->user->fieldPKName());
+        $uidName = $this->getCFGDef('uidName', $uidField);
         $userField = $this->getCFGDef('userField', 'email');
         $this->hashField = $hashField;
         $this->uidField = $uidField;
         $this->userField = $userField;
-        if ((isset($_REQUEST[$hashField]) && !empty($_REQUEST[$hashField])) && (isset($_REQUEST[$uidField]) && !empty($_REQUEST[$uidField]))) {
+        if ((isset($_REQUEST[$hashField]) && !empty($_REQUEST[$hashField])) && (isset($_REQUEST[$uidName]) && !empty($_REQUEST[$uidName]))) {
             $this->setFields($_REQUEST);
             $this->mode = 'reset';
             $this->config->setConfig(array(
@@ -53,8 +54,10 @@ class Reminder extends Form
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID('web')) {
+        if ($id = $this->modx->getLoginUserID('web')) {
             $this->redirect('exitTo');
+            $this->user->edit($id);
+            $this->setFields($this->user->toArray());
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('reminder.default_skipTpl'));
             $this->setValid(false);
         }
@@ -73,8 +76,8 @@ class Reminder extends Form
     public function renderReset()
     {
         $hash = $this->getField($this->hashField);
-        $uid = $this->getField($this->uidField);
-        if ($hash && $hash == $this->getUserHash($uid)) {
+        $uid = $this->getField($this->getCFGDef('uidName', $this->uidField));
+        if (is_scalar($hash) && $hash && $hash == $this->getUserHash($uid)) {
             if ($this->getCFGDef('resetTpl')) {
                 $this->setField('user.hash', $hash);
                 $this->setField('user.id', $uid);
@@ -114,7 +117,7 @@ class Reminder extends Form
             $hash = false;
         } else {
             $userdata = $this->user->edit($uid)->toArray();
-            $hash = $userdata['id'] ? md5(json_encode($userdata)) : false;
+            $hash = $this->user->getID() ? md5(json_encode($userdata)) : false;
         }
 
         return $hash;
@@ -133,9 +136,10 @@ class Reminder extends Form
                 $uid = $this->getField($this->userField);
                 if ($hash = $this->getUserHash($uid)) {
                     $this->setFields($this->user->toArray());
-                    $url = $this->getCFGDef('resetTo', $this->modx->config['site_start']);
+                    $url = $this->getCFGDef('resetTo', isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier > 0 ? $this->modx->documentIdentifier : $this->config['site_start']);
+                    $uidName = $this->getCFGDef('uidName', $this->uidField);
                     $this->setField('reset.url', $this->modx->makeUrl($url, "",
-                        http_build_query(array($this->uidField  => $this->getField($this->uidField),
+                        http_build_query(array($uidName  => $this->getField($this->uidField),
                                                $this->hashField => $hash
                         )),
                         'full'));

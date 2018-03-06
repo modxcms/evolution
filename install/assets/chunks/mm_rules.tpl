@@ -24,7 +24,7 @@ mm_moveFieldsToTab('titl,keyw,desc,seoOverride,noIndex,sitemap_changefreq,sitema
 mm_widget_tags('keyw',','); // Give blog tag editing capabilities to the 'documentTags (3)' TV
 
 
-//mm_createTab('Изображения', 'photos', '', '', '', '850');
+//mm_createTab('Images', 'photos', '', '', '', '850');
 //mm_moveFieldsToTab('images,photos', 'photos', '', '');
 
 //mm_hideFields('longtitle,description,link_attributes,menutitle,content', '', '6,7');

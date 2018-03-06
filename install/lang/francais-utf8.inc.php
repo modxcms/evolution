@@ -5,8 +5,8 @@
  * @author Grégory Pakosz (guardian)
  * @author Coroico
  * @author Jean-Christophe Brebion (Fairytree)
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language French
  * @package modx
@@ -44,7 +44,7 @@ $_lang["checking_if_config_exist_and_writable"] = 'Vérification de l\'existence
 $_lang["checking_if_export_exists"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_images_exist"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/images</span>: ';
-$_lang["checking_if_images_writable"] = 'Vérification des droits en écriture des répertoires <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> et <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_writable"] = 'Vérification des droits en écriture des répertoires <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> et <span class="mono">/assets/.thumbs</span>: ';
 $_lang["checking_mysql_strict_mode"] = 'Vérification du mode strict MySQL: ';
 $_lang["checking_mysql_version"] = 'Vérification de la version MySQL: ';
 $_lang["checking_php_version"] = 'Vérification de la version PHP: ';
@@ -167,6 +167,7 @@ $_lang["status_failed"] = 'échec!';
 $_lang["status_failed_could_not_create_database"] = 'échec - impossible de créer la base de données';
 $_lang["status_failed_database_collation_does_not_match"] = 'échec - collation différente; utilisez SET NAMES ou choisir %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'échec - préfixe de table déjà utilisé!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'succès - base sélectionnée';
 $_lang["status_passed_database_created"] = 'succès - base créée';
 $_lang["status_passed_server"] = 'succès - collations maintenant disponibles';

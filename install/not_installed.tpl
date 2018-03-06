@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>MODX is not installed!</title>
+<title>EVO is not installed!</title>
 <meta name="robots" content="noindex, nofollow">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet" type="text/css">
 <style type="text/css">
@@ -15,7 +15,7 @@ a{font-size:2em;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5
 </head>
 <body>
 <div class="install">
-<p>MODX is not currently installed or the configuration file cannot be found.</p>
+<p>EVO is not currently installed or the configuration file cannot be found.</p>
 <p>Do you want to <a href="install/index.php">install now?</a></p>
 </div>
 </body></html>

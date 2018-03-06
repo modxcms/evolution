@@ -1,4 +1,4 @@
-# MODX Database Script for New/Upgrade Installations
+# EVO Database Script for New/Upgrade Installations
 #
 # Each sql command is separated by double lines
 
@@ -7,18 +7,11 @@
 # Empty tables first
 # 
 
-
-TRUNCATE TABLE `{PREFIX}site_keywords`;
-
-TRUNCATE TABLE `{PREFIX}keyword_xref`;
-
 TRUNCATE TABLE `{PREFIX}documentgroup_names`;
 
 TRUNCATE TABLE `{PREFIX}site_content`;
 
 TRUNCATE TABLE `{PREFIX}site_htmlsnippets`;
-
-TRUNCATE TABLE `{PREFIX}site_keywords`;
 
 TRUNCATE TABLE `{PREFIX}site_plugins`;
 

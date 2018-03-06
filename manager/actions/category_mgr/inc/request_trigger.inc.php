@@ -2,6 +2,10 @@
 /**
  * Ajax Requests
  */
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+
 if( isset( $_REQUEST[$cm->get('request_key')]['ajax'] ) )
 {
     $_data  = $_REQUEST[$cm->get('request_key')];
@@ -14,42 +18,42 @@ if( isset( $_REQUEST[$cm->get('request_key')]['ajax'] ) )
          */
         case 'categorize_load_elements':
             $elements = $_data['elements'];
-            
+
             if( $uncategorized_elements = $cm->getAssignedElements( 0, $_data['elements'] ) )
-            { 
+            {
                $output .= $cm->renderView('chunks/categorize/uncategorized_elements', $uncategorized_elements);
             }
-            
+
             foreach( $cm->getCategories() as $category )
             {
                 $category['elements'] = $cm->getAssignedElements( $category['id'], $_data['elements'] );
                 $output .= $cm->renderView('chunks/categorize/category', $category);
-            }            
+            }
             break;
     }
     exit( $output );
 }
 /**
  * Categorize elements
- * 
+ *
  * @notice array [data] removed
  * @see /manager/includes/protect.inc.php ($limit)
- * @see http://modxcms.com/forums/index.php/topic,40430.msg251476.html#msg251476 
- * 
+ * @see http://modxcms.com/forums/index.php/topic,40430.msg251476.html#msg251476
+ *
  */
 if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
-{  
+{
     $_data = $_POST[$cm->get('request_key')]['categorize'];
     $_changes = 0;
 
     $cm->addMessage(
-        sprintf( 
-            $cm->txt('cm_categorize_x'), 
+        sprintf(
+            $cm->txt('cm_categorize_x'),
             $cm->txt($_data['elementsgroup'])
         ),
         'categorize'
     );
-    
+
     if( !isset( $_data['elements'] ) )
     {
         $cm->addMessage( $cm->txt('cm_unknown_error'), 'categorize' );
@@ -61,9 +65,9 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
         if( $cm->updateElement( $_data['elementsgroup'], $element_id, $data['category_id'] ) )
         {
             $cm->addMessage(
-                sprintf( 
-                    $cm->txt('cm_x_assigned_to_category_y'), 
-                    $data['element_name'], 
+                sprintf(
+                    $cm->txt('cm_x_assigned_to_category_y'),
+                    $data['element_name'],
                     $element_id,
                     $data['category_name'],
                     $data['category_id']
@@ -73,7 +77,7 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
             $_changes++;
         }
     }
-    
+
     if( $_changes === 0 )
     {
         $cm->addMessage( $cm->txt('cm_no_categorization'), 'categorize' );
@@ -82,12 +86,12 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
     else
     {
         $cm->addMessage(
-            sprintf( 
-                $cm->txt('cm_x_changes_made'), 
+            sprintf(
+                $cm->txt('cm_x_changes_made'),
                 $_changes
             ),
             'categorize'
-        );       
+        );
     }
 }
 
@@ -108,14 +112,14 @@ if( isset( $_POST[$cm->get('request_key')]['add']['submit'] ) )
 
     if( $cm->isCategoryExists( $category ) )
     {
-       $cm->addMessage( sprintf( $cm->txt('cm_category_x_exists'), $category ), 'add' ); 
+       $cm->addMessage( sprintf( $cm->txt('cm_category_x_exists'), $category ), 'add' );
        return;
     }
-    
+
     if( $cm->addCategory( $category, $rank ) !== 0 )
     {
         $cm->addMessage(
-            sprintf( 
+            sprintf(
                 $cm->txt( 'cm_category_x_saved_at_position_y' ),
                 $category,
                 $rank
@@ -126,7 +130,7 @@ if( isset( $_POST[$cm->get('request_key')]['add']['submit'] ) )
     else
     {
         $cm->addMessage( $cm->txt('cm_unknown_error'), 'add' );
-    }    
+    }
 }
 
 /**
@@ -136,28 +140,28 @@ if( isset( $_POST[$cm->get('request_key')]['sort']['submit'] ) )
 {
     $categories = $_POST[$cm->get('request_key')]['sort']['data'];
     $_changes   = 0;
-    
-    foreach( $categories as $category_id => $_data  ) 
+
+    foreach( $categories as $category_id => $_data  )
     {
         $data = array(
             'category' => urldecode( $_data['category'] ),
             'rank'     => $_data['rank']
         );
-        
+
         if( $cm->updateCategory( $category_id, $data ) )
         {
             $cm->addMessage(
-                sprintf( 
+                sprintf(
                     $cm->txt('cm_category_x_moved_to_position_y'),
                     $data['category'],
-                    $data['rank'] 
+                    $data['rank']
                 ),
                 'sort'
             );
             $_changes++;
         }
     }
-        
+
     if( $_changes === 0 )
     {
         $cm->addMessage( $cm->txt( 'cm_no_changes' ), 'sort');
@@ -165,12 +169,12 @@ if( isset( $_POST[$cm->get('request_key')]['sort']['submit'] ) )
     else
     {
         $cm->addMessage(
-            sprintf( 
-                $cm->txt('cm_x_changes_made'), 
+            sprintf(
+                $cm->txt('cm_x_changes_made'),
                 $_changes
             ),
             'sort'
-        );       
+        );
     }
 }
 
@@ -182,7 +186,7 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
     $categories = $_POST[$cm->get('request_key')]['edit']['data'];
     $_changes   = 0;
 
-    foreach( $categories as $category_id => $_data  ) 
+    foreach( $categories as $category_id => $_data  )
     {
         if( isset( $_data['delete'] ) )
         {
@@ -199,16 +203,16 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
             $_changes++;
             continue;
         }
-        
+
         $data = array(
             'category' => trim( html_entity_decode( $_data['category'] ) ),
             'rank'     => $_data['rank']
         );
-        
+
         if( $cm->updateCategory( $category_id, $data ) )
         {
             $cm->addMessage(
-                sprintf( 
+                sprintf(
                     $cm->txt('cm_category_x_renamed_to_y'),
                     urldecode( $_data['origin'] ),
                     $data['category']
@@ -228,18 +232,18 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
 /**
  * Delete singel category by $_GET
  */
-if( isset( $_GET[$cm->get('request_key')]['delete'] ) 
+if( isset( $_GET[$cm->get('request_key')]['delete'] )
     && !empty( $_GET[$cm->get('request_key')]['delete'] ) )
 {
     $category_id = (int)$_GET[$cm->get('request_key')]['delete'];
-    
+
     if( $cm->deleteCategory( $category_id ) )
     {
         $cm->addMessage(
             sprintf(
-                $cm->txt('cm_category_x_deleted'), 
+                $cm->txt('cm_category_x_deleted'),
                 urldecode( $_GET[$cm->get('request_key')]['category'] )
-            ), 
+            ),
             'edit'
         );
     }
@@ -248,7 +252,7 @@ if( isset( $_GET[$cm->get('request_key')]['delete'] )
  * Translate phrases
  */
 if( isset( $_POST[$cm->get('request_key')]['translate']['submit'] ) )
-{ 
+{
     $translations = $_POST[$cm->get('request_key')]['translate']['data'];
 
     foreach( $translations as $native_phrase => $translation )
@@ -258,33 +262,25 @@ if( isset( $_POST[$cm->get('request_key')]['translate']['submit'] ) )
         if( empty( $translation ) )
         {
             $translation = $native_phrase;
-            
+
             $cm->addMessage(
                 sprintf(
-                    $cm->txt('cm_translation_for_x_empty'), 
+                    $cm->txt('cm_translation_for_x_empty'),
                     $native_phrase
-                ), 
+                ),
                 'translate'
             );
         }
 
-        //$cm->c('Translator')->setType('phrase');
         $cm->c('Translator')->addTranslation( $native_phrase, $translation, 'phrase' );
-        
+
         $cm->addMessage(
             sprintf(
-                $cm->txt('cm_translation_for_x_to_y_success'), 
+                $cm->txt('cm_translation_for_x_to_y_success'),
                 $native_phrase,
                 $translation
-            ), 
+            ),
             'translate'
         );
-    }
-
-    if( empty( $cm->new_translations ) )
-    {   
-       //$_REQUEST['webfxtab_manage-categories-pane'] = 0;
-       // unset( $_COOKIE['webfxtab_manage-categories-pane'] );
-       // setcookie('webfxtab_manage-categories-pane', 0);
     }
 }

@@ -76,6 +76,10 @@ class PHPThumb
     {
         $options = strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
         parse_str($options, $params);
+        if(!is_array($params)) {
+            $params = array();
+        }
+
         foreach ($params as $key => $value) {
             $this->thumb->setParameter($key, $value);
         }

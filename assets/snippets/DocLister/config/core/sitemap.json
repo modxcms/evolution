@@ -1,0 +1,12 @@
+{
+  "idType": "documents",
+  "ignoreEmpty": 1,
+  "addWhereList": "c.published = 1 AND c.deleted=0 AND c.searchable=1 AND c.type='document'",
+  "selectFields": "c.id,c.editedon,c.createdon,c.type",
+  "dateSource":"",
+  "tpl": "@CODE:\n<url>\n\t<loc>[+e.url+]</loc>\n\t<lastmod>[+date+]</lastmod>\n\t<changefreq>[+update+]</changefreq>\n\t<priority>[+priority+]</priority>\n</url>",
+  "tvList": "sitemap_changefreq,sitemap_priority",
+  "ownerTPL": "@CODE:[+dl.wrap+]",
+  "urlScheme": "full",
+  "e":"url"
+}

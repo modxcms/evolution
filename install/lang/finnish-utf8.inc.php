@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author Anssi Rajakallio, Kari Söderholm
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Finnish
  * @package modx
@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = 'Tarkistetaan voiko kansioihin <span clas
 $_lang["checking_if_config_exist_and_writable"] = 'Tarkistetaan onko asetustiedosto <span class="mono">[+MGR_DIR+]/includes/config.inc.php</span> olemassa ja voiko siihen kirjoittaa: ';
 $_lang["checking_if_export_exists"] = 'Tarkistetaan onko kansio <span class="mono">/assets/export</span> olemassa: ';
 $_lang["checking_if_export_writable"] = 'Tarkistetaan voiko kansioon <span class="mono">/assets/export</span> luoda uusia tiedostoja: ';
-$_lang["checking_if_images_exist"] = 'Tarkistetaan onko kansiot <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> ja <span class="mono">/assets/.thumbs</span> olemassa: ';
-$_lang["checking_if_images_writable"] = 'Tarkistetaan voidaanko kansioihin <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> ja <span class="mono">/assets/.thumbs</span> luoda uusia tiedostoja: ';
+$_lang["checking_if_images_exist"] = 'Tarkistetaan onko kansiot <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> ja <span class="mono">/assets/.thumbs</span> olemassa: ';
+$_lang["checking_if_images_writable"] = 'Tarkistetaan voidaanko kansioihin <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> ja <span class="mono">/assets/.thumbs</span> luoda uusia tiedostoja: ';
 $_lang["checking_mysql_strict_mode"] = 'Tarkistetaan MySQL palvelimen "strict sql_mode" asetus: ';
 $_lang["checking_mysql_version"] = 'Tarkistetaan MySQL pavelimen versio: ';
 $_lang["checking_php_version"] = 'Tarkistetaan PHP:n versio: ';
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'epäonnistui!';
 $_lang["status_failed_could_not_create_database"] = 'epäonnistui - tietokantaa ei voitu luoda';
 $_lang["status_failed_database_collation_does_not_match"] = 'epäonnistui - tietokannan merkistön yhteensopivuus ongelma. Käytä "SET NAMES" tai valitse %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'epäonnistui - tietokannan taulujen etuliite on jo käytössä!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'onnistui - tietokanta valittu';
 $_lang["status_passed_database_created"] = 'onnistui - tietokanta luotu';
 $_lang["status_passed_server"] = 'onnistui - merkistöt ovat nyt käytettävissä';

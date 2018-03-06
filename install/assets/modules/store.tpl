@@ -2,7 +2,7 @@
 /**
  * Extras
  * 
- * first repository for MODX EVO
+ * first repository for Evolution CMS
  * 
  * @category	module
  * @version 	0.1.3

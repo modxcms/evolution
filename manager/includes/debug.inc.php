@@ -1,16 +1,18 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 // show debug information
 if(isset($enable_debug) && $enable_debug==true) {
 	?>
 	<script language="javascript">
 	//document.onload = removeDebug();
-	
+
 	function removeDebug() {
-		xyz = window.setTimeout('removeDebugDiv()', 6000);	
+		xyz = window.setTimeout('removeDebugDiv()', 6000);
 	}
-	
+
 	function removeDebugDiv() {
 		document.getElementById('debug').style.display="none";
 	}

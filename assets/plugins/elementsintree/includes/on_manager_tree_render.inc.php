@@ -2,26 +2,14 @@
 
 if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
-if ($useIcons=='yes') {
-    $tabLabel_template  = '<i class="fa fa-newspaper-o"></i>';
-    $tabLabel_tv        = '<i class="fa fa-list-alt"></i>';
-    $tabLabel_chunk     = '<i class="fa fa-th-large"></i>';
-    $tabLabel_snippet   = '<i class="fa fa-code"></i>';
-    $tabLabel_plugin    = '<i class="fa fa-plug"></i>';
-    $tabLabel_module    = '<i class="fa fa-cogs"></i>';
-    $tabLabel_create    = '<i class="fa fa-plus"></i>';
-    $tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
-}
-else {
-    $tabLabel_template  = 'TPL';
-    $tabLabel_tv        = 'TV';
-    $tabLabel_chunk     = 'CH';
-    $tabLabel_snippet   = 'SN';
-    $tabLabel_plugin    = 'PL';
-    $tabLabel_module    = 'MD';
-    $tabLabel_create    = 'Create';
-    $tabLabel_refresh   = 'Refresh';
-}
+$tabLabel_template  = '<i class="fa fa-newspaper-o"></i>';
+$tabLabel_tv        = '<i class="fa fa-list-alt"></i>';
+$tabLabel_chunk     = '<i class="fa fa-th-large"></i>';
+$tabLabel_snippet   = '<i class="fa fa-code"></i>';
+$tabLabel_plugin    = '<i class="fa fa-plug"></i>';
+$tabLabel_module    = '<i class="fa fa-cubes"></i>';
+$tabLabel_create    = '<i class="fa fa-plus"></i>';
+$tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
 
 $text_reload_title = 'Click here to reload elements list.';
 

@@ -40,17 +40,18 @@ class DLphx
 
     /**
      * DLphx constructor.
-     * @param int $debug
+     * @param int|bool|string $debug
      * @param int $maxpass
      */
-    public function __construct($debug = 0, $maxpass = 50)
+    public function __construct($debug = false, $maxpass = 50)
     {
         global $modx;
+
         $this->user["mgrid"] = isset($_SESSION['mgrInternalKey']) ? intval($_SESSION['mgrInternalKey']) : 0;
         $this->user["usrid"] = isset($_SESSION['webInternalKey']) ? intval($_SESSION['webInternalKey']) : 0;
         $this->user["id"] = ($this->user["usrid"] > 0) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 
-        $this->debug = ($debug !== '') ? (bool)$debug : false;
+        $this->debug = (bool)$debug;
 
         $this->maxPasses = ($maxpass != '') ? $maxpass : 50;
 
@@ -308,14 +309,14 @@ class DLphx
                         break;
                     case "show":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($conditional));
                         if (!$isvalid) {
                             $output = null;
                         }
                         break;
                     case "then":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($conditional));
                         if ($isvalid) {
                             $output = $modifier_value[$i];
                         } else {
@@ -324,7 +325,7 @@ class DLphx
                         break;
                     case "else":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($condition));
                         if (!$isvalid) {
                             $output = $modifier_value[$i];
                         }
@@ -466,7 +467,8 @@ class DLphx
                         $snippetName = 'phx:' . $modifier_cmd[$i];
                         if (isset($modx->snippetCache[$snippetName])) {
                             $snippet = $modx->snippetCache[$snippetName];
-                        } else { // not in cache so let's check the db
+                        } else {
+// not in cache so let's check the db
                             $sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $modx->db->escape($snippetName) . "';";
                             $result = $modx->dbQuery($sql);
                             if ($modx->recordCount($result) == 1) {
@@ -474,7 +476,8 @@ class DLphx
                                 $snippet = $modx->snippetCache[$row['name']] = $row['snippet'];
                                 $this->Log("  |--- DB -> Custom Modifier");
                             } else {
-                                if ($modx->recordCount($result) == 0) { // If snippet not found, look in the modifiers folder
+                                if ($modx->recordCount($result) == 0) {
+// If snippet not found, look in the modifiers folder
                                     $filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
                                     if (@file_exists($filename)) {
                                         $file_contents = @file_get_contents($filename);
@@ -515,6 +518,10 @@ class DLphx
         return $output;
     }
 
+    private function runCode($code)
+    {
+        return eval("return (" . $code . ");");
+    }
     // Event logging (debug)
     /**
      * @return string

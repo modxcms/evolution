@@ -1,4 +1,77 @@
 ## History
+### 1.7.18
+* [Enhancement] Dutch, Polish, English-Britain, German lexicons.
+* [Refactor] Экранирование значений массива до преобразования массива в строку в методе fieldsToPlaceholders 
+
+### 1.7.17
+* [Refactor] Мультибайтовые функции.
+
+### 1.7.16
+* [Fix] Ошибка с полями username и email при их отсутствии (Profile).
+* [Enhancement] В метод getField можно передать значение по умолчанию (Core).
+* [Refactor] Оптимизация обработки чанков (Core).
+
+### 1.7.15
+* [Enhancement] Отдельные настройки почты для писем ccSender и automessage в параметрах ccMailConfig и autoMailConfig (Form).
+* [Refactor] Проверка типа входящих данных (Validator).
+* [Refactor] Изменен метод renderForm (Core).
+* [Enhancement] Параметр apiFormat для формата вывода данных (json или просто массив) (Core).
+* [Fix] В валидаторе файлов неправильно обрабатывалась ситуация, когда файлы отправляются одним массивом из нескольких полей (Form).
+* [Enhancement] Разлогинивание удаленных и заблокированных пользователей (userHelper).
+
+### 1.7.14
+* [Refactor] Упрощение параметра parseMailerParams.
+
+### 1.7.13
+* [Enhancement] Параметр parseMailerParams для обработки плейсхолдеров в параметрах отправки почты, по умолчанию отключен (Form).
+* [Fix] Некорректная загрузка пользовательских лексиконов из файлов (Core, Lexicon).
+* [Fix] Параметр debug со значением 0 не отключал отладку (Core).
+
+### 1.7.12
+* [Enhancement] Возможность указывать имя параметра с id пользователя в ссылках (Reminder, Activate).
+* [Refactor] Имя пользователя и E-mail принудительно приводятся в нижний регистр (Login, Register, Profile).
+* [Fix] Неверное значение по умолчанию параметра resetTo (Reminder).
+* [Fix] Неверное значение по умолчанию параметра activateTo (Activate).
+* [Fix] Ошибка при расчете хэша для активации учетной записи (Register, Activate). 
+ 
+### 1.7.11
+* [Fix] Предупреждения в PHP 7 (Core).
+* [Enhancement] Вывод сообщений в лог при проблемах с параметрами rules, fileRules и contentFields (Core, Content). 
+* [Refactor] Обработка языковых плейсхолдеров в сообщениях (Core).
+* [Enhancement] Из prepare-сниппетов можно возвращать массив значений полей, который будет передан в метод setFields (Core).
+
+### 1.7.10
+* [Enhancement] Возможность использовать плейсхолдеры с данными пользователя в шаблоне skipTpl (Login, Activate, Register, Reminder).
+* [Fix] Неверное определение страницы для редиректа (Login).
+
+### 1.7.9
+* [Fix] Исправления ошибок.
+
+### 1.7.8
+* [Refactor] Переименованы файлы документации.
+* [Refactor] Параметр removeEmptyPlaceholders по умолчанию включен (Core).
+* [Refactor] Параметр rewriteUrls по умолчанию включен (Core).
+* [Refactor] Плейсхолдеры ошибок [+field.error+] не устанавливаются, если нет сообщения об ошибке (Core).
+* [Enhancement] Плейсхолдеры [+field.class+] (включает class="") и [+field.classname+] (не включает class="") (Core).
+* [Refactor] Параметр lexicon может содержать или имена файлов (без расширения) через запятую или массив с языковыми строками (Lexicon).
+
+### 1.7.7
+* [Enhancement] Возможность указывать разный subject для разных типов писем (Form).
+
+### 1.7.6
+* [Fix] Исправления ошибок.
+
+### 1.7.5
+* [Fix] $this->modx вместо $modx в сниппете.
+
+### 1.7.4
+* [Fix] Ошибка в лексиконе (Form).
+* [Refactor] Версии PHP ниже 5.6 не поддерживаются (Core).
+
+### 1.7.3
+* [Refactor] Подключать __autoload.php, если не задан другой загрузчик.
+* [Fix] Ошибка в обработке параметра редиректа (Core).
+
 ### 1.7.2
 * [Enhancement] Параметр &context в контроллере Login для поддержки модели modManagers (Login).
 * [Fix] Ошибка в обработке параметра редиректа (Core).

@@ -138,7 +138,7 @@ class dataTable extends \autoTable
 
     /**
      * @param $ids
-     * @param null $fire_events
+     * @param bool $fire_events
      * @return $this
      */
     public function delete($ids, $fire_events = false)
@@ -152,7 +152,7 @@ class dataTable extends \autoTable
     /**
      * @param $ids
      * @param $rid
-     * @param null $fire_events
+     * @param bool $fire_events
      * @return $this
      */
     public function deleteAll($ids, $rid, $fire_events = false)
@@ -272,6 +272,8 @@ class dataTable extends \autoTable
      */
     public function setParams($params = array())
     {
-        if (is_array($params)) $this->params = $params;
+        if (is_array($params)) {
+            $this->params = $params;
+        }
     }
 }

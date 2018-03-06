@@ -4,8 +4,8 @@
  *
  * @author Pontus Ågren (Pont)
  * @author Thomas Djärv (Beryl)
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Svenska
  * @package modx
@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Kontrollerar att katalogerna <span class
 $_lang["checking_if_config_exist_and_writable"] = 'Kontrollerar att filen <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> existerar och är skrivbar: ';
 $_lang["checking_if_export_exists"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> existerar: ';
 $_lang["checking_if_export_writable"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> är skrivbar: ';
-$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> existerar: ';
-$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> är skrivbara: ';
+$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> existerar: ';
+$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> är skrivbara: ';
 $_lang["checking_mysql_strict_mode"] = 'Kontrollerar MySQL för strikt sql_mode: ';
 $_lang["checking_mysql_version"] = 'Kontrollerar MySQL-versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerar PHP-version: ';
@@ -166,6 +166,7 @@ $_lang["status_failed"] = 'misslyckades!';
 $_lang["status_failed_could_not_create_database"] = 'misslyckades - kunde inte skapa databas';
 $_lang["status_failed_database_collation_does_not_match"] = 'misslyckades - databaskollationeringen stämmer inte; använd SET_NAMES eller välj %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'misslyckades - tabellprefixet används redan!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'godkänd - databasen valdes';
 $_lang["status_passed_database_created"] = 'godkänd - databas skapades';
 $_lang["status_passed_server"] = 'godkänd - kollationeringar finns nu tillgängliga';

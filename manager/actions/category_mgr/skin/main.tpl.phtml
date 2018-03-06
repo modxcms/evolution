@@ -1,102 +1,89 @@
-<!--<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />-->
 <link rel="stylesheet" type="text/css" href="actions/category_mgr/skin/css/module.css" />
-<script type="text/javascript" src="actions/category_mgr/skin/js/mootips.js"></script>
-<?php if(!empty($view->js_output)) : ?>
-	<script type="text/javascript">
-		<?php echo $view->js_output; ?>
-	</script>
-<?php endif; ?>
+
+<?php if (!empty($view->js_output)) : ?>
+    <script type="text/javascript">
+        <?= $view->js_output ?>
+    </script>
+<?php endif ?>
 
 <h1>
-	<i class="fa fa-folder-open"></i><?php echo $view->get('name') ?>
+    <i class="fa fa-object-group"></i><?= $view->get('name') ?>
 </h1>
 
-<div id="section-body-categories" class="sectionBody">
+<?php if ($data === 'TABLE_COLUMN_SORT_NOT_SET') : ?>
+    <?php $view->renderView('chunks/db_setup') ?>
+<?php else: ?>
 
-	<?php if($data === 'TABLE_COLUMN_SORT_NOT_SET') : ?>
-		<?php $view->renderView('chunks/db_setup'); ?>
-	<?php else: ?>
+    <div id="section-body-categories">
 
-		<?php $view->renderView('chunks/messages', $view->getMessages('global')); ?>
+        <div class="container"><?php $view->renderView('chunks/messages', $view->getMessages('global')) ?></div>
 
-		<div id="manage-categories-pane" class="tab-pane">
-			<script type="text/javascript">
-				tpCategories = new WebFXTabPane($('manage-categories-pane'));
-			</script>
+        <div id="manage-categories-pane" class="tab-pane">
+            <script type="text/javascript">
+              let tpCategories = new WebFXTabPane(document.getElementById('manage-categories-pane'));
+            </script>
 
-			<div id="tab-add-category" class="tab-page">
-				<h2 id="tab-header-add" class="tab"><i class="fa fa-plus-square-o"></i> <?php echo $view->txt('cm_add_new_category'); ?></h2>
-				<script type="text/javascript">tpCategories.addTabPage($('tab-add-category'));</script>
-				<?php $view->renderView('chunks/messages', $view->getMessages('add')); ?>
-				<?php $view->renderView('add'); ?>
-			</div><!-- end __ #tab-add-category .tab-page -->
+            <div id="tab-add-category" class="tab-page">
+                <h2 id="tab-header-add" class="tab"><i class="fa fa-plus-square-o"></i> <?= $view->txt('cm_add_new_category') ?></h2>
+                <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-add-category'));</script>
+                <div class="container container-body">
+                    <?php $view->renderView('chunks/messages', $view->getMessages('add')) ?>
+                    <?php $view->renderView('add') ?>
+                </div>
+            </div><!-- end __ #tab-add-category .tab-page -->
 
-			<?php if(is_array($data) && !empty($data)) : ?>
+            <?php if (is_array($data) && !empty($data)) : ?>
 
-				<div id="tab-edit-categories" class="tab-page">
-					<h2 id="tab-header-edit" class="tab"><i class="fa fa-pencil"></i> <?php echo $view->txt('cm_edit_categories'); ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-edit-categories'));</script>
-					<?php $view->renderView('chunks/messages', $view->getMessages('edit')); ?>
-					<?php $view->renderView('edit', $data); ?>
-				</div><!-- end __ #tab-edit-categories .tab-page -->
+                <div id="tab-edit-categories" class="tab-page">
+                    <h2 id="tab-header-edit" class="tab"><i class="fa fa-pencil"></i> <?= $view->txt('cm_edit_categories') ?></h2>
+                    <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-edit-categories'));</script>
+                    <div class="container container-body">
+                        <?php $view->renderView('chunks/messages', $view->getMessages('edit')) ?>
+                        <?php $view->renderView('edit', $data) ?>
+                    </div>
+                </div><!-- end __ #tab-edit-categories .tab-page -->
 
-				<div id="tab-sort-categories" class="tab-page">
-					<h2 id="tab-header-sort" class="tab"><i class="fa fa-sort"></i> <?php echo $view->txt('cm_sort_categories'); ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-sort-categories'));</script>
-					<?php $view->renderView('chunks/messages', $view->getMessages('sort')); ?>
-					<?php $view->renderView('sort', $data); ?>
-				</div><!-- end __ #tab-sort-categories .tab-page -->
+                <div id="tab-sort-categories" class="tab-page">
+                    <h2 id="tab-header-sort" class="tab"><i class="fa fa-sort"></i> <?= $view->txt('cm_sort_categories') ?></h2>
+                    <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-sort-categories'));</script>
+                    <div class="container container-body">
+                        <?php $view->renderView('chunks/messages', $view->getMessages('sort')) ?>
+                        <?php $view->renderView('sort', $data) ?>
+                    </div>
+                </div><!-- end __ #tab-sort-categories .tab-page -->
 
-				<div id="tab-categorize-elements" class="tab-page">
-					<h2 id="tab-header-categorize" class="tab"><i class="fa fa-arrows"></i> <?php echo $view->txt('cm_categorize_elements'); ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-categorize-elements'));</script>
-					<?php $view->renderView('chunks/messages', $view->getMessages('categorize')); ?>
-					<?php $view->renderView('categorize', $data); ?>
-				</div><!-- end __ #tab-edit-categories .tab-page -->
+                <div id="tab-categorize-elements" class="tab-page">
+                    <h2 id="tab-header-categorize" class="tab"><i class="fa fa-arrows"></i> <?= $view->txt('cm_categorize_elements') ?></h2>
+                    <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-categorize-elements'));</script>
+                    <div class="container container-body">
+                        <?php $view->renderView('chunks/messages', $view->getMessages('categorize')) ?>
+                        <?php $view->renderView('categorize', $data) ?>
+                    </div>
+                </div><!-- end __ #tab-edit-categories .tab-page -->
 
-			<?php endif; ?>
+            <?php endif ?>
 
-			<?php if($view->new_translations[$view->get('manager_language')] && !empty($view->new_translations[$view->get('manager_language')])) : ?>
+            <?php if ($view->new_translations[$view->get('manager_language')] && !empty($view->new_translations[$view->get('manager_language')])) : ?>
 
-				<div id="tab-translate-phrases" class="tab-page">
-					<h2 id="tab-header-translate" class="tab"><?php echo $view->txt('Translations'); ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-translate-phrases'));</script>
-					<?php $view->renderView('chunks/messages', $view->getMessages('translate')); ?>
-					<?php $view->renderView('translate', $view->new_translations[$view->get('manager_language')]); ?>
-				</div><!-- end __ #tab-translate-phrases .tab-page -->
+                <div id="tab-translate-phrases" class="tab-page">
+                    <h2 id="tab-header-translate" class="tab"><?= $view->txt('Translations') ?></h2>
+                    <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-translate-phrases'));</script>
+                    <div class="container container-body">
+                        <?php $view->renderView('chunks/messages', $view->getMessages('translate')) ?>
+                        <?php $view->renderView('translate', $view->new_translations[$view->get('manager_language')]) ?>
+                    </div>
+                </div><!-- end __ #tab-translate-phrases .tab-page -->
 
-			<?php endif; ?>
+            <?php endif ?>
 
-		</div><!-- end __ #manage-categoires-pane .tab-pane -->
+        </div><!-- end __ #manage-categoires-pane .tab-pane -->
 
-	<?php endif; /* if $data === TABLE_COLUMN_SORT_NOT_SET */ ?>
+    </div><!-- end __ #section-body-categories -->
 
-</div><!-- end __ #section-body-categories .sectionBody -->
+<?php endif; /* if $data === TABLE_COLUMN_SORT_NOT_SET */ ?>
 
 <script type="text/javascript">
-	var ajax_url = 'index.php?a=121';
-	var request_key = '<?php echo $view->get('request_key'); ?>';
-	$('elements-select').addEvent('change', function(e) {
-		e = new Event(e).stop();
-		var load_elements = new Ajax(ajax_url, {
-			method: 'post',
-			data: {
-				'<?php echo $view->get('request_key'); ?>[ajax]': 1,
-				'<?php echo $view->get('request_key'); ?>[task]': 'categorize_load_elements',
-				'<?php echo $view->get('request_key'); ?>[elements]': $('elements-select').getProperty('value')
-			},
-			update: $('categorize-workbench'),
-			onRequest: function() {
-				$('categorize-workbench').empty().addClass('ajax_loading');
-				$('categorize-elements').removeClass('hidden');
-				$('categorize-formfields').empty();
-			},
-			onComplete: function() {
-				$('categorize-workbench').removeClass('ajax_loading');
-				init_drag();
-			}
-		}).request();
-	});
+  const request_key = '<?= $view->get('request_key') ?>';
 </script>
 <script type="text/javascript" src="actions/category_mgr/skin/js/categories.js"></script>
 <script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>

@@ -1,10 +1,12 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('exec_module')) {	
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+if(!$modx->hasPermission('exec_module')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
@@ -61,10 +63,15 @@ $output = evalModule($content["modulecode"],$parameter);
 echo $output;
 include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
 
-// evalModule
+/**
+ * evalModule
+ *
+ * @param string $moduleCode
+ * @param array $params
+ * @return string
+ */
 function evalModule($moduleCode,$params){
 	global $modx;
-	$etomite = &$modx;
 	$modx->event->params = &$params; // store params inside event object
 	if(is_array($params)) {
 		extract($params, EXTR_SKIP);

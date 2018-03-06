@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('save_role')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -75,8 +75,6 @@ $fields = array(
 	'exec_module' => $exec_module,
 	'view_eventlog' => $view_eventlog,
 	'delete_eventlog' => $delete_eventlog,
-	'manage_metatags' => $manage_metatags,
-	'edit_doc_metatags' => $edit_doc_metatags,
 	'new_web_user' => $new_web_user,
 	'edit_web_user' => $edit_web_user,
 	'save_web_user' => $save_web_user,

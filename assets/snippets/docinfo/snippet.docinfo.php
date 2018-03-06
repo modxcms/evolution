@@ -20,7 +20,7 @@
 *       [[DocInfo? &docid=`3` &field=`tvname` &render=`1`]]
 */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-$default_field = array('type','contentType','pagetitle','longtitle','description','alias','link_attributes','published','pub_date','unpub_date','parent','isfolder','introtext','content','richtext','template','menuindex','searchable','cacheable','createdon','createdby','editedon','editedby','deleted','deletedon','deletedby','publishedon','publishedby','menutitle','donthit','haskeywords','hasmetatags','privateweb','privatemgr','content_dispo','hidemenu','alias_visible');
+$default_field = array('type','contentType','pagetitle','longtitle','description','alias','link_attributes','published','pub_date','unpub_date','parent','isfolder','introtext','content','richtext','template','menuindex','searchable','cacheable','createdon','createdby','editedon','editedby','deleted','deletedon','deletedby','publishedon','publishedby','menutitle','donthit','privateweb','privatemgr','content_dispo','hidemenu','alias_visible');
 $docid = (isset($docid) && (int)$docid>0) ? (int)$docid : $modx->documentIdentifier;
 $field = (isset($field)) ? $field : 'pagetitle';
 $render = (isset($render)) ? $render : 0;

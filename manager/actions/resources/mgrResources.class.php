@@ -1,19 +1,39 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 class mgrResources {
-	var $types = array();
-	var $items = array();
-	var $categories = array();
-	var $itemsPerCategory = array();
-	
-	function __construct() {
+    /**
+     * @var array
+     */
+	public $types = array();
+    /**
+     * @var array
+     */
+    public $items = array();
+    /**
+     * @var array
+     */
+    public $categories = array();
+    /**
+     * @var array
+     */
+    public $itemsPerCategory = array();
+
+    /**
+     * mgrResources constructor.
+     */
+    public function __construct() {
 		$this->setTypes();
 		$this->queryItemsFromDB();
 		$this->prepareCategoryArrays();
 	}
 
-	function setTypes() {
+    /**
+     * @return void
+     */
+    public function setTypes() {
 		global $_lang;
 		$this->types['site_templates']    = array(
 			'title'=>$_lang["manage_templates"],
@@ -47,8 +67,11 @@ class mgrResources {
 			'permissions'=>array('new_module','edit_module'),
 		);
 	}
-	
-	function queryItemsFromDB() {
+
+    /**
+     * @return void
+     */
+    public function queryItemsFromDB() {
 		foreach($this->types as $resourceTable=>$type) {
 			if($this->hasAnyPermissions($type['permissions'])) {
 				$nameField = isset($type['name']) ? $type['name'] : 'name';
@@ -57,58 +80,57 @@ class mgrResources {
 		 }
 	}
 
-	function hasAnyPermissions($permissions) {
+    /**
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAnyPermissions($permissions) {
 		global $modx;
-		
-		foreach($permissions as $p) 
+
+		foreach($permissions as $p)
 			if($modx->hasPermission($p)) return true;
-		
+
 		return false;
 	}
 
-	function queryResources($resourceTable, $nameField = 'name') {
+    /**
+     * @param string $resourceTable
+     * @param string $nameField
+     * @return array|bool
+     */
+    public function queryResources($resourceTable, $nameField = 'name') {
 		global $modx, $_lang;
 
-		$pluginsql = $resourceTable == 'site_plugins' ? $resourceTable . '.disabled, ' : '';
+        $allowed = array(
+            'site_htmlsnippets',
+            'site_snippets',
+            'site_plugins',
+            'site_modules'
+        );
+		$pluginsql = !empty($resourceTable) && in_array($resourceTable, $allowed) ? $resourceTable . '.disabled, ' : '';
 
 		$tvsql  = '';
 		$tvjoin = '';
-		if ($resourceTable == 'site_tmplvars') {
+		if ($resourceTable === 'site_tmplvars') {
 			$tvsql    = 'site_tmplvars.caption, ';
 			$tvjoin   = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getFullTableName('site_tmplvar_templates'));
 			$sttfield = 'IF(stt.templateid,1,0) AS reltpl,';
 		}
 		else $sttfield = '';
 
-		//$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
-
-		switch ($resourceTable) {
-			case 'site_plugins':
-				$orderby = '6,2';
-				break;
-			case 'site_tmplvars':
-				$orderby = '7,3';
-				break;
-			case 'site_templates':
-				$orderby = '6,1';
-				break;
-			default:
-				$orderby = '5,1';
-		}
-
-		$selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
+		$selectableTemplates = $resourceTable === 'site_templates' ? "{$resourceTable}.selectable, " : "";
 
 		$rs = $modx->db->select(
 			"{$sttfield} {$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
 			$modx->getFullTableName($resourceTable) . " AS {$resourceTable}
 	            LEFT JOIN " . $modx->getFullTableName('categories') . " AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
 			"",
-			$orderby
+			"category,name"
 		);
 		$limit = $modx->db->getRecordCount($rs);
-		
+
 		if($limit < 1) return false;
-		
+
 		$result = array();
 		while ($row = $modx->db->getRow($rs)) {
 			$result[] = $row;
@@ -116,20 +138,23 @@ class mgrResources {
 		return $result;
 	}
 
-	function prepareCategoryArrays() {
+    /**
+     * @return void
+     */
+    public function prepareCategoryArrays() {
 		foreach($this->items as $type=>$items) {
 			foreach((array)$items as $item) {
 				$catid = $item['catid'] ? $item['catid'] : 0;
 				$this->categories[$catid] = $item['category'];
-				
+
 				$item['type'] = $type;
 				$this->itemsPerCategory[$catid][] = $item;
 			}
 		}
-		
+
 		// Sort categories by name
 		natcasesort($this->categories);
-		
+
 		// Now sort by name
 		foreach($this->itemsPerCategory as $catid=>$items) {
 			usort($this->itemsPerCategory[$catid], function ($a, $b) {

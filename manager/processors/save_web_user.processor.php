@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('save_web_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -18,7 +18,7 @@ foreach($input as $k => $v) {
 	$input[$k] = $v;
 }
 
-$id = intval($input['id']);
+$id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $esc_newusername = $modx->db->escape($newusername);
@@ -108,22 +108,6 @@ switch($input['mode']) {
 		// Save User Settings
 		saveUserSettings($internalKey);
 
-		// invoke OnWebSaveUser event
-		$modx->invokeEvent("OnWebSaveUser", array(
-			"mode" => "new",
-			"userid" => $internalKey,
-			"username" => $newusername,
-			"userpassword" => $newpassword,
-			"useremail" => $email,
-			"userfullname" => $fullname
-		));
-
-		// invoke OnWUsrFormSave event
-		$modx->invokeEvent("OnWUsrFormSave", array(
-			"mode" => "new",
-			"id" => $internalKey
-		));
-
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
 
@@ -131,16 +115,32 @@ switch($input['mode']) {
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
-					$f['webgroup'] = intval($user_groups[$i]);
+					$f['webgroup'] = (int)$user_groups[$i];
 					$f['webuser'] = $internalKey;
 					$modx->db->insert($f, $tbl_web_groups);
 				}
 			}
 		}
 		// end of user_groups stuff!
+
+        // invoke OnWebSaveUser event
+        $modx->invokeEvent("OnWebSaveUser", array(
+            "mode" => "new",
+            "userid" => $internalKey,
+            "username" => $newusername,
+            "userpassword" => $newpassword,
+            "useremail" => $email,
+            "userfullname" => $fullname
+        ));
+
+        // invoke OnWUsrFormSave event
+        $modx->invokeEvent("OnWUsrFormSave", array(
+            "mode" => "new",
+            "id" => $internalKey
+        ));
 
 		if($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
@@ -244,43 +244,16 @@ switch($input['mode']) {
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
 
-		// invoke OnWebSaveUser event
-		$modx->invokeEvent("OnWebSaveUser", array(
-			"mode" => "upd",
-			"userid" => $id,
-			"username" => $newusername,
-			"userpassword" => $newpassword,
-			"useremail" => $email,
-			"userfullname" => $fullname,
-			"oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
-			"olduseremail" => (($oldemail != $email) ? $oldemail : "")
-		));
-
-		// invoke OnWebChangePassword event
-		if($genpassword == 1) {
-			$modx->invokeEvent("OnWebChangePassword", array(
-				"userid" => $id,
-				"username" => $newusername,
-				"userpassword" => $newpassword
-			));
-		}
-
-		// invoke OnWUsrFormSave event
-		$modx->invokeEvent("OnWUsrFormSave", array(
-			"mode" => "upd",
-			"id" => $id
-		));
-
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$modx->db->delete($tbl_web_groups, "webuser='{$id}'");
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['webgroup'] = intval($user_groups[$i]);
+					$field['webgroup'] = (int)$user_groups[$i];
 					$field['webuser'] = $id;
 					$modx->db->insert($field, $tbl_web_groups);
 				}
@@ -288,6 +261,33 @@ switch($input['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
+
+        // invoke OnWebSaveUser event
+        $modx->invokeEvent("OnWebSaveUser", array(
+            "mode" => "upd",
+            "userid" => $id,
+            "username" => $newusername,
+            "userpassword" => $newpassword,
+            "useremail" => $email,
+            "userfullname" => $fullname,
+            "oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
+            "olduseremail" => (($oldemail != $email) ? $oldemail : "")
+        ));
+
+        // invoke OnWebChangePassword event
+        if($genpassword == 1) {
+            $modx->invokeEvent("OnWebChangePassword", array(
+                "userid" => $id,
+                "username" => $newusername,
+                "userpassword" => $newpassword
+            ));
+        }
+
+        // invoke OnWUsrFormSave event
+        $modx->invokeEvent("OnWUsrFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
 
 		if($genpassword == 1 && $passwordnotifymethod == 's') {
 			if($input['stay'] != '') {
@@ -334,7 +334,12 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-// in case any plugins include a quoted_printable function
+/**
+ * in case any plugins include a quoted_printable function
+ *
+ * @param string $string
+ * @return string
+ */
 function save_user_quoted_printable($string) {
 	$crlf = "\n";
 	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf;
@@ -346,7 +351,14 @@ function save_user_quoted_printable($string) {
 	return trim(wordwrap($string, 70, ' =' . $crlf));
 }
 
-// Send an email to the user
+/**
+ * Send an email to the user
+ *
+ * @param string $email
+ * @param string $uid
+ * @param string $pwd
+ * @param string $ufn
+ */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx, $_lang, $websignupemail_message;
 	global $emailsubject, $emailsender;

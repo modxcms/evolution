@@ -1,4 +1,5 @@
 <?php namespace FormLister;
+
 /**
  * Контроллер для авторизации пользователя
  * Class Login
@@ -22,8 +23,12 @@ class Login extends Core
             $this->getCFGDef('model', '\modUsers'),
             $this->getCFGDef('modelPath', 'assets/lib/MODxAPI/modUsers.php')
         );
-        $this->requestUri = $this->modx->config['site_url'].ltrim($_SERVER['REQUEST_URI'],'/');
-        $this->context = $this->getCFGDef('context','web');
+        $requestUri = $_SERVER['REQUEST_URI'];
+        if (0 === strpos($requestUri, MODX_BASE_URL)) {
+            $requestUri = substr($requestUri, strlen(MODX_BASE_URL));
+        } 
+        $this->requestUri = $this->modx->config['site_url'] . $requestUri;
+        $this->context = $this->getCFGDef('context', 'web');
         $lang = $this->lexicon->loadLang('login');
         if ($lang) {
             $this->log('Lexicon loaded', array('lexicon' => $lang));
@@ -35,8 +40,10 @@ class Login extends Core
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID($this->context)) {
+        if ($id = $this->modx->getLoginUserID($this->context)) {
             $this->redirect();
+            $this->user->edit($id);
+            $this->setFields($this->user->toArray());
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('login.default_skipTpl'));
             $this->setValid(false);
         };
@@ -56,6 +63,11 @@ class Login extends Core
             return;
         }
         $login = $this->getField($this->getCFGDef('loginField', 'username'));
+        if (is_scalar($login)) {
+            $login = mb_strtolower($login);
+        } else {
+            $login = '';
+        }
         $password = $this->getField($this->getCFGDef('passwordField', 'password'));
         $remember = $this->getField($this->getCFGDef('rememberField', 'rememberme'));
         if ($this->user->checkBlock($login)) {
@@ -65,7 +77,7 @@ class Login extends Core
         }
         $this->user->edit($login);
 
-        if ($this->getCFGDef('checkActivation',0) && $this->user->get('logincount') < 0) {
+        if ($this->getCFGDef('checkActivation', 0) && $this->user->get('logincount') < 0) {
             $this->addMessage($this->lexicon->getMsg('login.user_notactivated'));
 
             return;
@@ -80,12 +92,13 @@ class Login extends Core
         if ($remember) {
             $remember = $this->getCFGDef('cookieLifetime', 60 * 60 * 24 * 365 * 5);
         }
-        $loginCookie = $this->getCFGDef('cookieName','WebLoginPE');
+        $loginCookie = $this->getCFGDef('cookieName', 'WebLoginPE');
         $this->user->authUser($login, $remember, $loginCookie, true);
         $this->setFormStatus(true);
         if (isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier == $this->modx->config['unauthorized_page']) {
-            $uaPage = $this->modx->makeUrl($this->modx->config['unauthorized_page'],"","","full");
-            if (array_shift(explode('?',$this->requestUri)) != $uaPage) {
+            $uaPage = $this->modx->makeUrl($this->modx->config['unauthorized_page'], "", "", "full");
+            $requested = explode('?', $this->requestUri);
+            if (array_shift($requested) != $uaPage) {
                 $this->setField('redirectTo', $this->requestUri);
                 $this->sendRedirect($this->requestUri);
             } else {

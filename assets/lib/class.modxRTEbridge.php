@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Deesen, yama / updated: 06.05.2016
+ * @author Deesen, yama / updated: 27.01.2018
  */
 if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
@@ -33,7 +33,7 @@ class modxRTEbridge
 
         // Check right path
         $file = !empty($basePath) ? $basePath : __FILE__;
-        $current_path = str_replace('\\', '/', dirname($file)) . '/';
+        $current_path = str_replace('\\', '/', dirname($file) . '/');
         if (strpos($current_path, MODX_BASE_PATH) !== false) {
             $path = substr($current_path, strlen(MODX_BASE_PATH));
             $basePath = MODX_BASE_PATH . $path;
@@ -42,7 +42,7 @@ class modxRTEbridge
 
         // Object to pass vars between multiple plugin-events
         if(!isset($modx->modxRTEbridge)) $modx->modxRTEbridge = array();
-        
+
         // Init language before bridge so bridge can alter translations via $this->setLang()
         $this->initLang($basePath);
 
@@ -72,11 +72,11 @@ class modxRTEbridge
 
         // Modx default WYSIWYG-params
         $modxParamsArr = array(
-            'theme', 'skin', 'entermode', 'element_format', 'schema', 'css_selectors',
+            'theme', 'skin', 'skintheme', 'entermode', 'element_format', 'schema', 'css_selectors',
             'custom_plugins', 'custom_buttons1', 'custom_buttons2', 'custom_buttons3', 'custom_buttons4',
             'template_docs', 'template_chunks'
         );
-        
+
         // Add defaultCheckbox-Values for user-settings
         $settingsRows = array();
         include($basePath . 'gsettings/gsettings.rows.inc.php');
@@ -87,7 +87,7 @@ class modxRTEbridge
                 $this->modxParams[$param . '_useglobal'] = !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
             }
         }
-        
+
         // Add custom settings from bridge
         foreach ($this->gSettingsCustom as $param => $row) {
             if (!in_array($param, $modxParamsArr)) $modxParamsArr[] = $param;
@@ -123,6 +123,7 @@ class modxRTEbridge
         $this->pluginParams['editorVersion']  = isset($bridgeConfig['editorVersion']) ? $bridgeConfig['editorVersion'] : 'No editorVersion set';
         $this->pluginParams['editorLogo']     = isset($bridgeConfig['editorLogo']) ? $bridgeConfig['editorLogo'] : '';
         $this->pluginParams['skinsDirectory'] = isset($bridgeConfig['skinsDirectory']) && !empty($bridgeConfig['skinsDirectory']) ? trim($bridgeConfig['skinsDirectory'], "/") . "/" : '';
+        $this->pluginParams['skinthemeDirectory'] = isset($bridgeConfig['skinthemeDirectory']) && !empty($bridgeConfig['skinthemeDirectory']) ? trim($bridgeConfig['skinthemeDirectory'], "/") . "/" : '';
         $this->pluginParams['base_path']      = $basePath;
         $this->pluginParams['base_url']       = $baseUrl;
     }
@@ -232,7 +233,7 @@ class modxRTEbridge
 
             // Allows bridging elements+TV-options etc before looping
             $this->renderBridgeParams('initBridge');
-            
+
             // Now loop through tvs
             foreach ($this->pluginParams['elements'] as $selector) {
 
@@ -266,18 +267,19 @@ class modxRTEbridge
                 // Loop through tvs
                 $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") ."\n";
                 $output  = $modx->parseText($output, $ph);
+                $output = str_replace('\\', '/', $output);
             }
 
         } else {
-            // No elements given - create Config-Object only 
+            // No elements given - create Config-Object only
             $this->theme = $this->tvOptions['theme'];
             $this->initTheme('noselector');
             $this->renderBridgeParams('noselector');
-            
+
             // Prepare config output
             $ph = $this->prepareDefaultPlaceholders();
             $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
-            
+
             if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
                 define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
                 $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
@@ -303,23 +305,27 @@ class modxRTEbridge
     /**
      * @return array
      */
-    public function prepareDefaultPlaceholders($selector='')
+    public function prepareDefaultPlaceholders($selector='', $render=true)
     {
         global $modx;
 
-        $ph['configString'] = $this->renderConfigString();
-        $ph['configRawString'] = $this->renderConfigRawString();
+        if($render) {
+            $ph['configString']    = $this->renderConfigString();
+            $ph['configRawString'] = $this->renderConfigRawString();
+        }
         $ph['editorKey'] = $this->editorKey;
         $ph['themeKey'] = $this->theme;
         $ph['selector'] = $selector;
         $ph['documentIdentifier'] = $modx->documentIdentifier;
+        $ph['base_path'] = MODX_BASE_PATH;
+        $ph['base_url'] = MODX_BASE_URL;
         $ph['manager_path'] = MGR_DIR;
         $ph['site_manager_url'] = MODX_MANAGER_URL;
         $ph['which_browser'] = !empty($modx->config['which_browser']) ? $modx->config['which_browser'] : 'mcpuk';
 
         return $ph;
     }
-    
+
     // Init/load theme
     public function initTheme($selector)
     {
@@ -328,7 +334,7 @@ class modxRTEbridge
         $this->theme = isset($this->tvOptions[$selector]['theme']) ? $this->tvOptions[$selector]['theme'] : $this->theme;
 
         // Load theme for user or webuser
-        if ($modx->isBackend() || (intval($_GET['quickmanagertv']) == 1 || isset($_SESSION['mgrValidated']))) {
+        if ($modx->isBackend() || ((int)$_GET['quickmanagertv'] == 1 || isset($_SESSION['mgrValidated']))) {
             // User is logged into Manager
             // Load base first to assure Modx settings like entermode, editor_css_path are given set, can be overwritten in custom theme
             include("{$this->pluginParams['base_path']}theme/theme.{$this->editorKey}.base.inc.php");
@@ -344,7 +350,7 @@ class modxRTEbridge
             $this->pluginParams['language'] = !isset($this->pluginParams['language']) ? $this->lang('lang_code') : $this->pluginParams['language'];
         }
     }
-    
+
     // Call bridge-functions and receive optional bridged-values
     // $selector = "initBridge" allows executing bridging function without modifying $this->themeConfig
     public function renderBridgeParams($selector)
@@ -372,7 +378,10 @@ class modxRTEbridge
     // Renders String for initialization via JS
     public function renderConfigString()
     {
+        global $modx;
+
         $config = array();
+        $defaultPhs = $this->prepareDefaultPlaceholders('',false);
 
         // Build config-string as per themeConfig
         $raw = '';
@@ -381,6 +390,8 @@ class modxRTEbridge
             if ($conf === NULL) { continue; }; // Skip nulled parameters
             $value = $this->determineValue($key, $conf);
             if ($value === NULL) { continue; }; // Skip none-allowed empty settings
+
+            $value = is_string($value) ? $modx->parseText($value, $defaultPhs) : $value; // Allow default-placeholders like [+which_browser+] in theme-param-values
 
             // Escape quotes
             if (!is_array($value) && strpos($value, "'") !== false && !in_array($conf['type'], array('raw','object','obj')) )
@@ -437,8 +448,8 @@ class modxRTEbridge
 
         return $raw;
     }
-    
-    // Get final value of editor-config  
+
+    // Get final value of editor-config
     public function determineValue($key, $conf=NULL)
     {
         if($conf == NULL) { $conf = $this->themeConfig[$key]; };
@@ -517,6 +528,9 @@ class modxRTEbridge
         // Prepare setting "skin"
         $ph['skin_options'] = $this->getSkinNames();
 
+        // Prepare setting "skin-theme"
+        $ph['skintheme_options'] = $this->getSkinThemeNames();
+
         // Prepare setting "entermode_options"
         $entermode = !empty($ph[$this->editorKey . '_entermode']) ? $ph[$this->editorKey . '_entermode'] : 'p';
         $ph['entermode_options'] = '<label><input name="[+name+]" type="radio" value="p" ' . $this->checked($entermode == 'p') . '/>' . $this->lang('entermode_opt1') . '</label><br />';
@@ -568,9 +582,9 @@ class modxRTEbridge
             if ($row == NULL) {
                 continue;
             };     // Skip disabled config-settings
-        
+
             $row = array_merge($this->langArr, $row);
-        
+
             $row['name'] = $this->editorKey . '_' . $name;
             $row['editorKey'] = $this->editorKey;
             $row['title'] = $this->lang($row['title']);
@@ -579,7 +593,7 @@ class modxRTEbridge
 
             // Prepare displaying of default values
             $row['default'] = isset($this->gSettingsDefaultValues[$name]) ? '<span class="default-val" style="margin:0.5em 0;display:block">' . $this->lang('default') . '<i>' . $this->gSettingsDefaultValues[$name] . '</i></span>' : '';
-        
+
             // Prepare Default-Checkboxes for user-settings
             if(in_array($modx->manager->action, array(11,12)) && isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
                 $useGlobalName          = $name . '_useglobal';
@@ -589,7 +603,7 @@ class modxRTEbridge
             } else {
                 $row['defaultCheckbox'] = '';
             }
-            
+
             // Nested parsing
             $output = $settingsRowTpl;
             $bt=md5('');
@@ -598,7 +612,7 @@ class modxRTEbridge
                 $output = $this->parsePlaceholders($output, $row); // Replace general translations
                 $output = $this->parsePlaceholders($output, $ph);  // Replace values / settings
             }
-        
+
             $ph['rows'] .= $output . "\n";
         };
 
@@ -611,12 +625,12 @@ class modxRTEbridge
 
         return $settingsBody;
     }
-    
+
     public function parsePlaceholders($content, $ph) {
         foreach($ph as $key=>$value) $content = str_replace('[+'.$key.'+]', $value, $content);
         return $content;
     }
-    
+
     // Replace all translation-placeholders
     public function replaceTranslations($output)
     {
@@ -652,9 +666,11 @@ class modxRTEbridge
         }
 
         foreach (glob("{$themeDir}*") as $file) {
-            $file = str_replace('\\', '/', $file);
+            //$file = str_replace('\\', '/', $file);
             $file = str_replace($themeDir, '', $file);
             $file = str_replace('theme.' . $this->editorKey . '.', '', $file);
+
+            if(in_array($file,array('index.html'))) continue;
 
             $theme = trim(str_replace('.inc.php', '', $file));
             if ($theme == 'base') continue; // Why should user select base-theme?
@@ -689,7 +705,7 @@ class modxRTEbridge
                 break;
         }
         foreach (glob("{$skinDir}*", GLOB_ONLYDIR) as $dir) {
-            $dir = str_replace('\\', '/', $dir);
+            //$dir = str_replace('\\', '/', $dir);
             $skin_name = substr($dir, strrpos($dir, '/') + 1);
             $skins[$skin_name][] = 'default';
             $styles = glob("{$dir}/ui_*.css");
@@ -712,6 +728,36 @@ class modxRTEbridge
         }
 
         return is_array($option) ? implode("\n", $option) : '<!-- ' . $this->editorKey . ': No skins found -->';
+    }
+
+    public function getSkinThemeNames()
+    {
+        global $modx;
+        $params = $this->pluginParams;
+
+        $themeDir = "{$params['base_path']}{$params['skinthemeDirectory']}";
+
+        switch ($modx->manager->action) {
+            case '11':
+            case '12':
+            case '119':
+                $selected = $this->selected(empty($params[$this->editorKey . '_skintheme']));
+                $option[] = '<option value=""' . $selected . '>' . $this->lang('theme_global_settings') . '</option>';
+                break;
+        }
+
+        foreach (glob("{$themeDir}*") as $theme) {
+            //$file = str_replace('\\', '/', $file);
+            $theme = str_replace($themeDir, '', $theme);
+
+            if(in_array($theme,array('index.html'))) continue;
+
+            $selected = $this->selected($theme == $this->modxParams['skintheme']);
+
+            $option[] = '<option value="' . $theme . '"' . $selected . '>' . "{$theme}</option>";
+        }
+
+        return isset($option) && is_array($option) ? implode("\n", $option) : '<!-- ' . $this->editorKey . ': No themes found -->';
     }
 
     public function selected($cond = false)
@@ -766,14 +812,14 @@ class modxRTEbridge
     public function mergeParamArrays()
     {
         $p = array();
-        foreach($this->pluginParams as $param=>$value) { $p['pp.'.$param] = is_array($value) ? join(',',$value) : $value; };
-        foreach($this->modxParams   as $param=>$value) { $p['mp.'.$param] = is_array($value) ? join(',',$value) : $value; };
+        foreach($this->pluginParams as $param=>$value) { $p['pp.'.$param] = is_array($value) ? implode(',',$value) : $value; };
+        foreach($this->modxParams   as $param=>$value) { $p['mp.'.$param] = is_array($value) ? implode(',',$value) : $value; };
         foreach($this->themeConfig  as $param=>$arr) {
             if (isset($arr['force'])) $p['tc.' . $param] = $arr['force'];
             elseif (isset($arr['bridged'])) $p['tc.' . $param] = $arr['bridged'];
             else $p['tc.' . $param] = $arr['value'];
         };
-        foreach($this->gSettingsDefaultValues as $param=>$value) { $p['gd.'.$param] = is_array($value) ? join(',',$value) : $value; };
+        foreach($this->gSettingsDefaultValues as $param=>$value) { $p['gd.'.$param] = is_array($value) ? implode(',',$value) : $value; };
         foreach($this->langArr as $param=>$value)      { $p['l.'.$param] = $value; };
         return $p;
     }
@@ -820,14 +866,14 @@ class modxRTEbridge
     {
         if(!isset($_SESSION['mgrValidated'])) return $source;
         $attrContentEditable = $attrContentEditable == true ? ' contenteditable="true"' : '';
-        
+
         $matchPhs = '~\[\*#(.*?)\*\]~'; // match [*#content*] / content
         preg_match_all($matchPhs, $source, $editableIds);
-        
+
         $this->setEditableIds($editableIds);
-        
+
         $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1"'.$attrContentEditable.'>[*$1*]</div>', $source);
-        
+
         return $source;
     }
 
@@ -895,7 +941,7 @@ class modxRTEbridge
         if($this->debug)
         {
             $output .= "<!-- ##### modxRTEbridge Debug Infos #########\n";
-            $output .= " - ". join("\n - ", $this->debugMessages);
+            $output .= " - ". implode("\n - ", $this->debugMessages);
 
             if($this->debug == 'full') {
                 $output .= "this->modxParams = ".print_r($this->modxParams, true)."\n";

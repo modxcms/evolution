@@ -39,9 +39,8 @@ class Lexicon
 
         if (is_scalar($name) && !empty($name)) {
             $name = array($name);
-        } else {
-            return $this->_lang;
         }
+
         foreach ($name as $n) {
             if ($lang != 'english') {
                 $this->loadLangFile($n, 'english', $langDir);
@@ -71,8 +70,9 @@ class Lexicon
      */
     public function fromArray($lang)
     {
-        if (is_array($lang) && $lang) {
-            $this->_lang = array_merge($this->_lang, $lang);
+        $language = \APIhelpers::getkey($this->cfg, 'lang', $this->modx->config['manager_language']);
+        if (is_array($lang) && isset($lang[$language])) {
+            $this->_lang = array_merge($this->_lang, $lang[$language]);
         }
 
         return $this->_lang;

@@ -1,10 +1,12 @@
-<?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_document')) {	
+<?php
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+if(!$modx->hasPermission('delete_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id'])? (int)$_REQUEST['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
@@ -42,13 +44,16 @@ if(!$deltime) {
 
 $children = array();
 
+/**
+ * @param int $parent
+ */
 function getChildren($parent) {
-	
+
 	global $modx;
 	global $children;
 	global $deltime;
-	
-	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
+
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='".(int)$parent."' AND deleted=1 AND deletedon='".(int)$deltime."'");
 		// the document has children documents, we'll need to delete those too
 		while ($row=$modx->db->getRow($rs)) {
 			$children[] = $row['id'];
@@ -75,13 +80,18 @@ $modx->db->update(
 		'deletedon' => 0,
 	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
-	// Set the item name for logger
-	$_SESSION['itemname'] = $content['pagetitle'];
+$modx->invokeEvent("OnDocFormUnDelete",
+    array(
+        "id"=>$id,
+        "children"=>$children
+    ));
 
-	// empty cache
-	$modx->clearCache('full');
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
 
-	// finished emptying cache - redirect
-	$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
-	header($header);
-?>
+// empty cache
+$modx->clearCache('full');
+
+// finished emptying cache - redirect
+$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
+header($header);

@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 $tpl = array(
@@ -11,12 +11,21 @@ $tpl = array(
 	'elementsRow' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_elementsRow.tpl')
 );
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePh($tpl, $ph) {
 	global $modx, $_lang;
 	$tpl = $modx->parseText($tpl, $_lang, '[%', '%]');
 	return $modx->parseText($tpl, $ph);
 }
 
+/**
+ * @param string|int $cssId
+ * @return string
+ */
 function renderViewSwitchButtons($cssId) {
 	global $modx, $_lang, $tpl;
 
@@ -25,13 +34,17 @@ function renderViewSwitchButtons($cssId) {
 	));
 }
 
+/**
+ * @param string $resourceTable
+ * @param mgrResources $resources
+ * @return string
+ */
 function createResourceList($resourceTable, $resources) {
 	global $modx, $_lang, $_style, $modx_textdir, $tpl;
 
 	$items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
-	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
-	if(!$items) {
+	if( ! is_array($items) || empty($items)) {
 		return $_lang['no_results'];
 	}
 
@@ -75,6 +88,10 @@ function createResourceList($resourceTable, $resources) {
 	));
 }
 
+/**
+ * @param mgrResources $resources
+ * @return string
+ */
 function createCombinedView($resources) {
 	global $modx, $_lang, $_style, $modx_textdir;
 
@@ -126,30 +143,52 @@ function createCombinedView($resources) {
 	));
 }
 
+/**
+ * @param array $row
+ * @param string $resourceTable
+ * @param mgrResources $resources
+ * @return array
+ */
 function prepareElementRowPh($row, $resourceTable, $resources) {
 	global $modx, $modx_textdir, $_style, $_lang;
 
 	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
-	$class = '';
-	if($resourceTable == 'site_templates') {
-		$class = $row['selectable'] ? '' : 'disabledPlugin';
-		$lockElementType = 1;
-	}
-	if($resourceTable == 'site_tmplvars') {
-		$class = $row['reltpl'] ? '' : 'disabledPlugin';
-		$lockElementType = 2;
-	}
-	if($resourceTable == 'site_htmlsnippets') {
-		$lockElementType = 3;
-	}
-	if($resourceTable == 'site_snippets') {
-		$lockElementType = 4;
-	}
-	if($resourceTable == 'site_plugins') {
-		$class = $row['disabled'] ? 'disabledPlugin' : '';
-		$lockElementType = 5;
-	}
+	$_lang["confirm_delete"] = $_lang["delete"];
+
+	switch($resourceTable){
+        case 'site_templates':
+            $class = $row['selectable'] ? '' : 'disabledPlugin';
+            $lockElementType = 1;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_template"];
+            break;
+        case 'site_tmplvars':
+            $class = $row['reltpl'] ? '' : 'disabledPlugin';
+            $lockElementType = 2;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_tmplvars"];
+            break;
+        case 'site_htmlsnippets':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 3;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_htmlsnippet"];
+            break;
+        case 'site_snippets':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 4;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_snippet"];
+            break;
+        case 'site_plugins':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 5;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_plugin"];
+            break;
+        case 'site_modules':
+            $class = $row['disabled'] ? '' : 'disabledPlugin';
+            $_lang["confirm_delete"] = $_lang["confirm_delete_module"];
+            break;
+        default:
+            return array();
+    }
 
 	// Prepare displaying user-locks
 	$lockedByUser = '';
@@ -193,18 +232,18 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	if($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') {
 		$tplInfo[] = $_lang['defaulttemplate_title'];
 	}
-	$marks = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
+	$marks = !empty($tplInfo) ? ' <em>(' . implode(', ', $tplInfo) . ')</em>' : '';
 
 	/* row buttons */
 	$buttons = '';
 	if($modx->hasPermission($types['actions']['edit'][1])) {
-		$buttons .= '<li><a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
+		$buttons .= '<li><a title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['duplicate'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['remove'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete"] . '\')" title="' . $_lang["delete"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
 	}
 	$buttons = $buttons ? '<div class="btnCell"><ul class="elements_buttonbar">' . $buttons . '</ul></div>' : '';
 
@@ -225,4 +264,3 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 		'textdir' => $modx_textdir ? '&rlm;' : '',
 	);
 }
-

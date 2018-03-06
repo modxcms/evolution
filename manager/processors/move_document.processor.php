@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('edit_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -13,6 +15,9 @@ $documentID = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 if($documentID==$newParentID) $modx->webAlertAndQuit($_lang["error_movedocument1"]);
 if($documentID <= 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
 if($newParentID < 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
+
+$parents = $modx->getParentIds($newParentID);
+if (in_array($documentID, $parents))  $modx->webAlertAndQuit($_lang["error_movedocument2"]);
 
 $rs = $modx->db->select('parent', $modx->getFullTableName('site_content'), "id='{$documentID}'");
 $oldparent = $modx->db->getValue($rs);
@@ -33,15 +38,18 @@ if ($use_udperms == 1) {
 	}
 }
 
+/**
+ * @param int $currDocID
+ * @return array
+ */
 function allChildren($currDocID) {
 	global $modx;
 	$children= array();
+	$currDocID = $modx->db->escape($currDocID);
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
 	while ($child= $modx->db->getRow($rs)) {
 		$children[]= $child['id'];
-		$nextgen= array();
-		$nextgen= allChildren($child['id']);
-		$children= array_merge($children, $nextgen);
+		$children= array_merge($children, allChildren($child['id']));
 	}
 	return $children;
 }
@@ -94,7 +102,7 @@ if (!array_search($newParentID, $children)) {
 	// empty cache & sync site
 	$modx->clearCache('full');
 
-	$header="Location: index.php?a=3&id={$documentID}&r=1";
+	$header="Location: index.php?a=3&id={$documentID}&r=9";
 	header($header);
 } else {
 	$modx->webAlertAndQuit("You cannot move a document to a child document!");

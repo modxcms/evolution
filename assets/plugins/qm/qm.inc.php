@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy and Nicola1971 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.7 updated 21/01/2017
+ * @version     1.5.10 updated 02/02/2018
  */
 
 if(!class_exists('Qm')) {
@@ -13,7 +13,7 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $position='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='', $buttonStyle='', $removeBg='') {
+    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadfa='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $position='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='', $buttonStyle='', $removeBg='') {
         $this->modx = $modx;
         
         // Get plugin parameters
@@ -21,6 +21,7 @@ class Qm {
         $this->loadmanagerjq = $loadmanagerjq;
         $this->loadfrontendjq = $loadfrontendjq;
         $this->noconflictjq = $noconflictjq;
+        $this->loadfa = $loadfa;
         $this->loadtb = $loadtb;
         $this->tbwidth = $tbwidth;
         $this->tbheight = $tbheight;
@@ -341,12 +342,20 @@ class Qm {
                         
                         // Add ID
                         $controls .= '<li class="qmId"><span class="textid">ID: </span>'.$docID.'</li>';
-
+                        // Go to Manager button
+                        if ($this->managerbutton == 'true') {
+                            $managerButton  = '
+                            <li class="qmManager">
+                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'" ><i class="fa fa-2x fa-fw fa-home butticon"></i><span class="butttext">'.$_lang['manager'].'</span></a>
+                            </li>
+                            ';
+                            $controls .= $managerButton;
+                        }
                         // Edit button
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext"> '.$_lang['edit_resource'].'</span></a>
+                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         
@@ -360,7 +369,7 @@ class Qm {
                             // Add button
                             $addButton = '
                             <li class="qmAdd">
-                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-plus-circle butticon"></i><span class="butttext">'.$_lang['create_resource_here'].'</span></a>
+                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-file butticon"></i><span class="butttext">'.$_lang['create_resource_here'].'</span></a>
                             </li>
                             ';
                             
@@ -446,15 +455,7 @@ class Qm {
                             }                                   
                         } 
                           
-                        // Go to Manager button
-                        if ($this->managerbutton == 'true') {
-                            $managerButton  = '
-                            <li class="qmManager">
-                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'" ><i class="fa fa-2x fa-fw fa-sign-in butticon"></i><span class="butttext">'.$_lang['manager'].'</span></a>
-                            </li>
-                            ';
-                            $controls .= $managerButton;
-                        }
+
                         
                         // Logout button
                         $logout = $this->modx->config['site_manager_url'].'index.php?a=8&amp;quickmanager=logout&amp;logoutid='.$docID;
@@ -463,8 +464,10 @@ class Qm {
                         <a id="qmLogout" class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><i class="fa fa-2x fa-fw fa-sign-out butticon"></i><span class="butttext">'.$_lang['logout'].'</span></a>
                         </li>
                         ';
+                        
                         $controls .= $logoutButton;
                         
+                        $username = $_SESSION['mgrShortname'];
                         // Add action buttons
                         $editor = '
                         <div id="qmEditorClosed"></div>
@@ -472,7 +475,10 @@ class Qm {
     					<div id="qmEditor">
     					
                         <ul>
-                        <li id="qmClose"><a class="qmButton qmClose" href="#" onclick="javascript: return false;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></li>
+                        <li id="qmUser">
+                        <span class="qmUser"> <span class="butttext">'.$username.'</span> <i class="fa fa-2x fa-fw fa-user-circle usericon"></i></span>
+                        </li>
+                        
                         <li><a id="qmLogoClose" class="qmClose" href="#" onclick="javascript: return false;"></a></li>
                         '.$controls.'
                         </ul>
@@ -481,11 +487,17 @@ class Qm {
                         $MGR_DIR = $this->modx->getManagerPath( );
                         $css = '
                         <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />';
-                        
+                    
                         $css .= '
-                        <link rel="stylesheet" type="text/css" href="'.$MGR_DIR.'media/style/common/font-awesome/css/font-awesome.min.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
                         ';
+                                                
+                        // font-awesome
+                        if ($this->loadfa == 'true') {
+                        $css .= '
+                        <link rel="stylesheet" type="text/css" href="'.$MGR_DIR.'media/style/common/font-awesome/css/font-awesome.min.css" />
+                            ';
+                        }
                         // Buttons Styles
                         if ($this->buttonStyle == 'actionButtons') {
                             $css .= '
@@ -504,15 +516,10 @@ class Qm {
                             <style type="text/css">
                             #qmEditor, #qmEditorClosed { left:0; top: 0px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
-                            .butticon {display:none}
+                            .butticon {display:inline}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -535,13 +542,7 @@ class Qm {
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor, #qmEditorClosed { left:0; top: -38px; width: 100%;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -559,17 +560,12 @@ class Qm {
                         if ($this->position == 'before') {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0px; width: 100%; height:39px; opacity:1; -ms-filter:"" !important; filter:none !important;}
-                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0; width: 100%; height:35px; opacity:1; -ms-filter:"" !important; filter:none !important;}
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0}
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -588,17 +584,11 @@ class Qm {
                             $css .= '
                             <style type="text/css">
                             #qmEditor, #qmEditorClosed { left:0; bottom: -30px; width: 100%;}
-                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0;}
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor, #qmEditorClosed { left:0; bottom: -38px; width: 100%;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -616,17 +606,12 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'bottom')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed { left:0; bottom: 0px; width: 100%;}
-                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            #qmEditor, #qmEditorClosed { left:0; bottom: 0; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0;}
                             .butticon {display:none}                            
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -643,15 +628,15 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'left')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:5px; left:-47px; top: 0px; width: 53px; height:100%}
-                            #qmEditor:hover, #qmEditorClosed:hover {left: 0px;}
-                            #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {left:-33px; top: 0; width: 40px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {left: 0}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
+                            #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 2px;}
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -660,14 +645,14 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'left')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:5px; left:0px; top: 0px; width: 53px; height:100%}
-                            #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {left:0; top: 0; width: 40px; height:100%}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
+                            #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 3px;}
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -675,15 +660,15 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'right')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:6px; right:-47px; top: 0px; width: 53px; height:100%}
-                            #qmEditor:hover, #qmEditorClosed:hover {right: 0px;}
-                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {right:-33px; top: 0; width: 40px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {right: 0;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
+                            #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 3px;}
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -692,14 +677,14 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'right')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:6px; right:0px; top: 0px; width: 55px; height:100%}
-                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {right:0; top: 0; width: 40px; height:100%}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
+                            #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 2px;} 
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -707,8 +692,7 @@ class Qm {
                         if (($this->removeBg == 'yes') && ($this->buttonStyle == 'actionButtons')) {
                             $css .= '
                             <style type="text/css">
-                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important; opacity:1; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; 
-                            background-image: none !important; background-image: none !important; background-image: none !important;}
+                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important;}
                             #qmEditor .qmId {background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center;  color: #666; padding:2px;} 
                             </style>
                             ';
@@ -717,8 +701,7 @@ class Qm {
                         if (($this->removeBg == 'yes') && ($this->buttonStyle == 'navButtons')) {
                             $css .= '
                             <style type="text/css">
-                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important; opacity:1!important; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=1)"; 
-                            background-image: none !important; background-image: none !important; background-image: none !important;}
+                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important;}
                             #qmEditor .qmId {font-size:13px; text-align:center;  color: #666; padding:1px; margin-right:2px!important;}
                             #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel {transition: all; background-color:rgba(57, 81, 93, 0.8);border-color: rgba(255, 255, 255, 0.8)}
                             #qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover { color:#FFF!important; background-color:rgba(57, 81, 93,.4); border-color: rgba(255, 255, 255, 1)}
@@ -990,7 +973,7 @@ class Qm {
 					
 					// Add action buttons
                     $url = $this->modx->makeUrl($doc_id,'','','full');
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a class=\"primary\" href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"'.$_style["icons_save"].'\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"'.$_style["icons_cancel"].'\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:10px;z-index:1000\" id=\"qmcontrols\" class=\"actions\"><a id=\"Button1\" class=\"btn btn-success\" href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><span> '.$_lang['save'].'</span></a><a id=\"Button5\" class=\"btn btn-secondary\" href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><span> '.$_lang['cancel'].'</span></a></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';

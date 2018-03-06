@@ -4,8 +4,8 @@
  *
  * @author Marc Hinse
  * @author Bogdan Günther
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language German
  * @package modx
@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Überprüfe ob die Ordner <span class="m
 $_lang["checking_if_config_exist_and_writable"] = 'Überprüfe ob die Datei <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 $_lang["checking_if_export_exists"] = 'Überprüfe ob der Ordner <span class="mono">/assets/export</span> existiert: ';
 $_lang["checking_if_export_writable"] = 'Überprüfe ob der Ordner <span class="mono">assets/export</span> beschreibbar ist: ';
-$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
-$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
+$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
+$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
 $_lang["checking_mysql_strict_mode"] = 'Überprüfe MySQL Strict-Mode: ';
 $_lang["checking_mysql_version"] = 'Überprüfe MySQL-Version: ';
 $_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';
@@ -169,6 +169,7 @@ $_lang["status_failed"] = 'fehlgeschlagen!';
 $_lang["status_failed_could_not_create_database"] = 'fehlgeschlagen – konnte Datenbank nicht erstellen';
 $_lang["status_failed_database_collation_does_not_match"] = 'fehlgeschlagen – Unterschied in der Datenbank-Kollation; benutzen Sie SET NAMES oder wählen Sie %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fehlgeschlagen – Tabellen-Präfix bereits verwendet!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'In Ordnung – Datenbank ausgewählt';
 $_lang["status_passed_database_created"] = 'In Ordnung – Datenbank erstellt';
 $_lang["status_passed_server"] = 'In Ordung – Kollationen sind nun auswählbar';

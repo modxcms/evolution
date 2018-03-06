@@ -14,10 +14,17 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
+/**
+ * @param string $value
+ * @param string $name
+ * @param string $docid
+ * @param string $src
+ * @param array $tvsArray
+ * @return string
+ */
 function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
-    $etomite = & $modx;
-    $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
+    $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
         return $value;
@@ -79,8 +86,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
                     $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
 
                     // if an inherited value is found and if there is content following the @INHERIT binding
-                    // remove @INHERIT and output that following content. This content could contain other 
-                    // @ bindings, that are processed in the next step                    
+                    // remove @INHERIT and output that following content. This content could contain other
+                    // @ bindings, that are processed in the next step
                     if ((string) $tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
                         $output = trim(str_replace('@INHERIT', '', (string) $tv['value']));
                         break 2;
@@ -118,14 +125,23 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
     }
 }
 
+/**
+ * @param $file
+ * @return string
+ */
 function ProcessFile($file) {
     // get the file
 	$buffer = @file_get_contents($file);
-	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
+	if ($buffer === false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 
-// ParseCommand - separate @ cmd from params
+/**
+ * ParseCommand - separate @ cmd from params
+ *
+ * @param string $binding_string
+ * @return array
+ */
 function ParseCommand($binding_string)
 {
     global $BINDINGS;
@@ -142,7 +158,13 @@ function ParseCommand($binding_string)
     return $binding_array;
 }
 
-// Parse MODX Template-Variables
+/**
+ * Parse MODX Template-Variables
+ *
+ * @param string $param
+ * @param array $tvsArray
+ * @return mixed
+ */
 function parseTvValues($param, $tvsArray)
 {
 	global $modx;

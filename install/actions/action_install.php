@@ -1,3 +1,13 @@
+<div class="stepcontainer">
+  <ul class="progressbar">
+    <li class="visited"><?php echo $_lang['choose_language']?></li>
+    <li class="visited"><?php echo $_lang['installation_mode']?></li>
+    <li class="visited"><?php echo $_lang['optional_items']?></li>
+    <li class="visited"><?php echo $_lang['preinstall_validation']?></li>
+    <li class="active"><?php echo $_lang['install_results']?></li>
+  </ul>
+  <div class="clearleft"></div>
+</div>
 <h2><?php echo $_lang['install_results']?></h2>
 <?php
 ob_start();
