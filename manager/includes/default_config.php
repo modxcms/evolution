@@ -85,6 +85,7 @@ $c['site_unavailable_message'] = $_lang['siteunavailable_message_default'];
 $c['allow_eval']               = 'with_scan';
 $c['safe_functions_at_eval']   = 'time,date,strtotime,strftime';
 $c['use_udperms']              = '1';
+$c['email_sender_method']      = 1;
 $c['email_method']             = 'mail';
 $c['smtp_auth']                = '0';
 $c['which_editor']             = 'TinyMCE4';

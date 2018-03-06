@@ -1478,3 +1478,8 @@ $_lang["viewopts_radio_inline"] = 'Inline';
 $_lang["viewopts_radio_flex"] = 'Flex';
 $_lang["viewopts_fontsize"] = 'Font-Size';
 $_lang["viewopts_cb_alltabs"] = 'All Tabs';
+
+$_lang['email_sender_method'] = 'The envelope sender of the message';
+$_lang['auto'] = 'Auto-detect';
+$_lang['use_emailsender'] = 'Use [(emailsender)] value';
+$_lang['email_sender_method_message'] = 'The envelope sender of the message. This will usually be turned into a Return-Path header by the receiver, and is the address that bounces will be sent to. Auto-detect will work in most cases.';

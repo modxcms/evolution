@@ -69,7 +69,9 @@ class MODxMailer extends PHPMailer
         }
 
         $this->From = $modx->config['emailsender'];
-        $this->Sender = $modx->config['emailsender'];
+        if (isset($modx->config['email_sender_method']) && !$modx->config['email_sender_method']) {
+            $this->Sender = $modx->config['emailsender'];
+        }
         $this->FromName = $modx->config['site_name'];
         $this->isHTML(true);
 
