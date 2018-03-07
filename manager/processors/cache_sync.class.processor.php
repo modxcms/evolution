@@ -130,8 +130,10 @@ class synccache
                 }
             }
         }
+        $opcache_restrict_api = trim(ini_get('opcache.restrict_api'));
+        $opcache_restrict_api = $opcache_restrict_api && mb_stripos(__FILE__, $opcache_restrict_api) !== 0;
 
-        if (function_exists('opcache_get_status')) {
+        if (!$opcache_restrict_api && function_exists('opcache_get_status')) {
             $opcache = opcache_get_status();
             if (!empty($opcache['opcache_enabled'])) {
                 opcache_reset();
