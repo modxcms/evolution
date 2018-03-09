@@ -21,7 +21,7 @@ $sitemenu['bars'] = array(
 $sitemenu['site'] = array(
 	'site',
 	'main',
-	'<i class="fa fa-home"></i>' . $_lang['home'],
+	'<i class="fa fa-tachometer"></i>' . $_lang['home'],
 	'index.php?a=2',
 	$_lang['home'],
 	'',
