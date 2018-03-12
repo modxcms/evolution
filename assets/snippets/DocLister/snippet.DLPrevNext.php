@@ -1,5 +1,5 @@
 <?php
-if ( ! defined('MODX_BASE_PATH')) {
+if (! defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 
@@ -8,15 +8,14 @@ $params = is_array($modx->Event->params) ? $modx->Event->params : array();
 $params = array_merge($params, array(
         'api'   => 1,
         'debug' => '0'
-    )
-);
+    ));
 
 $json = $modx->runSnippet("DocLister", $params);
 $children = jsonHelper::jsonDecode($json, array('assoc' => true));
 $children = is_array($children) ? $children : array();
 $self = $prev = $next = null;
 foreach ($children as $key => $data) {
-    if ( ! empty($self)) {
+    if (! empty($self)) {
         $next = $key;
         break;
     }

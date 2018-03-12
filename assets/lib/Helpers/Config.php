@@ -30,7 +30,8 @@ class Config
      * @param $path
      * @return $this
      */
-    public function setPath($path) {
+    public function setPath($path)
+    {
         $this->path = $path;
 
         return $this;
@@ -122,7 +123,7 @@ class Config
      */
     public function loadArray($arr, $sep = ',')
     {
-        switch(gettype($arr)){
+        switch (gettype($arr)) {
             case 'string':
                 $out = jsonHelper::jsonDecode($arr, array('assoc' => true));
                 if (!is_array($out)) {

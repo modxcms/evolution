@@ -243,14 +243,24 @@ abstract class DocLister
                     break;
             }
             $this->config->setConfig($cfg);
-            $this->alias = empty($this->alias) ? $this->getCFGDef('tableAlias',
-                'c') : $this->alias;
-            $this->table = $this->getTable(empty($this->table) ? $this->getCFGDef('table',
-                'site_content') : $this->table, $this->alias);
+            $this->alias = empty($this->alias) ? $this->getCFGDef(
+                'tableAlias',
+                'c'
+            ) : $this->alias;
+            $this->table = $this->getTable(empty($this->table) ? $this->getCFGDef(
+                'table',
+                'site_content'
+            ) : $this->table, $this->alias);
 
             $this->idField = $this->getCFGDef('idField', 'id');
             $this->parentField = $this->getCFGDef('parentField', 'parent');
-
+            $this->extCache = $this->getExtender('cache', true);
+            $this->extCache->init($this, array(
+                'cache'         => $this->getCFGDef('cache', 1),
+                'cacheKey'      => $this->getCFGDef('cacheKey'),
+                'cacheLifetime' => $this->getCFGDef('cacheLifetime', 0),
+                'cacheStrategy' => $this->getCFGDef('cacheStrategy')
+            ));
             $this->setIDs($IDs);
         }
 
@@ -452,8 +462,11 @@ abstract class DocLister
      */
     public function jsonDecode($json, $config = array(), $nop = false)
     {
-        $this->debug->debug('Decode JSON: ' . $this->debug->dumpData($json) . "\r\nwith config: " . $this->debug->dumpData($config),
-            'jsonDecode', 2);
+        $this->debug->debug(
+            'Decode JSON: ' . $this->debug->dumpData($json) . "\r\nwith config: " . $this->debug->dumpData($config),
+            'jsonDecode',
+            2
+        );
         $config = jsonHelper::jsonDecode($json, $config, $nop);
         $this->isErrorJSON($json);
         $this->debug->debugEnd("jsonDecode");
@@ -500,8 +513,7 @@ abstract class DocLister
             throw new Exception('Error load summary extender');
         }
 
-        if (
-            (int)$this->getCFGDef('display', 0) > 0 && ( //OR paginate in extender's parameter
+        if ((int)$this->getCFGDef('display', 0) > 0 && ( //OR paginate in extender's parameter
                 in_array('paginate', $extenders) || $this->getCFGDef('paginate', '') != '' ||
                 $this->getCFGDef('TplPrevP', '') != '' || $this->getCFGDef('TplPage', '') != '' ||
                 $this->getCFGDef('TplCurrentPage', '') != '' || $this->getCFGDef('TplWrapPaginate', '') != '' ||
@@ -717,7 +729,9 @@ abstract class DocLister
         $out = DLTemplate::getInstance($this->getMODX())->toPlaceholders($data, $set, $key, $id);
 
         $this->debug->debugEnd(
-            "toPlaceholders", array($key . " placeholder" => $data), array('html')
+            "toPlaceholders",
+            array($key . " placeholder" => $data),
+            array('html')
         );
 
         return $out;
@@ -735,8 +749,12 @@ abstract class DocLister
      */
     public function sanitarIn($data, $sep = ',', $quote = true)
     {
-        if(is_scalar($data)) $data = explode($sep, $data);
-        if(!is_array($data)) $data = array(); //@TODO: throw
+        if (is_scalar($data)) {
+            $data = explode($sep, $data);
+        }
+        if (!is_array($data)) {
+            $data = array(); //@TODO: throw
+        }
 
         $out = array();
         foreach ($data as $item) {
@@ -788,8 +806,11 @@ abstract class DocLister
             $lang = $this->getCFGDef('lang', $this->modx->config['manager_language']);
         }
 
-        $this->debug->debug('Load language ' . $this->debug->dumpData($name) . "." . $this->debug->dumpData($lang),
-            'loadlang', 2);
+        $this->debug->debug(
+            'Load language ' . $this->debug->dumpData($name) . "." . $this->debug->dumpData($lang),
+            'loadlang',
+            2
+        );
         if (is_scalar($name)) {
             $name = array($name);
         }
@@ -940,7 +961,8 @@ abstract class DocLister
         $this->debug->debug(
             array("parseChunk" => $name, "With data" => print_r($data, 1)),
             "parseChunk",
-            2, array('html', null)
+            2,
+            array('html', null)
         );
 
         $out = $this->DLTemplate->parseChunk($name, $data, $parseDocumentSource);
@@ -1039,20 +1061,30 @@ abstract class DocLister
         $iteration = $i;
 
         if ($this->extPaginate) {
-            $offset = $this->getCFGDef('reversePagination',
-                0) && $this->extPaginate->currentPage() > 1 ? $this->extPaginate->totalPage() * $this->getCFGDef('display',
-                    0) - $this->extPaginate->totalDocs() : 0;
-            if ($this->getCFGDef('maxDocs', 0) && !$this->getCFGDef('reversePagination',
-                    0) && $this->extPaginate->currentPage() == $this->extPaginate->totalPage()
+            $offset = $this->getCFGDef(
+                'reversePagination',
+                0
+            ) && $this->extPaginate->currentPage() > 1 ? $this->extPaginate->totalPage() * $this->getCFGDef(
+                'display',
+                0
+            ) - $this->extPaginate->totalDocs() : 0;
+            if ($this->getCFGDef('maxDocs', 0) && !$this->getCFGDef(
+                'reversePagination',
+                0
+            ) && $this->extPaginate->currentPage() == $this->extPaginate->totalPage()
             ) {
                 $iteration += $this->getCFGDef('display', 0);
             }
-            $iteration += $this->getCFGDef('display',
-                    0) * ($this->extPaginate->currentPage() - 1) - $offset;
+            $iteration += $this->getCFGDef(
+                'display',
+                0
+            ) * ($this->extPaginate->currentPage() - 1) - $offset;
         }
 
-        $data[$this->getCFGDef("sysKey",
-            "dl") . '.full_iteration'] = $iteration;
+        $data[$this->getCFGDef(
+            "sysKey",
+            "dl"
+        ) . '.full_iteration'] = $iteration;
 
         if ($i == 1) {
             $this->renderTPL = $this->getCFGDef('tplFirst', $this->renderTPL);
@@ -1064,8 +1096,10 @@ abstract class DocLister
         }
         if ($this->modx->documentIdentifier == $data['id']) {
             $this->renderTPL = $this->getCFGDef('tplCurrent', $this->renderTPL);
-            $data[$this->getCFGDef("sysKey",
-                "dl") . '.active'] = 1; //[+active+] - 1 if $modx->documentIdentifer equal ID this element
+            $data[$this->getCFGDef(
+                "sysKey",
+                "dl"
+            ) . '.active'] = 1; //[+active+] - 1 if $modx->documentIdentifer equal ID this element
             $class[] = $this->getCFGDef('currentClass', 'current');
         } else {
             $data[$this->getCFGDef("sysKey", "dl") . '.active'] = 0;
@@ -1229,7 +1263,6 @@ abstract class DocLister
         $classname = ($name != '') ? $name . "_DL_Extender" : "";
         if ($classname != '' && isset($this->extender[$name]) && $this->extender[$name] instanceof $classname) {
             $flag = true;
-
         } else {
             if (!class_exists($classname, false) && $classname != '') {
                 if (file_exists(dirname(__FILE__) . "/extender/" . $name . ".extender.inc")) {
@@ -1296,8 +1329,11 @@ abstract class DocLister
      */
     public function cleanIDs($IDs, $sep = ',')
     {
-        $this->debug->debug('clean IDs ' . $this->debug->dumpData($IDs) . ' with separator ' . $this->debug->dumpData($sep),
-            'cleanIDs', 2);
+        $this->debug->debug(
+            'clean IDs ' . $this->debug->dumpData($IDs) . ' with separator ' . $this->debug->dumpData($sep),
+            'cleanIDs',
+            2
+        );
         $out = array();
         if (!is_array($IDs)) {
             $IDs = explode($sep, $IDs);
@@ -1502,8 +1538,11 @@ abstract class DocLister
      */
     public function treeBuild($idField = 'id', $parentField = 'parent')
     {
-        return $this->_treeBuild($this->_docs, $this->getCFGDef('idField', $idField),
-            $this->getCFGDef('parentField', $parentField));
+        return $this->_treeBuild(
+            $this->_docs,
+            $this->getCFGDef('idField', $idField),
+            $this->getCFGDef('parentField', $parentField)
+        );
     }
 
     /**
@@ -1654,7 +1693,8 @@ abstract class DocLister
      * @param string $join
      * @return $this
      */
-    public function setFiltersJoin($join = '') {
+    public function setFiltersJoin($join = '')
+    {
         if (!empty($join)) {
             if (!empty($this->_filters['join'])) {
                 $this->_filters['join'] .= ' ' . $join;

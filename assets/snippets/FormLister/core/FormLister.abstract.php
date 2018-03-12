@@ -231,8 +231,9 @@ abstract class Core
                 case 'plh':
                     if (!empty($_source[1])) {
                         $fields = array();
-                        $keys = explode(',', $source[1]);
+                        $keys = explode(',', $_source[1]);
                         foreach ($keys as $key) {
+                            $key = trim($key);
                             if (isset($this->modx->placeholders[$key])) {
                                 $fields[$key] = $this->modx->placeholders[$key];
                             }
@@ -262,8 +263,9 @@ abstract class Core
                 case 'cookie':
                     if (!empty($_source[1])) {
                         $fields = array();
-                        $keys = explode(',', $source[1]);
+                        $keys = explode(',', $_source[1]);
                         foreach ($keys as $key) {
+                            $key = trim($key);
                             if (isset($_COOKIE[$key])) {
                                 $fields[$key] = $_COOKIE[$key];
                             }

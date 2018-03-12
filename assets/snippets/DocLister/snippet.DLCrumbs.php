@@ -10,15 +10,15 @@ if (!defined('MODX_BASE_PATH')) {
 }
 $_out = '';
 
-if ( isset( $modx->event->params['config'] ) ) {
+if (isset($modx->event->params['config'])) {
     require_once MODX_BASE_PATH . 'assets/lib/Helpers/Config.php';
 
-    $helper = new \Helpers\Config( $modx->event->params );
-    $helper->setPath( '/assets/snippets/DocLister/' );
-    $helper->loadConfig( $modx->event->params['config'] );
+    $helper = new \Helpers\Config($modx->event->params);
+    $helper->setPath('/assets/snippets/DocLister/');
+    $helper->loadConfig($modx->event->params['config']);
     
-    $modx->event->params = array_merge( $helper->getConfig(), $modx->event->params );
-    extract( $modx->event->params );
+    $modx->event->params = array_merge($helper->getConfig(), $modx->event->params);
+    extract($modx->event->params);
 }
 
 $_parents = array();

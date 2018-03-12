@@ -150,7 +150,7 @@ class Profile extends Form
             $fields['email'] = is_scalar($fields['username']) ? mb_strtolower($fields['email']) : '';
         }
         $result = $this->user->fromArray($fields)->save(true);
-        $this->log('Update profile', array('data' => $fields, 'result' => $result));
+        $this->log('Update profile', array('data' => $fields, 'result' => $result, 'log' => $this->user->getLog()));
         if ($result) {
             $this->setFormStatus(true);
             $this->user->close();
