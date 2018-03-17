@@ -4377,7 +4377,7 @@ class DocumentParser
     public function getTpl($tpl)
     {
         $template = $tpl;
-        if (preg_match("~^@([^:\s]+)[:\s]+(.+)$~", $tpl, $match)) {
+        if (preg_match("/^@([^:\s]+)[:\s]+(.+)$/s", trim($tpl), $match)) {
             $command = strtoupper($match[1]);
             $template = $match[2];
         }
