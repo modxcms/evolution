@@ -14,7 +14,7 @@
         {
             "name": "Dmytro Lukianenko",
             "email": "dmi3yy@gmail.com",
-            "homepage": "http://dmi3yy.com/",
+            "homepage": "http://dmi3yy.com",
             "role": "Developer"
         }
     ],
@@ -30,13 +30,6 @@
     },
     "require": {
         "php": ">=5.6"
-    },
-    "autoload": {
-    },
-    "scripts": {
-        "post-create-project-cmd": [
-          
-        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true
