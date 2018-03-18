@@ -185,7 +185,7 @@ if($modx->hasPermission('file_manager')) {
 		'file_manager',
 		'main',
 		0,
-		70,
+		80,
 		''
 	);
 }
@@ -200,7 +200,7 @@ if($modx->hasPermission('category_manager')) {
 		'category_manager',
 		'main',
 		0,
-		80,
+		70,
 		''
 	);
 }
