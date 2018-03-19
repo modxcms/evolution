@@ -40,7 +40,9 @@ img { max-width: 100%; height: auto }
 .h4, h4 { font-size: 1rem }
 .h5, h5 { font-size: 0.8125rem }
 .h6, h6 { font-size: 0.7rem }
-a { color: #0275d8; text-decoration: none }
+h1 .fa {display: none;}
+a { color: #3481bc; text-decoration: none }
+.text-primary {color: #3481bc !important;}
 a:focus, a:hover { color: #014c8c; text-decoration: underline }
 a[href=""], a:not([href]) { cursor: default }
 a:not([href]):not([tabindex]) { color: inherit; text-decoration: none }
