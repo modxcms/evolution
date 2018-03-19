@@ -11,8 +11,9 @@
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
 #treeHolder .rootNode { position: relative; }
-#treeHolder .rootNode a { display: block; overflow: hidden; padding: 0.25em 0.5em; text-overflow: ellipsis; color: #333; cursor: pointer; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
+#treeHolder .rootNode a { display: block; overflow: hidden; padding: 1em 1em 0.5em 1em; text-overflow: ellipsis; color: #333; cursor: pointer; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; font-weight: bold }
 #treeHolder .rootNode a .fa { margin-right: 0.5em }
+#treeHolder .rootNode .icon { display: none; }
 #treeRoot { float: left; width: 100%; color: #333; }
 #treeRoot a { display: block; clear: both; overflow: hidden; text-decoration: none; padding: 0.1em 0 0.1em 2.2em; font-size: 1em; text-overflow: ellipsis; color: #333; cursor: default; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeRoot a:hover:not(.empty), #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
