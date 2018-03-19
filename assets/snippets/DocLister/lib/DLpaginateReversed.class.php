@@ -5,6 +5,7 @@
  */
 class DLpaginateReversed extends DLpaginate
 {
+
     /**
      * @param $page
      * @return int|mixed

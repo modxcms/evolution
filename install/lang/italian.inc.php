@@ -1,13 +1,13 @@
 <?php
 /**
- * MODX Installer language file
+ * EVO Installer language file
  *
- * @author davaeron
- * @version 1.0.15
- * @date 2014/02/24
+ * @author Nicola
+ * @version 1.5.0
+ * @date 2018/02/23
  *
- * @language English
- * @package modx
+ * @language Italian
+ * @package evo
  * @subpackage installer
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
@@ -31,7 +31,7 @@ $_lang["begin"] = 'Inizio';
 $_lang["btnback_value"] = 'Indietro';
 $_lang["btnclose_value"] = 'Chiudi';
 $_lang["btnnext_value"] = 'Avanti';
-$_lang["cant_write_config_file"] = 'EVO non &eacute; riuscito a salvare il file di configurazione. Vi preghiamo di copiare il seguente testo nel file ';
+$_lang["cant_write_config_file"] = 'EVO non ha potuto salvare il file di configurazione. Vi preghiamo di copiare il seguente testo nel file ';
 $_lang["cant_write_config_file_note"] = 'Una volta completata l\'operazione potrete accedere a EVO inserendo nel browser l\'indirizzo vostrosito.it/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'Opzioni Checkbox:';
 $_lang["checking_if_cache_exist"] = 'Verifico se esistono le directories <span class="mono">/assets/cache</span> e <span class="mono">/assets/cache/rss</span> : ';
@@ -43,8 +43,8 @@ $_lang["checking_if_cache_writable"] = 'Controllo i permessi di scrittura sulle 
 $_lang["checking_if_config_exist_and_writable"] = 'Controllo l\'esistenza e i permessi di scrittura di <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> : ';
 $_lang["checking_if_export_exists"] = 'Controllo se esiste la directory <span class="mono">/assets/export</span> : ';
 $_lang["checking_if_export_writable"] = 'Controllo i permessi di scrittura della directory <span class="mono">/assets/export</span> : ';
-$_lang["checking_if_images_exist"] = 'Controllo se esistono le directories <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> : ';
-$_lang["checking_if_images_writable"] = 'Controllo i permessi di scrittura delle directories <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> : ';
+$_lang["checking_if_images_exist"] = 'Controllo se esistono le directories <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_writable"] = 'Controllo i permessi di scrittura delle directories <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Controllo la modalit&agrave; strict sql_mode di MySQL: ';
 $_lang["checking_mysql_version"] = 'Controllo la versione di MySQL: ';
 $_lang["checking_php_version"] = 'Controllo la versione di PHP: ';
@@ -129,7 +129,7 @@ $_lang["not_found"] = 'non trovato';
 $_lang["ok"] = 'OK!';
 $_lang["optional_items"] = 'Componenti Opzionali';
 $_lang["optional_items_note"] = 'Vi preghiamo di scegliere le opzioni di installazione e fare click su Installazione:';
-$_lang["php_security_notice"] = '<legend>Avviso di Sicurezza</legend><p>Anche se EVO funziona con la vostra versione di EVO, vi suggeriamo di non farlo. La vostra versione di EVO ha numerosi problemi di sicurezza. Un aggiornamento a PHP versione 4.3.8 o successiva corregger&agrave; questi problemi. Vi raccomandiamo di farlo per garantire la sicurezza del vostro sito web.</p>';
+$_lang["php_security_notice"] = '<legend>Avviso di Sicurezza</legend><p>Anche se EVO funziona con la vostra versione di EVO, vi suggeriamo di non farlo. La vostra versione di EVO ha numerosi problemi di sicurezza. Un aggiornamento a PHP versione 5.6 o successiva corregger&agrave; questi problemi. Vi raccomandiamo di farlo per garantire la sicurezza del vostro sito web.</p>';
 $_lang["please_correct_error"] = '. Vi preghiamo di correggere l\'errore';
 $_lang["please_correct_errors"] = '. Vi preghiamo di correggere gli errori';
 $_lang["plugins"] = 'Plugins';
@@ -170,6 +170,7 @@ $_lang["status_failed"] = 'fallita!';
 $_lang["status_failed_could_not_create_database"] = 'fallita - impossibile creare il database';
 $_lang["status_failed_database_collation_does_not_match"] = 'fallita - problemi con la collation del database; usate SET NAMES o scegliete %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fallita - il prefisso scelto per le tabelle &eacute; gi&agrave; in uso!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'successo - il database &eacute; stato selezionato';
 $_lang["status_passed_database_created"] = 'successo - il database &eacute; stato creato';
 $_lang["status_passed_server"] = 'successo - la collation del database &eacute; disponibile';

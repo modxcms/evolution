@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
@@ -16,8 +16,35 @@ if (!isset($modx->config['mgr_date_picker_path'])) {
     $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
 }
 
-if (!empty($_COOKIE['MODX_themeColor'])) {
+if (isset($_COOKIE['MODX_themeColor'])) {
     $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+} else {
+    $body_class .= ' dark';
+}
+
+$css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . $lastInstallTime;
+
+if ($modx->config['manager_theme'] == 'default') {
+    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css') && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
+        require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
+        $minifier = new Formatter\CSSMinify();
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css');
+        $css = $minifier->minify();
+        file_put_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css', $css);
+    }
+    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+    }
 }
 
 ?>
@@ -29,10 +56,12 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/style.css?v=<?= $modx->config['settings_version'] ?>" />
+    <link rel="stylesheet" type="text/css" href="<?= $css ?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
-
+    <?php if ($modx->config['show_picker'] != "0") { ?>
+        <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <?php } ?>
     <?php
     $aArr = array('2');
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
@@ -49,6 +78,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       if (!evo) {
         var evo = {};
       }
+
+      var actions;
 
       // evoTooltips
       evo.tooltips = function(a) {
@@ -312,7 +343,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 a[i].nextElementSibling.classList.add('in');
                 a[i].classList.remove('collapsed');
               }
-            }
+            };
           }
         }
       };
@@ -375,6 +406,45 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           };
         }
         evo.tooltips('[data-tooltip]');
+
+        if (document.forms.length && document.forms.mutate && window.frameElement.parentNode.parentNode.classList.contains('evo-popup')) {
+          window.focus();
+          document.forms.mutate.addEventListener('submit', function(e) {
+            if ((actionSelect && actionSelect.value === '') || (!actionSelect && actionSaveButton)) {
+              if (actionSelect) {
+                actionSelect.parentNode.removeChild(actionSelect);
+              }
+              if (top.mainMenu) {
+                top.mainMenu.work();
+              }
+              var xhr = new XMLHttpRequest();
+              xhr.onload = function() {
+                if (this.status === 200 && this.readyState === 4) {
+                  if (top.mainMenu) {
+                    top.mainMenu.stopWork();
+                  }
+                  if (top.tree) {
+                    top.tree.restoreTree();
+                  }
+                  window.frameElement.parentNode.parentNode.close(e);
+                }
+              };
+              xhr.open(document.forms.mutate.method, document.forms.mutate.action, true);
+              xhr.send(new FormData(document.forms.mutate));
+              e.preventDefault();
+            }
+          }, false);
+
+          actions.cancel = function() {
+            window.frameElement.parentNode.parentNode.close();
+          };
+
+          window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 27) {
+              window.frameElement.parentNode.parentNode.close();
+            }
+          })
+        }
       }
 
       function reset_path(elementName)
@@ -500,4 +570,4 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       /* ]]> */
     </script>
 </head>
-<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>">
+<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>" data-evocp="color">

@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('view_eventlog')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -9,7 +9,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
 <h1>
-	<i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
+	<?= $_style['page_shedule'] ?><?= $_lang['site_schedule'] ?>
 </h1>
 
 <div class="tab-page">

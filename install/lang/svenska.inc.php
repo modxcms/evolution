@@ -4,8 +4,8 @@
  *
  * @author Pontus Ågren (Pont)
  * @author Thomas Djärv (Beryl)
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Svenska
  * @package modx
@@ -166,6 +166,7 @@ $_lang["status_failed"] = 'misslyckades!';
 $_lang["status_failed_could_not_create_database"] = 'misslyckades - kunde inte skapa databas';
 $_lang["status_failed_database_collation_does_not_match"] = 'misslyckades - databaskollationeringen stämmer inte; använd SET_NAMES eller välj %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'misslyckades - tabellprefixet används redan!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'godkänd - databasen valdes';
 $_lang["status_passed_database_created"] = 'godkänd - databas skapades';
 $_lang["status_passed_server"] = 'godkänd - kollationeringar finns nu tillgängliga';

@@ -4,18 +4,30 @@ global $ContextMenuCnt;
 $ContextMenuCnt = 0;
 
 class ContextMenu {
-	var $id;
+	public $id;
+    /**
+     * @var string
+     */
+	public $html = '';
+    /**
+     * @var bool
+     */
+	public $visible = false;
+    /**
+     * @var int
+     */
+	public $width = 120;
 
-	function __construct($id = '', $width = 120, $visible = false) {
+    public function __construct($id = '', $width = 120, $visible = false) {
 		global $ContextMenuCnt;
 		$ContextMenuCnt++;
 		$this->html = "";
 		$this->visible = $visible ? $visible : false;
-		$this->width = is_numeric($width) ? intval($width) : 120;
+		$this->width = is_numeric($width) ? (int)$width : 120;
 		$this->id = $id ? $id : "cntxMnu" . $ContextMenuCnt;    // set id
 	}
 
-	function addItem($text, $action = "", $img = "", $disabled = 0) {
+    public function addItem($text, $action = "", $img = "", $disabled = 0) {
 		global $base_url, $_style;
         if($disabled) {
             return;
@@ -40,13 +52,13 @@ class ContextMenu {
 		$this->html .= $img . '&nbsp;' . $text . '</div>';
 	}
 
-	function addSeparator() {
+    public function addSeparator() {
 		$this->html .= "
 			<div class='cntxMnuSeparator'></div>
 		";
 	}
 
-	function render() {
+    public function render() {
 		global $ContextMenuScript;
 
 		$html = $ContextMenuScript . "<div id='" . $this->id . "' class='contextMenu' style='width:" . $this->width . "px; visibility:" . ($this->visible ? 'visible' : 'hidden') . "'>" . $this->html . "</div>";
@@ -54,7 +66,7 @@ class ContextMenu {
 		return $html;
 	}
 
-	function getClientScriptObject() {
+    public function getClientScriptObject() {
 		return "getCntxMenu('" . $this->id . "')";
 	}
 }

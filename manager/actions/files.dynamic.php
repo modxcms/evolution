@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('file_manager')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -16,8 +16,8 @@ $excludes = array(
     '.svn'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
-$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess' . $alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess' . $alias_suffix);
+$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
 $viewablefiles = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles = add_dot($editablefiles);
@@ -75,6 +75,10 @@ $upload_flash = explode(',', $upload_flash);
 $uploadablefiles = array();
 $uploadablefiles = array_merge($upload_files, $upload_images, $upload_media, $upload_flash);
 $uploadablefiles = add_dot($uploadablefiles);
+/**
+ * @param array $array
+ * @return array
+ */
 function add_dot($array)
 {
     $count = count($array);
@@ -565,6 +569,12 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
 
 }
 
+/**
+ * @param string $file
+ * @param string $selFile
+ * @param string $mode
+ * @return string
+ */
 function determineIcon($file, $selFile, $mode)
 {
     $icons = array(
@@ -579,6 +589,12 @@ function determineIcon($file, $selFile, $mode)
     return '<i class="' . $icon . ' FilesPage"></i>';
 }
 
+/**
+ * @param string $file
+ * @param string $selFile
+ * @param string $mode
+ * @return string
+ */
 function markRow($file, $selFile, $mode)
 {
     $classNames = array(
@@ -593,6 +609,9 @@ function markRow($file, $selFile, $mode)
     return '';
 }
 
+/**
+ * @param string $curpath
+ */
 function ls($curpath)
 {
     global $_lang, $theme_image_path, $_style;
@@ -698,6 +717,10 @@ function ls($curpath)
     return;
 }
 
+/**
+ * @param string $string
+ * @return bool|string
+ */
 function removeLastPath($string)
 {
     $pos = strrpos($string, '/');
@@ -709,6 +732,10 @@ function removeLastPath($string)
     return $path;
 }
 
+/**
+ * @param string $string
+ * @return bool|string
+ */
 function getExtension($string)
 {
     $pos = strrpos($string, '.');
@@ -721,6 +748,10 @@ function getExtension($string)
     return $ext;
 }
 
+/**
+ * @param string $path
+ * @return bool
+ */
 function checkExtension($path = '')
 {
     global $uploadablefiles;
@@ -732,8 +763,15 @@ function checkExtension($path = '')
     }
 }
 
+/**
+ * recursive mkdir function
+ *
+ * @param string $strPath
+ * @param int $mode
+ * @return bool
+ */
 function mkdirs($strPath, $mode)
-{ // recursive mkdir function
+{
     if (is_dir($strPath)) {
         return true;
     }
@@ -744,6 +782,10 @@ function mkdirs($strPath, $mode)
     return @mkdir($strPath);
 }
 
+/**
+ * @param string $type
+ * @param string $filename
+ */
 function logFileChange($type, $filename)
 {
     //global $_lang;
@@ -775,7 +817,13 @@ function logFileChange($type, $filename)
     $action = 1;
 }
 
-// by patrick_allaert - php user notes
+/**
+ * by patrick_allaert - php user notes
+ *
+ * @param string $file
+ * @param string $path
+ * @return bool|int
+ */
 function unzip($file, $path)
 {
     global $newfolderaccessmode, $token_check;
@@ -821,6 +869,10 @@ function unzip($file, $path)
     zip_close($zip);
 }
 
+/**
+ * @param string $dir
+ * @return bool
+ */
 function rrmdir($dir)
 {
     foreach (glob($dir . '/*') as $file) {
@@ -833,91 +885,97 @@ function rrmdir($dir)
     return rmdir($dir);
 }
 
+/**
+ * @return string
+ */
 function fileupload()
 {
     global $modx, $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
     $msg = '';
-
     foreach ($_FILES['userfile']['name'] as $i => $name) {
-        if (!empty($_FILES['userfile']['tmp_name'][$i])) {
-            $userfile['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
-            $userfile['error'] = $_FILES['userfile']['error'][$i];
-            $name = $_FILES['userfile']['name'][$i];
-            if ($modx->config['clean_uploaded_filename'] == 1) {
-                $nameparts = explode('.', $name);
-                $nameparts = array_map(array(
-                    $modx,
-                    'stripAlias'
-                ), $nameparts, array('file_manager'));
-                $name = implode('.', $nameparts);
-            }
-            $userfile['name'] = $name;
-            $userfile['type'] = $_FILES['userfile']['type'][$i];
+        if (empty($_FILES['userfile']['tmp_name'][$i])) continue;
+        $userfile= array();
 
-            // this seems to be an upload action.
-            $path = $modx->config['site_url'] . substr($startpath, strlen($filemanager_path), strlen($startpath));
-            $path = rtrim($path, '/') . '/' . $userfile['name'];
-            $msg .= $path;
-            if ($userfile['error'] == 0) {
-                $img = (strpos($userfile['type'], 'image') !== false) ? '<br /><img src="' . $path . '" height="75" />' : '';
-                $msg .= "<p>" . $_lang['files_file_type'] . $userfile['type'] . ", " . $modx->nicesize(filesize($userfile['tmp_name'])) . $img . '</p>';
-            }
+        $userfile['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
+        $userfile['error'] = $_FILES['userfile']['error'][$i];
+        $name = $_FILES['userfile']['name'][$i];
+        if ($modx->config['clean_uploaded_filename'] == 1) {
+            $nameparts = explode('.', $name);
+            $nameparts = array_map(array(
+                $modx,
+                'stripAlias'
+            ), $nameparts, array('file_manager'));
+            $name = implode('.', $nameparts);
+        }
+        $userfile['name'] = $name;
+        $userfile['type'] = $_FILES['userfile']['type'][$i];
 
-            $userfilename = $userfile['tmp_name'];
+        // this seems to be an upload action.
+        $path = $modx->config['site_url'] . substr($startpath, strlen($filemanager_path), strlen($startpath));
+        $path = rtrim($path, '/') . '/' . $userfile['name'];
+        $msg .= $path;
+        if ($userfile['error'] == 0) {
+            $img = (strpos($userfile['type'], 'image') !== false) ? '<br /><img src="' . $path . '" height="75" />' : '';
+            $msg .= "<p>" . $_lang['files_file_type'] . $userfile['type'] . ", " . $modx->nicesize(filesize($userfile['tmp_name'])) . $img . '</p>';
+        }
 
-            if (is_uploaded_file($userfilename)) {
-                // file is uploaded file, process it!
-                if (!checkExtension($userfile['name'])) {
-                    $msg .= '<p><span class="warning">' . $_lang['files_filetype_notok'] . '</span></p>';
-                } else {
-                    if (@move_uploaded_file($userfile['tmp_name'], $_POST['path'] . '/' . $userfile['name'])) {
-                        // Ryan: Repair broken permissions issue with file manager
-                        if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
-                            @chmod($_POST['path'] . "/" . $userfile['name'], $new_file_permissions);
-                        }
-                        // Ryan: End
-                        $msg .= '<p><span class="success">' . $_lang['files_upload_ok'] . '</span></p><hr/>';
+        $userfilename = $userfile['tmp_name'];
 
-                        // invoke OnFileManagerUpload event
-                        $modx->invokeEvent('OnFileManagerUpload', array(
-                            'filepath' => $_POST['path'],
-                            'filename' => $userfile['name']
-                        ));
-                        // Log the change
-                        logFileChange('upload', $_POST['path'] . '/' . $userfile['name']);
-                    } else {
-                        $msg .= '<p><span class="warning">' . $_lang['files_upload_copyfailed'] . '</span> ' . $_lang["files_upload_permissions_error"] . '</p>';
-                    }
-                }
+        if (is_uploaded_file($userfilename)) {
+            // file is uploaded file, process it!
+            if (!checkExtension($userfile['name'])) {
+                $msg .= '<p><span class="warning">' . $_lang['files_filetype_notok'] . '</span></p>';
             } else {
-                $msg .= '<br /><span class="warning"><b>' . $_lang['files_upload_error'] . ':</b>';
-                switch ($userfile['error']) {
-                    case 0: //no error; possible file attack!
-                        $msg .= $_lang['files_upload_error0'];
-                        break;
-                    case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-                        $msg .= $_lang['files_upload_error1'];
-                        break;
-                    case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-                        $msg .= $_lang['files_upload_error2'];
-                        break;
-                    case 3: //uploaded file was only partially uploaded
-                        $msg .= $_lang['files_upload_error3'];
-                        break;
-                    case 4: //no file was uploaded
-                        $msg .= $_lang['files_upload_error4'];
-                        break;
-                    default: //a default error, just in case!  :)
-                        $msg .= $_lang['files_upload_error5'];
-                        break;
+                if (@move_uploaded_file($userfile['tmp_name'], $_POST['path'] . '/' . $userfile['name'])) {
+                    // Ryan: Repair broken permissions issue with file manager
+                    if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
+                        @chmod($_POST['path'] . "/" . $userfile['name'], $new_file_permissions);
+                    }
+                    // Ryan: End
+                    $msg .= '<p><span class="success">' . $_lang['files_upload_ok'] . '</span></p><hr/>';
+
+                    // invoke OnFileManagerUpload event
+                    $modx->invokeEvent('OnFileManagerUpload', array(
+                        'filepath' => $_POST['path'],
+                        'filename' => $userfile['name']
+                    ));
+                    // Log the change
+                    logFileChange('upload', $_POST['path'] . '/' . $userfile['name']);
+                } else {
+                    $msg .= '<p><span class="warning">' . $_lang['files_upload_copyfailed'] . '</span> ' . $_lang["files_upload_permissions_error"] . '</p>';
                 }
-                $msg .= '</span><br />';
             }
+        } else {
+            $msg .= '<br /><span class="warning"><b>' . $_lang['files_upload_error'] . ':</b>';
+            switch ($userfile['error']) {
+                case 0: //no error; possible file attack!
+                    $msg .= $_lang['files_upload_error0'];
+                    break;
+                case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
+                    $msg .= $_lang['files_upload_error1'];
+                    break;
+                case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
+                    $msg .= $_lang['files_upload_error2'];
+                    break;
+                case 3: //uploaded file was only partially uploaded
+                    $msg .= $_lang['files_upload_error3'];
+                    break;
+                case 4: //no file was uploaded
+                    $msg .= $_lang['files_upload_error4'];
+                    break;
+                default: //a default error, just in case!  :)
+                    $msg .= $_lang['files_upload_error5'];
+                    break;
+            }
+            $msg .= '</span><br />';
         }
     }
     return $msg . '<br/>';
 }
 
+/**
+ * @return string
+ */
 function textsave()
 {
     global $_lang;
@@ -938,6 +996,9 @@ function textsave()
     return $msg;
 }
 
+/**
+ * @return string
+ */
 function delete_file()
 {
     global $_lang, $token_check;
@@ -957,6 +1018,11 @@ function delete_file()
     return $msg;
 }
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePlaceholder($tpl, $ph)
 {
     foreach ($ph as $k => $v) {
@@ -966,6 +1032,9 @@ function parsePlaceholder($tpl, $ph)
     return $tpl;
 }
 
+/**
+ * @return bool
+ */
 function checkToken()
 {
     if (isset($_POST['token']) && !empty($_POST['token'])) {
@@ -985,6 +1054,9 @@ function checkToken()
     return $rs;
 }
 
+/**
+ * @return string
+ */
 function makeToken()
 {
     $newToken = uniqid('');

@@ -1,12 +1,12 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('edit_document') || !$modx->hasPermission('save_document')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 $items = isset($_POST['list']) ? $_POST['list'] : '';
 $ressourcelist = '';
@@ -70,7 +70,7 @@ if ($id !== null) {
     }
 }
 
-$pagetitle = $id == 0 ? $site_name : $pagetitle;
+$pagetitle = empty($id) ? $site_name : $pagetitle;
 ?>
 
 <script type="text/javascript">

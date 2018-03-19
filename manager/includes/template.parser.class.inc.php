@@ -9,10 +9,7 @@
 
 Class TemplateParser {
 
-	function __construct() {
-	}
-
-	/**
+    /**
 	 * @param array $config [action, tabs, toArray]
 	 * @param array $data
 	 * @return string
@@ -69,6 +66,10 @@ Class TemplateParser {
 		return $output;
 	}
 
+    /**
+     * @param array $data
+     * @return string
+     */
 	private function render($data) {
 		global $modx, $_lang, $_country_lang;
 

@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module'))) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -95,7 +95,7 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="fa fa-cogs"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
+    <i class="fa fa-cubes"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['newmodule'] ?>
@@ -122,7 +122,7 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->db->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_modules']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $rs = $modx->db->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";

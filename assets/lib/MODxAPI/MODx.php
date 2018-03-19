@@ -3,12 +3,14 @@ include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 include_once(MODX_BASE_PATH . 'assets/snippets/DocLister/lib/jsonHelper.class.php');
 include_once(MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLCollection.class.php');
 
+use \Doctrine\Common\Cache\Cache;
 
 /**
  * Class MODxAPIhelpers
  */
 class MODxAPIhelpers
 {
+
     /**
      * @param $email
      * @param bool $dns
@@ -88,7 +90,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     protected $default_field = array();
 
     /**
-     * @var null
+     * @var null|integer|string
      */
     protected $id = null;
 
@@ -142,6 +144,8 @@ abstract class MODxAPI extends MODxAPIhelpers
      */
     private $_table = array();
 
+    private $cache = false;
+
     /**
      * MODxAPI constructor.
      * @param DocumentParser $modx
@@ -157,6 +161,7 @@ abstract class MODxAPI extends MODxAPIhelpers
 
         $this->setDebug($debug);
         $this->_decodedFields = new DLCollection($this->modx);
+        $this->cache = isset($this->modx->cache) && $this->modx->cache instanceof Cache;
     }
 
     /**
@@ -272,8 +277,7 @@ abstract class MODxAPI extends MODxAPIhelpers
      */
     final public function invokeEvent($name, $data = array(), $flag = false)
     {
-        $flag = (isset($flag) && $flag != '') ? (bool)$flag : false;
-        if ($flag) {
+        if ((bool)$flag === true) {
             $this->modx->invokeEvent($name, $data);
         }
 
@@ -507,8 +511,11 @@ abstract class MODxAPI extends MODxAPIhelpers
      * @param array $data
      * @return $this
      */
-    public function store($data = array()) {
-        if (is_array($data)) $this->store = $data;
+    public function store($data = array())
+    {
+        if (is_array($data)) {
+            $this->store = $data;
+        }
 
         return $this;
     }
@@ -519,9 +526,10 @@ abstract class MODxAPI extends MODxAPIhelpers
      * @param string $key
      * @return MODxAPI
      */
-    public function rollback($key = '') {
+    public function rollback($key = '')
+    {
         if (!empty($key) && isset($this->store[$key])) {
-            $this->set($key,$this->store[$key]);
+            $this->set($key, $this->store[$key]);
         } else {
             $this->fromArray($this->store);
         }
@@ -535,7 +543,8 @@ abstract class MODxAPI extends MODxAPIhelpers
      * @param $key
      * @return bool
      */
-    public function isChanged($key) {
+    public function isChanged($key)
+    {
         $flag = !isset($this->store[$key]) || (isset($this->store[$key]) && $this->store[$key] != $this->field[$key]);
 
         return $flag;
@@ -742,7 +751,7 @@ abstract class MODxAPI extends MODxAPIhelpers
         if ($where != '') {
             $sql = $this->query("SELECT `" . $this->escape($PK) . "` FROM " . $this->makeTable($table) . " WHERE " . $where);
             $id = $this->modx->db->getValue($sql);
-            if (is_null($id) || (!$this->newDoc && $id == $this->getID())) {
+            if (!$id || (!$this->newDoc && $id == $this->getID())) {
                 $flag = true;
             } else {
                 $flag = false;
@@ -808,11 +817,11 @@ abstract class MODxAPI extends MODxAPIhelpers
     abstract public function edit($id);
 
     /**
-     * @param null $fire_events
+     * @param bool $fire_events
      * @param bool $clearCache
      * @return mixed
      */
-    abstract public function save($fire_events = null, $clearCache = false);
+    abstract public function save($fire_events = false, $clearCache = false);
 
     /**
      * @param $ids
@@ -1052,4 +1061,34 @@ abstract class MODxAPI extends MODxAPIhelpers
 
         return $this;
     }
+
+    /**
+     * @param mixed $data
+     * @param string $key
+     * @return bool
+     */
+    protected function saveToCache($data, $key)
+    {
+        $out = false;
+        if ($this->cache) {
+            $out = $this->modx->cache->save($key, $data, 0);
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    protected function loadFromCache($key)
+    {
+        $out = false;
+        if ($this->cache) {
+            $out = $this->modx->cache->fetch($key);
+        }
+
+        return $out;
+    }
+
 }

@@ -1,5 +1,5 @@
 <?php
-if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     exit();
 }
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
@@ -41,7 +41,7 @@ if (isset($_REQUEST['searchid'])) {
                         <?php
                         $rs = $modx->db->select('*', $modx->getFullTableName('site_templates'));
                         $option[] = '<option value="">No selected</option>';
-                        $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? intval($_REQUEST['templateid']) : '';
+                        $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? (int)$_REQUEST['templateid'] : '';
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
                         $option[] = '<option value="0"' . $selected . '>(blank)</option>';
                         while ($row = $modx->db->getRow($rs)) {
@@ -49,7 +49,7 @@ if (isset($_REQUEST['searchid'])) {
                             $selected = $row['id'] == $templateid ? ' selected="selected"' : '';
                             $option[] = sprintf('<option value="%s"%s>%s(%s)</option>', $row['id'], $selected, $templatename, $row['id']);
                         }
-                        $tpls = sprintf('<select name="templateid">%s</select>', join("\n", $option));
+                        $tpls = sprintf('<select name="templateid">%s</select>', implode("\n", $option));
                         ?>
                         <?= $tpls ?>
                         <small class="form-text"><?= $_lang['search_criteria_template_id_msg'] ?></small>
@@ -86,7 +86,7 @@ if (isset($_REQUEST['submitok'])) {
     $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, $modx_manager_charset);
     $searchlongtitle = $modx->db->escape(trim($_REQUEST['searchfields']));
     $search_alias = $modx->db->escape(trim($_REQUEST['searchfields']));
-    $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? intval($_REQUEST['templateid']) : '';
+    $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? (int)$_REQUEST['templateid'] : '';
     $searchcontent = $modx->db->escape($_REQUEST['content']);
 
     $fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';
@@ -112,15 +112,39 @@ if (isset($_REQUEST['submitok'])) {
 
     // Handle Input "Search in main fields"
     if ($searchfields != '') {
+
+		/*start search by TV. Added Rising13*/
+		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+		$articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
+		$articul_result = $modx->db->query($articul_query);
+		$articul_id_array = $modx->db->makeArray($articul_result);
+		if(count($articul_id_array)>0){
+			$articul_id = '';
+			$i = 1;
+			foreach( $articul_id_array as $articul ) {
+				$articul_id.=$articul['contentid'];
+				if($i !== count($articul_id_array)){
+					$articul_id.=',';
+				}
+				$i++;
+			}
+		$articul_id_query = " OR sc.id IN ({$articul_id})";
+		}else{
+			$articul_id_query = '';
+		}
+		/*end search by TV*/
+
         if (ctype_digit($searchfields)) {
             $sqladd .= "sc.id='{$searchfields}'";
             if (strlen($searchfields) > 3) {
+				$sqladd .= $articul_id_query;//search by TV
                 $sqladd .= " OR sc.pagetitle LIKE '%{$searchfields}%'";
             }
         }
         if ($idFromAlias) {
             $sqladd .= $sqladd != '' ? ' OR ' : '';
             $sqladd .= "sc.id='{$idFromAlias}'";
+
         }
 
         $sqladd = $sqladd ? "({$sqladd})" : $sqladd;
@@ -133,6 +157,7 @@ if (isset($_REQUEST['submitok'])) {
             $sqladd .= " OR sc.introtext LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.menutitle LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.alias LIKE '%{$search_alias}%'";
+			$sqladd .= $articul_id_query;//search by TV
         }
     } else if ($idFromAlias) {
         $sqladd .= " sc.id='{$idFromAlias}'";
@@ -389,6 +414,11 @@ if (isset($_REQUEST['submitok'])) {
     <?php
 }
 
+/**
+ * @param string $text
+ * @param string $search
+ * @return string
+ */
 function highlightingCoincidence($text, $search)
 {
     $regexp = '!(' . str_replace(array(
@@ -401,6 +431,12 @@ function highlightingCoincidence($text, $search)
     return preg_replace($regexp, '<span class="text-danger">$1</span>', $text);
 }
 
+/**
+ * @param string $locked
+ * @param string $disabled
+ * @param string $deleted
+ * @return string
+ */
 function addClassForItemList($locked = '', $disabled = '', $deleted = '')
 {
     $class = '';

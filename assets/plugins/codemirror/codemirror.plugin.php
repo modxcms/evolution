@@ -149,11 +149,11 @@ if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
 	define('INIT_CODEMIRROR', 1);
 	$output = <<< HEREDOC
     <link rel="stylesheet" href="{$_CM_URL}cm/lib/codemirror.css">
+    <link rel="stylesheet" href="{$_CM_URL}cm/addon.css">
     <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$defaulttheme}.css">
     <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$darktheme}.css">
     <style>.CodeMirror { {$fontSize} {$lineHeight} } .CodeMirror pre { {$fontSize} {$lineHeight} } </style>
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
-    <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
     <script src="{$_CM_URL}cm/mode/javascript-compressed.js"></script> <!-- required by mode htmlmixed -->
     <script src="{$_CM_URL}cm/mode/css-compressed.js"></script>
@@ -162,7 +162,8 @@ if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <script src="{$_CM_URL}cm/mode/sql-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
     {$emmet}{$search}
-    
+	<script src="{$_CM_URL}cm/addon-compressed.js"></script>
+	    
     <script type="text/javascript">
         // Add mode MODX for syntax highlighting. Dfsed on $mode
         CodeMirror.defineMode("MODx-{$mode}", function(config, parserConfig) {
@@ -171,18 +172,18 @@ if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     var ch;
                     if (stream.match("[[") || stream.match("`[[")) {
                         while ((ch = stream.next()) != null)
-                            if (ch == "?" || (ch == "]"&& stream.next() == "]")) break;
+                            if (ch == "?" || (ch == "]" && stream.next() == "]")) break;
                         return "modxSnippet";
                     }
                     if (stream.match("{{") || stream.match("`{{")) {
                         while ((ch = stream.next()) != null)
-                            if (ch == "}" && stream.next() == "}") break;
+                            if (ch == "?" || (ch == "}" && stream.next() == "}")) break;
                         stream.eat("}");
                         return "modxChunk";
                     }
                     if (stream.match("[*") || stream.match("`[*")) {
                         while ((ch = stream.next()) != null)
-                            if (ch == "*" && stream.next() == "]") break;
+                            if (ch == ':' || (ch == "*" && stream.next() == "]")) break;
                         stream.eat("]");
                         return "modxTv";
                     }
@@ -194,7 +195,7 @@ if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     }
                     if (stream.match("[!") || stream.match("`[!")) {
                         while ((ch = stream.next()) != null)
-                            if (ch == "?" || (ch == "!"&& stream.next() == "]")) break;
+                            if (ch == "?" || (ch == "!" && stream.next() == "]")) break;
                         return "modxSnippetNoCache";
                     }
                     if (stream.match("[(") || stream.match("`[(")) {
@@ -240,7 +241,13 @@ if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     if (stream.match("]]")) {
                         return "modxSnippet";
                     }
-                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("`", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
+                    if (stream.match("}}")) {
+                        return "modxChunk";
+                    }
+                    if (stream.match("*]")) {
+                        return "modxTv";
+                    }
+                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("`", false) && !stream.match("!]", false) && !stream.match("]]", false) && !stream.match("*]", false)) {}
                     return null;
                 }
             };

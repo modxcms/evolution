@@ -1,149 +1,216 @@
 <?php
 /*
 @TODO:
-- add type commits
 — auto backup system files 
 — rollback option for updater
 */
 
-if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-if (empty($_SESSION['mgrInternalKey'])) return;
+if (!defined('MODX_BASE_PATH')) {
+    die('What are you doing? Get out of here!');
+}
+
+if (empty($_SESSION['mgrInternalKey'])) {
+    return;
+}
 // get manager role
 $internalKey = $modx->getLoginUserID();
 $sid = $modx->sid;
-$role = $_SESSION['mgrRole'];
-$user = $_SESSION['mgrShortname'];
-if(($role!=1) AND ($wdgVisibility == 'AdminOnly')) {    
-}
-else if(($role==1) AND ($wdgVisibility == 'AdminExcluded')) {    
-}
-else if(($role!=$ThisRole) AND ($wdgVisibility == 'ThisRoleOnly')) {    
-}
-else if(($user!=$ThisUser) AND ($wdgVisibility == 'ThisUserOnly')) {    
-}
-else {
-$version = 'evolution-cms/evolution';
-$type = isset($type) ? $type: 'tags';
-$showButton = isset($showButton) ? $showButton: 'AdminOnly';
+$role = isset($_SESSION['mgrRole']) ? $_SESSION['mgrRole'] : '';
+$user = isset($_SESSION['mgrShortname']) ? $_SESSION['mgrShortname'] : '';
+$wdgVisibility = isset($wdgVisibility) ? $wdgVisibility : '';
+$ThisRole = isset($ThisRole) ? $ThisRole : '';
+$ThisUser = isset($ThisUser) ? $ThisUser : '';
+$version = isset($version) ? $version : 'evolution-cms/evolution';
+$type = isset($type) ? $type : 'tags';
+$showButton = isset($showButton) ? $showButton : 'AdminOnly';
 
-//lang
-$_lang = array();
-$plugin_path = $modx->config['base_path'] . "assets/plugins/updater/";
-include($plugin_path.'lang/english.php');
-if (file_exists($plugin_path.'lang/' . $modx->config['manager_language'] . '.php')) {
-    include($plugin_path.'lang/' . $modx->config['manager_language'] . '.php');
-}
+if ($role != 1 && $wdgVisibility == 'AdminOnly') {
 
-$e = &$modx->Event;
-if($e->name == 'OnSiteRefresh'){
-    array_map("unlink", glob(MODX_BASE_PATH . 'assets/cache/updater/*.json'));
-}
+} else if ($role == 1 && $wdgVisibility == 'AdminExcluded') {
 
+} else if ($role != $ThisRole && $wdgVisibility == 'ThisRoleOnly') {
 
-if($e->name == 'OnManagerWelcomeHome'){
-    $errorsMessage = '';
-    $errors = 0;
-    if (!extension_loaded('curl')){
-        $errorsMessage .= '-'.$_lang['error_curl'].'<br>';
-        $errors += 1;
-        $curlNotReady = true;
-    }
-    if (!extension_loaded('zip')){
-        $errorsMessage .= '-'.$_lang['error_zip'].'<br>';
-        $errors += 1;
-    }
-    if (!extension_loaded('openssl')){
-        $errorsMessage .= '-'.$_lang['error_openssl'].'<br>';
-        $errors += 1;
-    }
-    if (!is_writable(MODX_BASE_PATH.'assets/')){
-        $errorsMessage .= '-'.$_lang['error_overwrite'].'<br>';
-        $errors += 1;
+} else if ($user != $ThisUser && $wdgVisibility == 'ThisUserOnly') {
+
+} else {
+
+    //lang
+    $_lang = array();
+    $plugin_path = $modx->config['base_path'] . "assets/plugins/updater/";
+    include($plugin_path . 'lang/english.php');
+    if (file_exists($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php')) {
+        include($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php');
     }
 
-    // Avoid "Fatal error: Call to undefined function curl_init()"
-    if(isset($curlNotReady)) {
-        $output = '<div class="card-body">
-                <small style="color:red;font-size:10px">'.$errorsMessage.'</small></div>';
-
-        $widgets['updater'] = array(
-            'menuindex' =>'1',
-            'id' => 'updater',
-            'cols' => 'col-sm-12',
-            'icon' => 'fa-exclamation-triangle',
-            'title' => $_lang['system_update'],
-            'body' => $output
-        );
-        $e->output(serialize($widgets));
-        return;
+    $e = &$modx->Event;
+    if ($e->name == 'OnSiteRefresh') {
+        array_map("unlink", glob(MODX_BASE_PATH . 'assets/cache/updater/*.json'));
     }
 
-    // Create directory 'assets/cache/updater'
-    if(!file_exists(MODX_BASE_PATH . 'assets/cache/updater'))
-        mkdir(MODX_BASE_PATH . 'assets/cache/updater', intval($modx->config['new_folder_permissions'], 8), true);
-    
-    $output = '';
-    if(!file_exists(MODX_BASE_PATH . 'assets/cache/updater/check_'.date("d").'.json')){
-        $ch = curl_init();
-        $url = 'https://api.github.com/repos/'.$version.'/'.$type;
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_REFERER, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: updateNotify widget'));
-        $info = curl_exec($ch);
-        curl_close($ch);
-        if (substr($info,0,1) != '[') return;
-        $info = json_decode($info,true);
-        $git['version'] = $info[0]['name'];
-        //$git['date'] = strtotime($info[0]['commit']['author']['date']); 
-        file_put_contents(MODX_BASE_PATH . 'assets/cache/updater/check_'.date("d").'.json', json_encode($git));
-    }else{
-        $git = file_get_contents( MODX_BASE_PATH . 'assets/cache/updater/check_'.date("d").'.json');
-        $git = json_decode($git, true);
-    }
+    if ($e->name == 'OnManagerWelcomeHome') {
+        $errorsMessage = '';
+        $errors = 0;
+        if (!extension_loaded('curl')) {
+            $errorsMessage .= '-' . $_lang['error_curl'] . '<br>';
+            $errors += 1;
+            $curlNotReady = true;
+        }
+        if (!extension_loaded('zip')) {
+            $errorsMessage .= '-' . $_lang['error_zip'] . '<br>';
+            $errors += 1;
+        }
+        if (!extension_loaded('openssl')) {
+            $errorsMessage .= '-' . $_lang['error_openssl'] . '<br>';
+            $errors += 1;
+        }
+        if (!is_writable(MODX_BASE_PATH . 'assets/')) {
+            $errorsMessage .= '-' . $_lang['error_overwrite'] . '<br>';
+            $errors += 1;
+        }
 
-    $currentVersion = $modx->getVersionData();
+        // Avoid "Fatal error: Call to undefined function curl_init()"
+        if (isset($curlNotReady)) {
+            $output = '<div class="card-body">
+                <small style="color:red;font-size:10px">' . $errorsMessage . '</small></div>';
 
-    $_SESSION['updatelink'] = md5(time());
-    $_SESSION['updateversion'] = $git['version'];
-    if (version_compare($git['version'], $currentVersion['version'],'>') && $git['version'] != '') {
-        // get manager role
-        $role = $_SESSION['mgrRole'];
-        if(($role!=1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
+            $widgets['updater'] = array(
+                'menuindex' => '1',
+                'id' => 'updater',
+                'cols' => 'col-sm-12',
+                'icon' => 'fa-exclamation-triangle',
+                'title' => $_lang['system_update'],
+                'body' => $output
+            );
+            $e->output(serialize($widgets));
+            return;
+        }
+
+        $_SESSION['updatelink'] = md5(time());
+
+        // if a GitHub commit feed
+        if ($type == 'commits') {
+
+            // include MagPieRSS
+            require_once('media/rss/rss_fetch.inc');
+            $branchPath = 'https://github.com/'.$version.'/'.$type.'/'.$branch;
+            $url = $branchPath.'.atom';
+            
+            // create Feed
             $updateButton = '';
-        }  else {
-            $updateButton = '<a target="_parent" href="'.MODX_SITE_URL.$_SESSION['updatelink'].'" class="btn btn-sm btn-danger">'.$_lang['updateButton_txt'].' '.$git['version'].'</a><br><br>';
-        }   
-
+            $rss = @fetch_rss($url);
+                if (!$rss){
+                    $errorsMessage .= '-'.$_lang['error_failedtogetfeed'].':'.$url.'<br>';
+                    $errors += 1;
+                }
+                $updateButton .= '<div class="table-responsive" style="max-height:200px;"><table class="table data">';
+                $updateButton .= '<thead><tr><th>'.$_lang['table_commitdate'].'</th><th>'.$_lang['table_titleauthor'].'</th><th></th></tr></thead><tbody>';
+            
+            $items = array_slice($rss->items, 0, $commitCount);
+            foreach ($items as $item) {
+                $commitid = $item['id'];
+                $commit = substr($commitid, strpos($commitid, "Commit/") + 7);
+                $href = $item['link'];
+                $title = $item['title'];
+                $pubdate = $item['updated'];
+                $pubdate = $modx->toDateFormat(strtotime($pubdate));
+                $author = $item['author_name'];
+                $updateButton .= '<tr><td><b>' . $pubdate . '</b></td><td><a href="' . $href . '" target="_blank">' . $title . '</a> (' . $author . ')</td>';
+                if (($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
+                    $updateButton .= '<td></td></tr>';
+                }  else {
+                    $updateButton .= '<td><a onclick="return confirm(\''.$_lang['are_you_sure_update'].'\')" target="_parent" title="sha: '.$commit.'" class="btn btn-sm btn-danger" href="'.MODX_SITE_URL.$_SESSION['updatelink'].'&sha='.$commit.'">'.$_lang['updateButtonCommit_txt'].'</a></td></tr>';
+                }             
+            }
     
-        $output = '<div class="card-body">'.$_lang['cms_outdated_msg'].' <strong>'.$git['version'].'</strong> <br><br>
-                '.$updateButton.'
-                <small style="color:red;font-size:10px"> '.$_lang['bkp_before_msg'].'</small>
-                <small style="color:red;font-size:10px">'.$errorsMessage.'</small></div>';
-
-        $widgets['updater'] = array(
-            'menuindex' =>'1',
-            'id' => 'updater',
-            'cols' => 'col-sm-12',
-            'icon' => 'fa-exclamation-triangle',
-            'title' => $_lang['system_update'],
-            'body' => $output
-        );
-        $e->output(serialize($widgets));
-
-    }
-}
-if($e->name == 'OnPageNotFound'){
-
-    switch($_GET['q']){     
-        case $_SESSION['updatelink']:
+            $updateButton .= '</tbody></table></div>';
+    
+            $output = '<div class="card-body">GitHub commits for <strong>(<a target="_blank" href="' . $branchPath . '">' . $branchPath . '</a>)</strong><br>
+            <small style="color:red;font-size:10px"> ' . $_lang['bkp_before_msg'] . '</small><br>
+            <small style="color:red;font-size:10px">' . $errorsMessage . '</small>
+                    </div>' . $updateButton;
+                // Add widget to end as is always displayed for commits
+                $widgets['updater'] = array(
+                    'menuindex' =>'1000',
+                    'id' => 'updater',
+                    'cols' => 'col-sm-12',
+                    'icon' => 'fa-exclamation-triangle',
+                    'title' => $_lang['system_update'],
+                    'body' => $output
+                );
+                $e->output(serialize($widgets));
+        } else {
+            // Create directory 'assets/cache/updater'
+            if (!file_exists(MODX_BASE_PATH . 'assets/cache/updater')) {
+                mkdir(MODX_BASE_PATH . 'assets/cache/updater', intval($modx->config['new_folder_permissions'], 8), true);
+            }
+    
+            $output = '';
+            if (!file_exists(MODX_BASE_PATH . 'assets/cache/updater/check_' . date("d") . '.json')) {
+                $ch = curl_init();
+                $url = 'https://api.github.com/repos/' . $version . '/' . $type;
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_REFERER, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: updateNotify widget'));
+                $info = curl_exec($ch);
+                curl_close($ch);
+                if (substr($info, 0, 1) != '[') {
+                    return;
+                }
+                $info = json_decode($info, true);
+                $git['version'] = $info[0]['name'];
+                //$git['date'] = strtotime($info[0]['commit']['author']['date']);
+                file_put_contents(MODX_BASE_PATH . 'assets/cache/updater/check_' . date("d") . '.json', json_encode($git));
+            } else {
+                $git = file_get_contents(MODX_BASE_PATH . 'assets/cache/updater/check_' . date("d") . '.json');
+                $git = json_decode($git, true);
+            }
+    
             $currentVersion = $modx->getVersionData();
-            if ($_SESSION['updateversion'] != $currentVersion['version']) {
+            $_SESSION['updateversion'] = $git['version'];
+            
+            if (version_compare($git['version'], $currentVersion['version'], '>') && $git['version'] != '') {
+                // get manager role
+                $role = $_SESSION['mgrRole'];
+                if (($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
+                    $updateButton = '';
+                } else {
+                    $updateButton = '<a target="_parent" onclick="return confirm(\''.$_lang['are_you_sure_update'].'\')" href="' . MODX_SITE_URL . $_SESSION['updatelink'] . '" class="btn btn-sm btn-danger">' . $_lang['updateButton_txt'] . ' ' . $git['version'] . '</a><br><br>';
+                }
+    
+                $output = '<div class="card-body">' . $_lang['cms_outdated_msg'] . ' <strong>' . $git['version'] . '</strong> <br><br>
+                    ' . $updateButton . '
+                    <small style="color:red;font-size:10px"> ' . $_lang['bkp_before_msg'] . '</small>
+                    <small style="color:red;font-size:10px">' . $errorsMessage . '</small></div>';
+    
+                $widgets['updater'] = array(
+                    'menuindex' => '1',
+                    'id' => 'updater',
+                    'cols' => 'col-sm-12',
+                    'icon' => 'fa-exclamation-triangle',
+                    'title' => $_lang['system_update'],
+                    'body' => $output
+                );
+    
+                $e->output(serialize($widgets));
+            }
+        }
+    }
 
-                file_put_contents(MODX_BASE_PATH.'update.php', '<?php
+    if ($e->name == 'OnPageNotFound' && isset($_GET['q'])) {
+        if (empty($_SESSION['mgrInternalKey']) || empty($_SESSION['updatelink']) ) {
+            return;
+        }
+        switch ($_GET['q']) {
+            case $_SESSION['updatelink']:
+                $currentVersion = $modx->getVersionData();
+                $commit = $_GET['sha'];
+                if ($_SESSION['updateversion'] != $currentVersion['version'] || (isset($commit) && $type == 'commits')) {
+
+                    file_put_contents(MODX_BASE_PATH . 'update.php', '<?php
 function downloadFile($url, $path)
 {
     $newfname = $path;
@@ -166,7 +233,7 @@ function downloadFile($url, $path)
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             $content = curl_exec($ch);
             curl_close($ch);
-	        file_put_contents($newfname,$content);
+            file_put_contents($newfname,$content);
         }
     } catch (Exception $e) {
         $this->errors[] = array("ERROR:Download", $e->getMessage());
@@ -232,7 +299,7 @@ function mmkDir($folder, $perm = 0777)
     }
 }
 
-$version = "evolution-cms/evolution";
+$version = "' . $version . '";
 
 downloadFile("https://github.com/".$version."/archive/" . $_GET["version"] . ".zip", "evo.zip");
 $zip = new ZipArchive;
@@ -266,23 +333,33 @@ if(is_file(__DIR__ . "/assets/cache/siteManager.php")){
         copyFolder(__DIR__."/temp/".$dir."/manager", __DIR__."/temp/".$dir."/".MGR_DIR);
         removeFolder(__DIR__."/temp/".$dir."/manager");
     } 
-    echo __DIR__."/temp/".$dir."/".MGR_DIR;
+    // echo __DIR__."/temp/".$dir."/".MGR_DIR;
 }
 copyFolder(__DIR__."/temp/".$dir, __DIR__."/");
 removeFolder(__DIR__."/temp");
 unlink(__DIR__."/evo.zip");
 unlink(__DIR__."/update.php");
-header("Location: /install/index.php?action=mode");');
-                
-
-                echo '<html><head></head><body>
-                      Evo Updater
-                      <script>window.location = "'.MODX_SITE_URL.'update.php?version='.$_SESSION['updateversion'].'";</script>
-                      </body></html>';
+header("Location: ' . constant('MODX_SITE_URL') . 'install/index.php?action=mode");');
+                if ($result === false){
+                    echo 'Update failed: cannot write to ' . MODX_BASE_PATH . 'update.php';
+                } else {
+                    if ($type == 'commits') {
+                        $versionGet = $commit;
+                        $versionText = $version . '/' . $type . '/' . $branch . '/' . $commit;
+                    } else {
+                        $versionGet = $_SESSION['updateversion'];
+                        $versionText = $_SESSION['updateversion'];	
+                    }
+                    echo '<html><head></head><body><h2>Evolution Updater</h2>
+                          <p>Downloading version: <strong>' . $versionText . '</strong>.</p>
+                          <p>You will be redirected to the update wizard shortly.</p>
+                          <p>Please wait...</p>
+                          <script>window.location = "' . MODX_SITE_URL . 'update.php?version=' . $versionGet . '";</script>
+                          </body></html>';
+                }
             }
             die();
             break;
+        }
     }
-
-}
 }

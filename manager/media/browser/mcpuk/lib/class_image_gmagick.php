@@ -238,7 +238,7 @@ class image_gmagick extends image {
 
     static function checkImage($file) {
         try {
-            $img = new Gmagic($file);
+            new Gmagick($file);
         } catch (Exception $e) {
             return false;
         }
@@ -298,5 +298,3 @@ class image_gmagick extends image {
     }
 
 }
-
-?>

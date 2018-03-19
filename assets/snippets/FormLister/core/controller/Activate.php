@@ -30,9 +30,10 @@ class Activate extends Form
         }
         $userField = $this->getCFGDef('userField', 'email');
         $this->userField = $userField;
-        if (!isset($_REQUEST['formid']) && !isset($_REQUEST[$userField]) && (isset($_REQUEST['hash']) && !empty($_REQUEST['hash']) && isset($_REQUEST['id']) && !empty($_REQUEST['id']))) {
+        $uidName = $this->getCFGDef('uidName', $this->user->fieldPKName());
+        if (!isset($_REQUEST['formid']) && !isset($_REQUEST[$userField]) && (isset($_REQUEST['hash']) && !empty($_REQUEST['hash']) && isset($_REQUEST[$uidName]) && !empty($_REQUEST[$uidName]))) {
             $this->setField('hash', $_REQUEST['hash']);
-            $this->setField('id', (int)$_REQUEST['id']);
+            $this->setField('id', (int)$_REQUEST[$uidName]);
             $this->mode = 'activate';
         }
         $this->log('Activate mode is ' . $this->mode);
@@ -43,8 +44,10 @@ class Activate extends Form
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID('web')) {
+        if ($id = $this->modx->getLoginUserID('web')) {
             $this->redirect('exitTo');
+            $this->user->edit($id);
+            $this->setFields($this->user->toArray());
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('activate.default_skipTpl'));
             $this->setValid(false);
         }
@@ -63,7 +66,7 @@ class Activate extends Form
     {
         $hash = $this->getField('hash');
         $uid = $this->getField('id');
-        if ($hash && $hash == $this->getUserHash($uid)) {
+        if (is_scalar($hash) && $hash && $hash == $this->getUserHash($uid)) {
             $this->process();
         } else {
             $this->addMessage($this->lexicon->getMsg('activate.update_failed'));
@@ -81,7 +84,7 @@ class Activate extends Form
             $hash = false;
         } else {
             $userdata = $this->user->edit($uid)->toArray();
-            $hash = $userdata['id'] && $userdata['logincount'] < 0 ? md5(json_encode($userdata)) : false;
+            $hash = $this->user->getID() && $userdata['logincount'] < 0 ? md5(json_encode($userdata)) : false;
         }
 
         return $hash;
@@ -99,16 +102,24 @@ class Activate extends Form
             case "hash":
                 $uid = $this->getField($this->userField);
                 $password = $this->getField('password');
-                if (($hash = $this->getUserHash($uid)) && ($password && $this->user->get('password') == $this->user->getPassword($password))) {
+                if (
+                    ($hash = $this->getUserHash($uid))
+                    && (
+                        empty($password)
+                        || ($this->user->get('password') == $this->user->getPassword($password))
+                    )
+                ) {
                     $this->setFields($this->user->toArray());
-                    if (!$password) {
+                    if (empty($password)) {
                         $password = \APIhelpers::genPass($this->getCFGDef('passwordLength', 6));
                         $this->user->set('password', $password)->save(true);
                         $this->setField('user.password', $password);
+                        $hash = $this->getUserHash($uid);
                     }
-                    $url = $this->getCFGDef('activateTo', $this->modx->config['site_start']);
+                    $url = $this->getCFGDef('activateTo', isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier > 0 ? $this->modx->documentIdentifier : $this->config['site_start']);
+                    $uidName = $this->getCFGDef('uidName', $this->user->fieldPKName());
                     $this->setField('activate.url', $this->modx->makeUrl($url, "",
-                        http_build_query(array('id' => $this->getField('id'), 'hash' => $hash)),
+                        http_build_query(array($uidName => $this->getField('id'), 'hash' => $hash)),
                         'full'));
                     $this->mailConfig['to'] = $this->user->get('email');
                     parent::process();

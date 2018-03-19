@@ -1,12 +1,12 @@
 <?php
-if (IN_MANAGER_MODE != 'true') {
-    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 if (!$modx->hasPermission('save_plugin')) {
     $modx->webAlertAndQuit($_lang['error_no_privileges']);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked'] == 'on' ? '1' : '0';
@@ -14,13 +14,13 @@ $plugincode = $modx->db->escape($_POST['post']);
 $properties = $modx->db->escape($_POST['properties']);
 $disabled = $_POST['disabled'] == 'on' ? '1' : '0';
 $moduleguid = $modx->db->escape($_POST['moduleguid']);
-$sysevents = $_POST['sysevents'];
+$sysevents = !empty($_POST['sysevents']) ? $_POST['sysevents'] : array();
 $parse_docblock = $_POST['parse_docblock'] == '1' ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
@@ -127,7 +127,7 @@ switch ($_POST['mode']) {
             }
         }
 
-        //do stuff to save the edited plugin    
+        //do stuff to save the edited plugin
         $modx->db->update(array(
             'name' => $name,
             'description' => $description,
@@ -191,40 +191,44 @@ function saveEventListeners($id, $sysevents, $mode)
         }
         $formEventList[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
     }
-    
+
     $evtids = array();
     foreach ($formEventList as $eventInfo) {
         $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
         $modx->db->save($eventInfo, '[+prefix+]site_plugin_events', $where);
         $evtids[] = $eventInfo['evtid'];
     }
-    
+
     $rs = $modx->db->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
     $dbEventList = array();
     $del = array();
     while($row = $modx->db->getRow($rs)) {
         if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
     }
-    
-    if(!$del) return;
-    
+
+    if(empty($del)) return;
+
     foreach($del as $delid) {
         $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
     }
 }
 
+/**
+ * @param string $name
+ * @return string|int
+ */
 function getEventIdByName($name)
 {
     global $modx;
     static $eventIds=array();
-    
+
     if(isset($eventIds[$name])) return $eventIds[$name];
-    
+
     $rs = $modx->db->select('id, name', '[+prefix+]system_eventnames');
     while ($row = $modx->db->getRow($rs)) {
         $eventIds[$row['name']] = $row['id'];
     }
-    
+
     return $eventIds[$name];
 }
 

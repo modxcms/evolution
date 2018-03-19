@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 switch($modx->manager->action) {
 	case 107:
@@ -16,7 +16,7 @@ switch($modx->manager->action) {
 	default:
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // Get table names (alphabetical)
 $tbl_membergroup_names = $modx->getFullTableName('membergroup_names');
 $tbl_site_content = $modx->getFullTableName('site_content');
@@ -28,7 +28,11 @@ $tbl_site_plugins = $modx->getFullTableName('site_plugins');
 $tbl_site_snippets = $modx->getFullTableName('site_snippets');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-// create globally unique identifiers (guid)
+/**
+ * create globally unique identifiers (guid)
+ *
+ * @return string
+ */
 function createGUID() {
 	srand((double) microtime() * 1000000);
 	$r = rand();
@@ -449,7 +453,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
-		<i class="fa fa-cogs"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
 	<?= $_style['actionbuttons']['dynamic']['element'] ?>
@@ -513,14 +517,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['icon'] ?>
-							<small class="text-muted">(32x32)</small>
+							<small class="text-muted"><?= $_lang["icon_description"] ?></small>
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="input-group">
 								<input type="text" maxlength="255" name="icon" value="<?= $content['icon'] ?>" class="form-control" onchange="documentDirty=true;" />
-								<span class="input-group-btn">
-									<button type="button" value="" class="btn btn-secondary" onclick="BrowseServer();"><?= $_lang['insert'] ?></button>
-								</span>
 							</div>
 						</div>
 					</div>

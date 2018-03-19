@@ -3,27 +3,16 @@ if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	header('HTTP/1.0 404 Not Found');
 	exit('error');
 }
-include_once(dirname(__FILE__) . '/../../assets/cache/siteManager.php');
-require_once(strtr(realpath(dirname(__FILE__)), '\\', '/') . '/../includes/protect.inc.php');
-
-set_include_path(get_include_path() . PATH_SEPARATOR . '../includes/');
-
-define('IN_MANAGER_MODE', 'true');  // we use this to make sure files are accessed through
-// the manager instead of seperately.
-// include the database configuration file
-include_once('../includes/config.inc.php');
-$core_path = MODX_MANAGER_PATH . 'includes/';
-
-// start session
-startCMSSession();
-
-
-include_once("{$core_path}document.parser.class.inc.php");
-$modx = new DocumentParser;
+define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
+define('MODX_API_MODE', true);
+include_once(__DIR__ . '/../../index.php');
+$modx->db->connect();
+$modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
 $modx->loadExtension('ManagerAPI');
 $modx->loadExtension('phpass');
-$modx->getSettings();
 
+$core_path = MODX_MANAGER_PATH . 'includes/';
 // include_once the language file
 $_lang = array();
 include_once("{$core_path}lang/english.inc.php");
@@ -181,9 +170,9 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 	if($hashType == 'phpass') {
 		$matchPassword = login($username, $_REQUEST['password'], $dbasePassword);
 	} elseif($hashType == 'md5') {
-		$matchPassword = loginMD5($internalKey, $givenPassword, $dbasePassword, $username);
+		$matchPassword = loginMD5($internalKey, $_REQUEST['password'], $dbasePassword, $username);
 	} elseif($hashType == 'v1') {
-		$matchPassword = loginV1($internalKey, $givenPassword, $dbasePassword, $username);
+		$matchPassword = loginV1($internalKey, $_REQUEST['password'], $dbasePassword, $username);
 	} else {
 		$matchPassword = false;
 	}
@@ -237,10 +226,12 @@ $rs = $modx->db->select('uga.documentgroup', $modx->getFullTableName('member_gro
 		INNER JOIN ' . $modx->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
 $_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
 
-if($rememberme == '1') {
-	$_SESSION['modx.mgr.session.cookie.lifetime'] = intval($modx->config['session.cookie.lifetime']);
+$_SESSION['mgrToken'] = md5($currentsessionid);
 
-	// Set a cookie separate from the session cookie with the username in it. 
+if($rememberme == '1') {
+	$_SESSION['modx.mgr.session.cookie.lifetime'] = (int)$modx->config['session.cookie.lifetime'];
+
+	// Set a cookie separate from the session cookie with the username in it.
 	// Are we using secure connection? If so, make sure the cookie is secure
 	global $https_port;
 
@@ -283,7 +274,7 @@ $modx->invokeEvent('OnManagerLogin', array(
 
 // check if we should redirect user to a web page
 $rs = $modx->db->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
-$id = intval($modx->db->getValue($rs));
+$id = (int)$modx->db->getValue($rs);
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');
 	if($_POST['ajax'] == 1) {
@@ -300,7 +291,11 @@ if($id > 0) {
 	}
 }
 
-// show javascript alert
+/**
+ * show javascript alert
+ *
+ * @param string $msg
+ */
 function jsAlert($msg) {
 	global $modx;
 	if($_POST['ajax'] != 1) {
@@ -310,11 +305,24 @@ function jsAlert($msg) {
 	}
 }
 
+/**
+ * @param string $username
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @return bool
+ */
 function login($username, $givenPassword, $dbasePassword) {
 	global $modx;
 	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
 }
 
+/**
+ * @param int $internalKey
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @param string $username
+ * @return bool
+ */
 function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
 	global $modx;
 
@@ -338,6 +346,13 @@ function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
 	return true;
 }
 
+/**
+ * @param int $internalKey
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @param string $username
+ * @return bool
+ */
 function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
 	global $modx;
 
@@ -348,6 +363,10 @@ function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
 	return true;
 }
 
+/**
+ * @param string $username
+ * @param string $password
+ */
 function updateNewHash($username, $password) {
 	global $modx;
 
@@ -356,6 +375,12 @@ function updateNewHash($username, $password) {
 	$modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
 }
 
+/**
+ * @param int $internalKey
+ * @param int $failedlogins
+ * @param int $failed_allowed
+ * @param int $blocked_minutes
+ */
 function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes) {
 	global $modx;
 

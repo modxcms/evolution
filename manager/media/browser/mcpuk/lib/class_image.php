@@ -237,5 +237,3 @@ abstract class image {
     abstract protected function getImage($image, &$width, &$height);
 
 }
-
-?>

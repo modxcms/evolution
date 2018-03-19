@@ -179,4 +179,5 @@ abstract class Action
     {
         return self::$classTable;
     }
+
 }

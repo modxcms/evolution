@@ -5,6 +5,7 @@
  */
 class xNop
 {
+
     /**
      * Magic call
      *
@@ -50,4 +51,5 @@ class xNop
     {
         return '';
     }
+
 }

@@ -47,9 +47,12 @@ class private_DL_filter extends content_DL_filter
      */
     public function get_join()
     {
-        $join = 'LEFT JOIN ' . $this->DocLister->getTable('document_groups',
-                $this->tableAlias) . ' ON `' . $this->tableAlias . '`.`document`=`' . parent::TableAlias . '`.`id`';
+        $join = 'LEFT JOIN ' . $this->DocLister->getTable(
+            'document_groups',
+            $this->tableAlias
+        ) . ' ON `' . $this->tableAlias . '`.`document`=`' . parent::TableAlias . '`.`id`';
 
         return $join;
     }
+
 }

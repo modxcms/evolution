@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('view_eventlog')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -99,7 +99,7 @@ echo $cm->render();
 	<input type="hidden" name="op" value="" />
 
 	<h1>
-		<i class="<?= $_style['actions_triangle'] ?>"></i><?= $_lang['eventlog_viewer'] ?><i class="fa fa-question-circle help"></i>
+		<?= $_style['page_eventlog'] ?> <?= $_lang['eventlog_viewer'] ?><?= $_style['icons_help'] ?>
 	</h1>
 
 	<div class="container element-edit-message">

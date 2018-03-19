@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != 'true') {
-	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
@@ -12,6 +12,8 @@ if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_v
 
 // set placeholders
 $ph = $_lang;
+$_SESSION['nrtotalmessages'] = 0;
+$_SESSION['nrnewmessages'] = 0;
 
 // setup message info
 if($modx->hasPermission('messages')) {
@@ -26,16 +28,16 @@ if($modx->hasPermission('messages')) {
 	$nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>' : '0';
 	$welcome_messages = sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages);
 	$msg[] = sprintf('<span class="comment">%s</span>', $welcome_messages);
-	$ph['MessageInfo'] = join("\n", $msg);
+	$ph['MessageInfo'] = implode("\n", $msg);
 }
 
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%security%]';
+	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%user_management_title%]';
 	$ph['SecurityIcon'] = wrapIcon($icon, 75);
 }
 if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_users%]';
+	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
 	$ph['WebUserIcon'] = wrapIcon($icon, 99);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
@@ -82,9 +84,10 @@ if(isset($_SESSION['show_logout_reminder'])) {
 }
 
 // Check multiple sessions
-$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
-$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
-$count = $modx->db->getValue($rs);
+//$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
+//$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
+//$count = $modx->db->getValue($rs);
+/*
 if($count > 1) {
 	$ph['multiple_sessions_msg'] = $modx->parseText($_lang['multiple_sessions_msg'], array(
 		'username' => $_SESSION['mgrShortname'],
@@ -93,7 +96,8 @@ if($count > 1) {
 	$ph['show_multiple_sessions'] = 'block';
 } else {
 	$ph['show_multiple_sessions'] = 'none';
-}
+}*/
+$ph['show_multiple_sessions'] = 'none';
 
 $ph['RecentInfo'] = getRecentInfo();
 
@@ -242,23 +246,23 @@ $widgets['welcome'] = array(
 				<div class="wm_buttons card-body"> 
 					<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=75">
+						<a target="main" href="index.php?a=75">
 							<i class="[&icons_security_large&]" title="[%user_management_title%]"></i>
-							<span>[%security%]</span>
+							<span>[%user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=99">
+						<a target="main" href="index.php?a=99">
 							<i class="[&icons_webusers_large&]" title="[%web_user_management_title%]"></i>
-							<span>[%web_users%]</span>
+							<span>[%web_user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=106">
+						<a target="main" href="index.php?a=106">
 							<i class="[&icons_modules_large&]" title="[%manage_modules%]"></i>
 							<span>[%modules%]</span>
 						</a>
@@ -266,7 +270,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
 					<span class="wm_button">
-						<a href="index.php?a=76">
+						<a target="main" href="index.php?a=76">
 							<i class="[&icons_resources_large&]" title="[%element_management%]"></i>
 							<span>[%elements%]</span>
 						</a>
@@ -274,7 +278,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=93">
+						<a target="main" href="index.php?a=93">
 							<i class="[&icons_backup_large&]" title="[%bk_manager%]"></i>
 							<span>[%backup%]</span>
 						</a>
@@ -282,7 +286,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=9">
+						<a target="main" href="index.php?a=9">
 							<i class="[&icons_help_large&]" title="[%help%]"></i>
 							<span>[%help%]</span>
 						</a>
@@ -316,7 +320,7 @@ $widgets['welcome'] = array(
 					</table>
 				</div>
 		',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
@@ -325,7 +329,7 @@ $widgets['onlineinfo'] = array(
 	'icon' => 'fa-user',
 	'title' => '[%onlineusers_title%]',
 	'body' => '<div class="userstable">[+OnlineInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['recentinfo'] = array(
 	'menuindex' => '30',
@@ -334,7 +338,7 @@ $widgets['recentinfo'] = array(
 	'icon' => 'fa-pencil-square-o',
 	'title' => '[%activity_title%]',
 	'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 if ($modx->config['rss_url_news']) {
     $widgets['news'] = array(
@@ -441,9 +445,9 @@ echo $content;
 function getTplWidget() { // recent document info
 	return '
 		<div class="[+cols+]" id="[+id+]">
-			<div class="card">
-				<div class="card-header"> <i class="fa [+icon+]"></i> [+title+] </div>
-				<div class="card-block"> [+body+] </div>
+			<div class="card"[+cardAttr+]>
+				<div class="card-header"[+headAttr+]> <i class="fa [+icon+]"></i> [+title+] </div>
+				<div class="card-block"[+bodyAttr+]> [+body+] </div>
 			</div>
 		</div>
 ';
@@ -557,7 +561,7 @@ function getRecentInfoList() {
 
 		$output[] = $modx->parseText($tpl, $ph);
 	}
-	return join("\n", $output);
+	return implode("\n", $output);
 }
 
 function getRecentInfoRowTpl() {
