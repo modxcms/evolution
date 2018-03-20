@@ -344,7 +344,7 @@ class tinymce4bridge extends modxRTEbridge
 
         // inlite-theme is only compatible with inline-mode / frontend
         if($this->modxParams['skintheme'] == 'inlite' && $modx->event->name != 'OnWebPagePrerender') {
-            $this->set('theme', 'modern');     // Fallback to modern-theme in backend
+            $this->force('theme', 'modern');     // Fallback to modern-theme in backend
         }
 
         return NULL;
