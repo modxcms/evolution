@@ -3,7 +3,7 @@
  * EVO Cli Installer
  * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
  */
-echo 'Install Evolution CMS?'.PHP_EOL;
+
 $path = dirname(__FILE__) . '/';
 
 /*
@@ -18,15 +18,15 @@ define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 define('MODX_SITE_URL', '/');
 
-require_once("functions.php");
+require_once($path."functions.php");
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
-if (is_file("../assets/cache/siteManager.php")) {
-    include_once("../assets/cache/siteManager.php");
+if (is_file($path."../assets/cache/siteManager.php")) {
+    include_once($path."../assets/cache/siteManager.php");
 }
-if(!defined('MGR_DIR') && is_dir("../manager")) {
+if(!defined('MGR_DIR') && is_dir($path."../manager")) {
     define('MGR_DIR', 'manager');
 }
 
@@ -58,6 +58,7 @@ $tableprefixauto = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('012345
 $args = array_slice($argv, 1);
 
 if ( empty($args) ){
+    echo 'Install Evolution CMS?'.PHP_EOL;
     $installYes = readline("Type 'y' to continue: ");
     if ($installYes != 'y') return;
 
@@ -166,7 +167,7 @@ if (version_compare(phpversion(), PHP_MIN_VERSION) < 0) {
 // check directories
 // cache exists?
 echo strip_tags($_lang['checking_if_cache_exist']);
-if (!file_exists("../assets/cache") || !file_exists("../assets/cache/rss")) {
+if (!file_exists($path."../assets/cache") || !file_exists($path."../assets/cache/rss")) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -176,7 +177,7 @@ if (!file_exists("../assets/cache") || !file_exists("../assets/cache/rss")) {
 
 // cache writable?
 echo strip_tags($_lang['checking_if_cache_writable']);
-if (!is_writable("../assets/cache")) {
+if (!is_writable($path."../assets/cache")) {
     $errors++;
     echo $_lang['failed'] . PHP_EOL;
 } else {
@@ -186,7 +187,7 @@ if (!is_writable("../assets/cache")) {
 
 // cache files writable?
 echo strip_tags($_lang['checking_if_cache_file_writable']);
-$tmp = "../assets/cache/siteCache.idx.php";
+$tmp = $path."../assets/cache/siteCache.idx.php";
 if ( ! file_exists($tmp)) {
     f_owc($tmp, "<?php //EVO site cache file ?>");
 }
@@ -199,7 +200,7 @@ if ( ! is_writable($tmp)) {
 
 
 echo strip_tags($_lang['checking_if_cache_file2_writable']);
-if ( ! is_writable("../assets/cache/sitePublishing.idx.php")) {
+if ( ! is_writable($path."../assets/cache/sitePublishing.idx.php")) {
     $errors++;
     echo $_lang['failed'] . PHP_EOL;
 } else {
