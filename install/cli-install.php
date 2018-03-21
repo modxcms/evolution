@@ -1,10 +1,9 @@
 <?php
 /**
  * EVO Cli Installer
+ * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
  */
 echo 'Install Evolution CMS?'.PHP_EOL;
-$installYes = readline("Type 'y' to continue: ");
-if ($installYes != 'y') return;
 
 
 $autoloader = realpath(__DIR__.'/../vendor/autoload.php');
@@ -24,10 +23,10 @@ require_once("functions.php");
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 if (is_file("../assets/cache/siteManager.php")) {
-	include_once("../assets/cache/siteManager.php");
+    include_once("../assets/cache/siteManager.php");
 }
 if(!defined('MGR_DIR') && is_dir("../manager")) {
-	define('MGR_DIR', 'manager');
+    define('MGR_DIR', 'manager');
 }
 
 require_once("lang.php");
@@ -51,53 +50,83 @@ $moduleDependencies = array(); // module depedencies - array : module, table, co
 $errors= 0;
 
 
-
-$tableprefixauto = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), rand(0, 33), 3).'_';
-
-
-//set param manual
 $installMode= 0;
 $installData = 0;
+$tableprefixauto = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), rand(0, 33), 3).'_';
+
+$args = array_slice($argv, 1);
+
+if ( empty($args) ){
+    $installYes = readline("Type 'y' to continue: ");
+    if ($installYes != 'y') return;
+
+    //set param manual
+    $databasehost = readline($_lang['connection_screen_database_host']. ' [localhost] ');
+    $databaseloginname = readline($_lang['connection_screen_database_login']. ' ');
+    $databaseloginpassword = readline($_lang['connection_screen_database_pass']. ' ');
+    $database_name = readline($_lang['connection_screen_database_name']. ' ');
+    $tableprefix = readline($_lang['connection_screen_table_prefix']. ' ['.$tableprefixauto.'] ');
+    $database_connection_method = readline($_lang['connection_screen_connection_method']. ' [SET CHARACTER SET] ');
+    $database_collation = readline($_lang['connection_screen_collation']. ' [utf8_general_ci] ');
+    $cmsadmin = readline($_lang['connection_screen_default_admin_login']. ' [admin] ');
+    $cmsadminemail = readline($_lang['connection_screen_default_admin_email']. ' ');
+    $cmspassword = readline($_lang['connection_screen_default_admin_password']. ' ');
+    $managerlanguage = readline('Мanager language:' . ' [en] ');
+    $installData = readline('Instal demo-site (y/n):' . ' [n] ');
+    
+}else{
+    
+    $cli_variables = [];
+    foreach ($args as $arg) {
+        $tmp = array_map('trim', explode('=', $arg));
+        if (count($tmp) === 2) {
+            $k = ltrim($tmp[0], '-');
+            
+            $cli_variables[$k] = $tmp[1];
+            
+        }
+    }
+
+    $databasehost = $cli_variables['database_server'];
+    $databaseloginname = $cli_variables['database_user'];
+    $databaseloginpassword = $cli_variables['database_password'];
+    $database_name = $cli_variables['database'];
+    $tableprefix = $cli_variables['table_prefix'];
+    
+    $cmsadmin = $cli_variables['cmsadmin'];
+    $cmsadminemail = $cli_variables['cmsadminemail'];
+    $cmspassword = $cli_variables['cmspassword'];
+    
+    $managerlanguage = $cli_variables['language'];
+    $installData = $cli_variables['installData'];
+    $mode = $cli_variables['mode'];
+    $removeInstall = $cli_variables['removeInstall'];
+
+}
 
 
-$databasehost = readline($_lang['connection_screen_database_host']. ' [localhost] ');
 if ($databasehost == '') { $databasehost= 'localhost'; } 
-
-$databaseloginname = readline($_lang['connection_screen_database_login']. ' ');
-
-$databaseloginpassword = readline($_lang['connection_screen_database_pass']. ' ');
-
-$database_name = readline($_lang['connection_screen_database_name']. ' ');
-
-$tableprefix = readline($_lang['connection_screen_table_prefix']. ' ['.$tableprefixauto.'] ');
 if ($tableprefix == ''){ $tableprefix = $tableprefixauto; }
-
-$database_connection_method = readline($_lang['connection_screen_connection_method']. ' [SET CHARACTER SET] ');
 if ($database_connection_method == '') { $database_connection_method = 'SET CHARACTER SET'; } 
-
-$database_collation = readline($_lang['connection_screen_collation']. ' [utf8_general_ci] ');
 if ($database_collation == '') { $database_collation = 'utf8_general_ci'; } 
-
-$cmsadmin = readline($_lang['connection_screen_default_admin_login']. ' [admin] ');
 if ($cmsadmin == ''){ $cmsadmin = 'admin'; }
-
-$cmsadminemail = readline($_lang['connection_screen_default_admin_email']. ' ');
-
-$cmspassword = readline($_lang['connection_screen_default_admin_password']. ' ');
-
-$managerlanguage = readline('Мanager language:' . ' [english] ');
-if ($managerlanguage == '') { $managerlanguage = 'english'; } 
-
-$installData = readline('Instal demo-site (y/n):' . ' [n] ');
+if ($managerlanguage == '') { $managerlanguage = 'en'; } 
 if ($installData == 'y') { $installData = 1;}
-//cms login 
-//////
+if ($mode == 'upgrade') { $installMode = 1;}
 
-//getLangs($install_language);
-//////
+//добавить обработку языка
 
-# load setup information file
-//include('setup.info.php');
+switch ($managerlanguage) {
+    case 'ru':
+        $managerlanguage = 'russian-UTF8';
+        break;
+    
+    case 'en':
+    default:
+        $managerlanguage = 'english';
+        break;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 if( ! function_exists('f_owc')){
     /**
@@ -396,7 +425,7 @@ $create = false;
 
 
 if ($installMode == 1) {
-	include "../".MGR_DIR."/includes/config.inc.php";
+    include "../".MGR_DIR."/includes/config.inc.php";
 } else {
     // get db info from post
     $database_server = $databasehost;
@@ -449,7 +478,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
     echo $_lang['setup_database_selection_failed']." ".$_lang['setup_database_selection_failed_note'].PHP_EOL;
     $create = true;
 } else {
-	if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
+    if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
     mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
     echo $_lang['ok'].PHP_EOL;
 }
@@ -457,7 +486,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
 // try to create the database
 if ($create) {
     echo $_lang['setup_database_creation']. str_replace("`", "", $dbase) . "`: ";
-    //	if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
+    //  if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
         echo $_lang['setup_database_creation_failed']." ".$_lang['setup_database_creation_failed_note'].PHP_EOL;
         $errors += 1;
@@ -993,24 +1022,24 @@ if ($installMode == 0) {
 
 // Reset database for installation of demo-site
 if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
-	echo $_lang['resetting_database'];
-	$sqlParser->process($moduleSQLResetFile);
-	// display database results
-	if ($sqlParser->installFailed == true) {
-		$errors += 1;
-		echo $_lang['database_alerts'] . PHP_EOL;
-		echo $_lang['setup_couldnt_install'] . PHP_EOL;
-		echo $_lang['installation_error_occured'] . PHP_EOL . PHP_EOL;
-		/*
+    echo $_lang['resetting_database'];
+    $sqlParser->process($moduleSQLResetFile);
+    // display database results
+    if ($sqlParser->installFailed == true) {
+        $errors += 1;
+        echo $_lang['database_alerts'] . PHP_EOL;
+        echo $_lang['setup_couldnt_install'] . PHP_EOL;
+        echo $_lang['installation_error_occured'] . PHP_EOL . PHP_EOL;
+        /*
         for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
-		}
-		echo "</p>";*/
-		echo $_lang['some_tables_not_updated'] . PHP_EOL;
-		die();
-	} else {
-		echo $_lang['ok'] . PHP_EOL;
-	}
+            echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+        }
+        echo "</p>";*/
+        echo $_lang['some_tables_not_updated'] . PHP_EOL;
+        die();
+    } else {
+        echo $_lang['ok'] . PHP_EOL;
+    }
 }
 
 // Install Templates
@@ -1413,51 +1442,51 @@ if ($installData && $moduleSQLDataFile) {
 // Install Dependencies
 $moduleDependencies = $mdp;
 foreach ($moduleDependencies as $dependency) {
-	$ds = mysqli_query($sqlParser->conn, 'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"');
-	if (!$ds) {
-		echo mysqli_error($sqlParser->conn) . PHP_EOL;
-		return;
-	} else {
-		$row = mysqli_fetch_assoc($ds);
-		$moduleId = $row["id"];
-		$moduleGuid = $row["guid"];
-	}
-	// get extra id
-	$ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"');
-	if (!$ds) {
-		echo mysqli_error($sqlParser->conn) . PHP_EOL;
-		return;
-	} else {
-		$row = mysqli_fetch_assoc($ds);
-		$extraId = $row["id"];
-	}
-	// setup extra as module dependency
-	$ds = mysqli_query($sqlParser->conn, 'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1');
-	if (!$ds) {
-		echo mysqli_error($sqlParser->conn) . PHP_EOL;
-		return;
-	} else {
-		if (mysqli_num_rows($ds) === 0) {
-			mysqli_query($sqlParser->conn, 'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')');
-			echo $dependency['module'] . ' Module: ' . $_lang['depedency_create'] . PHP_EOL;
-		} else {
-			mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type']);
-			echo $dependency['module'] . ' Module: ' . $_lang['depedency_update'] . PHP_EOL;
-		}
-		if ($dependency['type'] == 30 || $dependency['type'] == 40) {
-			// set extra guid for plugins and snippets
-			$ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1');
-			if (!$ds) {
-				echo mysqli_error($sqlParser->conn) . PHP_EOL;
-				return;
-			} else {
-				if (mysqli_num_rows($ds) != 0) {
-					mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId);
-					echo $dependency['name'] . ': ' . $_lang['guid_set'] . PHP_EOL;
-				}
-			}
-		}
-	}
+    $ds = mysqli_query($sqlParser->conn, 'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"');
+    if (!$ds) {
+        echo mysqli_error($sqlParser->conn) . PHP_EOL;
+        return;
+    } else {
+        $row = mysqli_fetch_assoc($ds);
+        $moduleId = $row["id"];
+        $moduleGuid = $row["guid"];
+    }
+    // get extra id
+    $ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"');
+    if (!$ds) {
+        echo mysqli_error($sqlParser->conn) . PHP_EOL;
+        return;
+    } else {
+        $row = mysqli_fetch_assoc($ds);
+        $extraId = $row["id"];
+    }
+    // setup extra as module dependency
+    $ds = mysqli_query($sqlParser->conn, 'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1');
+    if (!$ds) {
+        echo mysqli_error($sqlParser->conn) . PHP_EOL;
+        return;
+    } else {
+        if (mysqli_num_rows($ds) === 0) {
+            mysqli_query($sqlParser->conn, 'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')');
+            echo $dependency['module'] . ' Module: ' . $_lang['depedency_create'] . PHP_EOL;
+        } else {
+            mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type']);
+            echo $dependency['module'] . ' Module: ' . $_lang['depedency_update'] . PHP_EOL;
+        }
+        if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+            // set extra guid for plugins and snippets
+            $ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1');
+            if (!$ds) {
+                echo mysqli_error($sqlParser->conn) . PHP_EOL;
+                return;
+            } else {
+                if (mysqli_num_rows($ds) != 0) {
+                    mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId);
+                    echo $dependency['name'] . ': ' . $_lang['guid_set'] . PHP_EOL;
+                }
+            }
+        }
+    }
 }
 
 // call back function
@@ -1503,8 +1532,12 @@ if ($installMode == 0) {
    echo strip_tags($_lang['upgrade_note']) . PHP_EOL;
 }
 
-echo PHP_EOL . 'Remove install folder?'.PHP_EOL;
-$removeInstall = readline("Type 'y' or 'n' to continue: ");
+
+if ( empty($args) ){
+    echo PHP_EOL . 'Remove install folder?'.PHP_EOL;
+    $removeInstall = readline("Type 'y' or 'n' to continue: ");
+}
+//remove installFolder
 if ($removeInstall == 'y') {
     echo 'Install folder deleted!'. PHP_EOL . PHP_EOL;
 }
