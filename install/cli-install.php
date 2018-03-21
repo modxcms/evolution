@@ -36,9 +36,9 @@ require_once($path.'../'.MGR_DIR.'/includes/version.inc.php');
 $moduleName = "EVO";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = "setup.sql";
-$moduleSQLDataFile = "setup.data.sql";
-$moduleSQLResetFile = "setup.data.reset.sql";
+$moduleSQLBaseFile = $path."setup.sql";
+$moduleSQLDataFile = $path."setup.data.sql";
+$moduleSQLResetFile = $path."setup.data.reset.sql";
 
 $moduleChunks = array (); // chunks - array : name, description, type - 0:file or 1:content, file or content
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content
@@ -211,9 +211,9 @@ if ( ! is_writable($path."../assets/cache/sitePublishing.idx.php")) {
 // File Browser directories exists?
 echo strip_tags($_lang['checking_if_images_exist']);
 switch(true){
-    case !file_exists("../assets/images"):
-    case !file_exists("../assets/files"):
-    case !file_exists("../assets/backup"):
+    case !file_exists($path."../assets/images"):
+    case !file_exists($path."../assets/files"):
+    case !file_exists($path."../assets/backup"):
     //case !file_exists("../assets/.thumbs"):
         $errors++;
         echo $_lang['failed'] . PHP_EOL;
@@ -226,9 +226,9 @@ switch(true){
 // File Browser directories writable?
 echo strip_tags($_lang['checking_if_images_writable']);
 switch(true){
-    case !is_writable("../assets/images"):
-    case !is_writable("../assets/files"):
-    case !is_writable("../assets/backup"):
+    case !is_writable($path."../assets/images"):
+    case !is_writable($path."../assets/files"):
+    case !is_writable($path."../assets/backup"):
     //case !is_writable("../assets/.thumbs"):
         $errors++;
         echo $_lang['failed'] . PHP_EOL;
@@ -240,7 +240,7 @@ switch(true){
 
 // export exists?
 echo strip_tags($_lang['checking_if_export_exists']);
-if (!file_exists("../assets/export")) {
+if (!file_exists($path."../assets/export")) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -250,7 +250,7 @@ if (!file_exists("../assets/export")) {
 
 // export writable?
 echo strip_tags($_lang['checking_if_export_writable']);
-if (!is_writable("../assets/export")) {
+if (!is_writable($path."../assets/export")) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -260,7 +260,7 @@ if (!is_writable("../assets/export")) {
 
 // config.inc.php writable?
 echo strip_tags($_lang['checking_if_config_exist_and_writable']);
-$tmp = "../".MGR_DIR."/includes/config.inc.php";
+$tmp = $path."../".MGR_DIR."/includes/config.inc.php";
 if (!is_file($tmp)) {
     f_owc($tmp, "<?php //EVO configuration file ?>", 0666);
 } else {
@@ -277,7 +277,7 @@ if (!$isWriteable) {
 
 // connect to the database
 if ($installMode == 1) {
-    include "../".MGR_DIR."/includes/config.inc.php";
+    include $path."../".MGR_DIR."/includes/config.inc.php";
 } else {
     // get db info from post
     $database_server = $databasehost;
@@ -381,13 +381,13 @@ if ($conn) {
 
 // andrazk 20070416 - add install flag and disable manager login
 // assets/cache writable?
-if (is_writable("../assets/cache")) {
-    if (file_exists('../assets/cache/installProc.inc.php')) {
-        @chmod('../assets/cache/installProc.inc.php', 0755);
-        unlink('../assets/cache/installProc.inc.php');
+if (is_writable($path."../assets/cache")) {
+    if (file_exists($path.'../assets/cache/installProc.inc.php')) {
+        @chmod($path.'../assets/cache/installProc.inc.php', 0755);
+        unlink($path.'../assets/cache/installProc.inc.php');
     }
 
-    f_owc("../assets/cache/installProc.inc.php", '<?php $installStartTime = '.time().'; ?>');
+    f_owc($path."../assets/cache/installProc.inc.php", '<?php $installStartTime = '.time().'; ?>');
 }
 
 if($installMode > 0 && $_POST['installdata'] == "1") {
@@ -409,14 +409,6 @@ if ($errors > 0) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-    define('MGR_DIR', 'manager');
-}
-
-
 $create = false;
 
 // set timout limit
@@ -427,7 +419,7 @@ $create = false;
 
 
 if ($installMode == 1) {
-    include "../".MGR_DIR."/includes/config.inc.php";
+    include $path."../".MGR_DIR."/includes/config.inc.php";
 } else {
     // get db info from post
     $database_server = $databasehost;
@@ -576,12 +568,12 @@ if ($installMode != 0) {
 
 // open db connection
 $setupPath = realpath(dirname(__FILE__));
-$chunkPath    = 'assets/chunks';
-$snippetPath  = 'assets/snippets';
-$pluginPath   = 'assets/plugins';
-$modulePath   = 'assets/modules';
-$templatePath = 'assets/templates';
-$tvPath       = 'assets/tvs';
+$chunkPath    = $path.'assets/chunks';
+$snippetPath  = $path.'assets/snippets';
+$pluginPath   = $path.'assets/plugins';
+$modulePath   = $path.'assets/modules';
+$templatePath = $path.'assets/templates';
+$tvPath       = $path.'assets/tvs';
 
 // setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
 $mt = &$moduleTemplates;
@@ -917,7 +909,7 @@ function parse_docblock($element_dir, $filename) {
 }
 
 
-include "{$setupPath}/sqlParser.class.php";
+include $path."sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method, $auto_template_logic);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 /* image and file manager paths now handled via settings screen in Manager
@@ -950,7 +942,7 @@ if ($moduleSQLBaseFile) {
 }
 
 // custom or not
-if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
+if (file_exists($path."../assets/cache/siteManager.php")) {
     $mgrdir = 'include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");';
 }else{
     $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
@@ -973,7 +965,7 @@ $confph['site_sessionname']   = $site_sessionname;
 $configString = file_get_contents('config.inc.tpl');
 $configString = parse($configString, $confph);
 
-$filename = '../'.MGR_DIR.'/includes/config.inc.php';
+$filename = $path.'../'.MGR_DIR.'/includes/config.inc.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
     $configFileFailed = true;
@@ -1499,19 +1491,19 @@ if ($callBackFnc != "")
 if (!defined('MODX_MANAGER_PATH')) define('MODX_MANAGER_PATH', $base_path.MGR_DIR.'/');
 $database_type = 'mysqli';
 // initiate a new document parser
-include_once('../'.MGR_DIR.'/includes/document.parser.class.inc.php');
+include_once($path.'../'.MGR_DIR.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
 // always empty cache after install
-include_once "../".MGR_DIR."/processors/cache_sync.class.processor.php";
+include_once $path."../".MGR_DIR."/processors/cache_sync.class.processor.php";
 $sync = new synccache();
-$sync->setCachepath("../assets/cache/");
+$sync->setCachepath($path."../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
 
 // try to chmod the cache go-rwx (for suexeced php)
-$chmodSuccess = @chmod('../assets/cache/siteCache.idx.php', 0600);
-$chmodSuccess = @chmod('../assets/cache/sitePublishing.idx.php', 0600);
+$chmodSuccess = @chmod($path.'../assets/cache/siteCache.idx.php', 0600);
+$chmodSuccess = @chmod($path.'../assets/cache/sitePublishing.idx.php', 0600);
 
 // remove any locks on the manager functions so initial manager login is not blocked
 mysqli_query($conn, "TRUNCATE TABLE `".$table_prefix."active_users`");
@@ -1520,9 +1512,9 @@ mysqli_query($conn, "TRUNCATE TABLE `".$table_prefix."active_users`");
 $sqlParser->close();
 
 // andrazk 20070416 - release manager access
-if (file_exists('../assets/cache/installProc.inc.php')) {
-    @chmod('../assets/cache/installProc.inc.php', 0755);
-    unlink('../assets/cache/installProc.inc.php');
+if (file_exists($path.'../assets/cache/installProc.inc.php')) {
+    @chmod($path.'../assets/cache/installProc.inc.php', 0755);
+    unlink($path.'../assets/cache/installProc.inc.php');
 }
 
 // setup completed!
