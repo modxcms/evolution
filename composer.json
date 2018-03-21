@@ -33,7 +33,7 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "@php install/cli_install.php"
+            "@php install/cli-install.php"
         ]
     },
     "minimum-stability": "dev",
