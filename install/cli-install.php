@@ -4,12 +4,13 @@
  * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
  */
 echo 'Install Evolution CMS?'.PHP_EOL;
+$path = dirname(__FILE__) . '/';
 
-
+/*
 $autoloader = realpath(__DIR__.'/../vendor/autoload.php');
 if (file_exists($autoloader) && is_readable($autoloader)) {
     include_once($autoloader);
-}
+}*/
 
 $self = 'install/index.php';
 $base_path = str_replace($self,'',str_replace('\\','/', __FILE__));
@@ -29,8 +30,8 @@ if(!defined('MGR_DIR') && is_dir("../manager")) {
     define('MGR_DIR', 'manager');
 }
 
-require_once("lang.php");
-require_once('../'.MGR_DIR.'/includes/version.inc.php');
+require_once($path."lang.php");
+require_once($path.'../'.MGR_DIR.'/includes/version.inc.php');
 
 $moduleName = "EVO";
 $moduleVersion = $modx_branch.' '.$modx_version;
