@@ -31,11 +31,6 @@
     "require": {
         "php": ">=5.6"
     },
-    "scripts": {
-        "post-create-project-cmd": [
-            "@php install/cli-install.php"
-        ]
-    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
