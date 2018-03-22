@@ -2499,6 +2499,7 @@ class DocumentParser
         $requestedURL = "{$scheme}://{$http_host}" . '/' . $q; //LANG
 
         $site_url = $this->config['site_url'];
+        $url_query_string = explode('?', $_SERVER['REQUEST_URI'])[1];
 
         if ($this->documentIdentifier == $this->config['site_start']) {
             if ($requestedURL != $this->config['site_url']) {
