@@ -58,9 +58,9 @@ $tableprefixauto = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('012345
 $args = array_slice($argv, 1);
 
 if ( empty($args) ){
-    echo 'Install Evolution CMS?'.PHP_EOL;
-    $installYes = readline("Type 'y' to continue: ");
-    if ($installYes != 'y') return;
+    echo 'Install Evolution CMS'.PHP_EOL;
+    //$installYes = readline("Type 'y' to continue: ");
+    //if ($installYes != 'y') return;
 
     //set param manual
     $databasehost = readline($_lang['connection_screen_database_host']. ' [localhost] ');
