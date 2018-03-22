@@ -1526,7 +1526,39 @@ if ( empty($args) ){
 }
 //remove installFolder
 if ($removeInstall == 'y') {
+    removeFolder($path);
+    removeFolder($base_path.'.tx');
+    unlink($base_path.'README.md');
     echo 'Install folder deleted!'. PHP_EOL . PHP_EOL;
+}
+
+/**
+ * RemoveFolder
+ *
+ * @param string $path
+ * @return string
+ */
+function removeFolder($path)
+{
+    $dir = realpath($path);
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    $it    = new RecursiveDirectoryIterator($dir);
+    $files = new RecursiveIteratorIterator($it,
+        RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($files as $file) {
+        if ($file->getFilename() === "." || $file->getFilename() === "..") {
+            continue;
+        }
+        if ($file->isDir()) {
+            rmdir($file->getRealPath());
+        } else {
+            unlink($file->getRealPath());
+        }
+    }
+    rmdir($dir);
 }
 
 /**
