@@ -26,9 +26,9 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 if (is_file($path."../assets/cache/siteManager.php")) {
     include_once($path."../assets/cache/siteManager.php");
 }
-//if(!defined('MGR_DIR') && is_dir($path."../manager")) {
+if(!defined('MGR_DIR') && is_dir($path."../manager")) {
     define('MGR_DIR', 'manager');
-//}
+}
 
 require_once($path."lang.php");
 require_once($path.'../'.MGR_DIR.'/includes/version.inc.php');
