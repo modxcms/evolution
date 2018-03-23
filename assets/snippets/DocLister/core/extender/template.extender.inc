@@ -23,6 +23,7 @@ class template_DL_Extender extends extDocLister
      */
     private function getTemplate($name)
     {
-        return '';
+        return '@TODO: ' . $name;
     }
+
 }

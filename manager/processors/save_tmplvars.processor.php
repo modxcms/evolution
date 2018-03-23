@@ -1,12 +1,12 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_template')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $caption = $modx->db->escape($_POST['caption']);
@@ -17,13 +17,13 @@ $rank = isset ($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
 $display = $modx->db->escape($_POST['display']);
 $params = $modx->db->escape($_POST['params']);
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
-$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
-$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : null;
+$origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
+$originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
@@ -81,7 +81,7 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars);
 
         // save access permissions
-        saveTemplateAccess();
+        saveTemplateVarAccess();
         saveDocumentAccessPermissons();
 
         // invoke OnTVFormSave event
@@ -142,7 +142,7 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars, "id='{$id}'");
 
         // save access permissions
-        saveTemplateAccess();
+        saveTemplateVarAccess();
         saveDocumentAccessPermissons();
 
         // invoke OnTVFormSave event
@@ -164,7 +164,7 @@ switch ($_POST['mode']) {
             header($header);
         } else {
             $modx->unlockElement(2, $id);
-            $header = "Location: index.php?a=" . $origin . "&r=2" . ($originId != null ? '&id=' . $originId : '');
+            $header = "Location: index.php?a=" . $origin . "&r=2" . (empty($originId) ? '' : '&id=' . $originId);
             header($header);
         }
 
@@ -173,7 +173,10 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
-function saveTemplateAccess()
+/**
+ * @return void
+ */
+function saveTemplateVarAccess()
 {
     global $id, $newid;
     global $modx;

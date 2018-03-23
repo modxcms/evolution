@@ -31,6 +31,22 @@
     <td class="comment"><?php echo $_lang['udperms_allowroot_message'] ?></td>
   </tr>
 
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['email_sender_method'] ?><br><small>[(email_sender_method)]</small></td>
+    <td>
+      <label><input type="radio" name="email_sender_method" value="1" <?php echo $email_sender_method=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['auto']?></label><br />
+      <label><input type="radio" name="email_sender_method" value="0" <?php echo $email_sender_method=='0' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['use_emailsender']?></label>
+    </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['email_sender_method_message'] ?></td>
+  </tr>
   <!--for smtp-->
 
   <tr>

@@ -187,8 +187,9 @@ ul.breadcrumbs span::after { margin-left: 2em; font-family: FontAwesome; content
 /* [ SEARCHBAR ] */
 .searchbar input[type=text] { max-width: 10rem }
 /* [ WIDGETS ] */
-.widgets .card { margin-bottom: .75rem; border: 1px solid rgba(0, 0, 0, .1); border-radius: 3px; background-color: #fff; /*box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.1), 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);*/ }
-.widgets .card-header { padding: .5rem 1rem; font-size: .9rem; color: #616a73; font-weight: 700; border: none; border-bottom: 1px solid rgba(0, 0, 0, .05); background-color: #fff; }
+.widgets .card { margin-bottom: .75rem; border: 1px solid rgba(0, 0, 0, .1); border-radius: 0; background-color: #fff; -webkit-transition: box-shadow .35s; transition: box-shadow .35s; }
+.widgets .card:hover { box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.07); }
+.widgets .card-header { padding: .5rem 1rem; font-size: .9rem; color: #616a73; font-weight: 700; border-radius: 0; border: none; border-bottom: 1px solid rgba(0, 0, 0, .05); background-color: #fff; }
 .widgets .card-header .fa { font-size: .9rem }
 .widgets .card-block { padding: 0; }
 .widgets .card-block .card-block p { padding: 0 1rem }
@@ -334,3 +335,123 @@ to { opacity: 1; transform: translateY(0); }
 }
 .loginbox { -webkit-animation-name: anim-loginbox; -webkit-animation-duration: .5s; -webkit-animation-iteration-count: 1; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: forwards; -moz-animation-name: anim-loginbox; -moz-animation-duration: .5s; -moz-animation-iteration-count: 1; -moz-animation-timing-function: ease; -moz-animation-fill-mode: forwards; animation-name: anim-loginbox; animation-duration: .5s; animation-iteration-count: 1; animation-timing-function: ease; animation-fill-mode: forwards; }
 /* end loginbox animation */
+
+
+/* pmfx theme */
+
+#actions .dropdown-toggle:after {
+  display: none !important;
+}
+
+.widgets .card {
+  margin-bottom: 1rem;
+  /* border: 1px solid rgba(0,0,0,.1); */
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: 0 0.1rem 0.3rem 0 rgba(0, 0, 0, 0.075);
+}
+
+.card-header,
+.widgets .card-header {
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: none;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dark .widgets .card-header { 
+  background-color: #fafafa; 
+}
+
+.card .table.data {
+  margin-bottom: 0;
+  border-bottom-width: 0;
+}
+
+.table.data th, 
+.table.data thead td {
+  border-bottom-width: 1px;
+}
+
+.card .table.data > thead > tr:first-child td,
+.card .table.data > thead > tr:first-child th,
+.card .table.data > tbody > tr:first-child td,
+.card .table.data > tbody > tr:first-child th {
+  border-top-width: 0;
+}
+
+.table.data > tbody > tr,
+.table.data > tbody > tr:nth-child(2n),
+.widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) {
+  background-color: #fff;
+}
+.table.data > tbody > tr:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+ul.breadcrumbs {
+  margin: 0 0 1rem 0;
+  padding: .5rem 0.8rem;
+  line-height: normal;
+  font-size: .675rem;
+  color: #888;
+  border-width: 0;
+  background-image: linear-gradient(to right, rgba(0,0,0,0.04), transparent 60%);
+}
+
+ul.breadcrumbs a {
+  color: #333;
+}
+
+#settingsPane [name="site_name"],
+#settingsPane [name="emailsender"],
+#settingsPane [name="emailsubject"],
+#settingsPane [name="datepicker_offset"],
+#settingsPane [name="editor_css_path"],
+#settingsPane [name="safe_functions_at_eval"],
+#settingsPane [name="valid_hostnames"],
+#settingsPane [name="upload_files"],
+#settingsPane [name="upload_images"],
+#settingsPane [name="upload_media"],
+#settingsPane [name="upload_flash"],
+#settingsPane [name="txt_custom_contenttype"],
+#settingsPane [name="filemanager_path"],
+#settingsPane [name="rb_base_url"],
+#settingsPane [name="rb_base_dir"],
+#settingsPane [name="thumbsDir"],
+input[name="photo"],
+#range input#pids,
+input[maxlength="350"],
+textarea.mce,
+#editorRow_TinyMCE {
+  width: 100% !important;
+}
+
+#news .card-block > div,
+#security .card-block > div {
+  padding: 0 !important;
+}
+#news .card-block ul,
+#security .card-block ul {
+  padding: 0;
+  margin: 0;
+}
+#news .card-block ul li,
+#security .card-block ul li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #ebebeb;
+}
+
+ul.mmTagList li {
+  padding: 2px 8px !important;
+  border-radius: 3px !important;
+  -webkit-border-radius: 3px !important;
+  background-color: #eaeaea !important;
+  text-decoration: none !important;
+}
+ul.mmTagList li.tagSelected {
+  border-radius: 3px !important;
+  -webkit-border-radius: 3px !important;
+  background-color: #5A5E63 !important;
+}

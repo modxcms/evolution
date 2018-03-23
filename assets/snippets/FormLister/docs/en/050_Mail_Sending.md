@@ -3,6 +3,13 @@
 Form controller allows to send form data via e-mail.
 
 ## Mailer parameters
+### parseMailerParams
+Allows to use form data in mail sending parameters  (&to=\`[+user.email.value+]\` etc.).
+
+Possible values - 1, 0.
+
+Default value - 0.
+
 ### isHtml
 Allows to send e-mail in html format.
 
@@ -113,6 +120,20 @@ Sender's name for the mail sent to the form field defined address.
 
 Possible values - string.
 
+Default value - none.
+
+## ccMailConfig
+Allows to redefine mail sending parameters for the letters to the address taken from the form field ((isHtml, from, fromName, subject, replyTo, cc, bcc, noemail)).
+
+Possible values - json or php array.
+ 
+Default value - none.
+
+## autoMailConfig
+Allows to redefine mail sending parameters for the additional letters (isHtml, from, fromName, subject, replyTo, cc, bcc, noemail). 
+
+Possible values - json or php array.
+ 
 Default value - none.
 
 ## Submit protection

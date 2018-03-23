@@ -46,7 +46,6 @@ class Register extends Form
         return parent::render();
     }
 
-
     /**
      * @param string $param
      * @return array|mixed|\xNop
@@ -73,8 +72,8 @@ class Register extends Form
     public static function uniqueEmail($fl, $value)
     {
         $result = true;
-        if (!is_null($fl->user)) {
-            $fl->user->set('email', strtolower($value));
+        if (is_scalar($value) && !is_null($fl->user)) {
+            $fl->user->set('email', mb_strtolower($value));
             $result = $fl->user->checkUnique('web_user_attributes', 'email', 'internalKey');
         }
 
@@ -91,12 +90,12 @@ class Register extends Form
     public static function uniqueUsername($fl, $value)
     {
         $result = true;
-        if (!is_null($fl->user)) {
-            $fl->user->set('username', strtolower($value));
+        if (is_scalar($value) && !is_null($fl->user)) {
+            $fl->user->set('username', mb_strtolower($value));
             $result = $fl->user->checkUnique('web_users', 'username');
         }
 
-        return $result;
+        return $result ;
     }
 
     /**
@@ -111,7 +110,7 @@ class Register extends Form
         }
         if (!empty($this->forbiddenFields)) {
             $_forbidden = array_flip($this->forbiddenFields);
-            unset($_forbidden['username'],$_forbidden['password'],$_forbidden['email']);
+            unset($_forbidden['username'], $_forbidden['password'], $_forbidden['email']);
             $this->forbiddenFields = array_keys($_forbidden);
         }
 
@@ -128,32 +127,36 @@ class Register extends Form
         }
         $password = $this->getField('password');
         $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
-        $checkActivation = $this->getCFGDef('checkActivation',0);
-        if ($checkActivation) $fields['logincount'] = -1;
-        $fields['username'] = strtolower($fields['username']);
-        $fields['email'] = strtolower($fields['email']);
+        $checkActivation = $this->getCFGDef('checkActivation', 0);
+        if ($checkActivation) {
+            $fields['logincount'] = -1;
+        }
+        $fields['username'] = is_scalar($fields['username']) ? mb_strtolower($fields['username']) : '';
+        $fields['email'] = is_scalar($fields['email']) ? mb_strtolower($fields['email']) : '';
         $this->user->create($fields);
         $this->addWebUserToGroups(0, $this->config->loadArray($this->getCFGDef('userGroups')));
         $result = $this->user->save(true);
-        $this->log('Register user', array('data' => $fields, 'result' => $result));
+        $this->log('Register user', array('data' => $fields, 'result' => $result, 'log' => $this->user->getLog()));
         if (!$result) {
             $this->addMessage($this->lexicon->getMsg('register.registration_failed'));
         } else {
             $this->user->close();
             $userdata = $this->user->edit($result)->toArray();
             $this->setFields($userdata);
-            $this->setField('user.password',$password);
+            $this->setField('user.password', $password);
             $this->runPrepare('preparePostProcess');
             if ($checkActivation) {
                 $hash = md5(json_encode($userdata));
                 $uidName = $this->getCFGDef('uidName', $this->user->fieldPKName());
                 $query = http_build_query(array(
-                    $uidName   => $result,
-                    'hash' => $hash
+                    $uidName => $result,
+                    'hash'   => $hash
                 ));
-                $url = $this->getCFGDef('activateTo',$this->modx->config['site_start']);
-                $this->setField('activate.url', $this->modx->makeUrl($url, '',
-                    $query, 'full'));
+                $url = $this->getCFGDef('activateTo', $this->modx->config['site_start']);
+                $this->setField(
+                    'activate.url',
+                    $this->modx->makeUrl($url, '', $query, 'full')
+                );
             }
             parent::process();
         }
@@ -185,7 +188,7 @@ class Register extends Form
         }
         $groups = "'" . implode("','", $groups) . "'";
         $groupNames = $this->modx->db->query("SELECT `id` FROM " . $this->modx->getFullTableName('webgroup_names') . " WHERE `name` IN (" . $groups . ")");
-        $webGroups = $this->modx->db->getColumn('id',$groupNames);
+        $webGroups = $this->modx->db->getColumn('id', $groupNames);
         if ($webGroups) {
             $this->user->setUserGroups($uid, $webGroups);
         }

@@ -1,12 +1,12 @@
 <?php
-if (IN_MANAGER_MODE!="true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('delete_document')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if ($id==0) {
     $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
@@ -37,6 +37,9 @@ if (!$udperms->checkPermissions()) {
     $modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
+/**
+ * @param int $parent
+ */
 function getChildren($parent)
 {
     global $modx;
@@ -46,6 +49,7 @@ function getChildren($parent)
     global $error_page;
     global $unauthorized_page;
 
+    $parent = $modx->db->escape($parent);
     $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
         // the document has children documents, we'll need to delete those too
         while ($childid=$modx->db->getValue($rs)) {

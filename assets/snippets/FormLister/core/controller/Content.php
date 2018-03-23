@@ -156,6 +156,7 @@ class Content extends Form
                     if ($this->owner || !$this->getCFGDef('onlyUsers', 1)) {
                         $fields[$ownerField] = $this->owner;
                         $result = $this->content->create($fields)->save(true, $clearCache);
+                        $this->log('Create record', array('data' => $fields, 'result' => $result ,'log' => $this->content->getLog()));
                     }
                     if ($result) {
                         $url = '';

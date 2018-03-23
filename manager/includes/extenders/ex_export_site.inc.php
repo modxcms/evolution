@@ -5,9 +5,9 @@
  * Time: 14:24
  */
 
-if(include_once(MODX_MANAGER_PATH . 'includes/extenders/export.class.inc.php'))
-{
+if (include_once(MODX_MANAGER_PATH . 'includes/extenders/export.class.inc.php')) {
     $this->export = new EXPORT_SITE;
+
     return true;
 } else {
     return false;

@@ -1,11 +1,16 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+/**
+ * @param array $array
+ * @param string $checkKey
+ * @return array
+ */
 function array_unique_multi($array, $checkKey)
 {
     // Use the builtin if we're not a multi-dimensional array
@@ -26,6 +31,11 @@ function array_unique_multi($array, $checkKey)
     return $ret;
 }
 
+/**
+ * @param array $array
+ * @param string $key
+ * @return array
+ */
 function record_sort($array, $key)
 {
     $hash = array();
@@ -47,7 +57,7 @@ $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemnam
 $logs = $modx->db->makeArray($rs);
 ?>
     <h1>
-        <i class="fa fa-user-secret"></i><?= $_lang['mgrlog_view'] ?>
+        <?= $_style['page_manager_logs'] ?><?= $_lang['mgrlog_view'] ?>
     </h1>
 
     <div class="tab-page">
@@ -176,10 +186,10 @@ if (isset($_REQUEST['log_submit'])) {
     // get the selections the user made.
     $sqladd = array();
     if ($_REQUEST['searchuser'] != 0) {
-        $sqladd[] = "internalKey='" . intval($_REQUEST['searchuser']) . "'";
+        $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
     }
     if ($_REQUEST['action'] != 0) {
-        $sqladd[] = "action=" . intval($_REQUEST['action']);
+        $sqladd[] = "action=" . (int)$_REQUEST['action'];
     }
     if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
         $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";

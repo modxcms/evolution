@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author Anssi Rajakallio, Kari Söderholm
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Finnish
  * @package modx
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'epäonnistui!';
 $_lang["status_failed_could_not_create_database"] = 'epäonnistui - tietokantaa ei voitu luoda';
 $_lang["status_failed_database_collation_does_not_match"] = 'epäonnistui - tietokannan merkistön yhteensopivuus ongelma. Käytä "SET NAMES" tai valitse %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'epäonnistui - tietokannan taulujen etuliite on jo käytössä!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'onnistui - tietokanta valittu';
 $_lang["status_passed_database_created"] = 'onnistui - tietokanta luotu';
 $_lang["status_passed_server"] = 'onnistui - merkistöt ovat nyt käytettävissä';

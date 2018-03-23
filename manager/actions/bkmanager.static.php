@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('bk_manager')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -54,7 +54,7 @@ if ($mode == 'restore1') {
      * Perform MySQLdumper data dump
      */
     @set_time_limit(120); // set timeout limit to 2 minutes
-    $dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
+    $dumper = new Mysqldumper($dbase);
     $dumper->setDBtables($tables);
     $dumper->setDroptables((isset($_POST['droptables']) ? true : false));
     $dumpfinished = $dumper->createDump('dumpSql');
@@ -80,16 +80,12 @@ if ($mode == 'restore1') {
     $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->db->escape($modx->db->config['table_prefix']) . "%'";
     $rs = $modx->db->query($sql);
     $tables = $modx->db->getColumn('Name', $rs);
-    //$today = $modx->toDateFormat(time());
-    //$today = str_replace(array('/',' '), '-', $today);
-    //$today = str_replace(':', '', $today);
-    //$today = strtolower($today);
     $today = date('Y-m-d_H-i-s');
     global $path;
     $path = "{$modx->config['snapshot_path']}{$today}.sql";
 
     @set_time_limit(120); // set timeout limit to 2 minutes
-    $dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
+    $dumper = new Mysqldumper($dbase);
     $dumper->setDBtables($tables);
     $dumper->setDroptables(true);
     $dumpfinished = $dumper->createDump('snapshot');
@@ -508,33 +504,60 @@ include_once "footer.inc.php"; // send footer
 
 class Mysqldumper
 {
-    var $_dbtables;
-    var $_isDroptables;
-    var $database_server;
-    var $dbname;
+    /**
+     * @var array
+     */
+    public $_dbtables;
+    /**
+     * @var bool
+     */
+    public $_isDroptables;
+    /**
+     * @var string
+     */
+    public $dbname;
+    /**
+     * @var string
+     */
+    public $database_server;
 
-    function __construct($database_server, $database_user, $database_password, $dbname)
+    /**
+     * Mysqldumper constructor.
+     * @param string $dbname
+     */
+    public function __construct($dbname)
     {
         // Don't drop tables by default.
         $this->dbname = $dbname;
         $this->setDroptables(false);
     }
 
-    function setDroptables($state)
+    /**
+     * If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
+     *
+     * @param bool $state
+     */
+    public function setDroptables($state)
     {
         $this->_isDroptables = $state;
     }
 
-    // If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
-
-    function setDBtables($dbtables)
+    /**
+     * @param array $dbtables
+     */
+    public function setDBtables($dbtables)
     {
         $this->_dbtables = $dbtables;
     }
 
-    function createDump($callBack)
+    /**
+     * @param string $callBack
+     * @return bool
+     */
+    public function createDump($callBack)
     {
         global $modx;
+        $createtable = array();
 
         // Set line feed
         $lf = "\n";
@@ -578,13 +601,6 @@ class Mysqldumper
                 }
             }
             if ($callBack === 'snapshot') {
-                /*
-                switch($tblval)
-                {
-                    case $modx->db->config['table_prefix'].'event_log':
-                    case $modx->db->config['table_prefix'].'manager_log':
-                        continue 2;
-                }*/
                 if (!preg_match('@^' . $modx->db->config['table_prefix'] . '@', $tblval)) {
                     continue;
                 }
@@ -607,6 +623,7 @@ class Mysqldumper
                 $insertdump = $lf;
                 $insertdump .= "INSERT INTO `{$tblval}` VALUES (";
                 $arr = $this->object2Array($row);
+                if( ! is_array($arr)) $arr = array();
                 foreach ($arr as $key => $value) {
                     if (is_null($value)) {
                         $value = 'NULL';
@@ -646,7 +663,12 @@ class Mysqldumper
         return true;
     }
 
-    function result2Array($numinarray = 0, $resource)
+    /**
+     * @param int $numinarray
+     * @param mysqli_result $resource
+     * @return array
+     */
+    public function result2Array($numinarray = 0, $resource)
     {
         global $modx;
         $array = array();
@@ -657,16 +679,20 @@ class Mysqldumper
         return $array;
     }
 
-    // Private function object2Array.
-
-    function isDroptables()
+    /**
+     * @return bool
+     */
+    public function isDroptables()
     {
         return $this->_isDroptables;
     }
 
-    // Private function loadObjectList.
-
-    function loadObjectList($key = '', $resource)
+    /**
+     * @param string $key
+     * @param mysqli_result $resource
+     * @return array
+     */
+    public function loadObjectList($key = '', $resource)
     {
         global $modx;
         $array = array();
@@ -681,9 +707,11 @@ class Mysqldumper
         return $array;
     }
 
-    // Private function result2Array.
-
-    function object2Array($obj)
+    /**
+     * @param stdClass $obj
+     * @return array|null
+     */
+    public function object2Array($obj)
     {
         $array = null;
         if (is_object($obj)) {
@@ -700,10 +728,15 @@ class Mysqldumper
     }
 }
 
+/**
+ * @param string $source
+ * @param string $result_code
+ */
 function import_sql($source, $result_code = 'import_ok')
 {
     global $modx, $e;
 
+    $rs = null;
     if ($modx->getLockedElements() !== array()) {
         $modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
     }
@@ -729,11 +762,14 @@ function import_sql($source, $result_code = 'import_ok')
 
     $modx->clearCache();
 
-    $_SESSION['last_result'] = $modx->db->makeArray($rs);
-
+    $_SESSION['last_result'] = ($rs !== null) ? null : $modx->db->makeArray($rs);
     $_SESSION['result_msg'] = $result_code;
 }
 
+/**
+ * @param string $dumpstring
+ * @return bool
+ */
 function dumpSql(&$dumpstring)
 {
     global $modx;
@@ -753,6 +789,10 @@ function dumpSql(&$dumpstring)
     return true;
 }
 
+/**
+ * @param string $dumpstring
+ * @return bool
+ */
 function snapshot(&$dumpstring)
 {
     global $path;
@@ -760,6 +800,9 @@ function snapshot(&$dumpstring)
     return true;
 }
 
+/**
+ * @return array
+ */
 function getSettings()
 {
     global $modx;
@@ -781,6 +824,9 @@ function getSettings()
     return $settings;
 }
 
+/**
+ * @param array $settings
+ */
 function restoreSettings($settings)
 {
     global $modx;
@@ -791,6 +837,11 @@ function restoreSettings($settings)
     }
 }
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePlaceholder($tpl = '', $ph = array())
 {
     if (empty($ph) || empty($tpl)) {

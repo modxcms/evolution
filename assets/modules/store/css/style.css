@@ -230,6 +230,7 @@ nav ul li {
 
 .mh {
   min-height: 150px;
+  overflow:hidden;
 }
 
 .catalog_item {

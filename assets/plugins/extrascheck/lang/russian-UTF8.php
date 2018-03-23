@@ -13,7 +13,7 @@
 //
 
 $_oec_lang['title'] = 'Проверка совместимости дополнений';
-$_oec_lang['isoutdated'] = '<b> устаревший </ b> и больше не совместим с';
+$_oec_lang['isoutdated'] = '<b> устаревший </b> и больше не совместим с';
 $_oec_lang['please_update'] = 'Обновить';
 $_oec_lang['please_delete'] = 'Пожалуйста, удалите';
 $_oec_lang["to_latest"] = 'до последней версии';

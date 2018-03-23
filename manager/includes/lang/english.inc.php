@@ -396,7 +396,7 @@ $_lang["help"] = 'Help';
 $_lang["help_msg"] = '<p>You can obtain free community support by <a href="http://forums.modx.com/" target="_blank">visiting the EVO Forums</a>. There is also a growing body of <a href="http://evolution-docs.com" target="_blank">EVO Documentation and Guides</a> that touch on virtually every aspect of EVO.</p><p>We are planning to offer commercial support services for EVO as well. Please <a href="mailto:dmi3yy@evo.im?subject=EVO Commercial Support Inquiry">email us if you\'re interested</a>.</p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Hide Site Tree';
-$_lang["home"] = 'Home';
+$_lang["home"] = 'Dashboard';
 $_lang["htmlsnippet"] = 'Chunk';
 $_lang["htmlsnippets"] = 'Chunks';
 $_lang["htmlsnippet_desc"] = 'Description';
@@ -1478,3 +1478,8 @@ $_lang["viewopts_radio_inline"] = 'Inline';
 $_lang["viewopts_radio_flex"] = 'Flex';
 $_lang["viewopts_fontsize"] = 'Font-Size';
 $_lang["viewopts_cb_alltabs"] = 'All Tabs';
+
+$_lang['email_sender_method'] = 'The envelope sender of the message';
+$_lang['auto'] = 'Auto-detect';
+$_lang['use_emailsender'] = 'Use [(emailsender)] value';
+$_lang['email_sender_method_message'] = 'The envelope sender of the message. This will usually be turned into a Return-Path header by the receiver, and is the address that bounces will be sent to. Auto-detect will work in most cases.';

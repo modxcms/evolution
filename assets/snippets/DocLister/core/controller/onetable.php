@@ -33,8 +33,6 @@ class onetableDocLister extends DocLister
     {
         if ($this->checkExtender('paginate')) {
             $this->extender['paginate']->init($this);
-        } else {
-            $this->config->setConfig(array('start' => 0));
         }
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();
@@ -85,13 +83,19 @@ class onetableDocLister extends DocLister
                         $item = $extUser->setUserData($item); //[+user.id.createdby+], [+user.fullname.publishedby+], [+dl.user.publishedby+]....
                     }
 
-                    $item[$this->getCFGDef("sysKey", "dl") . '.summary'] = $extSummary ? $this->getSummary($item,
-                        $extSummary) : '';
+                    $item[$this->getCFGDef("sysKey", "dl") . '.summary'] = $extSummary ? $this->getSummary(
+                        $item,
+                        $extSummary
+                    ) : '';
 
-                    $item = array_merge($item,
-                        $sysPlh); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
-                    $item[$this->getCFGDef("sysKey",
-                        "dl") . '.iteration'] = $i; //[+iteration+] - Number element. Starting from zero
+                    $item = array_merge(
+                        $item,
+                        $sysPlh
+                    ); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
+                    $item[$this->getCFGDef(
+                        "sysKey",
+                        "dl"
+                    ) . '.iteration'] = $i; //[+iteration+] - Number element. Starting from zero
 
                     $date = $this->getCFGDef('dateSource', 'pub_date');
                     if (isset($item[$date])) {
@@ -124,8 +128,11 @@ class onetableDocLister extends DocLister
                     }
                     $tmp = $this->parseChunk($this->renderTPL, $item);
                     if ($this->getCFGDef('contentPlaceholder', 0) !== 0) {
-                        $this->toPlaceholders($tmp, 1,
-                            "item[" . $i . "]"); // [+item[x]+] – individual placeholder for each iteration documents on this page
+                        $this->toPlaceholders(
+                            $tmp,
+                            1,
+                            "item[" . $i . "]"
+                        ); // [+item[x]+] – individual placeholder for each iteration documents on this page
                     }
                     $out .= $tmp;
                     if (next($this->_docs) !== false) {
@@ -167,7 +174,6 @@ class onetableDocLister extends DocLister
          */
         $extE = $this->getExtender('e', true, true);
         foreach ($data as $num => $row) {
-
             switch (true) {
                 case ((array('1') == $fields || in_array('summary', $fields)) && $extSummary):
                     $row['summary'] = $this->getSummary($row, $extSummary, 'introtext');
@@ -183,7 +189,7 @@ class onetableDocLister extends DocLister
                             }
                         }
                     }
-                //nobreak    
+                //nobreak
             }
 
             if ($extE && $tmp = $extE->init($this, array('data' => $row))) {
@@ -214,15 +220,17 @@ class onetableDocLister extends DocLister
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $from = $this->table . " " . $this->_filters['join'];
             $where = $this->getCFGDef('addWhereList', '');
-            
-           	//====== block added by Dreamer to enable filters ======
+
+            //====== block added by Dreamer to enable filters ======
             $where = ($where ? $where . ' AND ' : '') . $this->_filters['where'];
             $where = sqlHelper::trimLogicalOp($where);
-        	//------- end of block -------
+            //------- end of block -------
 
-            
+
             if ($where != '') {
                 $where = array($where);
+            } else {
+                $where = array();
             }
             if ($sanitarInIDs != "''") {
                 $where[] = "{$this->getPK()} IN ({$sanitarInIDs})";
@@ -230,7 +238,10 @@ class onetableDocLister extends DocLister
 
             if (!empty($where)) {
                 $where = "WHERE " . implode(" AND ", $where);
+            } else {
+                $where = '';
             }
+
             $limit = $this->LimitSQL($this->getCFGDef('queryLimit', 0));
             $fields = $this->getCFGDef('selectFields', '*');
             $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
@@ -256,13 +267,13 @@ class onetableDocLister extends DocLister
         $from = $this->table . " " . $this->_filters['join'];
         $tmpWhere = $this->getCFGDef('addWhereList', '');
         $tmpWhere = sqlHelper::trimLogicalOp($tmpWhere);
-        
-    	//====== block added by Dreamer to enable filters ======
+
+        //====== block added by Dreamer to enable filters ======
         $tmpWhere = ($tmpWhere ? $tmpWhere . ' AND ' : '') . $this->_filters['where'];
         $tmpWhere = sqlHelper::trimLogicalOp($tmpWhere);
-	    //------- end of block -------
-        
-        
+        //------- end of block -------
+
+
         if (!empty($tmpWhere)) {
             $where[] = $tmpWhere;
         }
@@ -312,7 +323,6 @@ class onetableDocLister extends DocLister
             while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item[$pk]] = $item;
             }
-
         }
 
         return $out;
@@ -328,12 +338,12 @@ class onetableDocLister extends DocLister
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $from = $this->table . " " . $this->_filters['join'];
             $where = $this->getCFGDef('addWhereList', '');
-            
-        	//====== block added by Dreamer ======
+
+            //====== block added by Dreamer ======
             $where = ($where ? $where . ' AND ' : '') . $this->_filters['where'];
             $where = sqlHelper::trimLogicalOp($where);
-	        //------- end of block -------
-            
+            //------- end of block -------
+
             if ($where != '') {
                 $where = array($where);
             } else {
@@ -385,7 +395,7 @@ class onetableDocLister extends DocLister
     }
 
     /**
-     * @param string $id
+     * @param string|array $id
      * @return array
      */
     public function getChildrenFolder($id)

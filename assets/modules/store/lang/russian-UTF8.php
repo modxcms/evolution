@@ -35,6 +35,12 @@ $_Lang['s2_1_up'] = "По убыванию";
 $_Lang['s2_2_down'] = "Возрастание";
 $_Lang['search'] = "Поиск по категории: ";
 
+/* Installation by file-upload */
+$_Lang['install_file'] = "Установка из архива";
+$_Lang['choose_file_msg'] = "Выберите файл";
+$_Lang['install_file_btn'] = "Установить";
+$_Lang['install_file_success'] = "Установка завершена";
+
 /* faq */
 $_Lang['faq'] = '
 <li><a href="http://extras.evolution-cms.com/ru/faq/whatfor.html" target="_blank">Зачем свой репозиторий</a></li>

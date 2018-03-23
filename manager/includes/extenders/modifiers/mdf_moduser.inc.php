@@ -1,5 +1,5 @@
 <?php
-$userid = intval($value);
+$userid = (int)$value;
 if (!isset($modx->filter->cache['ui'][$userid])) {
     if ($userid < 0) $user = $modx->getWebUserInfo(abs($userid));
     else             $user = $modx->getUserInfo($userid);

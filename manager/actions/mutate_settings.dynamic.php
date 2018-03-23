@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang['error_no_privileges']);
@@ -60,7 +60,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<form name="settings" action="index.php?a=30" method="post">
 
 		<h1>
-			<i class="fa fa-sliders"></i><?php echo $_lang['settings_title']; ?>
+			<?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>
 		</h1>
 
 		<?= $_style['actionbuttons']['dynamic']['save'] ?>

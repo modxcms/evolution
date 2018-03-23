@@ -96,6 +96,9 @@ abstract class Core
     protected $gpc_seed = '';
     protected $gpc_fields = array();
 
+    protected $plhCache = array();
+
+    protected $DLTemplate = null;
 
     /**
      * Core constructor.
@@ -121,6 +124,9 @@ abstract class Core
             'langDir' => 'assets/snippets/FormLister/core/lang/',
             'lang'    => $this->getCFGDef('lang', $this->modx->config['manager_language'])
         ));
+        $this->DLTemplate = \DLTemplate::getInstance($modx);
+        $this->DLTemplate->setTemplatePath($this->getCFGDef('templatePath'));
+        $this->DLTemplate->setTemplateExtension($this->getCFGDef('templateExtension'));
         $this->formid = $this->getCFGDef('formid');
         switch (strtolower($this->getCFGDef('formMethod', 'post'))) {
             case 'post':
@@ -164,8 +170,11 @@ abstract class Core
             $this->config->loadArray($this->getCFGDef('allowedFields')));
         $this->forbiddenFields = array_merge($this->forbiddenFields,
             $this->config->loadArray($this->getCFGDef('forbiddenFields')));
-        $this->emptyFormControls = array_merge($this->emptyFormControls,
-            $this->config->loadArray($this->getCFGDef('emptyFormControls'), ''));
+        $this->emptyFormControls = array_merge(
+            $this->emptyFormControls,
+            $this->config->loadArray($this->getCFGDef('emptyFormControls'),
+            ''
+        ));
         $this->setRequestParams();
         $this->setExternalFields($this->getCFGDef('defaultsSources', 'array'));
         $this->renderTpl = $this->getCFGDef('formTpl'); //Шаблон по умолчанию
@@ -201,15 +210,16 @@ abstract class Core
                     }
                     break;
                 //Массив значений указывается в произвольном параметре
-                case 'param': {
-                    if (!empty($_source[1])) {
-                        $fields = $this->config->loadArray($this->getCFGDef($_source[1]));
-                        if (isset($_source[2])) {
-                            $prefix = $_source[2];
+                case 'param':
+                    {
+                        if (!empty($_source[1])) {
+                            $fields = $this->config->loadArray($this->getCFGDef($_source[1]));
+                            if (isset($_source[2])) {
+                                $prefix = $_source[2];
+                            }
                         }
+                        break;
                     }
-                    break;
-                }
                 //Массив значений указывается в параметре сессии
                 case 'session':
                     if (isset($_SESSION[$_source[1]]) && !empty($_source[1]) && is_array($_SESSION[$_source[1]])) {
@@ -223,8 +233,9 @@ abstract class Core
                 case 'plh':
                     if (!empty($_source[1])) {
                         $fields = array();
-                        $keys = explode(',', $source[1]);
+                        $keys = explode(',', $_source[1]);
                         foreach ($keys as $key) {
+                            $key = trim($key);
                             if (isset($this->modx->placeholders[$key])) {
                                 $fields[$key] = $this->modx->placeholders[$key];
                             }
@@ -254,8 +265,9 @@ abstract class Core
                 case 'cookie':
                     if (!empty($_source[1])) {
                         $fields = array();
-                        $keys = explode(',', $source[1]);
+                        $keys = explode(',', $_source[1]);
                         foreach ($keys as $key) {
+                            $key = trim($key);
                             if (isset($_COOKIE[$key])) {
                                 $fields[$key] = $_COOKIE[$key];
                             }
@@ -413,15 +425,19 @@ abstract class Core
      */
     public function prerenderForm($convertArraysToStrings = false)
     {
-        $plh = array_merge(
-            $this->fieldsToPlaceholders($this->getFormData('fields'), 'value',
-                $this->getFormData('status') || $convertArraysToStrings),
-            $this->controlsToPlaceholders(),
-            $this->errorsToPlaceholders(),
-            array('form.messages' => $this->renderMessages())
-        );
+        if (empty($this->plhCache) || !$convertArraysToStrings) {
+            $this->plhCache = array_merge(
+                $this->fieldsToPlaceholders(
+                    $this->getFormData('fields'), 'value',
+                    $this->getFormData('status') || $convertArraysToStrings
+                ),
+                $this->controlsToPlaceholders(),
+                $this->errorsToPlaceholders(),
+                array('form.messages' => $this->renderMessages())
+            );
+        }
 
-        return $plh;
+        return $this->plhCache;
     }
 
     /**
@@ -431,24 +447,31 @@ abstract class Core
      */
     public function renderForm()
     {
-        $api = $this->getCFGDef('api', 0);
-        $plh = $this->getCFGDef('skipPrerender', 0) ? $this->getFormData('fields') : $this->prerenderForm();
-        $this->log('Render output', array('template' => $this->renderTpl, 'data' => $plh));
-        $form = $this->parseChunk($this->renderTpl, $plh);
+        $api = (int)$this->getCFGDef('api', 0);
+        $data = $this->getFormData();
+        unset($data['files']);
         /*
-         * Если api = 0, то возвращается шаблон
-         * Если api = 1, то возвращаются данные формы
-         * Если api = 2, то возвращаются данные формы и шаблон
-         */
-        if (!$api) {
-            $out = $form;
+        * Если api = 0, то возвращается шаблон
+        * Если api = 1, то возвращаются данные формы
+        * Если api = 2, то возвращаются данные формы и шаблон
+        */
+        if ($api == 1) {
+            $out = $data;
         } else {
-            $out = $this->getFormData();
-            if ($api == 2) {
+            $plh = $this->getCFGDef('skipPrerender', 0) ? $this->getFormData('fields') : $this->prerenderForm($this->getFormStatus());
+            $this->log('Render output', array('template' => $this->renderTpl, 'data' => $plh));
+            $form = $this->parseChunk($this->renderTpl, $plh);
+            if (!$api) {
+                $out = $form;
+            } else {
+                $out = $data;
                 $out['output'] = $form;
             }
-            $out = json_encode($out);
         }
+        if ($api) {
+            $out = $this->getCFGDef('apiFormat', 'json') == 'json' ? json_encode($out) : $out;
+        }
+
         $this->log('Output', $out);
 
         return $out;
@@ -542,7 +565,10 @@ abstract class Core
                     $message = $description;
                 }
                 if (method_exists($validator, $rule)) {
-                    $result = call_user_func_array(array($validator, $rule), $params);
+                    $result = call_user_func_array(
+                        array($validator, $rule),
+                        $params
+                    );
                 } else {
                     if (isset($description['function'])) {
                         $rule = $description['function'];
@@ -612,12 +638,13 @@ abstract class Core
 
     /**
      * Возвращает значение поля из formData
-     * @param $field
-     * @return string
+     * @param string $field
+     * @param mixed $default
+     * @return mixed
      */
-    public function getField($field)
+    public function getField($field, $default = '')
     {
-        return \APIhelpers::getkey($this->formData['fields'], $field);
+        return \APIhelpers::getkey($this->formData['fields'], $field, $default);
     }
 
     /**
@@ -630,6 +657,7 @@ abstract class Core
     {
         if ($value !== '' || $this->getCFGDef('allowEmptyFields', 1)) {
             $this->formData['fields'][$field] = $value;
+            $this->plhCache = array();
         }
 
         return $this;
@@ -643,6 +671,7 @@ abstract class Core
     public function setPlaceholder($placeholder, $value)
     {
         $this->placeholders[$placeholder] = $value;
+        $this->plhCache = array();
 
         return $this;
     }
@@ -717,18 +746,35 @@ abstract class Core
         if (is_array($fields)) {
             $plh = $fields;
             $sanitarTagFields = $this->getRemoveGpcFields();
+            $defaultSplitter = $this->getCFGDef('arraySplitter', '; ');
             foreach ($fields as $field => $value) {
-                if ($split && is_array($value)) {
-                    $arraySplitter = $this->getCFGDef($field . '.arraySplitter',
-                        $this->getCFGDef('arraySplitter', '; '));
-                    $value = implode($arraySplitter, $value);
-                }
-                if (in_array($field, $sanitarTagFields)) {
-                    $value = \APIhelpers::sanitarTag($value);
+                $sanitizeTags = in_array($field, $sanitarTagFields);
+                if (is_array($value)) {
+                    foreach ($value as $key => &$_value) {
+                        if (empty($_value) || !is_scalar($_value)) {
+                            unset($value[$key]);
+                            continue;
+                        }
+                        if ($sanitizeTags) {
+                            $_value = \APIhelpers::sanitarTag($_value);
+                        }
+                        $_value = \APIhelpers::e($_value);
+                    }
+                    unset($_value);
+                    if ($split) {
+                        $arraySplitter = $this->getCFGDef($field . '.arraySplitter',
+                            $defaultSplitter);
+                        $value = implode($arraySplitter, $value);
+                    }
+                } else {
+                    if ($sanitizeTags) {
+                        $value = \APIhelpers::sanitarTag($value);
+                    }
+                    $value = \APIhelpers::e($value);
                 }
                 $field = array($field, $suffix);
                 $field = implode('.', array_filter($field));
-                $plh[$field] = \APIhelpers::e($value);
+                $plh[$field] = $value;
             }
         }
         if (!empty($this->placeholders)) {
@@ -798,6 +844,7 @@ abstract class Core
         $rules = $this->getCFGDef($param);
         if (empty($rules)) {
             $this->log('No validation rules defined');
+
             return array();
         }
         $rules = $this->config->loadArray($rules, '');
@@ -815,11 +862,18 @@ abstract class Core
     public function renderMessages()
     {
         $out = '';
-        $formMessages = $this->getFormData('messages');
-        $formErrors = $this->getFormData('errors');
-
-        $requiredMessages = $errorMessages = array();
-        if ($formErrors) {
+        $wrapper = $this->getCFGDef('messagesTpl', '@CODE:<div class="form-messages">[+messages+]</div>');
+        $formMessages = array_filter($this->getFormData('messages'));
+        $plh = array();
+        $plh['messages'] = $this->renderMessagesGroup(
+            $formMessages,
+            'messagesOuterTpl',
+            'messagesSplitter'
+        );
+        $renderErrors = strpos($wrapper, '[+errors+]') !== false || strpos($wrapper, '[+required+]') !== false;
+        if ($renderErrors) {
+            $formErrors = array_filter($this->getFormData('errors'));
+            $requiredMessages = $errorMessages = array();
             foreach ($formErrors as $field => $error) {
                 $type = key($error);
                 if ($type == 'required') {
@@ -828,26 +882,23 @@ abstract class Core
                     $errorMessages[] = $error[$type];
                 }
             }
+            if (!empty($requiredMessages)) {
+                $plh['required'] = $this->renderMessagesGroup(
+                    $requiredMessages,
+                    'messagesRequiredOuterTpl',
+                    'messagesRequiredSplitter'
+                );
+            }
+            if (!empty($errorMessages)) {
+                $plh['errors'] = $this->renderMessagesGroup(
+                    $errorMessages,
+                    'messagesErrorOuterTpl',
+                    'messagesErrorSplitter'
+                );
+            }
         }
-        $wrapper = $this->getCFGDef('messagesTpl', '@CODE:<div class="form-messages">[+messages+]</div>');
-        $formMessages = array_filter($formMessages);
-        $formErrors = array_filter($formErrors);
-        if (!empty($formMessages) || !empty($formErrors)) {
-            $out = $this->parseChunk($wrapper,
-                array(
-                    'messages' => $this->renderMessagesGroup(
-                        $formMessages,
-                        'messagesOuterTpl',
-                        'messagesSplitter'),
-                    'required' => $this->renderMessagesGroup(
-                        $requiredMessages,
-                        'messagesRequiredOuterTpl',
-                        'messagesRequiredSplitter'),
-                    'errors'   => $this->renderMessagesGroup(
-                        $errorMessages,
-                        'messagesErrorOuterTpl',
-                        'messagesErrorSplitter'),
-                ));
+        if (!empty($plh['messages']) || !empty($plh['errors']) || !empty($plh['required'])) {
+            $out = $this->parseChunk($wrapper, $plh);
         }
 
         return $out;
@@ -881,17 +932,14 @@ abstract class Core
     {
         $parseDocumentSource = $parseDocumentSource || $this->getCFGDef('parseDocumentSource', 0);
         $rewriteUrls = $this->getCFGDef('rewriteUrls', 1);
-        $DLTemplate = \DLTemplate::getInstance($this->modx)
-            ->setTemplatePath($this->getCFGDef('templatePath'))
-            ->setTemplateExtension($this->getCFGDef('templateExtension'))
-            ->setTwigTemplateVars(array(
-                    'FormLister' => $this,
-                    'errors'     => $this->getFormData('errors'),
-                    'messages'   => $this->getFormData('messages'),
-                    'plh'        => $this->placeholders
-                )
-            );
-        $out = $DLTemplate->parseChunk($name, $data, $parseDocumentSource);
+        $this->DLTemplate->setTwigTemplateVars(array(
+                'FormLister' => $this,
+                'errors'     => $this->getFormData('errors'),
+                'messages'   => $this->getFormData('messages'),
+                'plh'        => $this->placeholders
+            )
+        );
+        $out = $this->DLTemplate->parseChunk($name, $data, $parseDocumentSource);
         if ($this->lexicon->isReady()) {
             $out = $this->lexicon->parseLang($out);
         }
@@ -1219,7 +1267,6 @@ abstract class Core
     }
 
     /**
-     * @param array $fields
      * @return array
      */
     public function getRemoveGpcFields()

@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 ?>
 <p></p>
 <h1>EVOLUTION CMS 1.3.0</h1>
@@ -18,7 +20,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li>Correction of errors and stability
     </li>
     <li>Widgets for the main page (OnManagerWelcomeHome)
-    </li>    
+    </li>
     <li>Change the top menu (OnManagerMenuPrerender)
     </li>
     <li>Document tree changes (OnManagerNodePrerender)
@@ -33,7 +35,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li>Easier and faster
     </li>
     <li>Context menu for elements
-    </li>    
+    </li>
     <li>Ajax search in the admin area
     </li>
     <li>Remembering paths in admin panel

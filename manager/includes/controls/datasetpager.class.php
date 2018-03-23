@@ -12,22 +12,26 @@ $__DataSetPagerCnt = 0;
 
 class DataSetPager {
 
-	var $ds; // datasource
-	var $pageSize;
-	var $pageNumber;
-	var $rows;
-	var $pager;
-	var $id;
+	public $ds; // datasource
+    public $pageSize;
+    public $pageNumber;
+    public $rows;
+    public $pager;
+    public $id;
 
-	// normal page 
-	var $pageStyle;
-	var $pageClass;
+	// normal page
+    public $pageStyle;
+    public $pageClass;
 
 	// selected page
-	var $selPageStyle;
-	var $selPageClass;
+    public $selPageStyle;
+    public $selPageClass;
+    public $renderRowFnc;
+    public $renderRowFncArgs;
+    public $renderPagerFnc;
+    public $renderPagerFncArgs;
 
-	function __construct($id, $ds, $pageSize = 10, $pageNumber = -1) {
+    public function __construct($id, $ds, $pageSize = 10, $pageNumber = -1) {
 		global $_PAGE; // use view state object
 
 		global $__DataSetPagerCnt;
@@ -57,35 +61,35 @@ class DataSetPager {
 		$this->pager = '';
 	}
 
-	function getRenderedPager() {
+    public function getRenderedPager() {
 		return $this->pager;
 	}
 
-	function getRenderedRows() {
+    public function getRenderedRows() {
 		return $this->rows;
 	}
 
-	function setDataSource($ds) {
+    public function setDataSource($ds) {
 		$this->ds = $ds;
 	}
 
-	function setPageSize($ps) {
+    public function setPageSize($ps) {
 		$this->pageSize = $ps;
 	}
 
-	function setRenderRowFnc($fncName, $args = "") {
+    public function setRenderRowFnc($fncName, $args = "") {
 		$this->renderRowFnc = &$fncName;
 		$this->renderRowFncArgs = $args;    // extra agruments
 
 
 	}
 
-	function setRenderPagerFnc($fncName, $args = "") {
+    public function setRenderPagerFnc($fncName, $args = "") {
 		$this->renderPagerFnc = $fncName;
 		$this->renderPagerFncArgs = $args;    // extra agruments
 	}
 
-	function render() {
+    public function render() {
 		global $modx, $_PAGE;
 
 		$isDataset = $modx->db->isResult($this->ds);
@@ -94,7 +98,7 @@ class DataSetPager {
 			$this->selPageStyle = "font-weight:bold";
 		}
 
-		// get total number of rows		
+		// get total number of rows
 		$tnr = ($isDataset) ? $modx->db->getRecordCount($this->ds) : count($this->ds);
 
 		// render: no records found
@@ -128,6 +132,7 @@ class DataSetPager {
 
 		// render pager : renderPagerFnc($cuurentPage,$pagerNumber,$arguments="");
 		if($tp > 1) {
+		    $url = '';
 			$fnc = $this->renderPagerFnc;
 			$args = $this->renderPagerFncArgs;
 			if(!isset($fnc)) {

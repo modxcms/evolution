@@ -171,4 +171,5 @@ abstract class AbstractController
 
         return isset($modx_lang_attribute) ? $modx_lang_attribute : null;
     }
+
 }

@@ -1,13 +1,13 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('view_eventlog')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get id
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $ds = $modx->db->select('el.*, IFNULL(wu.username,mu.username) as username', $modx->getFullTableName("event_log") . " el 
 		LEFT JOIN " . $modx->getFullTableName("manager_users") . " mu ON mu.id=el.user AND el.usertype=0

@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('change_password')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -20,7 +20,7 @@ if(!$modx->hasPermission('change_password')) {
 	}
 </script>
 
-<h1><?php echo $_lang['change_password'] ?></h1>
+<h1><?php echo $_style['page_change_password']; echo $_lang['change_password'] ?></h1>
 
 <?php echo $_style['actionbuttons']['dynamic']['save'] ?>
 

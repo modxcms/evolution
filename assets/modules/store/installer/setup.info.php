@@ -1,8 +1,10 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+}
 
-//:: MODx Installer Setup file 
+//:: MODx Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
 require_once(MGR.'/includes/version.inc.php');
 $installPath = MODX_BASE_PATH .'assets/cache/store/install';
@@ -110,7 +112,7 @@ if(is_dir($snippetPath) && is_readable($snippetPath)) {
             continue;
         }
         $params = parse_docblock($snippetPath, $tplfile);
-	
+
         if(is_array($params) && count($params) > 0) {
             $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
             $ms[] = array(
@@ -147,7 +149,7 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
                 $params['modx_category'],
                 $params['legacy_names'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                intval($params['disabled'])
+                (int)$params['disabled']
             );
         }
     }
@@ -171,7 +173,7 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
                 "$modulePath/{$params['filename']}",
                 $params['properties'],
                 $params['guid'],
-                intval($params['shareparams']),
+                (int)$params['shareparams'],
                 $params['modx_category'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
             );

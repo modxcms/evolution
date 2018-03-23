@@ -75,14 +75,15 @@ if (!call_user_func($reflectValidator, $tmpGet)) {
 }
 if ($activeReflect) {
     $v = $modx->db->escape($activeReflect);
-    if ($reflectSource == 'tv') {
+    if ($reflectSource === 'tv') {
         $params['tvSortType'] = 'TVDATETIME';
-        $params['addWhereList'] = "DATE_FORMAT(STR_TO_DATE(`dltv_" . $reflectField . "_1`.`value`,'%d-%m-%Y %H:%i:%s'), '" . $sqlDateFormat . "')='" . $v . "'";
+        $query = 'STR_TO_DATE(`dltv_' . $reflectField . "_1`.`value`, '%d-%m-%Y %H:%i:%s')";
     } else {
-        $params['addWhereList'] = "DATE_FORMAT(FROM_UNIXTIME(" . $reflectField . "), '" . $sqlDateFormat . "')='" . $v . "'";
+        $query = 'FROM_UNIXTIME(' . $reflectField . ')';
     }
+    $params['addWhereList'] = 'DATE_FORMAT(' . $query . ", '" . $sqlDateFormat . "')='" . $v . "'";
 } else {
-    if ($reflectSource == 'tv') {
+    if ($reflectSource === 'tv') {
         $params['tvSortType'] = 'TVDATETIME';
     }
 }

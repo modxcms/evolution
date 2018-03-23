@@ -1,12 +1,14 @@
 <?php
-/** 
+/**
  * Message Quit Template
- * 
+ *
  */
-if(IN_MANAGER_MODE!="true" && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+if(( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) && IN_PARSER_MODE!="true") {
+    die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+}
 
 $parsedMessageString = "
-<html><head><title>MODX Content Manager $version &raquo; $release_date</title>
+<html><head><title>EVO Content Manager $version &raquo; $release_date</title>
 <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
 <script type='text/javascript'>
 	function copyToClip()
@@ -91,5 +93,3 @@ $parsedMessageString .= "</tr>";
 
 $parsedMessageString .= "</table>";
 $parsedMessageString .= "</body></html>";
-
-?>

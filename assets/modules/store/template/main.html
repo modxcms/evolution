@@ -41,6 +41,19 @@
                             <div class="category_list">
                             </div>
                         </div>
+                        <div class="box mh">
+                            <h4>[+install_file+]:</h4>
+                            <form id="install_file_form" method="post" enctype="multipart/form-data">
+                                <label>[+choose_file_msg+]
+                                    <input type="file" id="install_file" name="install_file" value="">
+                                </label>
+                                <button id="install_file_btn" type="button">[+install_file_btn+]</button>
+                                <input type="hidden" name="action" value="install_file">
+                                <input type="hidden" name="method" value="fast">
+                            </form>
+                            <progress id="install_file_prg" style="display:none"></progress>
+                            <div id="install_file_resp"></div>
+                        </div>
                         <div class="box mh" id="login">
                             <h4>[+enter_in_own_repository+]:</h4>
                             <div class="cart_list">
