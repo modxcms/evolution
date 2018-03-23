@@ -4,15 +4,8 @@
  * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
  */
 
+$self = 'install/cli-install.php';
 $path = dirname(__FILE__) . '/';
-
-/*
-$autoloader = realpath(__DIR__.'/../vendor/autoload.php');
-if (file_exists($autoloader) && is_readable($autoloader)) {
-    include_once($autoloader);
-}*/
-
-$self = 'install/index.php';
 $base_path = str_replace($self,'',str_replace('\\','/', __FILE__));
 define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
@@ -23,15 +16,15 @@ require_once($path."functions.php");
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
-if (is_file($path."../assets/cache/siteManager.php")) {
-    include_once($path."../assets/cache/siteManager.php");
+if (is_file($base_path."assets/cache/siteManager.php")) {
+    include_once($base_path."assets/cache/siteManager.php");
 }
-if(!defined('MGR_DIR') && is_dir($path."../manager")) {
+if(!defined('MGR_DIR') && is_dir($base_path."manager")) {
     define('MGR_DIR', 'manager');
 }
 
 require_once($path."lang.php");
-require_once($path.'../'.MGR_DIR.'/includes/version.inc.php');
+require_once($base_path.MGR_DIR.'/includes/version.inc.php');
 
 $moduleName = "EVO";
 $moduleVersion = $modx_branch.' '.$modx_version;
@@ -962,10 +955,10 @@ $confph['table_prefix']       = $table_prefix;
 $confph['lastInstallTime']    = time();
 $confph['site_sessionname']   = $site_sessionname;
 
-$configString = file_get_contents('config.inc.tpl');
+$configString = file_get_contents($path.'config.inc.tpl');
 $configString = parse($configString, $confph);
 
-$filename = $path.'../'.MGR_DIR.'/includes/config.inc.php';
+$filename = $base_path.MGR_DIR.'/includes/config.inc.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
     $configFileFailed = true;
@@ -1533,7 +1526,39 @@ if ( empty($args) ){
 }
 //remove installFolder
 if ($removeInstall == 'y') {
+    removeFolder($path);
+    removeFolder($base_path.'.tx');
+    unlink($base_path.'README.md');
     echo 'Install folder deleted!'. PHP_EOL . PHP_EOL;
+}
+
+/**
+ * RemoveFolder
+ *
+ * @param string $path
+ * @return string
+ */
+function removeFolder($path)
+{
+    $dir = realpath($path);
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    $it    = new RecursiveDirectoryIterator($dir);
+    $files = new RecursiveIteratorIterator($it,
+        RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($files as $file) {
+        if ($file->getFilename() === "." || $file->getFilename() === "..") {
+            continue;
+        }
+        if ($file->isDir()) {
+            rmdir($file->getRealPath());
+        } else {
+            unlink($file->getRealPath());
+        }
+    }
+    rmdir($dir);
 }
 
 /**
