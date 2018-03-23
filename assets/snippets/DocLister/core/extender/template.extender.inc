@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Template extender for DocLister
  *
@@ -27,6 +23,7 @@ class template_DL_Extender extends extDocLister
      */
     private function getTemplate($name)
     {
-        return '';
+        return '@TODO: ' . $name;
     }
+
 }

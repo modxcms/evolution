@@ -4,11 +4,11 @@ include_once(MODX_BASE_PATH . "assets/lib/Helpers/Collection.php");
 /**
  * Class DLCollection
  */
-class DLCollection extends \Helpers\Collection
+class DLCollection extends Helpers\Collection
 {
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var \DocumentParser
+     * @var DocumentParser
      * @access protected
      */
     protected $modx = null;
@@ -23,13 +23,13 @@ class DLCollection extends \Helpers\Collection
         $this->modx = $modx;
         switch (true) {
             case is_resource($data):
-            case (is_object($data) && $data instanceof \mysqli_result):
+            case (is_object($data) && $data instanceof mysqli_result):
                 $this->fromQuery($data, false);
                 break;
             case is_array($data):
                 $this->data = $data;
                 break;
-            case (is_object($data) && $data instanceof \IteratorAggregate):
+            case (is_object($data) && $data instanceof IteratorAggregate):
                 foreach ($data as $key => $item) {
                     $this->add($item, $key);
                 }
@@ -40,7 +40,7 @@ class DLCollection extends \Helpers\Collection
     }
 
     /**
-     * @param string $q
+     * @param string|resource|mysqli_result $q
      * @param bool $exec
      * @return int
      */
@@ -67,4 +67,5 @@ class DLCollection extends \Helpers\Collection
     {
         return new static($this->modx, $data);
     }
+
 }

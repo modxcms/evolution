@@ -44,8 +44,6 @@ class modResource extends MODxAPI
         'publishedby'     => 0,
         'menutitle'       => '',
         'donthit'         => 0,
-        'haskeywords'     => 0,
-        'hasmetatags'     => 0,
         'privateweb'      => 0,
         'privatemgr'      => 0,
         'content_dispo'   => 0,
@@ -152,6 +150,8 @@ class modResource extends MODxAPI
      * @var DLCollection
      */
     private $managerUsers = null;
+    /** @var array группы документов */
+    protected $groupIds = array();
 
     /**
      * modResource constructor.
@@ -190,8 +190,10 @@ class modResource extends MODxAPI
         $tvTPL = APIHelpers::getkey($this->tvTpl, $tpl, array());
         foreach ($tvTPL as $item) {
             if (isset($this->tvid[$item]) && !array_key_exists($this->tvid[$item], $out)) {
-                $out[$this->tvid[$item]] = $this->get($this->tvid[$item]);
+                $value = $this->get($this->tvid[$item]);
+                $out[$this->tvid[$item]] = empty($value) ? $this->tvd[$this->tvid[$item]] : $value;
             }
+
         }
         if ($render) {
             foreach ($out as $key => $val) {
@@ -307,7 +309,7 @@ class modResource extends MODxAPI
             $tvTPL = APIHelpers::getkey($this->tvTpl, $tpl, array());
             $tvID = APIHelpers::getkey($this->tv, $key, 0);
             if (in_array($tvID, $tvTPL) && is_null($out)) {
-                $out = APIHelpers::getkey($this->tvd[$key], 'value', null);
+                $out = APIHelpers::getkey($this->tvd, $key, null);
             }
         }
 
@@ -434,25 +436,6 @@ class modResource extends MODxAPI
     }
 
     /**
-     * @param $value
-     * @return int|mixed|string
-     */
-    protected function getTime($value)
-    {
-        $value = trim($value);
-        if (!empty($value)) {
-            if (!is_numeric($value)) {
-                $value = (int)strtotime($value);
-            }
-            if (!empty($value)) {
-                $value += $this->modxConfig('server_offset_time');
-            }
-        }
-
-        return $value;
-    }
-
-    /**
      * @param array $data
      * @return $this
      */
@@ -461,7 +444,7 @@ class modResource extends MODxAPI
         $this->close();
         $fld = array();
         foreach ($this->tvd as $name => $tv) {
-            $fld[$name] = $tv['value'];
+            $fld[$name] = $tv;
         };
         $this->store($fld);
 
@@ -509,7 +492,7 @@ class modResource extends MODxAPI
     /**
      * @param bool $fire_events
      * @param bool $clearCache
-     * @return bool|null|void
+     * @return bool|null
      */
     public function save($fire_events = false, $clearCache = false)
     {
@@ -536,7 +519,7 @@ class modResource extends MODxAPI
 
         $this->invokeEvent('OnBeforeDocFormSave', array(
             'mode'   => $this->newDoc ? "new" : "upd",
-            'id'     => $this->id ? $this->id : '',
+            'id'     => isset($this->id) ? $this->id : '',
             'doc'    => $this->toArray(),
             'docObj' => $this
         ), $fire_events);
@@ -603,30 +586,14 @@ class modResource extends MODxAPI
             }
         }
 
-        $_deleteTVs = $_updateTVs = $_insertTVs = array();
+        $_deleteTVs = $_insertTVs = array();
         foreach ($fld as $key => $value) {
-            if (empty($this->tv[$key]) || !$this->isChanged($key)) {
+            if (empty($this->tv[$key]) || !$this->isChanged($key) || !$this->belongsToTemplate($this->tv[$key])) {
                 continue;
             } elseif ($value === '') {
                 $_deleteTVs[] = $this->tv[$key];
             } else {
                 $_insertTVs[$this->tv[$key]] = $this->escape($value);
-            }
-        }
-
-        if (!$this->newDoc && !empty($_insertTVs)) {
-            $ids = implode(',', array_keys($_insertTVs));
-            $result = $this->query("SELECT `tmplvarid` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid`={$this->id} AND `tmplvarid` IN ({$ids})");
-            $existedTVs = $this->modx->db->getColumn('tmplvarid', $result);
-            foreach ($existedTVs as $id) {
-                $_updateTVs[$id] = $_insertTVs[$id];
-                unset($_insertTVs[$id]);
-            }
-        }
-
-        if (!empty($_updateTVs)) {
-            foreach ($_updateTVs as $id => $value) {
-                $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = {$this->id} AND `tmplvarid` = {$id}");
             }
         }
 
@@ -636,7 +603,8 @@ class modResource extends MODxAPI
                 $values[] = "({$this->id}, {$id}, '{$value}')";
             }
             $values = implode(',', $values);
-            $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} (`contentid`,`tmplvarid`,`value`) VALUES {$values}");
+            $this->query("INSERT INTO {$this->makeTable('site_tmplvar_contentvalues')} (`contentid`,`tmplvarid`,`value`) VALUES {$values} ON DUPLICATE KEY UPDATE
+    `value` = VALUES(`value`)");
         }
 
         if (!empty($_deleteTVs)) {
@@ -648,9 +616,13 @@ class modResource extends MODxAPI
             $this->mode = $this->newDoc ? "new" : "upd";
             $this->newDoc = false;
         }
+
+        if (!empty($this->groupIds)) {
+            $this->setDocumentGroups($this->id, $this->groupIds);
+        }
         $this->invokeEvent('OnDocFormSave', array(
             'mode'   => $this->mode,
-            'id'     => $this->id,
+            'id'     => isset($this->id) ? $this->id : '',
             'doc'    => $this->toArray(),
             'docObj' => $this
         ), $fire_events);
@@ -661,6 +633,17 @@ class modResource extends MODxAPI
         $this->decodeFields();
 
         return $this->id;
+    }
+
+    /**
+     * @param $tvId
+     * @return bool
+     */
+    protected function belongsToTemplate($tvId)
+    {
+        $template = $this->get('template');
+
+        return isset($this->tvTpl[$template]) && in_array($tvId, $this->tvTpl[$template]);
     }
 
     /**
@@ -820,14 +803,18 @@ class modResource extends MODxAPI
      */
     protected function get_TV($reload = false)
     {
-        if (empty($this->modx->_TVnames) || $reload) {
-            $result = $this->query('SELECT `id`,`name`,`type` FROM ' . $this->makeTable('site_tmplvars'));
+        $this->modx->_TVnames = $this->loadFromCache('_TVnames');
+        if ($this->modx->_TVnames === false || empty($this->modx->_TVnames) || $reload) {
+            $this->modx->_TVnames = array();
+            $result = $this->query('SELECT `id`,`name`,`default_text`,`type` FROM ' . $this->makeTable('site_tmplvars'));
             while ($row = $this->modx->db->GetRow($result)) {
                 $this->modx->_TVnames[$row['name']] = array(
-                    "id"   => $row['id'],
-                    "type" => $row['type']
+                    "id"      => $row['id'],
+                    "type"    => $row['type'],
+                    "default" => $row['default_text']
                 );
             }
+            $this->saveToCache($this->modx->_TVnames, '_TVnames');
         }
         $arrayTypes = array('checkbox', 'listbox-multiple');
         $arrayTVs = array();
@@ -838,7 +825,9 @@ class modResource extends MODxAPI
                 $arrayTVs[] = $name;
             }
         }
-        if (empty($this->tvaFields)) $this->tvaFields = $arrayTVs;
+        if (empty($this->tvaFields)) {
+            $this->tvaFields = $arrayTVs;
+        }
         $this->loadTVTemplate()->loadTVDefault(array_values($this->tv));
 
         return $this;
@@ -849,11 +838,14 @@ class modResource extends MODxAPI
      */
     protected function loadTVTemplate()
     {
-        $q = $this->query("SELECT `tmplvarid`, `templateid` FROM " . $this->makeTable('site_tmplvar_templates'));
-        $q = $this->modx->db->makeArray($q);
-        $this->tvTpl = array();
-        foreach ($q as $item) {
-            $this->tvTpl[$item['templateid']][] = $item['tmplvarid'];
+        $this->tvTpl = $this->loadFromCache('_tvTpl');
+        if ($this->tvTpl === false) {
+            $q = $this->query("SELECT `tmplvarid`, `templateid` FROM " . $this->makeTable('site_tmplvar_templates'));
+            $this->tvTpl = array();
+            while ($item = $this->modx->db->getRow($q)) {
+                $this->tvTpl[$item['templateid']][] = $item['tmplvarid'];
+            }
+            $this->saveToCache($this->tvTpl, '_tvTpl');
         }
 
         return $this;
@@ -866,14 +858,10 @@ class modResource extends MODxAPI
     protected function loadTVDefault(array $tvId = array())
     {
         if (is_array($tvId) && !empty($tvId)) {
-            $tbl_site_tmplvars = $this->makeTable('site_tmplvars');
-            $fields = 'id,name,default_text as value,display,display_params,type';
-            $implodeTvId = implode(',', $tvId);
-            $rs = $this->query("SELECT {$fields} FROM {$tbl_site_tmplvars} WHERE id IN({$implodeTvId})");
-            $rows = $this->modx->db->makeArray($rs);
             $this->tvd = array();
-            foreach ($rows as $item) {
-                $this->tvd[$item['name']] = $item;
+            foreach ($tvId as $id) {
+                $name = $this->tvid[$id];
+                $this->tvd[$name] = $this->modx->_TVnames[$name]['default'];
             }
         }
 
@@ -1024,7 +1012,7 @@ class modResource extends MODxAPI
         if ($this->isEncodableField($field)) {
             $data = $this->get($field);
             if ($this->isTVarrayField($field)) {
-                $out = is_array($data) ? implode('||', $data) : $data;
+                $out = is_array($data) ? implode('||', $data) : (string)$data;
             } else {
                 $out = json_encode($data);
             }
@@ -1070,6 +1058,59 @@ class modResource extends MODxAPI
         parent::markAllDecode();
         foreach ($this->tvaFields as $field) {
             $this->markAsDecode($field);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $docId
+     */
+    public function getDocumentGroups($docId = 0)
+    {
+        $out = array();
+        $doc = $this->switchObject($docId);
+        if (null !== $doc->getID()) {
+            $doc_groups = $this->makeTable('document_groups');
+            $docgroup_names = $this->makeTable('documentgroup_names');
+
+            $rs = $this->query("SELECT `dg`.`document_group`, `dgn`.`name` FROM {$doc_groups} as `dg` INNER JOIN {$docgroup_names} as `dgn` ON `dgn`.`id`=`dg`.`document_group`
+                WHERE `dg`.`document` = " . $doc->getID());
+            while ($row = $this->modx->db->getRow($rs)) {
+                $out[$row['document_group']] = $row['name'];
+            }
+
+        }
+        unset($doc);
+
+        return $out;
+    }
+
+    /**
+     * @param int $docId
+     * @param array $groupIds
+     * @return $this
+     */
+    public function setDocumentGroups($docId = 0, $groupIds = array())
+    {
+        if (!is_array($groupIds)) {
+            return $this;
+        }
+        if ($this->newDoc && $docId == 0) {
+            $this->groupIds = $groupIds;
+        } else {
+            $doc = $this->switchObject($docId);
+            if ($id = $doc->getID()) {
+                foreach ($groupIds as $gid) {
+                    $this->query("REPLACE INTO {$this->makeTable('document_groups')} (`document_group`, `document`) VALUES ('{$gid}', '{$id}')");
+                }
+                if (!$this->newDoc) {
+                    $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
+                    $this->query("DELETE FROM {$this->makeTable('document_groups')} WHERE `document`={$id} AND `document_group` NOT IN ({$groupIds})");
+                }
+            }
+            unset($doc);
+            $this->groupIds = array();
         }
 
         return $this;

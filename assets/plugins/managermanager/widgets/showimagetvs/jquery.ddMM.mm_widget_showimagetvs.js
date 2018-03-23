@@ -67,7 +67,7 @@ $.fn.mm_widget_showimagetvs = function(params){
 		
 		$this.data('lastvalue', url);
 		
-		if (url.length > 0 && url.search(/http:\/\//i) == -1 && url.search(/\//) != 0){
+		if (url.length > 0 && url.search(/https?:\/\//i) == -1 && url.search(/\//) != 0){
 			url = $.ddMM.config.site_url + url;
 		}
 		// If we have a PHPThumb URL

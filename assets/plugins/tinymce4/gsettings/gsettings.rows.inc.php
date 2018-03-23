@@ -1,6 +1,6 @@
 <?php
 
-
+$params = isset($params) && !empty($params) ? $params : array('base_url'=>'', 'skinsDirectory'=>'', 'skinthemeDirectory'=>'');
 // Hold general settings based on old Modx TinyMCE-Settings
 
 // Settings interface rows configuration
@@ -11,7 +11,8 @@ $settingsRows = array(
                     <select name="[+name+]" class="inputBox">
                         [+theme_options+]
                     </select>',
-        'message'=>'editor_theme_message'
+        'message'=>'editor_theme_message',
+        'messageVal'=>'<b>'. $params['base_url'].'<u>theme</u></b>'
     ),
     'skin'=>array(
         'title'=>'editor_skin_title',
@@ -20,7 +21,16 @@ $settingsRows = array(
                         [+skin_options+]
                     </select>',
         'message'=>'editor_skin_message',
-        'messageVal'=>'<b>'. $params['base_url'].$params['skinsDirectory'] .'</b>'
+        'messageVal'=>'<b>'. $params['base_url'].'<u>'.$params['skinsDirectory'] .'</u></b>'
+    ),
+    'skintheme'=>array(
+        'title'=>'editor_skintheme_title',
+        'configTpl'=>'
+                    <select name="[+name+]" class="inputBox">
+                        [+skintheme_options+]
+                    </select>',
+        'message'=>'editor_skintheme_message',
+        'messageVal'=>'<b>'. $params['base_url'].'<u>'.$params['skinthemeDirectory'] .'</u></b>'
     ),
     'template'=>array(
         'title'=>'tpl_title',

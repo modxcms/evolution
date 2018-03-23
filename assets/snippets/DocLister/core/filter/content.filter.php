@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Filters DocLister results by value of a given MODx Template Variables (TVs).
  * Supported comparison operators:
@@ -43,4 +39,5 @@ class content_DL_filter extends filterDocLister
     {
         return '';
     }
+
 }

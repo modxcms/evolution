@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 // PROCESSOR FIRST
 if($_SESSION['mgrRole'] == 1) {
@@ -33,11 +35,6 @@ if (is_writable("includes/config.inc.php")){
 if (file_exists("../install/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_installer']);
-}
-
-if (ini_get('register_globals')==TRUE) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_register_globals']);
 }
 
 if (!extension_loaded('gd') || !extension_loaded('zip')) {
@@ -120,6 +117,9 @@ if ($modx->db->getValue($modx->db->select('privateweb', $modx->getFullTableName(
 }
 
 if (!function_exists('checkSiteCache')) {
+    /**
+     * @return bool
+     */
     function checkSiteCache() {
         global $modx;
         $checked= true;
@@ -145,9 +145,13 @@ if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
     $warnings[] = array($_lang['configcheck_images']);
 }
 
-if (count($_lang)!=$length_eng_lang) {
-    //$warningspresent = 0;
-    //$warnings[] = array($_lang['configcheck_lang_difference']);
+if(strpos($modx->config['rb_base_dir'],MODX_BASE_PATH)!==0) {
+    $warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_rb_base_dir']);
+}
+if(strpos($modx->config['filemanager_path'],MODX_BASE_PATH)!==0) {
+    $warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_filemanager_path']);
 }
 
 // clear file info cache
@@ -178,11 +182,11 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_sysfiles_mod']:
             $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
-			$warnings[$i][2] = '<ul><li>'. join('</li><li>', $sysfiles_check) .'</li></ul>';
+			$warnings[$i][2] = '<ul><li>'. implode('</li><li>', $sysfiles_check) .'</li></ul>';
 			if($modx->hasPermission('settings')) {
 				$warnings[$i][2] .= '<ul class="actionButtons" style="float:right"><li><a href="index.php?a=2&b=resetSysfilesChecksum" onclick="return confirm(\'' . $_lang["reset_sysfiles_checksum_alert"] . '\')">' . $_lang["reset_sysfiles_checksum_button"] . '</a></li></ul>';
 			}
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".join(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".implode(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
@@ -217,6 +221,12 @@ for ($i=0;$i<count($warnings);$i++) {
             }
             $msg .= '<br />' . sprintf($_lang["configcheck_hide_warning"], 'templateswitcher_present');
             $warnings[$i][1] = "<span id=\"templateswitcher_present_warning_wrapper\">{$msg}</span>\n";
+            break;
+        case $_lang['configcheck_rb_base_dir'] :
+            $warnings[$i][1] = $_lang['configcheck_rb_base_dir_msg'];
+            break;
+        case $_lang['configcheck_filemanager_path'] :
+            $warnings[$i][1] = $_lang['configcheck_filemanager_path_msg'];
             break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];

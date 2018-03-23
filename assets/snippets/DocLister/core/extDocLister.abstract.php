@@ -6,9 +6,6 @@
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  *
  */
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
 /**
@@ -111,4 +108,5 @@ abstract class extDocLister
     {
         return \APIHelpers::getkey($this->_cfg, $name, $def);
     }
+
 }

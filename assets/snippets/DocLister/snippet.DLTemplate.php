@@ -1,5 +1,5 @@
 <?php
-if ( ! defined('MODX_BASE_PATH')) {
+if (! defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 

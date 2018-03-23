@@ -1,10 +1,11 @@
 <?php
-// extension_loaded('mbstring') ???
+
 /**
  * Class APIhelpers
  */
 class APIhelpers
 {
+
     /**
      * Преобразует первый символ в нижний регистр
      * @param $str
@@ -13,8 +14,12 @@ class APIhelpers
      */
     public static function mb_lcfirst($str, $encoding = 'UTF-8')
     {
-        return mb_strtolower(mb_substr($str, 0, 1, $encoding), $encoding) . mb_substr($str, 1, mb_strlen($str),
-            $encoding);
+        return mb_strtolower(mb_substr($str, 0, 1, $encoding), $encoding) . mb_substr(
+            $str,
+            1,
+            mb_strlen($str),
+            $encoding
+        );
     }
 
     /**
@@ -26,8 +31,12 @@ class APIhelpers
     public static function mb_ucfirst($str, $encoding = 'UTF-8')
     {
         $str = mb_ereg_replace('^[\ ]+', '', $str);
-        $str = mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_substr($str, 1, mb_strlen($str),
-                $encoding);
+        $str = mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_substr(
+            $str,
+            1,
+            mb_strlen($str),
+            $encoding
+        );
 
         return $str;
     }
@@ -57,18 +66,23 @@ class APIhelpers
     }
 
     /**
-     * @param  mixed $data
-     * @param string $key
-     * @param mixed $default null
+     * Получение значения по ключу из массива, либо возврат значения по умолчанию
+     *
+     * @param mixed $data массив
+     * @param string $key ключ массива
+     * @param mixed $default null значение по умолчанию
+     * @param Closure $validate null функция дополнительной валидации значения (должна возвращать true или false)
      * @return mixed
      */
-    public static function getkey($data, $key, $default = null)
+    public static function getkey($data, $key, $default = null, $validate = null)
     {
         $out = $default;
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
             $out = $data[$key];
         }
-
+        if (!empty($validate) && is_callable($validate)) {
+            $out = (($validate($out) === true) ? $out : $default);
+        }
         return $out;
     }
 
@@ -158,7 +172,7 @@ class APIhelpers
      * @param $data
      * @return bool|false|string
      */
-    private static function _getEnv($data)
+    public static function getEnv($data)
     {
         switch (true) {
             case (isset($_SERVER[$data])):
@@ -197,25 +211,25 @@ class APIhelpers
     {
         //Порядок условий зависит от приоритетов
         switch (true) {
-            case ($tmp = self::_getEnv('HTTP_COMING_FROM')):
+            case ($tmp = self::getEnv('HTTP_COMING_FROM')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_COMING_FROM')):
+            case ($tmp = self::getEnv('HTTP_X_COMING_FROM')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_VIA')):
+            case ($tmp = self::getEnv('HTTP_VIA')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_FORWARDED')):
+            case ($tmp = self::getEnv('HTTP_FORWARDED')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_FORWARDED_FOR')):
+            case ($tmp = self::getEnv('HTTP_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_FORWARDED')):
+            case ($tmp = self::getEnv('HTTP_X_FORWARDED')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_FORWARDED_FOR')):
+            case ($tmp = self::getEnv('HTTP_X_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
             case (!empty($_SERVER['REMOTE_ADDR'])):

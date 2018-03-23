@@ -1,13 +1,13 @@
 <?php
 /*####
 #
-#	Name: PHx (Placeholders Xtended)
-#	Version: 2.2.0
-#	Modified by Nick to include external files
-#	Modified by Anton Kuzmin for using of modx snippets cache
-#	Modified by Temus (temus3@gmail.com)
-#	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: March 22, 2013
+#   Name: PHx (Placeholders Xtended)
+#   Version: 2.2.0
+#   Modified by Nick to include external files
+#   Modified by Anton Kuzmin for using of modx snippets cache
+#   Modified by Temus (temus3@gmail.com)
+#   Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
+#   Date: March 22, 2013
 #
 ####*/
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
@@ -37,49 +37,50 @@ class DLphx
     public $curPass = 0;
     public $maxPasses = 50;
     public $swapSnippetCache = array();
+    protected $modx = null;
 
     /**
      * DLphx constructor.
-     * @param int $debug
+     * @param DocumentParser $modx
+     * @param int|bool|string $debug
      * @param int $maxpass
      */
-    public function __construct($debug = 0, $maxpass = 50)
+    public function __construct(DocumentParser $modx, $debug = false, $maxpass = 50)
     {
-        global $modx;
+        $this->modx = $modx;
         $this->user["mgrid"] = isset($_SESSION['mgrInternalKey']) ? intval($_SESSION['mgrInternalKey']) : 0;
         $this->user["usrid"] = isset($_SESSION['webInternalKey']) ? intval($_SESSION['webInternalKey']) : 0;
         $this->user["id"] = ($this->user["usrid"] > 0) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 
-        $this->debug = ($debug !== '') ? (bool)$debug : false;
+        $this->debug = (bool)$debug;
 
         $this->maxPasses = ($maxpass != '') ? $maxpass : 50;
 
-        $modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
+        $this->modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
         if (function_exists('mb_internal_encoding')) {
-            mb_internal_encoding($modx->config['modx_charset']);
+            mb_internal_encoding($this->modx->config['modx_charset']);
         }
     }
 
     // Plugin event hook for MODx
     public function OnParseDocument()
     {
-        global $modx;
         // Get document output from MODx
-        $template = $modx->documentOutput;
+        $template = $this->modx->documentOutput;
         // To the parse cave .. let's go! *insert batman tune here*
         $template = $this->Parse($template);
         // Set processed document output in MODx
-        $modx->documentOutput = $template;
+        $this->modx->documentOutput = $template;
     }
 
     // Parser: Preparation, cleaning and checkup
+
     /**
      * @param string $template
      * @return mixed|string
      */
     public function Parse($template = '')
     {
-        global $modx;
         // If we already reached max passes don't get at it again.
         if ($this->curPass == $this->maxPasses) {
             return $template;
@@ -106,7 +107,7 @@ class DLphx
         }
         // Write an event log if debugging is enabled and there is something to log
         if ($this->debug && $this->debugLog) {
-            $modx->logEvent($this->curPass, 1, $this->createEventLog(), $this->name . ' ' . $this->version);
+            $this->modx->logEvent($this->curPass, 1, $this->createEventLog(), $this->name . ' ' . $this->version);
             $this->debugLog = false;
         }
 
@@ -115,14 +116,13 @@ class DLphx
     }
 
     // Parser: Tag detection and replacements
+
     /**
      * @param string $template
      * @return mixed|string
      */
     public function ParseValues($template = '')
     {
-        global $modx;
-
         $this->curPass = $this->curPass + 1;
         $st = md5($template);
 
@@ -138,7 +138,7 @@ class DLphx
                 $var_search[] = $matches[0][$i];
                 $input = $matches[1][$i];
                 $this->Log('MODX Chunk: ' . $input);
-                $input = $modx->mergeChunkContent('{{' . $input . '}}');
+                $input = $this->modx->mergeChunkContent('{{' . $input . '}}');
                 $var_replace[] = $this->Filter($input, $matches[2][$i]);
             }
             $template = str_replace($var_search, $var_replace, $template);
@@ -157,7 +157,7 @@ class DLphx
                 $this->Log("MODx Snippet -> " . $snippet);
 
                 // Let MODx evaluate snippet
-                $replace = $modx->evalSnippets("[[" . $snippet . "]]");
+                $replace = $this->modx->evalSnippets("[[" . $snippet . "]]");
                 $this->LogSnippet($replace);
 
                 // Replace values
@@ -169,7 +169,6 @@ class DLphx
 
         // PHx / MODx Tags
         if (preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s', $template, $matches)) {
-
             //$matches[0] // Complete string that's need to be replaced
             //$matches[1] // Type
             //$matches[2] // The placeholder(s)
@@ -187,21 +186,23 @@ class DLphx
                     // Document / Template Variable eXtended
                     case "*":
                         $this->Log("MODx TV/DV: " . $input);
-                        $input = $modx->mergeDocumentContent("[*" . $input . "*]");
+                        $input = $this->modx->mergeDocumentContent("[*" . $input . "*]");
                         $replace = $this->Filter($input, $modifiers);
                         break;
                     // MODx Setting eXtended
                     case "(":
                         $this->Log("MODx Setting variable: " . $input);
-                        $input = $modx->mergeSettingsContent("[(" . $input . ")]");
+                        $input = $this->modx->mergeSettingsContent("[(" . $input . ")]");
                         $replace = $this->Filter($input, $modifiers);
                         break;
                     // MODx Placeholder eXtended
                     default:
                         $this->Log("MODx / PHx placeholder variable: " . $input);
                         // Check if placeholder is set
-                        if (!array_key_exists($input, $this->placeholders) && !array_key_exists($input,
-                                $modx->placeholders)
+                        if (!array_key_exists($input, $this->placeholders) && !array_key_exists(
+                            $input,
+                            $this->modx->placeholders
+                        )
                         ) {
                             // not set so try again later.
                             $input = '';
@@ -231,6 +232,7 @@ class DLphx
     }
 
     // Parser: modifier detection and eXtended processing if needed
+
     /**
      * @param $input
      * @param $modifiers
@@ -238,7 +240,6 @@ class DLphx
      */
     public function Filter($input, $modifiers)
     {
-        global $modx;
         $output = $input;
         $this->Log("  |--- Input = '" . $output . "'");
         if (preg_match_all('~:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?~s', $modifiers, $matches)) {
@@ -308,14 +309,14 @@ class DLphx
                         break;
                     case "show":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($conditional));
                         if (!$isvalid) {
                             $output = null;
                         }
                         break;
                     case "then":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($conditional));
                         if ($isvalid) {
                             $output = $modifier_value[$i];
                         } else {
@@ -324,7 +325,7 @@ class DLphx
                         break;
                     case "else":
                         $conditional = implode(' ', $condition);
-                        $isvalid = intval(eval("return (" . $conditional . ");"));
+                        $isvalid = intval($this->runCode($conditional));
                         if (!$isvalid) {
                             $output = $modifier_value[$i];
                         }
@@ -364,10 +365,10 @@ class DLphx
                         break;
                     case "htmlent":
                     case "htmlentities":
-                        $output = htmlentities($output, ENT_QUOTES, $modx->config['modx_charset']);
+                        $output = htmlentities($output, ENT_QUOTES, $this->modx->config['modx_charset']);
                         break;
                     case "html_entity_decode":
-                        $output = html_entity_decode($output, ENT_QUOTES, $modx->config['modx_charset']);
+                        $output = html_entity_decode($output, ENT_QUOTES, $this->modx->config['modx_charset']);
                         break;
                     case "esc":
                         $output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", APIHelpers::e($output));
@@ -391,7 +392,9 @@ class DLphx
                         break;
                     case "wordwrap": // default: 70
                         $wrapat = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 70;
-                        $output = preg_replace_callback("@(\b\w+\b)@",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$output);
+                        $output = preg_replace_callback("@(\b\w+\b)@", function ($m) use ($wrapat) {
+                            return wordwrap($m[1], $wrapat, ' ', 1);
+                        }, $output);
                         break;
                     case "limit": // default: 100
                         $limit = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 100;
@@ -428,7 +431,7 @@ class DLphx
                         $output = nl2br($output);
                         break;
                     case "date":
-                        $output = strftime($modifier_value[$i], 0 + $output);
+                        $output = strftime($modifier_value[$i], (int)$output);
                         break;
                     case "set":
                         $c = $i + 1;
@@ -438,7 +441,7 @@ class DLphx
                         break;
                     case "value":
                         if ($i > 0 && $modifier_cmd[$i - 1] == "set") {
-                            $modx->SetPlaceholder("phx." . $output, $modifier_value[$i]);
+                            $this->modx->SetPlaceholder("phx." . $output, $modifier_value[$i]);
                         }
                         $output = null;
                         break;
@@ -464,25 +467,27 @@ class DLphx
                         $snippet = '';
                         // modified by Anton Kuzmin (23.06.2010) //
                         $snippetName = 'phx:' . $modifier_cmd[$i];
-                        if (isset($modx->snippetCache[$snippetName])) {
-                            $snippet = $modx->snippetCache[$snippetName];
-                        } else { // not in cache so let's check the db
-                            $sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $modx->db->escape($snippetName) . "';";
-                            $result = $modx->dbQuery($sql);
-                            if ($modx->recordCount($result) == 1) {
-                                $row = $modx->fetchRow($result);
-                                $snippet = $modx->snippetCache[$row['name']] = $row['snippet'];
+                        if (isset($this->modx->snippetCache[$snippetName])) {
+                            $snippet = $this->modx->snippetCache[$snippetName];
+                        } else {
+// not in cache so let's check the db
+                            $sql = "SELECT snippet FROM " . $this->modx->getFullTableName("site_snippets") . " WHERE " . $this->modx->getFullTableName("site_snippets") . ".name='" . $this->modx->db->escape($snippetName) . "';";
+                            $result = $this->modx->db->query($sql);
+                            if ($this->modx->db->getRecordCount($result) == 1) {
+                                $row = $this->modx->db->getRow($result);
+                                $snippet = $this->modx->snippetCache[$row['name']] = $row['snippet'];
                                 $this->Log("  |--- DB -> Custom Modifier");
                             } else {
-                                if ($modx->recordCount($result) == 0) { // If snippet not found, look in the modifiers folder
-                                    $filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
+                                if ($this->modx->db->getRecordCount($result) == 0) {
+// If snippet not found, look in the modifiers folder
+                                    $filename = $this->modx->config['rb_base_dir'] . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
                                     if (@file_exists($filename)) {
                                         $file_contents = @file_get_contents($filename);
                                         $file_contents = str_replace('<' . '?php', '', $file_contents);
                                         $file_contents = str_replace('?' . '>', '', $file_contents);
                                         $file_contents = str_replace('<?', '', $file_contents);
-                                        $snippet = $modx->snippetCache[$snippetName] = $file_contents;
-                                        $modx->snippetCache[$snippetName . 'Props'] = '';
+                                        $snippet = $this->modx->snippetCache[$snippetName] = $file_contents;
+                                        $this->modx->snippetCache[$snippetName . 'Props'] = '';
                                         $this->Log("  |--- File ($filename) -> Custom Modifier");
                                     } else {
                                         $this->Log("  |--- PHX Error:  {$modifier_cmd[$i]} could not be found");
@@ -490,16 +495,12 @@ class DLphx
                                 }
                             }
                         }
-                        $cm = $snippet;
-                        // end //
-
-                        if (!empty($cm)) {
-                            ob_start();
-                            $options = $modifier_value[$i];
-                            $custom = eval($cm);
-                            $msg = ob_get_contents();
-                            $output = $msg . $custom;
-                            ob_end_clean();
+                        if (!empty($snippet)) {
+                            $output = $this->modx->runSnippet($snippetName, array(
+                                'input'   => $output,
+                                'output'  => $output,
+                                'options' => $modifier_value[$i]
+                            ));
                         } else {
                             $output = '';
                         }
@@ -515,21 +516,35 @@ class DLphx
         return $output;
     }
 
+    /**
+     * @param string $code
+     * @return mixed
+     */
+    private function runCode($code)
+    {
+        return eval("return (" . $code . ");");
+    }
+
     // Event logging (debug)
+
     /**
      * @return string
      */
     public function createEventLog()
     {
+        $out = '';
         if (!empty($this->console)) {
             $console = implode("\n", $this->console);
             $this->console = array();
 
-            return '<pre style="overflow: auto;">' . $console . '</pre>';
+            $out = '<pre style="overflow: auto;">' . $console . '</pre>';
         }
+
+        return $out;
     }
 
     // Returns a cleaned string escaping the HTML and special MODx characters
+
     /**
      * @param $string
      * @return array|mixed|string
@@ -543,6 +558,7 @@ class DLphx
     }
 
     // Simple log entry
+
     /**
      * @param $string
      */
@@ -550,12 +566,15 @@ class DLphx
     {
         if ($this->debug) {
             $this->debugLog = true;
-            $this->console[] = (count($this->console) + 1 - $this->curPass) . " [" . strftime("%H:%M:%S",
-                    time()) . "] " . $this->LogClean($string);
+            $this->console[] = (count($this->console) + 1 - $this->curPass) . " [" . strftime(
+                "%H:%M:%S",
+                time()
+            ) . "] " . $this->LogClean($string);
         }
     }
 
     // Log snippet output
+
     /**
      * @param $string
      */
@@ -563,42 +582,44 @@ class DLphx
     {
         if ($this->debug) {
             $this->debugLog = true;
-            $this->console[] = (count($this->console) + 1 - $this->curPass) . " [" . strftime("%H:%M:%S",
-                    time()) . "] " . "  |--- Returns: <div style='margin: 10px;'>" . $this->LogClean($string) . "</div>";
+            $this->console[] = (count($this->console) + 1 - $this->curPass) . " [" . strftime(
+                "%H:%M:%S",
+                time()
+            ) . "] " . "  |--- Returns: <div style='margin: 10px;'>" . $this->LogClean($string) . "</div>";
         }
     }
 
     // Log pass
     public function LogPass()
     {
-        $this->console[] = "<div style='margin: 2px;margin-top: 5px;border-bottom: 1px solid black;'>Pass " . $this->curPass . "</div>";
+        $this->console[] = "<div style='margin: 5px 2px 2px;border-bottom: 1px solid black;'>Pass " . $this->curPass . "</div>";
     }
 
     // Log pass
+
     /**
      * @param $string
      */
     public function LogSource($string)
     {
-        $this->console[] = "<div style='margin: 2px;margin-top: 5px;border-bottom: 1px solid black;'>Source:</div>" . $this->LogClean($string);
+        $this->console[] = "<div style='margin: 5px 2px 2px;border-bottom: 1px solid black;'>Source:</div>" . $this->LogClean($string);
     }
-
 
     // Returns the specified field from the user record
     // positive userid = manager, negative integer = webuser
-    /**
+    
+/**
      * @param $userid
      * @param $field
      * @return mixed
      */
     public function ModUser($userid, $field)
     {
-        global $modx;
         if (!array_key_exists($userid, $this->cache["ui"])) {
             if (intval($userid) < 0) {
-                $user = $modx->getWebUserInfo(-($userid));
+                $user = $this->modx->getWebUserInfo(-($userid));
             } else {
-                $user = $modx->getUserInfo($userid);
+                $user = $this->modx->getUserInfo($userid);
             }
             $this->cache["ui"][$userid] = $user;
         } else {
@@ -609,6 +630,7 @@ class DLphx
     }
 
     // Returns true if the user id is in one the specified webgroups
+
     /**
      * @param int $userid
      * @param array $groupNames
@@ -616,8 +638,7 @@ class DLphx
      */
     public function isMemberOfWebGroupByUserId($userid = 0, $groupNames = array())
     {
-        global $modx;
-
+        $userid = (int)$userid;
         // if $groupNames is not an array return false
         if (!is_array($groupNames)) {
             return false;
@@ -630,10 +651,10 @@ class DLphx
 
         // Creates an array with all webgroups the user id is in
         if (!array_key_exists($userid, $this->cache["mo"])) {
-            $tbl = $modx->getFullTableName("webgroup_names");
-            $tbl2 = $modx->getFullTableName("web_groups");
-            $sql = "SELECT wgn.name FROM $tbl wgn INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wg.webuser='" . $userid . "'";
-            $this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name", $sql);
+            $tbl = $this->modx->getFullTableName("webgroup_names");
+            $tbl2 = $this->modx->getFullTableName("web_groups");
+            $sql = "SELECT `wgn`.`name` FROM {$tbl} `wgn` INNER JOIN {$tbl2} `wg` ON `wg`.`webgroup`=`wgn`.`id` AND `wg`.`webuser`={$userid}";
+            $this->cache["mo"][$userid] = $grpNames = $this->modx->db->getColumn("name", $sql);
         } else {
             $grpNames = $this->cache["mo"][$userid];
         }
@@ -649,24 +670,25 @@ class DLphx
     }
 
     // Returns the value of a PHx/MODx placeholder.
+
     /**
      * @param $name
      * @return mixed|string
      */
     public function getPHxVariable($name)
     {
-        global $modx;
         // Check if this variable is created by PHx
         if (array_key_exists($name, $this->placeholders)) {
             // Return the value from PHx
             return $this->placeholders[$name];
         } else {
             // Return the value from MODx
-            return $modx->getPlaceholder($name);
+            return $this->modx->getPlaceholder($name);
         }
     }
 
     // Sets a placeholder variable which can only be access by PHx
+
     /**
      * @param $name
      * @param $value
@@ -679,6 +701,7 @@ class DLphx
     }
 
     //mbstring
+
     /**
      * @param $str
      * @param $s

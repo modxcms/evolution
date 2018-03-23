@@ -9,7 +9,7 @@ $self = 'assets/plugins/tinymce4/connector.tinymce4.templates.php';
 $base_path = str_replace($self, '', str_replace('\\', '/', __FILE__));
 
 define('MODX_API_MODE','true');
-define('IN_MANAGER_MODE','true');
+define('IN_MANAGER_MODE', true);
 include_once("{$base_path}index.php");
 if( !file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")) { // Add Fall-Back for now
     require_once(MODX_BASE_PATH."assets/plugins/tinymce4/class.modxRTEbridge.php");

@@ -71,12 +71,20 @@ abstract class autoTable extends MODxAPI
     }
 
     /**
-     * @param null $fire_events
+     * @param bool $fire_events
      * @param bool $clearCache
      * @return bool|null|void
      */
-    public function save($fire_events = null, $clearCache = false)
+    public function save($fire_events = false, $clearCache = false)
     {
+        foreach ($this->jsonFields as $field) {
+            if ($this->get($field) === null
+                && isset($this->default_field[$field])
+                && is_array($this->default_field[$field]))
+            {
+                $this->set($field, $this->default_field[$field]);
+            }
+        }
         $fld = $this->encodeFields()->toArray();
         foreach ($this->default_field as $key => $value) {
             if ($this->newDoc && $this->get($key) === null && $this->get($key) !== $value) {
@@ -110,11 +118,11 @@ abstract class autoTable extends MODxAPI
 
     /**
      * @param $ids
-     * @param null $fire_events
+     * @param bool $fire_events
      * @return $this
      * @throws Exception
      */
-    public function delete($ids, $fire_events = null)
+    public function delete($ids, $fire_events = false)
     {
         $_ids = $this->cleanIDs($ids, ',');
         if (is_array($_ids) && $_ids != array()) {

@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * all controller for show info from all table
  *
@@ -20,7 +16,6 @@ class onetableDocLister extends DocLister
      * @var string
      */
     protected $table = '';
-
     /**
      * @var string
      */
@@ -38,8 +33,6 @@ class onetableDocLister extends DocLister
     {
         if ($this->checkExtender('paginate')) {
             $this->extender['paginate']->init($this);
-        } else {
-            $this->config->setConfig(array('start' => 0));
         }
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();
@@ -54,6 +47,7 @@ class onetableDocLister extends DocLister
     public function _render($tpl = '')
     {
         $out = '';
+        $separator = $this->getCFGDef('outputSeparator', '');
         if ($tpl == '') {
             $tpl = $this->getCFGDef('tpl', '');
         }
@@ -89,19 +83,30 @@ class onetableDocLister extends DocLister
                         $item = $extUser->setUserData($item); //[+user.id.createdby+], [+user.fullname.publishedby+], [+dl.user.publishedby+]....
                     }
 
-                    $item[$this->getCFGDef("sysKey", "dl") . '.summary'] = $extSummary ? $this->getSummary($item,
-                        $extSummary) : '';
+                    $item[$this->getCFGDef("sysKey", "dl") . '.summary'] = $extSummary ? $this->getSummary(
+                        $item,
+                        $extSummary
+                    ) : '';
 
-                    $item = array_merge($item,
-                        $sysPlh); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
-                    $item[$this->getCFGDef("sysKey",
-                        "dl") . '.iteration'] = $i; //[+iteration+] - Number element. Starting from zero
+                    $item = array_merge(
+                        $item,
+                        $sysPlh
+                    ); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
+                    $item[$this->getCFGDef(
+                        "sysKey",
+                        "dl"
+                    ) . '.iteration'] = $i; //[+iteration+] - Number element. Starting from zero
 
                     $date = $this->getCFGDef('dateSource', 'pub_date');
-                    $date = isset($item[$date]) ? $item[$date] + $this->modx->config['server_offset_time'] : '';
-                    if ($date != '' && $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
-                        $item[$this->getCFGDef("sysKey", "dl") . '.date'] = strftime($this->getCFGDef('dateFormat',
-                            '%d.%b.%y %H:%M'), $date);
+                    if (isset($item[$date])) {
+                        $_date = is_numeric($item[$date]) && $item[$date] == (int)$item[$date] ? $item[$date] : strtotime($item[$date]);
+                        if ($_date !== false) {
+                            $_date = $_date + $this->modx->config['server_offset_time'];
+                            $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                            if ($dateFormat) {
+                                $item['date'] = strftime($dateFormat, $_date);
+                            }
+                        }
                     }
 
                     $findTpl = $this->renderTPL;
@@ -123,10 +128,16 @@ class onetableDocLister extends DocLister
                     }
                     $tmp = $this->parseChunk($this->renderTPL, $item);
                     if ($this->getCFGDef('contentPlaceholder', 0) !== 0) {
-                        $this->toPlaceholders($tmp, 1,
-                            "item[" . $i . "]"); // [+item[x]+] – individual placeholder for each iteration documents on this page
+                        $this->toPlaceholders(
+                            $tmp,
+                            1,
+                            "item[" . $i . "]"
+                        ); // [+item[x]+] – individual placeholder for each iteration documents on this page
                     }
                     $out .= $tmp;
+                    if (next($this->_docs) !== false) {
+                        $out .= $separator;
+                    }
                     $i++;
                 }
             }
@@ -162,19 +173,23 @@ class onetableDocLister extends DocLister
          * @var $extE e_DL_Extender
          */
         $extE = $this->getExtender('e', true, true);
-
-        foreach ($data as $num => $item) {
-            $row = $item;
-
+        foreach ($data as $num => $row) {
             switch (true) {
                 case ((array('1') == $fields || in_array('summary', $fields)) && $extSummary):
-                    $row['summary'] = $this->getSummary($this->_docs[$num], $extSummary, 'introtext');
+                    $row['summary'] = $this->getSummary($row, $extSummary, 'introtext');
                 //without break
                 case ((array('1') == $fields || in_array('date', $fields)) && $date != 'date'):
-                    $tmp = (isset($this->_docs[$num][$date]) && $date != 'createdon' && $this->_docs[$num][$date] != 0 && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date]) ? $this->_docs[$num][$date] : $this->_docs[$num]['createdon'];
-                    $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'),
-                        $tmp + $this->modx->config['server_offset_time']);
-                // no break
+                    if (isset($row[$date])) {
+                        $_date = is_numeric($row[$date]) && $row[$date] == (int)$row[$date] ? $row[$date] : strtotime($row[$date]);
+                        if ($_date !== false) {
+                            $_date = $_date + $this->modx->config['server_offset_time'];
+                            $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                            if ($dateFormat) {
+                                $row['date'] = strftime($dateFormat, $_date);
+                            }
+                        }
+                    }
+                //nobreak
             }
 
             if ($extE && $tmp = $extE->init($this, array('data' => $row))) {
@@ -203,26 +218,39 @@ class onetableDocLister extends DocLister
         $out = array();
         $sanitarInIDs = $this->sanitarIn($this->IDs);
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
+            $from = $this->table . " " . $this->_filters['join'];
             $where = $this->getCFGDef('addWhereList', '');
+
+            //====== block added by Dreamer to enable filters ======
+            $where = ($where ? $where . ' AND ' : '') . $this->_filters['where'];
+            $where = sqlHelper::trimLogicalOp($where);
+            //------- end of block -------
+
+
             if ($where != '') {
                 $where = array($where);
+            } else {
+                $where = array();
             }
             if ($sanitarInIDs != "''") {
-                $where[] = "`{$this->getPK()}` IN ({$sanitarInIDs})";
+                $where[] = "{$this->getPK()} IN ({$sanitarInIDs})";
             }
 
             if (!empty($where)) {
                 $where = "WHERE " . implode(" AND ", $where);
+            } else {
+                $where = '';
             }
+
             $limit = $this->LimitSQL($this->getCFGDef('queryLimit', 0));
             $fields = $this->getCFGDef('selectFields', '*');
             $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
-            $rs = $this->dbQuery("SELECT {$fields} FROM {$this->table} {$where} {$group} {$this->SortOrderSQL($this->getPK())} {$limit}");
+            $sort = $this->SortOrderSQL($this->getPK());
+            $rs = $this->dbQuery("SELECT {$fields} FROM {$from} {$where} {$group} {$sort} {$limit}");
 
-            $rows = $this->modx->db->makeArray($rs);
-            $out = array();
-            foreach ($rows as $item) {
-                $out[$item[$this->getPK()]] = $item;
+            $pk = $this->getPK(false);
+            while ($item = $this->modx->db->getRow($rs)) {
+                $out[$item[$pk]] = $item;
             }
         }
 
@@ -236,9 +264,16 @@ class onetableDocLister extends DocLister
     {
         $where = array();
         $out = array();
-
+        $from = $this->table . " " . $this->_filters['join'];
         $tmpWhere = $this->getCFGDef('addWhereList', '');
         $tmpWhere = sqlHelper::trimLogicalOp($tmpWhere);
+
+        //====== block added by Dreamer to enable filters ======
+        $tmpWhere = ($tmpWhere ? $tmpWhere . ' AND ' : '') . $this->_filters['where'];
+        $tmpWhere = sqlHelper::trimLogicalOp($tmpWhere);
+        //------- end of block -------
+
+
         if (!empty($tmpWhere)) {
             $where[] = $tmpWhere;
         }
@@ -246,17 +281,17 @@ class onetableDocLister extends DocLister
 
         $tmpWhere = null;
         if ($sanitarInIDs != "''") {
-            $tmpWhere = "(`{$this->getParentField()}` IN (" . $sanitarInIDs . ")";
+            $tmpWhere = "({$this->getParentField()} IN (" . $sanitarInIDs . ")";
             switch ($this->getCFGDef('showParent', '0')) {
                 case -1:
                     $tmpWhere .= ")";
                     break;
                 case 0:
-                    $tmpWhere .= " AND `{$this->getPK()}` NOT IN(" . $sanitarInIDs . "))";
+                    $tmpWhere .= " AND {$this->getPK()} NOT IN(" . $sanitarInIDs . "))";
                     break;
                 case 1:
                 default:
-                    $tmpWhere .= " OR `{$this->getPK()}` IN({$sanitarInIDs}))";
+                    $tmpWhere .= " OR {$this->getPK()} IN({$sanitarInIDs}))";
                     break;
             }
         }
@@ -277,16 +312,16 @@ class onetableDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', '*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', "`{$this->getPK()}`"));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $sort = $this->SortOrderSQL($this->getPK());
+        $limit = $this->LimitSQL($this->getCFGDef('queryLimit', 0));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
-            $sql = $this->dbQuery("SELECT {$fields} FROM " . $this->table . " " . $where . " " .
-                $group . " " .
-                $this->SortOrderSQL($this->getPK()) . " " .
-                $this->LimitSQL($this->getCFGDef('queryLimit', 0))
-            );
-            $rows = $this->modx->db->makeArray($sql);
-            foreach ($rows as $item) {
-                $out[$item[$this->getPK()]] = $item;
+            $rs = $this->dbQuery("SELECT {$fields} FROM {$from} {$where} {$group} {$sort} {$limit}");
+
+            $pk = $this->getPK(false);
+
+            while ($item = $this->modx->db->getRow($rs)) {
+                $out[$item[$pk]] = $item;
             }
         }
 
@@ -301,7 +336,14 @@ class onetableDocLister extends DocLister
         $out = 0;
         $sanitarInIDs = $this->sanitarIn($this->IDs);
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
+            $from = $this->table . " " . $this->_filters['join'];
             $where = $this->getCFGDef('addWhereList', '');
+
+            //====== block added by Dreamer ======
+            $where = ($where ? $where . ' AND ' : '') . $this->_filters['where'];
+            $where = sqlHelper::trimLogicalOp($where);
+            //------- end of block -------
+
             if ($where != '') {
                 $where = array($where);
             } else {
@@ -313,25 +355,25 @@ class onetableDocLister extends DocLister
                         case 'parents':
                             switch ($this->getCFGDef('showParent', '0')) {
                                 case '-1':
-                                    $tmpWhere = "`{$this->getParentField()}` IN ({$sanitarInIDs})";
+                                    $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs})";
                                     break;
                                 case 0:
-                                    $tmpWhere = "`{$this->getParentField()}` IN ({$sanitarInIDs}) AND `{$this->getPK()}` NOT IN({$sanitarInIDs})";
+                                    $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs}) AND {$this->getPK()} NOT IN({$sanitarInIDs})";
                                     break;
                                 case 1:
                                 default:
-                                    $tmpWhere = "(`{$this->getParentField()}` IN ({$sanitarInIDs}) OR `{$this->getPK()}` IN({$sanitarInIDs}))";
+                                    $tmpWhere = "({$this->getParentField()} IN ({$sanitarInIDs}) OR {$this->getPK()} IN({$sanitarInIDs}))";
                                     break;
                             }
                             if (($addDocs = $this->getCFGDef('documents', '')) != '') {
                                 $addDocs = $this->sanitarIn($this->cleanIDs($addDocs));
-                                $where[] = "((" . $tmpWhere . ") OR `{$this->getPK()}` IN({$addDocs}))";
+                                $where[] = "((" . $tmpWhere . ") OR {$this->getPK()} IN({$addDocs}))";
                             } else {
                                 $where[] = $tmpWhere;
                             }
                             break;
                         case 'documents':
-                            $where[] = "`{$this->getPK()}` IN({$sanitarInIDs})";
+                            $where[] = "{$this->getPK()} IN({$sanitarInIDs})";
                             break;
                     }
                 }
@@ -342,9 +384,10 @@ class onetableDocLister extends DocLister
                 $where = '';
             }
 
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', "`{$this->getPK()}`"));
-            $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$this->table} {$where} {$group}) as `tmp`");
-
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
+            $maxDocs = $this->getCFGDef('maxDocs', 0);
+            $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
+            $rs = ("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
             $out = $this->modx->db->getValue($rs);
         }
 
@@ -352,25 +395,24 @@ class onetableDocLister extends DocLister
     }
 
     /**
-     * @param string $id
+     * @param string|array $id
      * @return array
      */
     public function getChildrenFolder($id)
     {
+        $out = array();
         $sanitarInIDs = $this->sanitarIn($id);
 
         $tmp = $this->getCFGDef('addWhereFolder', '');
-        $where = "`{$this->getParentField()}` IN ({$sanitarInIDs})";
+        $where = "{$this->getParentField()} IN ({$sanitarInIDs})";
         if (!empty($tmp)) {
             $where .= " AND " . $tmp;
         }
 
-        $rs = $this->dbQuery("SELECT `{$this->getPK()}` FROM {$this->table} WHERE {$where}");
-
-        $rows = $this->modx->db->makeArray($rs);
-        $out = array();
-        foreach ($rows as $item) {
-            $out[] = $item[$this->getPK()];
+        $rs = $this->dbQuery("SELECT {$this->getPK()} FROM {$this->table} WHERE {$where}");
+        $pk = $this->getPK(false);
+        while ($item = $this->modx->db->getRow($rs)) {
+            $out[] = $item[$pk];
         }
 
         return $out;

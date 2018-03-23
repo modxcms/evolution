@@ -2,7 +2,7 @@
 
 /**
  * Правила проверки файлов
- * Class fValidator
+ * Class FileValidator
  * @package FormLister
  */
 class FileValidator
@@ -19,6 +19,9 @@ class FileValidator
         $flag = false;
         foreach ($value as $file) {
             $flag = !$file['error'] && is_uploaded_file($file['tmp_name']);
+            if (!$flag) {
+                break;
+            }
         }
 
         return $flag;
@@ -39,6 +42,9 @@ class FileValidator
                 $flag = true;
             } else {
                 $flag = !$file['error'] && is_uploaded_file($file['tmp_name']);
+                if (!$flag) {
+                    break;
+                }
             }
         }
 
@@ -62,6 +68,9 @@ class FileValidator
             } else {
                 $ext = strtolower(array_pop(explode('.', $file['name'])));
                 $flag = in_array($ext, $allowed);
+                if (!$flag) {
+                    break;
+                }
             }
         }
 
@@ -91,6 +100,9 @@ class FileValidator
         foreach ($value as $file) {
             $size = round($file['size'] / 1024, 0);
             $flag = $size < $max;
+            if (!$flag) {
+                break;
+            }
         }
 
         return $flag;
@@ -113,6 +125,9 @@ class FileValidator
             } else {
                 $size = round($file['size'] / 1024, 0);
                 $flag = $size > $min;
+                if (!$flag) {
+                    break;
+                }
             }
         }
 
@@ -137,6 +152,9 @@ class FileValidator
             } else {
                 $size = round($file['size'] / 1024, 0);
                 $flag = $size > $min && $size < $max;
+                if (!$flag) {
+                    break;
+                }
             }
         }
 
@@ -154,7 +172,7 @@ class FileValidator
             $value = array($value);
         }
 
-        return count($value) < $max;
+        return $this->getCount($value) < $max;
     }
 
     /**
@@ -168,7 +186,7 @@ class FileValidator
             $value = array($value);
         }
 
-        return count($value) > $min;
+        return $this->getCount($value) > $min;
     }
 
     /**
@@ -183,7 +201,7 @@ class FileValidator
             $value = array($value);
         }
 
-        return count($value) > $min && count($value) < $max;
+        return $this->getCount($value) > $min && $this->getCount($value) < $max;
     }
 
     /**
@@ -192,6 +210,22 @@ class FileValidator
      */
     protected function isArray($value)
     {
-        return !is_null($value[0]);
+        return isset($value[0]);
+    }
+
+    /**
+     * @param $value
+     * @return int
+     */
+    protected function getCount($value)
+    {
+        $out = 0;
+        foreach ($value as $file) {
+            if (!$file['error'] && is_uploaded_file($file['tmp_name'])) {
+                $out++;
+            }
+        }
+
+        return $out;
     }
 }

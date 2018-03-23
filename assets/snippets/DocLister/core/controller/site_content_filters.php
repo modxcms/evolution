@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * site_content_filters controller for DocLister
  *

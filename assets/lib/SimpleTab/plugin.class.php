@@ -65,8 +65,11 @@ abstract class Plugin
             $this->params['template'] = is_array($doc) ? end($doc) : null;
         }
         //overload plugin and class properties
-        $_params = $modx->parseProperties('&template=;;' . $this->params['template'] . ' &id=;;' . $this->params['id'],
-            $modx->event->activePlugin, 'plugin');
+        $_params = $modx->parseProperties(
+            '&template=;;' . $this->params['template'] . ' &id=;;' . $this->params['id'],
+            $modx->event->activePlugin,
+            'plugin'
+        );
         foreach ($_params as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
@@ -99,8 +102,10 @@ abstract class Plugin
         $templates = isset($this->params['templates']) ? explode(',', $this->params['templates']) : false;
         $roles = isset($this->params['roles']) ? explode(',', $this->params['roles']) : false;
 
-        $tplFlag = ($this->checkTemplate && !$templates || ($templates && !in_array($this->params['template'],
-                    $templates)));
+        $tplFlag = ($this->checkTemplate && !$templates || ($templates && !in_array(
+            $this->params['template'],
+            $templates
+        )));
 
         $documents = isset($this->params['documents']) ? explode(',', $this->params['documents']) : false;
         $docFlag = ($this->checkId && $tplFlag) ? !($documents && in_array($this->params['id'], $documents)) : $tplFlag;
@@ -184,8 +189,10 @@ abstract class Plugin
             if ($output !== false) {
                 $ph = $this->getTplPlaceholders();
                 $ph['js'] = $this->renderJS($this->jsListDefault, $ph) . $this->renderJS($this->jsListCustom, $ph);
-                $ph['styles'] = $this->renderJS($this->cssListDefault, $ph) . $this->renderJS($this->cssListCustom,
-                        $ph);
+                $ph['styles'] = $this->renderJS($this->cssListDefault, $ph) . $this->renderJS(
+                    $this->cssListCustom,
+                    $ph
+                );
                 $output = $this->DLTemplate->parseChunk('@CODE:' . $output, $ph);
             }
 
@@ -250,4 +257,5 @@ abstract class Plugin
             }
         }
     }
+
 }

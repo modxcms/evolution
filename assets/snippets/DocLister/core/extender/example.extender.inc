@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Example extender for DocLister
  *
@@ -20,4 +16,5 @@ class example_DL_Extender extends extDocLister
     {
         print_r($this->_cfg);
     }
+
 }

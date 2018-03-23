@@ -795,7 +795,8 @@ class SqlFormatter
             if ($string[0] === '-' || $string[0] === '#') {
                 $last = strpos($string, "\n");
                 $type = self::TOKEN_TYPE_COMMENT;
-            } else { // Comment until closing comment tag
+            } else {
+// Comment until closing comment tag
                 $last = strpos($string, "*/", 2) + 2;
                 $type = self::TOKEN_TYPE_BLOCK_COMMENT;
             }
@@ -833,7 +834,7 @@ class SqlFormatter
             } // Non-quoted variable name
             else {
                 preg_match('/^(' . $string[0] . '[a-zA-Z0-9\._\$]+)/', $string, $matches);
-                if ($matches) {
+                if (!empty($matches)) {
                     $ret[self::TOKEN_VALUE] = $matches[1];
                 }
             }
@@ -973,7 +974,7 @@ class SqlFormatter
             }
 
             // See if the token is already cached
-            if ($cacheKey && isset(self::$token_cache[$cacheKey])) {
+            if ($cacheKey !== false && isset(self::$token_cache[$cacheKey])) {
                 // Retrieve from cache
                 $token = self::$token_cache[$cacheKey];
                 $token_length = strlen($token[self::TOKEN_VALUE]);
@@ -985,7 +986,7 @@ class SqlFormatter
                 self::$cache_misses++;
 
                 // If the token is shorter than the max length, store it in cache
-                if ($cacheKey && $token_length < self::$max_cachekey_size) {
+                if ($cacheKey !== false && $token_length < self::$max_cachekey_size) {
                     self::$token_cache[$cacheKey] = $token;
                 }
             }
@@ -1044,7 +1045,8 @@ class SqlFormatter
             // Get highlighted token if doing syntax highlighting
             if ($highlight) {
                 $highlighted = self::highlightToken($token);
-            } else { // If returning raw text
+            } else {
+// If returning raw text
                 $highlighted = $token[self::TOKEN_VALUE];
             }
 

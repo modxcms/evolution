@@ -1,12 +1,12 @@
 <?php
-if ( ! defined('MODX_BASE_PATH')) {
+if (! defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
 $p = &$modx->event->params;
-if ( ! is_array($p)) {
+if (! is_array($p)) {
     $p = array();
 }
 
@@ -21,7 +21,8 @@ $p = array_merge(
         'api'        => implode(",", array($titleField, $valueField)),
         'controller' => 'site_content',
         'debug'      => '0'
-    ), $p
+    ),
+    $p
 );
 
 $json = $modx->runSnippet("DocLister", $p);
@@ -40,7 +41,7 @@ foreach ($json as $el) {
 if (APIhelpers::getkey($p, 'debug')) {
     $key = APIhelpers::getkey($p, 'sysKey', 'dl') . '.debug';
     $debugStack = $modx->getPlaceholder($key);
-    if ( ! empty($debugStack)) {
+    if (! empty($debugStack)) {
         $modx->logEvent(0, 1, $debugStack, 'DocLister [DLValueList]');
     }
 }

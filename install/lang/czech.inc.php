@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author modxcms.cz
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Czech
  * @package modx
@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = 'Kontrola zda lze zapisovat do adresář�
 $_lang["checking_if_config_exist_and_writable"] = 'Kontrola zda existuje soubor <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> a lze do něj zapisovat: ';
 $_lang["checking_if_export_exists"] = 'Kontrola existence adresáře <span class="mono">/assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Kontrola zda lze zapisovat do adresáře <span class="mono">/assets/export</span>: ';
-$_lang["checking_if_images_exist"] = 'Kontrola zda existují adresáře <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> a <span class="mono">/assets/.thumbs</span>: ';
-$_lang["checking_if_images_writable"] = 'Kontrola zda lze zapisovat do adresářů <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> a <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_exist"] = 'Kontrola zda existují adresáře <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> a <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_writable"] = 'Kontrola zda lze zapisovat do adresářů <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> a <span class="mono">/assets/.thumbs</span>: ';
 $_lang["checking_mysql_strict_mode"] = 'Kontrola MySQL strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Kontrola verze MySQL: ';
 $_lang["checking_php_version"] = 'Kontrola verze PHP: ';
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'nezdařilo se!';
 $_lang["status_failed_could_not_create_database"] = 'nezdařilo se - nelze vytvořit databázi';
 $_lang["status_failed_database_collation_does_not_match"] = 'nezdařilo se - nesoulad porovnání databáze; použijte SET NAMES nebo vyberte %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'nezdařilo se - zvolený prefix tabulek se již používá!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'v pořádku - databáze vybrána';
 $_lang["status_passed_database_created"] = 'v pořádku - databáze vytvořena';
 $_lang["status_passed_server"] = 'v pořádku - porovnání je dostupné';

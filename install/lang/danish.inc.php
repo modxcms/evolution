@@ -4,8 +4,8 @@
  *
  * @author Henrik Nielsen
  * @author Mads Vestmar
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Danish
  * @package modx
@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Kontrollerer om  <span class="mono">/ass
 $_lang["checking_if_config_exist_and_writable"] = 'Kontrollerer om <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> er oprettet og er skrivbar: ';
 $_lang["checking_if_export_exists"] = 'Kontrollerer om <span class="mono">/assets/export</span> mappen er oprettet: ';
 $_lang["checking_if_export_writable"] = 'Kontrollerer om <span class="mono">/assets/export</span> mappen er skrivbar: ';
-$_lang["checking_if_images_exist"] = 'Kontrollerer om <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> og <span class="mono">/assets/.thumbs</span> mapperne er oprettet: ';
-$_lang["checking_if_images_writable"] = 'Kontrollerer om <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> og <span class="mono">/assets/.thumbs</span> mapperne er skrivbare: ';
+$_lang["checking_if_images_exist"] = 'Kontrollerer om <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> og <span class="mono">/assets/.thumbs</span> mapperne er oprettet: ';
+$_lang["checking_if_images_writable"] = 'Kontrollerer om <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> og <span class="mono">/assets/.thumbs</span> mapperne er skrivbare: ';
 $_lang["checking_mysql_strict_mode"] = 'Kontrollerer om MySQL håndterer strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Kontrollerer MySQL versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerer PHP versionen: ';
@@ -166,6 +166,7 @@ $_lang["status_failed"] = 'Fejlede!';
 $_lang["status_failed_could_not_create_database"] = 'fejlede - kunne ikke oprette databasen';
 $_lang["status_failed_database_collation_does_not_match"] = 'fejlede - databasens collation stemmer ikke overens; brug SET NAMES eller vælg %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fejlede - tabellernes præfiks eksisterer allerede!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'gennemført - databasen er valgt';
 $_lang["status_passed_database_created"] = 'gennemført - databasen er oprettet';
 $_lang["status_passed_server"] = 'gennemført - collations er nu tilgængelige';

@@ -8,9 +8,10 @@
 	var DatePickers = document.querySelectorAll('input.DatePicker');
 	if(DatePickers) {
 		for(var i = 0; i < DatePickers.length; i++) {
+			let format = DatePickers[i].getAttribute("data-format");
 			new DatePicker(DatePickers[i], {
 				yearOffset: dpOffset,
-				format: dpformat,
+				format: format !== null ? format : dpformat,
 				dayNames: dpdayNames,
 				monthNames: dpmonthNames,
 				startDay: dpstartDay

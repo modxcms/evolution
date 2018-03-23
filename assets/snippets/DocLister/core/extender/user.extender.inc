@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * user extender for DocLister
  *
@@ -163,4 +159,5 @@ class user_DL_Extender extends extDocLister
 
         return $out;
     }
+
 }

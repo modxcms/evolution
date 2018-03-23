@@ -1,35 +1,26 @@
 <?php
 //Kill them all
 $_GET = $_POST = $_REQUEST = array();
+define('IN_MANAGER_MODE', true);
+//Setup the MODx API
+define('MODX_API_MODE', true);
 
 //Root dir
 $richtextIncludeDirectory = '../../../../../../';
 
+include_once ($richtextIncludeDirectory.'index.php');
 //Define MGR_DIR
-if (file_exists($richtextIncludeDirectory.'assets/cache/siteManager.php')){include_once($richtextIncludeDirectory.'assets/cache/siteManager.php');}
 if (!defined('MGR_DIR')){define('MGR_DIR', 'manager');}
 
 $richtextIncludeDirectory .= MGR_DIR.'/';
 
 //Config
 $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] = '/';
-require_once($richtextIncludeDirectory.'includes/protect.inc.php');
-require_once($richtextIncludeDirectory.'includes/config.inc.php');
-startCMSSession();
-
+$modx->db->connect();
+$modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
 if ($_SESSION['mgrValidated']){
-	define('IN_MANAGER_MODE', true);
-	//Setup the MODx API
-	define('MODX_API_MODE', true);
-	//Initiate a new document parser
-	require_once($richtextIncludeDirectory.'includes/document.parser.class.inc.php');
-	$modx = new DocumentParser;
-	
-	//Provide the MODx DBAPI
-	$modx->db->connect();
-	//Provide the $modx->documentMap and user settings
-	$modx->getSettings();
-	
+
 	$mmDir = 'assets/plugins/managermanager/';
 	$windowDir = $mmDir.'widgets/ddmultiplefields/richtext/';
 	

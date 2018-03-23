@@ -66,8 +66,7 @@ class Profile extends Form
     {
         $rules = parent::getValidationRules($param);
         $password = $this->getField('password');
-        var_dump($rules);
-        if (empty($password)) {
+        if (empty($password) || !is_scalar($password)) {
             $this->forbiddenFields[] = 'password';
             if (isset($rules['password'])) {
                 unset($rules['password']);
@@ -92,8 +91,8 @@ class Profile extends Form
     public static function uniqueEmail($fl, $value)
     {
         $result = true;
-        if (!is_null($fl->user) && ($fl->user->get("email") !== $value)) {
-            $fl->user->set('email', $value);
+        if (is_scalar($value) && !is_null($fl->user) && ($fl->user->get("email") !== $value)) {
+            $fl->user->set('email', mb_strtolower($value));
             $result = $fl->user->checkUnique('web_user_attributes', 'email', 'internalKey');
         }
 
@@ -108,8 +107,8 @@ class Profile extends Form
     public static function uniqueUsername($fl, $value)
     {
         $result = true;
-        if (!is_null($fl->user) && ($fl->user->get("email") !== $value)) {
-            $fl->user->set('username', $value);
+        if (is_scalar($value) && !is_null($fl->user) && ($fl->user->get("email") !== $value)) {
+            $fl->user->set('username', mb_strtolower($value));
             $result = $fl->user->checkUnique('web_users', 'username');
         }
 
@@ -123,7 +122,9 @@ class Profile extends Form
     {
         if ($this->user->get('username') == $this->user->get('email') && !empty($this->getField('email')) && empty($this->getField('username'))) {
             $this->setField('username', $this->getField('email'));
-            if (!empty($this->allowedFields)) $this->allowedFields[] = 'username';
+            if (!empty($this->allowedFields)) {
+                $this->allowedFields[] = 'username';
+            }
             if (!empty($this->forbiddenFields)) {
                 $_forbidden = array_flip($this->forbiddenFields);
                 unset($_forbidden['username']);
@@ -142,8 +143,14 @@ class Profile extends Form
             }
         }
         $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
+        if (isset($fields['username'])) {
+            $fields['username'] = is_scalar($fields['username']) ? mb_strtolower($fields['username']) : '';
+        }
+        if (isset($fields['email'])) {
+            $fields['email'] = is_scalar($fields['username']) ? mb_strtolower($fields['email']) : '';
+        }
         $result = $this->user->fromArray($fields)->save(true);
-        $this->log('Update profile', array('data' => $fields, 'result' => $result));
+        $this->log('Update profile', array('data' => $fields, 'result' => $result, 'log' => $this->user->getLog()));
         if ($result) {
             $this->setFormStatus(true);
             $this->user->close();

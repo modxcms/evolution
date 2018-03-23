@@ -3,9 +3,6 @@
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author kabachello <kabachnik@hotmail.com>
  */
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
 
 /**
  * Class filterDocLister
@@ -129,8 +126,11 @@ abstract class filterDocLister
      */
     protected function build_sql_where($table_alias, $field, $operator, $value)
     {
-        $this->DocLister->debug->debug('Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()),
-            'buildQuery', 2);
+        $this->DocLister->debug->debug(
+            'Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()),
+            'buildQuery',
+            2
+        );
         $output = sqlHelper::tildeField($field, $table_alias);
 
         switch ($operator) {
@@ -221,4 +221,5 @@ abstract class filterDocLister
     {
         return $this->tableAlias;
     }
+
 }

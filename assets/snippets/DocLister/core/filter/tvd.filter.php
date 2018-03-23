@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 require_once 'tv.filter.php';
 
 /**
@@ -11,6 +7,7 @@ require_once 'tv.filter.php';
  */
 class tvd_DL_filter extends tv_DL_filter
 {
+
     /**
      * @return string
      */
@@ -24,8 +21,10 @@ class tvd_DL_filter extends tv_DL_filter
         $this->field = "IFNULL(`{$alias}`.`value`, `{$dPrefix}`.`default_text`)";
 
         if (!$exists) {
-            $join .= " LEFT JOIN " . $this->DocLister->getTable("site_tmplvars",
-                    $dPrefix) . " on `" . $dPrefix . "`.`id` = " . $this->tv_id;
+            $join .= " LEFT JOIN " . $this->DocLister->getTable(
+                "site_tmplvars",
+                $dPrefix
+            ) . " on `" . $dPrefix . "`.`id` = " . $this->tv_id;
             $this->extTV->addTVSortWithDefault($this->tvName);
         }
 

@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Request extender for DocLister
  *
@@ -186,4 +182,5 @@ class request_DL_Extender extends extDocLister
 
         return $link;
     }
+
 }

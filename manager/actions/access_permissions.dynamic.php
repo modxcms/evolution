@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('access_permissions')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -39,226 +39,250 @@ if($modx->db->getRecordCount($rs) < 1) {
 }
 
 ?>
+<script type="text/javascript">
+
+	function deletegroup(groupid, type) {
+		if(confirm("<?= $_lang['confirm_delete_group'] ?>") === true) {
+			if(type === 'usergroup') {
+				document.location.href = "index.php?a=41&usergroup=" + groupid + "&operation=delete_user_group";
+			}
+			else if(type === 'documentgroup') {
+				document.location.href = "index.php?a=41&documentgroup=" + groupid + "&operation=delete_document_group";
+			}
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		}
+	});
+
+</script>
 
 <h1>
-	<i class="fa fa-male"></i><?php echo $_lang['mgr_access_permissions']; ?>
+	<i class="fa fa-male"></i><?= $_lang['mgr_access_permissions']; ?><i class="fa fa-question-circle help"></i>
 </h1>
 
-<div class="sectionBody">
-	<p><?php echo $_lang['access_permissions_introtext'] ?></p><?php echo $use_udperms != 1 ? '<p>' . $_lang['access_permissions_off'] . '</p>' : '' ?>
+<div class="container element-edit-message">
+	<div class="alert alert-info"><?= $_lang['access_permissions_introtext'] ?></div>
+</div>
 
-	<div class="tab-pane" id="uapPane">
-		<script type="text/javascript">
-			tp1 = new WebFXTabPane(document.getElementById("uapPane"), true);
+<div class="container"><?= ($use_udperms != 1 ? '<div class="alert alert-danger">' . $_lang['access_permissions_off'] . '</div>' : '') ?></div>
 
-			function deletegroup(groupid, type) {
-				if(confirm("<?php echo $_lang['confirm_delete_group']?>") === true) {
-					if(type === 'usergroup') {
-						document.location.href = "index.php?a=41&usergroup=" + groupid + "&operation=delete_user_group";
-					}
-					else if(type === 'documentgroup') {
-						document.location.href = "index.php?a=41&documentgroup=" + groupid + "&operation=delete_document_group";
-					}
-				}
-			}
-		</script>
+<div class="tab-pane" id="uapPane">
+	<script type="text/javascript">
+		tp1 = new WebFXTabPane(document.getElementById("uapPane"), true);
+	</script>
 
-		<div class="tab-page" id="tabPage1">
-			<h2 class="tab"><?php echo $_lang['access_permissions_user_groups'] ?></h2>
-			<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage1"));</script>
+	<div class="tab-page" id="tabPage1">
+		<h2 class="tab"><?= $_lang['access_permissions_user_groups'] ?></h2>
+		<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage1"));</script>
+
+		<div class="container container-body">
+			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_users_tab'] ?></p>
+			<div class="form-group">
+				<b><?= $_lang['access_permissions_add_user_group'] ?></b>
+				<form method="post" action="index.php" name="accesspermissions">
+					<input type="hidden" name="a" value="41" />
+					<input type="hidden" name="operation" value="add_user_group" />
+					<div class="input-group">
+						<input class="form-control" type="text" value="" name="newusergroup" />
+						<div class="input-group-btn">
+							<input class="btn btn-success" type="submit" value="<?= $_lang['submit'] ?>" />
+						</div>
+					</div>
+				</form>
+			</div>
 			<?php
-			// User Groups
-
-			echo '<p class="element-edit-message">' . $_lang['access_permissions_users_tab'] . '</p>';
-
-			?>
-			<table class="permissiongroup">
-				<thead>
-				<tr>
-					<td><b><?php echo $_lang['access_permissions_add_user_group'] ?></b></td>
-				</tr>
-				</thead>
-				<tr class="row1">
-					<td>
-						<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
-							<input type="hidden" name="a" value="41" />
-							<input type="hidden" name="operation" value="add_user_group" />
-							<input type="text" value="" name="newusergroup" size="200" />&nbsp;
-							<input type="submit" value="<?php echo $_lang['submit'] ?>" />
-						</form>
-					</td>
-				</tr>
-			</table>
-			<br />
-			<?php
-			$rs = $modx->db->select('groupnames.*, users.id AS user_id, users.username user_name', "{$tbl_membergroup_names} AS groupnames
-			LEFT JOIN {$tbl_member_groups} AS groups ON groups.user_group = groupnames.id
-			LEFT JOIN {$tbl_manager_users} AS users ON users.id = groups.member", '', 'groupnames.name, user_name');
+			$rs = $modx->db->select('groupnames.*, users.id AS user_id, users.username user_name', $tbl_membergroup_names . ' AS groupnames
+			LEFT JOIN ' . $tbl_member_groups . ' AS groups ON groups.user_group = groupnames.id
+			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups.member', '', 'groupnames.name, user_name');
 			if($modx->db->getRecordCount($rs) < 1) {
-				echo '<span class="warning">' . $_lang['no_groups_found'] . '</span>';
+				?>
+				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
+				<?php
 			} else {
-				echo "<ul class=\"permissiongroups\">\n";
+			?>
+			<div class="form-group">
+				<?php
 				$pid = '';
 				while($row = $modx->db->getRow($rs)) {
-					if($row['id'] !== $pid) {
+					if($pid != $row['id']) {
 						if($pid != '') {
-							echo "</li></ul></li>\n";
-						} // close previous one
-
-						// display the current user group with a rename/delete form
-						echo '<li><form method="post" action="index.php" name="accesspermissions" style="margin-top: 0.5em;">' . "\n" . "\t" . '<input type="hidden" name="a" value="41" />' . "\n" . "\t" . '<input type="hidden" name="groupid" value="' . $row['id'] . '" />' . "\n" . "\t" . '<input type="hidden" name="operation" value="rename_user_group" />' . "\n" . "\t" . '<input type="text" name="newgroupname" value="' . $modx->htmlspecialchars($row['name']) . '" size="200" />&nbsp;' . "\n" . "\t" . '<input type="submit" value="' . $_lang['rename'] . '" />&nbsp;' . "\n" . "\t" . '<input type="button" value="' . $_lang['delete'] . '" onclick="deletegroup(' . $row['id'] . ',\'usergroup\');" />' . "\n" . '</form>';
-
-						echo "<ul>\n";
-						echo "\t<li>" . $_lang['access_permissions_users_in_group'] . ' ';
+							echo '</div><div class="form-group">';
+						}
+						?>
+						<form method="post" action="index.php" name="accesspermissions">
+							<input type="hidden" name="a" value="41" />
+							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
+							<input type="hidden" name="operation" value="rename_user_group" />
+							<div class="input-group">
+								<input class="form-control" type="text" name="newgroupname" value="<?= $modx->htmlspecialchars($row['name']) ?>" />
+								<div class="input-group-btn">
+									<input class="btn btn-secondary" type="submit" value="<?= $_lang['rename'] ?>" />
+									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'usergroup');" />
+								</div>
+							</div>
+						</form>
+						<?= $_lang['access_permissions_users_in_group'] ?>
+						<?php
 					}
 					if(!$row['user_id']) {
-						// no users in group
-						echo '<i>' . $_lang['access_permissions_no_users_in_group'] . '</i>';
+						?>
+						<i><?= $_lang['access_permissions_no_users_in_group'] ?></i>
+						<?php
 						$pid = $row['id'];
 						continue;
 					}
-					if($pid == $row['id']) {
-						echo ', ';
-					} // comma separation :)
-					echo '<a href="index.php?a=12&amp;id=' . $row['user_id'] . '">' . $row['user_name'] . '</a>';
+					?>
+					<?= ($pid == $row['id'] ? ', ' : '') ?><a href="index.php?a=12&id=<?= $row['user_id'] ?>"><?= $row['user_name'] ?></a>
+					<?php
 					$pid = $row['id'];
 				}
-				echo "</li></ul></li>\n";
-				echo "</ul>\n";
-			}
-			?>
+				}
+				?>
+			</div>
 		</div>
+	</div>
 
-		<div class="tab-page" id="tabPage2">
-			<h2 class="tab"><?php echo $_lang['access_permissions_resource_groups'] ?></h2>
-			<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage2"));</script>
-			<?php
-			// Document Groups
+	<div class="tab-page" id="tabPage2">
+		<h2 class="tab"><?= $_lang['access_permissions_resource_groups'] ?></h2>
+		<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage2"));</script>
 
-			echo '<p class="element-edit-message">' . $_lang['access_permissions_resources_tab'] . '</p>';
-			?>
-			<table class="permissiongroup">
-				<thead>
-				<tr>
-					<td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td>
-				</tr>
-				</thead>
-				<tr class="row1">
-					<td>
-						<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
-							<input type="hidden" name="a" value="41" />
-							<input type="hidden" name="operation" value="add_document_group" />
-							<input type="text" value="" name="newdocgroup" size="200" />&nbsp;
-							<input type="submit" value="<?php echo $_lang['submit'] ?>" />
-						</form>
-					</td>
-				</tr>
-			</table>
-			<br />
+		<div class="container container-body">
+			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_resources_tab'] ?></p>
+			<div class="form-group">
+				<b><?= $_lang['access_permissions_add_resource_group'] ?></b>
+				<form method="post" action="index.php" name="accesspermissions">
+					<input type="hidden" name="a" value="41" />
+					<input type="hidden" name="operation" value="add_document_group" />
+					<div class="input-group">
+						<input class="form-control" type="text" value="" name="newdocgroup" />
+						<div class="input-group-btn">
+							<input class="btn btn-success" type="submit" value="<?= $_lang['submit'] ?>" />
+						</div>
+					</div>
+				</form>
+			</div>
 			<?php
-			$rs = $modx->db->select('dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title', "{$tbl_documentgroup_names} AS dgnames
-			LEFT JOIN {$tbl_document_groups} AS dg ON dg.document_group = dgnames.id
-			LEFT JOIN {$tbl_site_content} AS sc ON sc.id = dg.document", "", "dgnames.name, sc.id");
+			$rs = $modx->db->select('dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title', $tbl_documentgroup_names . ' AS dgnames
+			LEFT JOIN ' . $tbl_document_groups . ' AS dg ON dg.document_group = dgnames.id
+			LEFT JOIN ' . $tbl_site_content . ' AS sc ON sc.id = dg.document', '', 'dgnames.name, sc.id');
 			if($modx->db->getRecordCount($rs) < 1) {
-				echo '<span class="warning">' . $_lang['no_groups_found'] . '</span>';
+				?>
+				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
+				<?php
 			} else {
-				echo '<table class="permissiongroup">' . "\n" . "\t" . '<thead>' . "\n" . "\t" . '<tr><td><b>' . $_lang['access_permissions_resource_groups'] . '</b></td></tr>' . "\n" . "\t" . '</thead>' . "\n";
+			?>
+			<div class="form-group">
+				<?php
 				$pid = '';
 				while($row = $modx->db->getRow($rs)) {
-					if($row['id'] !== $pid) {
+					if($pid != $row['id']) {
 						if($pid != '') {
-							echo "</td></tr>\n";
-						} // close previous one
-
-						echo '<tr><td class="row3"><form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">' . "\n" . "\t" . '<input type="hidden" name="a" value="41" />' . "\n" . "\t" . '<input type="hidden" name="groupid" value="' . $row['id'] . '" />' . "\n" . "\t" . '<input type="hidden" name="operation" value="rename_document_group" />' . "\n" . "\t" . '<input type="text" name="newgroupname" value="' . $modx->htmlspecialchars($row['name']) . '" size="200" />&nbsp;' . "\n" . "\t" . '<input type="submit" value="' . $_lang['rename'] . '" />' . "\n" . "\t" . '<input type="button" value="' . $_lang['delete'] . '" onclick="deletegroup(' . $row['id'] . ',\'documentgroup\');" />' . "\n" . '</form>';
-
-						echo '</td></tr><tr><td class="row2">' . $_lang['access_permissions_resources_in_group'] . ' ';
+							echo '</div><div class="form-group">';
+						}
+						?>
+						<form method="post" action="index.php" name="accesspermissions">
+							<input type="hidden" name="a" value="41" />
+							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
+							<input type="hidden" name="operation" value="rename_document_group" />
+							<div class="input-group">
+								<input class="form-control" type="text" name="newgroupname" value="<?= $modx->htmlspecialchars($row['name']) ?>" />
+								<div class="input-group-btn">
+									<input class="btn btn-secondary" type="submit" value="<?= $_lang['rename'] ?>" />
+									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'documentgroup');" />
+								</div>
+							</div>
+						</form>
+						<?= $_lang['access_permissions_resources_in_group'] ?>
+						<?php
 					}
 					if(!$row['doc_id']) {
-						// no documents in group
-						echo $_lang['access_permissions_no_resources_in_group'];
+						?>
+						<i><?= $_lang['access_permissions_no_resources_in_group'] ?></i>
+						<?php
 						$pid = $row['id'];
 						continue;
 					}
-					if($pid == $row['id']) {
-						echo ", \n";
-					}
-					echo '<a href="index.php?a=3&amp;id=' . $row['doc_id'] . '" title="' . $modx->htmlspecialchars($row['doc_title']) . '">' . $row['doc_id'] . '</a>';
+					?>
+					<?= ($pid == $row['id'] ? ', ' : '') ?><a href="index.php?a=3&id=<?= $row['doc_id'] ?>" title="<?= $modx->htmlspecialchars($row['doc_title']) ?>"><?= $row['doc_id'] ?></a>
+					<?php
 					$pid = $row['id'];
 				}
-				echo '</table>';
-			}
-			?>
+				}
+				?>
+			</div>
 		</div>
+	</div>
 
-		<div class="tab-page" id="tabPage3">
-			<h2 class="tab"><?php echo $_lang['access_permissions_links'] ?></h2>
-			<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage3"));</script>
+	<div class="tab-page" id="tabPage3">
+		<h2 class="tab"><?= $_lang['access_permissions_links'] ?></h2>
+		<script type="text/javascript">tp1.addTabPage(document.getElementById("tabPage3"));</script>
+
+		<div class="container container-body">
+			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_links_tab'] ?></p>
 			<?php
 			// User/Document Group Links
-
-			echo '<p class="element-edit-message">' . $_lang['access_permissions_links_tab'] . '</p>';
-
-			$rs = $modx->db->select("groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name", "{$tbl_membergroup_names} AS groupnames
-			LEFT JOIN {$tbl_membergroup_access} AS groupacc ON groupacc.membergroup = groupnames.id
-			LEFT JOIN {$tbl_documentgroup_names} AS dgnames ON dgnames.id = groupacc.documentgroup", '', 'name, dg_name');
+			$rs = $modx->db->select('groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name', $tbl_membergroup_names . ' AS groupnames
+			LEFT JOIN ' . $tbl_membergroup_access . ' AS groupacc ON groupacc.membergroup = groupnames.id
+			LEFT JOIN ' . $tbl_documentgroup_names . ' AS dgnames ON dgnames.id = groupacc.documentgroup', '', 'name, dg_name');
 			if($modx->db->getRecordCount($rs) < 1) {
-				echo '<span class="warning">' . $_lang['no_groups_found'] . '</span><br />';
+				?>
+				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
+				<?php
 			} else {
 				?>
-				<table class="permissiongroup">
-					<thead>
-					<tr>
-						<td><b><?php echo $_lang["access_permissions_group_link"] ?></b></td>
-					</tr>
-					</thead>
-					<tr class="row1">
-						<td>
-							<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
-								<input type="hidden" name="a" value="41" />
-								<input type="hidden" name="operation" value="add_document_group_to_user_group" />
-								<?php echo $_lang["access_permissions_link_user_group"] ?>
-								<?php echo $usrgroupselector ?>
-								<?php echo $_lang["access_permissions_link_to_group"] ?>
-								<?php echo $docgroupselector ?>
-								<input type="submit" value="<?php echo $_lang['submit'] ?>">
-							</form>
-						</td>
-					</tr>
-				</table>
-				<br />
-				<?php
-				echo "<ul class=\"permissiongroups\">\n";
-				$pid = '';
-				while($row = $modx->db->getRow($rs)) {
-					if($row['id'] != $pid) {
-						if($pid != '') {
-							echo "</ul></li>\n";
-						} // close previous one
-						echo '<li><b>' . $row['name'] . '</b>';
-
-						if(!$row['dg_id']) {
-							echo ' &raquo; <i>' . $_lang['no_groups_found'] . "</i></li>\n";
-							$pid = '';
-							continue;
-						} else {
-							echo "<ul>\n";
+				<div class="form-group">
+					<b><?= $_lang["access_permissions_group_link"] ?></b>
+					<form method="post" action="index.php" name="accesspermissions">
+						<input type="hidden" name="a" value="41" />
+						<input type="hidden" name="operation" value="add_document_group_to_user_group" />
+						<?= $_lang["access_permissions_link_user_group"] ?>
+						<?= $usrgroupselector ?>
+						<?= $_lang["access_permissions_link_to_group"] ?>
+						<?= $docgroupselector ?>
+						<input class="btn btn-success" type="submit" value="<?= $_lang['submit'] ?>">
+					</form>
+				</div>
+				<hr>
+				<ul>
+					<?php
+					$pid = '';
+					while($row = $modx->db->getRow($rs)) {
+						if($row['id'] != $pid) {
+							if($pid != '') {
+								echo '</ul></li>';
+							} // close previous one
+							?>
+							<li><b><?= $row['name'] ?></b></li>
+							<?php
+							if(!$row['dg_id']) {
+								echo '<i>' . $_lang['no_groups_found'] . '</i></li>';
+								$pid = '';
+								continue;
+							} else {
+								echo '<ul>';
+							}
 						}
+						if(!$row['dg_id']) {
+							continue;
+						}
+						?>
+						<li><?= $row['dg_name'] ?>
+							<small><i>(<a class="text-danger" href="index.php?a=41&coupling=<?= $row['link_id'] ?>&operation=remove_document_group_from_user_group"><?= $_lang['remove'] ?></a>)</i></small>
+						</li>
+						<?php
+						$pid = $row['id'];
 					}
-					if(!$row['dg_id']) {
-						continue;
-					}
-					echo "\t<li>" . $row['dg_name'];
-					echo ' <small><i>(<a href="index.php?a=41&amp;coupling=' . $row['link_id'] . '&amp;operation=remove_document_group_from_user_group">';
-					echo $_lang['remove'] . '</a>)</i></small>';
-					echo "</li>\n";
-
-					$pid = $row['id'];
-				}
-				echo '</ul>';
+					?>
+				</ul>
+				<?php
 			}
 			?>
 		</div>
-
 	</div>
+
 </div>

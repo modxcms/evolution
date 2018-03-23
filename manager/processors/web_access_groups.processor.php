@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('web_access_permissions')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -48,26 +50,26 @@ switch ($operation) {
 	break;
 	case "delete_user_group" :
 		$updategroupaccess = true;
-		$usergroup = intval($_REQUEST['usergroup']);
+		$usergroup = (int)$_REQUEST['usergroup'];
 		if(empty($usergroup)) {
 			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
 			$modx->db->delete($tbl_webgroup_names, "id='{$usergroup}'");
-			
+
 			$modx->db->delete($tbl_webgroup_access, "webgroup='{$usergroup}'");
-			
+
 			$modx->db->delete($tbl_web_groups, "webuser='{$usergroup}'");
 		}
 	break;
 	case "delete_document_group" :
-		$group = intval($_REQUEST['documentgroup']);
+		$group = (int)$_REQUEST['documentgroup'];
 		if(empty($group)) {
 			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
 			$modx->db->delete($tbl_documentgroup_names, "id='{$group}'");
-			
+
 			$modx->db->delete($tbl_webgroup_access, "documentgroup='{$group}'");
-			
+
 			$modx->db->delete($tbl_document_groups, "document_group='{$group}'");
 		}
 	break;
@@ -76,7 +78,7 @@ switch ($operation) {
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
-		$groupid = intval($_REQUEST['groupid']);
+		$groupid = (int)$_REQUEST['groupid'];
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No user group id specified for rename.");
 		}
@@ -87,7 +89,7 @@ switch ($operation) {
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
-		$groupid = intval($_REQUEST['groupid']);
+		$groupid = (int)$_REQUEST['groupid'];
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No document group id specified for rename.");
 		}
@@ -95,8 +97,8 @@ switch ($operation) {
 	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
-		$usergroup = intval($_REQUEST['usergroup']);
-		$docgroup = intval($_REQUEST['docgroup']);
+		$usergroup = (int)$_REQUEST['usergroup'];
+		$docgroup = (int)$_REQUEST['docgroup'];
 		$rs = $modx->db->select('COUNT(*)', $tbl_webgroup_access, "webgroup='{$usergroup}' AND documentgroup='{$docgroup}'");
 		$limit = $modx->db->getValue($rs);
 		if($limit<=0) {
@@ -107,7 +109,7 @@ switch ($operation) {
 	break;
 	case "remove_document_group_from_user_group" :
 		$updategroupaccess = true;
-		$coupling = intval($_REQUEST['coupling']);
+		$coupling = (int)$_REQUEST['coupling'];
 		$modx->db->delete($tbl_webgroup_access, "id='{$coupling}'");
 	break;
 	default :
@@ -127,4 +129,3 @@ if($updategroupaccess==true){
 
 $header = "Location: index.php?a=91";
 header($header);
-?>

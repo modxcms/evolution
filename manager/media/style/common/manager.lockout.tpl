@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MODX Content Manager</title>
+	<title>EVO Content Manager</title>
 	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 	<meta name="robots" content="noindex, nofollow" />
 	<style type="text/css">
@@ -77,7 +77,7 @@
 
 <!-- convert this to a language include -->
 <p class="loginLicense">
-	<strong>MODX</strong>&trade; is licensed under the GPL license. &copy; 2005-2017 <a href="http://modx.com/" target="_blank">MODX</a>.
+	<strong>MODX</strong>&trade; is licensed under the GPL license. &copy; 2005-2018 <a href="http://modx.com/" target="_blank">MODX</a>.
 </p>
 
 </body>

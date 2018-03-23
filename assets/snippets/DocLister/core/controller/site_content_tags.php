@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * site_content_tags controller with TagSaver plugin
  * @see http://modx.im/blog/addons/374.html
@@ -48,8 +44,12 @@ class site_content_tagsDocLister extends site_contentDocLister
         if ($tag !== false && is_array($tag) && $tag['mode'] == 'get') {
             $link .= "&tag=" . urlencode($tag['tag']);
         }
-        $url = ($id == $this->modx->config['site_start']) ? $this->modx->config['site_url'] . ($link != '' ? "?{$link}" : "") : $this->modx->makeUrl($id,
-            '', $link, 'full');
+        $url = ($id == $this->modx->config['site_start']) ? $this->modx->config['site_url'] . ($link != '' ? "?{$link}" : "") : $this->modx->makeUrl(
+            $id,
+            '',
+            $link,
+            'full'
+        );
 
         return $url;
     }
@@ -116,8 +116,10 @@ class site_content_tagsDocLister extends site_contentDocLister
             } else {
                 $where = "t.`name`='" . $this->modx->db->escape($tag['tag']) . "'";
             }
-            $where .= ($this->getCFGDef('tagsData', '') > 0) ? "AND ct.tv_id=" . (int)$this->getCFGDef('tagsData',
-                    '') : "";
+            $where .= ($this->getCFGDef('tagsData', '') > 0) ? "AND ct.tv_id=" . (int)$this->getCFGDef(
+                'tagsData',
+                ''
+            ) : "";
 
             if (!empty($this->_filters['where'])) {
                 $this->_filters['where'] .= " AND " . $where;

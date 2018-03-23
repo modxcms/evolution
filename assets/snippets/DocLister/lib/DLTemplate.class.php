@@ -9,7 +9,7 @@ class DLTemplate
 {
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var \DocumentParser
+     * @var DocumentParser $modx
      * @access protected
      */
     protected $modx = null;
@@ -24,7 +24,7 @@ class DLTemplate
     protected $templateExtension = 'html';
 
     /**
-     * @var null twig object
+     * @var null|Twig_Environment twig object
      */
     protected $twig = null;
 
@@ -65,7 +65,6 @@ class DLTemplate
      */
     private function __clone()
     {
-
     }
 
     /**
@@ -75,7 +74,6 @@ class DLTemplate
      */
     private function __wakeup()
     {
-
     }
 
     /**
@@ -121,8 +119,12 @@ class DLTemplate
      * @param array $data
      * @return $this
      */
-    public function setTwigTemplateVars($data = array()) {
-        if (is_array($data)) $this->twigTemplateVars = $data;
+    public function setTwigTemplateVars($data = array())
+    {
+        if (is_array($data)) {
+            $this->twigTemplateVars = $data;
+        }
+
         return $this;
     }
 
@@ -156,12 +158,17 @@ class DLTemplate
     public function getChunk($name)
     {
         $tpl = '';
-        $this->twigEnabled = substr($name,0,3) == '@T_';
+        $this->twigEnabled = substr($name, 0, 3) == '@T_';
         if ($name != '' && !isset($this->modx->chunkCache[$name])) {
-            $mode = (preg_match('/^((@[A-Z_]+)[:]{0,1})(.*)/Asu', trim($name),
-                    $tmp) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
+            $mode = (preg_match(
+                '/^((@[A-Z_]+)[:]{0,1})(.*)/Asu',
+                trim($name),
+                $tmp
+            ) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
-            if ($this->twigEnabled) $mode = '@'.substr($mode,3);
+            if ($this->twigEnabled) {
+                $mode = '@' . substr($mode, 3);
+            }
             switch ($mode) {
                 case '@FILE':
                     if ($subTmp != '') {
@@ -171,8 +178,11 @@ class DLTemplate
                                 '/[\/|\\\]+/i'
                             ), array('/', '/'), $subTmp) . '.' . $this->templateExtension);
                         $fname = explode(".", $path);
-                        if ($real == substr($path, 0,
-                                strlen($real)) && end($fname) == $this->templateExtension && file_exists($path)
+                        if ($real == substr(
+                            $path,
+                            0,
+                            strlen($real)
+                        ) && end($fname) == $this->templateExtension && file_exists($path)
                         ) {
                             $tpl = file_get_contents($path);
                         }
@@ -257,11 +267,13 @@ class DLTemplate
      */
     public function renderDoc($id, $events = false, $tpl = null)
     {
-        if ((int)$id <= 0) {
+        $id = (int)$id;
+        if ($id <= 0) {
             return '';
         }
 
         $m = clone $this->modx; //Чтобы была возможность вызывать события
+        $m->documentIdentifier = $id;
         $m->documentObject = $m->getDocumentObject('id', (int)$id, $events ? 'prepareResponse' : null);
         if ($m->documentObject['type'] == "reference") {
             if (is_numeric($m->documentObject['content']) && $m->documentObject['content'] > 0) {
@@ -297,8 +309,9 @@ class DLTemplate
     public function getTemplate($id)
     {
         $tpl = null;
+        $id = (int)$id;
         if ($id > 0) {
-            $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = '{$id}'");
+            $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = {$id}");
         }
         if (is_null($tpl)) {
             $tpl = '[*content*]';
@@ -315,14 +328,14 @@ class DLTemplate
      * @param bool $parseDocumentSource render html template via DocumentParser::parseDocumentSource()
      * @return string html template with data without placeholders
      */
-    public function parseChunk($name, $data, $parseDocumentSource = false)
+    public function parseChunk($name, $data = array(), $parseDocumentSource = false)
     {
         $out = $this->getChunk($name);
         if ($this->twigEnabled && ($out != '') && ($twig = $this->getTwig($name, $out))) {
             $plh = $this->twigTemplateVars;
             $plh['data'] = $data;
             $plh['modx'] = $this->modx;
-            $out = $twig->render(md5($name),$plh);
+            $out = $twig->render(md5($name), $plh);
         } else {
             if (is_array($data) && ($out != '')) {
                 if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
@@ -369,16 +382,26 @@ class DLTemplate
     /**
      * Return clone of twig
      *
+     * @param string $name
+     * @param string $tpl
      * @return null
      */
-    protected function getTwig($name, $tpl) {
+    protected function getTwig($name, $tpl)
+    {
         if (is_null($this->twig) && isset($this->modx->twig)) {
             $twig = clone $this->modx->twig;
             $this->twig = $twig;
         } else {
             $twig = $this->twig;
         }
-        if ($twig) $twig->getLoader()->addLoader(new Twig_Loader_Array(array(md5($name)=>$tpl)));
+        if ($twig && class_exists('Twig_Loader_Array')) {
+            $twig->getLoader()->addLoader(
+                new Twig_Loader_Array(array(
+                    md5($name) => $tpl
+                ))
+            );
+        }
+
         return $twig;
     }
 
@@ -404,11 +427,11 @@ class DLTemplate
      */
     public function createPHx($debug = 0, $maxpass = 50)
     {
-        if (!class_exists('DLphx', false)) {
+        if (!class_exists('DLphx')) {
             include_once(__DIR__ . '/DLphx.class.php');
         }
 
-        return new DLphx($debug, $maxpass);
+        return new DLphx($this->modx, $debug, $maxpass);
     }
 
     /**
@@ -435,8 +458,8 @@ class DLTemplate
         if (!is_object($modx)) {
             $modx = $this->modx;
         }
-        $minPasses = empty ($modx->minParserPasses) ? 2 : $modx->minParserPasses;
-        $maxPasses = empty ($modx->maxParserPasses) ? 10 : $modx->maxParserPasses;
+        $minPasses = empty($modx->minParserPasses) ? 2 : $modx->minParserPasses;
+        $maxPasses = empty($modx->maxParserPasses) ? 10 : $modx->maxParserPasses;
         $site_status = $modx->getConfig('site_status');
         $modx->config['site_status'] = 0;
         for ($i = 1; $i <= $maxPasses; $i++) {
@@ -451,6 +474,7 @@ class DLTemplate
             }
         }
         $out = $modx->rewriteUrls($out);
+        $out = $this->cleanPHx($out);
         $modx->config['site_status'] = $site_status;
 
         return $out;

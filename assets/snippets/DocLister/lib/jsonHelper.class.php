@@ -1,7 +1,4 @@
 <?php
-if (!defined("JSON_ERROR_UTF8")) {
-    define("JSON_ERROR_UTF8", 5);
-} //PHP < 5.3.3
 include_once("xnop.class.php");
 
 /**
@@ -158,4 +155,5 @@ class jsonHelper
 
         return $new_json;
     }
+
 }

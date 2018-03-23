@@ -53,7 +53,7 @@ EOD;
             
             if($wheres) {
                 $result = $modx->db->select(
-                    "usr.id, usr.username, attr.email, MD5(CONCAT('{$today}',attr.lastlogin,usr.password)) AS hash",
+                    "usr.id, usr.username, attr.email, attr.blocked, MD5(CONCAT('{$today}',attr.lastlogin,usr.password)) AS hash",
                     "{$tbl_manager_users} usr
                         INNER JOIN {$tbl_user_attributes} attr ON usr.id=attr.internalKey",
                     implode(' AND ',$wheres),
@@ -75,11 +75,15 @@ EOD;
             global $modx, $_lang;
 
             $user = $this->getUser(0, '', $to);
+            if ($user['blocked']) {
+                $this->errors[] = $_lang['user_is_blocked'];
+                return false;
+            }
             if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
 
             if($user['username']) {
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
@@ -91,7 +95,7 @@ EOD;
                 $param['body']    = $body;
                 $rs = $modx->sendmail($param); //ignore mail errors in this case
 
-                if(!$rs) $modx->errors[] = $_lang['error_sending_email'];
+                if(!$rs) $this->errors[] = $_lang['error_sending_email'];
 
                 return $rs;
             }
@@ -100,7 +104,7 @@ EOD;
         function unblockUser($user_id) {
             global $modx, $_lang;
 
-            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), $modx->getFullTableName('user_attributes'), "internalKey = '{$user_id}'");
+            $modx->db->update(array('blockeduntil' => 0, 'failedlogincount' => 0), $modx->getFullTableName('user_attributes'), "internalKey = '{$user_id}'");
 
             if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
 
@@ -122,6 +126,7 @@ EOD;
             $eng['error_sending_email'] = 'Error sending email';
             $eng['could_not_find_user'] = 'Could not find user';
             $eng['user_doesnt_exist'] = 'User does not exist';
+            $eng['user_is_blocked'] = 'This User is blocked!';
             $eng['email_sent'] = 'Email sent';
 
             foreach($eng as $key=>$value) {

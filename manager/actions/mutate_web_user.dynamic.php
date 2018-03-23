@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 switch($modx->manager->action) {
@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked
@@ -83,6 +83,7 @@ if($manager_language != "english" && file_exists($modx->config['site_manager_pat
 } else {
 	include_once "lang/country/english_country.inc.php";
 }
+asort($_country_lang);
 
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 ?>
@@ -135,12 +136,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		document.getElementById("failed").innerHTML = "0";
 	}
 
-	function deleteuser() {
-		if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
-			window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
-		}
-	}
-
 	// change name
 	function changeName() {
 		if(confirm("<?php echo $_lang['confirm_name_change']; ?>") === true) {
@@ -174,6 +169,22 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		}
 	};
 
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			document.userform.save.click();
+		},
+		delete: function() {
+			if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
+				window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			window.location.href = 'index.php?a=99';
+		}
+	}
+
 </script>
 
 <form action="index.php?a=89" method="post" name="userform">
@@ -187,30 +198,16 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
-	<h1><i class="fa fa fa-users"></i><?php echo $_lang['web_user_title']; ?> </h1>
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button1" class="transition"><a href="javascript:;" onClick="documentDirty=false; document.userform.save.click();"> <i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
-				<select id="stay" name="stay">
-					<?php if($modx->hasPermission('new_web_user')) { ?>
-						<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-					<?php } ?>
-					<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-					<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-				</select>
-			</li>
-			<?php if($modx->manager->action == '87') { ?>
-				<li id="Button3" class="disabled"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['delete']; ?></a></li>
-			<?php } else { ?>
-				<li id="Button3"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['delete']; ?></a></li>
-			<?php } ?>
-			<li id="Button5" class="transition"><a href="javascript:;" onClick="documentDirty=false;window.location.href='index.php?a=99';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['cancel']; ?></a></li>
-		</ul>
-	</div>
+
+	<h1>
+        <i class="fa fa fa-users"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['web_user_title']) ?>
+    </h1>
+
+	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
 
 	<!-- Tab Start -->
 	<div class="sectionBody">
-		<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo "?$theme_refresher"; ?>" />
+
 		<div class="tab-pane" id="webUserPane">
 			<script type="text/javascript">
 				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
@@ -254,7 +251,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 								<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod'] == "spec" ? 'checked="checked"' : ""; ?>>
 								<?php echo $_lang['password_gen_specify']; ?>
 								<br />
-								<div style="padding-left:20px">
+								<div>
 									<label for="specifiedpassword" style="width:120px"><?php echo $_lang['change_password_new']; ?>:</label>
 									<input type="password" name="specifiedpassword" onChange="documentdirty=true;" onKeyPress="document.userform.passwordgenmethod[1].checked=true;" size="20" />
 									<br />
@@ -323,7 +320,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_country']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><select size="1" name="country" onChange="documentDirty=true;">
+						<td><select name="country" onChange="documentDirty=true;">
 								<?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 								<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 								<?php
@@ -336,8 +333,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_dob']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;' >
-							<a href="javascript:;" onClick="document.userform.dob.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;' readonly />
+							<i onClick="document.userform.dob.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_gender']; ?>:</th>
@@ -368,26 +365,26 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<tr>
 							<th><?php echo $_lang['user_failedlogincount']; ?>:</th>
 							<td>&nbsp;
-								<input type="hidden" name="failedlogincount" onChange='documentDirty=true;' value="<?php echo $userdata['failedlogincount']; ?>" ></td>
+								<input type="hidden" name="failedlogincount" onChange='documentDirty=true;' value="<?php echo $userdata['failedlogincount']; ?>"></td>
 							<td><span id='failed'><?php echo $userdata['failedlogincount'] ?></span>&nbsp;&nbsp;&nbsp;[<a href="javascript:resetFailed()"><?php echo $_lang['reset_failedlogins']; ?></a>]</td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_block']; ?>:</th>
 							<td>&nbsp;</td>
 							<td><input name="blockedcheck" type="checkbox" onClick="changeblockstate(document.userform.blockedmode, document.userform.blockedcheck);"<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0)) ? " checked='checked'" : ""; ?> />
-								<input type="hidden" name="blocked" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0)) ? 1 : 0; ?>" ></td>
+								<input type="hidden" name="blocked" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0)) ? 1 : 0; ?>"></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_blockeduntil']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly >
-								<a href="javascript:;" onClick="document.userform.blockeduntil.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+								<i onClick="document.userform.blockeduntil.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_blockedafter']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly >
-								<a href="javascript:;" onClick="document.userform.blockedafter.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+								<i onClick="document.userform.blockedafter.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<?php
 					}
@@ -402,7 +399,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<th><?php echo $_lang["login_homepage"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>" ></td>
+						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td>
 					</tr>
 					<tr>
 						<td width="200">&nbsp;</td>
@@ -471,11 +468,13 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 						var oWindow = window.open(url, "FCKBrowseWindow", sOptions);
 					}
+
 					function BrowseServer() {
 						var w = screen.width * 0.7;
 						var h = screen.height * 0.7;
 						OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
 					}
+
 					function SetUrl(url, width, height, alt) {
 						document.userform.photo.value = url;
 						document.images['iphoto'].src = "<?php echo $base_url; ?>" + url;
@@ -522,16 +521,16 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				}
 				?>
 			</div>
+			<?php
+			// invoke OnWUsrFormRender event
+			$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
+				"id" => $user
+			));
+			if(is_array($evtOut)) {
+				echo implode("", $evtOut);
+			}
+			?>
 		</div>
 	</div>
-	<input type="submit" name="save" style="display:none" >
-	<?php
-	// invoke OnWUsrFormRender event
-	$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
-		"id" => $user
-	));
-	if(is_array($evtOut)) {
-		echo implode("", $evtOut);
-	}
-	?>
+	<input type="submit" name="save" style="display:none">
 </form>

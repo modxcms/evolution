@@ -1,10 +1,12 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('new_document') || !$modx->hasPermission('save_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
@@ -34,6 +36,12 @@ $_SESSION['itemname'] = $name;
 $header="Location: index.php?r=1&a=3&id=$id";
 header($header);
 
+/**
+ * @param int $docid
+ * @param null|int $parent
+ * @param int $_toplevel
+ * @return int
+ */
 function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	global $modx, $_lang;
 
@@ -43,7 +51,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	));
 
 	// if( !in_array( 'false', array_values( $evtOut ) ) ){}
-	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication 
+	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication
 	// [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
 
 	$userID = $modx->getLoginUserID();
@@ -54,16 +62,32 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	$rs = $modx->db->select('*', $tblsc, "id='{$docid}'");
 	$content = $modx->db->getRow($rs);
 
-	unset($content['id']); // remove the current id.
+	// Handle incremental ID
+	switch($modx->config['docid_incrmnt_method'])
+	{
+		case '1':
+			$from = "{$tblsc} AS T0 LEFT JOIN {$tblsc} AS T1 ON T0.id + 1 = T1.id";
+			$rs = $modx->db->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
+			$content['id'] = $modx->db->getValue($rs);
+			break;
+		case '2':
+			$rs = $modx->db->select('MAX(id)+1',$tblsc);
+			$content['id'] = $modx->db->getValue($rs);
+			break;
+
+		default:
+			unset($content['id']); // remove the current id.
+	}
 
 	// Once we've grabbed the document object, start doing some modifications
 	if ($_toplevel == 0) {
 		// count duplicates
 		$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$docid}'"));
+		$pagetitle = $modx->db->escape($pagetitle);
 		$count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "pagetitle LIKE '{$pagetitle} Duplicate%'"));
 		if($count>=1) $count = ' '.($count+1);
 		else $count = '';
-		
+
 		$content['pagetitle'] = $_lang['duplicated_el_suffix'].$count.' '.$content['pagetitle'];
 		$content['alias'] = null;
 	} elseif($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
@@ -98,11 +122,10 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// Duplicate the Document
 	$newparent = $modx->db->insert($content, $tblsc);
 
-	// duplicate document's TVs & Keywords
-	duplicateKeywords($docid, $newparent);
+	// duplicate document's TVs
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
-	
+
 	// invoke OnDocDuplicate event
 	$evtOut = $modx->invokeEvent('OnDocDuplicate', array(
 		'id' => $docid,
@@ -119,40 +142,42 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	return $newparent;
 }
 
-// Duplicate Keywords
-function duplicateKeywords($oldid,$newid){
-	global $modx;
-
-	$tblkw = $modx->getFullTableName('keyword_xref');
-
-	$modx->db->insert(
-		array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
-		"{$newid}, keyword_id", $tblkw, "content_id='{$oldid}'" // Copy from
-	);
-}
-
-// Duplicate Document TVs
-function duplicateTVs($oldid,$newid){
+/**
+ * Duplicate Document TVs
+ *
+ * @param int $oldid
+ * @param int $newid
+ */
+function duplicateTVs($oldid, $newid){
 	global $modx;
 
 	$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 
-	$modx->db->insert(
+    $newid = (int)$newid;
+    $oldid = (int)$oldid;
+
+    $modx->db->insert(
 		array('contentid'=>'', 'tmplvarid'=>'', 'value'=>''), $tbltvc, // Insert into
 		"{$newid}, tmplvarid, value", $tbltvc, "contentid='{$oldid}'" // Copy from
 	);
 }
 
-// Duplicate Document Access Permissions
-function duplicateAccess($oldid,$newid){
+/**
+ * Duplicate Document Access Permissions
+ *
+ * @param int $oldid
+ * @param int $newid
+ */
+function duplicateAccess($oldid, $newid){
 	global $modx;
 
 	$tbldg = $modx->getFullTableName('document_groups');
 
-	$modx->db->insert(
+    $newid = (int)$newid;
+    $oldid = (int)$oldid;
+
+    $modx->db->insert(
 		array('document'=>'', 'document_group'=>''), $tbldg, // Insert into
 		"{$newid}, document_group", $tbldg, "document='{$oldid}'" // Copy from
 	);
 }
-
-?>

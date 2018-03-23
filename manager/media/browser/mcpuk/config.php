@@ -23,8 +23,8 @@ $_CONFIG = array(
     'denyZipDownload' => $modx->config['denyZipDownload'],
     'denyExtensionRename' => $modx->config['denyExtensionRename'],
     'showHiddenFiles' => $modx->config['showHiddenFiles'],
-	
-    'theme' => "oxygen",
+
+    'theme' => "evo",
 
     'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
     'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
@@ -70,7 +70,7 @@ $_CONFIG = array(
     'dirnameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-     ), 
+     ),
     'mime_magic' => "",
 
     'maxImageWidth' => $modx->config['maxImageWidth'],
@@ -98,5 +98,3 @@ $_CONFIG = array(
     //'_sessionDomain' => ".mysite.com",
     //'_sessionPath' => "/my/path",
 );
-
-?>

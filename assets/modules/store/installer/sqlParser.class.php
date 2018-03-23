@@ -8,7 +8,7 @@ class SqlParser {
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
     var $connection_charset, $connection_method;
 
-	function SqlParser( ) {
+	public function __construct() {
 		$adminname='';
 		$adminemail=''; 
 		$adminpass='';		

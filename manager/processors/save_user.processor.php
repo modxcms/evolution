@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -14,7 +14,7 @@ $tbl_member_groups = $modx->getFullTableName('member_groups');
 
 $input = $_POST;
 
-$id = intval($input['id']);
+$id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $fullname = $input['fullname'];
@@ -142,10 +142,10 @@ switch($input['mode']) {
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
-					$f['user_group'] = intval($user_groups[$i]);
+					$f['user_group'] = (int)$user_groups[$i];
 					$f['member'] = $internalKey;
 					$modx->db->insert($f, $tbl_member_groups);
 				}
@@ -289,10 +289,10 @@ switch($input['mode']) {
 		if($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$modx->db->delete($tbl_member_groups, "member='{$id}'");
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['user_group'] = intval($user_groups[$i]);
+					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
 					$modx->db->insert($field, $tbl_member_groups);
 				}
@@ -348,7 +348,14 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-// Send an email to the user
+/**
+ * Send an email to the user
+ *
+ * @param string $email
+ * @param string $uid
+ * @param string $pwd
+ * @param string $ufn
+ */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx, $_lang, $signupemail_message;
 	global $emailsubject, $emailsender;
@@ -377,7 +384,11 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	}
 }
 
-// Save User Settings
+/**
+ * Save User Settings
+ *
+ * @param int $id
+ */
 function saveUserSettings($id) {
 	global $modx;
 	$tbl_user_settings = $modx->getFullTableName('user_settings');
@@ -461,7 +472,11 @@ function saveUserSettings($id) {
 	}
 }
 
-// Web alert -  sends an alert to web browser
+/**
+ * Web alert -  sends an alert to web browser
+ *
+ * @param $msg
+ */
 function webAlertAndQuit($msg) {
 	global $id, $modx;
 	$mode = $_POST['mode'];
@@ -469,7 +484,12 @@ function webAlertAndQuit($msg) {
 	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
 }
 
-// Generate password
+/**
+ * Generate password
+ *
+ * @param int $length
+ * @return string
+ */
 function generate_password($length = 10) {
 	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 	$ps_len = strlen($allowable_characters);

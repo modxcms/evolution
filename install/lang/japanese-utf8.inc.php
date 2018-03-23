@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Japanese
  * @package modx
@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = '<span class="mono">/assets/cache</span>�
 $_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> exists and is writable: ';
 $_lang["checking_if_export_exists"] = '<span class="mono">/assets/export</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_export_writable"] = '<span class="mono">/assets/export</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの存在(なければ転送に失敗しています): ';
-$_lang["checking_if_images_writable"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの書き込み属性(707などに設定): ';
+$_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの存在(なければ転送に失敗しています): ';
+$_lang["checking_if_images_writable"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの書き込み属性(707などに設定): ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'MySQLのバージョン: ';
 $_lang["checking_php_version"] = 'PHPのバージョンチェック: ';
@@ -167,6 +167,7 @@ $_lang["status_failed"] = '接続できません';
 $_lang["status_failed_could_not_create_database"] = 'データベースを作成できません';
 $_lang["status_failed_database_collation_does_not_match"] = '問題があります - データベース側の照合順序のデフォルト値が「%s」になっています。phpMyAdminが利用できる場合は、該当データベースの「操作」タブで照合順序のデフォルト値を変更してください。';
 $_lang["status_failed_table_prefix_already_in_use"] = '接続できません - このTableプリフィクスはすでに使われています。異なるTableプリフィクスを指定するか、phpMyAdminなどを利用し関連Tableを削除してください。';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = '問題ありません';
 $_lang["status_passed_database_created"] = 'データベースを作成できます';
 $_lang["status_passed_server"] = '接続できます';

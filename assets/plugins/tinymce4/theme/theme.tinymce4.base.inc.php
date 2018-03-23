@@ -32,6 +32,9 @@
 $this->set('skin',                  'lightgray',                    'string' );     // Set default skin (setting param first time sets its value also as default val)
 $this->set('skin',                  $this->modxParams['skin'] );                    // Overwrite with Modx-setting (if empty, default is used))
 
+$this->set('theme',                 'modern',                       'string' );     // Set default skin (setting param first time sets its value also as default val)
+$this->set('theme',                 $this->modxParams['skintheme'] );               // Overwrite with Modx-setting (if empty, default is used))
+
 $this->set('width',                 $this->pluginParams['width'],   'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#width
 $this->set('height',                $this->pluginParams['height'],  'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#height
 
@@ -68,8 +71,13 @@ $this->set('image_class_list', '[{title: "None", value: ""},{title: "Float left"
 // https://github.com/extras-evolution/tinymce4-for-modx-evo/issues/26
 $this->set('browser_spellcheck',    ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
 
-// https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
-$this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
+if($this->pluginParams['paste_as_text'] == 'enabled') {
+	// https://www.tinymce.com/docs/plugins/paste/#paste_as_text
+	$this->set('paste_as_text', true, 'bool' );
+} else {
+	// https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
+	$this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
+}
 
 // @todo: final base-setup like tinymce3 "default"-theme?
 $this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
@@ -84,3 +92,10 @@ $this->set('forced_root_block', '',  'string'); // https://www.tinymce.com/docs/
 
 $this->set('setup', 'function(ed) { ed.on("change", function(e) { documentDirty=true; }); }',  'object');
 $this->set('save_onsavecallback', 'function () { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');
+
+// https://www.tinymce.com/docs/themes/mobile/
+$this->set('mobile', '{
+	theme: "mobile", 
+	plugins: [ "autosave", "lists", "autolink" ],
+	toolbar: [ "undo", "bold", "italic", "styleselect" ]
+}',	'json' );

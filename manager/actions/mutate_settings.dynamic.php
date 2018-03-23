@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang['error_no_privileges']);
@@ -23,8 +23,8 @@ $rs = $modx->db->select('setting_name, setting_value', '[+prefix+]system_setting
 while($row = $modx->db->getRow($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
 }
-$settings['filemanager_path'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['filemanager_path']);
-$settings['rb_base_dir'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['rb_base_dir']);
+$settings['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['filemanager_path']);
+$settings['rb_base_dir'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['rb_base_dir']);
 
 extract($settings, EXTR_OVERWRITE);
 
@@ -41,42 +41,36 @@ while($file = $dir->read()) {
 $dir->close();
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 ?>
-	<style type="text/css">
-		table th { text-align: left; vertical-align: top; }
-	</style>
-
 	<script type="text/javascript">
 		var displayStyle = '<?php echo $displayStyle; ?>';
 		var lang_chg = '<?php echo $_lang['confirm_setting_language_change']; ?>';
+
+		var actions = {
+			save: function() {
+				documentDirty = false;
+				document.settings.submit();
+			},
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?a=2';
+			}
+		}
 	</script>
 	<script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
 	<form name="settings" action="index.php?a=30" method="post">
 
 		<h1>
-			<i class="fa fa-sliders"></i><?php echo $_lang['settings_title']; ?>
+			<?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>
 		</h1>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<li id="Button1" class="transition">
-					<a href="javascript:;" onclick="documentDirty=false; document.settings.submit();">
-						<i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span>
-					</a>
-				</li>
-				<li id="Button5" class="transition">
-					<a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=2';">
-						<i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel']; ?></span>
-					</a>
-				</li>
-			</ul>
-		</div>
+		<?= $_style['actionbuttons']['dynamic']['save'] ?>
 
 		<div class="sectionBody">
 			<input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
 			<input type="hidden" name="settings_version" value="<?php echo $modx->getVersionData('version'); ?>" />
 			<!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
 			<?php if(!isset($settings_version) || $settings_version != $modx->getVersionData('version')) { ?>
-				<div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
+				<div class='sectionBody'><p class='element-edit-message-tab alert alert-warning'><?php echo $_lang['settings_after_install']; ?></p></div>
 			<?php } ?>
 			<div class="tab-pane" id="settingsPane">
 				<script type="text/javascript">

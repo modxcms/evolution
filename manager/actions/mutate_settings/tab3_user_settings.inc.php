@@ -4,7 +4,7 @@
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage4" ) );</script>
 <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['udperms_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['udperms_title'] ?><br><small>[(use_udperms)]</small></td>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('use_udperms', 1, 'id="udPermsOn"'));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('use_udperms', 0, 'id="udPermsOff"'));?>
@@ -18,7 +18,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="udPerms" <?php echo showHide($use_udperms==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['udperms_allowroot_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['udperms_allowroot_title'] ?><br><small>[(udperms_allowroot)]</small></td>
     <td>
       <label><input type="radio" name="udperms_allowroot" value="1" <?php echo $udperms_allowroot=='1' ? 'checked="checked"' : "" ; ?> />
       <?php echo $_lang['yes']?></label><br />
@@ -31,13 +31,29 @@
     <td class="comment"><?php echo $_lang['udperms_allowroot_message'] ?></td>
   </tr>
 
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['email_sender_method'] ?><br><small>[(email_sender_method)]</small></td>
+    <td>
+      <label><input type="radio" name="email_sender_method" value="1" <?php echo $email_sender_method=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['auto']?></label><br />
+      <label><input type="radio" name="email_sender_method" value="0" <?php echo $email_sender_method=='0' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['use_emailsender']?></label>
+    </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['email_sender_method_message'] ?></td>
+  </tr>
   <!--for smtp-->
 
   <tr>
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['email_method_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['email_method_title'] ?><br><small>[(email_method)]</small></td>
     <td>
         <?php echo wrap_label($_lang['email_method_mail'],form_radio('email_method','mail','id="useMail"'));?><br />
         <?php echo wrap_label($_lang['email_method_smtp'],form_radio('email_method','smtp','id="useSmtp"'));?>
@@ -50,7 +66,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['emailsubject_title'] ?>
+    <td nowrap class="warning"><?php echo $_lang['emailsubject_title'] ?><br><small>[(emailsubject)]</small>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_emailsubject" id="reload_emailsubject_select" onchange="confirmLangChange(this, 'emailsubject_default', 'emailsubject_field');">
@@ -69,7 +85,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['signupemail_title'] ?>
+    <td nowrap class="warning" valign="top"><?php echo $_lang['signupemail_title'] ?><br><small>[(signupemail_message)]</small>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_signupemail_message" id="reload_signupemail_message_select" onchange="confirmLangChange(this, 'system_email_signup', 'signupemail_message_textarea');">
@@ -88,7 +104,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['websignupemail_title'] ?>
+    <td nowrap class="warning" valign="top"><?php echo $_lang['websignupemail_title'] ?><br><small>[(websignupemail_message)]</small>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_websignupemail_message" id="reload_websignupemail_message_select" onchange="confirmLangChange(this, 'system_email_websignup', 'websignupemail_message_textarea');">
@@ -107,7 +123,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['webpwdreminder_title'] ?>
+    <td nowrap class="warning" valign="top"><?php echo $_lang['webpwdreminder_title'] ?><br><small>[(webpwdreminder_message)]</small>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_system_email_webreminder_message" id="reload_system_email_webreminder_select" onchange="confirmLangChange(this, 'system_email_webreminder', 'system_email_webreminder_textarea');">

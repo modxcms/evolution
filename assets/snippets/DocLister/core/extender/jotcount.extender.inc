@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Jot extender for DocLister
  *
@@ -12,31 +8,19 @@ if (!defined('MODX_BASE_PATH')) {
  */
 class jotcount_DL_Extender extends extDocLister
 {
+
     /**
      * @return bool
      */
     protected function run()
     {
+        $join = "LEFT JOIN (SELECT `uparent`, COUNT(`id`) AS `jotcount` FROM {$this->DocLister->getTable('jot_content')} WHERE `published`=1 AND `deleted`=0 GROUP BY `uparent`) `jc` ON `jc`.`uparent` = {$this->DocLister->getPK()}";
+        $this->DocLister->setFiltersJoin($join);
+        $fields = $this->DocLister->getCFGDef('selectFields', 'c.*');
+        $this->DocLister->config->setConfig(array(
+            "selectFields" => $fields . ",IFNULL(`jc`.`jotcount`,0) AS `jotcount`"
+        ));
+
         return true;
-    }
-
-    /**
-     * @param $docs
-     * @return array
-     */
-    public function countComments($docs)
-    {
-        $comments = array();
-        if (count($docs)) {
-            $from = $this->DocLister->getTable('jot_content');
-            $rs = $this->DocLister->dbQuery("SELECT uparent, COUNT(*) as total FROM {$from} WHERE uparent IN (" . implode(',',
-                    $docs) . ") AND published=1 AND deleted=0 GROUP BY uparent");
-            $counts = $this->modx->db->makeArray($rs);
-            foreach ($counts as $v) {
-                $comments[$v['uparent']] = $v['total'];
-            }
-        }
-
-        return $comments;
     }
 }

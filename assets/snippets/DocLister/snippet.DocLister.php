@@ -22,18 +22,21 @@ if (isset($controller)) {
 } else {
     $controller = "site_content";
 }
-$classname = $controller . "DocLister";
+$class = $controller . "DocLister";
 
 $dir = isset($dir) ? MODX_BASE_PATH . $dir : $DLDir . "core/controller/";
-if ($classname != 'DocLister' && file_exists($dir . $controller . ".php") && !class_exists($classname, false)) {
-    require_once($dir . $controller . ".php");
+$path = $dir . $controller . '.php';
+if ($class !== 'DocLister' && file_exists($path) && !class_exists($class, false)) {
+    require_once($path);
 }
 
-if (class_exists($classname, false) && $classname != 'DocLister') {
-    $DocLister = new $classname($modx, $modx->Event->params, $_time);
+if (class_exists($class, false) && $class != 'DocLister') {
+    $DocLister = new $class($modx, $modx->Event->params, $_time);
     $data = $DocLister->getDocs();
-    $out = isset($modx->Event->params['api']) ? $DocLister->getJSON($data,
-        $modx->Event->params['api']) : $DocLister->render();
+    $out = isset($modx->Event->params['api']) ? $DocLister->getJSON(
+        $data,
+        $modx->Event->params['api']
+    ) : $DocLister->render();
     if (isset($_SESSION['usertype']) && $_SESSION['usertype'] == 'manager') {
         $debug = $DocLister->debug->showLog();
     } else {

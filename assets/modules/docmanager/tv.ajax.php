@@ -2,167 +2,173 @@
 /**
  * This file includes slightly modified code from the MODX core distribution.
  */
-
-include_once("../../cache/siteManager.php");
-
-require_once '../../../'.MGR_DIR.'/includes/protect.inc.php';
-include_once ('../../../'.MGR_DIR.'/includes/config.inc.php');
-include_once (MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-include_once (MODX_BASE_PATH.'assets/modules/docmanager/classes/docmanager.class.php');
-$modx = new DocumentParser;
+define('MODX_API_MODE', true);
+include_once ('../../../index.php');
+$modx->db->connect();
 $modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
+if (!isset($_SESSION['mgrValidated'])) die('');
 
+include_once(MODX_BASE_PATH . 'assets/modules/docmanager/classes/docmanager.class.php');
 $dm = new DocManager($modx);
 $dm->getLang();
 $dm->getTheme();
- 
- $output = '';
- 
- if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
- 	$rs = $modx->db->select(
-		'*',
-		$modx->getFullTableName('site_tmplvars')." tv
-			LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS tvt ON tv.id = tvt.tmplvarid",
-		"tvt.templateid ='{$_POST['tplID']}'"
-		);
- 	$limit = $modx->db->getRecordCount($rs);
- 	
- 	if ($limit > 0) {
-		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
-		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
-		$i = 0;
-		while ($row = $modx->db->getRow($rs)) {
+$output = '';
 
-				if($i++>0) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
-				
-				$output.='<tr style="height: 24px;">
+$which_browser = $modx->configGlobal['which_browser'] ? $modx->configGlobal['which_browser'] : $modx->config['which_browser'];
+
+if (isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
+    $rs = $modx->db->select('*', $modx->getFullTableName('site_tmplvars') . " tv
+			LEFT JOIN " . $modx->getFullTableName('site_tmplvar_templates') . " AS tvt ON tv.id = tvt.tmplvarid", "tvt.templateid ='{$_POST['tplID']}'");
+    $limit = $modx->db->getRecordCount($rs);
+
+    if ($limit > 0) {
+        require(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+        $output .= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
+
+        $i = 0;
+        while ($row = $modx->db->getRow($rs)) {
+
+            if ($i++ > 0) {
+                $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
+            }
+
+            $output .= '<tr style="height: 24px;">
 				<td align="left" valign="top" width="200">
-					<span class=\'warning\'><input type=\'checkbox\' name=\'update_tv_' . $row['id'] . '\' id=\'cb_update_tv_' . $row['id'] . '\' value=\'yes\' />&nbsp;'.$row['caption'].'</span><br /><span class=\'comment\'>'.$row['description'].'</span>
+					<span class=\'warning\'><input type=\'checkbox\' name=\'update_tv_' . $row['id'] . '\' id=\'cb_update_tv_' . $row['id'] . '\' value=\'yes\' />&nbsp;' . $row['caption'] . '</span><br /><span class=\'comment\'>' . $row['description'] . '</span>
 				</td>
 				<td valign="top" style="position:relative">';
-				$base_url = str_replace("assets/modules/docmanager/", "", MODX_BASE_URL);
-				$output.= renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
-				$output.= '</td></tr>';
-		}
-		$output.='</table>';
-		//$output.= '<br />'.$dm->lang['DM_tv_ignore_tv'].' <input type="text" id="ignoreTV" name="ignoreTV" size="50" value="" />';
- 	} else {
- 		print $dm->lang['DM_tv_no_tv'];
- 	}
- 	
- 	print $output;
- } else {
- 	print '';
- }
- 
+            $base_url = str_replace("assets/modules/docmanager/", "", MODX_BASE_URL);
+            $output .= renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
+            $output .= '</td></tr>';
+        }
+        $output .= '</table>';
+        //$output.= '<br />'.$dm->lang['DM_tv_ignore_tv'].' <input type="text" id="ignoreTV" name="ignoreTV" size="50" value="" />';
+    } else {
+        print $dm->lang['DM_tv_no_tv'];
+    }
+
+    print $output;
+} else {
+    print '';
+}
 
 
-function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='') {
-	global $modx;
-	global $dm;
-	global $base_url;
-	global $rb_base_url;
+function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style = '')
+{
+    global $modx;
+    global $dm;
+    global $base_url;
+    global $rb_base_url;
 
-	$field_html ='';
-	$field_value = ($field_value!="" ? $field_value : $default_text);
+    $field_html = '';
+    $field_value = ($field_value != "" ? $field_value : $default_text);
 
-	switch ($field_type) {
-		case "text": // handler for regular text boxes
-		case "rawtext"; // non-htmlentity converted text boxes
-		case "email": // handles email input fields
-		case "number": // handles the input of numbers
-			$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" />';
-			break;
-		case "textareamini": // handler for textarea mini boxes
-			$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
-			break;
-		case "textarea": // handler for textarea boxes
-		case "rawtextarea": // non-htmlentity convertex textarea boxes
-		case "htmlarea": // handler for textarea boxes (deprecated)
-		case "richtext": // handler for textarea boxes
-			$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%;">' . htmlspecialchars($field_value) .'</textarea>';
-			break;
-		case "date":
-			$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
-            if($field_value=='') $field_value=0;
-			$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-			$field_html .=  ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style'.$dm->theme.'/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+    switch ($field_type) {
+        case "text": // handler for regular text boxes
+        case "rawtext"; // non-htmlentity converted text boxes
+        case "email": // handles email input fields
+        case "number": // handles the input of numbers
+            $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
+            break;
+        case "textareamini": // handler for textarea mini boxes
+            $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) . '</textarea>';
+            break;
+        case "textarea": // handler for textarea boxes
+        case "rawtextarea": // non-htmlentity convertex textarea boxes
+        case "htmlarea": // handler for textarea boxes (deprecated)
+        case "richtext": // handler for textarea boxes
+            $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%;">' . htmlspecialchars($field_value) . '</textarea>';
+            break;
+        case "date":
+            $field_id = str_replace(array('-', '.'), '_', urldecode($field_id));
+            if ($field_value == '') {
+                $field_value = 0;
+            }
+            $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
+            $field_html .= ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style' . $dm->theme . '/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
 
-			break;
-		case "dropdown": // handler for select boxes
-			$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" size="1" onchange="documentDirty=true;">';
-			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-			while (list($item, $itemvalue) = each ($index_list))
-			{
-				list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
-				if (strlen($itemvalue)==0) $itemvalue = $item;
-				$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
-			}
-			$field_html .=  "</select>";
-			break;
-		case "listbox": // handler for select boxes
-			$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="8">';	
-			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-			while (list($item, $itemvalue) = each ($index_list))
-			{
-				list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
-				if (strlen($itemvalue)==0) $itemvalue = $item;
-				$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
-			}
-			$field_html .=  "</select>";
-			break;
-		case "listbox-multiple": // handler for select boxes where you can choose multiple items
-			$field_value = explode("||",$field_value);
-			$field_html .=  '<select id="tv'.$field_id.'[]" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
-			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-			while (list($item, $itemvalue) = each ($index_list))
-			{
-				list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
-				if (strlen($itemvalue)==0) $itemvalue = $item;
-				$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.(in_array($itemvalue,$field_value) ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
-			}
-			$field_html .=  "</select>";
-			break;
-		case "url": // handles url input fields
-			$urls= array(''=>'--', 'http://'=>'http://', 'https://'=>'https://', 'ftp://'=>'ftp://', 'mailto:'=>'mailto:');
-			$field_html ='<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv'.$field_id.'_prefix" name="tv'.$field_id.'_prefix" onchange="documentDirty=true;">';
-			foreach($urls as $k => $v){
-				if(strpos($field_value,$v)===false) $field_html.='<option value="'.$v.'">'.$k.'</option>';
-				else{
-					$field_value = str_replace($v,'',$field_value);
-					$field_html.='<option value="'.$v.'" selected="selected">'.$k.'</option>';
-				}
-			}
-			$field_html .='</select></td><td>';
-			$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;" /></td></tr></table>';
-			break;
-		case "checkbox": // handles check boxes
-			$field_value = !is_array($field_value) ? explode("||",$field_value) : $field_value;
-			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-			static $i=0;
-			while (list($item, $itemvalue) = each ($index_list))
-			{
-				list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
-				if (strlen($itemvalue)==0) $itemvalue = $item;
-				$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
-				$i++;
-			}
-			break;
-		case "option": // handles radio buttons
-			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-			while (list($item, $itemvalue) = each ($index_list))
-			{
-				list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
-				if (strlen($itemvalue)==0) $itemvalue = $item;
-				$field_html .=  '<input type="radio" value="'.htmlspecialchars($itemvalue).'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" />'.$item.'<br />';
-			}
-			break;
-		case "image":	// handles image fields using htmlarea image manager
-			global $ResourceManagerLoaded;
-			global $content,$use_editor,$which_editor,$which_browser;
-			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
-				$field_html .="
+            break;
+        case "dropdown": // handler for select boxes
+            $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
+            $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+            while (list($item, $itemvalue) = each($index_list)) {
+                list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                if (strlen($itemvalue) == 0) {
+                    $itemvalue = $item;
+                }
+                $field_html .= '<option value="' . htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . htmlspecialchars($item) . '</option>';
+            }
+            $field_html .= "</select>";
+            break;
+        case "listbox": // handler for select boxes
+            $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
+            $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+            while (list($item, $itemvalue) = each($index_list)) {
+                list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                if (strlen($itemvalue) == 0) {
+                    $itemvalue = $item;
+                }
+                $field_html .= '<option value="' . htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . htmlspecialchars($item) . '</option>';
+            }
+            $field_html .= "</select>";
+            break;
+        case "listbox-multiple": // handler for select boxes where you can choose multiple items
+            $field_value = explode("||", $field_value);
+            $field_html .= '<select id="tv' . $field_id . '[]" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
+            $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+            while (list($item, $itemvalue) = each($index_list)) {
+                list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                if (strlen($itemvalue) == 0) {
+                    $itemvalue = $item;
+                }
+                $field_html .= '<option value="' . htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue, $field_value) ? ' selected="selected"' : '') . '>' . htmlspecialchars($item) . '</option>';
+            }
+            $field_html .= "</select>";
+            break;
+        case "url": // handles url input fields
+            $urls = array('' => '--', 'http://' => 'http://', 'https://' => 'https://', 'ftp://' => 'ftp://', 'mailto:' => 'mailto:');
+            $field_html = '<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv' . $field_id . '_prefix" name="tv' . $field_id . '_prefix" onchange="documentDirty=true;">';
+            foreach ($urls as $k => $v) {
+                if (strpos($field_value, $v) === false) {
+                    $field_html .= '<option value="' . $v . '">' . $k . '</option>';
+                } else {
+                    $field_value = str_replace($v, '', $field_value);
+                    $field_html .= '<option value="' . $v . '" selected="selected">' . $k . '</option>';
+                }
+            }
+            $field_html .= '</select></td><td>';
+            $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . htmlspecialchars($field_value) . '" width="100" ' . $field_style . ' onchange="documentDirty=true;" /></td></tr></table>';
+            break;
+        case "checkbox": // handles check boxes
+            $field_value = !is_array($field_value) ? explode("||", $field_value) : $field_value;
+            $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+            static $i = 0;
+            while (list($item, $itemvalue) = each($index_list)) {
+                list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                if (strlen($itemvalue) == 0) {
+                    $itemvalue = $item;
+                }
+                $field_html .= '<input type="checkbox" value="' . htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '[]" ' . (in_array($itemvalue, $field_value) ? " checked='checked'" : "") . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '">' . $item . '</label><br />';
+                $i++;
+            }
+            break;
+        case "option": // handles radio buttons
+            $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+            while (list($item, $itemvalue) = each($index_list)) {
+                list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                if (strlen($itemvalue) == 0) {
+                    $itemvalue = $item;
+                }
+                $field_html .= '<input type="radio" value="' . htmlspecialchars($itemvalue) . '" name="tv' . $field_id . '" ' . ($itemvalue == $field_value ? 'checked="checked"' : '') . ' onchange="documentDirty=true;" />' . $item . '<br />';
+            }
+            break;
+        case "image":    // handles image fields using htmlarea image manager
+            global $ResourceManagerLoaded;
+            global $content, $use_editor, $which_editor, $which_browser;
+            if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $_GET['a'] == 4) && $use_editor == 1 && $which_editor == 3)) {
+                $field_html .= "
 				<script type=\"text/javascript\">
 						var lastImageCtrl;
 						var lastFileCtrl;
@@ -206,17 +212,17 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							}
 						}
 				</script>";
-				$ResourceManagerLoaded  = true;					
-			} 
-			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
-			break;
-		case "file": // handles the input of file uploads
-		/* Modified by Timon for use with resource browser */
-			global $ResourceManagerLoaded;
-			global $content,$use_editor,$which_editor;
-			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
-			/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
-				$field_html .="
+                $ResourceManagerLoaded = true;
+            }
+            $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" />&nbsp;<input type="button" value="' . $dm->lang['insert'] . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';
+            break;
+        case "file": // handles the input of file uploads
+            /* Modified by Timon for use with resource browser */
+            global $ResourceManagerLoaded;
+            global $content, $use_editor, $which_editor, $which_browser;
+            if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $_GET['a'] == 4) && $use_editor == 1 && $which_editor == 3)) {
+                /* I didn't understand the meaning of the condition above, so I left it untouched ;-) */
+                $field_html .= "
 				<script type=\"text/javascript\">
 						var lastImageCtrl;
 						var lastFileCtrl;
@@ -261,25 +267,28 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							}
 						}
 				</script>";
-				$ResourceManagerLoaded  = true;					
-			} 
-			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
-            
-			break;
-		default: // the default handler -- for errors, mostly
-			$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
-	} // end switch statement
-	return $field_html;
+                $ResourceManagerLoaded = true;
+            }
+            $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" />&nbsp;<input type="button" value="' . $dm->lang['insert'] . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
+
+            break;
+        default: // the default handler -- for errors, mostly
+            $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . htmlspecialchars($field_value) . '" ' . $field_style . ' onchange="documentDirty=true;" />';
+    } // end switch statement
+    return $field_html;
 } // end renderFormElement function
 
 
-function ParseIntputOptions($v) {
-        global $modx;
-	$a = array();
-	if(is_array($v)) return $v;
-	else if($modx->db->isResult($v)) {
-		$a = $modx->db->makeArray($v);
-	}
-	else $a = explode("||", $v);
-	return $a;
+function ParseIntputOptions($v)
+{
+    global $modx;
+    $a = array();
+    if (is_array($v)) {
+        return $v;
+    } else if ($modx->db->isResult($v)) {
+        $a = $modx->db->makeArray($v);
+    } else {
+        $a = explode("||", $v);
+    }
+    return $a;
 }

@@ -28,7 +28,7 @@ $create = false;
 
 echo "<p>{$_lang['setup_database']}</p>\n";
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 //if ($installMode == 1) {
@@ -73,10 +73,10 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 // connect to the database
 echo "<p>". $_lang['setup_database_create_connection'];
 if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
-    echo "<span class=\"notok\">".$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
+    echo '<span class="notok">'.$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
     return;
 } else {
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // select database
@@ -87,7 +87,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
 } else {
 	if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
     mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // try to create the database
@@ -95,7 +95,7 @@ if ($create) {
     echo "<p>".$_lang['setup_database_creation']. str_replace("`", "", $dbase) . "`: ";
     //	if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-        echo "<span class=\"notok\">".$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
+        echo '<span class="notok">'.$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
         $errors += 1;
 ?>
         <pre>
@@ -107,7 +107,7 @@ if ($create) {
 
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -115,23 +115,29 @@ if ($create) {
 if ($installMode == 0) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
     if (@ $rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
+        echo '<span class="notok">' . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
 if(!function_exists('parseProperties')) {
-    // parses a resource property string and returns the result as an array
-    // duplicate of method in documentParser class
+    /**
+     * parses a resource property string and returns the result as an array
+     * duplicate of method in documentParser class
+     *
+     * @param string $propertyString
+     * @return array
+     */
     function parseProperties($propertyString) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
+            $countParams = count($tmpParams);
+            for ($x= 0; $x < $countParams; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
                     $pTmp= explode("=", $tmpParams[$x]);
                     $pvTmp= explode(";", trim($pTmp[1]));
@@ -203,7 +209,7 @@ if ($moduleSQLBaseFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -247,7 +253,7 @@ if (@ fwrite($handle, $configString) === FALSE) {
 $chmodSuccess = @chmod($filename, 0404);
 
 if ($configFileFailed == true) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+    echo '<span class="notok">' . $_lang['failed'] . "</span></p>";
     $errors += 1;
 ?>
     <p><?php echo $_lang['cant_write_config_file']?><span class="mono"><?php echo MGR_DIR; ?>/includes/config.inc.php</span></p>
@@ -258,13 +264,13 @@ if ($configFileFailed == true) {
 <?php
     return;
 } else {
-    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
-// generate new site_id and set manager theme to MODxRE
+// generate new site_id and set manager theme to default
 if ($installMode == 0) {
     $siteid = uniqid('');
-    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxRE2')");
+    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')");
 } else {
     // update site_id if missing
     $ds = mysqli_query($sqlParser->conn, "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'");
@@ -278,7 +284,7 @@ if ($installMode == 0) {
     }
 }
 
-// Reset database for installation of demo-site 
+// Reset database for installation of demo-site
 if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 	echo "<p>" . $_lang['resetting_database'];
 	$sqlParser->process($moduleSQLResetFile);
@@ -295,7 +301,7 @@ if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+		echo '<span class="ok">'.$_lang['ok']."</span></p>";
 	}
 }
 
@@ -581,7 +587,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
                     }
                     if($insert === true) {
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
+                        $properties = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                         if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
                             echo "<p>".mysqli_error($sqlParser->conn)."</p>";
                             return;
@@ -674,14 +680,14 @@ if ($installData && $moduleSQLDataFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='MODX startup - Bootstrap'", $sqlParser->prefix);
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'", $sqlParser->prefix);
         $rs = mysqli_query($sqlParser->conn, $sql);
         if(mysqli_num_rows($rs)) {
             $row = mysqli_fetch_assoc($rs);
             $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix, $row['id']);
             mysqli_query($sqlParser->conn, $sql);
         }
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -779,7 +785,13 @@ if ($installMode == 0) {
     echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
 
-// Property Update function
+/**
+ * Property Update function
+ *
+ * @param string $new
+ * @param string $old
+ * @return string
+ */
 function propUpdate($new,$old){
     $newArr = parseProperties($new);
     $oldArr = parseProperties($old);
@@ -790,47 +802,60 @@ function propUpdate($new,$old){
     }
     $return = $oldArr + $newArr;
     $return = json_encode($return, JSON_UNESCAPED_UNICODE);
-    $return = ($return != '[]') ? $return : '';
+    $return = ($return !== '[]') ? $return : '';
     return $return;
 }
 
-function parseProperties($propertyString, $json=false) {   
-    $propertyString = str_replace('{}', '', $propertyString ); 
+/**
+ * @param string $propertyString
+ * @param bool|mixed $json
+ * @return string
+ */
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
     if($propertyString=='{}' || $propertyString=='[]') return array();
-    
+
     $jsonFormat = isJson($propertyString, true);
     $property = array();
     // old format
     if ( $jsonFormat === false) {
         $props= explode('&', $propertyString);
-        $arr = array();
-        $key = array();
         foreach ($props as $prop) {
-            if ($prop != ''){
-                $arr = explode(';', $prop);
-                $key = explode('=', $arr['0']);
-                $property[$key['0']]['0']['label'] = trim($key['1']);
-                $property[$key['0']]['0']['type'] = trim($arr['1']);
-                switch ($arr['1']) {
-                    case 'list':
-                    case 'list-multi':
-                    case 'checkbox':
-                    case 'radio':
-                    case 'menu':
-                        $property[$key['0']]['0']['value'] = trim($arr['3']);
-                        $property[$key['0']]['0']['options'] = trim($arr['2']);
-                        $property[$key['0']]['0']['default'] = trim($arr['3']);
-                        break;
-                    default:
-                        $property[$key['0']]['0']['value'] = trim($arr['2']);
-                        $property[$key['0']]['0']['default'] = trim($arr['2']);
-                }
-                $property[$key['0']]['0']['desc'] = '';
+            $prop = trim($prop);
+            if($prop === '') {
+                continue;
             }
-            
+
+            $arr = explode(';', $prop);
+            if( ! is_array($arr)) {
+                $arr = array();
+            }
+            $key = explode('=', isset($arr[0]) ? $arr[0] : '');
+            if( ! is_array($key) || empty($key[0])) {
+                continue;
+            }
+
+            $property[$key[0]]['0']['label'] = isset($key[1]) ? trim($key[1]) : '';
+            $property[$key[0]]['0']['type'] = isset($arr[1]) ? trim($arr[1]) : '';
+            switch ($property[$key[0]]['0']['type']) {
+                case 'list':
+                case 'list-multi':
+                case 'checkbox':
+                case 'radio':
+                case 'menu':
+                    $property[$key[0]]['0']['value'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    $property[$key[0]]['0']['options'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    break;
+                default:
+                    $property[$key[0]]['0']['value'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[2]) ? trim($arr[2]) : '';
+            }
+            $property[$key[0]]['0']['desc'] = '';
+
         }
     // new json-format
     } else if(!empty($jsonFormat)){
@@ -839,15 +864,25 @@ function parseProperties($propertyString, $json=false) {
     if ($json) {
         $property = json_encode($property, JSON_UNESCAPED_UNICODE);
     }
-    $property = ($property != '[]') ? $property : '';
+    $property = ($property !== '[]') ? $property : '';
     return $property;
 }
 
+/**
+ * @param string $string
+ * @param bool $returnData
+ * @return bool|mixed
+ */
 function isJson($string, $returnData=false) {
     $data = json_decode($string, true);
     return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
 }
 
+/**
+ * @param string|int $category
+ * @param SqlParser $sqlParser
+ * @return int
+ */
 function getCreateDbCategory($category, $sqlParser) {
     $dbase = $sqlParser->dbname;
     $dbase = '`' . trim($dbase,'`') . '`';
@@ -869,11 +904,17 @@ function getCreateDbCategory($category, $sqlParser) {
     return $category_id;
 }
 
-// Remove installer Docblock only from components using plugin FileSource / fileBinding
+/**
+ * Remove installer Docblock only from components using plugin FileSource / fileBinding
+ *
+ * @param string $code
+ * @param string $type
+ * @return string
+ */
 function removeDocblock($code, $type) {
-    
+
     $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
-    
+
     // Procedure taken from plugin.filesource.php
     switch($type) {
         case 'snippet':
@@ -893,7 +934,7 @@ function removeDocblock($code, $type) {
     };
     if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
         return $cleaned;
-    
+
     // fileBinding not found - return code incl docblock
     return $code;
 }
