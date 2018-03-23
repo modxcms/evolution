@@ -46,7 +46,6 @@ class Register extends Form
         return parent::render();
     }
 
-
     /**
      * @param string $param
      * @return array|mixed|\xNop
@@ -96,7 +95,7 @@ class Register extends Form
             $result = $fl->user->checkUnique('web_users', 'username');
         }
 
-        return $result;
+        return $result ;
     }
 
     /**
@@ -154,8 +153,10 @@ class Register extends Form
                     'hash'   => $hash
                 ));
                 $url = $this->getCFGDef('activateTo', $this->modx->config['site_start']);
-                $this->setField('activate.url', $this->modx->makeUrl($url, '',
-                    $query, 'full'));
+                $this->setField(
+                    'activate.url',
+                    $this->modx->makeUrl($url, '', $query, 'full')
+                );
             }
             parent::process();
         }

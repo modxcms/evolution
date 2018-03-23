@@ -444,30 +444,25 @@ class site_contentDocLister extends DocLister
      */
     public function getChildrenFolder($id)
     {
-        $out = $this->extCache->load('childrenFolder');
-        if ($out === false) {
-            $out = array();
-            $where = $this->getCFGDef('addWhereFolder', '');
-            $where = sqlHelper::trimLogicalOp($where);
-            if ($where != '') {
-                $where .= " AND ";
-            }
+        $out = array();
+        $where = $this->getCFGDef('addWhereFolder', '');
+        $where = sqlHelper::trimLogicalOp($where);
+        if ($where != '') {
+            $where .= " AND ";
+        }
 
-            $tbl_site_content = $this->getTable('site_content', 'c');
-            $sanitarInIDs = $this->sanitarIn($id);
-            if ($this->getCFGDef('showNoPublish', 0)) {
-                $where = "WHERE {$where} c.parent IN ({$sanitarInIDs}) AND c.isfolder=1";
-            } else {
-                $where = "WHERE {$where} c.parent IN ({$sanitarInIDs}) AND c.deleted=0 AND c.published=1 AND c.isfolder=1";
-            }
+        $tbl_site_content = $this->getTable('site_content', 'c');
+        $sanitarInIDs = $this->sanitarIn($id);
+        if ($this->getCFGDef('showNoPublish', 0)) {
+            $where = "WHERE {$where} c.parent IN ({$sanitarInIDs}) AND c.isfolder=1";
+        } else {
+            $where = "WHERE {$where} c.parent IN ({$sanitarInIDs}) AND c.deleted=0 AND c.published=1 AND c.isfolder=1";
+        }
 
-            $rs = $this->dbQuery("SELECT id FROM {$tbl_site_content} {$where}");
+        $rs = $this->dbQuery("SELECT id FROM {$tbl_site_content} {$where}");
 
-            while ($item = $this->modx->db->getRow($rs)) {
-                $out[] = $item['id'];
-            }
-
-            $this->extCache->save($out, 'childrenFolder');
+        while ($item = $this->modx->db->getRow($rs)) {
+            $out[] = $item['id'];
         }
 
         return $out;

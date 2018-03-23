@@ -60,7 +60,9 @@ class Form extends Core
         $result = false;
         if ($this->isSubmitted() && $this->getCFGDef('protectSubmit', 1)) {
             $hash = $this->getFormHash();
-            if (isset($_SESSION[$this->formid . '_hash']) && $_SESSION[$this->formid . '_hash'] == $hash && $hash != '') {
+            if (isset($_SESSION[$this->formid . '_hash'])
+                && $_SESSION[$this->formid . '_hash'] == $hash
+                && $hash != '') {
                 $result = true;
                 $this->addMessage($this->lexicon->getMsg('form.protectSubmit'));
                 $this->log('Submit protection enabled');
@@ -316,7 +318,9 @@ class Form extends Core
             $mailer = new Mailer($this->modx, $config);
             $report = $this->renderReport('automessageTpl');
             $out = $mailer->send($report);
-            $this->log('Mail autosender report', array(
+            $this->log(
+                'Mail autosender report',
+                array(
                     'report'        => $report,
                     'mailer_config' => $mailer->config,
                     'result'        => $out
@@ -347,8 +351,14 @@ class Form extends Core
                 $mailer = new Mailer($this->modx, $config);
                 $report = $this->renderReport('ccSenderTpl');
                 $out = $mailer->send($report);
-                $this->log('Mail CC report',
-                    array('report' => $report, 'mailer_config' => $mailer->config, 'result' => $out));
+                $this->log(
+                    'Mail CC report',
+                    array(
+                        'report' => $report,
+                        'mailer_config' => $mailer->config,
+                        'result' => $out
+                    )
+                );
             } else {
                 $out = true;
             }
@@ -430,7 +440,9 @@ class Form extends Core
      */
     public function getMailSendConfig($to, $fromParam, $subjectParam = 'subject')
     {
-        $subject = empty($this->getCFGDef($subjectParam)) ? $this->renderSubject() : $this->renderSubject($subjectParam);
+        $subject = empty($this->getCFGDef($subjectParam))
+            ? $this->renderSubject()
+            : $this->renderSubject($subjectParam);
         $out = array_merge(
             $this->mailConfig,
             array(

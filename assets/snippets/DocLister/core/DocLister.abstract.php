@@ -1299,13 +1299,19 @@ abstract class DocLister
         $type = $this->getCFGDef('idType', 'parents');
         $depth = $this->getCFGDef('depth', '');
         if ($type == 'parents' && $depth > 0) {
-            $tmp = $IDs;
-            do {
-                if (count($tmp) > 0) {
-                    $tmp = $this->getChildrenFolder($tmp);
-                    $IDs = array_merge($IDs, $tmp);
-                }
-            } while ((--$depth) > 0);
+            $out = $this->extCache->load('children');
+            if ($out === false) {
+                $tmp = $IDs;
+                do {
+                    if (count($tmp) > 0) {
+                        $tmp = $this->getChildrenFolder($tmp);
+                        $IDs = array_merge($IDs, $tmp);
+                    }
+                } while ((--$depth) > 0);
+                $this->extCache->save($IDs, 'children');
+            } else {
+                $IDs = $out;
+            }
         }
         $this->debug->debugEnd("setIDs");
 

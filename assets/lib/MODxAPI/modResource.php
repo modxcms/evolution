@@ -444,7 +444,7 @@ class modResource extends MODxAPI
         $this->close();
         $fld = array();
         foreach ($this->tvd as $name => $tv) {
-            $fld[$name] = $tv['value'];
+            $fld[$name] = $tv;
         };
         $this->store($fld);
 

@@ -100,7 +100,6 @@ abstract class Core
 
     protected $DLTemplate = null;
 
-
     /**
      * Core constructor.
      * @param \DocumentParser $modx
@@ -171,8 +170,11 @@ abstract class Core
             $this->config->loadArray($this->getCFGDef('allowedFields')));
         $this->forbiddenFields = array_merge($this->forbiddenFields,
             $this->config->loadArray($this->getCFGDef('forbiddenFields')));
-        $this->emptyFormControls = array_merge($this->emptyFormControls,
-            $this->config->loadArray($this->getCFGDef('emptyFormControls'), ''));
+        $this->emptyFormControls = array_merge(
+            $this->emptyFormControls,
+            $this->config->loadArray($this->getCFGDef('emptyFormControls'),
+            ''
+        ));
         $this->setRequestParams();
         $this->setExternalFields($this->getCFGDef('defaultsSources', 'array'));
         $this->renderTpl = $this->getCFGDef('formTpl'); //Шаблон по умолчанию
@@ -425,8 +427,10 @@ abstract class Core
     {
         if (empty($this->plhCache) || !$convertArraysToStrings) {
             $this->plhCache = array_merge(
-                $this->fieldsToPlaceholders($this->getFormData('fields'), 'value',
-                    $this->getFormData('status') || $convertArraysToStrings),
+                $this->fieldsToPlaceholders(
+                    $this->getFormData('fields'), 'value',
+                    $this->getFormData('status') || $convertArraysToStrings
+                ),
                 $this->controlsToPlaceholders(),
                 $this->errorsToPlaceholders(),
                 array('form.messages' => $this->renderMessages())
@@ -561,7 +565,10 @@ abstract class Core
                     $message = $description;
                 }
                 if (method_exists($validator, $rule)) {
-                    $result = call_user_func_array(array($validator, $rule), $params);
+                    $result = call_user_func_array(
+                        array($validator, $rule),
+                        $params
+                    );
                 } else {
                     if (isset($description['function'])) {
                         $rule = $description['function'];
@@ -855,11 +862,18 @@ abstract class Core
     public function renderMessages()
     {
         $out = '';
-        $formMessages = $this->getFormData('messages');
-        $formErrors = $this->getFormData('errors');
-
-        $requiredMessages = $errorMessages = array();
-        if ($formErrors) {
+        $wrapper = $this->getCFGDef('messagesTpl', '@CODE:<div class="form-messages">[+messages+]</div>');
+        $formMessages = array_filter($this->getFormData('messages'));
+        $plh = array();
+        $plh['messages'] = $this->renderMessagesGroup(
+            $formMessages,
+            'messagesOuterTpl',
+            'messagesSplitter'
+        );
+        $renderErrors = strpos($wrapper, '[+errors+]') !== false || strpos($wrapper, ['+required+']) !== false;
+        if ($renderErrors) {
+            $formErrors = array_filter($this->getFormData('errors'));
+            $requiredMessages = $errorMessages = array();
             foreach ($formErrors as $field => $error) {
                 $type = key($error);
                 if ($type == 'required') {
@@ -868,26 +882,23 @@ abstract class Core
                     $errorMessages[] = $error[$type];
                 }
             }
+            if (!empty($requiredMessages)) {
+                $plh['required'] = $this->renderMessagesGroup(
+                    $requiredMessages,
+                    'messagesRequiredOuterTpl',
+                    'messagesRequiredSplitter'
+                );
+            }
+            if (!empty($errorMessages)) {
+                $plh['errors'] = $this->renderMessagesGroup(
+                    $errorMessages,
+                    'messagesErrorOuterTpl',
+                    'messagesErrorSplitter'
+                );
+            }
         }
-        $wrapper = $this->getCFGDef('messagesTpl', '@CODE:<div class="form-messages">[+messages+]</div>');
-        $formMessages = array_filter($formMessages);
-        $formErrors = array_filter($formErrors);
-        if (!empty($formMessages) || !empty($formErrors)) {
-            $out = $this->parseChunk($wrapper,
-                array(
-                    'messages' => $this->renderMessagesGroup(
-                        $formMessages,
-                        'messagesOuterTpl',
-                        'messagesSplitter'),
-                    'required' => $this->renderMessagesGroup(
-                        $requiredMessages,
-                        'messagesRequiredOuterTpl',
-                        'messagesRequiredSplitter'),
-                    'errors'   => $this->renderMessagesGroup(
-                        $errorMessages,
-                        'messagesErrorOuterTpl',
-                        'messagesErrorSplitter'),
-                ));
+        if (!empty($plh['messages']) || !empty($plh['errors']) || !empty($plh['required'])) {
+            $out = $this->parseChunk($wrapper, $plh);
         }
 
         return $out;
