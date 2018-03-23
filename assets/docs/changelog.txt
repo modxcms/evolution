@@ -1,6 +1,30 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 1.4.2 (Mar 23, 2018)
+* [GitHub:#6a33e6f2b] - now you can use argv like this: php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y (dmi3yy)
+* [GitHub:#d8e7ec072] - run install file (dmi3yy)
+* [GitHub:#1baf289d6] - Install Evo from console: (https://monosnap.com/file/Tj21cmlMhZXNJdRXfKBLAvTlJcElkJ) (dmi3yy)
+* [GitHub:#52c27d0d6] - fix for use html tags in name (dmi3yy)
+* [GitHub:#6324989c9] - [F] #577 Fix "undefined index"-notice (Deesen)
+* [GitHub:#8389d3c15] - [C] #577 TinyMCE4 code clean-up (Deesen)
+* [GitHub:#4c9b26d56] - fix (document.parser.class.inc.php) sendStrictURI (Ruslan)
+* [GitHub:#27c63435a] - modernize default theme (Serg)
+* [GitHub:#b42174b85] - Globat Tabs by Default On (dmi3yy)
+* [GitHub:#4f8323b13] - add .tpl  for create file from filemanager (dmi3yy)
+* [GitHub:#2ad9bb7e3] - correct getTpl (Serg)
+* [GitHub:#e5718a08a] - add composer.json (dmi3yy)
+* [GitHub:#14155ff84] - fix lang error (dmi3yy)
+* [GitHub:#628eabf86] - update DocLister and FormLister (dmi3yy)
+* [GitHub:#c1ea7c3e0] - fix escapeshellarg disabled for security reason (dmi3yy)
+* [GitHub:#f55cff2b8] - Update english.inc.php (Mr B)
+* [GitHub:#151206e87] - Update mainmenu.php (Mr B)
+* [GitHub:#4ae239de6] - fix #559 Zend OPcache API is restricted by "restrict_api" configuration directive (Pathologic)
+* [GitHub:#ddcdcdbc0] - fix #563 Error when upgrading to 'phpmailer sender property' commit(Pathologic)
+* [GitHub:#e3ce8aaf9] - phpmailer sender property (Pathologic)
+* [GitHub:#ce2fc8313] - fix only variables can be passed by reference (Pathologic)
+* [GitHub:#271d809b0] - log only public properties of MODxMailer (Pathologic)
+
 
 Evolution CMS 1.4.1 (Mar 02, 2018)
 * [GitHub:#3a9224b03] - revert [I] save_content.processor.php Initialize full cache only when alias, parent, and published are changed (dmi3yy)
