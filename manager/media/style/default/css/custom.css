@@ -128,7 +128,7 @@ table.actionButtons .searchtext { padding: 5px; height: 24px; width: 150px; }
 .table th, .table td { padding: 0.15rem 0.25rem; }
 /* table-data */
 .table.data { width: 100%; max-width: 100%; margin-bottom: 0; border-bottom: 1px solid #eceeef }
-.table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777; border-bottom: 2px solid #eceeef }
+.table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777; border-bottom: 1px solid #eceeef }
 .table.data td { padding: 0.55rem 0.75rem; }
 .table.data td, .table.data th, .table.data thead td { vertical-align: top; border-top: 1px solid #eceeef }
 .table.data td:first-child, .table.data th:first-child, .table.data.table-sm td:first-child, .table.data.table-sm th:first-child { padding-left: 1.25rem }
@@ -187,15 +187,16 @@ ul.breadcrumbs span::after { margin-left: 2em; font-family: FontAwesome; content
 /* [ SEARCHBAR ] */
 .searchbar input[type=text] { max-width: 10rem }
 /* [ WIDGETS ] */
-.widgets .card { margin-bottom: .75rem; border: 1px solid rgba(0, 0, 0, .1); border-radius: 0; background-color: #fff; -webkit-transition: box-shadow .35s; transition: box-shadow .35s; }
+.widgets .card { margin-bottom: 1rem; border-width: 0; border-radius: 0; background-color: #fff; -webkit-transition: box-shadow .35s; transition: box-shadow .35s; box-shadow: 0 0.1rem 0.3rem 0 rgba(0, 0, 0, 0.075);}
 .widgets .card:hover { box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.07); }
-.widgets .card-header { padding: .5rem 1rem; font-size: .9rem; color: #616a73; font-weight: 700; border-radius: 0; border: none; border-bottom: 1px solid rgba(0, 0, 0, .05); background-color: #fff; }
+.widgets .card-header { padding: .5rem 1rem; font-size: .9rem; color: #616a73; font-weight: 700; border-radius: 0; border: none; border-bottom: 1px solid rgba(0, 0, 0, .05); text-transform: none;background-color: transparent;border-bottom: 1px solid rgba(0,0,0,0.05); }
 .widgets .card-header .fa { font-size: .9rem }
 .widgets .card-block { padding: 0; }
 .widgets .card-block .card-block p { padding: 0 1rem }
 .widgets .card-block .card-body { padding: 1rem; }
 .widgets .card-block .card-body + .card-body { padding-top: 0 }
-.widgets .table { margin-bottom: 1rem }
+.widgets .table { margin-bottom: 0rem }
+.widgets .table.data td, .widgets .table.data th, .widgets .table.data thead td{border-top:0px;}
 .widgets .table:not(.data) tr th, .widgets .table:not(.data) tr td { padding: .15rem; }
 .widgets .table tr th:first-child, .widgets .table tr td:first-child { padding-left: 1rem !important }
 .widgets .table tr th:last-child, .widgets .table tr td:last-child { padding-right: 1rem !important }
@@ -292,7 +293,7 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 .dark .content-blocks .block .fields-group { border: 1px dashed #e2e2e2; }*/
 .dark .content-blocks input[type="text"], .dark .content-blocks input[type="password"], .dark .content-blocks input[type="number"], .dark .content-blocks textarea { background-color: #fbfbfb !important; border-color: #dbdbdb !important; }
 .dark .content-blocks .controls { background: #f9f9f9 !important; }
-.dark .widgets .card-header { color: #616a73; background-color: #fff; }
+.dark .widgets .card-header { color: #616a73; background-color: #fafafa; }
 /*
  [ OTHERS COMPONENTS ] - this components need fix css
 */
@@ -338,57 +339,16 @@ to { opacity: 1; transform: translateY(0); }
 
 
 /* pmfx theme */
+#actions .dropdown-toggle:after { display: none !important; }
 
-#actions .dropdown-toggle:after {
-  display: none !important;
-}
 
-.widgets .card {
-  margin-bottom: 1rem;
-  /* border: 1px solid rgba(0,0,0,.1); */
-  border-width: 0;
-  border-radius: 0;
-  box-shadow: 0 0.1rem 0.3rem 0 rgba(0, 0, 0, 0.075);
-}
-
-.card-header,
-.widgets .card-header {
-  font-size: .9rem;
-  font-weight: 700;
-  text-transform: none;
-  background-color: transparent;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.dark .widgets .card-header { 
-  background-color: #fafafa; 
-}
-
-.card .table.data {
-  margin-bottom: 0;
-  border-bottom-width: 0;
-}
-
-.table.data th, 
-.table.data thead td {
-  border-bottom-width: 1px;
-}
-
-.card .table.data > thead > tr:first-child td,
-.card .table.data > thead > tr:first-child th,
-.card .table.data > tbody > tr:first-child td,
-.card .table.data > tbody > tr:first-child th {
-  border-top-width: 0;
-}
-
+/*
 .table.data > tbody > tr,
 .table.data > tbody > tr:nth-child(2n),
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) {
   background-color: #fff;
-}
-.table.data > tbody > tr:hover {
-  background-color: rgba(0, 0, 0, 0.03) !important;
-}
+}*/
+
 
 ul.breadcrumbs {
   margin: 0 0 1rem 0;
