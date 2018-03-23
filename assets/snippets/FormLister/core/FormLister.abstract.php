@@ -870,7 +870,7 @@ abstract class Core
             'messagesOuterTpl',
             'messagesSplitter'
         );
-        $renderErrors = strpos($wrapper, '[+errors+]') !== false || strpos($wrapper, ['+required+']) !== false;
+        $renderErrors = strpos($wrapper, '[+errors+]') !== false || strpos($wrapper, '[+required+]') !== false;
         if ($renderErrors) {
             $formErrors = array_filter($this->getFormData('errors'));
             $requiredMessages = $errorMessages = array();
