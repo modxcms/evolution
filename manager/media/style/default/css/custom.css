@@ -18,7 +18,8 @@
 .form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
 .form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
 .form-control-name .custom-control input:checked ~ .fa-lock::before { content: "\f023"; color: #d9534f }
-input[type=date]:not(.unstyled), input[name*=date]:not(.unstyled):not([type=checkbox]):not([type=radio]), input[name=createdon], input[name=editedon], input[size="1"], select[size="1"]:not(.unstyled), select[name=usergroup]:not(.unstyled), select[name=docgroup]:not(.unstyled) { width: auto !important; vertical-align: middle }
+input[type=date]:not(.unstyled), input[name*=date]:not(.unstyled):not([type=checkbox]):not([type=radio]), input[name=createdon], input[name=editedon], input[size="1"], select[name=usergroup]:not(.unstyled), select[name=docgroup]:not(.unstyled) { width: auto !important; vertical-align: middle }
+select[size="1"]:not(.unstyled) { vertical-align: middle }
 input[name*=date]:not(.unstyled) + .input-group-addon { float: left; width: auto; }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
