@@ -49,7 +49,7 @@ if (empty($base_path) || empty($base_url)) {
         $script_name = $_SERVER['SCRIPT_NAME'];
     }
     $script_name = str_replace('\\', '/', dirname($script_name));
-    if (strpos($script_name, MGR_DIR) !== false) {
+    if ($script_name === '/' . MGR_DIR || strpos($script_name, '/' . MGR_DIR . '/') !== false) {
         $separator = MGR_DIR;
     } elseif (strpos($script_name, '/assets/') !== false) {
         $separator = 'assets';
