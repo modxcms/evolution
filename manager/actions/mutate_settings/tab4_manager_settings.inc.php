@@ -64,9 +64,34 @@
                 </select><input type="hidden" name="theme_refresher" value="" />
             </td>
         </tr>
+
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
+                <small>[(manager_theme_mode)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode1'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="2" <?= $manager_theme_mode == '2' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode2'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="3" <?= $manager_theme_mode == '3' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode3'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($manager_theme_mode == '4') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode4'] ?></label>
+            </td>
+        </tr>
         <tr>
             <td width="200">&nbsp;</td>
-            <td class="comment"><?= $_lang['manager_theme_message'] ?></td>
+            <td class="comment"><?= $_lang['manager_theme_mode_message'] ?></td>
         </tr>
 
         <tr>
@@ -74,6 +99,7 @@
                 <div class="split"></div>
             </td>
         </tr>
+
         <tr>
             <td nowrap class="warning"><?= $_lang['show_picker'] ?><br>
                 <small>[(show_picker)]</small>
