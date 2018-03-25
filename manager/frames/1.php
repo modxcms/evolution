@@ -45,11 +45,21 @@ if (!$MODX_widthSideBar) {
     $body_class .= 'sidebar-closed';
 }
 
-if (isset($_COOKIE['MODX_themeColor'])) {
-    $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
-} else {
+switch ($modx->config['manager_theme_mode']) {
+  case '1':
+    $body_class .= ' lightness';
+    break;
+  case '2':
+    $body_class .= ' light';
+    break;
+  case '3':
     $body_class .= ' dark';
+    break;
+  case '4':
+    $body_class .= ' darkness';
+    break;
 }
+
 
 if (isset($modx->pluginCache['ElementsInTree'])) {
     $body_class .= ' ElementsInTree';

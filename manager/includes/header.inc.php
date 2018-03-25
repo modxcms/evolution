@@ -16,10 +16,19 @@ if (!isset($modx->config['mgr_date_picker_path'])) {
     $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
 }
 
-if (isset($_COOKIE['MODX_themeColor'])) {
-    $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
-} else {
+switch ($modx->config['manager_theme_mode']) {
+  case '1':
+    $body_class .= ' lightness';
+    break;
+  case '2':
+    $body_class .= ' light';
+    break;
+  case '3':
     $body_class .= ' dark';
+    break;
+  case '4':
+    $body_class .= ' darkness';
+    break;
 }
 
 $css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . $lastInstallTime;
