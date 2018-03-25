@@ -38,7 +38,7 @@ $historyEventDelay = (isset($historyEventDelay) ? $historyEventDelay : 1250);
 $fontSize = (isset($fontSize) ? 'font-size:' . $fontSize . 'px !important;' : '');
 $lineHeight = (isset($lineHeight) ? 'line-height:' . $lineHeight . ' !important;' : '');
 
-if ($modx->config['which_editor'] == 3 || $modx->config['which_editor'] == 4) {
+if ($modx->config['manager_theme_mode'] == 3 || $modx->config['manager_theme_mode'] == 4) {
 	$theme = $darktheme;
 }
 /*
