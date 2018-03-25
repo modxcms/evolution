@@ -889,34 +889,6 @@
           }
         }
       },
-      toggleTheme: function() {
-        var myCodeMirrors = w.main.myCodeMirrors, key;
-        if (d.body.classList.contains('dark')) {
-          d.body.classList.remove('dark');
-          w.main.document.body.classList.remove('dark');
-          d.cookie = 'MODX_themeColor=';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme);
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme);
-              }
-            }
-          }
-        } else {
-          d.body.classList.add('dark');
-          w.main.document.body.classList.add('dark');
-          d.cookie = 'MODX_themeColor=dark';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.darktheme);
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.defaulttheme);
-              }
-            }
-          }
-        }
-      },
       toggleNode: function(e, id) {
         e = e || w.event;
         if (e.ctrlKey) return;
