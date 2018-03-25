@@ -91,6 +91,8 @@ class logHandler
         $fields['itemid'] = $this->entry['itemId'];
         $fields['itemname'] = $modx->db->escape($this->entry['itemName']);
         $fields['message'] = $modx->db->escape($this->entry['msg']);
+        $fields['ip'] = $this->getUserIP();
+
         $insert_id = $modx->db->insert($fields, $tbl_manager_log);
         if (!$insert_id) {
             $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->db->getLastError());
@@ -100,6 +102,20 @@ class logHandler
             if (($insert_id % $trim) === 0) {
                 $modx->rotate_log('manager_log', $limit, $trim);
             }
+        }
+    }
+
+    private function getUserIP() {
+        if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
+            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
+                $addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);
+                return trim($addr[0]);
+            } else {
+                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            }
+        }
+        else {
+            return $_SERVER['REMOTE_ADDR'];
         }
     }
 }
