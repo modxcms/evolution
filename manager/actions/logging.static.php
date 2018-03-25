@@ -282,6 +282,7 @@ if ($limit < 1) {
                     <th class="sortable"><?= $_lang["mgrlog_itemname"] ?></th>
                     <th class="sortable" width="1%"><?= $_lang["mgrlog_time"] ?></th>
                     <th class="sortable" width="1%">IP</th>
+                    <th class="sortable" width="1%">USER_AGENT</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -307,6 +308,7 @@ if ($limit < 1) {
                         <td><?= $item ?></td>
                         <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $server_offset_time) ?></td>
                         <td class="text-nowrap"><?= $logentry['ip'] ?></td>
+                        <td class="text-nowrap"><?= $logentry['useragent'] ?></td>
                     </tr>
                     <?php
                     $i++;

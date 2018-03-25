@@ -92,7 +92,8 @@ class logHandler
         $fields['itemname'] = $modx->db->escape($this->entry['itemName']);
         $fields['message'] = $modx->db->escape($this->entry['msg']);
         $fields['ip'] = $this->getUserIP();
-
+        $fields['useragent'] = $_SERVER['HTTP_USER_AGENT'];
+            
         $insert_id = $modx->db->insert($fields, $tbl_manager_log);
         if (!$insert_id) {
             $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->db->getLastError());
