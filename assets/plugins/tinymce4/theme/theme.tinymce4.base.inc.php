@@ -32,8 +32,8 @@
 $this->set('skin',                  'lightgray',                    'string' );     // Set default skin (setting param first time sets its value also as default val)
 $this->set('skin',                  $this->modxParams['skin'] );                    // Overwrite with Modx-setting (if empty, default is used))
 
-$this->set('theme',                 'modern',                       'string' );     // Set default skin (setting param first time sets its value also as default val)
-$this->set('theme',                 $this->modxParams['skintheme'] );               // Overwrite with Modx-setting (if empty, default is used))
+$this->set('skintheme',                 'modern',                       'string' );     // Set default skin (setting param first time sets its value also as default val)
+$this->set('skintheme',                 $this->modxParams['skintheme'] );               // Overwrite with Modx-setting (if empty, default is used))
 
 $this->set('width',                 $this->pluginParams['width'],   'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#width
 $this->set('height',                $this->pluginParams['height'],  'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#height
