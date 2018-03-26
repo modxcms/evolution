@@ -83,7 +83,6 @@ if (isset($action)) {
                         FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
                         LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
                         ' . $sqlLike . '
-                        GROUP BY t1.id
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
 
