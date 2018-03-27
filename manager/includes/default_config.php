@@ -106,5 +106,6 @@ $c['publish_default']          = '0';
 $c['cache_default']            = '1';
 $c['search_default']           = '1';
 $c['group_tvs']                = 0;
-$c['global_tabs']              = 0;
+$c['global_tabs']              = 1;
 $c['manager_theme_mode']       = '3';
+
