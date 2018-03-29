@@ -368,7 +368,7 @@ class modxRTEbridge
         // Load Tv-Options as bridged-params
         if($selector !== 'initBridge') {
             foreach ($this->themeConfig as $key => $conf) {
-                if (isset($this->tvOptions[$selector][$key])) {
+                if (isset($this->tvOptions[$selector][$key]) && $key != 'theme') { // Issue #577
                     $this->themeConfig[$key]['bridged'] = $this->tvOptions[$selector][$key];
                 }
             }
