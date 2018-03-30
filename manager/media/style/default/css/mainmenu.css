@@ -18,7 +18,7 @@
 #mainMenu .nav > li > a .icon { display: inline-block; overflow: hidden; width: auto; height: 2rem; line-height: 2rem; font-size: 1.5em; text-align: center; margin: 0.05rem 0 0 0.5rem; vertical-align: top; border-radius: 50%; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .nav > li > a .icon.photo { width: 2rem }
 #mainMenu .nav > li > a .icon .fa { font-size: 1.2rem; line-height: 2.1rem }
-#mainMenu .nav > li .fa { min-width: 1em; line-height: 2.2rem; font-size: .9rem; vertical-align: top }
+#mainMenu .nav > li .fa { min-width: 1em; line-height: 2.2rem; font-size: 0.875rem; vertical-align: top }
 #mainMenu #nav > li > a > .fa { display: none }
 #mainMenu #nav #bars { width: 3.5rem; text-align: center }
 #mainMenu #nav #bars a { padding: 0 1rem; }
@@ -92,7 +92,6 @@
 #mainMenu, #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li > a .icon, #mainMenu #searchform .mask, #mainMenu #nav #site::before { height: 3rem; }
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li .fa, #mainMenu .nav > li > a .icon { line-height: 3.1rem; }
 #mainMenu .nav > li > a .icon.photo { width: 2.5rem; height: 2.5rem; margin-top: .3rem; }
-#mainMenu .nav > li .fa { font-size: 1rem; }
 #mainMenu #nav > li > a { padding: 0 1.3rem; font-size: .875rem; }
 #mainMenu #nav > li > a > .fa { display: none }
 #mainMenu .nav > li > a .icon .fa { line-height: 3rem; font-size: 1.5rem; }
