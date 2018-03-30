@@ -1,5 +1,5 @@
 /* #mainMenu */
-#mainMenu { background-color: #343944; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
+#mainMenu { background-color: #343944; color: #8b9298; -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
 #mainMenu.show { overflow: visible }
 #mainMenu + #tree::before, #mainMenu + #tree + #main::before { content: ""; position: fixed; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1); opacity: 0; visibility: hidden; -webkit-transition: opacity .15s, visibility .15s; transition: opacity .15s, visibility .15s; }
 #mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { opacity: 1; visibility: visible }
@@ -37,7 +37,7 @@
 #mainMenu .nav > li > ul > li:last-child { border: none; margin-bottom: 0 }
 #mainMenu .nav > li > ul > li.item-input { padding: 0.375em 0.5em; }
 #mainMenu .nav > li > ul > li > a:first-child, #mainMenu .nav > li > ul > li > span { display: block; position: relative; padding: 0 2rem 0 1rem; line-height: 2.2rem; color: #444; text-decoration: none }
-#mainMenu .nav > li > ul > li.hover > a:first-child { color: #fff; background-color: #1976d2; }
+#mainMenu .nav > li > ul > li.hover > a:first-child { color: #444; background-color: #eee; }
 #mainMenu .nav > li > ul > li > span:first-child { padding: 0 1rem; text-align: center; font-size: 0.875em; color: #aaa; }
 #mainMenu .nav > li > ul > li.dropdown-back > span { text-align: left; font-size: inherit; color: inherit }
 #mainMenu .nav > li > ul > li.dropdown-back > span * { pointer-events: none }
