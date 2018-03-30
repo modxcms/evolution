@@ -197,7 +197,6 @@ ul.breadcrumbs span::after { margin-left: 2em; font-family: FontAwesome; content
 .widgets .card-block .card-body { padding: 1rem; }
 .widgets .card-block .card-body + .card-body { padding-top: 0 }
 .widgets .table { margin-bottom: 0rem }
-.widgets .table.data td, .widgets .table.data th, .widgets .table.data thead td{border-top:0px;}
 .widgets .table:not(.data) tr th, .widgets .table:not(.data) tr td { padding: .15rem; }
 .widgets .table tr th:first-child, .widgets .table tr td:first-child { padding-left: 1rem !important }
 .widgets .table tr th:last-child, .widgets .table tr td:last-child { padding-right: 1rem !important }
@@ -344,14 +343,32 @@ to { opacity: 1; transform: translateY(0); }
 /* pmfx theme */
 #actions .dropdown-toggle:after { display: none !important; }
 
+.card .table.data {
+  margin-bottom: 0;
+  border-bottom-width: 0;
+}
 
-/*
+.table.data th, 
+.table.data thead td {
+  border-bottom-width: 1px;
+}
+
+.card .table.data > thead > tr:first-child td,
+.card .table.data > thead > tr:first-child th,
+.card .table.data > tbody > tr:first-child td,
+.card .table.data > tbody > tr:first-child th {
+  border-top-width: 0;
+}
+
 .table.data > tbody > tr,
 .table.data > tbody > tr:nth-child(2n),
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) {
   background-color: #fff;
-}*/
+}
 
+.table.data > tbody > tr:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
 
 ul.breadcrumbs {
   margin: 0 0 1rem 0;
