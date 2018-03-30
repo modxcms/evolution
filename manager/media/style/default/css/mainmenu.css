@@ -86,10 +86,10 @@
 #searchresult .ajaxSearchResults .disabled a { opacity: .5; color: #7d2a24; }
 #searchresult .ajaxSearchResults .deleted a { color: #a52a2a; text-decoration: line-through }
 @media (min-width: 1200px) {
-#searchresult { top: 3rem; }
+#searchresult { top: 3.125rem; }
 #mainMenu #nav #site::before { content: ""; display: block; overflow: hidden; width: 10rem; background: url("../images/misc/logo-navbar.png") 0 50% no-repeat; background-size: 88%; }
 #mainMenu #nav #site::before , #mainMenu #nav #site a { float: left }
-#mainMenu, #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li > a .icon, #mainMenu #searchform .mask, #mainMenu #nav #site::before { height: 3rem; }
+#mainMenu, #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li > a .icon, #mainMenu #searchform .mask, #mainMenu #nav #site::before { height: 3.125rem; }
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li .fa, #mainMenu .nav > li > a .icon { line-height: 3.1rem; }
 #mainMenu .nav > li > a .icon.photo { width: 2.5rem; height: 2.5rem; margin-top: .3rem; }
 #mainMenu #nav > li > a { padding: 0 1.3rem; font-size: .875rem; }

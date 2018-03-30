@@ -18,8 +18,8 @@
 .sidebar-closed #tree { width: 0 !important; }
 .sidebar-closed #main, .sidebar-closed #resizer { left: 0 !important; }
 @media (min-width: 1200px) {
-#mainMenu { height: 3rem; }
-#tree, #main { top: 3rem; }
+#mainMenu { height: 3.125rem; }
+#tree, #main { top: 3.125rem; }
 #tree { font-size: .875rem }
 }
 @media (max-width: 840px) {
