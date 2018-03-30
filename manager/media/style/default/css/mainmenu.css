@@ -1,5 +1,5 @@
 /* #mainMenu */
-#mainMenu { background-color: #2b323a; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
+#mainMenu { background-color: #343944; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
 #mainMenu.show { overflow: visible }
 #mainMenu + #tree::before, #mainMenu + #tree + #main::before { content: ""; position: fixed; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1); opacity: 0; visibility: hidden; -webkit-transition: opacity .15s, visibility .15s; transition: opacity .15s, visibility .15s; }
 #mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { opacity: 1; visibility: visible }
