@@ -115,7 +115,7 @@
 .evo-tab-row .tab-row .tab:not(#evo-tab-home) i.help, .evo-popup.evo-popup-iframe .evo-popup-header i.help { display: none }
 .evo-tab-row .tab-row .tab:not(#evo-tab-home) i, .evo-popup.evo-popup-iframe .evo-popup-header i { margin-right: .25em }
 .evo-tab-row .tab-row .tab span { background: none !important }
-.evo-tab-row .tab-row .tab .tab-title { float: left; width: 5rem; line-height: 2rem; text-overflow: ellipsis; overflow: hidden; }
+.evo-tab-row .tab-row .tab .tab-title { float: left; width: 8rem; line-height: 2rem; text-overflow: ellipsis; overflow: hidden; }
 .evo-tab-row .tab-row .tab .tab-close { float: right; margin: 0 -.75rem 0 .5rem; padding: .25em; line-height: 1.3em; font-size: 1.3em; font-weight: 700; color: #9e9e9e }
 .evo-tab-row .tab-row .tab .tab-close:hover { color: #d9534f }
 .evo-tab-page { position: absolute; overflow: hidden; z-index: -1; display: block; left: 0; top: 2.3em; right: 0; bottom: 0; height: auto; box-shadow: none; background-color: #fafafa; }
