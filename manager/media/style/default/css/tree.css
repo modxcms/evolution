@@ -404,6 +404,7 @@
 
 #treePane .panel-title a {
   padding: 4px 0 6px 0.6rem !important;
+  font-size: 0.8125rem;
 }
 
 #treePane .panel-title > a:before {
