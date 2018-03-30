@@ -22,7 +22,8 @@
 .tab-pane > .tab-page > div:first-of-type, .tab-pane > .tab-page > table { margin-top: -2.5rem }
 .dynamic-tab-pane-control.tab-pane > .tab-page > div:first-of-type, .dynamic-tab-pane-control.tab-pane > .tab-page > table { margin-top: 0 }
 .tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
-.tab-page .tab-header, .sectionHeader { margin-top: 1em; padding: .5rem 1.25rem; letter-spacing: .03rem }
+.tab-page .tab-header, .sectionHeader { margin-top: 1em; padding: .5rem 1.25rem; letter-spacing: 0; font-size: 0.875rem; font-weight: bold; }
+.tab-page .tab-header, .tab-page .tab-section .tab-header, .tab-page .sectionHeader { background-color: #f3f3f3;  border-bottom-width: 1px; }
 .tab-page .tab-header + .tab-header, .tab-page .sectionHeader + .sectionHeader { margin-top: 0; border-top: 1px solid #ccc; }
 .tab-page > .tab-body .tab-header { padding-left: 0; padding-right: 0 }
 .tab-page > .tab-header:first-child, .tab-page > .tab-body > .tab-header:first-child, .tab-page .sectionHeader:first-child, .tab-page > script + .sectionHeader, .sectionBody .tab-page > script + .tab-section { margin-top: 0 }
@@ -34,6 +35,7 @@
 .tab-page .tab-section, .tab-page .sectionHeader + .sectionBody { margin-top: 1.25rem; background-color: #fafafa; border: 1px solid #e0e0e0; border-radius: .1rem; }
 .tab-page .tab-section:first-child, .tab-page .sectionHeader + .sectionBody, .tab-page .sectionBody ~ .sectionHeader { margin-top: 0 }
 .tab-page .tab-section .tab-header, .tab-page .sectionHeader { margin-left: -1px; margin-right: -1px; padding-left: .5rem; padding-right: .5rem; background-color: #efeff6; border: 1px solid #e0e0e0; border-bottom: 2px solid #e0e0ec; }
+.tab-page .tab-header, .tab-page .tab-section .tab-header, .tab-page .sectionHeader { background-color: #f3f3f3; border-bottom-width: 1px; }
 .tab-page .tab-section .tab-header:first-child, .tab-page .sectionHeader { margin-top: 0; border-top: none }
 .tab-page .tab-section .tab-header + .tab-header, .tab-page .tab-section .tab-body + .tab-header, .tab-page .sectionHeader { border-top: 1px solid #e0e0e0; }
 .tab-page .tab-section .tab-body, .tab-page .sectionBody { padding: 1rem; }
@@ -121,6 +123,7 @@
 .evo-tab-page { position: absolute; overflow: hidden; z-index: -1; display: block; left: 0; top: 2.3em; right: 0; bottom: 0; height: auto; box-shadow: none; background-color: #fafafa; }
 .evo-tab-page.show { z-index: 1; }
 .evo-tab-page iframe { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: #fafafa; overflow: hidden; }
+#tabGeneral > table { margin-bottom: 1rem; }
 /* dark */
 .dark .evo-popup-overlay { background-color: rgba(0, 0, 0, 0.3); }
 .dark .evo-tab-row { background-color: #1a1c21; border-bottom: none; }
