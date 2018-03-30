@@ -11,11 +11,11 @@
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
 #treeHolder .rootNode { position: relative; }
-#treeHolder .rootNode a { display: block; overflow: hidden; padding: 1em 1em 0.5em 1em; text-overflow: ellipsis; color: #333; cursor: pointer; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; font-weight: bold }
+#treeHolder .rootNode a { display: block; overflow: hidden; padding: 1em 1em 0.5em 1rem; text-overflow: ellipsis; color: #333; cursor: pointer; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; font-weight: bold }
 #treeHolder .rootNode a .fa { margin-right: 0.5em }
 #treeHolder .rootNode .icon { display: none; }
 #treeRoot { float: left; width: 100%; color: #333; }
-#treeRoot a { display: block; clear: both; overflow: hidden; text-decoration: none; padding: 0.1em 0 0.1em 2.2em; font-size: 1em; text-overflow: ellipsis; color: #333; cursor: default; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
+#treeRoot a { display: block; clear: both; overflow: hidden; text-decoration: none; padding: 0.2em 0 0.2em 2rem !important; font-size: 0.875rem; text-overflow: ellipsis; color: #333; cursor: default; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeRoot a:hover:not(.empty), #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
 #treeRoot a small { margin: 0 0.8em 0 0.2em }
 #treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 0, 0, 0.1); }
@@ -66,3 +66,31 @@
 .dark #treeRoot a.deleted .title:hover { color: #e23d3d }
 .dark #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.19); }
 .dark #treeRoot .fa, .dark #treeHolder .rootNode .fa { color: #bcbec0; }
+
+/* ElementsInTree plugin */
+
+#treePane .panel-title {
+  font-size: 0.8125rem;
+}
+
+#treePane .panel-title a {
+  padding: 4px 0 6px 0.6rem !important;
+}
+
+#treePane .panel-title > a:before {
+  display: none !important;
+}
+
+#treePane .tab-page ul {
+  margin: 7px 0 !important;
+}
+
+.ElementsInTree #tree .eltree {
+  padding-left: 1rem !important;
+  font-size: 13px;
+}
+
+.dark #treePane .panel-heading {
+  border-top-color: #3e4144 !important;
+  border-bottom-color: transparent !important;
+}
