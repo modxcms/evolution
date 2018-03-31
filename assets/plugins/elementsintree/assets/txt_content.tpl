@@ -278,8 +278,23 @@
 
   .ElementsInTree #tree .tab-page .panel-group .panel,
   .ElementsInTree #tree #tabDoc.tab-page>div {
-    max-height: calc(100vh - 8rem) !important;
     overflow: auto;
+  }
+  
+  .ElementsInTree #tree #tabDoc.tab-page>div {
+    max-height: calc(100vh - 10rem) !important;
+  }
+
+  .ElementsInTree #tree.has-treemenu-intab #tabDoc.tab-page>div {
+    max-height: calc(100vh - 10.3rem) !important;
+  }
+
+  .ElementsInTree #tree .tab-page .panel-group .panel {
+    max-height: calc(100vh - 9rem) !important;
+  }
+
+  .ElementsInTree #tree.has-treemenu-intab .tab-page .panel-group .panel {
+    max-height: calc(100vh - 7.125rem) !important;
   }
 
   .ElementsInTree #tree .tab-page .panel-group {
