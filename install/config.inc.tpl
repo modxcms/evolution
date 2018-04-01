@@ -82,9 +82,19 @@ if (empty($base_path) || empty($base_url)) {
 if (!defined('MODX_BASE_PATH')) {
     define('MODX_BASE_PATH', $base_path);
 }
+
+if( ! preg_match('/\/$/', MODX_BASE_PATH)) {
+    throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_PATH');
+}
+
 if (!defined('MODX_BASE_URL')) {
     define('MODX_BASE_URL', $base_url);
 }
+
+if( ! preg_match('/\/$/', MODX_BASE_URL)) {
+    throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_URL');
+}
+
 if (!defined('MODX_MANAGER_PATH')) {
     define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
 }
@@ -119,12 +129,12 @@ if (!defined('MODX_SITE_URL')) {
     define('MODX_SITE_URL', $site_url);
 }
 
-if (!defined('MODX_MANAGER_URL')) {
-    define('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/');
+if( ! preg_match('/\/$/', MODX_SITE_URL)) {
+    throw new RuntimeException('Please, use trailing slash at the end of MODX_SITE_URL');
 }
 
-if( ! preg_match('/\/$/', MODX_SITE_URL)) {
-    throw new RuntimeException('Please, use trailing slash at end of MODX_SITE_URL');
+if (!defined('MODX_MANAGER_URL')) {
+    define('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/');
 }
 
 include_once(MODX_MANAGER_PATH . 'includes/preload.functions.inc.php');
