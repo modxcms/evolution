@@ -171,7 +171,7 @@ evo.draggable = function(a, b) {
     }
   };
 
-  o.container.els = document.getElementsByClassName(o.container.className);
+  o.container.els = document.querySelectorAll('.' + o.container.className);
 
   function onmousedown(e) {
     o.el = this;
@@ -208,7 +208,7 @@ evo.draggable = function(a, b) {
       o.el.style.left = '';
       o.el.style.top = '';
       o.el.draggable = false;
-      var h = document.getElementsByClassName(o.container.classOver);
+      var h = document.querySelector('.' + o.container.classOver);
       if (h && h !== o.parent) {
         h.appendChild(o.el);
         o.container.drop(h, o.el);
