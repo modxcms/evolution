@@ -242,6 +242,10 @@
 
 /* darkness */
 
+.darkness {
+  letter-spacing: .021em;
+}
+
 .darkness #mainloader {
   background-color: rgba(0, 0, 0, 0.1);
 }
