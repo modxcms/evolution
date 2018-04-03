@@ -418,6 +418,10 @@
   margin-bottom: 1rem;
 }
 
+#tab1Help > img {
+  margin-bottom: 20px;
+}
+
 /* [ POPUPS ] */
 
 .evo-popup {
