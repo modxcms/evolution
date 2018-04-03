@@ -557,6 +557,10 @@ if($which_browser == 'default') {
 			                <small>[(manager_theme_mode)]</small>
 			            </td>
 			            <td>
+							<label><input type="radio" name="manager_theme_mode" value="" <?= $manager_theme_mode == '' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['option_default'] ?></label>
+			                <br />
+
 			                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['manager_theme_mode1'] ?></label>
 			                <br />
