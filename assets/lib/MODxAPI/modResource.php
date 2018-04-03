@@ -444,7 +444,7 @@ class modResource extends MODxAPI
         $this->close();
         $fld = array();
         foreach ($this->tvd as $name => $tv) {
-            $fld[$name] = $tv;
+            $fld[$name] = $tv['default'];
         };
         $this->store($fld);
 
@@ -806,12 +806,14 @@ class modResource extends MODxAPI
         $this->modx->_TVnames = $this->loadFromCache('_TVnames');
         if ($this->modx->_TVnames === false || empty($this->modx->_TVnames) || $reload) {
             $this->modx->_TVnames = array();
-            $result = $this->query('SELECT `id`,`name`,`default_text`,`type` FROM ' . $this->makeTable('site_tmplvars'));
+            $result = $this->query('SELECT `id`,`name`,`default_text`,`type`,`display`,`display_params` FROM ' . $this->makeTable('site_tmplvars'));
             while ($row = $this->modx->db->GetRow($result)) {
                 $this->modx->_TVnames[$row['name']] = array(
-                    "id"      => $row['id'],
-                    "type"    => $row['type'],
-                    "default" => $row['default_text']
+                    'id'      => $row['id'],
+                    'type'    => $row['type'],
+                    'default' => $row['default_text'],
+                    'display' => $row['display'],
+                    'display_params' => $row['display_params']
                 );
             }
             $this->saveToCache($this->modx->_TVnames, '_TVnames');
@@ -861,7 +863,7 @@ class modResource extends MODxAPI
             $this->tvd = array();
             foreach ($tvId as $id) {
                 $name = $this->tvid[$id];
-                $this->tvd[$name] = $this->modx->_TVnames[$name]['default'];
+                $this->tvd[$name] = $this->modx->_TVnames[$name];
             }
         }
 

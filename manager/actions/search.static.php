@@ -151,13 +151,14 @@ if (isset($_REQUEST['submitok'])) {
 
         if (!ctype_digit($searchfields)) {
             $sqladd .= $sqladd != '' ? ' AND' : '';
-            $sqladd .= " sc.pagetitle LIKE '%{$searchfields}%'";
+            $sqladd .= " (sc.pagetitle LIKE '%{$searchfields}%'";
             $sqladd .= " OR sc.longtitle LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.description LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.introtext LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.menutitle LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.alias LIKE '%{$search_alias}%'";
-			$sqladd .= $articul_id_query;//search by TV
+            $sqladd .= $articul_id_query;//search by TV
+            $sqladd .= ")";
         }
     } else if ($idFromAlias) {
         $sqladd .= " sc.id='{$idFromAlias}'";

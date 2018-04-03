@@ -45,11 +45,13 @@ if (!$MODX_widthSideBar) {
     $body_class .= 'sidebar-closed';
 }
 
-if (isset($_COOKIE['MODX_themeColor'])) {
-    $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
-} else {
-    $body_class .= ' dark';
+$theme_modes = array('', 'lightness', 'light', 'dark', 'darkness');
+if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
+    $body_class .= ' ' . $theme_modes[$_COOKIE['MODX_themeMode']];
+} elseif (!empty($theme_modes[$modx->config['manager_theme_mode']])) {
+    $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
 }
+
 
 if (isset($modx->pluginCache['ElementsInTree'])) {
     $body_class .= ' ElementsInTree';
@@ -148,6 +150,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           site_start: <?= (int)$modx->config['site_start'] ?>,
           tree_page_click: <?=(!empty($modx->config['tree_page_click']) ? (int)$modx->config['tree_page_click'] : 27) ?>,
           theme: '<?= $modx->config['manager_theme'] ?>',
+          theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',

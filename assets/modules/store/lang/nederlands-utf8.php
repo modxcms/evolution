@@ -35,6 +35,12 @@ $_Lang['s2_1_up'] = "Aflopend";
 $_Lang['s2_2_down'] = "Oplopend";
 $_Lang['search'] = "Zoeken binnen categorie:";
 
+/* Installation by file-upload */
++$_Lang['install_file'] = "Installatie vanuit archief";
++$_Lang['choose_file_msg'] = "Selecteer bestand";
++$_Lang['install_file_btn'] = "Installeer";
++$_Lang['install_file_success'] = "Installatie voltooid";
+
 /* faq */
 $_Lang['faq'] = '
 <li><a href="http://modx-store.com/faq/whatfor.html" target="_blank">Waarom heb je een opslagplaats nodig?</a></li>

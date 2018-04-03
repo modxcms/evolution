@@ -579,7 +579,7 @@ function getRecentInfoRowTpl() {
 									<ul>
 										<li><b>[%long_title%]</b>: [+longtitle+]</li>
 										<li><b>[%description%]</b>: [+description+]</li>
-										<li><b>[%resource_summary%]</b>: [+longtitle+]</li>
+										<li><b>[%resource_summary%]</b>: [+introtext+]</li>
 										<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
 										<li><b>[%resource_alias%]</b>: [+alias+]</li>
 										<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>

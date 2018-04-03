@@ -321,6 +321,7 @@ removeFolder(__DIR__ . "/temp/" . $dir . "/install/assets/templates");
 unlink(__DIR__ . "/temp/" . $dir . "/ht.access");
 unlink(__DIR__ . "/temp/" . $dir . "/README.md");
 unlink(__DIR__ . "/temp/" . $dir . "/sample-robots.txt");
+unlink(__DIR__ . "/temp/" . $dir . "/composer.json");
 
 
 if(is_file(__DIR__ . "/assets/cache/siteManager.php")){

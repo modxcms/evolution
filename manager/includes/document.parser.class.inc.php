@@ -2499,13 +2499,14 @@ class DocumentParser
         $requestedURL = "{$scheme}://{$http_host}" . '/' . $q; //LANG
 
         $site_url = $this->config['site_url'];
-        $url_query_string = explode('?', $_SERVER['REQUEST_URI'])[1];
+        $url_query_string = explode('?', $_SERVER['REQUEST_URI']);
+        // Strip conflicting id/q from query string
+        $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
 
         if ($this->documentIdentifier == $this->config['site_start']) {
             if ($requestedURL != $this->config['site_url']) {
                 // Force redirect of site start
                 // $this->sendErrorPage();
-                $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string) : ''; // Strip conflicting id/q from query string
                 if ($qstring) {
                     $url = "{$site_url}?{$qstring}";
                 } else {
@@ -2523,10 +2524,6 @@ class DocumentParser
         } elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']) {
             // Force page redirect
             //$strictURL = ltrim($strictURL,'/');
-
-            if (!empty($url_query_string)) {
-                $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string);
-            }  // Strip conflicting id/q from query string
             if (!empty($qstring)) {
                 $url = "{$site_url}{$strictURL}?{$qstring}";
             } else {
