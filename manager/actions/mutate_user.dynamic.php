@@ -551,6 +551,26 @@ if($which_browser == 'default') {
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["manager_theme_message"] ?></td>
 					</tr>
+
+					<tr>
+			            <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
+			                <small>[(manager_theme_mode)]</small>
+			            </td>
+			            <td>
+			                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode1'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="2" <?= $manager_theme_mode == '2' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode2'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="3" <?= $manager_theme_mode == '3' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode3'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($manager_theme_mode == '4') ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode4'] ?></label>
+			            </td>
+			        </tr>
+
 					<tr>
 						<th><?php echo $_lang["which_browser_title"] ?></th>
 						<td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">
