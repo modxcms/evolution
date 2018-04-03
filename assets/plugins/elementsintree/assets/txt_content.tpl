@@ -478,6 +478,72 @@
   }
 
 
+
+  .darkness.ElementsInTree #tree .treeframebody {
+    background-color: #202329 !important;
+    color: #828282;
+    border-color: #2a2d33
+  }
+
+  .darkness.ElementsInTree #tree .tab-row .tab {
+    color: #7b7b7b;
+    border-color: #2a2d33;
+    background-color: #1a1c21;
+  }
+
+  .darkness.ElementsInTree #tree .tab-row .tab:hover {
+    background-color: #2d3033;
+  }
+
+  .darkness.ElementsInTree #tree .tab-row .tab.selected {
+    background-color: #202329;
+    color: #bfbfbf;
+  }
+
+  .darkness.ElementsInTree #tree .tab-row .tab span {
+    background-color: transparent;
+  }
+
+  .darkness.ElementsInTree #tree .tab-page {
+    background-color: #202329;
+  }
+
+  .darkness.ElementsInTree #tree .tab-page .panel-group {
+    border-color: #3e4144;
+  }
+
+  .darkness.ElementsInTree #tree .form-control {
+    background-color: transparent;
+    color: #c7c7c7;
+  }
+
+  .darkness.ElementsInTree #tree a {
+    color: #b7b7b7;
+  }
+
+  .darkness.ElementsInTree #tree .disabledPlugin, 
+  .darkness.ElementsInTree #tree .disabledPlugin a {
+    color: #B68282;
+  }
+
+  .darkness.ElementsInTree #tree a:hover {
+    color: #dbdbdb;
+  }
+
+  .darkness.ElementsInTree #tree .disabledPlugin a {
+    color: #b68282;
+  }
+
+  .darkness.ElementsInTree #treeMenu {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .darkness.ElementsInTree #treeMenu.is-intab {
+    background-color: transparent !important;
+  }
+
+
+
   /* Unify frames */
 
   body,
