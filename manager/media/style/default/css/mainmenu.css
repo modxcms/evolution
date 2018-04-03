@@ -3,8 +3,8 @@
 #mainMenu {
   background-color: #2b323a;
   color: #8b9298;
-  -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25);
-  box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3); 
+  box-shadow: 0 2px 4px rgba(0,0,0,.3);
 }
 
 #mainMenu.show {
@@ -65,7 +65,7 @@
 #mainMenu .nav > li {
   position: relative;
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   vertical-align: top
 }
 
@@ -206,10 +206,6 @@
   visibility: hidden;
 }
 
-#mainMenu.show .nav > li:hover > ul.sub-menu {}
-
-#mainMenu.show .nav > li:hover > ul.sub-menu.show {}
-
 #mainMenu #settings.nav > li > ul {
   left: auto;
   right: 0
@@ -240,8 +236,8 @@
 }
 
 #mainMenu .nav > li > ul > li.hover > a:first-child {
-  color: #fff;
-  background-color: #1976d2;
+  color: #444;
+  background-color: #eee;
 }
 
 #mainMenu .nav > li > ul > li > span:first-child {
@@ -612,7 +608,7 @@
   #mainMenu .nav .label_searchid,
   #mainMenu .nav > li .fa,
   #mainMenu .nav > li > a .icon {
-    line-height: 2.6rem;
+    line-height: 2.5rem;
   }
   #mainMenu .nav > li > a .icon.photo {
     width: 2.1rem;
@@ -731,6 +727,11 @@
 
 /* lightness */
 
+.lightness #mainMenu {
+  -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.15); 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
 .lightness #mainMenu,
 .lightness #mainMenu #nav #site a::before {
   background-color: #f1f1f1;
@@ -753,8 +754,8 @@
 /* light */
 
 .light #mainMenu {
-  -webkit-box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3); 
+  box-shadow: 0 2px 4px rgba(0,0,0,.3);
 }
 
 .light #mainMenu,
@@ -815,6 +816,11 @@
 .darkness #mainMenu.show .nav > li.dropdown.hover > a {
   color: #eee;
   background-color: #343942;
+}
+
+.darkness #mainMenu .nav > li > ul > li.hover > a:first-child {
+  color: #eee;
+  background-color: #454c57;
 }
 
 .darkness #mainMenu .nav > li > ul {
