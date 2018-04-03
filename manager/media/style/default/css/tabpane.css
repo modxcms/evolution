@@ -154,7 +154,9 @@
 .sectionHeader {
   margin-top: 1em;
   padding: .5rem 1.25rem;
-  letter-spacing: .03rem
+  letter-spacing: 0;
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 .tab-page .tab-header + .tab-header,
@@ -230,6 +232,13 @@
   background-color: #efeff6;
   border: 1px solid #e0e0e0;
   border-bottom: 2px solid #e0e0ec;
+}
+
+.tab-page .tab-header,
+.tab-page .tab-section .tab-header,
+.tab-page .sectionHeader {
+  background-color: #f3f3f3;
+  border-bottom-width: 1px;
 }
 
 .tab-page .tab-section .tab-header:first-child,
@@ -402,6 +411,10 @@
 
 .sectionBody .tab-page#tabGeneral > table + div {
   margin-top: 1.3rem;
+}
+
+#tabGeneral > table {
+  margin-bottom: 1rem;
 }
 
 /* [ POPUPS ] */
