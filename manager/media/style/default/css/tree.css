@@ -44,7 +44,7 @@
 #treeRoot .fa-link { margin-right: 0; font-size: 0.8em }
 #treeRoot #binFull { display: none }
 @media (min-width: 1200px) {
-#tree { font-size: .875rem; letter-spacing: 0.0321em; }
+.dark #tree, .darkness #tree { font-size: .875rem; letter-spacing: 0.0321em; }
 }
 /* modes theme */
 /* lightness */
