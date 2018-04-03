@@ -759,7 +759,7 @@
 
 .light #mainMenu,
 .light #mainMenu #nav #site a::before {
-  background-color: #2b323a;
+  background-color: #343944;
   color: #cacaca;
 }
 
