@@ -783,12 +783,12 @@
 .dark #mainMenu,
 .dark #mainMenu #nav #site a::before {
   background-color: #202329;
-  color: #DCD9E3;
+  color: #bbb;
 }
 
 .dark #mainMenu .nav > li > a,
 .dark #mainMenu .nav .label_searchid {
-  color: #DCD9E3
+  color: #bbb
 }
 
 .dark #mainMenu.show .nav > li.dropdown.hover > a {
