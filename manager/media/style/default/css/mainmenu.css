@@ -83,7 +83,7 @@
   height: 2.2rem;
   line-height: 2.3rem;
   text-decoration: none;
-  color: #bbb;
+  color: #DCD9E3;
   transition-duration: 0.15s
 }
 
@@ -765,7 +765,7 @@
 
 .light #mainMenu .nav > li > a,
 .light #mainMenu .nav .label_searchid {
-  color: #cacaca
+  color: #DCD9E3;
 }
 
 .light #mainMenu.show .nav > li.dropdown.hover > a {
@@ -782,12 +782,12 @@
 .dark #mainMenu,
 .dark #mainMenu #nav #site a::before {
   background-color: #202329;
-  color: #bbb;
+  color: #DCD9E3;
 }
 
 .dark #mainMenu .nav > li > a,
 .dark #mainMenu .nav .label_searchid {
-  color: #bbb
+  color: #DCD9E3
 }
 
 .dark #mainMenu.show .nav > li.dropdown.hover > a {
@@ -809,7 +809,7 @@
 
 .darkness #mainMenu .nav > li > a,
 .darkness #mainMenu .nav .label_searchid {
-  color: #bbb
+  color: #bbb;
 }
 
 .darkness #mainMenu.show .nav > li.dropdown.hover > a {
