@@ -1,7 +1,7 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-Evolution CMS 1.4.3 (Apr 03, 2018)
+Evolution CMS 1.4.3 (Apr 04, 2018)
 * [GitHub:#e10383b14] - update DocLister (dmi3yy)
 * [GitHub:#2654f2c59] - update Formlister (dmi3yy)
 * [GitHub:#64c4e9adf] - add select for theme mode in managers settings (dmi3yy)
