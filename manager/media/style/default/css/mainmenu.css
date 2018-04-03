@@ -126,7 +126,7 @@
 #mainMenu .nav > li .fa {
   min-width: 1em;
   line-height: 2.2rem;
-  font-size: .875rem;
+  font-size: 0.875rem;
   vertical-align: top
 }
 
@@ -620,7 +620,7 @@
     margin-top: .2rem;
   }
   #mainMenu .nav > li .fa {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
   #mainMenu #nav > li > a {
     padding: 0 1.25rem;
