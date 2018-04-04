@@ -236,8 +236,8 @@
 }
 
 #mainMenu .nav > li > ul > li.hover > a:first-child {
-  color: #444;
-  background-color: #eee;
+  color: #fff;
+  background-color: #1976d2;
 }
 
 #mainMenu .nav > li > ul > li > span:first-child {
