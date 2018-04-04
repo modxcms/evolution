@@ -244,7 +244,7 @@
 
 .tab-page .tab-section .tab-header:first-child,
 .tab-page .sectionHeader {
-  margin-top: -1px;
+  margin-top: 0;
   border-top: none
 }
 
