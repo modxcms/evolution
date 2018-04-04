@@ -8,6 +8,7 @@
  */
 class jotcount_DL_Extender extends extDocLister
 {
+
     /**
      * @return bool
      */

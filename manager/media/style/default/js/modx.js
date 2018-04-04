@@ -5,6 +5,7 @@
     minWidth: 840,
     isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
     typesactions: {'16': 1, '301': 2, '78': 3, '22': 4, '102': 5, '108': 6, '3': 7, '4': 7, '6': 7, '27': 7, '61': 7, '62': 7, '63': 7, '72': 7},
+    thememodes: ['', 'lightness', 'light', 'dark', 'darkness'],
     tabsTimer: 0,
     popupTimer: 0,
     init: function() {
@@ -890,28 +891,33 @@
         }
       },
       toggleTheme: function() {
-        var myCodeMirrors = w.main.myCodeMirrors, key;
-        if (d.body.classList.contains('dark')) {
-          d.body.classList.remove('dark');
-          w.main.document.body.classList.remove('dark');
-          d.cookie = 'MODX_themeColor=';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme);
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme);
-              }
-            }
+        var a, b = 1, myCodeMirrors = w.main.myCodeMirrors, key;
+        if (typeof localStorage['MODX_themeMode'] === 'undefined') {
+          localStorage['MODX_themeMode'] = modx.config.theme_mode;
+        }
+        if (modx.thememodes[parseInt(localStorage['MODX_themeMode']) + 1]) {
+          b = parseInt(localStorage['MODX_themeMode']) + 1;
+        }
+        a = modx.thememodes[b];
+        for (key in modx.thememodes) {
+          if (modx.thememodes[key]) {
+            d.body.classList.remove(modx.thememodes[key]);
+            w.main.document.body.classList.remove(modx.thememodes[key]);
           }
-        } else {
-          d.body.classList.add('dark');
-          w.main.document.body.classList.add('dark');
-          d.cookie = 'MODX_themeColor=dark';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
+        }
+        d.body.classList.add(a);
+        w.main.document.body.classList.add(a);
+        d.cookie = 'MODX_themeMode=' + b;
+        localStorage['MODX_themeMode'] = b;
+        if (typeof myCodeMirrors !== 'undefined') {
+          for (key in myCodeMirrors) {
+            if (myCodeMirrors.hasOwnProperty(key)) {
+              if (~a.indexOf('dark')) {
                 w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.darktheme);
                 w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.defaulttheme);
+              } else {
+                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme);
+                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme);
               }
             }
           }

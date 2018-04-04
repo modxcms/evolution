@@ -41,7 +41,6 @@ class DLdebug
             $this->DocLister = $DocLister;
             $this->modx = $this->DocLister->getMODX();
         }
-
     }
 
     /**
@@ -130,7 +129,6 @@ class DLdebug
         }
     }
 
-
     /**
      * @param $message
      * @param string $title
@@ -196,16 +194,21 @@ class DLdebug
                                 $msg = $this->dumpData(Formatter\SqlFormatter::format($msg), '', null);
                                 break;
                             case 'html':
-                                $msg = is_numeric($msg) ? $msg : $this->dumpData(Formatter\HtmlFormatter::format($msg),
-                                    '', null);
+                                $msg = is_numeric($msg) ? $msg : $this->dumpData(
+                                    Formatter\HtmlFormatter::format(!is_scalar($msg) ? print_r($msg, true) : $msg),
+                                    '',
+                                    null
+                                );
                                 break;
                             default:
                                 $msg = $this->dumpData($msg);
                                 break;
                         }
                         if (!empty($title) && !is_numeric($title)) {
-                            $message .= $this->DocLister->parseChunk('@CODE:<strong>[+title+]</strong>: [+msg+]<br />',
-                                compact('msg', 'title'));
+                            $message .= $this->DocLister->parseChunk(
+                                '@CODE:<strong>[+title+]</strong>: [+msg+]<br />',
+                                compact('msg', 'title')
+                            );
                         } else {
                             $message .= $msg;
                         }

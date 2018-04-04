@@ -69,7 +69,9 @@ class MODxMailer extends PHPMailer
         }
 
         $this->From = $modx->config['emailsender'];
-        $this->Sender = $modx->config['emailsender'];
+        if (isset($modx->config['email_sender_method']) && !$modx->config['email_sender_method']) {
+            $this->Sender = $modx->config['emailsender'];
+        }
         $this->FromName = $modx->config['site_name'];
         $this->isHTML(true);
 
@@ -268,7 +270,7 @@ class MODxMailer extends PHPMailer
      */
     public function SetError($msg)
     {
-        $msg .= '<pre>' . print_r(get_object_vars($this), true) . '</pre>';
+        $msg .= '<pre>' . print_r(call_user_func('get_object_vars', $this), true) . '</pre>';
         $this->modx->config['send_errormail'] = '0';
         $this->modx->logEvent(0, 3, $msg, 'phpmailer');
 

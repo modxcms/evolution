@@ -39,4 +39,5 @@ class content_DL_filter extends filterDocLister
     {
         return '';
     }
+
 }

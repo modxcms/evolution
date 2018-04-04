@@ -84,8 +84,13 @@ class prepare_DL_Extender extends extDocLister
             return $params['data'];
         }
         if ((is_object($name) && ($name instanceof Closure)) || is_callable($name)) {
-            $data = call_user_func($name, $params['data'], $params['modx'], $params['_DocLister'],
-                $params['_extDocLister']);
+            $data = call_user_func(
+                $name,
+                $params['data'],
+                $params['modx'],
+                $params['_DocLister'],
+                $params['_extDocLister']
+            );
         } else {
             $data = $this->modx->runSnippet($name, $params);
         }
@@ -106,4 +111,5 @@ class prepare_DL_Extender extends extDocLister
 
         return is_null($out) ? $params['data'] : $out;
     }
+
 }

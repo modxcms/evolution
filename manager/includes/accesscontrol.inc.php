@@ -84,8 +84,21 @@ if (!isset($_SESSION['mgrValidated'])) {
     $modx->setPlaceholder('manager_theme_url',
         MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
     $modx->setPlaceholder('year', date('Y'));
-    $modx->setPlaceholder('manager_theme_style',
-        (isset($_COOKIE['MODX_themeColor']) ? $_COOKIE['MODX_themeColor'] : ''));
+    
+    switch ($modx->config['manager_theme_mode']) {
+      case '1':
+        $modx->setPlaceholder('manager_theme_style', 'lightness');
+        break;
+      case '2':
+        $modx->setPlaceholder('manager_theme_style', 'light');
+        break;
+      case '3':
+        $modx->setPlaceholder('manager_theme_style', 'dark');
+        break;
+      case '4':
+        $modx->setPlaceholder('manager_theme_style', 'darkness');
+        break;    }
+
 
     // andrazk 20070416 - notify user of install/update
     if (isset($_GET['installGoingOn'])) {

@@ -1,6 +1,6 @@
 <?php
 
-$params = isset($params) ? $params : array('base_url'=>'', 'skinsDirectory'=>'');
+$params = isset($params) && !empty($params) ? $params : array('base_url'=>'', 'skinsDirectory'=>'', 'skinthemeDirectory'=>'');
 // Hold general settings based on old Modx TinyMCE-Settings
 
 // Settings interface rows configuration

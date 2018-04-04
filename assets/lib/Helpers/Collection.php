@@ -65,7 +65,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
     public function forAll(Closure $p)
     {
         foreach ($this->data as $key => $element) {
-            if ( ! $p($key, $element)) {
+            if (! $p($key, $element)) {
                 return false;
             }
         }
@@ -231,7 +231,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function remove($key)
     {
-        if ( ! isset($this->data[$key]) && ! array_key_exists($key, $this->data)) {
+        if (! isset($this->data[$key]) && ! array_key_exists($key, $this->data)) {
             return null;
         }
         $removed = $this->data[$key];
@@ -280,7 +280,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        if ( ! isset($offset)) {
+        if (! isset($offset)) {
             return $this->add($value);
         }
         $this->set($offset, $value);
@@ -381,7 +381,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function max($key)
     {
-        return $this->reduce(function($result, $item) use ($key) {
+        return $this->reduce(function ($result, $item) use ($key) {
             return (is_null($result) || $item[$key] > $result) ? $item[$key] : $result;
         });
     }
@@ -394,7 +394,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function min($key)
     {
-        return $this->reduce(function($result, $item) use ($key) {
+        return $this->reduce(function ($result, $item) use ($key) {
             return (is_null($result) || $item[$key] < $result) ? $item[$key] : $result;
         });
     }
@@ -452,4 +452,5 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return $this->create(array_reverse($this->data));
     }
+
 }

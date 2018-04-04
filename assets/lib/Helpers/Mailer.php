@@ -90,11 +90,11 @@ class Mailer
     public function attachFiles($filelist = array())
     {
         if (!$this->noemail) {
-            $fs = FS::getInstance();
             $contentType = "application/octetstream";
             foreach ($filelist as $file) {
-                if (!$fs->checkFile($file['filepath'])) continue;
-                $this->mail->AddAttachment($file['filepath'], $file['filename'], "base64", $contentType);
+                if (is_file($file['filepath']) && is_readable($file['filepath'])) {
+                    $this->mail->AddAttachment($file['filepath'], $file['filename'], "base64", $contentType);
+                }
             }
         }
 
@@ -114,7 +114,7 @@ class Mailer
             return false;
         }
 
-        $this->mail->Body = $this->getCFGDef('isHtml',1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
+        $this->mail->Body = $this->getCFGDef('isHtml', 1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
 
         $result = $this->mail->send();
         if ($result) {
@@ -138,7 +138,7 @@ class Mailer
             return false;
         }
 
-        $this->mail->Body = $this->getCFGDef('isHtml',1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
+        $this->mail->Body = $this->getCFGDef('isHtml', 1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
 
         $this->Body = $this->modx->removeSanitizeSeed($this->mail->Body);
         $this->Subject = $this->modx->removeSanitizeSeed($this->mail->Subject);
@@ -163,7 +163,8 @@ class Mailer
      * @param string $path
      * @return bool
      */
-    public function setQueuePath($path = '') {
+    public function setQueuePath($path = '')
+    {
         if (!empty($path)) {
             $this->queuePath = $path;
             return true;
@@ -195,7 +196,8 @@ class Mailer
     /**
      * @return string
      */
-    protected function getFileName() {
+    protected function getFileName()
+    {
         return $this->mail->getMessageID() . '.eml';
     }
 

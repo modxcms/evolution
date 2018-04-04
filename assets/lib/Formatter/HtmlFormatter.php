@@ -6,6 +6,7 @@
  */
 class HtmlFormatter
 {
+
     /**
      * @param string $string
      * @param bool $decode

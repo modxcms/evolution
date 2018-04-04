@@ -41,8 +41,11 @@ $wrapTPL = APIHelpers::getkey($params, 'wrapTPL', '@CODE: <div class="reflect-li
  *            [+reflects+] - Общее число уникальных дат, которые возможно отобразить в списке
  *            [+displayReflects+] - Число уникальных дат отображаемых в общем списке
  */
-$reflectTPL = APIHelpers::getkey($params, 'reflectTPL',
-    '@CODE: <li><a href="[+url+]" title="[+title+]">[+title+]</a></li>');
+$reflectTPL = APIHelpers::getkey(
+    $params,
+    'reflectTPL',
+    '@CODE: <li><a href="[+url+]" title="[+title+]">[+title+]</a></li>'
+);
 /**
  * activeReflectTPL
  *        Шаблон активной даты.
@@ -159,25 +162,26 @@ $DLParams['debug'] = $debug;
 $DLParams['api'] = 'id';
 $DLParams['orderBy'] = $reflectField;
 $DLParams['saveDLObject'] = 'DLAPI';
-if ($reflectSource == 'tv') {
+if ($reflectSource === 'tv') {
     $DLParams['tvSortType'] = 'TVDATETIME';
-    $DLParams['selectFields'] = "DATE_FORMAT(STR_TO_DATE(`dltv_" . $reflectField . "_1`.`value`,'%d-%m-%Y %H:%i:%s'), '" . $sqlDateFormat . "') as `id`";
+    $query = 'STR_TO_DATE(`dltv_' . $reflectField . "_1`.`value`,'%d-%m-%Y %H:%i:%s')";
 } else {
     $DLParams['orderBy'] = $reflectField;
-    $DLParams['selectFields'] = "DATE_FORMAT(FROM_UNIXTIME(" . $reflectField . "), '" . $sqlDateFormat . "') as `id`";
+    $query = 'FROM_UNIXTIME(' . $reflectField . ')';
 }
+$DLParams['selectFields'] = 'DATE_FORMAT(' . $query . ", '" . $sqlDateFormat . "') as `id`";
 $totalReflects = $modx->runSnippet('DocLister', $DLParams);
 /** Получаем объект DocLister'a */
 $DLAPI = $modx->getPlaceholder('DLAPI');
 
-if ($reflectType == 'month') {
+if ($reflectType === 'month') {
     //Загружаем лексикон с месяцами
     $DLAPI->loadLang('months');
 }
 
 /** Разбираем API ответ от DocLister'a */
 $totalReflects = json_decode($totalReflects, true);
-if (is_null($totalReflects)) {
+if ($totalReflects === null) {
     $totalReflects = array();
 }
 $totalReflects = new DLCollection($modx, $totalReflects);
@@ -185,7 +189,7 @@ $totalReflects = $totalReflects->filter(function ($el) {
     return !empty($el['id']);
 });
 /** Добавляем активную дату в коллекцию */
-if (!is_null($activeReflect)) {
+if ($activeReflect !== null) {
     $totalReflects->add(array('id' => $activeReflect), $activeReflect);
 }
 $hasCurrentReflect = ($totalReflects->indexOf(array('id' => $originalCurrentReflect)) !== false);
@@ -203,13 +207,16 @@ $totalReflects->sort(function ($a, $b) use ($dateFormat) {
 })->reindex();
 
 /** Разделяем коллекцию дат на 2 части (до текущей даты и после) */
-list($lReflect, $rReflect) = $totalReflects->partition(function ($key, $val) use (
+list($lReflect, $rReflect) = $totalReflects->partition(function (
+    $key,
+    $val
+) use (
     $activeReflect,
     $originalDate,
     $dateFormat
 ) {
     $aDate = DateTime::createFromFormat($dateFormat, $val['id']);
-    if (is_null($activeReflect)) {
+    if ($activeReflect === null) {
         $activeReflect = $originalDate;
     }
     $bDate = DateTime::createFromFormat($dateFormat, $activeReflect);
@@ -248,7 +255,7 @@ foreach ($lReflect as $item) {
     $outReflects->add($item['id']);
 }
 /** Добавляем текущую дату */
-if (is_null($activeReflect)) {
+if ($activeReflect === null) {
     if (($hasCurrentReflect && !$selectCurrentReflect) || $appendCurrentReflect) {
         $outReflects->add($originalCurrentReflect);
     }

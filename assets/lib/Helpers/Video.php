@@ -419,4 +419,5 @@ class Video
                 . "<b>Картинка:</b> " . $v->getImage() . "<hr />\n";
         }
     }
+
 }

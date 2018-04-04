@@ -67,4 +67,5 @@ class DLCollection extends Helpers\Collection
     {
         return new static($this->modx, $data);
     }
+
 }

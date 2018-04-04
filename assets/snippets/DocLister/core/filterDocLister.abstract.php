@@ -126,8 +126,11 @@ abstract class filterDocLister
      */
     protected function build_sql_where($table_alias, $field, $operator, $value)
     {
-        $this->DocLister->debug->debug('Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()),
-            'buildQuery', 2);
+        $this->DocLister->debug->debug(
+            'Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()),
+            'buildQuery',
+            2
+        );
         $output = sqlHelper::tildeField($field, $table_alias);
 
         switch ($operator) {
@@ -218,4 +221,5 @@ abstract class filterDocLister
     {
         return $this->tableAlias;
     }
+
 }
