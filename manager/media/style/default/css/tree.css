@@ -458,9 +458,8 @@
 }
 
 .darkness #treeMenu {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom-color: rgba(255,255,255,0.1);
-  border-right-color: #2a2d33
+  background-color: #1a1c21;
+  border-color: #414449;
 }
 
 .darkness #mainMenu .nav > li > ul > li {
