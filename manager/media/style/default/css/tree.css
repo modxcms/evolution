@@ -1,7 +1,7 @@
 /* tree */
 
 #tree {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 #treeloader {
@@ -265,7 +265,7 @@
 #treeHolder .rootNode .fa {
   margin-right: 1px;
   width: 1em;
-  font-size: 1em;
+  font-size: 1.08em;
   text-align: center;
   color: #565656;
   -webkit-transition-duration: 0.15s;
