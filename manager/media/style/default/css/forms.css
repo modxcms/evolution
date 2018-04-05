@@ -385,7 +385,8 @@ select::-ms-expand {
 .darkness .btn,
 .darkness button:not(.btn),
 .darkness input[type=button]:not(.btn),
-.darkness input[type=submit]:not(.btn) {
+.darkness input[type=submit]:not(.btn),
+.darkness .input-group-addon {
   border-color: #414449;
   background-color: #202329;
   color: #bbb;
@@ -399,7 +400,8 @@ select::-ms-expand {
 
 .darkness .btn:hover,
 .darkness input[type=button]:not(.btn):hover,
-.darkness input[type=submit]:not(.btn):hover {
+.darkness input[type=submit]:not(.btn):hover,
+.darkness .input-group-addon:hover {
   border-color: #414449;
   background-color: #282c34;
   color: #eee;
@@ -425,12 +427,7 @@ select::-ms-expand {
 .darkness .btn-secondary:active:hover,
 .darkness .open > .btn-secondary.dropdown-toggle.focus,
 .darkness .open > .btn-secondary.dropdown-toggle:focus,
-.darkness .open > .btn-secondary.dropdown-toggle:hover {
-  border-color: #414449;
-  background-color: #1a1c21;
-  color: #eee;
-}
-
+.darkness .open > .btn-secondary.dropdown-toggle:hover,
 .darkness .btn-secondary.focus,
 .darkness .btn-secondary:focus {
   border-color: #414449;
