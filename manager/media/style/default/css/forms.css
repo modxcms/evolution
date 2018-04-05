@@ -313,6 +313,11 @@ select[size="1"] {
   background-size: 2em 1.3em
 }
 
+select[size="1"]:not(.unstyled),
+select[name="which_editor"] {
+width: auto;
+}
+
 optgroup {
   font-style: normal;
   font-weight: 500;
@@ -574,11 +579,6 @@ select::-ms-expand {
 .darkness select[size="1"] {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTc5MiAxNzkyJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9JyNlZWUnPjxwYXRoIGQ9J00xMzk1IDczNnEwIDEzLTEwIDIzbC00NjYgNDY2cS0xMCAxMC0yMyAxMHQtMjMtMTBsLTQ2Ni00NjZxLTEwLTEwLTEwLTIzdDEwLTIzbDUwLTUwcTEwLTEwIDIzLTEwdDIzIDEwbDM5MyAzOTMgMzkzLTM5M3ExMC0xMCAyMy0xMHQyMyAxMGw1MCA1MHExMCAxMCAxMCAyM3onLz48L3N2Zz4=") !important;
   background-repeat: no-repeat;
-}
-
-.darkness select[size="1"]:not(.unstyled),
-.darkness select[name="which_editor"] {
-  width: auto;
 }
 
 .darkness input:-webkit-autofill,
