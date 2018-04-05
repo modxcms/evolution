@@ -244,7 +244,7 @@
 
 .tab-page .tab-section .tab-header:first-child,
 .tab-page .sectionHeader {
-  margin-top: 0;
+  margin-top: -1px;
   border-top: none
 }
 
@@ -914,12 +914,6 @@
 .darkness .tab-page .sectionHeader {
   background-color: #202329;
   border: 1px solid #414449;
-}
-
-.darkness .tab-page .tab-section .tab-header:first-child,
-.darkness .tab-page .sectionHeader {
-  margin-top: 0;
-  border-top: none
 }
 
 .darkness .tab-page .tab-section,
