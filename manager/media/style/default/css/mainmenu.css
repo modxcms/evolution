@@ -826,6 +826,9 @@
 .darkness #mainMenu .nav > li > ul > li > span {
   color: #eee;
 }
+#mainMenu .nav > li > ul > li > span:hover {
+  background-color: inherit;
+}
 
 .darkness #mainMenu .nav li.item-group > * {
   background-color: transparent
