@@ -1579,7 +1579,7 @@ ul.sortableList li.ghost {
   padding: 1em;
 }
 
-#helpPane #tab2Help img {
+#helpPane .tab-page > img:first-of-type {
   margin-bottom: 1rem;
 }
 
@@ -2049,7 +2049,7 @@ ul.sortableList li.ghost {
   margin: 0;
 }
 
-.darkness #helpPane #tab2Help img {
+.darkness #helpPane .tab-page > img:first-of-type {
   content: url("../images/misc/logo-navbar-white.png");
 }
 
