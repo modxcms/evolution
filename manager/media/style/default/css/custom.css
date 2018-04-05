@@ -2107,6 +2107,17 @@ ul.sortableList li.ghost {
   color: #3481bc;
 }
 
+.darkness #pagination li a {
+  border: 1px solid #414449;
+  color: #bbb;
+}
+
+.darkness #pagination li.currentPage a,
+.darkness #pagination li a:hover {
+  color: #eee;
+  border: 1px solid #1976d2;
+}
+
 .darkness h2[style="color:#003399"],
 .darkness h3[style="color:#003399"] {
   color: #f44336 !important;
