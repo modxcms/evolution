@@ -38,7 +38,7 @@ letter-spacing: 0; font-size: 0.875rem; font-weight: bold; color: #777; }
 padding-right: .5rem;
 background-color: #efeff6; border: 1px solid #e0e0e0; border-bottom: 2px solid #e0e0ec; }
 .tab-page .tab-header, .tab-page .tab-section .tab-header, .tab-page .sectionHeader { background-color: #f3f3f3; border-bottom-width: 1px; }
-.tab-page .tab-section .tab-header:first-child, .tab-page .sectionHeader { margin-top: -1px; border-top: none }
+.tab-page .tab-section .tab-header:first-child, .tab-page .sectionHeader { margin-top: 0; border-top: none }
 .tab-page .tab-section .tab-header + .tab-header, .tab-page .tab-section .tab-body + .tab-header, .tab-page .sectionHeader { border-top: 1px solid #e0e0e0; }
 .tab-page .tab-section .tab-body, .tab-page .sectionBody { padding: 1rem; }
 .tab-page > .sectionHeader, .sectionBody .tab-page > .tab-section { margin-top: 1rem; margin-left: .25rem; margin-right: .25rem }
@@ -169,5 +169,6 @@ padding: .25em; line-height: 1.3em; font-size: 1.3em; font-weight: 700; color: #
 .darkness .evo-tab-row .tab-row .tab.selected { background-color: #282c34; border-color: #343942; border-bottom: 3px solid #1976d2; }
 .darkness .sectionBody fieldset, .darkness .sectionBody legend { background: none; border: 1px solid #414449; box-shadow: none; }
 .darkness .tab-page .tab-section .tab-header, .darkness .tab-page .sectionHeader { background-color: #202329; border: 1px solid #414449; }
+.darkness .tab-page .tab-section .tab-header:first-child, .darkness .tab-page .sectionHeader { margin-top: -1px; }
 .darkness .tab-page .tab-section, .darkness .tab-page .sectionHeader + .sectionBody { background: none; border: 1px solid #414449; }
 .darkness .tab-page .sectionHeader + .sectionBody { border-top: none; }
