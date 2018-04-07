@@ -24,7 +24,7 @@
       body.dark,
       body.darkness {
         background-color: #2a313b !important;
-        background-image: url('media/style/[(manager_theme)]/images/login/default/login-background.jpg') !important;
+        background-image: url('[+login_bg+]') !important;
         background-size: cover !important;
         background-position: center !important;
         background-repeat: no-repeat !important;
@@ -353,7 +353,7 @@
       }
     </style>
   </head>
-  <body class="[+manager_theme_style+]">
+  <body class="[+manager_theme_style+] [+login_form_position_class+]">
     <div class="page">
       <div class="tab-page loginbox">
         <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
@@ -364,7 +364,7 @@
           <!-- logo -->
           <div class="form-group form-group--logo text-center">
             <a class="logo" href="../" title="[(site_name)]">
-              <img src="media/style/[(manager_theme)]/images/login/default/login-logo.png" alt="[(site_name)]" id="logo">
+              <img src="[+login_logo+]" alt="[(site_name)]" id="logo">
             </a>
           </div>
           
