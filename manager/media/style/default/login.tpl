@@ -353,7 +353,7 @@
       }
     </style>
   </head>
-  <body class="[+manager_theme_style+]">
+  <body class="[+manager_theme_style+] [+login_form_position_class+]">
     <div class="page">
       <div class="tab-page loginbox">
         <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">

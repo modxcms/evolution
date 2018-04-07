@@ -97,6 +97,9 @@ if (!isset($_SESSION['mgrValidated'])) {
     } else {
         $modx->setPlaceholder('login_bg', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-background.jpg');
     }
+  
+    // set form position css class
+    $modx->setPlaceholder('login_form_position_class', 'loginbox-' . $modx->config['login_form_position']);
     
     switch ($modx->config['manager_theme_mode']) {
       case '1':
