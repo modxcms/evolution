@@ -45,6 +45,24 @@
       .page {
         height: 100%;
       }
+
+      @media (min-width: 480px) {
+        .loginbox-center .page {
+          max-width: 25rem;
+          margin-top:    10vh;
+          margin-bottom: 10vh;
+          margin-left: auto;
+          margin-right: auto;
+          height: auto;
+        }
+      }
+
+      @media (min-width: 1200px) {
+        .loginbox-center .page {
+          margin-top:    20vh;
+          margin-bottom: 20vh;
+        }
+      }
       
       .darkness .page {
         background-color: transparent;
@@ -55,16 +73,26 @@
       .loginbox {
         will-change: transform;
         transform: translate3d(0,0,0);
-        -webkit-animation-name: anim-loginbox-evore3;
+        -webkit-animation-name: anim-loginbox;
         -webkit-animation-duration: .5s;
         -webkit-animation-iteration-count: 1;
         -webkit-animation-timing-function: ease;
         -webkit-animation-fill-mode: forwards;
-        animation-name: anim-loginbox-evore3;
+        animation-name: anim-loginbox;
         animation-duration: .5s;
         animation-iteration-count: 1;
         animation-timing-function: ease;
         animation-fill-mode: forwards;
+      }
+
+      .loginbox-right .loginbox {
+        -webkit-animation-name: anim-loginbox-right;
+        animation-name: anim-loginbox-right;
+      }
+
+      .loginbox-center .loginbox {
+        -webkit-animation-name: anim-loginbox-center;
+        animation-name: anim-loginbox-center;
       }
 
       .loginbox {
@@ -75,6 +103,14 @@
       @media (min-width: 480px) {
         .loginbox {
           max-width: 25rem;
+        }
+
+        .loginbox-right .loginbox {
+          margin-left: auto;
+        }
+
+        .loginbox-center .loginbox {
+          min-height: 1px;
         }
       }
       
@@ -133,6 +169,28 @@
         .copyrights {
           max-width: 25rem;
           padding-left: 2.5rem;
+          background-color: rgba(0,0,0,0.85);
+        }
+
+        .loginbox-right .copyrights {
+          margin-left: auto;
+        }
+      }
+
+      @media (min-width: 480px) and (max-width: 767px) {
+        .loginbox-center .copyrights {
+          will-change: transform;
+          transform: translate3d(0,0,0);
+          -webkit-animation-name: anim-loginbox-center;
+          -webkit-animation-duration: .5s;
+          -webkit-animation-iteration-count: 1;
+          -webkit-animation-timing-function: ease;
+          -webkit-animation-fill-mode: forwards;
+          animation-name: anim-loginbox-center;
+          animation-duration: .5s;
+          animation-iteration-count: 1;
+          animation-timing-function: ease;
+          animation-fill-mode: forwards;
         }
       }
 
@@ -145,6 +203,18 @@
           max-width: none;
           text-align: right;
           background-color: transparent;
+        }
+
+        .loginbox-right .copyrights {
+          left: 0;
+          right: auto;
+          padding-left: 1.5rem;
+        }
+
+        .loginbox-center .copyrights {
+          right: auto;
+          left: 50%;
+          transform: translate3d(-50%,0,0);
         }
       }
 
@@ -330,7 +400,7 @@
 
       /* loginbox keyframes */
       
-      @-webkit-keyframes anim-loginbox-evore3 {
+      @-webkit-keyframes anim-loginbox {
         from {
           opacity: 0;
           transform: translate3d(-10%,0,0);
@@ -341,10 +411,50 @@
         }
       }
 
-      @keyframes anim-loginbox-evore3 {
+      @keyframes anim-loginbox {
         from {
           opacity: 0;
           transform: translate3d(-10%,0,0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0,0,0);
+        }
+      }
+      
+      @-webkit-keyframes anim-loginbox-right {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes anim-loginbox-right {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      
+      @-webkit-keyframes anim-loginbox-center {
+        from {
+          opacity: 0;
+          transform: translate3d(0,1.5rem,0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0,0,0);
+        }
+      }
+
+      @keyframes anim-loginbox-center {
+        from {
+          opacity: 0;
+          transform: translate3d(0,1.5rem,0);
         }
         to {
           opacity: 1;
