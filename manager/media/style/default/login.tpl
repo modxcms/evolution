@@ -24,7 +24,7 @@
       body.dark,
       body.darkness {
         background-color: #2a313b !important;
-        background-image: url('media/style/[(manager_theme)]/images/login/default/login-background.jpg') !important;
+        background-image: url('[+login_bg+]') !important;
         background-size: cover !important;
         background-position: center !important;
         background-repeat: no-repeat !important;
@@ -364,7 +364,7 @@
           <!-- logo -->
           <div class="form-group form-group--logo text-center">
             <a class="logo" href="../" title="[(site_name)]">
-              <img src="media/style/[(manager_theme)]/images/login/default/login-logo.png" alt="[(site_name)]" id="logo">
+              <img src="[+login_logo+]" alt="[(site_name)]" id="logo">
             </a>
           </div>
           
