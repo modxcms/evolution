@@ -76,6 +76,9 @@
       /* loginbox */
 
       .loginbox {
+        width: 100%;
+        min-height: 100vh;
+        box-shadow: none;
         will-change: transform;
         transform: translate3d(0,0,0);
         -webkit-animation-name: anim-loginbox;
@@ -100,14 +103,10 @@
         animation-name: anim-loginbox-center;
       }
 
-      .loginbox {
-        width: 100%;
-        min-height: 100vh;
-      }
-
       @media (min-width: 480px) {
         .loginbox {
           max-width: 25rem;
+          box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, .5);
         }
 
         .loginbox-right .loginbox {
