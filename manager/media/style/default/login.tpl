@@ -17,6 +17,11 @@
         min-height: 100%;
         height: 100%;
       }
+      
+      body.loginbox-center {
+        min-height: 1px;
+        height: auto;
+      }
 
       body,
       body.lightness,
