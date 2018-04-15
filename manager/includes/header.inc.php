@@ -85,6 +85,7 @@ if ($modx->config['manager_theme'] == 'default') {
         var evo = {};
       }
       var actions;
+      var actionStay = [];
       var dontShowWorker = false;
       var documentDirty = false;
       var timerForUnload;
