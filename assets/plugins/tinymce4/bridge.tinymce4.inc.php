@@ -50,7 +50,7 @@ class tinymce4bridge extends modxRTEbridge
                 'template_chunks' => '',
                 'custom_buttons3' => '',
                 'custom_buttons4' => '',
-                'skin' => 'lightgray'
+                'skin' => ''
             )
         );
 
