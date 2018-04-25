@@ -276,7 +276,7 @@ function document_onload() {
 
   var actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
   if (actionButtons !== null && actionSelect !== null) {
-    var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
+    var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a');
     actionPlus.classList.add('dropdown-toggle');
     actionStay['stay1'] = '<i class="' + evo.style.actions_file + '"></i>';
     actionStay['stay2'] = '<i class="' + evo.style.actions_pencil + '"></i>';

@@ -293,12 +293,6 @@ table.sysSettings tr.noborder td {border:none;}
          <div class="comment"><?php echo $_lang['track_visitors_message'] ?></div>
      </td>
    </tr>
-  <tr class="">
-    <th><?php echo $_lang['top_howmany_title'] ?><br><small>[(top_howmany)]</small></th>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" />
-        <div class="comment"><?php echo $_lang['top_howmany_message'] ?></div>
-        </td>
-  </tr>
 
   <tr>
     <th><?php echo $_lang["login_logo_title"] ?><br><small>[(login_logo)]</small></th>
