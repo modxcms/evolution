@@ -221,17 +221,8 @@ text-decoration: none; color: #646b7b; box-shadow: none; transition-duration: .5
 .widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
-@media (max-width: 1399px) {
-.widgets #welcome .wm_button { max-width: 20%; flex: 0 0 20%; }
-}
-@media (max-width: 1199px) {
-.widgets #welcome .wm_button { max-width: 25%; flex: 0 0 25%; }
-}
-@media (max-width: 991px) {
-.widgets #welcome .wm_button { max-width: 33.3333%; flex: 0 0 33.3333%; }
-}
 @media (max-width: 767px) {
-.widgets #welcome .wm_button { max-width: 50%; flex: 0 0 50%; }
+.widgets #welcome .wm_button { max-width: 33.3333%; flex: 0 0 33.3333%; }
 }
 /* [ DATEPICKER ] */
 .dp_container { position: absolute; z-index: 500; }

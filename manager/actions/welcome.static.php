@@ -239,7 +239,7 @@ if(is_array($evtOut)) {
 $widgets['welcome'] = array(
 	'menuindex' => '10',
 	'id' => 'welcome',
-	'cols' => 'col-sm-6',
+	'cols' => 'col-lg-6',
 	'icon' => 'fa-home',
 	'title' => '[%welcome_title%]',
 	'body' => '
@@ -325,7 +325,7 @@ $widgets['welcome'] = array(
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
 	'id' => 'onlineinfo',
-	'cols' => 'col-sm-6',
+	'cols' => 'col-lg-6',
 	'icon' => 'fa-user',
 	'title' => '[%onlineusers_title%]',
 	'body' => '<div class="userstable">[+OnlineInfo+]</div>',
