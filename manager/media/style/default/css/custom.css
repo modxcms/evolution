@@ -212,7 +212,7 @@ line-height: 1.7; border: 1px solid #ddd; text-decoration: none; color: #333; }
 .widgets .table .actions a .fa { margin: 0 .05rem; }
 /* widgets custom */
 .widgets #welcome .wm_buttons { display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-bottom: 1rem; padding: 0; text-align: center; border-bottom: 1px solid rgba(0, 0, 0, .05); }
-.widgets #welcome .wm_button { max-width: 16.666667%; flex: 0 0 16.666667%; }
+.widgets #welcome .wm_button { max-width: 50%; flex: 0 0 50%; }
 .widgets #welcome .wm_button a { display: block; height: 100%; padding: 1rem 1rem .5rem;
 text-decoration: none; color: #646b7b; box-shadow: none; transition-duration: .5s }
 .widgets #welcome .wm_button a:hover { color: #373b46; background-color: rgba(93, 109, 202, 0.16) }
@@ -221,8 +221,17 @@ text-decoration: none; color: #646b7b; box-shadow: none; transition-duration: .5
 .widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
-@media (max-width: 767px) {
+@media (min-width: 568px) {
 .widgets #welcome .wm_button { max-width: 33.3333%; flex: 0 0 33.3333%; }
+}
+@media (min-width: 768px) {
+.widgets #welcome .wm_button { max-width: 16.666667%; flex: 0 0 16.666667%; }
+}
+@media (min-width: 992px) {
+.widgets #welcome .wm_button { max-width: 33.3333%; flex: 0 0 33.3333%; }
+}
+@media (min-width: 1400px) {
+.widgets #welcome .wm_button { max-width: 16.666667%; flex: 0 0 16.666667%; }
 }
 /* [ DATEPICKER ] */
 .dp_container { position: absolute; z-index: 500; }
