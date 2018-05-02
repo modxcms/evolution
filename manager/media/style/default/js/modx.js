@@ -1029,7 +1029,7 @@
               this.restoreTree();
             } else {
               modx.tabs({url: modx.MODX_MANAGER_URL + href, title: title + '<small>(' + id + ')</small>'});
-              if (modx.isMobile) modx.resizer.toggle();
+              if (modx.isMobile && w.innerWidth < modx.minWidth) modx.resizer.toggle();
             }
           }
           this.itemToChange = id;
