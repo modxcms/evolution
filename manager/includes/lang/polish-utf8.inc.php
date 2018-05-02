@@ -3,7 +3,7 @@
  * EVO Manager language file
  *
  * @version 1.4.4
- * @date 2018/04/07
+ * @date 2018/05/02
  * @author The EVO Project Team
  * @author Piotr Matysiak (pmfx)
  *
@@ -1206,6 +1206,8 @@ $_lang["webpwdreminder_message"] = 'Ustaw treść wiadomości z przypomnieniem h
 $_lang["webpwdreminder_title"] = 'E-mail przypomnienia Web';
 $_lang["websignupemail_message"] = 'Tutaj możesz ustawić treść wiadomości wysyłanej użytkownikowi po utworzeniu dla niego nowego konta. Wiadomość będzie zawierać nazwę użytkownika i hasło. <br /><b>Uwaga:</b> Poniższe znaczniki zostaną zamienione na tekst przy wysyłaniu wiadomości: <br /><br />[+sname+] - Nazwa Twojej strony, <br />[+saddr+] - Adres e-mail, <br />[+surl+] - URL Twojej strony, <br />[+uid+] - Nazwa lub ID użytkownika, <br />[+pwd+] - Hasło użytkownika, <br />[+ufn+] - Pełna nazwa użytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w treści wiadomości, ponieważ w przeciwnym razie użytkownik nie będzie w stanie zalogować się do serwisu!</b>';
 $_lang["websignupemail_title"] = 'E-mail rejestracyjny Web';
+$_lang["allow_multiple_emails_title"] = 'Pozwalaj użytkownikom mieć ten sam e-mail';
+$_lang["allow_multiple_emails_message"] = 'Allows Web Users to share the same email address for situations when a member may not have their own email address or there is just one family email address.<br/>Note: Any password reminder and registration logic will need to account for this option if set to yes.';
 $_lang["wednesday"] = 'Środa';
 $_lang["welcome_messages"] = 'Twoja skrzynka wiadomości zawiera <b>%d</b> wiadomość(-ci), z których <b>%s</b> jest nieprzeczytane.';
 $_lang["welcome_title"] = 'Witaj w swoim systemie EVO';
@@ -1498,3 +1500,7 @@ $_lang['login_logo_title'] = 'Logo strony logowania';
 $_lang['login_logo_message'] = 'Zalecana szerokość to 360px i typ pliku PNG';
 $_lang['login_bg_title'] = 'Tło strony logowania';
 $_lang['login_bg_message'] = 'Zalecana szerokość to 1920px';
+
+$_lang['manager_menu_position_title'] = 'Położenie głównej nawigacji';
+$_lang['manager_menu_position_top'] = 'Góra';
+$_lang['manager_menu_position_left'] = 'Lewa';
