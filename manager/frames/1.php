@@ -421,11 +421,13 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
             <div class="tab-row-container evo-tab-row">
                 <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
             </div>
-            <div id="evo-tab-page-home" class="evo-tab-page show">
-                <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            <div id="evo-tab-page-home" class="evo-tab-page show iframe-scroller">
+                <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="no" frameborder="0" onload="modx.main.onload(event);"></iframe>
             </div>
         <?php else: ?>
-            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            <div class="iframe-scroller">
+                <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="no" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
         <?php endif; ?>
         <div id="mainloader"></div>
     </div>
