@@ -371,6 +371,14 @@ table.sysSettings tr.noborder td {border:none;}
   </tr>
 
 
+  <tr>
+    <th><?php echo $_lang['manager_menu_position_title'] ?><br><small>[(manager_menu_position)]</small></th>
+    <td>
+        <?php echo wrap_label($_lang['manager_menu_position_top'],form_radio('manager_menu_position', 'top'));?><br />
+        <?php echo wrap_label($_lang['manager_menu_position_left'], form_radio('manager_menu_position', 'left'));?><br />
+    </td>
+  </tr>
+
 
 
   <tr>

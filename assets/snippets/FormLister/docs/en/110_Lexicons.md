@@ -3,10 +3,10 @@
 To use lexicons you should create a file named "lexicon name.inc.php" in a folder named as full language name (russian-UTF8, english etc.):
 ```
 <?php
-if (!defined('MODX_BASE_PATH')) {die();})
+if (!defined('MODX_BASE_PATH')) {die();}
 $_lang = array();
 $_lang['key'] = 'Value.';
-return $lang;
+return $_lang;
 ?>
 ```
 Parameters to load lexicons are:

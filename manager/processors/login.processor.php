@@ -147,7 +147,7 @@ if($allowed_ip) {
 if($allowed_days) {
 	$date = getdate();
 	$day = $date['wday'] + 1;
-	if(strpos($allowed_days, $day) === false) {
+	if(!in_array($day,explode(',',$allowed_days))) {
 		jsAlert($_lang['login_processor_date']);
 		return;
 	}

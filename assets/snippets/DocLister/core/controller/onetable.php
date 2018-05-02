@@ -27,7 +27,7 @@ class onetableDocLister extends DocLister
     protected $parentField = 'parent';
 
     /**
-     * @absctract
+     * @abstract
      */
     public function getDocs($tvlist = '')
     {
