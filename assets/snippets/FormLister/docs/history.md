@@ -1,4 +1,12 @@
 ## History
+### 1.7.19
+* [Refactor] Имя пользователя и E-mail не приводятся в нижний регистр (Login, Register, Profile).
+* [Refactor] Не выводятся пустые обертки для сообщений формы (Core).
+* [Enhancement] Вывод логов моделей MODxAPI при отладке (Content, Register, Profile).
+* [Enhancement] Spanish, Italian lexicons.
+* [Fix] Опечатка в методе renderMessages() (Core).
+* [Fix] Неправильно задавался параметр size для ReCaptcha.
+
 ### 1.7.18
 * [Enhancement] Dutch, Polish, English-Britain, German lexicons.
 * [Refactor] Экранирование значений массива до преобразования массива в строку в методе fieldsToPlaceholders 
