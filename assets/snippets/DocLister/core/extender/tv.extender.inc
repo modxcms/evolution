@@ -140,7 +140,7 @@ class tv_DL_Extender extends extDocLister
         $TVkeys = array_keys($tvDef);
         foreach ($out as $itemid => $item) {
             foreach ($TVkeys as $name) {
-                if (!isset($out[$itemid][$name])) {
+                if (!isset($out[$itemid][$name]) || $out[$itemid][$name] === '' || is_null($out[$itemid][$name])) {
                     $out[$itemid][$name] = $tvDef[$name]['default'];
                 }
                 if (in_array($name, $renderTV) || $renderTV == array("*")) {

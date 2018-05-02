@@ -43,7 +43,7 @@ class site_contentDocLister extends DocLister
     }
 
     /**
-     * @absctract
+     * @abstract
      */
     public function getDocs($tvlist = '')
     {
@@ -52,6 +52,14 @@ class site_contentDocLister extends DocLister
         }
 
         $this->extTV->getAllTV_Name();
+
+        /**
+         * @var $multiCategories multicategories_DL_Extender
+         */
+        $multiCategories = $this->getCFGDef('multiCategories', 0) ? $this->getExtender('multicategories', true) : null;
+        if ($multiCategories) {
+            $multiCategories->init($this);
+        }
 
         /**
          * @var $extJotCount jotcount_DL_Extender
