@@ -52,6 +52,10 @@ if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
     $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
 }
 
+$navbar_position = $modx->config['manager_menu_position'];
+if ($navbar_position == 'left') {
+    $body_class .= ' navbar-left navbar-left-icon-and-text';
+}
 
 if (isset($modx->pluginCache['ElementsInTree'])) {
     $body_class .= ' ElementsInTree';
