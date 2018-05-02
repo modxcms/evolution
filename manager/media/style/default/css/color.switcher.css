@@ -67,3 +67,7 @@ i.evocpicon:hover { -webkit-transform: rotate(30deg); -moz-transform: rotate(30d
 .sp-dd { margin-top: 4px; color: #666; }
 .dark .sp-dd { color: #bcbec0; }
 .sp-preview { height: 25px; width: 25px; max-height: 25px; max-width: 25px; overflow: hidden; cursor: pointer; border-radius: 50%; border: 0px solid #2f323a; }
+/* navbar left */
+.navbar-left .evocp-box {
+  top: 0;
+}

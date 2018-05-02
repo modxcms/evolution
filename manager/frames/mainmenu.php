@@ -21,7 +21,7 @@ $sitemenu['bars'] = array(
 $sitemenu['site'] = array(
 	'site',
 	'main',
-	'<i class="fa fa-tachometer"></i>' . $_lang['home'],
+	'<i class="fa fa-tachometer"></i><span class="menu-item-text">' . $_lang['home'] . '</span>',
 	'index.php?a=2',
 	$_lang['home'],
 	'',
@@ -36,7 +36,7 @@ if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet')
 	$sitemenu['elements'] = array(
 		'elements',
 		'main',
-		'<i class="fa fa-th"></i>' . $_lang['elements'],
+		'<i class="fa fa-th"></i><span class="menu-item-text">' . $_lang['elements'] . '</span>',
 		'javascript:;',
 		$_lang['elements'],
 		' return false;',
@@ -52,7 +52,7 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="'.$_style['icons_modules'] .'"></i>' . $_lang['modules'],
+		'<i class="'.$_style['icons_modules'] .'"></i><span class="menu-item-text">' . $_lang['modules'] . '</span>',
 		'javascript:;',
 		$_lang['modules'],
 		' return false;',
@@ -68,7 +68,7 @@ if($modx->hasPermission('edit_user') || $modx->hasPermission('edit_web_user') ||
 	$sitemenu['users'] = array(
 		'users',
 		'main',
-		'<i class="fa fa-users"></i>' . $_lang['users'],
+		'<i class="fa fa-users"></i><span class="menu-item-text">' . $_lang['users'] . '</span>',
 		'javascript:;',
 		$_lang['users'],
 		' return false;',
@@ -84,7 +84,7 @@ if($modx->hasPermission('empty_cache') || $modx->hasPermission('bk_manager') || 
 	$sitemenu['tools'] = array(
 		'tools',
 		'main',
-		'<i class="fa fa-wrench"></i>' . $_lang['tools'],
+		'<i class="fa fa-wrench"></i><span class="menu-item-text">' . $_lang['tools'] . '</span>',
 		'javascript:;',
 		$_lang['tools'],
 		' return false;',
