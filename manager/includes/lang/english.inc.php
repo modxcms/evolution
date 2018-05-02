@@ -1499,3 +1499,7 @@ $_lang['login_logo_title'] = 'Login page logo image';
 $_lang['login_logo_message'] = 'Recomended login logo image width: 360px, type .png';
 $_lang['login_bg_title'] = 'Login page background image';
 $_lang['login_bg_message'] = 'Recomended login page background image width: 1920px  ';
+
+$_lang['manager_menu_position_title'] = 'Main menu position';
+$_lang['manager_menu_position_top'] = 'top';
+$_lang['manager_menu_position_left'] = 'left';
