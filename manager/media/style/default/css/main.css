@@ -104,6 +104,10 @@ code { font-size: inherit; font-family: Consolas, 'Courier New', 'Courier', mono
 table th { font-weight: 500; }
 .table--edit th { width: 200px; color: #555; font-size: inherit; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
+/* stacked table cells on small screens */
+@media (max-width: 567px) {
+#documentPane #tabGeneral > table > tbody > tr > td, #documentPane #tabGeneral .tmplvars > table > tbody > tr > td, #documentPane #tabSettings > table > tbody > tr > td {display: block !important;width: 100% !important;}
+}
 /*
  * MODxRE2 styles
  * css above is original MODxRE
