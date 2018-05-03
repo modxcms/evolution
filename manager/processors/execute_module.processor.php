@@ -59,6 +59,8 @@ $parameter = $modx->parseProperties($content["properties"], $content["guid"], 'm
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
 
+echo "<style>body,html {overflow:auto!important;height:100%!important}</style>"; // for iframe scroller
+
 $output = evalModule($content["modulecode"],$parameter);
 echo $output;
 include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
