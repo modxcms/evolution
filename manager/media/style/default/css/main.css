@@ -106,7 +106,8 @@ table th { font-weight: 500; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
 /* stacked table cells on small screens */
 @media (max-width: 567px) {
-#documentPane #tabGeneral > table > tbody > tr > td, #documentPane #tabGeneral .tmplvars > table > tbody > tr > td, #documentPane #tabSettings > table > tbody > tr > td {display: block !important;width: 100% !important;}
+#documentPane #tabGeneral > table > tbody > tr > td, #documentPane #tabGeneral .tmplvars > table > tbody > tr > td, #documentPane #tabSettings > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > th {display: block !important;width: 100% !important;}
+#settingsPane > .tab-page > table > tbody > tr > th {border-bottom-width: 0;}
 }
 /*
  * MODxRE2 styles
