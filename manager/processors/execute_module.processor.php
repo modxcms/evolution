@@ -61,7 +61,7 @@ $_SESSION['itemname'] = $content['name'];
 
 
 $output = evalModule($content["modulecode"],$parameter);
-if ( (int)$_GET['api'] != 1){
+if (strpos(trim($output),'<')===0) {
 	echo "<style>body,html {overflow:auto!important;height:100%!important}</style>"; // for iframe scroller
 }
 echo $output;
