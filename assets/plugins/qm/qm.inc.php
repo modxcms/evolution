@@ -355,7 +355,7 @@ class Qm {
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
+                        <a title="'.$_lang['edit_resource'].'" class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         
