@@ -1544,7 +1544,11 @@
           this.page = d.createElement('div');
           this.page.id = 'evo-tab-page-' + this.uid;
           this.page.className = 'evo-tab-page iframe-scroller show';
-          this.page.innerHTML = '<iframe class="tabframes" src="' + this.url + '" name="' + this.name + '" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>';
+          if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>';
+			  } else {
+              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
+          };
           d.getElementById('main').appendChild(this.page);
           console.time('load-tab');
           this.page.firstElementChild.onload = function(e) {
