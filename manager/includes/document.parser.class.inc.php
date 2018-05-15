@@ -346,7 +346,7 @@ class DocumentParser
             header($responseCode);
         }
 
-        if(!empty($header)) {
+        if (!empty($header)) {
             header($header);
         }
 
@@ -745,22 +745,23 @@ class DocumentParser
      * @param $id
      * @return array|mixed|null|string
      */
-    public function makePageCacheKey($id){
+    public function makePageCacheKey($id)
+    {
         $hash = $id;
         $tmp = null;
         $params = array();
-        if(!empty($this->systemCacheKey)){
+        if (!empty($this->systemCacheKey)) {
             $hash = $this->systemCacheKey;
-        }else {
+        } else {
             if (!empty($_GET)) {
                 // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
                 $params = $_GET;
                 ksort($params);
-                $hash .= '_'.md5(http_build_query($params));
+                $hash .= '_' . md5(http_build_query($params));
             }
         }
-        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
-        if (is_array($evtOut) && count($evtOut) > 0){
+        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array("hash" => $hash, "id" => $id, 'params' => $params));
+        if (is_array($evtOut) && count($evtOut) > 0) {
             $tmp = array_pop($evtOut);
         }
         return empty($tmp) ? $hash : $tmp;
@@ -1085,11 +1086,11 @@ class DocumentParser
         // now, check for documents that need publishing
         $field = array('published' => 1, 'publishedon' => $timeNow);
         $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
-        $result_pub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
+        $result_pub = $this->db->select('id', '[+prefix+]site_content', $where);
         $this->db->update($field, '[+prefix+]site_content', $where);
-        if( $this->db->getRecordCount( $result_pub ) >= 1 ) { //Event Published doc
+        if ($this->db->getRecordCount($result_pub) >= 1) { //Event Published doc
             while ($row_unpub = $this->db->getRow($result_pub)) {
-                $this->invokeEvent("OnDocPublished", array (
+                $this->invokeEvent("OnDocPublished", array(
                     "docid" => $row_unpub['id']
                 ));
             }
@@ -1098,11 +1099,11 @@ class DocumentParser
         // now, check for documents that need un-publishing
         $field = array('published' => 0, 'publishedon' => 0);
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
-        $result_unpub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
+        $result_unpub = $this->db->select('id', '[+prefix+]site_content', $where);
         $this->db->update($field, '[+prefix+]site_content', $where);
-        if( $this->db->getRecordCount( $result_unpub ) >= 1 ) { //Event unPublished doc
+        if ($this->db->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
             while ($row_unpub = $this->db->getRow($result_unpub)) {
-                $this->invokeEvent("OnDocUnPublished", array (
+                $this->invokeEvent("OnDocUnPublished", array(
                     "docid" => $row_unpub['id']
                 ));
             }
@@ -1187,10 +1188,10 @@ class DocumentParser
             return array();
         }
         $spacer = md5('<<<EVO>>>');
-        if($left==='{{' && strpos($content,';}}')!==false)  $content = str_replace(';}}', sprintf(';}%s}',   $spacer),$content);
-        if($left==='{{' && strpos($content,'{{}}')!==false) $content = str_replace('{{}}',sprintf('{%$1s{}%$1s}',$spacer),$content);
-        if($left==='[[' && strpos($content,']]]]')!==false) $content = str_replace(']]]]',sprintf(']]%s]]',  $spacer),$content);
-        if($left==='[[' && strpos($content,']]]')!==false)  $content = str_replace(']]]', sprintf(']%s]]',   $spacer),$content);
+        if ($left === '{{' && strpos($content, ';}}') !== false) $content = str_replace(';}}', sprintf(';}%s}', $spacer), $content);
+        if ($left === '{{' && strpos($content, '{{}}') !== false) $content = str_replace('{{}}', sprintf('{%$1s{}%$1s}', $spacer), $content);
+        if ($left === '[[' && strpos($content, ']]]]') !== false) $content = str_replace(']]]]', sprintf(']]%s]]', $spacer), $content);
+        if ($left === '[[' && strpos($content, ']]]') !== false) $content = str_replace(']]]', sprintf(']%s]]', $spacer), $content);
 
         $pos['<![CDATA['] = strpos($content, '<![CDATA[');
         $pos[']]>'] = strpos($content, ']]>');
@@ -1260,8 +1261,8 @@ class DocumentParser
                 }
             }
         }
-        foreach($tags as $i=>$tag) {
-            if(strpos($tag,$spacer)!==false) $tags[$i] = str_replace($spacer, '', $tag);
+        foreach ($tags as $i => $tag) {
+            if (strpos($tag, $spacer) !== false) $tags[$i] = str_replace($spacer, '', $tag);
         }
         return $tags;
     }
@@ -1301,7 +1302,7 @@ class DocumentParser
         }
 
         foreach ($matches[1] as $i => $key) {
-            if(strpos($key,'[+')!==false) continue; // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
+            if (strpos($key, '[+') !== false) continue; // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
             if (substr($key, 0, 1) == '#') {
                 $key = substr($key, 1);
             } // remove # for QuickEdit format
@@ -1333,7 +1334,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeDocumentContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1501,7 +1502,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeSettingsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1570,7 +1571,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergeChunkContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1629,7 +1630,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('mergePlaceholderContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1840,7 +1841,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $v, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('ignoreCommentedTagsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1997,7 +1998,7 @@ class DocumentParser
                 }
                 if (strpos($content, $s) !== false) {
                     $content = str_replace($s, $value, $content);
-                } elseif($this->debug) {
+                } elseif ($this->debug) {
                     $this->addLog('evalSnippetsSGVar parse error', $_SERVER['REQUEST_URI'] . $s, 2);
                 }
                 continue;
@@ -2009,7 +2010,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -2715,7 +2716,7 @@ class DocumentParser
      */
     public function executeParser()
     {
-        if(MODX_CLI) {
+        if (MODX_CLI) {
             throw new RuntimeException('Call DocumentParser::executeParser on CLI mode');
         }
 
@@ -3629,7 +3630,7 @@ class DocumentParser
      */
     public function isFrontend()
     {
-        return ! $this->isBackend();
+        return !$this->isBackend();
     }
 
     /**
@@ -4349,7 +4350,7 @@ class DocumentParser
             }
             if (strpos($tpl, $s) !== false) {
                 $tpl = str_replace($s, $value, $tpl);
-            } elseif($this->debug) {
+            } elseif ($this->debug) {
                 $this->addLog('parseText parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -4706,7 +4707,7 @@ class DocumentParser
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (($idnames != '*' && !is_array($idnames)) || empty($idnames) ) {
+        if (($idnames != '*' && !is_array($idnames)) || empty($idnames)) {
             return false;
         } else {
 
@@ -4740,7 +4741,7 @@ class DocumentParser
             $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
-            if(is_array($docRow)){
+            if (is_array($docRow)) {
                 ksort($docRow);
 
                 foreach ($docRow as $key => $value) {
@@ -4778,7 +4779,7 @@ class DocumentParser
      */
     public function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
-        if (is_array($idnames) && empty($idnames) ) {
+        if (is_array($idnames) && empty($idnames)) {
             return false;
         } else {
             $output = array();
@@ -4954,14 +4955,16 @@ class DocumentParser
             }
         } else {
             switch (true) {
-                case ($this->isFrontend() && isset ($_SESSION['webValidated'])): {
-                    $out = $_SESSION['webInternalKey'];
-                    break;
-                }
-                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])): {
-                    $out = $_SESSION['mgrInternalKey'];
-                    break;
-                }
+                case ($this->isFrontend() && isset ($_SESSION['webValidated'])):
+                    {
+                        $out = $_SESSION['webInternalKey'];
+                        break;
+                    }
+                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):
+                    {
+                        $out = $_SESSION['mgrInternalKey'];
+                        break;
+                    }
             }
         }
         return $out;
@@ -4983,14 +4986,16 @@ class DocumentParser
             }
         } else {
             switch (true) {
-                case ($this->isFrontend() && isset ($_SESSION['webValidated'])): {
-                    $out = $_SESSION['webShortname'];
-                    break;
-                }
-                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])): {
-                    $out = $_SESSION['mgrShortname'];
-                    break;
-                }
+                case ($this->isFrontend() && isset ($_SESSION['webValidated'])):
+                    {
+                        $out = $_SESSION['webShortname'];
+                        break;
+                    }
+                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):
+                    {
+                        $out = $_SESSION['mgrShortname'];
+                        break;
+                    }
             }
         }
         return $out;
@@ -6348,33 +6353,40 @@ class DocumentParser
             $args = preg_replace_callback('/\$var/', function () use ($modx, &$tmp, $val) {
                 $arg = $val['args'][$tmp - 1];
                 switch (true) {
-                    case is_null($arg): {
-                        $out = 'NULL';
-                        break;
-                    }
-                    case is_numeric($arg): {
-                        $out = $arg;
-                        break;
-                    }
-                    case is_scalar($arg): {
-                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
-                        break;
-                    }
-                    case is_bool($arg): {
-                        $out = $arg ? 'TRUE' : 'FALSE';
-                        break;
-                    }
-                    case is_array($arg): {
-                        $out = 'array $var' . $tmp;
-                        break;
-                    }
-                    case is_object($arg): {
-                        $out = get_class($arg) . ' $var' . $tmp;
-                        break;
-                    }
-                    default: {
-                        $out = '$var' . $tmp;
-                    }
+                    case is_null($arg):
+                        {
+                            $out = 'NULL';
+                            break;
+                        }
+                    case is_numeric($arg):
+                        {
+                            $out = $arg;
+                            break;
+                        }
+                    case is_scalar($arg):
+                        {
+                            $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
+                            break;
+                        }
+                    case is_bool($arg):
+                        {
+                            $out = $arg ? 'TRUE' : 'FALSE';
+                            break;
+                        }
+                    case is_array($arg):
+                        {
+                            $out = 'array $var' . $tmp;
+                            break;
+                        }
+                    case is_object($arg):
+                        {
+                            $out = get_class($arg) . ' $var' . $tmp;
+                            break;
+                        }
+                    default:
+                        {
+                            $out = '$var' . $tmp;
+                        }
                 }
                 $tmp++;
                 return $out;
