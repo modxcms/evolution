@@ -62,7 +62,7 @@ $_SESSION['itemname'] = $content['name'];
 
 $output = evalModule($content["modulecode"],$parameter);
 if (strpos(trim($output),'<')===0 && strpos(trim($output),'<?xml')!==0) {
-	echo "<style>body,html {overflow:auto!important;height:100%!important}</style>"; // for iframe scroller
+	echo "<style>@supports (-webkit-overflow-scrolling: touch) {body,html {-webkit-overflow-scrolling: touch;overflow:auto!important;height:100%!important}}</style>"; // for iframe scroller
 }
 echo $output;
 include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
