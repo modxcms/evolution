@@ -1107,10 +1107,10 @@ class DocumentParser
         $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
         $result_pub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
         $this->db->update($field, '[+prefix+]site_content', $where);
-        if( $this->db->getRecordCount( $result_pub ) >= 1 ) { //Event Published doc
-            while ($row_unpub = $this->db->getRow($result_pub)) {
-                $this->invokeEvent("OnDocPublished", array (
-                    "docid" => $row_unpub['id']
+        if ($this->db->getRecordCount($result_pub) >= 1) { //Event unPublished doc
+            while ($row_pub = $this->db->getRow($result_pub)) {
+                $this->invokeEvent("OnDocUnPublished", array(
+                    "docid" => $row_pub['id']
                 ));
             }
         }
@@ -1120,9 +1120,9 @@ class DocumentParser
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
         $result_unpub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
         $this->db->update($field, '[+prefix+]site_content', $where);
-        if( $this->db->getRecordCount( $result_unpub ) >= 1 ) { //Event unPublished doc
+        if ($this->db->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
             while ($row_unpub = $this->db->getRow($result_unpub)) {
-                $this->invokeEvent("OnDocUnPublished", array (
+                $this->invokeEvent("OnDocUnPublished", array(
                     "docid" => $row_unpub['id']
                 ));
             }
