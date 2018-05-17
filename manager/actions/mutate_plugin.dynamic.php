@@ -283,6 +283,8 @@ function bold($cond = false)
         td = document.getElementById('displayparams');
         td.innerHTML = t;
         tr.style.display = '';
+        if(JSON.stringify(currentParams) === '{}')return;
+
 
         implodeParameters();
     }
@@ -623,6 +625,7 @@ function bold($cond = false)
             <div class="container container-body">
                 <p><?= $_lang['plugin_event_msg'] ?></p>
                 <?php
+
                 // get selected events
                 if (is_numeric($id) && $id > 0) {
                     $rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");

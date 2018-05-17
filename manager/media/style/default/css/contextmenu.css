@@ -9,3 +9,6 @@
 #mx_contextmenu .seperator, #contextmenu .seperator, .nu-context-menu ul hr, .contextMenu .cntxMnuSeparator { height: 1px; background-color: rgba(0, 0, 0, 0.07) !important; margin: 0.25em 0; padding: 0; cursor: default; }
 .nu-context-menu ul { margin: 0; padding: 0; }
 .contextMenu .cntxMnuItem { white-space: nowrap }
+/* modes theme */
+/* darkness */
+.darkness #mx_contextmenu, .darkness #contextmenu, .darkness .nu-context-menu, .darkness .contextMenu { background-color: #343942; color: inherit; }

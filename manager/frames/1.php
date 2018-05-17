@@ -45,8 +45,16 @@ if (!$MODX_widthSideBar) {
     $body_class .= 'sidebar-closed';
 }
 
-if (isset($_COOKIE['MODX_themeColor'])) {
-    $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+$theme_modes = array('', 'lightness', 'light', 'dark', 'darkness');
+if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
+    $body_class .= ' ' . $theme_modes[$_COOKIE['MODX_themeMode']];
+} elseif (!empty($theme_modes[$modx->config['manager_theme_mode']])) {
+    $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
+}
+
+$navbar_position = $modx->config['manager_menu_position'];
+if ($navbar_position == 'left') {
+    $body_class .= ' navbar-left navbar-left-icon-and-text';
 }
 
 if (isset($modx->pluginCache['ElementsInTree'])) {
@@ -146,6 +154,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           site_start: <?= (int)$modx->config['site_start'] ?>,
           tree_page_click: <?=(!empty($modx->config['tree_page_click']) ? (int)$modx->config['tree_page_click'] : 27) ?>,
           theme: '<?= $modx->config['manager_theme'] ?>',
+          theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',
@@ -314,6 +323,41 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
+                        <li id="account" class="dropdown account">
+                            <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
+                                <span class="username"><?= $user['username'] ?></span>
+                                <?php if ($user['photo']) { ?>
+                                    <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
+                                <?php } else { ?>
+                                    <span class="icon"><?= $_style['menu_user'] ?></span>
+                                <?php } ?>
+                                <i id="msgCounter"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <?php if ($modx->hasPermission('messages')): ?>
+                                    <li id="newMail"></li>
+                                <?php endif; ?>
+                                <?php if ($modx->hasPermission('change_password')) { ?>
+                                    <li>
+                                        <a onclick="" href="index.php?a=28" target="main">
+                                            <?= $_style['page_change_password'] ?><?= $_lang['change_password'] ?>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                                <li>
+                                    <a href="index.php?a=8">
+                                        <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
+                                    </a>
+                                </li>
+                                <?php
+                                $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+                                $version = 'Evolution';
+                                ?>
+                                <?php
+                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+                                ?>
+                            </ul>
+                        </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
                             <li id="system" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
@@ -361,41 +405,6 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 </ul>
                             </li>
                         <?php } ?>
-                        <li id="account" class="dropdown account">
-                            <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
-                                <span class="username"><?= $user['username'] ?></span>
-                                <?php if ($user['photo']) { ?>
-                                    <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
-                                <?php } else { ?>
-                                    <span class="icon"><?= $_style['menu_user'] ?></span>
-                                <?php } ?>
-                                <i id="msgCounter"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <?php if ($modx->hasPermission('messages')): ?>
-                                    <li id="newMail"></li>
-                                <?php endif; ?>
-                                <?php if ($modx->hasPermission('change_password')) { ?>
-                                    <li>
-                                        <a onclick="" href="index.php?a=28" target="main">
-                                            <?= $_style['page_change_password'] ?><?= $_lang['change_password'] ?>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-                                <li>
-                                    <a href="index.php?a=8">
-                                        <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
-                                    </a>
-                                </li>
-                                <?php
-                                $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
-                                $version = 'Evolution';
-                                ?>
-                                <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
-                                ?>
-                            </ul>
-                        </li>
                         <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
                             <li id="fullscreen">
                                 <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
@@ -416,12 +425,20 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
             <div class="tab-row-container evo-tab-row">
                 <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
             </div>
-            <div id="evo-tab-page-home" class="evo-tab-page show">
+            <div id="evo-tab-page-home" class="evo-tab-page show iframe-scroller">
                 <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
             </div>
         <?php else: ?>
-            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            <div class="iframe-scroller">
+                <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
         <?php endif; ?>
+        <script>
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.getElementById('mainframe').setAttribute('scrolling', 'no');
+                document.getElementsByClassName("tabframes").setAttribute("scrolling", "no");
+            }
+        </script>
         <div id="mainloader"></div>
     </div>
     <div id="resizer"></div>

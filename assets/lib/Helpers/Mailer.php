@@ -1,7 +1,12 @@
 <?php namespace Helpers;
 
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
+include_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php');
+
+use MODxMailer;
+use DocumentParser;
+use PHPMailer\PHPMailer\Exception as phpmailerException;
 
 /**
  * Class Mailer
@@ -10,30 +15,43 @@ include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php');
 class Mailer
 {
     /**
-     * @var \PHPMailer $mail
+     * @var MODxMailer $mail
      */
     protected $mail = null;
     protected $modx = null;
     public $config = array();
     protected $debug = false;
     protected $queuePath = 'assets/cache/mail/';
+    protected $noemail = false;
+
+    /**
+     * @var string
+     */
+    protected $Body = '';
+    /**
+     * @var string
+     */
+    protected $Subject = '';
 
     /**
      * Mailer constructor.
-     * @param \DocumentParser $modx
+     * @param DocumentParser $modx
      * @param $cfg
      * @param bool $debug
      */
-    public function __construct(\DocumentParser $modx, $cfg, $debug = false)
+    public function __construct(DocumentParser $modx, $cfg, $debug = false)
     {
         $this->modx = $modx;
-        $this->mail = new \MODxMailer();
-        if (method_exists('\MODxMailer', 'init')) {
-            $this->mail->init($modx);
+        $this->noemail = (bool)(isset($cfg['noemail']) ? $cfg['noemail'] : 0);
+        if (!$this->noemail) {
+            $this->mail = new MODxMailer();
+            if (method_exists('MODxMailer', 'init')) {
+                $this->mail->init($modx);
+            }
+            $this->config = $cfg;
+            $this->debug = $debug;
+            $this->applyMailConfig();
         }
-        $this->config = $cfg;
-        $this->debug = $debug;
-        $this->applyMailConfig();
     }
 
     /**
@@ -43,7 +61,7 @@ class Mailer
      */
     public function addAddressToMailer($type, $addr)
     {
-        if (!empty($addr)) {
+        if (!$this->noemail && !empty($addr)) {
             $a = array_filter(array_map('trim', explode(',', $addr)));
             foreach ($a as $address) {
                 switch ($type) {
@@ -71,9 +89,13 @@ class Mailer
      */
     public function attachFiles($filelist = array())
     {
-        $contentType = "application/octetstream";
-        foreach ($filelist as $file) {
-            $this->mail->AddAttachment($file['filepath'], $file['filename'], "base64", $contentType);
+        if (!$this->noemail) {
+            $contentType = "application/octetstream";
+            foreach ($filelist as $file) {
+                if (is_file($file['filepath']) && is_readable($file['filepath'])) {
+                    $this->mail->AddAttachment($file['filepath'], $file['filename'], "base64", $contentType);
+                }
+            }
         }
 
         return $this;
@@ -86,13 +108,13 @@ class Mailer
     public function send($report)
     {
         //если отправлять некуда или незачем, то делаем вид, что отправили
-        if (!$this->getCFGDef('to') || $this->getCFGDef('noemail')) {
+        if (!$this->getCFGDef('to') || $this->noemail) {
             return true;
         } elseif (empty($report)) {
             return false;
         }
 
-        $this->mail->Body = $report;
+        $this->mail->Body = $this->getCFGDef('isHtml', 1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
 
         $result = $this->mail->send();
         if ($result) {
@@ -110,19 +132,19 @@ class Mailer
     public function toQueue($report)
     {
         //если отправлять некуда или незачем, то делаем вид, что отправили
-        if (!$this->getCFGDef('to') || $this->getCFGDef('noemail')) {
+        if (!$this->getCFGDef('to') || $this->noemail) {
             return true;
         } elseif (empty($report)) {
             return false;
         }
 
-        $this->mail->Body = $report;
+        $this->mail->Body = $this->getCFGDef('isHtml', 1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
 
         $this->Body = $this->modx->removeSanitizeSeed($this->mail->Body);
         $this->Subject = $this->modx->removeSanitizeSeed($this->mail->Subject);
         try {
             $result = $this->mail->preSend() && $this->saveMessage();
-        } catch (\phpmailerException $e) {
+        } catch (phpmailerException $e) {
             $this->mail->SetError($e->getMessage());
 
             $result = false;
@@ -141,7 +163,8 @@ class Mailer
      * @param string $path
      * @return bool
      */
-    public function setQueuePath($path = '') {
+    public function setQueuePath($path = '')
+    {
         if (!empty($path)) {
             $this->queuePath = $path;
             return true;
@@ -161,11 +184,8 @@ class Mailer
             "config" => $this->config
         ));
         $file = $this->getFileName();
-        $dir = MODX_BASE_PATH . $this->queuePath;
-        if (!is_dir($dir)) {
-            @mkdir($dir);
-        }
-        $result = @file_put_contents($dir . $file, $data) !== false;
+        FS::getInstance()->makeDir($this->queuePath);
+        $result = @file_put_contents(MODX_BASE_PATH . $this->queuePath . $file, $data) !== false;
         if ($result) {
             $result = $file;
         }
@@ -176,7 +196,8 @@ class Mailer
     /**
      * @return string
      */
-    protected function getFileName() {
+    protected function getFileName()
+    {
         return $this->mail->getMessageID() . '.eml';
     }
 
@@ -188,7 +209,8 @@ class Mailer
     {
         $result = false;
         $dir = MODX_BASE_PATH . $this->queuePath;
-        if (file_exists($dir . $file) && is_readable($dir . $file)) {
+        $fs = FS::getInstance();
+        if ($fs->checkFile($dir)) {
             $message = unserialize(file_get_contents($dir . $file));
             $this->config = $message['config'];
             $this->applyMailConfig();
@@ -197,7 +219,7 @@ class Mailer
             $result = $this->mail->postSend();
             if ($result) {
                 $this->mail->setMIMEBody()->setMIMEHeader();
-                @unlink($dir . $file);
+                FS::getInstance()->unlink($dir . $file);
             }
         }
 

@@ -58,7 +58,7 @@ $c['number_of_results']        = 30;
 $c['use_editor']               = 1;
 $c['editor_css_path']          = '';
 $c['filemanager_path']         = '[(base_path)]';
-$c['upload_files']             = 'bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF,svg';
+$c['upload_files']             = 'bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF,svg,tpl';
 $c['upload_images']            = 'bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,svg';
 $c['upload_media']             = 'au,avi,mp3,mp4,mpeg,mpg,wav,wmv';
 $c['upload_flash']             = 'fla,flv,swf';
@@ -85,6 +85,7 @@ $c['site_unavailable_message'] = $_lang['siteunavailable_message_default'];
 $c['allow_eval']               = 'with_scan';
 $c['safe_functions_at_eval']   = 'time,date,strtotime,strftime';
 $c['use_udperms']              = '1';
+$c['email_sender_method']      = 1;
 $c['email_method']             = 'mail';
 $c['smtp_auth']                = '0';
 $c['which_editor']             = 'TinyMCE4';
@@ -105,4 +106,11 @@ $c['publish_default']          = '0';
 $c['cache_default']            = '1';
 $c['search_default']           = '1';
 $c['group_tvs']                = 0;
-$c['global_tabs']              = 0;
+$c['global_tabs']              = 1;
+$c['manager_theme_mode']       = '3';
+$c['login_form_position']      = 'left';
+$c['manager_menu_position']    = 'top';
+$c['tinymce4_skin']            = 'lightgray';
+
+
+

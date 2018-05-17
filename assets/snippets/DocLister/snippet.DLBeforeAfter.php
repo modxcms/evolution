@@ -1,6 +1,7 @@
 <?php
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 if (!function_exists('validateMonth')) {
+
     /**
      * @param $val
      * @return bool
@@ -18,9 +19,11 @@ if (!function_exists('validateMonth')) {
 
         return $flag;
     }
+
 }
 
 if (!function_exists('buildUrl')) {
+
     /**
      * @param $url
      * @param int $start
@@ -46,6 +49,7 @@ if (!function_exists('buildUrl')) {
 
         return $url;
     }
+
 }
 
 $params = is_array($modx->event->params) ? $modx->event->params : array();

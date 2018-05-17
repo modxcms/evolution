@@ -141,7 +141,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 						$i,
 						$field_id,
 						$checked,
-						$modx->htmlspecialchars($name)
+						$name
 					);
 					$_[] = vsprintf($tpl, $param);
 					$i++;

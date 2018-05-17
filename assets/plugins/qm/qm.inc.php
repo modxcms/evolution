@@ -355,7 +355,7 @@ class Qm {
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
+                        <a title="'.$_lang['edit_resource'].'" class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext">'.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         
@@ -429,7 +429,7 @@ class Qm {
                                         case 'new':
                                             $customButton = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
+                                            <a title="'.$buttonTitle.'" class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';
                                         break;
@@ -437,7 +437,7 @@ class Qm {
                                         case 'link':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
+                                            <a title="'.$buttonTitle.'" class="qmButton qmCustom" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';    
                                         break;
@@ -445,7 +445,7 @@ class Qm {
                                         case 'modal':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
+                                            <a title="'.$buttonTitle.'" class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';   
                                         break;

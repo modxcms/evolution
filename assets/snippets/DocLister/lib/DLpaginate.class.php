@@ -252,8 +252,11 @@ class DLpaginate
     {
         $out = '';
         if (!$this->calculate && $this->calculate() && !empty($this->pagination)) {
-            $out = str_replace(array("[+class+]", "[+wrap+]"), array($this->className, $this->pagination),
-                    $this->mainTpl) . "\n";
+            $out = str_replace(
+                array("[+class+]", "[+wrap+]"),
+                array($this->className, $this->pagination),
+                $this->mainTpl
+            ) . "\n";
         }
 
         return $out;
@@ -309,13 +312,17 @@ class DLpaginate
         $this->calculate = true;
         $error = false;
 
-        if (!empty($this->urlF) && is_scalar($this->urlF) && $this->urlF != '%' && strpos($this->target,
-                $this->urlF) === false
+        if (!empty($this->urlF) && is_scalar($this->urlF) && $this->urlF != '%' && strpos(
+            $this->target,
+            $this->urlF
+        ) === false
         ) {
             //Es necesario especificar el comodin para sustituir
             $error = true;
-        } elseif (!empty($this->urlF) && is_scalar($this->urlF) && $this->urlF == '%' && strpos($this->target,
-                $this->urlF) === false
+        } elseif (!empty($this->urlF) && is_scalar($this->urlF) && $this->urlF == '%' && strpos(
+            $this->target,
+            $this->urlF
+        ) === false
         ) {
             $error = true;
         }
@@ -423,4 +430,5 @@ class DLpaginate
     {
         return str_replace(array('[+num+]', '[+link+]'), array($num, $this->get_pagenum_link($num)), $tpl);
     }
+
 }

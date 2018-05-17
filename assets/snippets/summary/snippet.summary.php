@@ -9,7 +9,7 @@
  * @date 31.07.2013
  * @version 1.0.2
  */
-if ( ! defined('MODX_BASE_PATH')) {
+if (! defined('MODX_BASE_PATH')) {
     die('HACK?');
 }
 
@@ -26,27 +26,27 @@ if (class_exists('SummaryText', false)) {
             $action[] = 'notags';
         }
 
-        if ( ! empty($noparser)) {
+        if (! empty($noparser)) {
             $action[] = 'noparser';
         }
 
-        if ( ! empty($len)) {
+        if (! empty($len)) {
             $action[] = 'len' . ((int)$len > 0 ? ':' . (int)$len : '');
         }
-        if ( ! empty($chars)) {
+        if (! empty($chars)) {
             $action[] = 'chars' . ((int)$chars > 0 ? ':' . (int)$chars : '');
         }
 
         $action = implode(",", $action);
     }
 
-    if ( ! isset($dot)) {
+    if (! isset($dot)) {
         $dot = 0;
     }
 
 
     $summary = new SummaryText($text, $action);
-    if ( ! empty($cut)) {
+    if (! empty($cut)) {
         $summary->setCut($cut);
     }
     $out = $summary->run($dot);

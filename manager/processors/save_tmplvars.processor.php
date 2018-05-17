@@ -197,15 +197,16 @@ function saveTemplateVarAccess()
         $getRankArray[$row['templateid']] = $row['rank'];
     }
 
-
     $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
-    for ($i = 0; $i < count($templates); $i++) {
-        $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-        $modx->db->insert(array(
-            'tmplvarid' => $id,
-            'templateid' => $templates[$i],
-            'rank' => $setRank,
-        ), $tbl_site_tmplvar_templates);
+    if (!empty($templates)) {
+        for ($i = 0; $i < count($templates); $i++) {
+            $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
+            $modx->db->insert(array(
+                'tmplvarid' => $id,
+                'templateid' => $templates[$i],
+                'rank' => $setRank,
+            ), $tbl_site_tmplvar_templates);
+        }
     }
 }
 

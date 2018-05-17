@@ -83,10 +83,10 @@ class SummaryText
      */
     protected function dotted($scheme = 0)
     {
-        if (($scheme == 1 && ($this->_useCut || $this->_useSubstr)) || ($scheme == 2 && $this->_useSubstr && !$this->_useCut)) {
+        if (($scheme == 1 && ($this->_useCut === true || $this->_useSubstr)) || ($scheme == 2 && $this->_useSubstr && $this->_useCut !== true)) {
             $this->_cfg['content'] .= '&hellip;'; //...
         } else {
-            if ($scheme && (!$this->_useCut || $scheme != 2)) {
+            if ($scheme && ($this->_useCut !== true|| $scheme != 2)) {
                 $this->_cfg['content'] .= '.';
             }
         }
@@ -105,7 +105,6 @@ class SummaryText
             $param = explode(",", $this->_cfg['summary']);
             $this->_cfg['content'] = $this->beforeCut($this->_cfg['content'], $this->getCut());
             foreach ($param as $doing) {
-
                 $process = explode(":", $doing);
                 switch ($process[0]) {
                     case 'notags':
@@ -124,8 +123,13 @@ class SummaryText
                         if (!(isset($process[1]) && $process[1] > 0)) {
                             $process[1] = 200;
                         }
-                        $this->_cfg['content'] = $this->summary($this->_cfg['content'], $process[1], 50, true,
-                            $this->getCut());
+                        $this->_cfg['content'] = $this->summary(
+                            $this->_cfg['content'],
+                            $process[1],
+                            50,
+                            true,
+                            $this->getCut()
+                        );
                         break;
                 }
             }
@@ -142,8 +146,11 @@ class SummaryText
     protected function beforeCut($resource, $splitter = '')
     {
         if ($splitter !== '') {
-            $summary = str_replace('<p>' . $splitter . '</p>', $splitter,
-                $resource); // For TinyMCE or if it isn't wrapped inside paragraph tags
+            $summary = str_replace(
+                '<p>' . $splitter . '</p>',
+                $splitter,
+                $resource
+            ); // For TinyMCE or if it isn't wrapped inside paragraph tags
             $summary = explode($splitter, $summary, 2);
             $this->_useCut = isset($summary[1]);
             $summary = $summary['0'];
@@ -168,7 +175,6 @@ class SummaryText
             $summary = $this->beforeCut($resource, $splitter);
         } else {
             if ($this->_useCut !== true && (mb_strlen($resource, 'UTF-8') > $truncLen)) {
-
                 $summary = $this->html_substr($resource, $truncLen, $truncOffset, $truncChars);
                 if ($resource != $summary) {
                     $this->_useSubstr = true;
@@ -295,7 +301,7 @@ class SummaryText
     protected function rTriming($str)
     {
         $str = preg_replace('/[\r\n]++/', ' ', $str);
-        if (!$this->_useCut || $this->_dotted != 2) {
+        if ($this->_useCut !== true || $this->_dotted != 2) {
             $str = preg_replace("/(([\.,\-:!?;\s])|(&\w+;))+$/ui", "", $str);
         }
 
@@ -348,7 +354,7 @@ class SummaryText
                 if (mb_strstr($tag, ' ', 'UTF-8')) {
                     $tag = mb_substr($tag, 0, strpos($tag, ' '), 'UTF-8');
                 }
-                if (!mb_stristr($tag, 'br', 'UTF-8') && !mb_stristr($tag, 'img', 'UTF-8') && !empty ($tag)) {
+                if (!mb_stristr($tag, 'br', 'UTF-8') && !mb_stristr($tag, 'img', 'UTF-8') && !empty($tag)) {
                     $endTags .= '</' . $tag . '>';
                 }
             }

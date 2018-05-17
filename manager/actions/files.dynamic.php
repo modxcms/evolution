@@ -16,8 +16,8 @@ $excludes = array(
     '.svn'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
-$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
+$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
 $viewablefiles = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles = add_dot($editablefiles);

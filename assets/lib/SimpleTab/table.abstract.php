@@ -129,7 +129,7 @@ class dataTable extends \autoTable
         if ($cache) {
             return;
         }
-        $thumbsCache = \APIhelpers::getkey($this->params,'thumbsCache',$this->thumbsCache);
+        $thumbsCache = \APIhelpers::getkey($this->params, 'thumbsCache', $this->thumbsCache);
         $thumb = $thumbsCache . $url;
         if ($this->fs->checkFile($thumb)) {
             $this->deleteThumb($thumb, true);
@@ -138,7 +138,7 @@ class dataTable extends \autoTable
 
     /**
      * @param $ids
-     * @param null $fire_events
+     * @param bool $fire_events
      * @return $this
      */
     public function delete($ids, $fire_events = false)
@@ -152,7 +152,7 @@ class dataTable extends \autoTable
     /**
      * @param $ids
      * @param $rid
-     * @param null $fire_events
+     * @param bool $fire_events
      * @return $this
      */
     public function deleteAll($ids, $rid, $fire_events = false)
@@ -207,27 +207,51 @@ class dataTable extends \autoTable
         /* more refactoring  needed */
         if ($targetIndex < $sourceIndex) {
             if (($point == 'top' && $orderDir == 'asc') || ($point == 'bottom' && $orderDir == 'desc')) {
-                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1", $table,
-                    "`{$this->indexName}`>={$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
-                $rows = $this->modx->db->update("`{$this->indexName}`={$targetIndex}", $table,
-                    "`{$this->pkName}`={$sourceId}");
+                $this->modx->db->update(
+                    "`{$this->indexName}`=`{$this->indexName}`+1",
+                    $table,
+                    "`{$this->indexName}`>={$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}"
+                );
+                $rows = $this->modx->db->update(
+                    "`{$this->indexName}`={$targetIndex}",
+                    $table,
+                    "`{$this->pkName}`={$sourceId}"
+                );
             } elseif (($point == 'bottom' && $orderDir == 'asc') || ($point == 'top' && $orderDir == 'desc')) {
-                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1", $table,
-                    "`{$this->indexName}`>{$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
-                $rows = $this->modx->db->update("`{$this->indexName}`=1+{$targetIndex}", $table,
-                    "`{$this->pkName}`={$sourceId}");
+                $this->modx->db->update(
+                    "`{$this->indexName}`=`{$this->indexName}`+1",
+                    $table,
+                    "`{$this->indexName}`>{$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}"
+                );
+                $rows = $this->modx->db->update(
+                    "`{$this->indexName}`=1+{$targetIndex}",
+                    $table,
+                    "`{$this->pkName}`={$sourceId}"
+                );
             }
         } else {
             if (($point == 'bottom' && $orderDir == 'asc') || ($point == 'top' && $orderDir == 'desc')) {
-                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1", $table,
-                    "`{$this->indexName}`<={$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
-                $rows = $this->modx->db->update("`{$this->indexName}`={$targetIndex}", $table,
-                    "`{$this->pkName}`={$sourceId}");
+                $this->modx->db->update(
+                    "`{$this->indexName}`=`{$this->indexName}`-1",
+                    $table,
+                    "`{$this->indexName}`<={$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}"
+                );
+                $rows = $this->modx->db->update(
+                    "`{$this->indexName}`={$targetIndex}",
+                    $table,
+                    "`{$this->pkName}`={$sourceId}"
+                );
             } elseif (($point == 'top' && $orderDir == 'asc') || ($point == 'bottom' && $orderDir == 'desc')) {
-                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1", $table,
-                    "`{$this->indexName}`<{$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
-                $rows = $this->modx->db->update("`{$this->indexName}`=-1+{$targetIndex}", $table,
-                    "`{$this->pkName}`={$sourceId}");
+                $this->modx->db->update(
+                    "`{$this->indexName}`=`{$this->indexName}`-1",
+                    $table,
+                    "`{$this->indexName}`<{$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}"
+                );
+                $rows = $this->modx->db->update(
+                    "`{$this->indexName}`=-1+{$targetIndex}",
+                    $table,
+                    "`{$this->pkName}`={$sourceId}"
+                );
             }
         }
 
@@ -272,6 +296,9 @@ class dataTable extends \autoTable
      */
     public function setParams($params = array())
     {
-        if (is_array($params)) $this->params = $params;
+        if (is_array($params)) {
+            $this->params = $params;
+        }
     }
+
 }

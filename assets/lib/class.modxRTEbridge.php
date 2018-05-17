@@ -84,7 +84,7 @@ class modxRTEbridge
         foreach($this->gSettingsRows as $param=>$row) {
             if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
                 $useGlobalName = $editorKey . '_' . $param . '_useglobal';
-                $this->modxParams[$param . '_useglobal'] = !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
+                $this->modxParams[$param . '_useglobal'] = !isset($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
             }
         }
 
@@ -94,7 +94,7 @@ class modxRTEbridge
             // Handle defaultCheckbox
             if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
                 $useGlobalName = $editorKey . '_' . $param . '_useglobal';
-                $this->modxParams[$param . '_useglobal'] = !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
+                $this->modxParams[$param . '_useglobal'] = !isset($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
             }
         };
 
@@ -368,7 +368,7 @@ class modxRTEbridge
         // Load Tv-Options as bridged-params
         if($selector !== 'initBridge') {
             foreach ($this->themeConfig as $key => $conf) {
-                if (isset($this->tvOptions[$selector][$key])) {
+                if (isset($this->tvOptions[$selector][$key]) && $key != 'theme') { // Issue #577
                     $this->themeConfig[$key]['bridged'] = $this->tvOptions[$selector][$key];
                 }
             }

@@ -1595,7 +1595,7 @@ class PHPMailer
     {
         // Future-proof
         if (escapeshellcmd($string) !== $string
-            or !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])
+            or !in_array(@escapeshellarg($string), ["'$string'", "\"$string\""])
         ) {
             return false;
         }

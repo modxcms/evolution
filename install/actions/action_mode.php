@@ -2,7 +2,7 @@
 // Determine upgradeability
 $upgradeable = 0;
 if (is_file($base_path . MGR_DIR . '/includes/config.inc.php')) { // Include the file so we can test its validity
-    include $base_path . MGR_DIR . '/includes/config.inc.php';
+    include_once $base_path . MGR_DIR . '/includes/config.inc.php';
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
     if (isset($dbase)) {
         if (!$conn = @mysqli_connect($database_server, $database_user, $database_password))

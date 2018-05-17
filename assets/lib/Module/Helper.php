@@ -152,4 +152,5 @@ class Helper extends \APIhelpers
 
         return array('line' => $i, 'add' => $total);
     }
+
 }

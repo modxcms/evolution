@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `itemid` varchar(10) default '0',
   `itemname` varchar(255) default NULL,
   `message` varchar(255) NOT NULL default '',
+  `ip` varchar(15),
+  `useragent` varchar(255),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains a record of user interaction.';
 
@@ -860,6 +862,12 @@ ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`w
 
 ALTER TABLE `{PREFIX}document_groups` ADD UNIQUE INDEX `ix_dg_id` (`document_group`,`document`);
 
+ALTER TABLE `{PREFIX}manager_log`
+  ADD COLUMN `ip` varchar(15);
+
+ALTER TABLE `{PREFIX}manager_log`
+  ADD COLUMN `useragent` varchar(255);  
+
 # ]]upgrade-able
 
 
@@ -1148,5 +1156,7 @@ UPDATE `{PREFIX}user_settings` SET
 
 
 REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','default');
+
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('email_sender_method','1');
 
 UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';
