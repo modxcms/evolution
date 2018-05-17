@@ -63,7 +63,7 @@ class EVOmenu
      */
     public function DrawSub($parentid, $level)
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         $output = '';
 

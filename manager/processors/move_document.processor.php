@@ -43,7 +43,7 @@ if ($use_udperms == 1) {
  * @return array
  */
 function allChildren($currDocID) {
-	global $modx;
+	$modx = evolutionCMS();
 	$children= array();
 	$currDocID = $modx->db->escape($currDocID);
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");

@@ -90,7 +90,7 @@ class DataSetPager {
 	}
 
     public function render() {
-		global $modx, $_PAGE;
+		$modx = evolutionCMS(); global $_PAGE;
 
 		$isDataset = $modx->db->isResult($this->ds);
 

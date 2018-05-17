@@ -179,7 +179,7 @@ switch ($_POST['mode']) {
 function saveTemplateVarAccess()
 {
     global $id, $newid;
-    global $modx;
+    $modx = evolutionCMS();
 
     if ($newid) {
         $id = $newid;
@@ -213,7 +213,7 @@ function saveTemplateVarAccess()
 function saveDocumentAccessPermissons()
 {
     global $id, $newid;
-    global $modx, $use_udperms;
+    $modx = evolutionCMS(); global $use_udperms;
 
     $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
 

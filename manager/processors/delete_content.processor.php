@@ -42,7 +42,7 @@ if (!$udperms->checkPermissions()) {
  */
 function getChildren($parent)
 {
-    global $modx;
+    $modx = evolutionCMS();
     global $children;
     global $site_start;
     global $site_unavailable_page;

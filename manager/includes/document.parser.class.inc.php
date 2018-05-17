@@ -173,6 +173,12 @@ class DocumentParser
     public $old;
 
     /**
+     * Hold the class instance.
+     * @var DocumentParser
+     */
+    private static $instance = null;
+
+    /**
      * Document constructor
      *
      * @return DocumentParser
@@ -196,6 +202,20 @@ class DocumentParser
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
+    }
+
+    final private function __clone()
+    {
+    }
+    /**
+     * @return DocumentParser
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new DocumentParser();
+        }
+        return self::$instance;
     }
 
     /**

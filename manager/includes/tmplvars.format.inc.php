@@ -17,7 +17,7 @@
  */
 function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype = "", $docid = "", $sep = '') {
 
-	global $modx;
+    $modx = evolutionCMS();
     $o = '';
 
     // process any TV commands in value
@@ -356,7 +356,7 @@ function decodeParamValue($s) {
  * @return array|string
  */
 function parseInput($src, $delim = "||", $type = "string", $columns = true) { // type can be: string, array
-	global $modx;
+    $modx = evolutionCMS();
 	if($modx->db->isResult($src)) {
 		// must be a recordset
 		$rows = array();

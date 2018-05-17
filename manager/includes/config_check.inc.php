@@ -121,7 +121,7 @@ if (!function_exists('checkSiteCache')) {
      * @return bool
      */
     function checkSiteCache() {
-        global $modx;
+        $modx = evolutionCMS();
         $checked= true;
         if (file_exists($modx->config['base_path'] . 'assets/cache/siteCache.idx.php')) {
             $checked= @include_once ($modx->config['base_path'] . 'assets/cache/siteCache.idx.php');
