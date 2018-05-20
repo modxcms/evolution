@@ -1,3 +1,4 @@
+<script src="js/customEvent.js" type="text/javascript"></script>
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/jquery.rightClick.js" type="text/javascript"></script>
 <script src="js/jquery.drag.js" type="text/javascript"></script>
@@ -41,9 +42,24 @@ _.kuki.domain = "<?php echo text::jsValue($this->config['cookieDomain']) ?>";
 _.kuki.path = "<?php echo text::jsValue($this->config['cookiePath']) ?>";
 _.kuki.prefix = "<?php echo text::jsValue($this->config['cookiePrefix']) ?>";
 $(document).ready(function() {
-    browser.resize();
-    browser.init();
-    $('#all').css('visibility', 'visible');
+    (function(w, d){
+        var b = d.getElementsByTagName('body')[0];
+        var s = d.createElement("script"); s.async = true;
+        var v = !("IntersectionObserver" in w) ? "8.7.1" : "10.5.2";
+        s.src = "js/lazyload/" + v + "/lazyload.min.js";
+        w.lazyLoadOptions = {
+            container: d.getElementById('files'),
+            elements_selector: ".lazy"
+        }; // Your options here. See "recipes" for more information about async.
+        b.appendChild(s);
+        w.addEventListener('LazyLoad::Initialized', function (e) {
+            // Get the instance and puts it in the lazyLoadInstance variable
+            lazyLoadInstance = e.detail.instance;
+            browser.resize();
+            browser.init();
+            $('#all').css('visibility', 'visible');
+        }, false);
+    }(window, document));
 });
 $(window).resize(browser.resize);
 </script>

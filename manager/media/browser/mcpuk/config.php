@@ -18,14 +18,11 @@
 
 $modx = evolutionCMS();
 $_CONFIG = array(
-
     'disabled' => false,
     'denyZipDownload' => $modx->config['denyZipDownload'],
     'denyExtensionRename' => $modx->config['denyExtensionRename'],
     'showHiddenFiles' => $modx->config['showHiddenFiles'],
-
     'theme' => "evo",
-
     'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
     'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
     'siteURL' => $modx->config['site_url'],
