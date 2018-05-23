@@ -104,69 +104,7 @@ browser.initToolbar = function() {
 
         return false;
     });
-
-    this.initUploadButton();
 };
-
-browser.initUploadButton = function() {
-    var btn = $('#toolbar a[href="kcact:upload"]');
-    if (!this.access.files.upload) {
-        btn.css('display', 'none');
-        return;
-    }
-    var top = btn.get(0).offsetTop;
-    var width = btn.outerWidth();
-    var height = btn.outerHeight();
-    $('#toolbar').prepend('<div id="upload" style="top:' + top + 'px;width:' + width + 'px;height:' + height + 'px">' +
-        '<form enctype="multipart/form-data" method="post" target="uploadResponse" action="' + browser.baseGetData('upload') + '">' +
-            '<input type="file" name="upload[]" onchange="browser.uploadFile(this.form)" style="height:' + height + 'px" multiple="multiple" />' +
-            '<input type="hidden" name="dir" value="" />' +
-        '</form>' +
-    '</div>');
-    $('#upload input').css('margin-left', "-" + ($('#upload input').outerWidth() - width) + 'px');
-    $('#upload').mouseover(function() {
-        $('#toolbar a[href="kcact:upload"]').addClass('hover');
-    });
-    $('#upload').mouseout(function() {
-        $('#toolbar a[href="kcact:upload"]').removeClass('hover');
-    });
-};
-
-browser.uploadFile = function(form) {
-    if (!this.dirWritable) {
-        browser.alert(this.label("Cannot write to upload folder."));
-        $('#upload').detach();
-        browser.initUploadButton();
-        return;
-    }
-    form.elements[1].value = browser.dir;
-    $('<iframe id="uploadResponse" name="uploadResponse" src="javascript:;"></iframe>').prependTo(document.body);
-    $('#loading').html(this.label("Uploading file..."));
-    $('#loading').css('display', 'inline');
-        form.submit();
-        $('#uploadResponse').load(function() {
-            var response = $(this).contents().find('body').html();
-            $('#loading').css('display', 'none');
-            response = response.split("\n");
-            var selected = [], errors = [];
-            $.each(response, function(i, row) {
-                if (row.substr(0, 1) == '/')
-                    selected[selected.length] = row.substr(1, row.length - 1)
-                else
-                    errors[errors.length] = row;
-            });
-            if (errors.length)
-                browser.alert(errors.join("\n"));
-            if (!selected.length)
-            selected = null
-            browser.refresh(selected);
-            $('#upload').detach();
-            setTimeout(function() {
-                $('#uploadResponse').detach();
-            }, 1);
-            browser.initUploadButton();
-        });
-    };
 
 browser.maximize = function(button) {
     if (window.opener) {

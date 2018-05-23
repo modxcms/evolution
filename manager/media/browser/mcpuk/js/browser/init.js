@@ -30,8 +30,8 @@ browser.init = function() {
     this.initSettings();
     this.initContent();
     this.initToolbar();
+    this.initUploader();
     this.initResizer();
-    this.initDropUpload();
 };
 
 browser.checkAgent = function() {
