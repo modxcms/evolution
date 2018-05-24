@@ -41,7 +41,7 @@ margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; 
 .h4, h4 { font-size: 1rem }
 .h5, h5 { font-size: 0.8125rem }
 .h6, h6 { font-size: 0.7rem }
-h1 .fa:first-child { display: none; }
+h1 .fa:first-child { color:#444; margin-right: 0.5em }
 a { color: #3481bc; text-decoration: none }
 .text-primary { color: #3481bc !important; }
 a:focus, a:hover { color: #014c8c; text-decoration: underline }
