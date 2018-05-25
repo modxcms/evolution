@@ -2263,6 +2263,7 @@ class DocumentParser
         $closeOpt = false;
         $maybePos = false;
         $inFilter = false;
+        $pos = false;
         $total = strlen($str);
         for ($i = 0; $i < $total; $i++) {
             $c = substr($str, $i, 1);
@@ -5558,7 +5559,7 @@ class DocumentParser
                 $property = $out;
             }
         }
-        
+
         return $property;
     }
 
