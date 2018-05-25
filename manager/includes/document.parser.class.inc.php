@@ -5496,7 +5496,7 @@ class DocumentParser
         $propertyString = str_replace('{}', '', $propertyString);
         $propertyString = str_replace('} {', ',', $propertyString);
         $property = array();
-        if (!empty($propertyString) && $propertyString == '{}') {
+        if (!empty($propertyString) && $propertyString != '{}') {
             $jsonFormat = $this->isJson($propertyString, true);
             // old format
             if ($jsonFormat === false) {
