@@ -5495,57 +5495,52 @@ class DocumentParser
         $propertyString = trim($propertyString);
         $propertyString = str_replace('{}', '', $propertyString);
         $propertyString = str_replace('} {', ',', $propertyString);
-        if (empty($propertyString)) {
-            return array();
-        }
-        if ($propertyString == '{}') {
-            return array();
-        }
-
-        $jsonFormat = $this->isJson($propertyString, true);
         $property = array();
-        // old format
-        if ($jsonFormat === false) {
-            $props = explode('&', $propertyString);
-            foreach ($props as $prop) {
+        if (!empty($propertyString) && $propertyString == '{}') {
+            $jsonFormat = $this->isJson($propertyString, true);
+            // old format
+            if ($jsonFormat === false) {
+                $props = explode('&', $propertyString);
+                foreach ($props as $prop) {
 
-                if (empty($prop)) {
-                    continue;
-                } elseif (strpos($prop, '=') === false) {
-                    $property[trim($prop)] = '';
-                    continue;
-                }
-
-                $_ = explode('=', $prop, 2);
-                $key = trim($_[0]);
-                $p = explode(';', trim($_[1]));
-                switch ($p[1]) {
-                    case 'list':
-                    case 'list-multi':
-                    case 'checkbox':
-                    case 'radio':
-                        $value = !isset($p[3]) ? '' : $p[3];
-                        break;
-                    default:
-                        $value = !isset($p[2]) ? '' : $p[2];
-                }
-                if (!empty($key)) {
-                    $property[$key] = $value;
-                }
-            }
-            // new json-format
-        } else if (!empty($jsonFormat)) {
-            foreach ($jsonFormat as $key => $row) {
-                if (!empty($key)) {
-                    if (is_array($row)) {
-                        if (isset($row[0]['value'])) {
-                            $value = $row[0]['value'];
-                        }
-                    } else {
-                        $value = $row;
+                    if (empty($prop)) {
+                        continue;
+                    } elseif (strpos($prop, '=') === false) {
+                        $property[trim($prop)] = '';
+                        continue;
                     }
-                    if (isset($value) && $value !== '') {
+
+                    $_ = explode('=', $prop, 2);
+                    $key = trim($_[0]);
+                    $p = explode(';', trim($_[1]));
+                    switch ($p[1]) {
+                        case 'list':
+                        case 'list-multi':
+                        case 'checkbox':
+                        case 'radio':
+                            $value = !isset($p[3]) ? '' : $p[3];
+                            break;
+                        default:
+                            $value = !isset($p[2]) ? '' : $p[2];
+                    }
+                    if (!empty($key)) {
                         $property[$key] = $value;
+                    }
+                }
+                // new json-format
+            } else if (!empty($jsonFormat)) {
+                foreach ($jsonFormat as $key => $row) {
+                    if (!empty($key)) {
+                        if (is_array($row)) {
+                            if (isset($row[0]['value'])) {
+                                $value = $row[0]['value'];
+                            }
+                        } else {
+                            $value = $row;
+                        }
+                        if (isset($value) && $value !== '') {
+                            $property[$key] = $value;
+                        }
                     }
                 }
             }
@@ -5563,6 +5558,7 @@ class DocumentParser
                 $property = $out;
             }
         }
+        
         return $property;
     }
 
