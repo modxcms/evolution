@@ -1061,6 +1061,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('83','OnFriendlyURLSettingsRender','1','System Settings'),
 ('84','OnUserSettingsRender','1','System Settings'),
 ('85','OnInterfaceSettingsRender','1','System Settings'),
+('109','OnSecuritySettingsRender','1','System Settings'),
+('110','OnFileManagerSettingsRender','1','System Settings'),
 ('86','OnMiscSettingsRender','1','System Settings'),
 ('87','OnRichTextEditorRegister','1','RichText Editor'),
 ('88','OnRichTextEditorInit','1','RichText Editor'),
