@@ -953,6 +953,145 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
                                 $rs = $modx->db->select($field, $from, $where, $sort);
                                 if ($modx->db->getRecordCount($rs)) {
+                                    $tvsArray = $modx->db->makeArray($rs, 'name');
+                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
+                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+
+                                    $templateVariablesOutput = '';
+                                    $templateVariablesGeneral = '';
+
+                                    $i = $ii = 0;
+                                    $tab = '';
+                                    foreach ($tvsArray as $row) {
+                                        if ($group_tvs && $row['category_id'] != 0) {
+                                            $ii = 0;
+                                            if ($tab !== $row['category_id']) {
+                                                if ($group_tvs == 1 || $group_tvs == 3) {
+                                                    if ($i === 0) {
+                                                        $templateVariablesOutput .= '
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
+                                <div class="tab-header">' . $row['category'] . '</div>
+                                <div class="tab-body tmplvars">
+                                    <table>' . "\n";
+                                                    } else {
+                                                        $templateVariablesOutput .= '
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
+                                <div class="tab-header">' . $row['category'] . '</div>
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                    }
+                                                } else if ($group_tvs == 2 || $group_tvs == 4) {
+                                                    if ($i === 0) {
+                                                        $templateVariablesOutput .= '
+                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                <h2 class="tab">' . $row['category'] . '</h2>
+                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                    } else {
+                                                        $templateVariablesOutput .= '
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                <h2 class="tab">' . $row['category'] . '</h2>
+                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                
+                                <div class="tab-body tmplvars">
+                                    <table>';
+                                                    }
+                                                } else if ($group_tvs == 5) {
+                                                    if ($i === 0) {
+                                                        $templateVariablesOutput .= '
+                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                    <h2 class="tab">' . $row['category'] . '</h2>
+                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                    <table>';
+                                                    } else {
+                                                        $templateVariablesOutput .= '
+                                    </table>
+                                </div>
+                                
+                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
+                                    <h2 class="tab">' . $row['category'] . '</h2>
+                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
+                                    
+                                    <table>';
+                                                    }
+                                                }
+                                                $split = 0;
+                                            } else {
+                                                $split = 1;
+                                            }
+                                        }
+
+                                        // Go through and display all Template Variables
+                                        if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                                            // determine TV-options
+                                            $tvOptions = $modx->parseProperties($row['elements']);
+                                            if (!empty($tvOptions)) {
+                                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->config['which_editor'];
+                                            };
+                                            // Add richtext editor to the list
+                                            $richtexteditorIds[$editor][] = "tv" . $row['id'];
+                                            $richtexteditorOptions[$editor]["tv" . $row['id']] = $tvOptions;
+                                        }
+
+                                        $templateVariablesTmp = '';
+
+                                        // splitter
+                                        if ($group_tvs) {
+                                            if (($split && $i) || $ii) {
+                                                $templateVariablesTmp .= '
+                                            <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
+                                            }
+                                        } else if ($i) {
+                                            $templateVariablesTmp .= '
+                                        <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
+                                        }
+
+                                        // post back value
+                                        if (array_key_exists('tv' . $row['id'], $_POST)) {
+                                            if (is_array($_POST['tv' . $row['id']])) {
+                                                $tvPBV = implode('||', $_POST['tv' . $row['id']]);
+                                            } else {
+                                                $tvPBV = $_POST['tv' . $row['id']];
+                                            }
+                                        } else {
+                                            $tvPBV = $row['value'];
+                                        }
+
+                                        $tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
+                                        $tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
+                                        $tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
+
+                                        $templateVariablesTmp .= '
+                                        <tr>
+                                            <td><span class="warning">' . $row['caption'] . $tvName . '</span>' . $tvDescription . $tvInherited . '</td>
+                                            <td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' . renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray) . '</div></td>
+                                        </tr>';
+
+                                        if ($group_tvs && $row['category_id'] == 0) {
+                                            $templateVariablesGeneral .= $templateVariablesTmp;
+                                            $ii++;
+                                        } else {
+                                            $templateVariablesOutput .= $templateVariablesTmp;
+                                            $tab = $row['category_id'];
+                                            $i++;
+                                        }
+                                    }
+
+                                    if ($templateVariablesGeneral) {
+                                        echo '<table id="tabTV_0" class="tmplvars"><tbody>' . $templateVariablesGeneral . '</tbody></table>';
+                                    }
+
                                     $templateVariables .= '
                         <!-- Template Variables -->' . "\n";
                                     if (!$group_tvs) {
@@ -984,124 +1123,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
                             </script>';
                                     }
-
-                                    $tvsArray = $modx->db->makeArray($rs, 'name');
-                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
-                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-                                    $i = 0;
-                                    $tab = '';
-                                    foreach ($tvsArray as $row) {
-                                        if ($tab !== $row['category_id']) {
-                                            if ($group_tvs == 1 || $group_tvs == 3) {
-                                                if ($i === 0) {
-                                                    $templateVariables .= '
-                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
-                                <div class="tab-header">' . $row['category'] . '</div>
-                                <div class="tab-body tmplvars">
-                                    <table>' . "\n";
-                                                } else {
-                                                    $templateVariables .= '
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
-                                <div class="tab-header">' . $row['category'] . '</div>
-                                <div class="tab-body tmplvars">
-                                    <table>';
-                                                }
-                                            } else if ($group_tvs == 2 || $group_tvs == 4) {
-                                                if ($i === 0) {
-                                                    $templateVariables .= '
-                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
-                                <h2 class="tab">' . $row['category'] . '</h2>
-                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
-                                
-                                <div class="tab-body tmplvars">
-                                    <table>';
-                                                } else {
-                                                    $templateVariables .= '
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
-                                <h2 class="tab">' . $row['category'] . '</h2>
-                                <script type="text/javascript">tpTemplateVariables.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
-                                
-                                <div class="tab-body tmplvars">
-                                    <table>';
-                                                }
-                                            } else if ($group_tvs == 5) {
-                                                if ($i === 0) {
-                                                    $templateVariables .= '
-                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
-                                    <h2 class="tab">' . $row['category'] . '</h2>
-                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
-                                    <table>';
-                                                } else {
-                                                    $templateVariables .= '
-                                    </table>
-                                </div>
-                                
-                                <div id="tabTV_' . $row['category_id'] . '" class="tab-page tmplvars">
-                                    <h2 class="tab">' . $row['category'] . '</h2>
-                                    <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'tabTV_' . $row['category_id'] . '\'));</script>
-                                    
-                                    <table>';
-                                                }
-                                            }
-                                            $split = 0;
-                                        } else {
-                                            $split = 1;
-                                        }
-                                        // Go through and display all Template Variables
-                                        if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
-                                            // determine TV-options
-                                            $tvOptions = $modx->parseProperties($row['elements']);
-                                            if (!empty($tvOptions)) {
-                                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
-                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->config['which_editor'];
-                                            };
-                                            // Add richtext editor to the list
-                                            $richtexteditorIds[$editor][] = "tv" . $row['id'];
-                                            $richtexteditorOptions[$editor]["tv" . $row['id']] = $tvOptions;
-                                        }
-                                        // splitter
-                                        if ($group_tvs) {
-                                            if ($split && $i) {
-                                                $templateVariables .= '
-                                            <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
-                                            }
-                                        } else if ($i) {
-                                            $templateVariables .= '
-                                        <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
-                                        }
-
-                                        // post back value
-                                        if (array_key_exists('tv' . $row['id'], $_POST)) {
-                                            if (is_array($_POST['tv' . $row['id']])) {
-                                                $tvPBV = implode('||', $_POST['tv' . $row['id']]);
-                                            } else {
-                                                $tvPBV = $_POST['tv' . $row['id']];
-                                            }
-                                        } else {
-                                            $tvPBV = $row['value'];
-                                        }
-
-                                        $tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
-                                        $tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-                                        $tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
-
-                                        $templateVariables .= '
-                                        <tr>
-                                            <td><span class="warning">' . $row['caption'] . $tvName . '</span>' . $tvDescription . $tvInherited . '</td>
-                                            <td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' . renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray) . '</div></td>
-                                        </tr>';
-
-                                        $tab = $row['category_id'];
-                                        $i++;
-                                    }
+                                    $templateVariables .= $templateVariablesOutput;
                                     $templateVariables .= '
                                     </table>
                                 </div>' . "\n";
