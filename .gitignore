@@ -69,6 +69,8 @@ Desktop.ini
 .idea
 .vagrant
 .rocketeer
+.php_cs
+.php_cs.cache
 
 # except do not ignore .gitignore
 !.gitignore
