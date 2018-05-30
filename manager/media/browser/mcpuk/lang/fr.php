@@ -124,5 +124,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Envoi du fichier {number} sur {count}... {progress}",
     "Failed to upload {filename}!" => "Échec du téléchargement du fichier {filename} !",
 );
-
-?>

@@ -4,14 +4,14 @@ global $site_sessionname;
 $site_sessionname = genEvoSessionName(); // For legacy extras not using startCMSSession
 
 
-if( ! function_exists('evolutionCMS')) {
+if (! function_exists('evolutionCMS')) {
     /**
      * @return DocumentParser
      */
     function evolutionCMS()
     {
-        if( ! defined('MODX_CLASS')) {
-            if( ! class_exists('DocumentParser')) {
+        if (! defined('MODX_CLASS')) {
+            if (! class_exists('DocumentParser')) {
                 throw new RuntimeException('MODX_CLASS not defined and DocumentParser class not exists');
             }
             define('MODX_CLASS', 'DocumentParser');
@@ -38,12 +38,14 @@ function genEvoSessionName()
 function startCMSSession()
 {
     global $site_sessionname, $https_port, $session_cookie_path, $session_cookie_domain;
-    if(MODX_CLI) return;
+    if (MODX_CLI) {
+        return;
+    }
 
     session_name($site_sessionname);
     removeInvalidCmsSessionIds($site_sessionname);
     $cookieExpiration = 0;
-    $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
+    $secure = ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
     $cookiePath = !empty($session_cookie_path) ? $session_cookie_path : MODX_BASE_URL;
     $cookieDomain = !empty($session_cookie_domain) ? $session_cookie_domain : '';
     session_set_cookie_params($cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
@@ -79,7 +81,9 @@ function removeInvalidCmsSessionFromStorage(&$storage, $session_name)
  */
 function removeInvalidCmsSessionIds($session_name)
 {
-    if(MODX_CLI) return;
+    if (MODX_CLI) {
+        return;
+    }
     // session ids is invalid iff it is empty string
     // storage priorioty can see in PHP source ext/session/session.c
     removeInvalidCmsSessionFromStorage($_COOKIE, $session_name);

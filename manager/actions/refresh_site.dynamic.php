@@ -1,6 +1,6 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 // (un)publishing of documents, version 2!
@@ -29,12 +29,16 @@ $num_rows_unpub = $modx->db->getAffectedRows();
 
 <div class="tab-page">
 	<div class="container container-body">
-		<?php if($num_rows_pub)   printf('<p>' . $_lang["refresh_published"]   . '</p>', $num_rows_pub) ?>
-		<?php if($num_rows_unpub) printf('<p>' . $_lang["refresh_unpublished"] . '</p>', $num_rows_unpub) ?>
+		<?php if ($num_rows_pub) {
+    printf('<p>' . $_lang["refresh_published"] . '</p>', $num_rows_pub);
+} ?>
+		<?php if ($num_rows_unpub) {
+    printf('<p>' . $_lang["refresh_unpublished"] . '</p>', $num_rows_unpub);
+} ?>
 		<?php
-		$modx->clearCache('full', true);
-		// invoke OnSiteRefresh event
-		$modx->invokeEvent("OnSiteRefresh");
-		?>
+        $modx->clearCache('full', true);
+        // invoke OnSiteRefresh event
+        $modx->invokeEvent("OnSiteRefresh");
+        ?>
 	</div>
 </div>

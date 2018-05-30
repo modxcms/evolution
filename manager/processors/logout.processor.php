@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
@@ -9,10 +9,10 @@ $sid = $modx->sid;
 
 // invoke OnBeforeManagerLogout event
 $modx->invokeEvent("OnBeforeManagerLogout",
-						array(
-							"userid"		=> $internalKey,
-							"username"		=> $username
-						));
+                        array(
+                            "userid"		=> $internalKey,
+                            "username"		=> $username
+                        ));
 
 //// Unset all of the session variables.
 //$_SESSION = array();
@@ -35,10 +35,10 @@ $modx->db->delete($modx->getFullTableName('active_user_sessions'), "sid = '{$sid
 
 // invoke OnManagerLogout event
 $modx->invokeEvent("OnManagerLogout",
-						array(
-							"userid"		=> $internalKey,
-							"username"		=> $username
-						));
+                        array(
+                            "userid"		=> $internalKey,
+                            "username"		=> $username
+                        ));
 
 // show login screen
 header('Location: ' . MODX_MANAGER_URL);

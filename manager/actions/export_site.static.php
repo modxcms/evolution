@@ -1,9 +1,9 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('export_static')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('export_static')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // figure out the base of the server, so we know where to get the documents in order to export them
@@ -35,11 +35,11 @@ if(!$modx->hasPermission('export_static')) {
 
 		<div class="container container-body">
 			<?php
-			if(isset($_POST['export'])) {
-				$rs = include_once(MODX_MANAGER_PATH . 'processors/export_site.processor.php');
-				echo $rs;
-			} else {
-				?>
+            if (isset($_POST['export'])) {
+                $rs = include_once(MODX_MANAGER_PATH . 'processors/export_site.processor.php');
+                echo $rs;
+            } else {
+                ?>
 				<form action="index.php" method="post" name="exportFrm">
 					<input type="hidden" name="export" value="export" />
 					<input type="hidden" name="a" value="83" />
@@ -76,13 +76,13 @@ if(!$modx->hasPermission('export_static')) {
 					<a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["export_site_start"] ?></a>
 					<script>
 						jQuery('#exportButton a').click(function() {
-							jQuery(this).parent().html('<?= $_style['ajax_loader'];?>');
+							jQuery(this).parent().html('<?= $_style['ajax_loader']; ?>');
 						});
 					</script>
 				</form>
 				<?php
-			}
-			?>
+            }
+            ?>
 		</div>
 	</div>
 

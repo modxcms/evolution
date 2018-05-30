@@ -123,7 +123,7 @@ class POP3
      *
      * @var array
      */
-    protected $errors = [];
+    protected $errors = array();
 
     /**
      * Line break constant.
@@ -188,7 +188,7 @@ class POP3
         $this->username = $username;
         $this->password = $password;
         //  Reset the error log
-        $this->errors = [];
+        $this->errors = array();
         //  connect
         $result = $this->connect($this->host, $this->port, $this->tval);
         if ($result) {
@@ -223,7 +223,7 @@ class POP3
 
         //On Windows this will raise a PHP Warning error if the hostname doesn't exist.
         //Rather than suppress it with @fsockopen, capture it cleanly instead
-        set_error_handler([$this, 'catchWarning']);
+        set_error_handler(array($this, 'catchWarning'));
 
         if (false === $port) {
             $port = static::DEFAULT_PORT;

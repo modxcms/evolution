@@ -1,10 +1,11 @@
 <!-- Templates -->
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-if (isset($resources->items['site_templates'])) { ?>
+if (isset($resources->items['site_templates'])) {
+    ?>
     <div class="tab-page" id="tabTemplates">
         <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?= $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabTemplates'))</script>
@@ -35,4 +36,5 @@ if (isset($resources->items['site_templates'])) { ?>
             initViews('tmp', 'template', 'site_templates')
         </script>
     </div>
-<?php } ?>
+<?php
+} ?>

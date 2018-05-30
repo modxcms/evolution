@@ -123,5 +123,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Đang tải tập tin thứ {number} của {count}... {progress}",
     "Failed to upload {filename}!" => "Tải lên thất bại {filename}!",
 );
-
-?>

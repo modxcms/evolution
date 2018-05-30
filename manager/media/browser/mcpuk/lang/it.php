@@ -123,5 +123,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Caricmento del file {number} di {count}... {progress}",
     "Failed to upload {filename}!" => "Il caricamento del file {filename} è fallito ",
 );
-
-?>

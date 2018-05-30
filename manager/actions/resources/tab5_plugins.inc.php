@@ -1,10 +1,11 @@
 <!-- plugins -->
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-if (isset($resources->items['site_plugins'])) { ?>
+if (isset($resources->items['site_plugins'])) {
+    ?>
     <div class="tab-page" id="tabPlugins">
         <h2 class="tab"><i class="fa fa-plug"></i> <?= $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabPlugins'))</script>
@@ -19,16 +20,21 @@ if (isset($resources->items['site_plugins'])) { ?>
                 <div class="input-group input-group-sm">
                     <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
                     <div class="input-group-btn">
-                        <?php if ($modx->hasPermission('new_plugin')) { ?>
+                        <?php if ($modx->hasPermission('new_plugin')) {
+        ?>
                             <a class="btn btn-success" href="index.php?a=101"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_plugin'] ?></span></a>
-                        <?php } ?>
-                        <?php if ($modx->hasPermission('save_plugin')) { ?>
+                        <?php
+    } ?>
+                        <?php if ($modx->hasPermission('save_plugin')) {
+        ?>
                             <a class="btn btn-secondary" href="index.php?a=100"><i class="<?= $_style["actions_sort"] ?>"></i> <span><?= $_lang['plugin_priority'] ?></span></a>
-                        <?php } ?>
+                        <?php
+    } ?>
                         <?php
                         if ($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
                             $tbl_site_plugins = $modx->getFullTableName('site_plugins');
-                            if ($modx->db->getRecordCount($modx->db->query("SELECT id FROM {$tbl_site_plugins} t1 WHERE disabled = 1 AND name IN (SELECT name FROM {$tbl_site_plugins} t2 WHERE t1.name = t2.name AND t1.id != t2.id)"))) { ?>
+                            if ($modx->db->getRecordCount($modx->db->query("SELECT id FROM {$tbl_site_plugins} t1 WHERE disabled = 1 AND name IN (SELECT name FROM {$tbl_site_plugins} t2 WHERE t1.name = t2.name AND t1.id != t2.id)"))) {
+                                ?>
                                 <a class="btn btn-danger" href="index.php?a=119"><?= $_lang['purge_plugin'] ?></a>
                                 <?php
                             }
@@ -49,4 +55,5 @@ if (isset($resources->items['site_plugins'])) { ?>
             initViews('pl', 'plugins', 'site_plugins')
         </script>
     </div>
-<?php } ?>
+<?php
+} ?>

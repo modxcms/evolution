@@ -109,7 +109,7 @@ class OldFunctions
         if (!is_array($array)) {
             return "<ul><li>Bad list</li></ul>";
         }
-        if (!empty ($type)) {
+        if (!empty($type)) {
             $typestr = " style='list-style-type: $type'";
         } else {
             $typestr = "";
@@ -218,7 +218,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
         $userdetails = array();
-        if ($modx->isFrontend() && isset ($_SESSION['webValidated'])) {
+        if ($modx->isFrontend() && isset($_SESSION['webValidated'])) {
             // web user
             $userdetails['loggedIn'] = true;
             $userdetails['id'] = $_SESSION['webInternalKey'];
@@ -227,7 +227,7 @@ class OldFunctions
 
             return $userdetails;
         } else {
-            if ($modx->isBackend() && isset ($_SESSION['mgrValidated'])) {
+            if ($modx->isBackend() && isset($_SESSION['mgrValidated'])) {
                 // manager user
                 $userdetails['loggedIn'] = true;
                 $userdetails['id'] = $_SESSION['mgrInternalKey'];

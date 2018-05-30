@@ -123,5 +123,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Siirretään tiedostoa {number}/{count} ... {progress}",
     "Failed to upload {filename}!" => "Siirto epäonnistui {filename}!",
 );
-
-?>

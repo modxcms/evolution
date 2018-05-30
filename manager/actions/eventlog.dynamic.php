@@ -1,9 +1,9 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('view_eventlog')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('view_eventlog')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // Get table Names (alphabetical)
@@ -15,15 +15,15 @@ $tbl_web_users = $modx->getFullTableName('web_users');
 $modx->manager->initPageViewState();
 
 // get and save search string
-if($_REQUEST['op'] == 'reset') {
-	$sqlQuery = $query = '';
-	$_PAGE['vs']['search'] = '';
+if ($_REQUEST['op'] == 'reset') {
+    $sqlQuery = $query = '';
+    $_PAGE['vs']['search'] = '';
 } else {
-	$sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-	if(!is_numeric($sqlQuery)) {
-		$sqlQuery = $modx->db->escape($query);
-	}
-	$_PAGE['vs']['search'] = $query;
+    $sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
+    if (!is_numeric($sqlQuery)) {
+        $sqlQuery = $modx->db->escape($query);
+    }
+    $_PAGE['vs']['search'] = $query;
 }
 
 // get & save listmode
@@ -125,33 +125,33 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-					$ds = $modx->db->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
+                    $ds = $modx->db->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
-					$grd->pagerClass = '';
-					$grd->pageClass = 'page-item';
-					$grd->selPageClass = 'page-item active';
-					$grd->noRecordMsg = $_lang['no_records_found'];
-					$grd->cssClass = "table data nowrap";
-					$grd->columnHeaderClass = "tableHeader";
-					$grd->itemClass = "tableItem";
-					$grd->altItemClass = "tableAltItem";
-					$grd->fields = "type,source,createdon,eventid,username";
-					$grd->columns = $_lang['type'] . " ," . $_lang['source'] . " ," . $_lang['date'] . " ," . $_lang['event_id'] . " ," . $_lang['sysinfo_userid'];
-					$grd->colWidths = "1%,,1%,1%,1%";
-					$grd->colAligns = "center,,,center,center";
-					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang['click_to_context'] . "'><i class='[+icon+]'></i></a>||template:<a href='index.php?a=115&id=[+id+]' title='" . $_lang['click_to_view_details'] . "'>[+source+]</a>||date: " . $modx->toDateFormat(null, 'formatOnly') . ' %I:%M %p';
-					if($listmode == '1') {
-						$grd->pageSize = 0;
-					}
-					if($_REQUEST['op'] == 'reset') {
-						$grd->pageNumber = 1;
-					}
-					// render grid
-					echo $grd->render();
-					?>
+                    include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+                    $grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+                    $grd->pagerClass = '';
+                    $grd->pageClass = 'page-item';
+                    $grd->selPageClass = 'page-item active';
+                    $grd->noRecordMsg = $_lang['no_records_found'];
+                    $grd->cssClass = "table data nowrap";
+                    $grd->columnHeaderClass = "tableHeader";
+                    $grd->itemClass = "tableItem";
+                    $grd->altItemClass = "tableAltItem";
+                    $grd->fields = "type,source,createdon,eventid,username";
+                    $grd->columns = $_lang['type'] . " ," . $_lang['source'] . " ," . $_lang['date'] . " ," . $_lang['event_id'] . " ," . $_lang['sysinfo_userid'];
+                    $grd->colWidths = "1%,,1%,1%,1%";
+                    $grd->colAligns = "center,,,center,center";
+                    $grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang['click_to_context'] . "'><i class='[+icon+]'></i></a>||template:<a href='index.php?a=115&id=[+id+]' title='" . $_lang['click_to_view_details'] . "'>[+source+]</a>||date: " . $modx->toDateFormat(null, 'formatOnly') . ' %I:%M %p';
+                    if ($listmode == '1') {
+                        $grd->pageSize = 0;
+                    }
+                    if ($_REQUEST['op'] == 'reset') {
+                        $grd->pageNumber = 1;
+                    }
+                    // render grid
+                    echo $grd->render();
+                    ?>
 				</div>
 			</div>
 		</div>

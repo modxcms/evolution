@@ -1,8 +1,8 @@
 <?php
 
 /** Ukrainian localization file for KCFinder
-	* author: Myroslav Dobra
-	* E-mail: dmaraptor@mail.ru
+    * author: Myroslav Dobra
+    * E-mail: dmaraptor@mail.ru
   */
 
 $lang = array(
@@ -124,5 +124,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Завантаження файлу {number} з {count}... {progress}",
     "Failed to upload {filename}!" => "Помилка завантаження {filename}!",
 );
-
-?>

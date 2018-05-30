@@ -4,7 +4,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 }
 
 // START HACK
-if (isset ($modx)) {
+if (isset($modx)) {
     $user_id = $modx->getLoginUserID();
 } else {
     $user_id = $_SESSION['mgrInternalKey'];

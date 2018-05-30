@@ -1,9 +1,9 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('view_eventlog')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('view_eventlog')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get id
@@ -41,18 +41,18 @@ $content = $modx->db->getRow($ds);
 	<div class="tab-page">
 		<div class="container container-body">
 			<?php
-			$date = $modx->toDateFormat($content["createdon"]);
-			if($content["type"] == 1) {
-				$icon = $_style['actions_info'] . ' text-info';
-				$msgtype = $_lang["information"];
-			} else if($content["type"] == 2) {
-				$icon = $_style['actions_triangle'] . ' text-warning';
-				$msgtype = $_lang["warning"];
-			} else if($content["type"] == 3) {
-				$icon = $_style['actions_error'] . ' text-danger';
-				$msgtype = $_lang["error"];
-			}
-			?>
+            $date = $modx->toDateFormat($content["createdon"]);
+            if ($content["type"] == 1) {
+                $icon = $_style['actions_info'] . ' text-info';
+                $msgtype = $_lang["information"];
+            } elseif ($content["type"] == 2) {
+                $icon = $_style['actions_triangle'] . ' text-warning';
+                $msgtype = $_lang["warning"];
+            } elseif ($content["type"] == 3) {
+                $icon = $_style['actions_error'] . ' text-danger';
+                $msgtype = $_lang["error"];
+            }
+            ?>
 			<p><b><?= $content['source'] . " - " . $_lang['eventlog_viewer'] ?></b></p>
 			<p>
 				<i class="<?= $icon ?>"></i> <?= $msgtype ?>
