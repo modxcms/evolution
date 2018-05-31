@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 if (!$modx->hasPermission('save_plugin')) {
@@ -177,7 +177,9 @@ function saveEventListeners($id, $sysevents, $mode)
     // save selected system events
     $formEventList = array();
     foreach ($sysevents as $evtId) {
-        if(!preg_match('@^[1-9][0-9]*$@',$evtId)) $evtId = getEventIdByName($evtId);
+        if (!preg_match('@^[1-9][0-9]*$@', $evtId)) {
+            $evtId = getEventIdByName($evtId);
+        }
         if ($mode == '101') {
             $rs = $modx->db->select('max(priority) as priority', '[+prefix+]site_plugin_events', "evtid='{$evtId}'");
         } else {
@@ -202,13 +204,17 @@ function saveEventListeners($id, $sysevents, $mode)
     $rs = $modx->db->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
     $dbEventList = array();
     $del = array();
-    while($row = $modx->db->getRow($rs)) {
-        if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
+    while ($row = $modx->db->getRow($rs)) {
+        if (!in_array($row['evtid'], $evtids)) {
+            $del[] = $row['evtid'];
+        }
     }
 
-    if(empty($del)) return;
+    if (empty($del)) {
+        return;
+    }
 
-    foreach($del as $delid) {
+    foreach ($del as $delid) {
         $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
     }
 }
@@ -222,7 +228,9 @@ function getEventIdByName($name)
     $modx = evolutionCMS();
     static $eventIds=array();
 
-    if(isset($eventIds[$name])) return $eventIds[$name];
+    if (isset($eventIds[$name])) {
+        return $eventIds[$name];
+    }
 
     $rs = $modx->db->select('id, name', '[+prefix+]system_eventnames');
     while ($row = $modx->db->getRow($rs)) {
@@ -231,4 +239,3 @@ function getEventIdByName($name)
 
     return $eventIds[$name];
 }
-

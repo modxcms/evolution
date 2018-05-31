@@ -7,7 +7,6 @@
 
 class DBAPI
 {
-
     public $conn;
     public $config;
     public $lastQuery;
@@ -172,13 +171,12 @@ class DBAPI
 
     public function escape($s, $safecount = 0)
     {
-
         $safecount++;
         if (1000 < $safecount) {
             exit("Too many loops '{$safecount}'");
         }
 
-        if (empty ($this->conn) || !is_resource($this->conn)) {
+        if (empty($this->conn) || !is_resource($this->conn)) {
             $this->connect();
         }
 
@@ -205,7 +203,7 @@ class DBAPI
     public function query($sql, $watchError = true)
     {
         $modx = evolutionCMS();
-        if (empty ($this->conn) || !is_resource($this->conn)) {
+        if (empty($this->conn) || !is_resource($this->conn)) {
             $this->connect();
         }
         $tstart = $modx->getMicroTime();
@@ -416,7 +414,6 @@ class DBAPI
 
     public function save($fields, $table, $where = '')
     {
-
         if ($where === '') {
             $mode = 'insert';
         } elseif ($this->getRecordCount($this->select('*', $table, $where)) == 0) {
@@ -617,7 +614,7 @@ class DBAPI
     public function getTableMetaData($table)
     {
         $metadata = false;
-        if (!empty ($table)) {
+        if (!empty($table)) {
             $sql = "SHOW FIELDS FROM $table";
             if ($ds = $this->query($sql)) {
                 while ($row = $this->getRow($ds)) {
@@ -643,16 +640,16 @@ class DBAPI
         $date = '';
         if (!$timestamp === false && $timestamp > 0) {
             switch ($fieldType) {
-                case 'DATE' :
+                case 'DATE':
                     $date = date('Y-m-d', $timestamp);
                     break;
-                case 'TIME' :
+                case 'TIME':
                     $date = date('H:i:s', $timestamp);
                     break;
-                case 'YEAR' :
+                case 'YEAR':
                     $date = date('Y', $timestamp);
                     break;
-                default :
+                default:
                     $date = date('Y-m-d H:i:s', $timestamp);
                     break;
             }
@@ -705,7 +702,6 @@ class DBAPI
      */
     public function replaceFullTableName($str, $force = null)
     {
-
         $str = trim($str);
         $dbase = trim($this->config['dbase'], '`');
         $prefix = $this->config['table_prefix'];
@@ -744,7 +740,6 @@ class DBAPI
 
     public function _getFieldsStringFromArray($fields = array())
     {
-
         if (empty($fields)) {
             return '*';
         }
@@ -771,4 +766,3 @@ class DBAPI
         return implode(' ', $_);
     }
 }
-

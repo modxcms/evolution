@@ -1,26 +1,25 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('delete_template')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('delete_template')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if($id == 0) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
+if ($id == 0) {
+    $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 $forced = isset($_GET['force']) ? $_GET['force'] : 0;
 
 // check for relations
-if(!$forced) {
-	$drs = $modx->db->select('sc.id, sc.pagetitle,sc.description', $modx->getFullTableName('site_content') . " AS sc
+if (!$forced) {
+    $drs = $modx->db->select('sc.id, sc.pagetitle,sc.description', $modx->getFullTableName('site_content') . " AS sc
 			INNER JOIN " . $modx->getFullTableName('site_tmplvar_contentvalues') . " AS stcv ON stcv.contentid=sc.id", "stcv.tmplvarid='{$id}'");
-	$count = $modx->db->getRecordCount($drs);
-	if($count > 0) {
-		include_once "header.inc.php";
-		?>
+    $count = $modx->db->getRecordCount($drs);
+    if ($count > 0) {
+        include_once "header.inc.php"; ?>
 		<script>
 			var actions = {
 				delete: function() {
@@ -42,17 +41,16 @@ if(!$forced) {
 				<p><?= $_lang['tmplvar_inuse'] ?></p>
 				<ul>
 					<?php
-					while($row = $modx->db->getRow($drs)) {
-						echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['description'] != '' ? ' - ' . $row['description'] : '') . '</li>';
-					}
-					?>
+                    while ($row = $modx->db->getRow($drs)) {
+                        echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['description'] != '' ? ' - ' . $row['description'] : '') . '</li>';
+                    } ?>
 				</ul>
 			</div>
 		</div>
 		<?php
-		include_once "footer.inc.php";
-		exit;
-	}
+        include_once "footer.inc.php";
+        exit;
+    }
 }
 
 // Set the item name for logger
@@ -61,7 +59,7 @@ $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTVFormDelete event
 $modx->invokeEvent("OnBeforeTVFormDelete", array(
-	"id" => $id
+    "id" => $id
 ));
 
 // delete variable
@@ -78,7 +76,7 @@ $modx->db->delete($modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$
 
 // invoke OnTVFormDelete event
 $modx->invokeEvent("OnTVFormDelete", array(
-	"id" => $id
+    "id" => $id
 ));
 
 // empty cache

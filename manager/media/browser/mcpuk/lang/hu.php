@@ -123,5 +123,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "A(z) {number}. fájl feltöltése (összesen {count}) ... {progress}",
     "Failed to upload {filename}!" => "Nem sikerült feltölteni a '{filename}' fájlt.",
 );
-
-?>

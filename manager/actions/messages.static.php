@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('messages')) {
@@ -11,29 +11,29 @@ if (!$modx->hasPermission('messages')) {
     <i class="fa fa-envelope"></i><?= $_lang['messages_title'] ?>
 </h1>
 
-<?php if (isset($_REQUEST['id']) && $_REQUEST['m'] == 'r') { ?>
+<?php if (isset($_REQUEST['id']) && $_REQUEST['m'] == 'r') {
+    ?>
     <div class="tab-page">
         <div class="container container-body" id="lyr3">
             <b><?= $_lang['messages_read_message'] ?></b>
             <?php
             $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='" . (int)$_REQUEST['id'] . "'");
-            $message = $modx->db->getRow($rs);
-            if (!$message) {
-                echo "Wrong number of messages returned!";
+    $message = $modx->db->getRow($rs);
+    if (!$message) {
+        echo "Wrong number of messages returned!";
+    } else {
+        if ($message['recipient'] != $modx->getLoginUserID()) {
+            echo $_lang['messages_not_allowed_to_read'];
+        } else {
+            // output message!
+            // get the name of the sender
+            $sender = $message['sender'];
+            if ($sender == 0) {
+                $sendername = $_lang['messages_system_user'];
             } else {
-                if ($message['recipient'] != $modx->getLoginUserID()) {
-                    echo $_lang['messages_not_allowed_to_read'];
-                } else {
-                    // output message!
-                    // get the name of the sender
-                    $sender = $message['sender'];
-                    if ($sender == 0) {
-                        $sendername = $_lang['messages_system_user'];
-                    } else {
-                        $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                        $sendername = $modx->db->getValue($rs2);
-                    }
-                    ?>
+                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
+                $sendername = $modx->db->getValue($rs2);
+            } ?>
                     <div class="btn-group float-xs-right">
                         <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="fa fa-reply"></i> <?= $_lang['messages_reply'] ?></a>
                         <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="fa fa-forward"></i> <?= $_lang['messages_forward'] ?></a>
@@ -63,24 +63,23 @@ if (!$modx->hasPermission('messages')) {
                         <?php
                         // format the message :)
                         $message = str_replace("\n", '<br />', $message['message']);
-                        $dashcount = substr_count($message, '-----');
-                        $message = str_replace('-----', '<i class="text-muted">', $message);
-                        for ($i = 0; $i < $dashcount; $i++) {
-                            $message .= '</i>';
-                        }
-                        ?>
+            $dashcount = substr_count($message, '-----');
+            $message = str_replace('-----', '<i class="text-muted">', $message);
+            for ($i = 0; $i < $dashcount; $i++) {
+                $message .= '</i>';
+            } ?>
                         <div class="card-block"><?= $message ?></div>
                     </div>
                     <?php
                     // mark the message as read
                     $modx->db->update(array('messageread' => 1), $modx->getFullTableName('user_messages'), "id='{$_REQUEST['id']}'");
-                }
-            }
-            ?>
+        }
+    } ?>
         </div>
     </div>
     <p></p>
-<?php } ?>
+<?php
+} ?>
 
 <div class="tab-page">
     <div class="container container-body">
@@ -136,8 +135,7 @@ if (!$modx->hasPermission('messages')) {
         if ($limit < 1) {
             echo $_lang['messages_no_messages'];
         } else {
-            $dotablestuff = 1;
-            ?>
+            $dotablestuff = 1; ?>
             <?= $pager ?>
             <script type="text/javascript" src="media/script/tablesort.js"></script>
             <div class="row">
@@ -162,8 +160,7 @@ if (!$modx->hasPermission('messages')) {
                                 $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
                                 $sendername = $modx->db->getValue($rs2);
                             }
-                            $messagestyle = $message['messageread'] == 0 ? "text-primary" : "";
-                            ?>
+                            $messagestyle = $message['messageread'] == 0 ? "text-primary" : ""; ?>
                             <tr>
                                 <td><?= $message['messageread'] == 0 ? '<i class="fa fa-envelope"></i>' : "" ?></td>
                                 <td class="<?= $messagestyle ?>" style="cursor: pointer;" onClick="window.location.href='index.php?a=10&id=<?= $message['id'] ?>&m=r';"><?= $message['subject'] ?></td>
@@ -172,13 +169,13 @@ if (!$modx->hasPermission('messages')) {
                                 <td><?= $modx->toDateFormat($message['postdate'] + $server_offset_time) ?></td>
                             </tr>
                             <?php
-                        }
-                        ?>
+                        } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-        <?php } ?>
+        <?php
+        } ?>
     </div>
 </div>
 

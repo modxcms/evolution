@@ -258,5 +258,3 @@ $lang = array(
 
     "Failed to upload {filename}!" => "Несполучливо качване на {filename}!",
 );
-
-?>
