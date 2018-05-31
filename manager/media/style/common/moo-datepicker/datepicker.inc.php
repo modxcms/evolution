@@ -1,15 +1,11 @@
 <?php
-class DATEPICKER
-{
-    public function __construct()
-    {
+class DATEPICKER {
+    function __construct() {
     }
-    public function getDP()
-    {
-        $modx = evolutionCMS();
-        global$_lang;
+    function getDP() {
+        $modx = evolutionCMS(); global$_lang;
 
-        $tpl = file_get_contents(dirname(__FILE__) . '/datepicker.tpl');
-        return $modx->parseText($tpl, $_lang, '[%', '%]');
+        $tpl = file_get_contents(dirname(__FILE__).'/datepicker.tpl');
+        return $modx->parseText($tpl,$_lang,'[%','%]');
     }
 }

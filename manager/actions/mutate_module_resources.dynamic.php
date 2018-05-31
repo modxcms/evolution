@@ -1,10 +1,10 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-if (!$modx->hasPermission('edit_module')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!$modx->hasPermission('edit_module')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
@@ -25,92 +25,92 @@ $modx->manager->initPageViewState();
 
 // check to see the  editor isn't locked
 $rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='" . $modx->getLoginUserID() . "'");
-if ($username = $modx->db->getValue($rs)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'module'));
+if($username = $modx->db->getValue($rs)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'module'));
 }
 // end check for lock
 
 // take action
-switch ($_REQUEST['op']) {
-    case 'add':
-        // convert ids to numbers
-        $opids = array_filter(array_map('intval', explode(',', $_REQUEST['newids'])));
+switch($_REQUEST['op']) {
+	case 'add':
+		// convert ids to numbers
+		$opids = array_filter(array_map('intval', explode(',', $_REQUEST['newids'])));
 
-        if (count($opids) > 0) {
-            // 1-snips, 2-tpls, 3-tvs, 4-chunks, 5-plugins, 6-docs
-            $rt = strtolower($_REQUEST["rt"]);
-            if ($rt == 'chunk') {
-                $type = 10;
-            }
-            if ($rt == 'doc') {
-                $type = 20;
-            }
-            if ($rt == 'plug') {
-                $type = 30;
-            }
-            if ($rt == 'snip') {
-                $type = 40;
-            }
-            if ($rt == 'tpl') {
-                $type = 50;
-            }
-            if ($rt == 'tv') {
-                $type = 60;
-            }
-            $modx->db->delete($tbl_site_module_depobj, "module='{$id}' AND resource IN (" . implode(',', $opids) . ") AND type='{$type}'");
-            foreach ($opids as $opid) {
-                $modx->db->insert(array(
-                    'module' => $id,
-                    'resource' => $opid,
-                    'type' => $type,
-                ), $tbl_site_module_depobj);
-            }
-        }
-        break;
-    case 'del':
-        // convert ids to numbers
-        $opids = array_filter(array_map('intval', $_REQUEST['depid']));
+		if(count($opids) > 0) {
+			// 1-snips, 2-tpls, 3-tvs, 4-chunks, 5-plugins, 6-docs
+			$rt = strtolower($_REQUEST["rt"]);
+			if($rt == 'chunk') {
+				$type = 10;
+			}
+			if($rt == 'doc') {
+				$type = 20;
+			}
+			if($rt == 'plug') {
+				$type = 30;
+			}
+			if($rt == 'snip') {
+				$type = 40;
+			}
+			if($rt == 'tpl') {
+				$type = 50;
+			}
+			if($rt == 'tv') {
+				$type = 60;
+			}
+			$modx->db->delete($tbl_site_module_depobj, "module='{$id}' AND resource IN (" . implode(',', $opids) . ") AND type='{$type}'");
+			foreach($opids as $opid) {
+				$modx->db->insert(array(
+					'module' => $id,
+					'resource' => $opid,
+					'type' => $type,
+				), $tbl_site_module_depobj);
+			}
+		}
+		break;
+	case 'del':
+		// convert ids to numbers
+		$opids = array_filter(array_map('intval', $_REQUEST['depid']));
 
-        // get resources that needs to be removed
-        $ds = $modx->db->select('*', $tbl_site_module_depobj, "id IN (" . implode(",", $opids) . ")");
-        // loop through resources and look for plugins and snippets
-        $plids = array();
-        $snid = array();
-        while ($row = $modx->db->getRow($ds)) {
-            if ($row['type'] == '30') {
-                $plids[$i] = $row['resource'];
-            }
-            if ($row['type'] == '40') {
-                $snids[$i] = $row['resource'];
-            }
-        }
-        // get guid
-        $ds = $modx->db->select('guid', $tbl_site_modules, "id='{$id}'");
-        $guid = $modx->db->getValue($ds);
-        // reset moduleguid for deleted resources
-        if (($cp = count($plids)) || ($cs = count($snids))) {
-            if ($cp) {
-                $modx->db->update(array('moduleguid' => ''), $tbl_site_plugins, "id IN (" . implode(',', $plids) . ") AND moduleguid='{$guid}'");
-            }
-            if ($cs) {
-                $modx->db->update(array('moduleguid' => ''), $tbl_site_plugins, "id IN (" . implode(',', $snids) . ") AND moduleguid='{$guid}'");
-            }
-            // reset cache
-            $modx->clearCache('full');
-        }
-        $modx->db->delete($tbl_site_module_depobj, "id IN (" . implode(',', $opids) . ")");
-        break;
+		// get resources that needs to be removed
+		$ds = $modx->db->select('*', $tbl_site_module_depobj, "id IN (" . implode(",", $opids) . ")");
+		// loop through resources and look for plugins and snippets
+		$plids = array();
+		$snid = array();
+		while($row = $modx->db->getRow($ds)) {
+			if($row['type'] == '30') {
+				$plids[$i] = $row['resource'];
+			}
+			if($row['type'] == '40') {
+				$snids[$i] = $row['resource'];
+			}
+		}
+		// get guid
+		$ds = $modx->db->select('guid', $tbl_site_modules, "id='{$id}'");
+		$guid = $modx->db->getValue($ds);
+		// reset moduleguid for deleted resources
+		if(($cp = count($plids)) || ($cs = count($snids))) {
+			if($cp) {
+				$modx->db->update(array('moduleguid' => ''), $tbl_site_plugins, "id IN (" . implode(',', $plids) . ") AND moduleguid='{$guid}'");
+			}
+			if($cs) {
+				$modx->db->update(array('moduleguid' => ''), $tbl_site_plugins, "id IN (" . implode(',', $snids) . ") AND moduleguid='{$guid}'");
+			}
+			// reset cache
+			$modx->clearCache('full');
+		}
+		$modx->db->delete($tbl_site_module_depobj, "id IN (" . implode(',', $opids) . ")");
+		break;
 }
 
 // load record
 $rs = $modx->db->select('*', $tbl_site_modules, "id = '{$id}'");
 $content = $modx->db->getRow($rs);
-if (!$content) {
-    $modx->webAlertAndQuit("Module not found for id '{$id}'.");
+if(!$content) {
+	$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 }
 $_SESSION['itemname'] = $content['name'];
-if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 ?>
@@ -203,7 +203,7 @@ if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 				<tr>
 					<td valign="top" align="left">
 						<?php
-                        $ds = $modx->db->select("smd.id,COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) as name,
+						$ds = $modx->db->select("smd.id,COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) as name,
 				CASE smd.type
 					WHEN 10 THEN 'Chunk'
 					WHEN 20 THEN 'Document'
@@ -218,18 +218,18 @@ if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 					LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = '40'
 					LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = '50'
 					LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = '60'", "smd.module={$id}", "smd.type,name");
-                        include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-                        $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
-                        $grd->noRecordMsg = $_lang["no_records_found"];
-                        $grd->cssClass = "grid";
-                        $grd->columnHeaderClass = "gridHeader";
-                        $grd->itemClass = "gridItem";
-                        $grd->altItemClass = "gridAltItem";
-                        $grd->columns = $_lang["element_name"] . " ," . $_lang["type"];
-                        $grd->colTypes = "template:<input type='checkbox' name='depid[]' value='[+id+]'> [+value+]";
-                        $grd->fields = "name,type";
-                        echo $grd->render();
-                        ?>
+						include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+						$grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
+						$grd->noRecordMsg = $_lang["no_records_found"];
+						$grd->cssClass = "grid";
+						$grd->columnHeaderClass = "gridHeader";
+						$grd->itemClass = "gridItem";
+						$grd->altItemClass = "gridAltItem";
+						$grd->columns = $_lang["element_name"] . " ," . $_lang["type"];
+						$grd->colTypes = "template:<input type='checkbox' name='depid[]' value='[+id+]'> [+value+]";
+						$grd->fields = "name,type";
+						echo $grd->render();
+						?>
 					</td>
 					<td valign="top" style="width: 150px;">
 						<a class="btn btn-block btn-danger text-left" style="margin-bottom:10px;" href="javascript:;" onclick="removeDependencies();return false;"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['remove']; ?></a>

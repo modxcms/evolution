@@ -1,11 +1,11 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 // show debug information
-if (isset($enable_debug) && $enable_debug==true) {
-    ?>
+if(isset($enable_debug) && $enable_debug==true) {
+	?>
 	<script language="javascript">
 	//document.onload = removeDebug();
 
@@ -35,11 +35,8 @@ if (isset($enable_debug) && $enable_debug==true) {
 	}
 	</style>
 	<?php
-    $mtime = microtime();
-    $mtime = explode(" ", $mtime);
-    $mtime = $mtime[1] + $mtime[0];
-    $tend = $mtime;
-    $totaltime = ($tend - $tstart); ?>
+	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tend = $mtime; $totaltime = ($tend - $tstart);
+	?>
 	<div class='debug' id='debug' name='debug' onClick="removeDebugDiv();">
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
@@ -47,7 +44,7 @@ if (isset($enable_debug) && $enable_debug==true) {
 		  </tr>
 		  <tr>
 			<td width="70">Time taken</td>
-			<td width="80"><?php echo printf("%6.5f s", $totaltime); ?></td>
+			<td width="80"><?php echo printf ("%6.5f s", $totaltime); ?></td>
 		  </tr>
 		</table>
 	</div>

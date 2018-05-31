@@ -24,6 +24,7 @@ class udperms
      */
     public function checkPermissions()
     {
+
         global $udperms_allowroot;
         $modx = evolutionCMS();
 

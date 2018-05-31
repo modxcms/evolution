@@ -2,8 +2,8 @@
   <tr>
     <td><?php echo $_lang['smtp_auth_title'] ?></td>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('smtp_auth', '1'));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('smtp_auth', '0'));?>
+        <?php echo wrap_label($_lang['yes'],form_radio('smtp_auth','1' ));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('smtp_auth','0' ));?>
     </td>
   </tr>
   <tr>
@@ -15,12 +15,8 @@
     <td >
      <select name="smtp_secure" size="1" class="inputBox">
   <option value="none" ><?php echo $_lang['no'] ?></option>
-   <option value="ssl" <?php if ($smtp_secure == 'ssl') {
-    echo "selected='selected'";
-} ?> >SSL</option>
-  <option value="tls" <?php if ($smtp_secure == 'tls') {
-    echo "selected='selected'";
-} ?> >TLS</option>
+   <option value="ssl" <?php if($smtp_secure == 'ssl') echo "selected='selected'"; ?> >SSL</option>
+  <option value="tls" <?php if($smtp_secure == 'tls') echo "selected='selected'"; ?> >TLS</option>
  </select>
  <br />
   </td>

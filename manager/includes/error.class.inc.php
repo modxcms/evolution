@@ -22,6 +22,7 @@ class errorHandler
      */
     public function __construct()
     {
+
         $_lang = $this->include_lang('errormsg');
 
         $this->errors = array(

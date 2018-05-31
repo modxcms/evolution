@@ -241,3 +241,5 @@ $lang = array(
     "Select Thumbnails" => "Kies duimnaels",
     "Download files" => "Laai lêers af",
 );
+
+?>

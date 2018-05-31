@@ -6,7 +6,7 @@
   <tr>
     <td nowrap class="warning"><?php echo $_lang['rb_title']?><br><small>[(use_browser)]</small></td>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('use_browser', 1, 'id="rbRowOn"'));?><br />
+        <?php echo wrap_label($_lang['yes'],form_radio('use_browser', 1, 'id="rbRowOn"'));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('use_browser', 0, 'id="rbRowOff"'));?>
     </td>
   </tr>
@@ -235,9 +235,7 @@
         <?php
             // invoke OnMiscSettingsRender event
             $evtOut = $modx->invokeEvent('OnMiscSettingsRender');
-            if (is_array($evtOut)) {
-                echo implode("", $evtOut);
-            }
+            if(is_array($evtOut)) echo implode("",$evtOut);
         ?>
     </td>
   </tr>

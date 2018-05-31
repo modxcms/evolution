@@ -1,11 +1,8 @@
 <?php
 $userid = (int)$value;
 if (!isset($modx->filter->cache['ui'][$userid])) {
-    if ($userid < 0) {
-        $user = $modx->getWebUserInfo(abs($userid));
-    } else {
-        $user = $modx->getUserInfo($userid);
-    }
+    if ($userid < 0) $user = $modx->getWebUserInfo(abs($userid));
+    else             $user = $modx->getUserInfo($userid);
     $modx->filter->cache['ui'][$userid] = $user;
 } else {
     $user = $modx->filter->cache['ui'][$userid];

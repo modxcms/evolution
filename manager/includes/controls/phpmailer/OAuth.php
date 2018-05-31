@@ -111,7 +111,7 @@ class OAuth
     {
         return $this->provider->getAccessToken(
             $this->getGrant(),
-            array('refresh_token' => $this->oauthRefreshToken)
+            ['refresh_token' => $this->oauthRefreshToken]
         );
     }
 

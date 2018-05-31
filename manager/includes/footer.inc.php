@@ -1,11 +1,11 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 global $SystemAlertMsgQueque;
 // display system alert window if messages are available
-if (count($SystemAlertMsgQueque) > 0) {
-    include "sysalert.display.inc.php";
+if(count($SystemAlertMsgQueque) > 0) {
+	include "sysalert.display.inc.php";
 }
 ?>
 <script type='text/javascript'>
@@ -18,18 +18,18 @@ if (count($SystemAlertMsgQueque) > 0) {
 	});
 </script>
 <?php
-if (in_array($modx->manager->action, array(
-    85,
-    27,
-    4,
-    72,
-    13,
-    11,
-    12,
-    87,
-    88
+if(in_array($modx->manager->action, array(
+	85,
+	27,
+	4,
+	72,
+	13,
+	11,
+	12,
+	87,
+	88
 ))) {
-    echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
+	echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
 }
 ?>
 </body>

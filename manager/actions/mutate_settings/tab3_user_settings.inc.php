@@ -6,7 +6,7 @@
   <tr>
     <td nowrap class="warning"><?php echo $_lang['udperms_title'] ?><br><small>[(use_udperms)]</small></td>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('use_udperms', 1, 'id="udPermsOn"'));?><br />
+        <?php echo wrap_label($_lang['yes'],form_radio('use_udperms', 1, 'id="udPermsOn"'));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('use_udperms', 0, 'id="udPermsOff"'));?>
     </td>
   </tr>
@@ -55,8 +55,8 @@
   <tr>
     <td nowrap class="warning"><?php echo $_lang['email_method_title'] ?><br><small>[(email_method)]</small></td>
     <td>
-        <?php echo wrap_label($_lang['email_method_mail'], form_radio('email_method', 'mail', 'id="useMail"'));?><br />
-        <?php echo wrap_label($_lang['email_method_smtp'], form_radio('email_method', 'smtp', 'id="useSmtp"'));?>
+        <?php echo wrap_label($_lang['email_method_mail'],form_radio('email_method','mail','id="useMail"'));?><br />
+        <?php echo wrap_label($_lang['email_method_smtp'],form_radio('email_method','smtp','id="useSmtp"'));?>
         <div class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <?php include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/snippet_smtp.inc.php'); ?>
         </div>
@@ -144,8 +144,8 @@
   <tr>
     <td nowrap class="warning" valign="top"><?php echo $_lang['allow_multiple_emails_title'] ?><br><small>[(allow_multiple_emails)]</small></td>
     <td>
-      <?php echo wrap_label($_lang['yes'], form_radio('allow_multiple_emails', '1'));?><br />
-      <?php echo wrap_label($_lang['no'], form_radio('allow_multiple_emails', '0'));?>
+      <?php echo wrap_label($_lang['yes'],form_radio('allow_multiple_emails','1'));?><br />
+      <?php echo wrap_label($_lang['no'], form_radio('allow_multiple_emails','0'));?>
     </td>
   </tr>
   <tr>
@@ -157,9 +157,7 @@
         <?php
             // invoke OnUserSettingsRender event
             $evtOut = $modx->invokeEvent('OnUserSettingsRender');
-            if (is_array($evtOut)) {
-                echo implode("", $evtOut);
-            }
+            if(is_array($evtOut)) echo implode("",$evtOut);
         ?>
     </td>
   </tr>

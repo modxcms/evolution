@@ -1,5 +1,5 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_template')) {
@@ -13,7 +13,7 @@ $caption = $modx->db->escape($_POST['caption']);
 $type = $modx->db->escape($_POST['type']);
 $elements = $modx->db->escape($_POST['elements']);
 $default_text = $modx->db->escape($_POST['default_text']);
-$rank = isset($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
+$rank = isset ($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
 $display = $modx->db->escape($_POST['display']);
 $params = $modx->db->escape($_POST['params']);
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
@@ -213,8 +213,7 @@ function saveTemplateVarAccess()
 function saveDocumentAccessPermissons()
 {
     global $id, $newid;
-    $modx = evolutionCMS();
-    global $use_udperms;
+    $modx = evolutionCMS(); global $use_udperms;
 
     $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
 

@@ -1,5 +1,5 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('bk_manager')) {
@@ -274,12 +274,10 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                             </table>
                         </div>
                     </div>
-                    <?php if ($totaloverhead > 0) {
-                                    ?>
+                    <?php if ($totaloverhead > 0) { ?>
                         <br>
                         <p class="alert alert-danger"><?= $_lang['database_overhead'] ?></p>
-                    <?php
-                                } ?>
+                    <?php } ?>
                 </form>
             </div>
         </div>
@@ -425,33 +423,34 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                     <tbody>
                                     <?php
                                     arsort($files);
-                        while ($file = array_shift($files)) {
-                            $filename = substr($file, strrpos($file, '/') + 1);
-                            $filesize = $modx->nicesize(filesize($file));
+                                    while ($file = array_shift($files)) {
+                                        $filename = substr($file, strrpos($file, '/') + 1);
+                                        $filesize = $modx->nicesize(filesize($file));
 
-                            $file = fopen($file, "r");
-                            $count = 0;
-                            $details = array();
-                            while ($count < 11) {
-                                $line = fgets($file);
-                                foreach ($detailFields as $label) {
-                                    $fileLabel = '# ' . $label;
-                                    if (strpos($line, $fileLabel) !== false) {
-                                        $details[$label] = htmlentities(trim(str_replace(array(
+                                        $file = fopen($file, "r");
+                                        $count = 0;
+                                        $details = array();
+                                        while ($count < 11) {
+                                            $line = fgets($file);
+                                            foreach ($detailFields as $label) {
+                                                $fileLabel = '# ' . $label;
+                                                if (strpos($line, $fileLabel) !== false) {
+                                                    $details[$label] = htmlentities(trim(str_replace(array(
                                                         $fileLabel,
                                                         ':',
                                                         '`'
                                                     ), '', $line)), ENT_QUOTES, $modx_manager_charset);
-                                    }
-                                }
-                                $count++;
-                            };
-                            fclose($file);
+                                                }
+                                            }
+                                            $count++;
+                                        };
+                                        fclose($file);
 
-                            $tooltip = "Generation Time: " . $details["Generation Time"] . "\n";
-                            $tooltip .= "Server version: " . $details["Server version"] . "\n";
-                            $tooltip .= "PHP Version: " . $details["PHP Version"] . "\n";
-                            $tooltip .= "Host: " . $details["Host"] . "\n"; ?>
+                                        $tooltip = "Generation Time: " . $details["Generation Time"] . "\n";
+                                        $tooltip .= "Server version: " . $details["Server version"] . "\n";
+                                        $tooltip .= "PHP Version: " . $details["PHP Version"] . "\n";
+                                        $tooltip .= "Host: " . $details["Host"] . "\n";
+                                        ?>
                                         <tr>
                                             <td><?= $filename ?></td>
                                             <td><i class="<?= $_style['actions_help'] ?>" data-tooltip="<?= $tooltip ?>"></i></td>
@@ -462,7 +461,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                             <td><a href="javascript:;" onclick="confirmRevert('<?= $filename ?>');" title="<?= $tooltip ?>"><?= $_lang["bkmgr_restore_submit"] ?></a></td>
                                         </tr>
                                         <?php
-                        } ?>
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -623,9 +623,7 @@ class Mysqldumper
                 $insertdump = $lf;
                 $insertdump .= "INSERT INTO `{$tblval}` VALUES (";
                 $arr = $this->object2Array($row);
-                if (! is_array($arr)) {
-                    $arr = array();
-                }
+                if( ! is_array($arr)) $arr = array();
                 foreach ($arr as $key => $value) {
                     if (is_null($value)) {
                         $value = 'NULL';
@@ -736,8 +734,7 @@ class Mysqldumper
  */
 function import_sql($source, $result_code = 'import_ok')
 {
-    $modx = evolutionCMS();
-    global $e;
+    $modx = evolutionCMS(); global $e;
 
     $rs = null;
     if ($modx->getLockedElements() !== array()) {

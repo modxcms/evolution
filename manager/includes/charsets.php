@@ -65,41 +65,25 @@ $_['iso-8859-1']        = 'Western European (ISO) - iso-8859-1';
 $_['macintosh']         = 'Western European (Mac) - macintosh';
 $_['Windows-1252']      = 'Western European (Windows) - Windows-1252';
 
-if ($modx_charset     == 'euc-jp') {
-    $_['euc-jp']      = 'Japanese (EUC) - euc-jp';
-} elseif ($modx_charset == 'shift_jis') {
-    $_['shift_jis']   = 'Japanese (Shift-JIS) - shift_jis';
-} elseif ($modx_charset == 'iso-2022-jp') {
-    $_['iso-2022-jp'] = 'Japanese (JIS-Allow 1 byte Kana - SO/SI) - iso-2022-jp';
-} elseif ($modx_charset == 'csISO2022JP') {
-    $_['csISO2022JP'] = 'Japanese (JIS-Allow 1 byte Kana) - csISO2022JP';
-} elseif ($modx_charset == 'EUC-CN') {
-    $_['EUC-CN']            = 'Chinese Simplified (EUC) - EUC-CN';
-} elseif ($modx_charset == 'hz-gb-2312') {
-    $_['hz-gb-2312']        = 'Chinese Simplified (HZ) - hz-gb-2312';
-} elseif ($modx_charset == 'x-mac-chinesesimp') {
-    $_['x-mac-chinesesimp'] = 'Chinese Simplified (Mac) - x-mac-chinesesimp';
-} elseif ($modx_charset == 'x-Chinese-CNS') {
-    $_['x-Chinese-CNS']     = 'Chinese Traditional (CNS) - x-Chinese-CNS';
-} elseif ($modx_charset == 'x-Chinese-Eten') {
-    $_['x-Chinese-Eten']    = 'Chinese Traditional (Eten) - x-Chinese-Eten';
-} elseif ($modx_charset == 'x-mac-chinesetrad') {
-    $_['x-mac-chinesetrad'] = 'Chinese Traditional (Mac) - x-mac-chinesetrad';
-} elseif ($modx_charset == 'ks_c_5601-1987') {
-    $_['ks_c_5601-1987'] = 'Korean - ks_c_5601-1987';
-} elseif ($modx_charset == 'euc-kr') {
-    $_['euc-kr']         = 'Korean (EUC) - euc-kr';
-} elseif ($modx_charset == 'iso-2022-kr') {
-    $_['iso-2022-kr']    = 'Korean (ISO) - iso-2022-kr';
-} elseif ($modx_charset == 'Johab') {
-    $_['Johab']          = 'Korean (Johab) - Johab';
-} elseif ($modx_charset == 'x-mac-korean') {
-    $_['x-mac-korean']   = 'Korean (Mac) - x-mac-korean';
-}
+if($modx_charset     == 'euc-jp')      $_['euc-jp']      = 'Japanese (EUC) - euc-jp';
+elseif($modx_charset == 'shift_jis')   $_['shift_jis']   = 'Japanese (Shift-JIS) - shift_jis';
+elseif($modx_charset == 'iso-2022-jp') $_['iso-2022-jp'] = 'Japanese (JIS-Allow 1 byte Kana - SO/SI) - iso-2022-jp';
+elseif($modx_charset == 'csISO2022JP') $_['csISO2022JP'] = 'Japanese (JIS-Allow 1 byte Kana) - csISO2022JP';
+elseif($modx_charset == 'EUC-CN')            $_['EUC-CN']            = 'Chinese Simplified (EUC) - EUC-CN';
+elseif($modx_charset == 'hz-gb-2312')        $_['hz-gb-2312']        = 'Chinese Simplified (HZ) - hz-gb-2312';
+elseif($modx_charset == 'x-mac-chinesesimp') $_['x-mac-chinesesimp'] = 'Chinese Simplified (Mac) - x-mac-chinesesimp';
+elseif($modx_charset == 'x-Chinese-CNS')     $_['x-Chinese-CNS']     = 'Chinese Traditional (CNS) - x-Chinese-CNS';
+elseif($modx_charset == 'x-Chinese-Eten')    $_['x-Chinese-Eten']    = 'Chinese Traditional (Eten) - x-Chinese-Eten';
+elseif($modx_charset == 'x-mac-chinesetrad') $_['x-mac-chinesetrad'] = 'Chinese Traditional (Mac) - x-mac-chinesetrad';
+elseif($modx_charset == 'ks_c_5601-1987') $_['ks_c_5601-1987'] = 'Korean - ks_c_5601-1987';
+elseif($modx_charset == 'euc-kr')         $_['euc-kr']         = 'Korean (EUC) - euc-kr';
+elseif($modx_charset == 'iso-2022-kr')    $_['iso-2022-kr']    = 'Korean (ISO) - iso-2022-kr';
+elseif($modx_charset == 'Johab')          $_['Johab']          = 'Korean (Johab) - Johab';
+elseif($modx_charset == 'x-mac-korean')   $_['x-mac-korean']   = 'Korean (Mac) - x-mac-korean';
 
 $tpl = '<option value="%s" %s>%s</option>';
 $options = array();
-foreach ($_ as $value=>$label) {
+foreach($_ as $value=>$label) {
     $selected = $value===$modx_charset ? 'selected' : '';
     $options[] = sprintf($tpl, $value, $selected, $label);
 }

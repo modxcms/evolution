@@ -118,6 +118,7 @@ class Module_Categories_Manager extends Categories
      */
     public function updateElement($element, $element_id, $category_id)
     {
+
         $_update = array(
             'id'       => (int)$element_id,
             'category' => (int)$category_id

@@ -14,19 +14,14 @@
 
 require "core/autoload.php"; // Init MODX
 
-function returnNoPermissionsMessage($role)
-{
-    global $_lang;
-    echo sprintf($_lang['files_management_no_permission'], $role);
-    exit;
+function returnNoPermissionsMessage($role) {
+	global $_lang;
+	echo sprintf($_lang['files_management_no_permission'], $role);
+	exit;
 }
 
-if ($_GET['type'] == 'images' && !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_images')) {
-    returnNoPermissionsMessage('assets_images');
-}
-if ($_GET['type'] == 'files'  && !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_files')) {
-    returnNoPermissionsMessage('assets_files');
-}
+if( $_GET['type'] == 'images' && !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_images')) returnNoPermissionsMessage('assets_images');
+if( $_GET['type'] == 'files'  && !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_files'))  returnNoPermissionsMessage('assets_files');
 
 $browser = new browser($modx);
 $browser->action();

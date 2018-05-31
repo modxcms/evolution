@@ -7,7 +7,7 @@ include_once("./../../../../index.php");
 
 $modx->db->connect();
 
-if (empty($modx->config)) {
+if (empty ($modx->config)) {
     $modx->getSettings();
 }
 
@@ -285,7 +285,7 @@ if (isset($action)) {
 
                         break;
                     }
-                    case 'Chunk': {
+                    case 'Chunk' : {
 
                         $sql = $modx->db->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
@@ -347,6 +347,7 @@ if (isset($action)) {
                                 );
                             }
                         } else {
+
                             $sql = $modx->db->query('SELECT *
 							FROM ' . $modx->getFullTableName('site_snippets') . '
 							WHERE name="' . $name . '"
@@ -388,8 +389,8 @@ if (isset($action)) {
 
                         break;
                     }
-                    case 'Placeholder':
-                    case 'Tv': {
+                    case 'Placeholder' :
+                    case 'Tv' : {
                         $default_field = array(
                             'id',
                             'type',
@@ -479,7 +480,7 @@ if (isset($action)) {
             break;
         }
 
-        case 'movedocument': {
+        case 'movedocument' : {
             $json = array();
 
             if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
@@ -493,11 +494,11 @@ if (isset($action)) {
                     // find older parent
                     $parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
-                    $eventOut = $modx->invokeEvent('onBeforeMoveDocument', array(
+                    $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
                         'old_parent'  => $parentOld,
                         'new_parent'  => $parent,
-                    ));
+                    ]);
 
                     if (is_array($eventOut) && count($eventOut) > 0) {
                         $eventParent = array_pop($eventOut);
@@ -569,11 +570,11 @@ if (isset($action)) {
                             if (!$json['errors']) {
                                 $json['success'] = $_lang["actioncomplete"];
 
-                                $modx->invokeEvent('onAfterMoveDocument', array(
+                                $modx->invokeEvent('onAfterMoveDocument', [
                                     'id_document' => $id,
                                     'old_parent'  => $parentOld,
                                     'new_parent'  => $parent,
-                                ));
+                                ]);
                             }
                         }
                     }
