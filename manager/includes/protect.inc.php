@@ -77,8 +77,8 @@ modx_sanitize_gpc($_COOKIE);
 modx_sanitize_gpc($_REQUEST);
 
 foreach (array('PHP_SELF', 'HTTP_USER_AGENT', 'HTTP_REFERER', 'QUERY_STRING') as $key) {
-    $_SERVER[$key] = isset($_SERVER[$key]) ? htmlspecialchars($_SERVER[$key], ENT_QUOTES) : null;
+    $_SERVER[$key] = isset ($_SERVER[$key]) ? htmlspecialchars($_SERVER[$key], ENT_QUOTES) : null;
 }
 
 // Unset vars
-unset($key, $value);
+unset ($key, $value);

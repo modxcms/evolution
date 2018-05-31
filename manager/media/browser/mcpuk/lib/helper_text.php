@@ -12,24 +12,21 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class text
-{
+class text {
 
   /** Replace repeated white spaces to single space
     * @param string $string
     * @return string */
 
-    public static function clearWhitespaces($string)
-    {
+    static function clearWhitespaces($string) {
         return trim(preg_replace('/\s+/s', " ", $string));
     }
 
-    /** Normalize the string for HTML attribute value
-      * @param string $string
-      * @return string */
+  /** Normalize the string for HTML attribute value
+    * @param string $string
+    * @return string */
 
-    public static function htmlValue($string)
-    {
+    static function htmlValue($string) {
         return
             str_replace('"', "&quot;",
             str_replace("'", '&#39;',
@@ -38,12 +35,11 @@ class text
         $string))));
     }
 
-    /** Normalize the string for JavaScript string value
-      * @param string $string
-      * @return string */
+  /** Normalize the string for JavaScript string value
+    * @param string $string
+    * @return string */
 
-    public static function jsValue($string)
-    {
+    static function jsValue($string) {
         return
             preg_replace('/\r?\n/', "\\n",
             str_replace('"', "\\\"",
@@ -52,25 +48,22 @@ class text
         $string))));
     }
 
-    /** Normalize the string for XML tag content data
-      * @param string $string
-      * @param bool $cdata */
+  /** Normalize the string for XML tag content data
+    * @param string $string
+    * @param bool $cdata */
 
-    public static function xmlData($string, $cdata=false)
-    {
+    static function xmlData($string, $cdata=false) {
         $string = str_replace("]]>", "]]]]><![CDATA[>", $string);
-        if (!$cdata) {
+        if (!$cdata)
             $string = "<![CDATA[$string]]>";
-        }
         return $string;
     }
 
-    /** Returns compressed content of given CSS code
-      * @param string $code
-      * @return string */
+  /** Returns compressed content of given CSS code
+    * @param string $code
+    * @return string */
 
-    public static function compressCSS($code)
-    {
+    static function compressCSS($code) {
         $code = self::clearWhitespaces($code);
         $code = preg_replace('/ ?\{ ?/', "{", $code);
         $code = preg_replace('/ ?\} ?/', "}", $code);

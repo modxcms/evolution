@@ -1,21 +1,21 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-switch ($modx->manager->action) {
-    case 88:
-        if (!$modx->hasPermission('edit_web_user')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    case 87:
-        if (!$modx->hasPermission('new_web_user')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    default:
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+switch($modx->manager->action) {
+	case 88:
+		if(!$modx->hasPermission('edit_web_user')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	case 87:
+		if(!$modx->hasPermission('new_web_user')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	default:
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
@@ -23,67 +23,65 @@ $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
 $rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
-if ($username = $modx->db->getValue($rs)) {
-    $modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
+if($username = $modx->db->getValue($rs)) {
+	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 }
 // end check for lock
 
-if ($modx->manager->action == '88') {
-    // get user attributes
-    $rs = $modx->db->select('*', $modx->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
-    $userdata = $modx->db->getRow($rs);
-    if (!$userdata) {
-        $modx->webAlertAndQuit("No user returned!");
-    }
+if($modx->manager->action == '88') {
+	// get user attributes
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
+	$userdata = $modx->db->getRow($rs);
+	if(!$userdata) {
+		$modx->webAlertAndQuit("No user returned!");
+	}
 
-    // get user settings
-    $rs = $modx->db->select('*', $modx->getFullTableName('web_user_settings'), "webuser = '{$user}'");
-    $usersettings = array();
-    while ($row = $modx->db->getRow($rs)) {
-        $usersettings[$row['setting_name']] = $row['setting_value'];
-    }
-    extract($usersettings, EXTR_OVERWRITE);
+	// get user settings
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_user_settings'), "webuser = '{$user}'");
+	$usersettings = array();
+	while($row = $modx->db->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
+	extract($usersettings, EXTR_OVERWRITE);
 
-    // get user name
-    $rs = $modx->db->select('*', $modx->getFullTableName('web_users'), "id = '{$user}'");
-    $usernamedata = $modx->db->getRow($rs);
-    if (!$usernamedata) {
-        $modx->webAlertAndQuit("No user returned while getting username!");
-    }
-    $_SESSION['itemname'] = $usernamedata['username'];
+	// get user name
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_users'), "id = '{$user}'");
+	$usernamedata = $modx->db->getRow($rs);
+	if(!$usernamedata) {
+		$modx->webAlertAndQuit("No user returned while getting username!");
+	}
+	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
-    $userdata = array();
-    $usersettings = array();
-    $usernamedata = array();
-    $_SESSION['itemname'] = $_lang["new_web_user"];
+	$userdata = array();
+	$usersettings = array();
+	$usernamedata = array();
+	$_SESSION['itemname'] = $_lang["new_web_user"];
 }
 
 // avoid doubling htmlspecialchars (already encoded in DB)
-foreach ($userdata as $key => $val) {
-    $userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->config['modx_charset']);
+foreach($userdata as $key => $val) {
+	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->config['modx_charset']);
 };
 $usernamedata['username'] = html_entity_decode($usernamedata['username'], ENT_NOQUOTES, $modx->config['modx_charset']);
 
 // restore saved form
 $formRestored = false;
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
-    // restore post values
-    $userdata = array_merge($userdata, $_POST);
-    $userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
-    $usernamedata['username'] = $userdata['newusername'];
-    $usernamedata['oldusername'] = $_POST['oldusername'];
-    $usersettings = array_merge($usersettings, $userdata);
-    $usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
-    extract($usersettings, EXTR_OVERWRITE);
+if($modx->manager->hasFormValues()) {
+	$modx->manager->loadFormValues();
+	// restore post values
+	$userdata = array_merge($userdata, $_POST);
+	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
+	$usernamedata['username'] = $userdata['newusername'];
+	$usernamedata['oldusername'] = $_POST['oldusername'];
+	$usersettings = array_merge($usersettings, $userdata);
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
+	extract($usersettings, EXTR_OVERWRITE);
 }
 
 // include the country list language file
 $_country_lang = array();
-if ($manager_language != "english" && file_exists($modx->config['site_manager_path'] . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
-    include_once "lang/country/" . $manager_language . "_country.inc.php";
+if($manager_language != "english" && file_exists($modx->config['site_manager_path'] . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
+	include_once "lang/country/" . $manager_language . "_country.inc.php";
 } else {
-    include_once "lang/country/english_country.inc.php";
+	include_once "lang/country/english_country.inc.php";
 }
 asort($_country_lang);
 
@@ -191,12 +189,12 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 <form action="index.php?a=89" method="post" name="userform">
 	<?php
-    // invoke OnWUsrFormPrerender event
-    $evtOut = $modx->invokeEvent("OnWUsrFormPrerender", array("id" => $user));
-    if (is_array($evtOut)) {
-        echo implode("", $evtOut);
-    }
-    ?>
+	// invoke OnWUsrFormPrerender event
+	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender", array("id" => $user));
+	if(is_array($evtOut)) {
+		echo implode("", $evtOut);
+	}
+	?>
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
@@ -220,23 +218,19 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<td colspan="3"><span id="blocked" class="warning">
-							<?php if ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) {
-        ?>
+							<?php if($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) { ?>
 								<b><?php echo $_lang['user_is_blocked']; ?></b>
-							<?php
-    } ?>
+							<?php } ?>
 							</span>
 							<br /></td>
 					</tr>
-					<?php if (!empty($userdata['id'])) {
-        ?>
+					<?php if(!empty($userdata['id'])) { ?>
 						<tr id="showname" style="display: <?php echo ($modx->manager->action == '88' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
 							<td colspan="3"><i class="<?php echo $_style["icons_user"] ?>"></i>&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
 								<input type="hidden" name="oldusername" value="<?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?>" />
 							</td>
 						</tr>
-					<?php
-    } ?>
+					<?php } ?>
 					<tr id="editname" style="display:<?php echo $modx->manager->action == '87' || (isset($usernamedata['oldusername']) && $usernamedata['oldusername'] != $usernamedata['username']) ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang['username']; ?>:</th>
 						<td>&nbsp;</td>
@@ -330,10 +324,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 								<?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 								<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 								<?php
-                                foreach ($_country_lang as $key => $country) {
-                                    echo "<option value=\"$key\"" . (isset($chosenCountry) && $chosenCountry == $key ? ' selected' : '') . ">$country</option>";
-                                }
-                                ?>
+								foreach($_country_lang as $key => $country) {
+									echo "<option value=\"$key\"" . (isset($chosenCountry) && $chosenCountry == $key ? ' selected' : '') . ">$country</option>";
+								}
+								?>
 							</select></td>
 					</tr>
 					<tr>
@@ -357,8 +351,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<td>&nbsp;</td>
 						<td><textarea type="text" name="comment" class="inputBox" rows="5" onChange="documentDirty=true;"><?php echo $modx->htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea></td>
 					</tr>
-					<?php if ($modx->manager->action == '88') {
-                                    ?>
+					<?php if($modx->manager->action == '88') { ?>
 						<tr>
 							<th><?php echo $_lang['user_logincount']; ?>:</th>
 							<td>&nbsp;</td>
@@ -394,8 +387,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 								<i onClick="document.userform.blockedafter.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<?php
-                                }
-                    ?>
+					}
+					?>
 				</table>
 			</div>
 
@@ -503,40 +496,40 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				</table>
 			</div>
 			<?php
-            if ($use_udperms == 1) {
-                $groupsarray = array();
+			if($use_udperms == 1) {
 
-                if ($modx->manager->action == '88') { // only do this bit if the user is being edited
-                    $rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
-                    $groupsarray = $modx->db->getColumn('webgroup', $rs);
-                }
-                // retain selected user groups between post
-                if (is_array($_POST['user_groups'])) {
-                    foreach ($_POST['user_groups'] as $n => $v) {
-                        $groupsarray[] = $v;
-                    }
-                } ?>
+			$groupsarray = array();
+
+			if($modx->manager->action == '88') { // only do this bit if the user is being edited
+				$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
+				$groupsarray = $modx->db->getColumn('webgroup', $rs);
+			}
+			// retain selected user groups between post
+			if(is_array($_POST['user_groups'])) {
+				foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
+			}
+			?>
 			<div class="tab-page" id="tabPermissions">
 				<h2 class="tab"><?php echo $_lang['web_access_permissions'] ?></h2>
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabPermissions"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-                $rs = $modx->db->select('name, id', $modx->getFullTableName('webgroup_names'), '', 'name');
-                while ($row = $modx->db->getRow($rs)) {
-                    echo '<label><input type="checkbox" name="user_groups[]" value="' . $row['id'] . '"' . (in_array($row['id'], $groupsarray) ? ' checked="checked"' : '') . ' />' . $row['name'] . '</label><br />';
-                }
-            }
-                ?>
+				$rs = $modx->db->select('name, id', $modx->getFullTableName('webgroup_names'), '', 'name');
+				while($row = $modx->db->getRow($rs)) {
+					echo '<label><input type="checkbox" name="user_groups[]" value="' . $row['id'] . '"' . (in_array($row['id'], $groupsarray) ? ' checked="checked"' : '') . ' />' . $row['name'] . '</label><br />';
+				}
+				}
+				?>
 			</div>
 			<?php
-            // invoke OnWUsrFormRender event
-            $evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
-                "id" => $user
-            ));
-            if (is_array($evtOut)) {
-                echo implode("", $evtOut);
-            }
-            ?>
+			// invoke OnWUsrFormRender event
+			$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
+				"id" => $user
+			));
+			if(is_array($evtOut)) {
+				echo implode("", $evtOut);
+			}
+			?>
 		</div>
 	</div>
 	<input type="submit" name="save" style="display:none">

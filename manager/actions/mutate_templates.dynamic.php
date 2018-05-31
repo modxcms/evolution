@@ -1,21 +1,21 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-switch ($modx->manager->action) {
-    case 16:
-        if (!$modx->hasPermission('edit_template')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    case 19:
-        if (!$modx->hasPermission('new_template')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    default:
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+switch($modx->manager->action) {
+	case 16:
+		if(!$modx->hasPermission('edit_template')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	case 19:
+		if(!$modx->hasPermission('new_template')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	default:
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
@@ -23,8 +23,8 @@ $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
 // check to see the snippet editor isn't locked
-if ($lockedEl = $modx->elementIsLocked(1, $id)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['template']));
+if($lockedEl = $modx->elementIsLocked(1, $id)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['template']));
 }
 // end check for lock
 
@@ -32,24 +32,24 @@ if ($lockedEl = $modx->elementIsLocked(1, $id)) {
 $modx->lockElement(1, $id);
 
 $content = array();
-if (!empty($id)) {
-    $rs = $modx->db->select('*', $tbl_site_templates, "id='{$id}'");
-    $content = $modx->db->getRow($rs);
-    if (!$content) {
-        $modx->webAlertAndQuit("No database record has been found for this template.");
-    }
+if(!empty($id)) {
+	$rs = $modx->db->select('*', $tbl_site_templates, "id='{$id}'");
+	$content = $modx->db->getRow($rs);
+	if(!$content) {
+		$modx->webAlertAndQuit("No database record has been found for this template.");
+	}
 
-    $_SESSION['itemname'] = $content['templatename'];
-    if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-    }
+	$_SESSION['itemname'] = $content['templatename'];
+	if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+	}
 } else {
-    $_SESSION['itemname'] = $_lang["new_template"];
-    $content['category'] = (int)$_REQUEST['catid'];
+	$_SESSION['itemname'] = $_lang["new_template"];
+	$content['category'] = (int)$_REQUEST['catid'];
 }
 
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
+if($modx->manager->hasFormValues()) {
+	$modx->manager->loadFormValues();
 }
 
 $content = array_merge($content, $_POST);
@@ -98,12 +98,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 <form name="mutate" method="post" action="index.php">
 	<?php
-    // invoke OnTempFormPrerender event
-    $evtOut = $modx->invokeEvent("OnTempFormPrerender", array("id" => $id));
-    if (is_array($evtOut)) {
-        echo implode("", $evtOut);
-    }
-    ?>
+	// invoke OnTempFormPrerender event
+	$evtOut = $modx->invokeEvent("OnTempFormPrerender", array("id" => $id));
+	if(is_array($evtOut)) {
+		echo implode("", $evtOut);
+	}
+	?>
 	<input type="hidden" name="a" value="20">
 	<input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>">
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
@@ -132,14 +132,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2">
 							<?= $_lang['template_name'] ?>
-							<?php if ($id == $modx->config['default_template']) {
-        echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), $modx_manager_charset) . '</small>';
-    } ?>
+							<?php if($id == $modx->config['default_template']) {
+								echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), $modx_manager_charset) . '</small>';
+							} ?>
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
 								<input name="templatename" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
-								<?php if ($modx->hasPermission('save_role')): ?>
+								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_template'] . "\n" . $_lang['lock_template_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
 										<i class="fa fa-lock"></i>
@@ -162,11 +162,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
 								<option>&nbsp;</option>
 								<?php
-                                include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-                                foreach (getCategories() as $n => $v) {
-                                    echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
-                                }
-                                ?>
+								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+								foreach(getCategories() as $n => $v) {
+									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+								}
+								?>
 							</select>
 						</div>
 					</div>
@@ -177,7 +177,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</div>
 					</div>
 				</div>
-				<?php if ($modx->hasPermission('save_role')): ?>
+				<?php if($modx->hasPermission('save_role')): ?>
 					<div class="form-group">
 						<label>
 							<input name="selectable" type="checkbox"<?= ($selectable == 1 ? ' checked="checked"' : '') ?> /> <?= $_lang['template_selectable'] ?></label>
@@ -197,38 +197,38 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<input type="submit" name="save" style="display:none">
 
 			<?php
-            $selectedTvs = array();
-            if (!isset($_POST['assignedTv'])) {
-                $rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
+			$selectedTvs = array();
+			if(!isset($_POST['assignedTv'])) {
+				$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
                 LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
-                );
-                while ($row = $modx->db->getRow($rs)) {
-                    $selectedTvs[$row['tvid']] = $row;
-                }
-                $selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
-            }
+				);
+				while($row = $modx->db->getRow($rs)) {
+					$selectedTvs[$row['tvid']] = $row;
+				}
+				$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+			}
 
-            $unselectedTvs = array();
-            $rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
+			$unselectedTvs = array();
+			$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "", "category, tvcaption");
-            while ($row = $modx->db->getRow($rs)) {
-                $unselectedTvs[$row['tvid']] = $row;
-            }
+			while($row = $modx->db->getRow($rs)) {
+				$unselectedTvs[$row['tvid']] = $row;
+			}
 
-            // Catch checkboxes if form not validated
-            if (isset($_POST['assignedTv'])) {
-                $selectedTvs = array();
-                foreach ($_POST['assignedTv'] as $tvid) {
-                    if (isset($unselectedTvs[$tvid])) {
-                        $selectedTvs[$tvid] = $unselectedTvs[$tvid];
-                    }
-                };
-            }
+			// Catch checkboxes if form not validated
+			if(isset($_POST['assignedTv'])) {
+				$selectedTvs = array();
+				foreach($_POST['assignedTv'] as $tvid) {
+					if(isset($unselectedTvs[$tvid])) {
+						$selectedTvs[$tvid] = $unselectedTvs[$tvid];
+					}
+				};
+			}
 
-            $total = count($selectedTvs);
-            ?>
+			$total = count($selectedTvs);
+			?>
 		</div>
 
 		<div class="tab-page" id="tabAssignedTVs">
@@ -238,64 +238,65 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 			<div class="container container-body">
 				<?php
-                if ($total > 0) {
-                    echo '<p>' . $_lang['template_tv_msg'] . '</p>';
-                }
-                if ($modx->hasPermission('save_template') && $total > 1 && $id) {
-                    echo sprintf('<div class="form-group"><a class="btn btn-primary" href="index.php?a=117&amp;id=%s">%s</a></div>', $id, $_lang['template_tv_edit']);
-                }
+				if($total > 0) {
+					echo '<p>' . $_lang['template_tv_msg'] . '</p>';
+				}
+				if($modx->hasPermission('save_template') && $total > 1 && $id) {
+					echo sprintf('<div class="form-group"><a class="btn btn-primary" href="index.php?a=117&amp;id=%s">%s</a></div>', $id, $_lang['template_tv_edit']);
+				}
 
-                // Selected TVs
-                $tvList = '';
-                if ($total > 0) {
-                    $tvList .= '<ul>';
-                    foreach ($selectedTvs as $row) {
-                        $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
-                        $locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
-                        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" checked="checked" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
-                    }
-                    $tvList .= '</ul>';
-                } else {
-                    echo $_lang['template_no_tv'];
-                }
-                echo $tvList;
+				// Selected TVs
+				$tvList = '';
+				if($total > 0) {
+					$tvList .= '<ul>';
+					foreach($selectedTvs as $row) {
+						$desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
+						$locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
+						$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" checked="checked" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
+					}
+					$tvList .= '</ul>';
 
-                // Unselected TVs
-                $tvList = '<hr/><p>' . $_lang['template_notassigned_tv'] . '</p><ul>';
-                $preCat = '';
-                $insideUl = 0;
-                while ($row = array_shift($unselectedTvs)) {
-                    if (isset($selectedTvs[$row['tvid']])) {
-                        continue;
-                    } // Skip selected
-                    $row['category'] = stripslashes($row['category']); //pixelchutes
-                    if ($preCat !== $row['category']) {
-                        $tvList .= $insideUl ? '</ul>' : '';
-                        $tvList .= '<li><strong>' . $row['category'] . ($row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '') . '</strong><ul>';
-                        $insideUl = 1;
-                    }
+				} else {
+					echo $_lang['template_no_tv'];
+				}
+				echo $tvList;
 
-                    $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
-                    $locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
-                    $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
-                    $tvList .= '</li>';
+				// Unselected TVs
+				$tvList = '<hr/><p>' . $_lang['template_notassigned_tv'] . '</p><ul>';
+				$preCat = '';
+				$insideUl = 0;
+				while($row = array_shift($unselectedTvs)) {
+					if(isset($selectedTvs[$row['tvid']])) {
+						continue;
+					} // Skip selected
+					$row['category'] = stripslashes($row['category']); //pixelchutes
+					if($preCat !== $row['category']) {
+						$tvList .= $insideUl ? '</ul>' : '';
+						$tvList .= '<li><strong>' . $row['category'] . ($row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '') . '</strong><ul>';
+						$insideUl = 1;
+					}
 
-                    $preCat = $row['category'];
-                }
-                $tvList .= $insideUl ? '</ul>' : '';
-                $tvList .= '</ul>';
-                echo $tvList;
+					$desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
+					$locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
+					$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
+					$tvList .= '</li>';
 
-                ?>
+					$preCat = $row['category'];
+				}
+				$tvList .= $insideUl ? '</ul>' : '';
+				$tvList .= '</ul>';
+				echo $tvList;
+
+				?>
 			</div>
 		</div>
 
 		<?php
-        // invoke OnTempFormRender event
-        $evtOut = $modx->invokeEvent("OnTempFormRender", array("id" => $id));
-        if (is_array($evtOut)) {
-            echo implode("", $evtOut);
-        }
-        ?>
+		// invoke OnTempFormRender event
+		$evtOut = $modx->invokeEvent("OnTempFormRender", array("id" => $id));
+		if(is_array($evtOut)) {
+			echo implode("", $evtOut);
+		}
+		?>
 	</div>
 </form>

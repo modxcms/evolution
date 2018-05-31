@@ -5,7 +5,7 @@ $modx->db->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnWebPageInit');
 
-$vword = new VeriWord(148, 60);
+$vword = new VeriWord(148,60);
 $vword->output_image();
 $vword->destroy_image();
 
@@ -41,8 +41,7 @@ $vword->destroy_image();
 ## see sample.php for test and usage
 ## sample URL: http://www.program-ruti.org/veriword/
 ####
-class VeriWord
-{
+class VeriWord {
 
     /* path to font directory*/
     public $dir_font   = "ttf/";
@@ -53,8 +52,7 @@ class VeriWord
     public $im_height  = 0;
     public $im;
 
-    public function __construct($w=200, $h=80)
-    {
+    public function __construct($w=200, $h=80) {
         /* create session to set word for verification */
         $this->set_veriword();
         $this->dir_font = dirname(__FILE__) . '/' . $this->dir_font;
@@ -62,24 +60,21 @@ class VeriWord
         $this->im_height        = $h;
     }
 
-    public function set_veriword()
-    {
+    public function set_veriword() {
         /* create session variable for verification,
            you may change the session variable name */
         $this->word             = $this->pick_word();
         $_SESSION['veriword']   = $this->word;
     }
 
-    public function output_image()
-    {
+    public function output_image() {
         /* output the image as jpeg */
         $this->draw_image();
         header("Content-type: image/jpeg");
         imagejpeg($this->im);
     }
 
-    public function pick_word()
-    {
+    public function pick_word() {
         $modx = evolutionCMS();
         // set default words
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
@@ -87,27 +82,26 @@ class VeriWord
         $arr_words = array_filter(array_map('trim', explode(',', $words)));
 
         /* pick one randomly for text verification */
-        return (string) $arr_words[array_rand($arr_words)] . rand(10, 999);
+        return (string) $arr_words[array_rand($arr_words)].rand(10,999);
     }
 
-    public function draw_text()
-    {
+    public function draw_text() {
         $dir = dir($this->dir_font);
         $fontstmp = array();
         while (false !== ($file = $dir->read())) {
-            if (substr($file, -4) == '.ttf') {
-                $fontstmp[] = $this->dir_font . $file;
+            if(substr($file, -4) == '.ttf') {
+                $fontstmp[] = $this->dir_font.$file;
             }
         }
         $dir->close();
         $text_font = (string) $fontstmp[array_rand($fontstmp)];
 
         /* angle for text inclination */
-        $text_angle = rand(-9, 9);
+        $text_angle = rand(-9,9);
         /* initial text size */
         $text_size  = 30;
         /* calculate text width and height */
-        $box        = imagettfbbox($text_size, $text_angle, $text_font, $this->word);
+        $box        = imagettfbbox ( $text_size, $text_angle, $text_font, $this->word);
         $text_width = $box[2]-$box[0]; //text width
         $text_height= $box[5]-$box[3]; //text height
 
@@ -115,7 +109,7 @@ class VeriWord
         $text_size  = round((20 * $this->im_width)/$text_width);
 
         /* recalculate text width and height */
-        $box        = imagettfbbox($text_size, $text_angle, $text_font, $this->word);
+        $box        = imagettfbbox ( $text_size, $text_angle, $text_font, $this->word);
         $text_width = $box[2]-$box[0]; //text width
         $text_height= $box[5]-$box[3]; //text height
 
@@ -124,14 +118,14 @@ class VeriWord
         $text_y         = ($this->im_height - $text_height)/2;
 
         /* create canvas for text drawing */
-        $im_text        = imagecreate($this->im_width, $this->im_height);
-        $bg_color       = imagecolorallocate($im_text, 255, 255, 255);
+        $im_text        = imagecreate ($this->im_width, $this->im_height);
+        $bg_color       = imagecolorallocate ($im_text, 255, 255, 255);
 
         /* pick color for text */
-        $text_color     = imagecolorallocate($im_text, 0, 51, 153);
+        $text_color     = imagecolorallocate ($im_text, 0, 51, 153);
 
         /* draw text into canvas */
-        imagettftext($im_text,
+        imagettftext    (   $im_text,
             $text_size,
             $text_angle,
             $text_x,
@@ -146,20 +140,19 @@ class VeriWord
     }
 
 
-    public function draw_image()
-    {
+    public function draw_image() {
 
         /* pick one background image randomly from image directory */
-        $img_file       = $this->dir_noise . "noise" . rand(1, 4) . ".jpg";
+        $img_file       = $this->dir_noise."noise".rand(1,4).".jpg";
 
         /* create "noise" background image from your image stock*/
-        $noise_img      = @imagecreatefromjpeg($img_file);
+        $noise_img      = @imagecreatefromjpeg ($img_file);
         $noise_width    = imagesx($noise_img);
         $noise_height   = imagesy($noise_img);
 
         /* resize the background image to fit the size of image output */
-        $this->im       = imagecreatetruecolor($this->im_width, $this->im_height);
-        imagecopyresampled($this->im,
+        $this->im       = imagecreatetruecolor($this->im_width,$this->im_height);
+        imagecopyresampled ($this->im,
             $noise_img,
             0, 0, 0, 0,
             $this->im_width,
@@ -168,18 +161,20 @@ class VeriWord
             $noise_height);
 
         /* put text image into background image */
-        imagecopymerge($this->im,
+        imagecopymerge (    $this->im,
             $this->draw_text(),
             0, 0, 0, 0,
             $this->im_width,
             $this->im_height,
-            70);
+            70 );
 
         return $this->im;
     }
 
-    public function destroy_image()
-    {
+    public function destroy_image() {
+
         imagedestroy($this->im);
+
     }
+
 }

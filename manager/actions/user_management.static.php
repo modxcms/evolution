@@ -1,22 +1,22 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('edit_user')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!$modx->hasPermission('edit_user')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // initialize page view state - the $_PAGE object
 $modx->manager->initPageViewState();
 
 // get and save search string
-if ($_REQUEST['op'] == 'reset') {
-    $query = '';
-    $_PAGE['vs']['search'] = '';
+if($_REQUEST['op'] == 'reset') {
+	$query = '';
+	$_PAGE['vs']['search'] = '';
 } else {
-    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-    $sqlQuery = $modx->db->escape($query);
-    $_PAGE['vs']['search'] = $query;
+	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
+	$sqlQuery = $modx->db->escape($query);
+	$_PAGE['vs']['search'] = $query;
 }
 
 // get & save listmode
@@ -120,55 +120,55 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-                    $where = "";
-                    if (!$modx->hasPermission('save_role')) {
-                        $where .= (empty($where) ? "" : " AND ") . "mua.role != 1";
-                    }
-                    if (!empty($sqlQuery)) {
-                        $where .= (empty($where) ? "" : " AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
-                    }
-                    $ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin", $modx->getFullTableName('manager_users') . " AS mu 
+					$where = "";
+					if(!$modx->hasPermission('save_role')) {
+						$where .= (empty($where) ? "" : " AND ") . "mua.role != 1";
+					}
+					if(!empty($sqlQuery)) {
+						$where .= (empty($where) ? "" : " AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
+					}
+					$ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin", $modx->getFullTableName('manager_users') . " AS mu 
 			INNER JOIN " . $modx->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
 			LEFT JOIN " . $modx->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
-                    include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-                    $grd = new DataGrid('', $ds, $modx->config['number_of_results']); // set page size to 0 t show all items
-                    $grd->noRecordMsg = $_lang["no_records_found"];
-                    $grd->cssClass = "table data";
-                    $grd->columnHeaderClass = "tableHeader";
-                    $grd->itemClass = "tableItem";
-                    $grd->altItemClass = "tableAltItem";
-                    $grd->fields = "id,username,fullname,role,email,gender,blocked,thislogin";
-                    $grd->columns = implode(',', array(
-                        $_lang["icon"],
-                        $_lang["name"],
-                        $_lang["user_full_name"],
-                        $_lang['role'],
-                        $_lang["email"],
-                        $_lang["user_gender"],
-                        $_lang["user_block"],
-                        $_lang["login_button"]
-                    ));
-                    $grd->colWidths = "1%,,,,,,1%,1%";
-                    $grd->colAligns = "center,,,,,center,center,right' nowrap='nowrap";
-                    $grd->colTypes = implode('||', array(
-                        'template:<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu([+id+],event);" title="' . $_lang['click_to_context'] . '"><i class="' . $_style['icons_user'] . '"></i></a>',
-                        'template:<a href="index.php?a=12&id=[+id+]" title="' . $_lang['click_to_edit_title'] . '">[+value+]</a>',
-                        'template:[+fullname+]',
-                        'template:[+role+]',
-                        'template:[+email+]',
-                        'template:[+gender+]',
-                        'template:[+blocked+]',
-                        'date: ' . $modx->toDateFormat('[+thislogin+]', 'formatOnly') . ' %H:%M'
-                    ));
-                    if ($listmode == '1') {
-                        $grd->pageSize = 0;
-                    }
-                    if ($_REQUEST['op'] == 'reset') {
-                        $grd->pageNumber = 1;
-                    }
-                    // render grid
-                    echo $grd->render();
-                    ?>
+					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+					$grd = new DataGrid('', $ds, $modx->config['number_of_results']); // set page size to 0 t show all items
+					$grd->noRecordMsg = $_lang["no_records_found"];
+					$grd->cssClass = "table data";
+					$grd->columnHeaderClass = "tableHeader";
+					$grd->itemClass = "tableItem";
+					$grd->altItemClass = "tableAltItem";
+					$grd->fields = "id,username,fullname,role,email,gender,blocked,thislogin";
+					$grd->columns = implode(',', array(
+						$_lang["icon"],
+						$_lang["name"],
+						$_lang["user_full_name"],
+						$_lang['role'],
+						$_lang["email"],
+						$_lang["user_gender"],
+						$_lang["user_block"],
+						$_lang["login_button"]
+					));
+					$grd->colWidths = "1%,,,,,,1%,1%";
+					$grd->colAligns = "center,,,,,center,center,right' nowrap='nowrap";
+					$grd->colTypes = implode('||', array(
+						'template:<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu([+id+],event);" title="' . $_lang['click_to_context'] . '"><i class="' . $_style['icons_user'] . '"></i></a>',
+						'template:<a href="index.php?a=12&id=[+id+]" title="' . $_lang['click_to_edit_title'] . '">[+value+]</a>',
+						'template:[+fullname+]',
+						'template:[+role+]',
+						'template:[+email+]',
+						'template:[+gender+]',
+						'template:[+blocked+]',
+						'date: ' . $modx->toDateFormat('[+thislogin+]', 'formatOnly') . ' %H:%M'
+					));
+					if($listmode == '1') {
+						$grd->pageSize = 0;
+					}
+					if($_REQUEST['op'] == 'reset') {
+						$grd->pageNumber = 1;
+					}
+					// render grid
+					echo $grd->render();
+					?>
 				</div>
 			</div>
 		</div>

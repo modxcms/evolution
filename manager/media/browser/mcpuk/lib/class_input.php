@@ -12,34 +12,31 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class input
-{
+class input {
 
   /** Filtered $_GET array
     * @var array */
     public $get;
 
-    /** Filtered $_POST array
-      * @var array */
+  /** Filtered $_POST array
+    * @var array */
     public $post;
 
-    /** Filtered $_COOKIE array
-      * @var array */
+  /** Filtered $_COOKIE array
+    * @var array */
     public $cookie;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->get = &$_GET;
         $this->post = &$_POST;
         $this->cookie = &$_COOKIE;
     }
 
-    /** Magic method to get non-public properties like public.
-      * @param string $property
-      * @return mixed */
+  /** Magic method to get non-public properties like public.
+    * @param string $property
+    * @return mixed */
 
-    public function __get($property)
-    {
+    public function __get($property) {
         return property_exists($this, $property) ? $this->$property : null;
     }
 }

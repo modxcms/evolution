@@ -1,9 +1,9 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('access_permissions')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!$modx->hasPermission('access_permissions')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // Get table names (alphabetical)
@@ -17,25 +17,25 @@ $tbl_site_content = $modx->getFullTableName('site_content');
 
 // find all document groups, for the select :)
 $rs = $modx->db->select('*', $tbl_documentgroup_names, '', 'name');
-if ($modx->db->getRecordCount($rs) < 1) {
-    $docgroupselector = '[no groups to add]';
+if($modx->db->getRecordCount($rs) < 1) {
+	$docgroupselector = '[no groups to add]';
 } else {
-    $docgroupselector = '<select name="docgroup">' . "\n";
-    while ($row = $modx->db->getRow($rs)) {
-        $docgroupselector .= "\t" . '<option value="' . $row['id'] . '">' . $row['name'] . "</option>\n";
-    }
-    $docgroupselector .= "</select>\n";
+	$docgroupselector = '<select name="docgroup">' . "\n";
+	while($row = $modx->db->getRow($rs)) {
+		$docgroupselector .= "\t" . '<option value="' . $row['id'] . '">' . $row['name'] . "</option>\n";
+	}
+	$docgroupselector .= "</select>\n";
 }
 
 $rs = $modx->db->select('*', $tbl_membergroup_names, '', 'name');
-if ($modx->db->getRecordCount($rs) < 1) {
-    $usrgroupselector = '[no user groups]';
+if($modx->db->getRecordCount($rs) < 1) {
+	$usrgroupselector = '[no user groups]';
 } else {
-    $usrgroupselector = '<select name="usergroup">' . "\n";
-    while ($row = $modx->db->getRow($rs)) {
-        $usrgroupselector .= "\t" . '<option value="' . $row['id'] . '">' . $row['name'] . "</option>\n";
-    }
-    $usrgroupselector .= "</select>\n";
+	$usrgroupselector = '<select name="usergroup">' . "\n";
+	while($row = $modx->db->getRow($rs)) {
+		$usrgroupselector .= "\t" . '<option value="' . $row['id'] . '">' . $row['name'] . "</option>\n";
+	}
+	$usrgroupselector .= "</select>\n";
 }
 
 ?>
@@ -96,23 +96,24 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				</form>
 			</div>
 			<?php
-            $rs = $modx->db->select('groupnames.*, users.id AS user_id, users.username user_name', $tbl_membergroup_names . ' AS groupnames
+			$rs = $modx->db->select('groupnames.*, users.id AS user_id, users.username user_name', $tbl_membergroup_names . ' AS groupnames
 			LEFT JOIN ' . $tbl_member_groups . ' AS groups ON groups.user_group = groupnames.id
 			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups.member', '', 'groupnames.name, user_name');
-            if ($modx->db->getRecordCount($rs) < 1) {
-                ?>
+			if($modx->db->getRecordCount($rs) < 1) {
+				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
 				<?php
-            } else {
-                ?>
+			} else {
+			?>
 			<div class="form-group">
 				<?php
-                $pid = '';
-                while ($row = $modx->db->getRow($rs)) {
-                    if ($pid != $row['id']) {
-                        if ($pid != '') {
-                            echo '</div><div class="form-group">';
-                        } ?>
+				$pid = '';
+				while($row = $modx->db->getRow($rs)) {
+					if($pid != $row['id']) {
+						if($pid != '') {
+							echo '</div><div class="form-group">';
+						}
+						?>
 						<form method="post" action="index.php" name="accesspermissions">
 							<input type="hidden" name="a" value="41" />
 							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
@@ -127,20 +128,21 @@ if ($modx->db->getRecordCount($rs) < 1) {
 						</form>
 						<?= $_lang['access_permissions_users_in_group'] ?>
 						<?php
-                    }
-                    if (!$row['user_id']) {
-                        ?>
+					}
+					if(!$row['user_id']) {
+						?>
 						<i><?= $_lang['access_permissions_no_users_in_group'] ?></i>
 						<?php
-                        $pid = $row['id'];
-                        continue;
-                    } ?>
+						$pid = $row['id'];
+						continue;
+					}
+					?>
 					<?= ($pid == $row['id'] ? ', ' : '') ?><a href="index.php?a=12&id=<?= $row['user_id'] ?>"><?= $row['user_name'] ?></a>
 					<?php
-                    $pid = $row['id'];
-                }
-            }
-                ?>
+					$pid = $row['id'];
+				}
+				}
+				?>
 			</div>
 		</div>
 	</div>
@@ -165,23 +167,24 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				</form>
 			</div>
 			<?php
-            $rs = $modx->db->select('dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title', $tbl_documentgroup_names . ' AS dgnames
+			$rs = $modx->db->select('dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title', $tbl_documentgroup_names . ' AS dgnames
 			LEFT JOIN ' . $tbl_document_groups . ' AS dg ON dg.document_group = dgnames.id
 			LEFT JOIN ' . $tbl_site_content . ' AS sc ON sc.id = dg.document', '', 'dgnames.name, sc.id');
-            if ($modx->db->getRecordCount($rs) < 1) {
-                ?>
+			if($modx->db->getRecordCount($rs) < 1) {
+				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
 				<?php
-            } else {
-                ?>
+			} else {
+			?>
 			<div class="form-group">
 				<?php
-                $pid = '';
-                while ($row = $modx->db->getRow($rs)) {
-                    if ($pid != $row['id']) {
-                        if ($pid != '') {
-                            echo '</div><div class="form-group">';
-                        } ?>
+				$pid = '';
+				while($row = $modx->db->getRow($rs)) {
+					if($pid != $row['id']) {
+						if($pid != '') {
+							echo '</div><div class="form-group">';
+						}
+						?>
 						<form method="post" action="index.php" name="accesspermissions">
 							<input type="hidden" name="a" value="41" />
 							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
@@ -196,20 +199,21 @@ if ($modx->db->getRecordCount($rs) < 1) {
 						</form>
 						<?= $_lang['access_permissions_resources_in_group'] ?>
 						<?php
-                    }
-                    if (!$row['doc_id']) {
-                        ?>
+					}
+					if(!$row['doc_id']) {
+						?>
 						<i><?= $_lang['access_permissions_no_resources_in_group'] ?></i>
 						<?php
-                        $pid = $row['id'];
-                        continue;
-                    } ?>
+						$pid = $row['id'];
+						continue;
+					}
+					?>
 					<?= ($pid == $row['id'] ? ', ' : '') ?><a href="index.php?a=3&id=<?= $row['doc_id'] ?>" title="<?= $modx->htmlspecialchars($row['doc_title']) ?>"><?= $row['doc_id'] ?></a>
 					<?php
-                    $pid = $row['id'];
-                }
-            }
-                ?>
+					$pid = $row['id'];
+				}
+				}
+				?>
 			</div>
 		</div>
 	</div>
@@ -221,16 +225,16 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		<div class="container container-body">
 			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_links_tab'] ?></p>
 			<?php
-            // User/Document Group Links
-            $rs = $modx->db->select('groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name', $tbl_membergroup_names . ' AS groupnames
+			// User/Document Group Links
+			$rs = $modx->db->select('groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name', $tbl_membergroup_names . ' AS groupnames
 			LEFT JOIN ' . $tbl_membergroup_access . ' AS groupacc ON groupacc.membergroup = groupnames.id
 			LEFT JOIN ' . $tbl_documentgroup_names . ' AS dgnames ON dgnames.id = groupacc.documentgroup', '', 'name, dg_name');
-            if ($modx->db->getRecordCount($rs) < 1) {
-                ?>
+			if($modx->db->getRecordCount($rs) < 1) {
+				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
 				<?php
-            } else {
-                ?>
+			} else {
+				?>
 				<div class="form-group">
 					<b><?= $_lang["access_permissions_group_link"] ?></b>
 					<form method="post" action="index.php" name="accesspermissions">
@@ -246,35 +250,38 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				<hr>
 				<ul>
 					<?php
-                    $pid = '';
-                while ($row = $modx->db->getRow($rs)) {
-                    if ($row['id'] != $pid) {
-                        if ($pid != '') {
-                            echo '</ul></li>';
-                        } // close previous one ?>
+					$pid = '';
+					while($row = $modx->db->getRow($rs)) {
+						if($row['id'] != $pid) {
+							if($pid != '') {
+								echo '</ul></li>';
+							} // close previous one
+							?>
 							<li><b><?= $row['name'] ?></b></li>
 							<?php
-                            if (!$row['dg_id']) {
-                                echo '<i>' . $_lang['no_groups_found'] . '</i></li>';
-                                $pid = '';
-                                continue;
-                            } else {
-                                echo '<ul>';
-                            }
-                    }
-                    if (!$row['dg_id']) {
-                        continue;
-                    } ?>
+							if(!$row['dg_id']) {
+								echo '<i>' . $_lang['no_groups_found'] . '</i></li>';
+								$pid = '';
+								continue;
+							} else {
+								echo '<ul>';
+							}
+						}
+						if(!$row['dg_id']) {
+							continue;
+						}
+						?>
 						<li><?= $row['dg_name'] ?>
 							<small><i>(<a class="text-danger" href="index.php?a=41&coupling=<?= $row['link_id'] ?>&operation=remove_document_group_from_user_group"><?= $_lang['remove'] ?></a>)</i></small>
 						</li>
 						<?php
-                        $pid = $row['id'];
-                } ?>
+						$pid = $row['id'];
+					}
+					?>
 				</ul>
 				<?php
-            }
-            ?>
+			}
+			?>
 		</div>
 	</div>
 

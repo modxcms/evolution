@@ -423,6 +423,7 @@ class synccache
      */
     public function php_strip_whitespace($source)
     {
+
         $source = trim($source);
         if (substr($source, 0, 5) !== '<?php') {
             $source = '<?php ' . $source;
@@ -449,10 +450,10 @@ class synccache
             list($type, $text) = $token;
 
             switch ($type) {
-                case T_COMMENT:
+                case T_COMMENT    :
                 case T_DOC_COMMENT:
                     break;
-                case T_WHITESPACE:
+                case T_WHITESPACE :
                     if ($prev_token != T_END_HEREDOC) {
                         $_ = trim($_);
                     }
@@ -464,13 +465,13 @@ class synccache
                         }
                     }
                     break;
-                case T_IS_EQUAL:
-                case T_IS_IDENTICAL:
-                case T_IS_NOT_EQUAL:
-                case T_DOUBLE_ARROW:
-                case T_BOOLEAN_AND:
-                case T_BOOLEAN_OR:
-                case T_START_HEREDOC:
+                case T_IS_EQUAL :
+                case T_IS_IDENTICAL :
+                case T_IS_NOT_EQUAL :
+                case T_DOUBLE_ARROW :
+                case T_BOOLEAN_AND :
+                case T_BOOLEAN_OR :
+                case T_START_HEREDOC :
                     if ($prev_token != T_START_HEREDOC) {
                         $_ = trim($_);
                     }

@@ -26,12 +26,12 @@ $_CONFIG = array(
 
     'theme' => "evo",
 
-    'uploadURL' => rtrim($modx->config['rb_base_url'], '/'),
-    'uploadDir' => rtrim($modx->config['rb_base_dir'], '/'),
+    'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
     'siteURL' => $modx->config['site_url'],
-    'assetsURL' => rtrim($modx->config['rb_base_url'], '/'),
-    'dirPerms' => intval($modx->config['new_folder_permissions'], 8),
-    'filePerms' => intval($modx->config['new_file_permissions'], 8),
+    'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'dirPerms' => intval($modx->config['new_folder_permissions'],8),
+    'filePerms' => intval($modx->config['new_file_permissions'],8),
     'maxfilesize' => $settings['upload_maxsize'],
     'denyUpdateCheck' => true,
 
@@ -58,14 +58,14 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'   =>  str_replace(',', ' ', $modx->config['upload_files']),
-        'flash'   =>  str_replace(',', ' ', $modx->config['upload_flash']),
-        'images'  =>  str_replace(',', ' ', $modx->config['upload_images']),
+        'files'   =>  str_replace(',',' ',$modx->config['upload_files']),
+        'flash'   =>  str_replace(',',' ',$modx->config['upload_flash']),
+        'images'  =>  str_replace(',',' ',$modx->config['upload_images']),
 
         // TinyMCE types
-        'file'    =>  str_replace(',', ' ', $modx->config['upload_files']),
-        'media'   =>  str_replace(',', ' ', $modx->config['upload_media']),
-        'image'   =>  str_replace(',', ' ', $modx->config['upload_images']),
+        'file'    =>  str_replace(',',' ',$modx->config['upload_files']),
+        'media'   =>  str_replace(',',' ',$modx->config['upload_media']),
+        'image'   =>  str_replace(',',' ',$modx->config['upload_images']),
     ),
     'dirnameChangeChars' => array(
         ' ' => "_",

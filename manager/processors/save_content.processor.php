@@ -36,10 +36,10 @@ $hidemenu = (int) $_POST['hidemenu'];
 $aliasvisible = $_POST['alias_visible'];
 
 /************* webber ********/
-$sd = isset($_POST['dir']) ? '&dir=' . $_POST['dir'] : '&dir=DESC';
-$sb = isset($_POST['sort']) ? '&sort=' . $_POST['sort'] : '&sort=pub_date';
-$pg = isset($_POST['page']) ? '&page=' . (int) $_POST['page'] : '';
-$add_path = $sd . $sb . $pg;
+$sd = isset($_POST['dir']) ? '&dir='.$_POST['dir'] : '&dir=DESC';
+$sb = isset($_POST['sort']) ? '&sort='.$_POST['sort'] : '&sort=pub_date';
+$pg = isset($_POST['page']) ? '&page='.(int) $_POST['page'] : '';
+$add_path = $sd.$sb.$pg;
 
 
 
@@ -134,26 +134,28 @@ if ($friendly_urls) {
         }
         //end webber
     }
-} elseif ($alias) {
+}
+elseif ($alias) {
     $alias = $modx->stripAlias($alias);
 }
 
 // determine published status
 $currentdate = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 
-if (empty($pub_date)) {
+if (empty ($pub_date)) {
     $pub_date = 0;
 } else {
     $pub_date = $modx->toTimeStamp($pub_date);
 
     if ($pub_date < $currentdate) {
         $published = 1;
-    } elseif ($pub_date > $currentdate) {
+    }
+    elseif ($pub_date > $currentdate) {
         $published = 0;
     }
 }
 
-if (empty($unpub_date)) {
+if (empty ($unpub_date)) {
     $unpub_date = 0;
 } else {
     $unpub_date = $modx->toTimeStamp($unpub_date);
@@ -193,15 +195,15 @@ $rs = $modx->db->select(
         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
         LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
-    "tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ")",
+    "tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)".((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)").")",
     "tv.rank"
     );
 while ($row = $modx->db->getRow($rs)) {
     $tmplvar = '';
     switch ($row['type']) {
         case 'url':
-            $tmplvar = $_POST["tv" . $row['id']];
-            if ($_POST["tv" . $row['id'] . '_prefix'] != '--') {
+            $tmplvar = $_POST["tv".$row['id']];
+            if ($_POST["tv".$row['id'].'_prefix'] != '--') {
                 $tmplvar = str_replace(array(
                     "feed://",
                     "ftp://",
@@ -209,23 +211,23 @@ while ($row = $modx->db->getRow($rs)) {
                     "https://",
                     "mailto:"
                 ), "", $tmplvar);
-                $tmplvar = $_POST["tv" . $row['id'] . '_prefix'] . $tmplvar;
+                $tmplvar = $_POST["tv".$row['id'].'_prefix'].$tmplvar;
             }
         break;
         case 'file':
-            $tmplvar = $_POST["tv" . $row['id']];
+            $tmplvar = $_POST["tv".$row['id']];
         break;
         default:
-            if (is_array($_POST["tv" . $row['id']])) {
+            if (is_array($_POST["tv".$row['id']])) {
                 // handles checkboxes & multiple selects elements
                 $feature_insert = array();
-                $lst = $_POST["tv" . $row['id']];
-                while (list($featureValue, $feature_item) = each($lst)) {
+                $lst = $_POST["tv".$row['id']];
+                while (list ($featureValue, $feature_item) = each($lst)) {
                     $feature_insert[count($feature_insert)] = $feature_item;
                 }
                 $tmplvar = implode("||", $feature_insert);
             } else {
-                $tmplvar = $_POST["tv" . $row['id']];
+                $tmplvar = $_POST["tv".$row['id']];
             }
         break;
     }
@@ -248,12 +250,13 @@ if ($actionToTake != "new") {
     if (!$existingDocument) {
         $modx->webAlertAndQuit($_lang["error_no_results"]);
     }
+
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
 if ($use_udperms == 1) {
     if ($existingDocument['parent'] != $parent) {
-        include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
+        include_once MODX_MANAGER_PATH."processors/user_documents_permissions.class.php";
         $udperms = new udperms();
         $udperms->user = $modx->getLoginUserID();
         $udperms->document = $parent;
@@ -272,10 +275,11 @@ if ($use_udperms == 1) {
 }
 
 switch ($actionToTake) {
-        case 'new':
+        case 'new' :
 
             // invoke OnBeforeDocFormSave event
-            switch ($modx->config['docid_incrmnt_method']) {
+            switch($modx->config['docid_incrmnt_method'])
+            {
             case '1':
                 $from = "{$tbl_site_content} AS T0 LEFT JOIN {$tbl_site_content} AS T1 ON T0.id + 1 = T1.id";
                 $where = "T1.id IS NULL";
@@ -343,9 +347,8 @@ switch ($actionToTake) {
             "alias_visible"    => $aliasvisible
         );
 
-        if ($id != '') {
+        if ($id != '')
             $dbInsert["id"] = $id;
-        }
 
         $key = $modx->db->insert($dbInsert, $tbl_site_content);
 
@@ -369,11 +372,11 @@ switch ($actionToTake) {
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
                 list($group) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
-                $new_groups[] = '(' . (int) $group . ',' . $key . ')';
+                $new_groups[] = '('.(int) $group.','.$key.')';
             }
             $saved = true;
             if (!empty($new_groups)) {
-                $modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES " . implode(',', $new_groups));
+                $modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $new_groups));
             }
         } else {
             $isManager = $modx->hasPermission('access_permissions');
@@ -403,11 +406,11 @@ switch ($actionToTake) {
         ));
 
         // secure web documents - flag as private
-        include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
+        include MODX_MANAGER_PATH."includes/secure_web_documents.inc.php";
         secureWebDocument($key);
 
         // secure manager documents - flag as private
-        include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
+        include MODX_MANAGER_PATH."includes/secure_mgr_documents.inc.php";
         secureMgrDocument($key);
 
         // Set the item name for logger
@@ -421,14 +424,12 @@ switch ($actionToTake) {
         // redirect/stay options
         if ($_POST['stay'] != '') {
             // weblink
-            if ($_POST['mode'] == "72") {
+            if ($_POST['mode'] == "72")
                 $a = ($_POST['stay'] == '2') ? "27&id=$key" : "72&pid=$parent";
-            }
             // document
-            if ($_POST['mode'] == "4") {
+            if ($_POST['mode'] == "4")
                 $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
-            }
-            $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
+            $header = "Location: index.php?a=".$a."&r=1&stay=".$_POST['stay'];
         } else {
             $header = "Location: index.php?a=3&id=$key&r=1";
         }
@@ -442,7 +443,7 @@ switch ($actionToTake) {
 
 
         break;
-        case 'edit':
+        case 'edit' :
 
             // get the document's current parent
             $oldparent = $existingDocument['parent'];
@@ -488,10 +489,10 @@ switch ($actionToTake) {
             if (!$was_published && $published) {
                 $publishedon = $currentdate;
                 $publishedby = $modx->getLoginUserID();
-            } elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
+                }elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
                 $publishedon = $pub_date;
                 $publishedby = $modx->getLoginUserID();
-            } elseif ($was_published && !$published) {
+                   }elseif ($was_published && !$published) {
                 $publishedon = 0;
                 $publishedby = 0;
             } else {
@@ -500,7 +501,7 @@ switch ($actionToTake) {
             }
 
             // invoke OnBeforeDocFormSave event
-            $modx->invokeEvent("OnBeforeDocFormSave", array(
+            $modx->invokeEvent("OnBeforeDocFormSave", array (
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -534,11 +535,12 @@ switch ($actionToTake) {
                 . "donthit={$donthit}, "
                 . "menutitle='{$menutitle}', "
                 . "hidemenu={$hidemenu}, "
-                . "alias_visible={$aliasvisible}", $tbl_site_content, "id='{$id}'");
+                . "alias_visible={$aliasvisible}"
+                , $tbl_site_content, "id='{$id}'");
 
             // update template variables
             $rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, "contentid='{$id}'");
-            $tvIds = array();
+            $tvIds = array ();
             while ($row = $modx->db->getRow($rs)) {
                 $tvIds[$row['tmplvarid']] = $row['id'];
             }
@@ -546,9 +548,7 @@ switch ($actionToTake) {
             $tvChanges = array();
             foreach ($tmplvars as $field => $value) {
                 if (!is_array($value)) {
-                    if (isset($tvIds[$value])) {
-                        $tvDeletions[] = $tvIds[$value];
-                    }
+                    if (isset($tvIds[$value])) $tvDeletions[] = $tvIds[$value];
                 } else {
                     $tvId = $value[0];
                     $tvVal = $value[1];
@@ -562,7 +562,7 @@ switch ($actionToTake) {
             }
 
             if (!empty($tvDeletions)) {
-                $modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN(' . implode(',', $tvDeletions) . ')');
+                $modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
             }
 
             if (!empty($tvAdded)) {
@@ -593,12 +593,10 @@ switch ($actionToTake) {
                     'groups.id, groups.document_group',
                     "{$tbl_document_groups} AS groups
                     LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups.document_group",
-                    "((1=" . (int)$isManager . " AND dgn.private_memgroup) OR (1=" . (int)$isWeb . " AND dgn.private_webgroup)) AND groups.document = '{$id}'"
+                    "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups.document = '{$id}'"
                     );
                 $old_groups = array();
-                while ($row = $modx->db->getRow($rs)) {
-                    $old_groups[$row['document_group']] = $row['id'];
-                }
+                while ($row = $modx->db->getRow($rs)) $old_groups[$row['document_group']] = $row['id'];
 
                 // update the permissions in the database
                 $insertions = $deletions = array();
@@ -607,14 +605,14 @@ switch ($actionToTake) {
                         unset($old_groups[$group]);
                         continue;
                     } elseif ($link_id == 'new') {
-                        $insertions[] = '(' . (int)$group . ',' . $id . ')';
+                        $insertions[] = '('.(int)$group.','.$id.')';
                     }
                 }
                 if (!empty($insertions)) {
-                    $modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES " . implode(',', $insertions));
+                    $modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $insertions));
                 }
                 if (!empty($old_groups)) {
-                    $modx->db->delete($tbl_document_groups, "id IN (" . implode(',', $old_groups) . ")");
+                    $modx->db->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");
                 }
                 // necessary to remove all permissions as document is public
                 if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
@@ -639,7 +637,7 @@ switch ($actionToTake) {
 
 
             // invoke OnDocFormSave event
-            $modx->invokeEvent("OnDocFormSave", array(
+            $modx->invokeEvent("OnDocFormSave", array (
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -660,9 +658,9 @@ switch ($actionToTake) {
                 $modx->clearCache('full');
             }
 
-            if ($_POST['refresh_preview'] == '1') {
-                $header = "Location: " . MODX_SITE_URL . "index.php?id=$id&z=manprev";
-            } else {
+            if ($_POST['refresh_preview'] == '1')
+                $header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
+            else {
                 if ($_POST['stay'] != '2' && $id > 0) {
                     $modx->unlockElement(7, $id);
                 }
@@ -675,18 +673,18 @@ switch ($actionToTake) {
                         // document
                         $a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
                     }
-                    $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'] . $add_path;
+                    $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
                 } else {
-                    $header = "Location: index.php?a=3&id=$id&r=1" . $add_path;
+                    $header = "Location: index.php?a=3&id=$id&r=1".$add_path;
                 }
             }
             if (headers_sent()) {
-                $header = str_replace('Location: ', '', $header);
+                $header = str_replace('Location: ','',$header);
                 echo "<script>document.location.href='$header';</script>\n";
             } else {
                 header($header);
             }
             break;
-        default:
+        default :
             $modx->webAlertAndQuit("No operation set in request.");
 }

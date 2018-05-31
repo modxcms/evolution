@@ -238,3 +238,5 @@ $lang = array(
     "Select Thumbnails" => "Velg miniatyrbilde",
     "Download files" => "Last ned filer",
 );
+
+?>

@@ -113,9 +113,7 @@
         <?php
             // invoke OnMiscSettingsRender event
             $evtOut = $modx->invokeEvent('OnFileManagerSettingsRender');
-            if (is_array($evtOut)) {
-                echo implode("", $evtOut);
-            }
+            if(is_array($evtOut)) echo implode("",$evtOut);
         ?>
     </td>
   </tr>

@@ -86,6 +86,7 @@ class ManagerAPI
      */
     public function loadFormValues()
     {
+
         if (!$this->hasFormValues()) {
             return false;
         }

@@ -1,5 +1,5 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('logs')) {
@@ -110,19 +110,20 @@ $serverArr = array(
                                 $modx->db->config['table_prefix'] . 'event_log',
                                 $modx->db->config['table_prefix'] . 'manager_log',
                             );
-                        if ($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
-                            echo "<td class=\"text-xs-right\">";
-                            echo "<a class=\"text-danger\" href='index.php?a=54&mode=$action&u=" . $log_status['Name'] . "' title='" . $_lang['truncate_table'] . "'>" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</a>";
-                            echo "</td>";
-                        } else {
-                            echo "<td class=\"text-xs-right\">" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</td>";
-                        }
+                            if ($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
+                                echo "<td class=\"text-xs-right\">";
+                                echo "<a class=\"text-danger\" href='index.php?a=54&mode=$action&u=" . $log_status['Name'] . "' title='" . $_lang['truncate_table'] . "'>" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</a>";
+                                echo "</td>";
+                            } else {
+                                echo "<td class=\"text-xs-right\">" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</td>";
+                            }
 
-                        if ($modx->hasPermission('settings')) {
-                            echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? "<a class=\"text-danger\" href='index.php?a=54&mode=$action&t=" . $log_status['Name'] . "' title='" . $_lang['optimize_table'] . "' ><span>" . $modx->nicesize($log_status['Data_free']) . "</span></a>" : "-") . "</td>";
-                        } else {
-                            echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? $modx->nicesize($log_status['Data_free']) : "-") . "</td>";
-                        } ?>
+                            if ($modx->hasPermission('settings')) {
+                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? "<a class=\"text-danger\" href='index.php?a=54&mode=$action&t=" . $log_status['Name'] . "' title='" . $_lang['optimize_table'] . "' ><span>" . $modx->nicesize($log_status['Data_free']) . "</span></a>" : "-") . "</td>";
+                            } else {
+                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? $modx->nicesize($log_status['Data_free']) : "-") . "</td>";
+                            }
+                            ?>
                             <td class="text-xs-right"><?= $modx->nicesize($log_status['Data_length'] - $log_status['Data_free']) ?></td>
                             <td class="text-xs-right"><?= $modx->nicesize($log_status['Index_length']) ?></td>
                             <td class="text-xs-right"><?= $modx->nicesize($log_status['Index_length'] + $log_status['Data_length'] + $log_status['Data_free']) ?></td>
@@ -143,11 +144,9 @@ $serverArr = array(
                 </table>
             </div>
         </div>
-        <?php if ($totaloverhead > 0) {
-                        ?>
+        <?php if ($totaloverhead > 0) { ?>
             <br>
             <p class="alert alert-danger"><?= $_lang['database_overhead'] ?></p>
-        <?php
-                    } ?>
+        <?php } ?>
     </div>
 </div>

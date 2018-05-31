@@ -1,17 +1,17 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('settings')) {
-    $modx->webAlertAndQuit($_lang['error_no_privileges']);
+if(!$modx->hasPermission('settings')) {
+	$modx->webAlertAndQuit($_lang['error_no_privileges']);
 }
 
 include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/functions.inc.php');
 
 // check to see the edit settings page isn't locked
 $rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='" . $modx->getLoginUserID() . "'");
-if ($username = $modx->db->getValue($rs)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_settings_msg'], $username));
+if($username = $modx->db->getValue($rs)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_settings_msg'], $username));
 }
 // end check for lock
 
@@ -20,8 +20,8 @@ if ($username = $modx->db->getValue($rs)) {
 $settings = array();
 include_once(MODX_MANAGER_PATH . 'includes/default_config.php');
 $rs = $modx->db->select('setting_name, setting_value', '[+prefix+]system_settings');
-while ($row = $modx->db->getRow($rs)) {
-    $settings[$row['setting_name']] = $row['setting_value'];
+while($row = $modx->db->getRow($rs)) {
+	$settings[$row['setting_name']] = $row['setting_value'];
 }
 $settings['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['filemanager_path']);
 $settings['rb_base_dir'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['rb_base_dir']);
@@ -31,12 +31,12 @@ extract($settings, EXTR_OVERWRITE);
 // load languages and keys
 $lang_keys = array();
 $dir = dir('includes/lang');
-while ($file = $dir->read()) {
-    if (strpos($file, '.inc.php') > 0) {
-        $endpos = strpos($file, '.');
-        $languagename = substr($file, 0, $endpos);
-        $lang_keys[$languagename] = get_lang_keys($file);
-    }
+while($file = $dir->read()) {
+	if(strpos($file, '.inc.php') > 0) {
+		$endpos = strpos($file, '.');
+		$languagename = substr($file, 0, $endpos);
+		$lang_keys[$languagename] = get_lang_keys($file);
+	}
 }
 $dir->close();
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
@@ -69,25 +69,23 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			<input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
 			<input type="hidden" name="settings_version" value="<?php echo $modx->getVersionData('version'); ?>" />
 			<!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-			<?php if (!isset($settings_version) || $settings_version != $modx->getVersionData('version')) {
-    ?>
+			<?php if(!isset($settings_version) || $settings_version != $modx->getVersionData('version')) { ?>
 				<div class='sectionBody'><p class='element-edit-message-tab alert alert-warning'><?php echo $_lang['settings_after_install']; ?></p></div>
-			<?php
-} ?>
+			<?php } ?>
 			<div class="tab-pane" id="settingsPane">
 				<script type="text/javascript">
 					tpSettings = new WebFXTabPane(document.getElementById('settingsPane'), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 				</script>
 
 				<?php
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab1_site_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab2_furl_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab3_user_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab4_manager_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab5_security_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab6_filemanager_settings.inc.php');
-                include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab7_filebrowser_settings.inc.php');
-                ?>
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab1_site_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab2_furl_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab3_user_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab4_manager_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab5_security_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab6_filemanager_settings.inc.php');
+				include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab7_filebrowser_settings.inc.php');
+				?>
 			</div>
 		</div>
 	</form>
@@ -133,6 +131,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		});
 	</script>
 <?php
-if (is_numeric($_GET['tab'])) {
-                    echo '<script type="text/javascript">tpSettings.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';
-                }
+if(is_numeric($_GET['tab'])) {
+	echo '<script type="text/javascript">tpSettings.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';
+}

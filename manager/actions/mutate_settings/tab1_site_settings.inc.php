@@ -13,7 +13,7 @@ table.sysSettings tr.noborder td {border:none;}
   <tr>
     <th><?php echo $_lang['sitestatus_title'] ?><br><small>[(site_status)]</small></th>
     <td>
-        <?php echo wrap_label($_lang['online'], form_radio('site_status', 1));?><br />
+        <?php echo wrap_label($_lang['online'],  form_radio('site_status', 1));?><br />
         <?php echo wrap_label($_lang['offline'], form_radio('site_status', 0));?>
     </td>
   </tr>
@@ -72,41 +72,41 @@ table.sysSettings tr.noborder td {border:none;}
     <?php
         $rs = $modx->db->select(
             't.templatename, t.id, c.category',
-            $modx->getFullTableName('site_templates') . " AS t
-                LEFT JOIN " . $modx->getFullTableName('categories') . " AS c ON t.category = c.id",
+            $modx->getFullTableName('site_templates')." AS t
+                LEFT JOIN ".$modx->getFullTableName('categories')." AS c ON t.category = c.id",
             "",
             'c.category, t.templatename ASC'
             );
     ?>
       <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
         <?php
-
+        
         $currentCategory = '';
                         while ($row = $modx->db->getRow($rs)) {
-                            $thisCategory = $row['category'];
-                            if ($thisCategory == null) {
-                                $thisCategory = $_lang['no_category'];
-                            }
-                            if ($thisCategory != $currentCategory) {
-                                if ($closeOptGroup) {
-                                    echo "\t\t\t\t\t</optgroup>\n";
-                                }
-                                echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
-                                $closeOptGroup = true;
-                            } else {
-                                $closeOptGroup = false;
-                            }
+            $thisCategory = $row['category'];
+            if($thisCategory == null) {
+                $thisCategory = $_lang['no_category'];
+            }
+            if($thisCategory != $currentCategory) {
+                if($closeOptGroup) {
+                    echo "\t\t\t\t\t</optgroup>\n";
+                }
+                echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
+                $closeOptGroup = true;
+            } else {
+                $closeOptGroup = false;
+            }
             
-                            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
-                            if ($selectedtext) {
-                                $oldTmpId = $row['id'];
-                                $oldTmpName = $row['templatename'];
-                            }
+            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
+            if ($selectedtext) {
+                $oldTmpId = $row['id'];
+                $oldTmpName = $row['templatename'];
+            }
             
-                            echo "\t\t\t\t\t" . '<option value="' . $row['id'] . '"' . $selectedtext . '>' . $row['templatename'] . "</option>\n";
-                            $currentCategory = $thisCategory;
-                        }
-        if ($thisCategory != '') {
+            echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
+            $currentCategory = $thisCategory;
+        }
+        if($thisCategory != '') {
             echo "\t\t\t\t\t</optgroup>\n";
         }
 ?>
@@ -114,7 +114,7 @@ table.sysSettings tr.noborder td {border:none;}
           <br />
         <div id="template_reset_options_wrapper" style="display:none;">
             <label><input type="radio" name="reset_template" value="1" /> <?php echo $_lang['template_reset_all']; ?></label><br />
-            <label><input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'], $oldTmpName); ?></label>
+            <label><input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'],$oldTmpName); ?></label>
         </div>
         <input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
   <div class="comment"><?php echo $_lang['defaulttemplate_message'] ?></div>
@@ -124,15 +124,9 @@ table.sysSettings tr.noborder td {border:none;}
         <th><?php echo $_lang['defaulttemplate_logic_title'];?><br><small>[(auto_template_logic)]</small></th>
         <td>
             <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
-            <label><input type="radio" name="auto_template_logic" value="system"<?php if ($auto_template_logic == 'system') {
-    echo " checked='checked'";
-}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?></label><br />
-            <label><input type="radio" name="auto_template_logic" value="parent"<?php if ($auto_template_logic == 'parent') {
-    echo " checked='checked'";
-}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?></label><br />
-            <label><input type="radio" name="auto_template_logic" value="sibling"<?php if ($auto_template_logic == 'sibling') {
-    echo " checked='checked'";
-}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?></label><br />
+            <label><input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?></label><br />
+            <label><input type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?></label><br />
+            <label><input type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?></label><br />
         </td>
     </tr>
     <tr>
@@ -141,17 +135,16 @@ table.sysSettings tr.noborder td {border:none;}
         <?php
             // Check if PHX is enabled
             $count = $modx->db->getRecordCount(
-              $modx->db->select('id', '[+prefix+]site_plugins',
+              $modx->db->select('id', '[+prefix+]site_plugins', 
               "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
             );
-            if ($count) {
+            if($count) {
                 $disabledFilters = 1;
-                echo '<b>' . $_lang['enable_filter_phx_warning'] . '</b><br/>';
-            } else {
-                $disabledFilters = false;
+                echo '<b>'.$_lang['enable_filter_phx_warning'].'</b><br/>';
             }
+            else $disabledFilters = false;
         ?>
-        <?php echo wrap_label($_lang['yes'], form_radio('enable_filter', 1, '', $disabledFilters));?><br />
+        <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>
         <div class="comment"><?php echo $_lang['enable_filter_message']; ?></div>
       </td>
@@ -159,7 +152,7 @@ table.sysSettings tr.noborder td {border:none;}
     <tr>
       <th><?php echo $_lang['enable_at_syntax_title'] ?><br><small>[(enable_at_syntax)]</small></th>
       <td >
-        <?php echo wrap_label($_lang['yes'], form_radio('enable_at_syntax', 1));?><br />
+        <?php echo wrap_label($_lang['yes'],form_radio('enable_at_syntax', 1));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('enable_at_syntax', 0));?>
         <div class="comment">
             <?php echo $_lang['enable_at_syntax_message']; ?>
@@ -174,8 +167,8 @@ table.sysSettings tr.noborder td {border:none;}
   <tr>
     <th><?php echo $_lang['defaultpublish_title'] ?><br><small>[(publish_default)]</small></th>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('publish_default', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('publish_default', 0));?>
+        <?php echo wrap_label($_lang['yes'],form_radio('publish_default', 1));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('publish_default', 0));?>
         <div class="comment"><?php echo $_lang['defaultpublish_message'] ?></div>
     </td>
   </tr>
@@ -183,24 +176,24 @@ table.sysSettings tr.noborder td {border:none;}
   <tr>
     <th><?php echo $_lang['defaultcache_title'] ?><br><small>[(cache_default)]</small></th>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('cache_default', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('cache_default', 0));?>
+        <?php echo wrap_label($_lang['yes'],form_radio('cache_default', 1));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('cache_default', 0));?>
         <div class="comment"><?php echo $_lang['defaultcache_message'] ?></div>
     </td>
   </tr>
   <tr>
     <th><?php echo $_lang['defaultsearch_title'] ?><br><small>[(search_default)]</small></th>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('search_default', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('search_default', 0));?>
+        <?php echo wrap_label($_lang['yes'],form_radio('search_default', 1));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('search_default', 0));?>
         <div class="comment"><?php echo $_lang['defaultsearch_message'] ?></div>
     </td>
   </tr>
   <tr>
     <th><?php echo $_lang['defaultmenuindex_title'] ?><br><small>[(auto_menuindex)]</small></th>
     <td>
-        <?php echo wrap_label($_lang['yes'], form_radio('auto_menuindex', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('auto_menuindex', 0));?>
+        <?php echo wrap_label($_lang['yes'],form_radio('auto_menuindex', 1));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('auto_menuindex', 0));?>
         <div class="comment"><?php echo $_lang['defaultmenuindex_message'] ?></div>
     </td>
   </tr>
@@ -210,9 +203,9 @@ table.sysSettings tr.noborder td {border:none;}
     <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
     <select name="lst_custom_contenttype" style="width:200px;height:100px;" size="5">
     <?php
-        $ct = explode(",", $custom_contenttype);
-        for ($i=0;$i<count($ct);$i++) {
-            echo "<option value=\"" . $ct[$i] . "\">" . $ct[$i] . "</option>";
+        $ct = explode(",",$custom_contenttype);
+        for($i=0;$i<count($ct);$i++) {
+            echo "<option value=\"".$ct[$i]."\">".$ct[$i]."</option>";
         }
     ?>
     </select>
@@ -240,7 +233,7 @@ table.sysSettings tr.noborder td {border:none;}
 <tr>
 <th><?php echo $_lang['enable_cache_title'] ?><br><small>[(enable_cache)]</small></th>
 <td>
-    <?php echo wrap_label($_lang['enabled'], form_radio('enable_cache', 1));?><br />
+    <?php echo wrap_label($_lang['enabled'],form_radio('enable_cache', 1));?><br />
     <?php echo wrap_label($_lang['disabled'], form_radio('enable_cache', 0));?><br />
     <?php echo wrap_label($_lang['disabled_at_login'], form_radio('enable_cache', 2));?>
 </td>
@@ -249,14 +242,14 @@ table.sysSettings tr.noborder td {border:none;}
 <tr>
 <th><?php echo $_lang['cache_type_title'] ?><br><small>[(cache_type)]</small></th>
 <td>
-<?php echo wrap_label($_lang['cache_type_1'], form_radio('cache_type', 1));?><br />
+<?php echo wrap_label($_lang['cache_type_1'],form_radio('cache_type', 1));?><br />
 <?php echo wrap_label($_lang['cache_type_2'], form_radio('cache_type', 2));?>
 </td>
 </tr>
   <tr>
 <th><?php echo $_lang['minifyphp_incache_title'] ?><br><small>[(minifyphp_incache)]</small></th>
     <td>
-<?php echo wrap_label($_lang['enabled'], form_radio('minifyphp_incache', 1));?><br />
+<?php echo wrap_label($_lang['enabled'],form_radio('minifyphp_incache', 1));?><br />
 <?php echo wrap_label($_lang['disabled'], form_radio('minifyphp_incache', 0));?>
 <div class="comment"><?php echo $_lang['minifyphp_incache_message'] ?></div>
     </td>
@@ -266,9 +259,10 @@ table.sysSettings tr.noborder td {border:none;}
       <th><?php echo $_lang['serveroffset_title'] ?><br><small>[(server_offset_time)]</small></th>
       <td> <select name="server_offset_time" size="1" class="inputBox">
           <?php
-      for ($i=-24; $i<25; $i++) {
+      for($i=-24; $i<25; $i++) {
           $seconds = $i*60*60;
-          $selectedtext = $seconds==$server_offset_time ? "selected='selected'" : "" ; ?>
+          $selectedtext = $seconds==$server_offset_time ? "selected='selected'" : "" ;
+      ?>
           <option value="<?php echo $seconds; ?>" <?php echo $selectedtext; ?>><?php echo $i; ?></option>
           <?php
       }
@@ -280,7 +274,7 @@ table.sysSettings tr.noborder td {border:none;}
     <tr>
       <th><?php echo $_lang['server_protocol_title'] ?><br><small>[(server_protocol)]</small></th>
       <td>
-        <?php echo wrap_label($_lang['server_protocol_http'], form_radio('server_protocol', 'http'));?><br />
+        <?php echo wrap_label($_lang['server_protocol_http'],form_radio('server_protocol', 'http'));?><br />
         <?php echo wrap_label($_lang['server_protocol_https'], form_radio('server_protocol', 'https'));?>
         <div class="comment"><?php echo $_lang['server_protocol_message'] ?></div>
       </td>
@@ -294,8 +288,8 @@ table.sysSettings tr.noborder td {border:none;}
     <tr>
      <th><?php echo $_lang['track_visitors_title'] ?><br><small>[(track_visitors)]</small></th>
      <td>
-         <?php echo wrap_label($_lang['yes'], form_radio('track_visitors', 1));?><br />
-         <?php echo wrap_label($_lang['no'], form_radio('track_visitors', 0));?>
+         <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
+         <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
          <div class="comment"><?php echo $_lang['track_visitors_message'] ?></div>
      </td>
    </tr>
@@ -307,9 +301,7 @@ table.sysSettings tr.noborder td {border:none;}
         <?php
             // invoke OnSiteSettingsRender event
             $evtOut = $modx->invokeEvent('OnSiteSettingsRender');
-            if (is_array($evtOut)) {
-                echo implode("", $evtOut);
-            }
+            if(is_array($evtOut)) echo implode("",$evtOut);
         ?>
     </td>
   </tr>

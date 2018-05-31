@@ -12,8 +12,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function makeHTML($indent, $parent, $expandAll, $hereid = '')
 {
-    $modx = evolutionCMS();
-    global $icons, $_style, $_lang, $opened, $opened2, $closed2, $modx_textdir;
+    $modx = evolutionCMS(); global $icons, $_style, $_lang, $opened, $opened2, $closed2, $modx_textdir;
 
     $output = '';
 
@@ -58,10 +57,10 @@ function makeHTML($indent, $parent, $expandAll, $hereid = '')
     // get document groups for current user
     $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
     $showProtected = false;
-    if (isset($modx->config['tree_show_protected'])) {
+    if (isset ($modx->config['tree_show_protected'])) {
         $showProtected = (boolean)$modx->config['tree_show_protected'];
     }
-    $mgrRole = (isset($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
+    $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
     if ($showProtected == false) {
         $access = "AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
     } else {
@@ -196,16 +195,16 @@ function makeHTML($indent, $parent, $expandAll, $hereid = '')
         if (!$row['isfolder']) {
             $tpl = getTplSingleNode();
             switch ($row['id']) {
-                case $modx->config['site_start']:
+                case $modx->config['site_start']            :
                     $icon = $_style['tree_page_home'];
                     break;
-                case $modx->config['error_page']:
+                case $modx->config['error_page']            :
                     $icon = $_style['tree_page_404'];
                     break;
-                case $modx->config['site_unavailable_page']:
+                case $modx->config['site_unavailable_page'] :
                     $icon = $_style['tree_page_hourglass'];
                     break;
-                case $modx->config['unauthorized_page']:
+                case $modx->config['unauthorized_page']     :
                     $icon = $_style['tree_page_info'];
                     break;
                 default:
@@ -240,6 +239,7 @@ function makeHTML($indent, $parent, $expandAll, $hereid = '')
             } else {
                 $node .= $modx->parseText($tpl, $ph);
             }
+
         } else {
             $ph['icon_folder_open'] = $_style['tree_folderopen_new'];
             $ph['icon_folder_close'] = $_style['tree_folder_new'];

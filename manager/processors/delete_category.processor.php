@@ -1,5 +1,5 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_plugin') && !$modx->hasPermission('save_snippet') && !$modx->hasPermission('save_template') && !$modx->hasPermission('save_module')) {
@@ -15,7 +15,7 @@ if ($id==0) {
 $name = $modx->db->getValue($modx->db->select('category', $modx->getFullTableName('categories'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
-include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
 deleteCategory($id);
 
 // finished emptying cache - redirect

@@ -123,3 +123,5 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Įkeliamas {number} failas iš {count}... {progress}",
     "Failed to upload {filename}!" => "Nepavyko įkelti {filename}!",
 );
+
+?>

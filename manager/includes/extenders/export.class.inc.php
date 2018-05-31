@@ -172,8 +172,7 @@ class EXPORT_SITE
      */
     public function makeFile($docid, $filepath)
     {
-        $modx = evolutionCMS();
-        global $_lang;
+        $modx = evolutionCMS(); global $_lang;
         $file_permission = octdec($modx->config['new_file_permissions']);
         if ($this->generate_mode === 'direct') {
             $back_lang = $_lang;
@@ -287,7 +286,7 @@ class EXPORT_SITE
                     if ($row['published'] === '1') {
                         $status = $this->makeFile($row['id'], $filename);
                         switch ($status) {
-                            case 'failed_no_write':
+                            case 'failed_no_write'   :
                                 $row['status'] = $msg_failed_no_write;
                                 break;
                             case 'failed_no_retrieve':
@@ -320,6 +319,7 @@ class EXPORT_SITE
                     }
                     mkdir($dir_path);
                     @chmod($dir_path, $folder_permission);
+
                 }
 
 
@@ -370,4 +370,5 @@ class EXPORT_SITE
 
         return $tpl;
     }
+
 }

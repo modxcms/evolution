@@ -332,10 +332,10 @@ class MakeTable
     public function determineRowClass($position)
     {
         switch ($this->rowAlternatingScheme) {
-            case 'ODD':
+            case 'ODD' :
                 $modRemainder = 1;
                 break;
-            case 'EVEN':
+            case 'EVEN' :
             default:
                 $modRemainder = 0;
                 break;
@@ -441,7 +441,7 @@ class MakeTable
                         $table .= $this->createCellText($currentActionFieldValue, $value);
                         $table .= "</td>\n";
                         if ($i == 0) {
-                            if (empty($header) && $this->formElementType) {
+                            if (empty ($header) && $this->formElementType) {
                                 $header .= "\t\t<th style=\"width:32px\" " . ($this->thClass ? 'class="' . $this->thClass . '"' : '') . ">" . ($this->allOption ? '<a href="javascript:clickAll()">all</a>' : '') . "</th>\n";
                             }
                             $headerText = array_key_exists($key, $fieldHeadersArray) ? $fieldHeadersArray[$key] : $key;
@@ -471,6 +471,7 @@ class MakeTable
                 */
                 $table .= '<div id="pagination" class="paginate">' . $_lang["pagination_table_gotopage"] . '<ul>' . $this->pageNav . '</ul></div>';
                 //$table .= '<script language="javascript">function updatePageSize(size){window.location = \''.$this->prepareLink($linkpage).'pageSize=\'+size;}</script>';
+
             }
             if ($this->allOption) {
                 $table .= '
@@ -643,4 +644,5 @@ class MakeTable
 
         return '<a href="[~' . $modx->documentIdentifier . '~]?' . $qs . 'orderby=' . $key . $orderDir . '">' . $text . '</a>';
     }
+
 }

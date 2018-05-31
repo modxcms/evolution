@@ -122,3 +122,5 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Încărcare fișier {number} din {count}... {progress}",
     "Failed to upload {filename}!" => "Încărcare {filename} eșuată!",
 );
+
+?>

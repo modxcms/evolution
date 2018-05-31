@@ -1,5 +1,5 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     exit();
 }
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
@@ -113,37 +113,38 @@ if (isset($_REQUEST['submitok'])) {
     // Handle Input "Search in main fields"
     if ($searchfields != '') {
 
-        /*start search by TV. Added Rising13*/
-        $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
-        $articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
-        $articul_result = $modx->db->query($articul_query);
-        $articul_id_array = $modx->db->makeArray($articul_result);
-        if (count($articul_id_array)>0) {
-            $articul_id = '';
-            $i = 1;
-            foreach ($articul_id_array as $articul) {
-                $articul_id.=$articul['contentid'];
-                if ($i !== count($articul_id_array)) {
-                    $articul_id.=',';
-                }
-                $i++;
-            }
-            $articul_id_query = " OR sc.id IN ({$articul_id})";
-        } else {
-            $articul_id_query = '';
-        }
-        /*end search by TV*/
+		/*start search by TV. Added Rising13*/
+		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+		$articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
+		$articul_result = $modx->db->query($articul_query);
+		$articul_id_array = $modx->db->makeArray($articul_result);
+		if(count($articul_id_array)>0){
+			$articul_id = '';
+			$i = 1;
+			foreach( $articul_id_array as $articul ) {
+				$articul_id.=$articul['contentid'];
+				if($i !== count($articul_id_array)){
+					$articul_id.=',';
+				}
+				$i++;
+			}
+		$articul_id_query = " OR sc.id IN ({$articul_id})";
+		}else{
+			$articul_id_query = '';
+		}
+		/*end search by TV*/
 
         if (ctype_digit($searchfields)) {
             $sqladd .= "sc.id='{$searchfields}'";
             if (strlen($searchfields) > 3) {
-                $sqladd .= $articul_id_query;//search by TV
+				$sqladd .= $articul_id_query;//search by TV
                 $sqladd .= " OR sc.pagetitle LIKE '%{$searchfields}%'";
             }
         }
         if ($idFromAlias) {
             $sqladd .= $sqladd != '' ? ' OR ' : '';
             $sqladd .= "sc.id='{$idFromAlias}'";
+
         }
 
         $sqladd = $sqladd ? "({$sqladd})" : $sqladd;
@@ -159,7 +160,7 @@ if (isset($_REQUEST['submitok'])) {
             $sqladd .= $articul_id_query;//search by TV
             $sqladd .= ")";
         }
-    } elseif ($idFromAlias) {
+    } else if ($idFromAlias) {
         $sqladd .= " sc.id='{$idFromAlias}'";
     }
 
@@ -178,7 +179,7 @@ if (isset($_REQUEST['submitok'])) {
     // get document groups for current user
     if (!empty($modx->config['use_udperms']) && $sqladd) {
         $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
-        $mgrRole = (isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1) ? 1 : 0;
+        $mgrRole = (isset ($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1) ? 1 : 0;
         $docgrp_cond = $docgrp ? " OR dg.document_group IN ({$docgrp})" : '';
         $fields .= ', MAX(IF(1=' . $mgrRole . ' OR sc.privatemgr=0' . $docgrp_cond . ',1,0)) AS hasAccess';
         $sqladd = '(' . $sqladd . ") AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
@@ -195,7 +196,9 @@ if (isset($_REQUEST['submitok'])) {
         $limit = $modx->db->getRecordCount($rs);
     } else {
         $limit = 0;
-    } ?>
+    }
+
+    ?>
     <div class="container navbar">
         <?= $_lang['search_results'] ?>
     </div>
@@ -204,10 +207,12 @@ if (isset($_REQUEST['submitok'])) {
         <div class="container container-body">
             <?php
             if ($_GET['ajax'] != 1) {
+
                 if ($limit < 1) {
                     echo $_lang['search_empty'];
                 } else {
-                    printf('<p>' . $_lang['search_results_returned_msg'] . '</p>', $limit); ?>
+                    printf('<p>' . $_lang['search_results_returned_msg'] . '</p>', $limit);
+                    ?>
                     <script type="text/javascript" src="media/script/tablesort.js"></script>
                     <table class="grid sortabletable sortable-onload-2 rowstyle-even" id="table-1">
                         <thead>
@@ -237,24 +242,25 @@ if (isset($_REQUEST['submitok'])) {
                             'image/png' => $_style["tree_page_png"]
                         );
 
-                    while ($row = $modx->db->getRow($rs)) {
-                        // figure out the icon for the document...
-                        $icon = "";
-                        if ($row['type'] == 'reference') {
-                            $icon .= $_style["tree_linkgo"];
-                        } elseif ($row['isfolder'] == 0) {
-                            $icon .= isset($icons[$row['contenttype']]) ? $icons[$row['contenttype']] : $_style["tree_page_html"];
-                        } else {
-                            $icon .= $_style['tree_folder_new'];
-                        }
+                        while ($row = $modx->db->getRow($rs)) {
+                            // figure out the icon for the document...
+                            $icon = "";
+                            if ($row['type'] == 'reference') {
+                                $icon .= $_style["tree_linkgo"];
+                            } elseif ($row['isfolder'] == 0) {
+                                $icon .= isset($icons[$row['contenttype']]) ? $icons[$row['contenttype']] : $_style["tree_page_html"];
+                            } else {
+                                $icon .= $_style['tree_folder_new'];
+                            }
 
-                        $tdClass = "";
-                        if ($row['published'] == 0) {
-                            $tdClass .= ' class="unpublishedNode"';
-                        }
-                        if ($row['deleted'] == 1) {
-                            $tdClass .= ' class="deletedNode"';
-                        } ?>
+                            $tdClass = "";
+                            if ($row['published'] == 0) {
+                                $tdClass .= ' class="unpublishedNode"';
+                            }
+                            if ($row['deleted'] == 1) {
+                                $tdClass .= ' class="deletedNode"';
+                            }
+                            ?>
                             <tr>
                                 <td class="text-center">
                                     <a href="index.php?a=3&id=<?= $row['id'] ?>" title="<?= $_lang['search_view_docdata'] ?>"><i class="<?= $_style['icons_resource_overview'] ?>" /></i></a>
@@ -274,13 +280,16 @@ if (isset($_REQUEST['submitok'])) {
                                     <td<?= $tdClass ?>><?= strlen($row['pagetitle']) > 20 ? substr($row['pagetitle'], 0, 20) . '...' : $row['pagetitle'] ?></td>
                                     <td<?= $tdClass ?>><?= strlen($row['description']) > 35 ? substr($row['description'], 0, 35) . '...' : $row['description'] ?></td>
                                     <?php
-                                } ?>
+                                }
+                                ?>
                             </tr>
                             <?php
-                    } ?>
+                        }
+                        ?>
                         </tbody>
                     </table>
                     <?php
+
                 }
             } else {
                 $output = '';
@@ -398,7 +407,9 @@ if (isset($_REQUEST['submitok'])) {
                 }
 
                 echo $output ? '<div class="ajaxSearchResults"><ul>' . $output . '</ul></div>' : '1';
-            } ?>
+            }
+
+            ?>
         </div>
     </div>
     <?php

@@ -1,20 +1,20 @@
 <?php
-if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-switch ($modx->manager->action) {
-    case 107:
-        if (!$modx->hasPermission('new_module')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    case 108:
-        if (!$modx->hasPermission('edit_module')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-        }
-        break;
-    default:
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+switch($modx->manager->action) {
+	case 107:
+		if(!$modx->hasPermission('new_module')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	case 108:
+		if(!$modx->hasPermission('edit_module')) {
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	default:
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // Get table names (alphabetical)
@@ -33,41 +33,40 @@ $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
  *
  * @return string
  */
-function createGUID()
-{
-    srand((double) microtime() * 1000000);
-    $r = rand();
-    $u = uniqid(getmypid() . $r . (double) microtime() * 1000000, 1);
-    $m = md5($u);
-    return $m;
+function createGUID() {
+	srand((double) microtime() * 1000000);
+	$r = rand();
+	$u = uniqid(getmypid() . $r . (double) microtime() * 1000000, 1);
+	$m = md5($u);
+	return $m;
 }
 
 // check to see the module editor isn't locked
-if ($lockedEl = $modx->elementIsLocked(6, $id)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['module']));
+if($lockedEl = $modx->elementIsLocked(6, $id)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['module']));
 }
 // end check for lock
 
 // Lock snippet for other users to edit
 $modx->lockElement(6, $id);
 
-if (isset($_GET['id'])) {
-    $rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
-    $content = $modx->db->getRow($rs);
-    if (!$content) {
-        $modx->webAlertAndQuit("Module not found for id '{$id}'.");
-    }
-    $content['properties'] = str_replace("&", "&amp;", $content['properties']);
-    $_SESSION['itemname'] = $content['name'];
-    if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-    }
+if(isset($_GET['id'])) {
+	$rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
+	$content = $modx->db->getRow($rs);
+	if(!$content) {
+		$modx->webAlertAndQuit("Module not found for id '{$id}'.");
+	}
+	$content['properties'] = str_replace("&", "&amp;", $content['properties']);
+	$_SESSION['itemname'] = $content['name'];
+	if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+	}
 } else {
-    $_SESSION['itemname'] = $_lang["new_module"];
-    $content['wrap'] = '1';
+	$_SESSION['itemname'] = $_lang["new_module"];
+	$content['wrap'] = '1';
 }
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
+if($modx->manager->hasFormValues()) {
+	$modx->manager->loadFormValues();
 }
 
 // Add lock-element JS-Script
@@ -438,18 +437,18 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 <form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
 	<?php
-    // invoke OnModFormPrerender event
-    $evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
-    if (is_array($evtOut)) {
-        echo implode('', $evtOut);
-    }
+	// invoke OnModFormPrerender event
+	$evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
+	if(is_array($evtOut)) {
+		echo implode('', $evtOut);
+	}
 
-    // Prepare internal params & info-tab via parseDocBlock
-    $modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
-    $docBlock = $modx->parseDocBlockFromString($modulecode);
-    $docBlockList = $modx->convertDocBlockIntoList($docBlock);
-    $internal = array();
-    ?>
+	// Prepare internal params & info-tab via parseDocBlock
+	$modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
+	$docBlock = $modx->parseDocBlockFromString($modulecode);
+	$docBlockList = $modx->convertDocBlockIntoList($docBlock);
+	$internal = array();
+	?>
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
@@ -479,7 +478,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
 								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
-								<?php if ($modx->hasPermission('save_role')): ?>
+								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
 										<i class="fa fa-lock"></i>
@@ -502,11 +501,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
 								<option>&nbsp;</option>
 								<?php
-                                include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-                                foreach (getCategories() as $n => $v) {
-                                    echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . "</option>\n";
-                                }
-                                ?>
+								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+								foreach(getCategories() as $n => $v) {
+									echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . "</option>\n";
+								}
+								?>
 							</select>
 						</div>
 					</div>
@@ -601,7 +600,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			</div>
 			<!-- HTML text editor end -->
 		</div>
-		<?php if ($modx->manager->action == '108'): ?>
+		<?php if($modx->manager->action == '108'): ?>
 			<!-- Dependencies -->
 			<div class="tab-page" id="tabDepend">
 				<h2 class="tab"><?= $_lang['settings_dependencies'] ?></h2>
@@ -613,7 +612,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
-                    $ds = $modx->db->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+					$ds = $modx->db->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
 					CASE smd.type
 						WHEN 10 THEN 'Chunk'
 						WHEN 20 THEN 'Document'
@@ -629,17 +628,17 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
 						LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60", "smd.module='{$id}'", 'smd.type,name');
 
-                    include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-                    $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
-                    $grd->noRecordMsg = $_lang['no_records_found'];
-                    $grd->cssClass = 'grid';
-                    $grd->columnHeaderClass = 'gridHeader';
-                    $grd->itemClass = 'gridItem';
-                    $grd->altItemClass = 'gridAltItem';
-                    $grd->columns = $_lang['element_name'] . " ," . $_lang['type'];
-                    $grd->fields = "name,type";
-                    echo $grd->render();
-                    ?>
+					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+					$grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
+					$grd->noRecordMsg = $_lang['no_records_found'];
+					$grd->cssClass = 'grid';
+					$grd->columnHeaderClass = 'gridHeader';
+					$grd->itemClass = 'gridItem';
+					$grd->altItemClass = 'gridAltItem';
+					$grd->columns = $_lang['element_name'] . " ," . $_lang['type'];
+					$grd->fields = "name,type";
+					echo $grd->render();
+					?>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -649,14 +648,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<h2 class="tab"><?= $_lang['access_permissions'] ?></h2>
 			<script type="text/javascript">tp.addTabPage(document.getElementById("tabPermissions"));</script>
 			<div class="container container-body">
-				<?php if ($use_udperms == 1) : ?>
+				<?php if($use_udperms == 1) : ?>
 					<?php
-                    // fetch user access permissions for the module
-                    $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
-                    $groupsarray = $modx->db->getColumn('usergroup', $rs);
+					// fetch user access permissions for the module
+					$rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
+					$groupsarray = $modx->db->getColumn('usergroup', $rs);
 
-                    if ($modx->hasPermission('access_permissions')) {
-                        ?>
+					if($modx->hasPermission('access_permissions')) {
+						?>
 						<!-- User Group Access Permissions -->
 						<script type="text/javascript">
 							function makePublic(b) {
@@ -680,28 +679,28 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</script>
 						<p><?= $_lang['module_group_access_msg'] ?></p>
 						<?php
-                    }
-                    $chk = '';
-                    $rs = $modx->db->select('name, id', $tbl_membergroup_names, '', 'name');
-                    while ($row = $modx->db->getRow($rs)) {
-                        $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
-                        $checked = in_array($row['id'], $groupsarray);
-                        if ($modx->hasPermission('access_permissions')) {
-                            if ($checked) {
-                                $notPublic = true;
-                            }
-                            $chks .= '<label><input type="checkbox" name="usrgroups[]" value="' . $row['id'] . '"' . ($checked ? ' checked="checked"' : '') . ' onclick="makePublic(false)" /> ' . $row['name'] . "</label><br />\n";
-                        } else {
-                            if ($checked) {
-                                $chks = '<input type="hidden" name="usrgroups[]"  value="' . $row['id'] . '" />' . "\n" . $chks;
-                            }
-                        }
-                    }
-                    if ($modx->hasPermission('access_permissions')) {
-                        $chks = '<label><input type="checkbox" name="chkallgroups"' . (!$notPublic ? ' checked="checked"' : '') . ' onclick="makePublic(true)" /><span class="warning"> ' . $_lang['all_usr_groups'] . '</span></label><br />' . "\n" . $chks;
-                    }
-                    echo $chks;
-                    ?>
+					}
+					$chk = '';
+					$rs = $modx->db->select('name, id', $tbl_membergroup_names, '', 'name');
+					while($row = $modx->db->getRow($rs)) {
+						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
+						$checked = in_array($row['id'], $groupsarray);
+						if($modx->hasPermission('access_permissions')) {
+							if($checked) {
+								$notPublic = true;
+							}
+							$chks .= '<label><input type="checkbox" name="usrgroups[]" value="' . $row['id'] . '"' . ($checked ? ' checked="checked"' : '') . ' onclick="makePublic(false)" /> ' . $row['name'] . "</label><br />\n";
+						} else {
+							if($checked) {
+								$chks = '<input type="hidden" name="usrgroups[]"  value="' . $row['id'] . '" />' . "\n" . $chks;
+							}
+						}
+					}
+					if($modx->hasPermission('access_permissions')) {
+						$chks = '<label><input type="checkbox" name="chkallgroups"' . (!$notPublic ? ' checked="checked"' : '') . ' onclick="makePublic(true)" /><span class="warning"> ' . $_lang['all_usr_groups'] . '</span></label><br />' . "\n" . $chks;
+					}
+					echo $chks;
+					?>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -717,11 +716,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		<input type="submit" name="save" style="display:none;">
 		<?php
-        // invoke OnModFormRender event
-        $evtOut = $modx->invokeEvent('OnModFormRender', array('id' => $id));
-        if (is_array($evtOut)) {
-            echo implode('', $evtOut);
-        }
-        ?>
+		// invoke OnModFormRender event
+		$evtOut = $modx->invokeEvent('OnModFormRender', array('id' => $id));
+		if(is_array($evtOut)) {
+			echo implode('', $evtOut);
+		}
+		?>
 </form>
 <script type="text/javascript">setTimeout('showParameters();', 10);</script>
