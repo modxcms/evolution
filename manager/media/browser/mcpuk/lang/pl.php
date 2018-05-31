@@ -123,5 +123,3 @@ $lang = array(
     "Uploading file {number} of {count}... {progress}" => "Wysyłanie pliku nr {number} spośród {count} ... {progress}",
     "Failed to upload {filename}!" => "Wysyłanie pliku {filename} nie powiodło się!",
 );
-
-?>

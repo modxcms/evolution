@@ -119,7 +119,7 @@ class DBAPI
         if (1000 < $safeCount) {
             exit("Too many loops '{$safeCount}'");
         }
-        if ( ! ($this->conn instanceof mysqli)) {
+        if (! ($this->conn instanceof mysqli)) {
             $this->connect();
         }
         if (is_array($s)) {
@@ -145,7 +145,7 @@ class DBAPI
     public function query($sql, $watchError = true)
     {
         $modx = evolutionCMS();
-        if ( ! ($this->conn instanceof mysqli)) {
+        if (! ($this->conn instanceof mysqli)) {
             $this->connect();
         }
         $tStart = $modx->getMicroTime();
@@ -295,7 +295,7 @@ class DBAPI
         $modx = evolutionCMS();
         $out = false;
         if (!$table) {
-            $modx->messageQuit('Empty '.$table.' parameter in DBAPI::update().');
+            $modx->messageQuit('Empty ' . $table . ' parameter in DBAPI::update().');
         } else {
             $table = $this->replaceFullTableName($table);
             if (is_array($fields)) {
@@ -311,10 +311,10 @@ class DBAPI
             }
             $where = trim($where);
             if ($where !== '' && stripos($where, 'WHERE') !== 0) {
-                $where = 'WHERE '.$where;
+                $where = 'WHERE ' . $where;
             }
 
-            return $this->query('UPDATE '.$table.' SET '.$fields.' '.$where);
+            return $this->query('UPDATE ' . $table . ' SET ' . $fields . ' ' . $where);
         }
         return $out;
     }
@@ -490,7 +490,7 @@ class DBAPI
     {
         $out = false;
         if ($ds instanceof mysqli_result) {
-            switch($mode){
+            switch ($mode) {
                 case 'assoc':
                     $out = $ds->fetch_assoc();
                     break;
@@ -520,7 +520,7 @@ class DBAPI
     public function getColumn($name, $dsq)
     {
         $col = array();
-        if ( ! ($dsq instanceof mysqli_result)) {
+        if (! ($dsq instanceof mysqli_result)) {
             $dsq = $this->query($dsq);
         }
         if ($dsq) {
@@ -539,7 +539,7 @@ class DBAPI
     public function getColumnNames($dsq)
     {
         $names = array();
-        if ( ! ($dsq instanceof mysqli_result)) {
+        if (! ($dsq instanceof mysqli_result)) {
             $dsq = $this->query($dsq);
         }
         if ($dsq) {
@@ -559,7 +559,7 @@ class DBAPI
     public function getValue($dsq)
     {
         $out = false;
-        if ( ! ($dsq instanceof mysqli_result)) {
+        if (! ($dsq instanceof mysqli_result)) {
             $dsq = $this->query($dsq);
         }
         if ($dsq) {
@@ -578,7 +578,7 @@ class DBAPI
     {
         $metadata = array();
         if (!empty($table) && is_scalar($table)) {
-            $sql = 'SHOW FIELDS FROM '.$table;
+            $sql = 'SHOW FIELDS FROM ' . $table;
             if ($ds = $this->query($sql)) {
                 while ($row = $this->getRow($ds)) {
                     $fieldName = $row['Field'];
@@ -600,16 +600,16 @@ class DBAPI
         $date = false;
         if (!$timestamp === false && $timestamp > 0) {
             switch ($fieldType) {
-                case 'DATE' :
+                case 'DATE':
                     $date = date('Y-m-d', $timestamp);
                     break;
-                case 'TIME' :
+                case 'TIME':
                     $date = date('H:i:s', $timestamp);
                     break;
-                case 'YEAR' :
+                case 'YEAR':
                     $date = date('Y', $timestamp);
                     break;
-                default :
+                default:
                     $date = date('Y-m-d H:i:s', $timestamp);
                     break;
             }
@@ -674,9 +674,9 @@ class DBAPI
      */
     public function optimize($table_name)
     {
-        $rs = $this->query('OPTIMIZE TABLE '.$table_name);
+        $rs = $this->query('OPTIMIZE TABLE ' . $table_name);
         if ($rs) {
-            $rs = $this->query('ALTER TABLE '.$table_name);
+            $rs = $this->query('ALTER TABLE ' . $table_name);
         }
 
         return $rs;
@@ -688,7 +688,7 @@ class DBAPI
      */
     public function truncate($table_name)
     {
-        return $this->query('TRUNCATE '.$table_name);
+        return $this->query('TRUNCATE ' . $table_name);
     }
 
     /**
@@ -707,7 +707,6 @@ class DBAPI
      */
     public function _getFieldsStringFromArray($fields = array())
     {
-
         if (empty($fields)) {
             return '*';
         }
@@ -715,7 +714,7 @@ class DBAPI
         $_ = array();
         foreach ($fields as $k => $v) {
             if ($k !== $v) {
-                $_[] = $v.' as '.$k;
+                $_[] = $v . ' as ' . $k;
             } else {
                 $_[] = $v;
             }

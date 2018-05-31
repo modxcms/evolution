@@ -4,7 +4,7 @@
  * Created by Raymond Irving Feb, 2005
  */
 global $BINDINGS; // Array of supported bindings. must be upper case
-$BINDINGS = array (
+$BINDINGS = array(
     'FILE',
     'CHUNK',
     'DOCUMENT',
@@ -22,40 +22,41 @@ $BINDINGS = array (
  * @param array $tvsArray
  * @return string
  */
-function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
+function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array())
+{
     $modx = evolutionCMS();
     $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
     $nvalue = trim($value);
-    if (substr($nvalue, 0, 1) != '@')
+    if (substr($nvalue, 0, 1) != '@') {
         return $value;
-    elseif(isset($modx->config['enable_bindings']) && $modx->config['enable_bindings']!=1 && $src==='docform') {
+    } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings']!=1 && $src==='docform') {
         return '@Bindings is disabled.';
-    }
-    else {
-        list ($cmd, $param) = ParseCommand($nvalue);
+    } else {
+        list($cmd, $param) = ParseCommand($nvalue);
         $cmd = trim($cmd);
         $param = parseTvValues($param, $tvsArray);
         switch ($cmd) {
-            case "FILE" :
+            case "FILE":
                 $output = $modx->atBindFileContent($nvalue);
                 break;
 
-            case "CHUNK" : // retrieve a chunk and process it's content
+            case "CHUNK": // retrieve a chunk and process it's content
                 $chunk = $modx->getChunk(trim($param));
                 $output = $chunk;
                 break;
 
-            case "DOCUMENT" : // retrieve a document and process it's content
+            case "DOCUMENT": // retrieve a document and process it's content
                 $rs = $modx->getDocument($param);
-                if (is_array($rs))
+                if (is_array($rs)) {
                     $output = $rs['content'];
-                else
+                } else {
                     $output = "Unable to locate document $param";
+                }
                 break;
 
-            case "SELECT" : // selects a record from the cms database
-                $rt = array ();
-                $replacementVars = array (
+            case "SELECT": // selects a record from the cms database
+                $rt = array();
+                $replacementVars = array(
                     'DBASE' => $modx->db->config['dbase'],
                     'PREFIX' => $modx->db->config['table_prefix']
                 );
@@ -67,11 +68,11 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
                 $output = $rs;
                 break;
 
-            case "EVAL" : // evaluates text as php codes return the results
-                $output = eval ($param);
+            case "EVAL": // evaluates text as php codes return the results
+                $output = eval($param);
                 break;
 
-            case "INHERIT" :
+            case "INHERIT":
                 $output = $param; // Default to param value if no content from parents
                 $doc = $modx->getPageInfo($docid, 0, 'id,parent');
 
@@ -80,8 +81,9 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
 
                     // Grab document regardless of publish status
                     $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published');
-                    if ($doc['parent'] != 0 && !$doc['published'])
-                        continue; // hide unpublished docs if we're not at the top
+                    if ($doc['parent'] != 0 && !$doc['published']) {
+                        continue;
+                    } // hide unpublished docs if we're not at the top
 
                     $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
 
@@ -95,8 +97,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
                 }
                 break;
 
-            case 'DIRECTORY' :
-                $files = array ();
+            case 'DIRECTORY':
+                $files = array();
                 $path = $modx->config['base_path'] . $param;
                 if (substr($path, -1, 1) != '/') {
                     $path .= '/';
@@ -115,7 +117,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
                 $output = implode('||', $files);
                 break;
 
-            default :
+            default:
                 $output = $value;
                 break;
 
@@ -129,10 +131,13 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
  * @param $file
  * @return string
  */
-function ProcessFile($file) {
+function ProcessFile($file)
+{
     // get the file
-	$buffer = @file_get_contents($file);
-	if ($buffer === false) $buffer = " Could not retrieve document '$file'.";
+    $buffer = @file_get_contents($file);
+    if ($buffer === false) {
+        $buffer = " Could not retrieve document '$file'.";
+    }
     return $buffer;
 }
 
@@ -146,11 +151,9 @@ function ParseCommand($binding_string)
 {
     global $BINDINGS;
     $binding_array = array();
-    foreach($BINDINGS as $cmd)
-    {
-        if(strpos($binding_string,'@'.$cmd)===0)
-        {
-            $code = substr($binding_string,strlen($cmd)+1);
+    foreach ($BINDINGS as $cmd) {
+        if (strpos($binding_string, '@' . $cmd)===0) {
+            $code = substr($binding_string, strlen($cmd)+1);
             $binding_array = array($cmd,trim($code));
             break;
         }
@@ -168,20 +171,20 @@ function ParseCommand($binding_string)
 function parseTvValues($param, $tvsArray)
 {
     $modx = evolutionCMS();
-	$tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
-	if (strpos($param, '[*') !== false) {
-		$matches = $modx->getTagsFromContent($param, '[*', '*]');
-		foreach ($matches[0] as $i=>$match) {
-			if(isset($tvsArray[ $matches[1][$i] ])) {
-				if(is_array($tvsArray[ $matches[1][$i] ])) {
-					$value = $tvsArray[$matches[1][$i]]['value'];
-					$value = $value === '' ? $tvsArray[$matches[1][$i]]['default_text'] : $value;
-				} else {
-					$value = $tvsArray[ $matches[1][$i] ];
-				}
-				$param = str_replace($match, $value, $param);
-			}
-		}
-	}
-	return $param;
+    $tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
+    if (strpos($param, '[*') !== false) {
+        $matches = $modx->getTagsFromContent($param, '[*', '*]');
+        foreach ($matches[0] as $i=>$match) {
+            if (isset($tvsArray[ $matches[1][$i] ])) {
+                if (is_array($tvsArray[ $matches[1][$i] ])) {
+                    $value = $tvsArray[$matches[1][$i]]['value'];
+                    $value = $value === '' ? $tvsArray[$matches[1][$i]]['default_text'] : $value;
+                } else {
+                    $value = $tvsArray[ $matches[1][$i] ];
+                }
+                $param = str_replace($match, $value, $param);
+            }
+        }
+    }
+    return $param;
 }

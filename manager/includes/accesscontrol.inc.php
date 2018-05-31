@@ -85,14 +85,14 @@ if (!isset($_SESSION['mgrValidated'])) {
     $modx->setPlaceholder('year', date('Y'));
 
     // set login logo image
-    if ( !empty($modx->config['login_logo']) ) {
+    if (!empty($modx->config['login_logo'])) {
         $modx->setPlaceholder('login_logo', MODX_SITE_URL . $modx->config['login_logo']);
     } else {
         $modx->setPlaceholder('login_logo', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-logo.png');
     }
 
     // set login background image
-    if ( !empty($modx->config['login_bg']) ) {
+    if (!empty($modx->config['login_bg'])) {
         $modx->setPlaceholder('login_bg', MODX_SITE_URL . $modx->config['login_bg']);
     } else {
         $modx->setPlaceholder('login_bg', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-background.jpg');
@@ -114,7 +114,7 @@ if (!isset($_SESSION['mgrValidated'])) {
       case '4':
         $modx->setPlaceholder('manager_theme_style', 'darkness');
         break;
-	}
+    }
 
     // andrazk 20070416 - notify user of install/update
     if (isset($_GET['installGoingOn'])) {
@@ -122,11 +122,11 @@ if (!isset($_SESSION['mgrValidated'])) {
     }
     if (isset($installGoingOn)) {
         switch ($installGoingOn) {
-            case 1 :
+            case 1:
                 $modx->setPlaceholder('login_message',
                     "<p><span class=\"fail\">" . $_lang["login_cancelled_install_in_progress"] . "</p><p>" . $_lang["login_message"] . "</p>");
                 break;
-            case 2 :
+            case 2:
                 $modx->setPlaceholder('login_message',
                     "<p><span class=\"fail\">" . $_lang["login_cancelled_site_was_updated"] . "</p><p>" . $_lang["login_message"] . "</p>");
                 break;
@@ -210,7 +210,6 @@ if (!isset($_SESSION['mgrValidated'])) {
     echo $login_tpl;
 
     exit;
-
 } else {
     // Update table active_user_sessions
     $modx->updateValidatedUserSession();

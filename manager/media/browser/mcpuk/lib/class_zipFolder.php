@@ -13,20 +13,23 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class zipFolder {
+class zipFolder
+{
     protected $zip;
     protected $root;
     protected $ignored;
 
-    function __construct($file, $folder, $ignored=null) {
+    public function __construct($file, $folder, $ignored=null)
+    {
         $this->zip = new ZipArchive();
 
         $this->ignored = is_array($ignored)
             ? $ignored
             : ($ignored ? array($ignored) : array());
 
-        if ($this->zip->open($file, ZIPARCHIVE::CREATE) !== TRUE)
+        if ($this->zip->open($file, ZIPARCHIVE::CREATE) !== true) {
             throw new Exception("cannot open <$file>\n");
+        }
 
         $folder = rtrim($folder, '/');
 
@@ -39,20 +42,23 @@ class zipFolder {
         $this->zip->close();
     }
 
-    function zip($folder, $parent=null) {
+    public function zip($folder, $parent=null)
+    {
         $full_path = "{$this->root}$parent$folder";
         $zip_path = "$parent$folder";
         $this->zip->addEmptyDir($zip_path);
         $dir = new DirectoryIterator($full_path);
-        foreach ($dir as $file)
+        foreach ($dir as $file) {
             if (!$file->isDot()) {
                 $filename = $file->getFilename();
                 if (!in_array($filename, $this->ignored)) {
-                    if ($file->isDir())
+                    if ($file->isDir()) {
                         $this->zip($filename, "$zip_path/");
-                    else
+                    } else {
                         $this->zip->addFile("$full_path/$filename", "$zip_path/$filename");
+                    }
                 }
             }
+        }
     }
 }

@@ -66,16 +66,20 @@ if ($modx->config['manager_theme'] == 'default') {
     <link rel="stylesheet" type="text/css" href="<?= $css ?>"/>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
-    <?php if ($modx->config['show_picker'] != "0") { ?>
+    <?php if ($modx->config['show_picker'] != "0") {
+    ?>
         <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js"
                 type="text/javascript"></script>
-    <?php } ?>
+    <?php
+} ?>
     <?php
     $aArr = array('2');
-    if (!in_array($_REQUEST['a'], $aArr)) { ?>
+    if (!in_array($_REQUEST['a'], $aArr)) {
+        ?>
         <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
         <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
-    <?php } ?>
+    <?php
+    } ?>
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
     <?= $onManagerMainFrameHeaderHTMLBlock . "\n" ?>

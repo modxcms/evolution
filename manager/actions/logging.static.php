@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('logs')) {
@@ -183,83 +183,83 @@ $logs = $modx->db->makeArray($rs);
 
 <?php
 if (isset($_REQUEST['log_submit'])) {
-    // get the selections the user made.
-    $sqladd = array();
-    if ($_REQUEST['searchuser'] != 0) {
-        $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
-    }
-    if ($_REQUEST['action'] != 0) {
-        $sqladd[] = "action=" . (int)$_REQUEST['action'];
-    }
-    if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
-        $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";
-    }
-    if ($_REQUEST['itemname'] != '0') {
-        $sqladd[] = "itemname='" . $modx->db->escape($_REQUEST['itemname']) . "'";
-    }
-    if ($_REQUEST['message'] != "") {
-        $sqladd[] = "message LIKE '%" . $modx->db->escape($_REQUEST['message']) . "%'";
-    }
-    // date stuff
-    if ($_REQUEST['datefrom'] != "") {
-        $sqladd[] = "timestamp>" . $modx->toTimeStamp($_REQUEST['datefrom']);
-    }
-    if ($_REQUEST['dateto'] != "") {
-        $sqladd[] = "timestamp<" . $modx->toTimeStamp($_REQUEST['dateto']);
-    }
+                                // get the selections the user made.
+                                $sqladd = array();
+                                if ($_REQUEST['searchuser'] != 0) {
+                                    $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
+                                }
+                                if ($_REQUEST['action'] != 0) {
+                                    $sqladd[] = "action=" . (int)$_REQUEST['action'];
+                                }
+                                if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
+                                    $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";
+                                }
+                                if ($_REQUEST['itemname'] != '0') {
+                                    $sqladd[] = "itemname='" . $modx->db->escape($_REQUEST['itemname']) . "'";
+                                }
+                                if ($_REQUEST['message'] != "") {
+                                    $sqladd[] = "message LIKE '%" . $modx->db->escape($_REQUEST['message']) . "%'";
+                                }
+                                // date stuff
+                                if ($_REQUEST['datefrom'] != "") {
+                                    $sqladd[] = "timestamp>" . $modx->toTimeStamp($_REQUEST['datefrom']);
+                                }
+                                if ($_REQUEST['dateto'] != "") {
+                                    $sqladd[] = "timestamp<" . $modx->toTimeStamp($_REQUEST['dateto']);
+                                }
 
-    // If current position is not set, set it to zero
-    if (!isset($_REQUEST['int_cur_position']) || $_REQUEST['int_cur_position'] == 0) {
-        $int_cur_position = 0;
-    } else {
-        $int_cur_position = $_REQUEST['int_cur_position'];
-    }
+                                // If current position is not set, set it to zero
+                                if (!isset($_REQUEST['int_cur_position']) || $_REQUEST['int_cur_position'] == 0) {
+                                    $int_cur_position = 0;
+                                } else {
+                                    $int_cur_position = $_REQUEST['int_cur_position'];
+                                }
 
-    // Number of result to display on the page, will be in the LIMIT of the sql query also
-    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs;
+                                // Number of result to display on the page, will be in the LIMIT of the sql query also
+                                $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs;
 
-    $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
+                                $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
-    // build the sql
-    $limit = $num_rows = $modx->db->getValue($modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
+                                // build the sql
+                                $limit = $num_rows = $modx->db->getValue($modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
 
-    $rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+                                $rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 
-if ($limit < 1) {
-    echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
-} else {
-    echo '<p>' . $_lang["mgrlog_sortinst"] . '</p>';
+                                if ($limit < 1) {
+                                    echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
+                                } else {
+                                    echo '<p>' . $_lang["mgrlog_sortinst"] . '</p>';
 
-    include_once "paginate.inc.php";
-    // New instance of the Paging class, you can modify the color and the width of the html table
-    $p = new Paging($num_rows, $int_cur_position, $int_num_result, $extargv);
+                                    include_once "paginate.inc.php";
+                                    // New instance of the Paging class, you can modify the color and the width of the html table
+                                    $p = new Paging($num_rows, $int_cur_position, $int_num_result, $extargv);
 
-    // Load up the 2 array in order to display result
-    $array_paging = $p->getPagingArray();
-    $array_row_paging = $p->getPagingRowArray();
-    $current_row = $int_cur_position / $int_num_result;
+                                    // Load up the 2 array in order to display result
+                                    $array_paging = $p->getPagingArray();
+                                    $array_row_paging = $p->getPagingRowArray();
+                                    $current_row = $int_cur_position / $int_num_result;
 
-    // Display the result as you like...
-    print "<p>" . $_lang["paging_showing"] . " " . $array_paging['lower'];
-    print " " . $_lang["paging_to"] . " " . $array_paging['upper'];
-    print " (" . $array_paging['total'] . " " . $_lang["paging_total"] . ")<br />";
-    $paging = $array_paging['first_link'] . $_lang["paging_first"] . (isset($array_paging['first_link']) ? "</a> " : " ");
-    $paging .= $array_paging['previous_link'] . $_lang["paging_prev"] . (isset($array_paging['previous_link']) ? "</a> " : " ");
-    $pagesfound = sizeof($array_row_paging);
-    if ($pagesfound > 6) {
-        $paging .= $array_row_paging[$current_row - 2]; // ."&nbsp;";
+                                    // Display the result as you like...
+                                    print "<p>" . $_lang["paging_showing"] . " " . $array_paging['lower'];
+                                    print " " . $_lang["paging_to"] . " " . $array_paging['upper'];
+                                    print " (" . $array_paging['total'] . " " . $_lang["paging_total"] . ")<br />";
+                                    $paging = $array_paging['first_link'] . $_lang["paging_first"] . (isset($array_paging['first_link']) ? "</a> " : " ");
+                                    $paging .= $array_paging['previous_link'] . $_lang["paging_prev"] . (isset($array_paging['previous_link']) ? "</a> " : " ");
+                                    $pagesfound = sizeof($array_row_paging);
+                                    if ($pagesfound > 6) {
+                                        $paging .= $array_row_paging[$current_row - 2]; // ."&nbsp;";
         $paging .= $array_row_paging[$current_row - 1]; // ."&nbsp;";
         $paging .= $array_row_paging[$current_row]; // ."&nbsp;";
         $paging .= $array_row_paging[$current_row + 1]; // ."&nbsp;";
         $paging .= $array_row_paging[$current_row + 2]; // ."&nbsp;";
-    } else {
-        for ($i = 0; $i < $pagesfound; $i++) {
-            $paging .= $array_row_paging[$i] . "&nbsp;";
-        }
-    }
-    $paging .= $array_paging['next_link'] . $_lang["paging_next"] . (isset($array_paging['next_link']) ? "</a> " : " ") . " ";
-    $paging .= $array_paging['last_link'] . $_lang["paging_last"] . (isset($array_paging['last_link']) ? "</a> " : " ") . " ";
-    // The above exemple print somethings like:
+                                    } else {
+                                        for ($i = 0; $i < $pagesfound; $i++) {
+                                            $paging .= $array_row_paging[$i] . "&nbsp;";
+                                        }
+                                    }
+                                    $paging .= $array_paging['next_link'] . $_lang["paging_next"] . (isset($array_paging['next_link']) ? "</a> " : " ") . " ";
+                                    $paging .= $array_paging['last_link'] . $_lang["paging_last"] . (isset($array_paging['last_link']) ? "</a> " : " ") . " ";
+                                    // The above exemple print somethings like:
     // Results 1 to 20 of 597  <<< 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 >>>
     // Of course you can now play with array_row_paging in order to print
     // only the results you would like...
@@ -289,18 +289,17 @@ if ($limit < 1) {
                 <?php
                 // grab the entire log file...
                 $logentries = array();
-                $i = 0;
-                while ($logentry = $modx->db->getRow($rs)) {
-                    if (!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
-                        $item = '<div style="text-align:center;">-</div>';
-                    } elseif ($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
-                        $item = '<a href="index.php?a=3&amp;id=' . $logentry['itemid'] . '">' . $logentry['itemname'] . '</a>';
-                    } else {
-                        $item = $logentry['itemname'];
-                    }
-                    //index.php?a=13&searchuser=' . $logentry['internalKey'] . '&action=' . $logentry['action'] . '&itemname=' . $logentry['itemname'] . '&log_submit=true'
-                    $user_drill = 'index.php?a=13&searchuser=' . $logentry['internalKey'] . '&itemname=0&log_submit=true';
-                    ?>
+                                    $i = 0;
+                                    while ($logentry = $modx->db->getRow($rs)) {
+                                        if (!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
+                                            $item = '<div style="text-align:center;">-</div>';
+                                        } elseif ($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
+                                            $item = '<a href="index.php?a=3&amp;id=' . $logentry['itemid'] . '">' . $logentry['itemname'] . '</a>';
+                                        } else {
+                                            $item = $logentry['itemname'];
+                                        }
+                                        //index.php?a=13&searchuser=' . $logentry['internalKey'] . '&action=' . $logentry['action'] . '&itemname=' . $logentry['itemname'] . '&log_submit=true'
+                                        $user_drill = 'index.php?a=13&searchuser=' . $logentry['internalKey'] . '&itemname=0&log_submit=true'; ?>
                     <tr>
                         <td><?= '<a href="' . $user_drill . '">' . $logentry['username'] . '</a>' ?></td>
                         <td class="text-nowrap"><?= '[' . $logentry['action'] . '] ' . $logentry['message'] ?></td>
@@ -312,8 +311,7 @@ if ($limit < 1) {
                     </tr>
                     <?php
                     $i++;
-                }
-                ?>
+                                    } ?>
                 </tbody>
             </table>
         </div>
@@ -323,15 +321,14 @@ if ($limit < 1) {
         <?= $paging ?>
     </div>
 <?php
-}
-?>
+                                } ?>
     </div>
     </div>
     <?php
     // HACK: prevent multiple "Viewing logging" entries after a search has taken place.
     // @see index.php @ 915
     global $action;
-    $action = 1;
-} else {
-    echo $_lang["mgrlog_noquery"];
-}
+                                $action = 1;
+                            } else {
+                                echo $_lang["mgrlog_noquery"];
+                            }

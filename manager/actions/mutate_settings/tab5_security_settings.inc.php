@@ -1,6 +1,6 @@
 <?php
     $MODX_SITE_HOSTNAMES = MODX_SITE_HOSTNAMES; // Fix for PHP 5.4
-    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) {
+    if (empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) {
         $valid_hostnames = $_SERVER['HTTP_HOST'];
     } else {
         $valid_hostnames = $MODX_SITE_HOSTNAMES;
@@ -15,10 +15,10 @@
 <tr>
 <th><?php echo $_lang['allow_eval_title']; ?><br><small>[(allow_eval)]</small></th>
 <td>
-<?php echo wrap_label($_lang['allow_eval_with_scan']         , form_radio('allow_eval','with_scan'));?><br />
-<?php echo wrap_label($_lang['allow_eval_with_scan_at_post'] , form_radio('allow_eval','with_scan_at_post'));?><br />
-<?php echo wrap_label($_lang['allow_eval_everytime_eval']    , form_radio('allow_eval','everytime_eval'));?><br />
-<?php echo wrap_label($_lang['allow_eval_dont_eval']         , form_radio('allow_eval','dont_eval'));?>
+<?php echo wrap_label($_lang['allow_eval_with_scan'], form_radio('allow_eval', 'with_scan'));?><br />
+<?php echo wrap_label($_lang['allow_eval_with_scan_at_post'], form_radio('allow_eval', 'with_scan_at_post'));?><br />
+<?php echo wrap_label($_lang['allow_eval_everytime_eval'], form_radio('allow_eval', 'everytime_eval'));?><br />
+<?php echo wrap_label($_lang['allow_eval_dont_eval'], form_radio('allow_eval', 'dont_eval'));?>
     <div class="comment">
         <?php echo $_lang['allow_eval_msg'] ?>
     </div>
@@ -53,7 +53,7 @@
     <tr>
       <td nowrap class="warning"><?php echo $_lang['validate_referer_title'] ?><br><small>[(validate_referer)]</small></td>
       <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('validate_referer', 1));?><br />
+        <?php echo wrap_label($_lang['yes'], form_radio('validate_referer', 1));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('validate_referer', 0));?>
       </td>
     </tr>
@@ -89,10 +89,10 @@
   <tr>
 <th><?php echo $_lang['a17_error_reporting_title']; ?><br><small>[(error_reporting)]</small></th>
 <td>
-<?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0'));?><br />
-<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1'));?><br />
-<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2'));?><br />
-<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99'));?>
+<?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting', '0'));?><br />
+<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting', '1'));?><br />
+<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting', '2'));?><br />
+<?php echo wrap_label($_lang['a17_error_reporting_opt99'], form_radio('error_reporting', '99'));?>
 </td>
 </tr>
 <tr>
@@ -103,11 +103,11 @@
 <tr>
 <th><?php echo $_lang['mutate_settings.dynamic.php6']; ?><br><small>[(send_errormail)]</small></th>
 <td>
-<?php echo wrap_label($_lang['mutate_settings.dynamic.php7'],form_radio('send_errormail','0'));?><br />
-<?php echo wrap_label('error',form_radio('send_errormail','3'));?><br />
-<?php echo wrap_label('error + warning',form_radio('send_errormail','2'));?><br />
-<?php echo wrap_label('error + warning + information',form_radio('send_errormail','1'));?><br />
-<?php echo parseText($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?></td>
+<?php echo wrap_label($_lang['mutate_settings.dynamic.php7'], form_radio('send_errormail', '0'));?><br />
+<?php echo wrap_label('error', form_radio('send_errormail', '3'));?><br />
+<?php echo wrap_label('error + warning', form_radio('send_errormail', '2'));?><br />
+<?php echo wrap_label('error + warning + information', form_radio('send_errormail', '1'));?><br />
+<?php echo parseText($_lang['mutate_settings.dynamic.php8'], array('emailsender'=>$modx->config['emailsender']));?></td>
 </tr>
    <tr>
     <td colspan="2"><div class="split"></div></td>
@@ -115,8 +115,8 @@
 <tr>
 <th><?php echo $_lang['enable_bindings_title'] ?><br><small>[(enable_bindings)]</small></th>
 <td>
-<?php echo wrap_label($_lang['yes'],form_radio('enable_bindings','1'));?><br />
-<?php echo wrap_label($_lang['no'], form_radio('enable_bindings','0'));?>
+<?php echo wrap_label($_lang['yes'], form_radio('enable_bindings', '1'));?><br />
+<?php echo wrap_label($_lang['no'], form_radio('enable_bindings', '0'));?>
 
 </td>
 </tr>
@@ -157,7 +157,9 @@
 <th><?php echo $_lang['pwd_hash_algo_title'] ?><br><small>[(pwd_hash_algo)]</small></th>
 <td>
 <?php
-if(empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
+if (empty($pwd_hash_algo)) {
+    $phm['sel']['UNCRYPT'] = 1;
+}
 $phm['e']['BLOWFISH_Y'] = $modx->manager->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
 $phm['e']['BLOWFISH_A'] = $modx->manager->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
 $phm['e']['SHA512']     = $modx->manager->checkHashAlgorithm('SHA512') ? 0:1;
@@ -165,12 +167,12 @@ $phm['e']['SHA256']     = $modx->manager->checkHashAlgorithm('SHA256') ? 0:1;
 $phm['e']['MD5']        = $modx->manager->checkHashAlgorithm('MD5') ? 0:1;
 $phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
 ?>
-<?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_Y', '', $phm['e']['BLOWFISH_Y']));?><br />
-<?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_A', '', $phm['e']['BLOWFISH_A']));?><br />
-<?php echo wrap_label('CRYPT_SHA512 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA512'    , '', $phm['e']['SHA512']));?><br />
-<?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA256'    , '', $phm['e']['SHA256']));?><br />
-<?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)'       ,form_radio('pwd_hash_algo','MD5'       , '', $phm['e']['MD5']));?><br />
-<?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)'  ,form_radio('pwd_hash_algo','UNCRYPT'  , '', $phm['e']['UNCRYPT']));?>
+<?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)', form_radio('pwd_hash_algo', 'BLOWFISH_Y', '', $phm['e']['BLOWFISH_Y']));?><br />
+<?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)', form_radio('pwd_hash_algo', 'BLOWFISH_A', '', $phm['e']['BLOWFISH_A']));?><br />
+<?php echo wrap_label('CRYPT_SHA512 (salt &amp; stretch)', form_radio('pwd_hash_algo', 'SHA512', '', $phm['e']['SHA512']));?><br />
+<?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)', form_radio('pwd_hash_algo', 'SHA256', '', $phm['e']['SHA256']));?><br />
+<?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)', form_radio('pwd_hash_algo', 'MD5', '', $phm['e']['MD5']));?><br />
+<?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)', form_radio('pwd_hash_algo', 'UNCRYPT', '', $phm['e']['UNCRYPT']));?>
 </td>
 </tr>
 <tr>
@@ -186,7 +188,9 @@ $phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
   ?>
 <?php
 $gdAvailable = extension_loaded('gd');
-if(!$gdAvailable) $use_captcha = 0;
+if (!$gdAvailable) {
+    $use_captcha = 0;
+}
 ?>
   <tr>
     <td nowrap class="warning"><?php echo $_lang['captcha_title'] ?><br><small>[(use_captcha)]</small></td>
@@ -226,7 +230,9 @@ if(!$gdAvailable) $use_captcha = 0;
         <?php
             // invoke OnMiscSettingsRender event
             $evtOut = $modx->invokeEvent('OnSecuritySettingsRender');
-            if(is_array($evtOut)) echo implode("",$evtOut);
+            if (is_array($evtOut)) {
+                echo implode("", $evtOut);
+            }
         ?>
     </td>
   </tr>

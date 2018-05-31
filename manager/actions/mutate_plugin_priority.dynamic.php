@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_plugin')) {
@@ -103,7 +103,7 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
     <input type="hidden" name="listSubmitted" value="true" />
     <?php
     foreach ($sortables as $list) {
-    ?>
+        ?>
     <input type="hidden" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
     <?php
     }

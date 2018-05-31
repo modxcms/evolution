@@ -180,7 +180,7 @@
       <tr>
         <th><?php echo $_lang['login_form_position_title'] ?><br><small>[(login_form_position)]</small></th>
         <td>
-            <?php echo wrap_label($_lang['login_form_position_left'],form_radio('login_form_position', 'left'));?><br />
+            <?php echo wrap_label($_lang['login_form_position_left'], form_radio('login_form_position', 'left'));?><br />
             <?php echo wrap_label($_lang['login_form_position_center'], form_radio('login_form_position', 'center'));?><br />
             <?php echo wrap_label($_lang['login_form_position_right'], form_radio('login_form_position', 'right'));?>
         </td>
@@ -194,7 +194,7 @@
       <tr>
         <th><?php echo $_lang['manager_menu_position_title'] ?><br><small>[(manager_menu_position)]</small></th>
         <td>
-            <?php echo wrap_label($_lang['manager_menu_position_top'],form_radio('manager_menu_position', 'top'));?><br />
+            <?php echo wrap_label($_lang['manager_menu_position_top'], form_radio('manager_menu_position', 'top'));?><br />
             <?php echo wrap_label($_lang['manager_menu_position_left'], form_radio('manager_menu_position', 'left'));?><br />
         </td>
       </tr>

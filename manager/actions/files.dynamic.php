@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('file_manager')) {
@@ -407,7 +407,7 @@ if (substr($webstart_path, 0, 1) == '/') {
 
                 if (preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@', $newDirname) !== 0) {
                     echo $_lang['files.dynamic.php3'];
-                } else if (!rename($dirname, $_REQUEST['path'] . '/' . $newDirname)) {
+                } elseif (!rename($dirname, $_REQUEST['path'] . '/' . $newDirname)) {
                     echo '<span class="warning"><b>', $_lang['file_folder_not_created'], '</b></span><br /><br />';
                 }
                 umask($old_umask);
@@ -482,8 +482,7 @@ if (substr($webstart_path, 0, 1) == '/') {
 
             <?php
             if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
-                @ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
-                ?>
+                @ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond ?>
 
                 <form name="upload" enctype="multipart/form-data" action="index.php" method="post">
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= isset($upload_maxsize) ? $upload_maxsize : 3145728 ?>">
@@ -491,8 +490,8 @@ if (substr($webstart_path, 0, 1) == '/') {
                     <input type="hidden" name="path" value="<?= $startpath ?>">
 
                     <?php if (isset($information)) {
-                        echo $information;
-                    } ?>
+                    echo $information;
+                } ?>
 
                     <div id="uploader">
                         <input type="file" name="userfile[]" onchange="document.upload.submit();" multiple>
@@ -517,13 +516,12 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
         <div class="navbar navbar-editor"><?= $_REQUEST['mode'] == "edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ?></div>
         <?php
         $filename = $_REQUEST['path'];
-        $buffer = file_get_contents($filename);
-        // Log the change
-        logFileChange('view', $filename);
-        if ($buffer === false) {
-            $modx->webAlertAndQuit("Error opening file for reading.");
-        }
-        ?>
+    $buffer = file_get_contents($filename);
+    // Log the change
+    logFileChange('view', $filename);
+    if ($buffer === false) {
+        $modx->webAlertAndQuit("Error opening file for reading.");
+    } ?>
         <form action="index.php" method="post" name="editFile">
             <input type="hidden" name="a" value="31" />
             <input type="hidden" name="mode" value="save" />
@@ -566,7 +564,6 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
     if (is_array($evtOut)) {
         echo implode('', $evtOut);
     }
-
 }
 
 /**
@@ -849,7 +846,7 @@ function unzip($file, $path)
                 $complete_name = $path . str_replace('\\', '/', $zip_entry_name);
                 if (!file_exists($complete_path)) {
                     $tmp = '';
-                    foreach (explode('/', $complete_path) AS $k) {
+                    foreach (explode('/', $complete_path) as $k) {
                         $tmp .= $k . '/';
                         if (!is_dir($tmp)) {
                             mkdir($tmp, 0777);
@@ -890,10 +887,13 @@ function rrmdir($dir)
  */
 function fileupload()
 {
-    $modx = evolutionCMS(); global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
+    $modx = evolutionCMS();
+    global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
     $msg = '';
     foreach ($_FILES['userfile']['name'] as $i => $name) {
-        if (empty($_FILES['userfile']['tmp_name'][$i])) continue;
+        if (empty($_FILES['userfile']['tmp_name'][$i])) {
+            continue;
+        }
         $userfile= array();
 
         $userfile['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];

@@ -68,7 +68,6 @@ class EVOmenu
         $output = '';
 
         if (isset($this->menu[$parentid])) {
-
             $ph = array();
             $countChild = 0;
             $itemTpl = '
@@ -102,7 +101,7 @@ class EVOmenu
                     $level++;
                     $ph['DrawSub'] = $this->DrawSub($id, $level);
                     $level--;
-                    // Optional buttons
+                // Optional buttons
                 } else {
                     if (isset($value[11]) && !empty($value[11])) {
                         $optionalButton = '';

@@ -7,15 +7,17 @@
 
 global $database_type;
 
-if (empty($database_type)) $database_type = 'mysql';
+if (empty($database_type)) {
+    $database_type = 'mysql';
+}
 
 $out = false;
 $class = 'DBAPI';
-if( ! class_exists($class)){
+if (! class_exists($class)) {
     include_once MODX_MANAGER_PATH . 'includes/extenders/dbapi.' . $database_type . '.class.inc.php';
 }
 
-if(class_exists($class)){
+if (class_exists($class)) {
     $this->db= new $class;
     $out = true;
 }

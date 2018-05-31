@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('edit_document') || !$modx->hasPermission('save_document')) {
@@ -49,7 +49,7 @@ if ($id !== null) {
 
     $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
     $docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
-    $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
+    $mgrRole = (isset($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
     $access = " AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
 
     $rs = $modx->db->select('sc.id, sc.pagetitle, sc.parent, sc.menuindex, sc.published, sc.hidemenu, sc.deleted, sc.isfolder', $tblsc . 'AS sc LEFT JOIN ' . $tbldg . ' dg ON dg.document=sc.id', 'sc.parent=' . $id . $access . ' GROUP BY sc.id', 'menuindex ASC');

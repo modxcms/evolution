@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module'))) {
@@ -116,7 +116,7 @@ echo $cm->render();
                 ORDER BY sm.name');
             if ($modx->hasPermission('edit_module')) {
                 $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
-            } else if ($modx->hasPermission('exec_module')) {
+            } elseif ($modx->hasPermission('exec_module')) {
                 $title = "<a href='index.php?a=112&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
             } else {
                 $title = '[+value+]';
