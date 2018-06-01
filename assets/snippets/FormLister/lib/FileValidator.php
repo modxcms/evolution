@@ -81,7 +81,7 @@ class FileValidator
      * @param $value
      * @return bool
      */
-    public statuc function images($value)
+    public static function images($value)
     {
         return self::allowed($value, array("jpg", "jpeg", "png", "gif", "bmp"));
     }
