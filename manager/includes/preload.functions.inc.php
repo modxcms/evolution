@@ -22,7 +22,7 @@ if( ! function_exists('evolutionCMS')) {
             $obj = new ReflectionClass(MODX_CLASS);
             $modx = $obj->newInstanceWithoutConstructor()->getInstance();
         }
-        return $modx
+        return $modx;
     }
 }
 
