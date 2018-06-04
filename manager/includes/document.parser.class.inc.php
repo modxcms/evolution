@@ -203,8 +203,8 @@ class DocumentParser
 
         $this->q = self::_getCleanQueryString();
     }
-
-    final private function __clone()
+    
+    final public function __clone()
     {
     }
     /**
