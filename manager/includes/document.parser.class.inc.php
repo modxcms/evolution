@@ -3162,22 +3162,31 @@ class DocumentParser implements EvolutionCMS\Interfaces\CoreInterface
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    public function webAlertAndQuit($msg, $url = "")
+    public function webAlertAndQuit($msg, $url = '')
     {
         global $modx_manager_charset;
-        if (substr(strtolower($url), 0, 11) == "javascript:") {
-            $fnc = substr($url, 11);
-        } elseif ($url) {
-            $fnc = "window.location.href='" . addslashes($url) . "';";
-        } else {
-            $fnc = "history.back(-1);";
+        switch (true) {
+            case (0 === stripos($url, 'javascript:')):
+                $fnc = substr($url, 11);
+                break;
+            case $url === '#':
+                $fnc = '';
+                break;
+            case empty($url):
+                $fnc = 'history.back(-1);';
+                break;
+            default:
+                $fnc = "window.location.href='" . addslashes($url) . "';";
         }
+
         echo "<html><head>
             <title>MODX :: Alert</title>
             <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
             <script>
                 function __alertQuit() {
-                    alert('" . addslashes($msg) . "');
+                    var el = document.querySelector('p');
+                    alert(el.innerHTML);
+                    el.remove();
                     {$fnc}
                 }
                 window.setTimeout('__alertQuit();',100);
@@ -5442,8 +5451,8 @@ class DocumentParser implements EvolutionCMS\Interfaces\CoreInterface
                 $this->pluginsCode .= '</fieldset><br />';
                 $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
-            if ($e->_output != '') {
-                $results[] = $e->_output;
+            if ($e->getOutput() != '') {
+                $results[] = $e->getOutput();
             }
             if ($e->_propagate != true) {
                 break;
@@ -6704,7 +6713,11 @@ class SystemEvent implements EvolutionCMS\Interfaces\EventInterface
 {
     public $name = '';
     public $_propagate = true;
-    public $_output = '';
+    /**
+     * @deprecated use setOutput(), getOutput()
+     * @var string
+     */
+    public $_output;
     public $activated = false;
     public $activePlugin = '';
     public $params = array();
@@ -6743,10 +6756,27 @@ class SystemEvent implements EvolutionCMS\Interfaces\EventInterface
      * Output
      *
      * @param string $msg
+     * @deprecated see addOutput
      */
     public function output($msg)
     {
         $this->_output .= $msg;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setOutput($data)
+    {
+        $this->_output = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutput()
+    {
+        return $this->_output;
     }
 
     /**
@@ -6761,7 +6791,7 @@ class SystemEvent implements EvolutionCMS\Interfaces\EventInterface
     {
         unset ($this->returnedValues);
         $this->name = "";
-        $this->_output = "";
+        $this->setOutput(null);
         $this->_propagate = true;
         $this->activated = false;
     }

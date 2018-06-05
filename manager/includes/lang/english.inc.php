@@ -1503,3 +1503,5 @@ $_lang['login_bg_message'] = 'Recomended login page background image width: 1920
 $_lang['manager_menu_position_title'] = 'Main menu position';
 $_lang['manager_menu_position_top'] = 'top';
 $_lang['manager_menu_position_left'] = 'left';
+
+$_lang['invalid_event_response'] = 'The %s event has ivalid output';
