@@ -11,7 +11,7 @@ if (!defined('E_USER_DEPRECATED')) {
     define('E_USER_DEPRECATED', 16384);
 }
 
-class DocumentParser
+class DocumentParser implements EvolutionCMS\Interfaces\CoreInterface
 {
     /**
      * This is New evolution
@@ -203,7 +203,7 @@ class DocumentParser
 
         $this->q = self::_getCleanQueryString();
     }
-    
+
     final public function __clone()
     {
     }
@@ -6700,7 +6700,7 @@ class DocumentParser
 /**
  * System Event Class
  */
-class SystemEvent
+class SystemEvent implements EvolutionCMS\Interfaces\EventInterface
 {
     public $name = '';
     public $_propagate = true;

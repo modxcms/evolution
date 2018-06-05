@@ -1,6 +1,6 @@
 <?php
 
-class DBAPI
+class DBAPI implements EvolutionCMS\Interfaces\DatabaseInterface
 {
     /**
      * @var mysqli

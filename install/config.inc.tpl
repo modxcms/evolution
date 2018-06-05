@@ -137,4 +137,4 @@ if (!defined('MODX_MANAGER_URL')) {
     define('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/');
 }
 
-include_once(MODX_MANAGER_PATH . 'includes/preload.functions.inc.php');
+include_once(MODX_MANAGER_PATH . 'bootstrap.php');
