@@ -3162,22 +3162,31 @@ class DocumentParser
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    public function webAlertAndQuit($msg, $url = "")
+    public function webAlertAndQuit($msg, $url = '')
     {
         global $modx_manager_charset;
-        if (substr(strtolower($url), 0, 11) == "javascript:") {
-            $fnc = substr($url, 11);
-        } elseif ($url) {
-            $fnc = "window.location.href='" . addslashes($url) . "';";
-        } else {
-            $fnc = "history.back(-1);";
+        switch (true) {
+            case (0 === stripos($url, 'javascript:')):
+                $fnc = substr($url, 11);
+                break;
+            case $url === '#':
+                $fnc = '';
+                break;
+            case empty($url):
+                $fnc = 'history.back(-1);';
+                break;
+            default:
+                $fnc = "window.location.href='" . addslashes($url) . "';";
         }
+
         echo "<html><head>
             <title>MODX :: Alert</title>
             <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
             <script>
                 function __alertQuit() {
-                    alert('" . addslashes($msg) . "');
+                    var el = document.querySelector('p');
+                    alert(el.innerHTML);
+                    el.remove();
                     {$fnc}
                 }
                 window.setTimeout('__alertQuit();',100);
