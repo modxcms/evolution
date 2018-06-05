@@ -3166,7 +3166,7 @@ class DocumentParser
     {
         global $modx_manager_charset;
         switch (true) {
-            case (0 === stripos($url, 0, 'javascript:')):
+            case (0 === stripos($url, 'javascript:')):
                 $fnc = substr($url, 11);
                 break;
             case $url === '#':
