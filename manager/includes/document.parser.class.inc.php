@@ -203,7 +203,7 @@ class DocumentParser
 
         $this->q = self::_getCleanQueryString();
     }
-    
+
     final public function __clone()
     {
     }
@@ -5442,8 +5442,8 @@ class DocumentParser
                 $this->pluginsCode .= '</fieldset><br />';
                 $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
-            if ($e->_output != '') {
-                $results[] = $e->_output;
+            if ($e->getOutput() != '') {
+                $results[] = $e->getOutput();
             }
             if ($e->_propagate != true) {
                 break;
@@ -6704,7 +6704,11 @@ class SystemEvent
 {
     public $name = '';
     public $_propagate = true;
-    public $_output = '';
+    /**
+     * @deprecated use setOutput(), getOutput()
+     * @var string
+     */
+    public $_output;
     public $activated = false;
     public $activePlugin = '';
     public $params = array();
@@ -6743,10 +6747,27 @@ class SystemEvent
      * Output
      *
      * @param string $msg
+     * @deprecated see addOutput
      */
     public function output($msg)
     {
         $this->_output .= $msg;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setOutput($data)
+    {
+        $this->_output = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutput()
+    {
+        return $this->_output;
     }
 
     /**
@@ -6761,7 +6782,7 @@ class SystemEvent
     {
         unset ($this->returnedValues);
         $this->name = "";
-        $this->_output = "";
+        $this->setOutput(null);
         $this->_propagate = true;
         $this->activated = false;
     }
