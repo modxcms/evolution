@@ -1475,3 +1475,5 @@ $_lang['login_bg_message'] = 'Рекомендованный размер фон
 $_lang['manager_menu_position_title'] = 'Расположение основного меню';
 $_lang['manager_menu_position_top'] = 'вверху';
 $_lang['manager_menu_position_left'] = 'слева';
+
+$_lang['invalid_event_response'] = 'Событие %s вернуло неверный результат';
