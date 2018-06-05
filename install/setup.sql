@@ -1102,6 +1102,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('214','OnManagerMenuPrerender','2',''),
 ('215','OnManagerTopPrerender','2',''),
 ('224','OnDocFormTemplateRender','1','Documents'),
+('225','OnBeforeMinifyCss', '1', ''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1',''),
 ('1001','OnFileBrowserUpload','1','File Browser Events');
