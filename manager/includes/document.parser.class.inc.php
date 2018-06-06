@@ -213,7 +213,7 @@ class DocumentParser
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new DocumentParser();
+            self::$instance = new static();
         }
         return self::$instance;
     }
