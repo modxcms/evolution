@@ -1,6 +1,17 @@
+<div class="stepcontainer">
+  <ul class="progressbar">
+    <li class="visited"><?php echo $_lang['choose_language']?></li>
+    <li class="visited"><?php echo $_lang['installation_mode']?></li>
+    <li class="visited"><?php echo $_lang['optional_items']?></li>
+    <li class="visited"><?php echo $_lang['preinstall_validation']?></li>
+    <li class="active"><?php echo $_lang['install_results']?></li>
+  </ul>
+  <div class="clearleft"></div>
+</div>
+<h2><?php echo $_lang['install_results']?></h2>
 <?php
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(__DIR__."/../assets/cache/siteManager.php")) {
+    include_once(__DIR__."/../assets/cache/siteManager.php");
 }else{
     define('MGR_DIR', 'manager');
 }
@@ -62,7 +73,7 @@ if (count($a) > 1)
     array_pop($a);
 $url = implode("install", $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", realpath(dirname(__FILE__))));
+$a = explode("install", str_replace("\\", "/", realpath(__DIR__)));
 if (count($a) > 1)
     array_pop($a);
 $pth = implode("install", $a);
@@ -85,7 +96,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
     echo "<span class=\"notok\" style='color:#707070'>".$_lang['setup_database_selection_failed']."</span>".$_lang['setup_database_selection_failed_note']."</p>";
     $create = true;
 } else {
-	if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
+    if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
     mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
     echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
@@ -97,13 +108,13 @@ if ($create) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
         echo '<span class="notok">'.$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
         $errors += 1;
-?>
+        ?>
         <pre>
         database charset = <?php echo $database_charset ?>
-        database collation = <?php echo $database_collation ?>
+            database collation = <?php echo $database_collation ?>
         </pre>
         <p><?php echo $_lang['setup_database_creation_failed_note2']?></p>
-<?php
+        <?php
 
         return;
     } else {
@@ -121,35 +132,6 @@ if ($installMode == 0) {
         return;
     } else {
         echo '<span class="ok">'.$_lang['ok']."</span></p>";
-    }
-}
-
-if(!function_exists('parseProperties')) {
-    /**
-     * parses a resource property string and returns the result as an array
-     * duplicate of method in documentParser class
-     *
-     * @param string $propertyString
-     * @return array
-     */
-    function parseProperties($propertyString) {
-        $parameter= array ();
-        if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            $countParams = count($tmpParams);
-            for ($x= 0; $x < $countParams; $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
-                            $parameter[trim($pTmp[0])]= $pvTmp[2];
-                }
-            }
-        }
-        return $parameter;
     }
 }
 
@@ -178,9 +160,9 @@ if ($installMode != 0) {
 }
 
 // open db connection
-$setupPath = realpath(dirname(__FILE__));
-include "{$setupPath}/setup.info.php";
-include "{$setupPath}/sqlParser.class.php";
+$setupPath = realpath(__DIR__);
+include dirname(__DIR__) . '/processor/result.php';
+include_once dirname(__DIR__) . '/sqlParser.class.php';
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method, $auto_template_logic);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 /* image and file manager paths now handled via settings screen in Manager
@@ -214,8 +196,8 @@ if ($moduleSQLBaseFile) {
 }
 
 // custom or not
-if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
-    $mgrdir = 'include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");';
+if (file_exists(__DIR__."/../../assets/cache/siteManager.php")) {
+    $mgrdir = 'include_once(__DIR__."/../../assets/cache/siteManager.php");';
 }else{
     $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
 }
@@ -234,7 +216,7 @@ $confph['table_prefix']       = $table_prefix;
 $confph['lastInstallTime']    = time();
 $confph['site_sessionname']   = $site_sessionname;
 
-$configString = file_get_contents('config.inc.tpl');
+$configString = file_get_contents(dirname(__DIR__) . '/stubs/config.tpl');
 $configString = parse($configString, $confph);
 
 $filename = '../'.MGR_DIR.'/includes/config.inc.php';
@@ -250,18 +232,18 @@ if (@ fwrite($handle, $configString) === FALSE) {
 @ fclose($handle);
 
 // try to chmod the config file go-rwx (for suexeced php)
-$chmodSuccess = @chmod($filename, 0404);
+@chmod($filename, 0404);
 
 if ($configFileFailed == true) {
     echo '<span class="notok">' . $_lang['failed'] . "</span></p>";
     $errors += 1;
-?>
+    ?>
     <p><?php echo $_lang['cant_write_config_file']?><span class="mono"><?php echo MGR_DIR; ?>/includes/config.inc.php</span></p>
     <textarea style="width:400px; height:160px;">
     <?php echo $configString; ?>
     </textarea>
     <p><?php echo $_lang['cant_write_config_file_note']?></p>
-<?php
+    <?php
     return;
 } else {
     echo '<span class="ok">'.$_lang['ok']."</span></p>";
@@ -286,23 +268,23 @@ if ($installMode == 0) {
 
 // Reset database for installation of demo-site
 if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
-	echo "<p>" . $_lang['resetting_database'];
-	$sqlParser->process($moduleSQLResetFile);
-	// display database results
-	if ($sqlParser->installFailed == true) {
-		$errors += 1;
-		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
-		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
-		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
-		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
-		}
-		echo "</p>";
-		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
-		return;
-	} else {
-		echo '<span class="ok">'.$_lang['ok']."</span></p>";
-	}
+    echo "<p>" . $_lang['resetting_database'];
+    $sqlParser->process($moduleSQLResetFile);
+    // display database results
+    if ($sqlParser->installFailed == true) {
+        $errors += 1;
+        echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+        echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+        echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
+        for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
+            echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+        }
+        echo "</p>";
+        echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
+        return;
+    } else {
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
+    }
 }
 
 // Install Templates
@@ -424,7 +406,7 @@ if (isset ($_POST['tv']) || $installData) {
                         $tRow = mysqli_fetch_assoc($ts);
                         $templateId = $tRow['id'];
                         mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
-                   }
+                    }
                 }
             }
         }
@@ -693,51 +675,51 @@ if ($installData && $moduleSQLDataFile) {
 
 // Install Dependencies
 foreach ($moduleDependencies as $dependency) {
-	$ds = mysqli_query($sqlParser->conn, 'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"');
-	if (!$ds) {
-		echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
-		return;
-	} else {
-		$row = mysqli_fetch_assoc($ds);
-		$moduleId = $row["id"];
-		$moduleGuid = $row["guid"];
-	}
-	// get extra id
-	$ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"');
-	if (!$ds) {
-		echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
-		return;
-	} else {
-		$row = mysqli_fetch_assoc($ds);
-		$extraId = $row["id"];
-	}
-	// setup extra as module dependency
-	$ds = mysqli_query($sqlParser->conn, 'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1');
-	if (!$ds) {
-		echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
-		return;
-	} else {
-		if (mysqli_num_rows($ds) === 0) {
-			mysqli_query($sqlParser->conn, 'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')');
-			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_create'] . '</span></p>';
-		} else {
-			mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type']);
-			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_update'] . '</span></p>';
-		}
-		if ($dependency['type'] == 30 || $dependency['type'] == 40) {
-			// set extra guid for plugins and snippets
-			$ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1');
-			if (!$ds) {
-				echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
-				return;
-			} else {
-				if (mysqli_num_rows($ds) != 0) {
-					mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId);
-					echo '<p>&nbsp;&nbsp;' . $dependency['name'] . ': <span class="ok">' . $_lang['guid_set'] . '</span></p>';
-				}
-			}
-		}
-	}
+    $ds = mysqli_query($sqlParser->conn, 'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"');
+    if (!$ds) {
+        echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
+        return;
+    } else {
+        $row = mysqli_fetch_assoc($ds);
+        $moduleId = $row["id"];
+        $moduleGuid = $row["guid"];
+    }
+    // get extra id
+    $ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"');
+    if (!$ds) {
+        echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
+        return;
+    } else {
+        $row = mysqli_fetch_assoc($ds);
+        $extraId = $row["id"];
+    }
+    // setup extra as module dependency
+    $ds = mysqli_query($sqlParser->conn, 'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1');
+    if (!$ds) {
+        echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
+        return;
+    } else {
+        if (mysqli_num_rows($ds) === 0) {
+            mysqli_query($sqlParser->conn, 'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')');
+            echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_create'] . '</span></p>';
+        } else {
+            mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type']);
+            echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_update'] . '</span></p>';
+        }
+        if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+            // set extra guid for plugins and snippets
+            $ds = mysqli_query($sqlParser->conn, 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1');
+            if (!$ds) {
+                echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
+                return;
+            } else {
+                if (mysqli_num_rows($ds) != 0) {
+                    mysqli_query($sqlParser->conn, 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId);
+                    echo '<p>&nbsp;&nbsp;' . $dependency['name'] . ': <span class="ok">' . $_lang['guid_set'] . '</span></p>';
+                }
+            }
+        }
+    }
 }
 
 // call back function
@@ -761,8 +743,8 @@ $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
 
 // try to chmod the cache go-rwx (for suexeced php)
-$chmodSuccess = @chmod('../assets/cache/siteCache.idx.php', 0600);
-$chmodSuccess = @chmod('../assets/cache/sitePublishing.idx.php', 0600);
+@chmod('../assets/cache/siteCache.idx.php', 0600);
+@chmod('../assets/cache/sitePublishing.idx.php', 0600);
 
 // remove any locks on the manager functions so initial manager login is not blocked
 mysqli_query($conn, "TRUNCATE TABLE `".$table_prefix."active_users`");
@@ -784,157 +766,38 @@ if ($installMode == 0) {
 } else {
     echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
-
-/**
- * Property Update function
- *
- * @param string $new
- * @param string $old
- * @return string
- */
-function propUpdate($new,$old){
-    $newArr = parseProperties($new);
-    $oldArr = parseProperties($old);
-    foreach ($oldArr as $k => $v){
-        if (isset($v['0']['options'])){
-            $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
-        }
+?>
+<form name="install" id="install_form" action="index.php?action=options" method="post">
+<?php
+if ($errors == 0) {
+	// check if install folder is removeable
+    if (is_writable("../install")) { ?>
+<span id="removeinstall" style="float:left;cursor:pointer;color:#505050;line-height:18px;" onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo (empty ($errors) ? 'checked="checked"' : '') ?> style="cursor:default;" /><?php echo $_lang['remove_install_folder_auto'] ?></span>
+<?php
+    } else {
+?>
+<span id="removeinstall" style="float:left;color:#505050;line-height:18px;"><?php echo $_lang['remove_install_folder_manual']?></span>
+<?php
     }
-    $return = $oldArr + $newArr;
-    $return = json_encode($return, JSON_UNESCAPED_UNICODE);
-    $return = ($return !== '[]') ? $return : '';
-    return $return;
 }
-
-/**
- * @param string $propertyString
- * @param bool|mixed $json
- * @return string
- */
-function parseProperties($propertyString, $json=false) {
-    $propertyString = str_replace('{}', '', $propertyString );
-    $propertyString = str_replace('} {', ',', $propertyString );
-
-    if(empty($propertyString)) return array();
-    if($propertyString=='{}' || $propertyString=='[]') return array();
-
-    $jsonFormat = isJson($propertyString, true);
-    $property = array();
-    // old format
-    if ( $jsonFormat === false) {
-        $props= explode('&', $propertyString);
-        foreach ($props as $prop) {
-            $prop = trim($prop);
-            if($prop === '') {
-                continue;
-            }
-
-            $arr = explode(';', $prop);
-            if( ! is_array($arr)) {
-                $arr = array();
-            }
-            $key = explode('=', isset($arr[0]) ? $arr[0] : '');
-            if( ! is_array($key) || empty($key[0])) {
-                continue;
-            }
-
-            $property[$key[0]]['0']['label'] = isset($key[1]) ? trim($key[1]) : '';
-            $property[$key[0]]['0']['type'] = isset($arr[1]) ? trim($arr[1]) : '';
-            switch ($property[$key[0]]['0']['type']) {
-                case 'list':
-                case 'list-multi':
-                case 'checkbox':
-                case 'radio':
-                case 'menu':
-                    $property[$key[0]]['0']['value'] = isset($arr[3]) ? trim($arr[3]) : '';
-                    $property[$key[0]]['0']['options'] = isset($arr[2]) ? trim($arr[2]) : '';
-                    $property[$key[0]]['0']['default'] = isset($arr[3]) ? trim($arr[3]) : '';
-                    break;
-                default:
-                    $property[$key[0]]['0']['value'] = isset($arr[2]) ? trim($arr[2]) : '';
-                    $property[$key[0]]['0']['default'] = isset($arr[2]) ? trim($arr[2]) : '';
-            }
-            $property[$key[0]]['0']['desc'] = '';
-
-        }
-    // new json-format
-    } else if(!empty($jsonFormat)){
-        $property = $jsonFormat;
-    }
-    if ($json) {
-        $property = json_encode($property, JSON_UNESCAPED_UNICODE);
-    }
-    $property = ($property !== '[]') ? $property : '';
-    return $property;
+?>
+    <p class="buttonlinks">
+        <a href="javascript:closepage();" title="<?php echo $_lang['btnclose_value']?>"><span><?php echo $_lang['btnclose_value']?></span></a>
+    </p>
+	<br />
+</form>
+<br />
+<script type="text/javascript">
+/* <![CDATA[ */
+function closepage(){
+	var chk = document.install.rminstaller;
+	if(chk && chk.checked) {
+		// remove install folder and files
+		window.location.href = "../<?php echo MGR_DIR;?>/processors/remove_installer.processor.php?rminstall=1";
+	}
+	else {
+		window.location.href = "../<?php echo MGR_DIR;?>/";
+	}
 }
-
-/**
- * @param string $string
- * @param bool $returnData
- * @return bool|mixed
- */
-function isJson($string, $returnData=false) {
-    $data = json_decode($string, true);
-    return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
-}
-
-/**
- * @param string|int $category
- * @param SqlParser $sqlParser
- * @return int
- */
-function getCreateDbCategory($category, $sqlParser) {
-    $dbase = $sqlParser->dbname;
-    $dbase = '`' . trim($dbase,'`') . '`';
-    $table_prefix = $sqlParser->prefix;
-    $category_id = 0;
-    if(!empty($category)) {
-        $category = mysqli_real_escape_string($sqlParser->conn, $category);
-        $rs = mysqli_query($sqlParser->conn, "SELECT id FROM $dbase.`".$table_prefix."categories` WHERE category = '".$category."'");
-        if(mysqli_num_rows($rs) && ($row = mysqli_fetch_assoc($rs))) {
-            $category_id = $row['id'];
-        } else {
-            $q = "INSERT INTO $dbase.`".$table_prefix."categories` (`category`) VALUES ('{$category}');";
-            $rs = mysqli_query($sqlParser->conn, $q);
-            if($rs) {
-                $category_id = mysqli_insert_id($sqlParser->conn);
-            }
-        }
-    }
-    return $category_id;
-}
-
-/**
- * Remove installer Docblock only from components using plugin FileSource / fileBinding
- *
- * @param string $code
- * @param string $type
- * @return string
- */
-function removeDocblock($code, $type) {
-
-    $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
-
-    // Procedure taken from plugin.filesource.php
-    switch($type) {
-        case 'snippet':
-            $elm_name = 'snippets';
-            $include = 'return require';
-            $count = 47;
-            break;
-
-        case 'plugin':
-            $elm_name = 'plugins';
-            $include = 'require';
-            $count = 39;
-            break;
-
-        default:
-            return $cleaned;
-    };
-    if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
-        return $cleaned;
-
-    // fileBinding not found - return code incl docblock
-    return $code;
-}
+/* ]]> */
+</script>
