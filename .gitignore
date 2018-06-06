@@ -45,6 +45,7 @@
 
 # Manager
 /manager/includes/config.inc.php
+/manager/includes/config_mutator.php
 
 # Composer
 /composer.phar
