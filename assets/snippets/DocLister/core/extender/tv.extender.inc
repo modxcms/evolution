@@ -198,9 +198,6 @@ class tv_DL_Extender extends extDocLister
      */
     public function renderTV($iddoc, $tvname, $tvval, $param)
     {
-        include_once MODX_MANAGER_PATH . "includes/tmplvars.format.inc.php";
-        include_once MODX_MANAGER_PATH . "includes/tmplvars.commands.inc.php";
-
         return getTVDisplayFormat(
             $tvname,
             $tvval,

@@ -1,7 +1,7 @@
 <?php
 /**
  * EVO Cli Installer
- * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
+ * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y
  */
 
 $self = 'install/cli-install.php';
@@ -68,17 +68,17 @@ if ( empty($args) ){
     $cmspassword = readline($_lang['connection_screen_default_admin_password']. ' ');
     $managerlanguage = readline('Мanager language:' . ' [en] ');
     $installData = readline('Instal demo-site (y/n):' . ' [n] ');
-    
+
 }else{
-    
+
     $cli_variables = [];
     foreach ($args as $arg) {
         $tmp = array_map('trim', explode('=', $arg));
         if (count($tmp) === 2) {
             $k = ltrim($tmp[0], '-');
-            
+
             $cli_variables[$k] = $tmp[1];
-            
+
         }
     }
 
@@ -87,11 +87,11 @@ if ( empty($args) ){
     $databaseloginpassword = $cli_variables['database_password'];
     $database_name = $cli_variables['database'];
     $tableprefix = $cli_variables['table_prefix'];
-    
+
     $cmsadmin = $cli_variables['cmsadmin'];
     $cmsadminemail = $cli_variables['cmsadminemail'];
     $cmspassword = $cli_variables['cmspassword'];
-    
+
     $managerlanguage = $cli_variables['language'];
     $installData = $cli_variables['installData'];
     $mode = $cli_variables['mode'];
@@ -100,12 +100,12 @@ if ( empty($args) ){
 }
 
 
-if ($databasehost == '') { $databasehost= 'localhost'; } 
+if ($databasehost == '') { $databasehost= 'localhost'; }
 if ($tableprefix == ''){ $tableprefix = $tableprefixauto; }
-if ($database_connection_method == '') { $database_connection_method = 'SET CHARACTER SET'; } 
-if ($database_collation == '') { $database_collation = 'utf8_general_ci'; } 
+if ($database_connection_method == '') { $database_connection_method = 'SET CHARACTER SET'; }
+if ($database_collation == '') { $database_collation = 'utf8_general_ci'; }
 if ($cmsadmin == ''){ $cmsadmin = 'admin'; }
-if ($managerlanguage == '') { $managerlanguage = 'en'; } 
+if ($managerlanguage == '') { $managerlanguage = 'en'; }
 if ($installData == 'y') { $installData = 1;}
 if ($mode == 'upgrade') { $installMode = 1;}
 
@@ -115,7 +115,7 @@ switch ($managerlanguage) {
     case 'ru':
         $managerlanguage = 'russian-UTF8';
         break;
-    
+
     case 'en':
     default:
         $managerlanguage = 'english';
@@ -477,7 +477,7 @@ if ($create) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
         echo $_lang['setup_database_creation_failed']." ".$_lang['setup_database_creation_failed_note'].PHP_EOL;
         $errors += 1;
-        
+
         echo 'database charset: ' . $database_charset . PHP_EOL;
         echo 'database collation: ' . $database_collation . PHP_EOL;
 
@@ -1030,7 +1030,7 @@ if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 }
 
 // Install Templates
-$moduleTemplate = $mt; 
+$moduleTemplate = $mt;
 if (!empty($moduleTemplate) || $installData) {
     echo PHP_EOL . $_lang['templates'] . ":" . PHP_EOL;
     //$selTemplates = $_POST['template'];
@@ -1488,8 +1488,7 @@ include_once($path.'../'.MGR_DIR.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
 // always empty cache after install
-include_once $path."../".MGR_DIR."/processors/cache_sync.class.processor.php";
-$sync = new synccache();
+$sync = new EvolutionCMS\Cache();
 $sync->setCachepath($path."../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache

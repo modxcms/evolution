@@ -97,10 +97,10 @@ if (!isset($_SESSION['mgrValidated'])) {
     } else {
         $modx->setPlaceholder('login_bg', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-background.jpg');
     }
-  
+
     // set form position css class
     $modx->setPlaceholder('login_form_position_class', 'loginbox-' . $modx->config['login_form_position']);
-    
+
     switch ($modx->config['manager_theme_mode']) {
       case '1':
         $modx->setPlaceholder('manager_theme_style', 'lightness');
@@ -136,7 +136,7 @@ if (!isset($_SESSION['mgrValidated'])) {
     if ($modx->config['use_captcha'] == 1) {
         $modx->setPlaceholder('login_captcha_message', $_lang["login_captcha_message"]);
         $modx->setPlaceholder('captcha_image',
-            '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha"><img id="captcha_image" src="' . MODX_MANAGER_URL . 'includes/veriword.php?rand=' . rand() . '" alt="' . $_lang["login_captcha_message"] . '" /></a>');
+            '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha"><img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $_lang["login_captcha_message"] . '" /></a>');
         $modx->setPlaceholder('captcha_input',
             '<label>' . $_lang["captcha_code"] . '</label> <input type="text" name="captcha_code" tabindex="3" value="" />');
     }

@@ -25,7 +25,7 @@ if(!defined('MGR_DIR') && is_dir("{$base_path}manager")) {
 
 require_once("lang.php");
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
-include_once('../'.MGR_DIR.'/bootstrap.php');
+include_once('../'.MGR_DIR.'/includes/bootstrap.php');
 
 // start session
 session_start();

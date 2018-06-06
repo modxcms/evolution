@@ -36,7 +36,6 @@ if (!function_exists('genEvoSessionName')) {
     }
 }
 
-
 if (!function_exists('startCMSSession')) {
     /**
      * @return void

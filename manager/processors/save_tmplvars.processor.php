@@ -173,65 +173,70 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
-/**
- * @return void
- */
-function saveTemplateVarAccess()
-{
-    global $id, $newid;
-    $modx = evolutionCMS();
+if(!function_exists('saveTemplateVarAccess')) {
+    /**
+     * @return void
+     */
+    function saveTemplateVarAccess()
+    {
+        global $id, $newid;
+        $modx = evolutionCMS();
 
-    if ($newid) {
-        $id = $newid;
-    }
-    $templates = $_POST['template']; // get muli-templates based on S.BRENNAN mod
+        if ($newid) {
+            $id = $newid;
+        }
+        $templates = $_POST['template']; // get muli-templates based on S.BRENNAN mod
 
-    // update template selections
-    $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+        // update template selections
+        $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 
-    $getRankArray = array();
+        $getRankArray = array();
 
-    $getRank = $modx->db->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+        $getRank = $modx->db->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 
-    while ($row = $modx->db->getRow($getRank)) {
-        $getRankArray[$row['templateid']] = $row['rank'];
-    }
+        while ($row = $modx->db->getRow($getRank)) {
+            $getRankArray[$row['templateid']] = $row['rank'];
+        }
 
-    $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
-    if (!empty($templates)) {
-        for ($i = 0; $i < count($templates); $i++) {
-            $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-            $modx->db->insert(array(
-                'tmplvarid' => $id,
-                'templateid' => $templates[$i],
-                'rank' => $setRank,
-            ), $tbl_site_tmplvar_templates);
+        $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
+        if (!empty($templates)) {
+            for ($i = 0; $i < count($templates); $i++) {
+                $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
+                $modx->db->insert(array(
+                    'tmplvarid'  => $id,
+                    'templateid' => $templates[$i],
+                    'rank'       => $setRank,
+                ), $tbl_site_tmplvar_templates);
+            }
         }
     }
 }
 
-function saveDocumentAccessPermissons()
-{
-    global $id, $newid;
-    $modx = evolutionCMS(); global $use_udperms;
+if(!function_exists('saveDocumentAccessPermissons')) {
+    function saveDocumentAccessPermissons()
+    {
+        global $id, $newid;
+        $modx = evolutionCMS();
+        global $use_udperms;
 
-    $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
+        $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
 
-    if ($newid) {
-        $id = $newid;
-    }
-    $docgroups = $_POST['docgroups'];
+        if ($newid) {
+            $id = $newid;
+        }
+        $docgroups = $_POST['docgroups'];
 
-    // check for permission update access
-    if ($use_udperms == 1) {
-        // delete old permissions on the tv
-        $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
-        if (is_array($docgroups)) {
-            foreach ($docgroups as $value) {
-                $modx->db->insert(array(
-                    'tmplvarid' => $id,
-                    'documentgroup' => stripslashes($value),
-                ), $tbl_site_tmplvar_templates);
+        // check for permission update access
+        if ($use_udperms == 1) {
+            // delete old permissions on the tv
+            $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+            if (is_array($docgroups)) {
+                foreach ($docgroups as $value) {
+                    $modx->db->insert(array(
+                        'tmplvarid'     => $id,
+                        'documentgroup' => stripslashes($value),
+                    ), $tbl_site_tmplvar_templates);
+                }
             }
         }
     }

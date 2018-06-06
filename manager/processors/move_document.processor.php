@@ -26,8 +26,7 @@ $oldparent = $modx->db->getValue($rs);
 
 if ($use_udperms == 1) {
 	if ($oldparent != $newParentID) {
-		include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
-		$udperms = new udperms();
+		$udperms = new EvolutionCMS\Legacy\Permissions();
 		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $newParentID;
 		$udperms->role = $_SESSION['mgrRole'];
@@ -38,20 +37,24 @@ if ($use_udperms == 1) {
 	}
 }
 
-/**
- * @param int $currDocID
- * @return array
- */
-function allChildren($currDocID) {
-	$modx = evolutionCMS();
-	$children= array();
-	$currDocID = $modx->db->escape($currDocID);
-	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
-	while ($child= $modx->db->getRow($rs)) {
-		$children[]= $child['id'];
-		$children= array_merge($children, allChildren($child['id']));
-	}
-	return $children;
+if(!function_exists('allChildren')) {
+    /**
+     * @param int $currDocID
+     * @return array
+     */
+    function allChildren($currDocID)
+    {
+        $modx = evolutionCMS();
+        $children = array();
+        $currDocID = $modx->db->escape($currDocID);
+        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
+        while ($child = $modx->db->getRow($rs)) {
+            $children[] = $child['id'];
+            $children = array_merge($children, allChildren($child['id']));
+        }
+
+        return $children;
+    }
 }
 
 $evtOut = $modx->invokeEvent("onBeforeMoveDocument", array (

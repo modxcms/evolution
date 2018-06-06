@@ -348,155 +348,170 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-/**
- * Send an email to the user
- *
- * @param string $email
- * @param string $uid
- * @param string $pwd
- * @param string $ufn
- */
-function sendMailMessage($email, $uid, $pwd, $ufn) {
-	$modx = evolutionCMS(); global $_lang, $signupemail_message;
-	global $emailsubject, $emailsender;
-	global $site_name;
-	$manager_url = MODX_MANAGER_URL;
-	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
-	// replace placeholders
-	$message = str_replace("[+uid+]", $uid, $message);
-	$message = str_replace("[+pwd+]", $pwd, $message);
-	$message = str_replace("[+ufn+]", $ufn, $message);
-	$message = str_replace("[+sname+]", $site_name, $message);
-	$message = str_replace("[+saddr+]", $emailsender, $message);
-	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $manager_url, $message);
+if(!function_exists('sendMailMessage')) {
+    /**
+     * Send an email to the user
+     *
+     * @param string $email
+     * @param string $uid
+     * @param string $pwd
+     * @param string $ufn
+     */
+    function sendMailMessage($email, $uid, $pwd, $ufn)
+    {
+        $modx = evolutionCMS();
+        global $_lang, $signupemail_message;
+        global $emailsubject, $emailsender;
+        global $site_name;
+        $manager_url = MODX_MANAGER_URL;
+        $message = sprintf($signupemail_message, $uid, $pwd); // use old method
+        // replace placeholders
+        $message = str_replace("[+uid+]", $uid, $message);
+        $message = str_replace("[+pwd+]", $pwd, $message);
+        $message = str_replace("[+ufn+]", $ufn, $message);
+        $message = str_replace("[+sname+]", $site_name, $message);
+        $message = str_replace("[+saddr+]", $emailsender, $message);
+        $message = str_replace("[+semail+]", $emailsender, $message);
+        $message = str_replace("[+surl+]", $manager_url, $message);
 
-	$param = array();
-	$param['from'] = "{$site_name}<{$emailsender}>";
-	$param['subject'] = $emailsubject;
-	$param['body'] = $message;
-	$param['to'] = $email;
-	$param['type'] = 'text';
-	$rs = $modx->sendmail($param);
-	if(!$rs) {
-		$modx->manager->saveFormValues();
-		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
-	}
+        $param = array();
+        $param['from'] = "{$site_name}<{$emailsender}>";
+        $param['subject'] = $emailsubject;
+        $param['body'] = $message;
+        $param['to'] = $email;
+        $param['type'] = 'text';
+        $rs = $modx->sendmail($param);
+        if (!$rs) {
+            $modx->manager->saveFormValues();
+            $modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
+        }
+    }
 }
 
-/**
- * Save User Settings
- *
- * @param int $id
- */
-function saveUserSettings($id) {
-	$modx = evolutionCMS();
-	$tbl_user_settings = $modx->getFullTableName('user_settings');
+if(!function_exists('saveUserSettings')) {
+    /**
+     * Save User Settings
+     *
+     * @param int $id
+     */
+    function saveUserSettings($id)
+    {
+        $modx = evolutionCMS();
+        $tbl_user_settings = $modx->getFullTableName('user_settings');
 
-	$ignore = array(
-		'id',
-		'oldusername',
-		'oldemail',
-		'newusername',
-		'fullname',
-		'newpassword',
-		'newpasswordcheck',
-		'passwordgenmethod',
-		'passwordnotifymethod',
-		'specifiedpassword',
-		'confirmpassword',
-		'email',
-		'phone',
-		'mobilephone',
-		'fax',
-		'dob',
-		'country',
-		'street',
-		'city',
-		'state',
-		'zip',
-		'gender',
-		'photo',
-		'comment',
-		'role',
-		'failedlogincount',
-		'blocked',
-		'blockeduntil',
-		'blockedafter',
-		'user_groups',
-		'mode',
-		'blockedmode',
-		'stay',
-		'save',
-		'theme_refresher'
-	);
+        $ignore = array(
+            'id',
+            'oldusername',
+            'oldemail',
+            'newusername',
+            'fullname',
+            'newpassword',
+            'newpasswordcheck',
+            'passwordgenmethod',
+            'passwordnotifymethod',
+            'specifiedpassword',
+            'confirmpassword',
+            'email',
+            'phone',
+            'mobilephone',
+            'fax',
+            'dob',
+            'country',
+            'street',
+            'city',
+            'state',
+            'zip',
+            'gender',
+            'photo',
+            'comment',
+            'role',
+            'failedlogincount',
+            'blocked',
+            'blockeduntil',
+            'blockedafter',
+            'user_groups',
+            'mode',
+            'blockedmode',
+            'stay',
+            'save',
+            'theme_refresher'
+        );
 
-	// determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
-	$defaults = array(
-		'upload_images',
-		'upload_media',
-		'upload_flash',
-		'upload_files'
-	);
+        // determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
+        $defaults = array(
+            'upload_images',
+            'upload_media',
+            'upload_flash',
+            'upload_files'
+        );
 
-	// get user setting field names
-	$settings = array();
-	foreach($_POST as $n => $v) {
-		if(in_array($n, $ignore) || (!in_array($n, $defaults) && is_scalar($v) && trim($v) == '') || (!in_array($n, $defaults) && is_array($v) && empty($v))) {
-			continue;
-		} // ignore blacklist and empties
-		$settings[$n] = $v; // this value should be saved
-	}
+        // get user setting field names
+        $settings = array();
+        foreach ($_POST as $n => $v) {
+            if (in_array($n, $ignore) || (!in_array($n, $defaults) && is_scalar($v) && trim($v) == '') || (!in_array($n,
+                        $defaults) && is_array($v) && empty($v))) {
+                continue;
+            } // ignore blacklist and empties
+            $settings[$n] = $v; // this value should be saved
+        }
 
-	foreach($defaults as $k) {
-		if(isset($settings['default_' . $k]) && $settings['default_' . $k] == '1') {
-			unset($settings[$k]);
-		}
-		unset($settings['default_' . $k]);
-	}
+        foreach ($defaults as $k) {
+            if (isset($settings['default_' . $k]) && $settings['default_' . $k] == '1') {
+                unset($settings[$k]);
+            }
+            unset($settings['default_' . $k]);
+        }
 
-	$modx->db->delete($tbl_user_settings, "user='{$id}'");
+        $modx->db->delete($tbl_user_settings, "user='{$id}'");
 
-	foreach($settings as $n => $vl) {
-		if(is_array($vl)) {
-			$vl = implode(",", $vl);
-		}
-		if($vl != '') {
-			$f = array();
-			$f['user'] = $id;
-			$f['setting_name'] = $n;
-			$f['setting_value'] = $vl;
-			$f = $modx->db->escape($f);
-			$modx->db->insert($f, $tbl_user_settings);
-		}
-	}
+        foreach ($settings as $n => $vl) {
+            if (is_array($vl)) {
+                $vl = implode(",", $vl);
+            }
+            if ($vl != '') {
+                $f = array();
+                $f['user'] = $id;
+                $f['setting_name'] = $n;
+                $f['setting_value'] = $vl;
+                $f = $modx->db->escape($f);
+                $modx->db->insert($f, $tbl_user_settings);
+            }
+        }
+    }
 }
 
-/**
- * Web alert -  sends an alert to web browser
- *
- * @param $msg
- */
-function webAlertAndQuit($msg) {
-	global $id, $modx;
-	$mode = $_POST['mode'];
-	$modx->manager->saveFormValues($mode);
-	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
+if(!function_exists('webAlertAndQuit')) {
+    /**
+     * Web alert -  sends an alert to web browser
+     *
+     * @param $msg
+     */
+    function webAlertAndQuit($msg)
+    {
+        global $id, $modx;
+        $mode = $_POST['mode'];
+        $modx->manager->saveFormValues($mode);
+        $modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
+    }
 }
 
-/**
- * Generate password
- *
- * @param int $length
- * @return string
- */
-function generate_password($length = 10) {
-	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-	$ps_len = strlen($allowable_characters);
-	mt_srand((double) microtime() * 1000000);
-	$pass = "";
-	for($i = 0; $i < $length; $i++) {
-		$pass .= $allowable_characters[mt_rand(0, $ps_len - 1)];
-	}
-	return $pass;
+if(!function_exists('generate_password')) {
+    /**
+     * Generate password
+     *
+     * @param int $length
+     * @return string
+     */
+    function generate_password($length = 10)
+    {
+        $allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        $ps_len = strlen($allowable_characters);
+        mt_srand((double)microtime() * 1000000);
+        $pass = "";
+        for ($i = 0; $i < $length; $i++) {
+            $pass .= $allowable_characters[mt_rand(0, $ps_len - 1)];
+        }
+
+        return $pass;
+    }
 }

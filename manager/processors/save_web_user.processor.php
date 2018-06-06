@@ -338,120 +338,142 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-/**
- * in case any plugins include a quoted_printable function
- *
- * @param string $string
- * @return string
- */
-function save_user_quoted_printable($string) {
-	$crlf = "\n";
-	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf;
-	$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e';
-	$r[] = "'=' . sprintf('%02X', ord('\\1'))";
-	$f[] = '/([\011\040])' . $crlf . '/e';
-	$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'";
-	$string = preg_replace($f, $r, $string);
-	return trim(wordwrap($string, 70, ' =' . $crlf));
+if(!function_exists('save_user_quoted_printable')) {
+    /**
+     * in case any plugins include a quoted_printable function
+     *
+     * @param string $string
+     * @return string
+     */
+    function save_user_quoted_printable($string)
+    {
+        $crlf = "\n";
+        $string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf;
+        $f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e';
+        $r[] = "'=' . sprintf('%02X', ord('\\1'))";
+        $f[] = '/([\011\040])' . $crlf . '/e';
+        $r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'";
+        $string = preg_replace($f, $r, $string);
+
+        return trim(wordwrap($string, 70, ' =' . $crlf));
+    }
 }
 
-/**
- * Send an email to the user
- *
- * @param string $email
- * @param string $uid
- * @param string $pwd
- * @param string $ufn
- */
-function sendMailMessage($email, $uid, $pwd, $ufn) {
-	$modx = evolutionCMS(); global $_lang, $websignupemail_message;
-	global $emailsubject, $emailsender;
-	global $site_name, $site_url;
-	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
-	// replace placeholders
-	$message = str_replace("[+uid+]", $uid, $message);
-	$message = str_replace("[+pwd+]", $pwd, $message);
-	$message = str_replace("[+ufn+]", $ufn, $message);
-	$message = str_replace("[+sname+]", $site_name, $message);
-	$message = str_replace("[+saddr+]", $emailsender, $message);
-	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $site_url, $message);
+if(!function_exists('sendMailMessage')) {
+    /**
+     * Send an email to the user
+     *
+     * @param string $email
+     * @param string $uid
+     * @param string $pwd
+     * @param string $ufn
+     */
+    function sendMailMessage($email, $uid, $pwd, $ufn)
+    {
+        $modx = evolutionCMS();
+        global $_lang, $websignupemail_message;
+        global $emailsubject, $emailsender;
+        global $site_name, $site_url;
+        $message = sprintf($websignupemail_message, $uid, $pwd); // use old method
+        // replace placeholders
+        $message = str_replace("[+uid+]", $uid, $message);
+        $message = str_replace("[+pwd+]", $pwd, $message);
+        $message = str_replace("[+ufn+]", $ufn, $message);
+        $message = str_replace("[+sname+]", $site_name, $message);
+        $message = str_replace("[+saddr+]", $emailsender, $message);
+        $message = str_replace("[+semail+]", $emailsender, $message);
+        $message = str_replace("[+surl+]", $site_url, $message);
 
-	$param = array();
-	$param['from'] = "{$site_name}<{$emailsender}>";
-	$param['subject'] = $emailsubject;
-	$param['body'] = $message;
-	$param['to'] = $email;
-	$param['type'] = 'text';
-	$rs = $modx->sendmail($param);
-	if(!$rs) {
-		$modx->manager->saveFormValues();
-		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
-	}
+        $param = array();
+        $param['from'] = "{$site_name}<{$emailsender}>";
+        $param['subject'] = $emailsubject;
+        $param['body'] = $message;
+        $param['to'] = $email;
+        $param['type'] = 'text';
+        $rs = $modx->sendmail($param);
+        if (!$rs) {
+            $modx->manager->saveFormValues();
+            $modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
+        }
+    }
 }
 
+if(!function_exists('saveUserSettings')) {
 // Save User Settings
-function saveUserSettings($id) {
-	$modx = evolutionCMS();
-	$tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
+    function saveUserSettings($id)
+    {
+        $modx = evolutionCMS();
+        $tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
 
-	$settings = array(
-		"login_home",
-		"allowed_ip",
-		"allowed_days"
-	);
+        $settings = array(
+            "login_home",
+            "allowed_ip",
+            "allowed_days"
+        );
 
-	$modx->db->delete($tbl_web_user_settings, "webuser='{$id}'");
+        $modx->db->delete($tbl_web_user_settings, "webuser='{$id}'");
 
-	foreach($settings as $n) {
-		$vl = $_POST[$n];
-		if(is_array($vl)) {
-			$vl = implode(",", $vl);
-		}
-		if($vl != '') {
-			$f = array();
-			$f['webuser'] = $id;
-			$f['setting_name'] = $n;
-			$f['setting_value'] = $vl;
-			$f = $modx->db->escape($f);
-			$modx->db->insert($f, $tbl_web_user_settings);
-		}
-	}
+        foreach ($settings as $n) {
+            $vl = $_POST[$n];
+            if (is_array($vl)) {
+                $vl = implode(",", $vl);
+            }
+            if ($vl != '') {
+                $f = array();
+                $f['webuser'] = $id;
+                $f['setting_name'] = $n;
+                $f['setting_value'] = $vl;
+                $f = $modx->db->escape($f);
+                $modx->db->insert($f, $tbl_web_user_settings);
+            }
+        }
+    }
 }
 
+if(!function_exists('webAlertAndQuit')) {
 // Web alert -  sends an alert to web browser
-function webAlertAndQuit($msg) {
-	global $id, $modx;
-	$mode = $_POST['mode'];
-	$modx->manager->saveFormValues($mode);
-	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : ''));
+    function webAlertAndQuit($msg)
+    {
+        global $id, $modx;
+        $mode = $_POST['mode'];
+        $modx->manager->saveFormValues($mode);
+        $modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : ''));
+    }
 }
 
+if(!function_exists('generate_password')) {
 // Generate password
-function generate_password($length = 10) {
-	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-	$ps_len = strlen($allowable_characters);
-	mt_srand((double) microtime() * 1000000);
-	$pass = "";
-	for($i = 0; $i < $length; $i++) {
-		$pass .= $allowable_characters[mt_rand(0, $ps_len - 1)];
-	}
-	return $pass;
+    function generate_password($length = 10)
+    {
+        $allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        $ps_len = strlen($allowable_characters);
+        mt_srand((double)microtime() * 1000000);
+        $pass = "";
+        for ($i = 0; $i < $length; $i++) {
+            $pass .= $allowable_characters[mt_rand(0, $ps_len - 1)];
+        }
+
+        return $pass;
+    }
 }
 
-function sanitize($str = '', $safecount = 0) {
-	$modx = evolutionCMS();
-	$safecount++;
-	if(1000 < $safecount) {
-		exit("error too many loops '{$safecount}'");
-	}
-	if(is_array($str)) {
-		foreach($str as $i => $v) {
-			$str[$i] = sanitize($v, $safecount);
-		}
-	} else {
-		// $str = strip_tags($str); // LEAVE < and > intact
-		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
-	}
-	return $str;
+if(!function_exists('sanitize')) {
+    function sanitize($str = '', $safecount = 0)
+    {
+        $modx = evolutionCMS();
+        $safecount++;
+        if (1000 < $safecount) {
+            exit("error too many loops '{$safecount}'");
+        }
+        if (is_array($str)) {
+            foreach ($str as $i => $v) {
+                $str[$i] = sanitize($v, $safecount);
+            }
+        } else {
+            // $str = strip_tags($str); // LEAVE < and > intact
+            $str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
+        }
+
+        return $str;
+    }
 }

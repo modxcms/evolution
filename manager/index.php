@@ -984,8 +984,7 @@ switch ($action) {
 /********************************************************************/
 // log action, unless it's a frame request
 if($action!=1 && $action!=7 && $action!=2) {
-	include_once "log.class.inc.php";
-	$log = new logHandler;
+	$log = new EvolutionCMS\Legacy\LogHandler;
 	$log->initAndWriteLog();
 }
 /********************************************************************/

@@ -6,51 +6,56 @@ if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-/**
- * @param array $array
- * @param string $checkKey
- * @return array
- */
-function array_unique_multi($array, $checkKey)
-{
-    // Use the builtin if we're not a multi-dimensional array
-    if (!is_array(current($array)) || empty($checkKey)) {
-        return array_unique($array);
-    }
+if(!function_exists('array_unique_multi')) {
+    /**
+     * @param array $array
+     * @param string $checkKey
+     * @return array
+     */
+    function array_unique_multi($array, $checkKey)
+    {
+        // Use the builtin if we're not a multi-dimensional array
+        if (!is_array(current($array)) || empty($checkKey)) {
+            return array_unique($array);
+        }
 
-    $ret = array();
-    $checkValues = array(); // contains the unique key Values
-    foreach ($array as $key => $current) {
-        if (in_array($current[$checkKey], $checkValues)) {
-            continue;
-        } // duplicate
+        $ret = array();
+        $checkValues = array(); // contains the unique key Values
+        foreach ($array as $key => $current) {
+            if (in_array($current[$checkKey], $checkValues)) {
+                continue;
+            } // duplicate
 
-        $checkValues[] = $current[$checkKey];
-        $ret[$key] = $current;
+            $checkValues[] = $current[$checkKey];
+            $ret[$key] = $current;
+        }
+
+        return $ret;
     }
-    return $ret;
 }
 
-/**
- * @param array $array
- * @param string $key
- * @return array
- */
-function record_sort($array, $key)
-{
-    $hash = array();
-    foreach ($array as $k => $v) {
-        $hash[$k] = $v[$key];
+if(!function_exists('record_sort')) {
+    /**
+     * @param array $array
+     * @param string $key
+     * @return array
+     */
+    function record_sort($array, $key)
+    {
+        $hash = array();
+        foreach ($array as $k => $v) {
+            $hash[$k] = $v[$key];
+        }
+
+        natsort($hash);
+
+        $records = array();
+        foreach ($hash as $k => $row) {
+            $records[$k] = $array[$k];
+        }
+
+        return $records;
     }
-
-    natsort($hash);
-
-    $records = array();
-    foreach ($hash as $k => $row) {
-        $records[$k] = $array[$k];
-    }
-
-    return $records;
 }
 
 $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
@@ -230,9 +235,8 @@ if ($limit < 1) {
 } else {
     echo '<p>' . $_lang["mgrlog_sortinst"] . '</p>';
 
-    include_once "paginate.inc.php";
     // New instance of the Paging class, you can modify the color and the width of the html table
-    $p = new Paging($num_rows, $int_cur_position, $int_num_result, $extargv);
+    $p = new EvolutionCMS\Support\Paginate($num_rows, $int_cur_position, $int_num_result, $extargv);
 
     // Load up the 2 array in order to display result
     $array_paging = $p->getPagingArray();

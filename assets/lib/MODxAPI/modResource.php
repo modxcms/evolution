@@ -281,8 +281,6 @@ class modResource extends MODxAPI
     {
         $out = null;
         if ($this->getID() > 0) {
-            include_once MODX_MANAGER_PATH . "includes/tmplvars.format.inc.php";
-            include_once MODX_MANAGER_PATH . "includes/tmplvars.commands.inc.php";
             $tvval = $this->get($tvname);
             if ($this->isTVarrayField($tvname) && is_array($tvval)) {
                 $tvval = implode('||', $tvval);
@@ -491,7 +489,7 @@ class modResource extends MODxAPI
             }
             unset($this->field['id']);
         }
-        
+
         return $this;
     }
 

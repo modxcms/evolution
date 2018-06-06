@@ -460,8 +460,10 @@ echo $content;
 //	<a href="javascript:;" class="setting"><i class="fa fa-cog"></i></a>
 //  <a href="javascript:;" class="closed"><i class="fa fa-close"></i></a>
 //</span>
-function getTplWidget() { // recent document info
-	return '
+if(!function_exists('getTplWidget')) {
+    function getTplWidget()
+    { // recent document info
+        return '
 		<div class="[+cols+]" id="[+id+]">
 			<div class="card"[+cardAttr+]>
 				<div class="card-header"[+headAttr+]> <i class="fa [+icon+]"></i> [+title+] </div>
@@ -469,14 +471,17 @@ function getTplWidget() { // recent document info
 			</div>
 		</div>
 ';
+    }
 }
 
-function getRecentInfo() { // recent document info
-	$modx = evolutionCMS();
+if(!function_exists('getRecentInfo')) {
+    function getRecentInfo()
+    { // recent document info
+        $modx = evolutionCMS();
 
-	$modx->addSnippet('recentInfoList', 'getRecentInfoList');
+        $modx->addSnippet('recentInfoList', 'getRecentInfoList');
 
-	$html = '
+        $html = '
 			<div class="table-responsive">
 				<table class="table data">
 					<thead>
@@ -494,96 +499,105 @@ function getRecentInfo() { // recent document info
 				</table>
 			</div>
 ';
-	return $html;
+
+        return $html;
+    }
 }
 
-function getRecentInfoList() {
-	$modx = evolutionCMS();
+if(!function_exists('getRecentInfoList')) {
+    function getRecentInfoList()
+    {
+        $modx = evolutionCMS();
 
-	$rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
+        $rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
 
-	if($modx->db->getRecordCount($rs) < 1) {
-		return '<tr><td>[%no_activity_message%]</td></tr>';
-	}
+        if ($modx->db->getRecordCount($rs) < 1) {
+            return '<tr><td>[%no_activity_message%]</td></tr>';
+        }
 
-	$tpl = getRecentInfoRowTpl();
+        $tpl = getRecentInfoRowTpl();
 
-	$btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]" target="main"><i class="fa fa-edit fa-fw"></i></a> ';
-	$btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+        $btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]" target="main"><i class="fa fa-edit fa-fw"></i></a> ';
+        $btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
-	$output = array();
-	while($ph = $modx->db->getRow($rs)) {
-		$docid = $ph['id'];
-		$_ = $modx->getUserInfo($ph['editedby']);
-		$ph['username'] = $_['username'];
+        $output = array();
+        while ($ph = $modx->db->getRow($rs)) {
+            $docid = $ph['id'];
+            $_ = $modx->getUserInfo($ph['editedby']);
+            $ph['username'] = $_['username'];
 
-		if($ph['deleted'] == 1) {
-			$ph['status'] = 'deleted text-danger';
-		} elseif($ph['published'] == 0) {
-			$ph['status'] = 'unpublished font-italic text-muted';
-		} else {
-			$ph['status'] = 'published';
-		}
+            if ($ph['deleted'] == 1) {
+                $ph['status'] = 'deleted text-danger';
+            } elseif ($ph['published'] == 0) {
+                $ph['status'] = 'unpublished font-italic text-muted';
+            } else {
+                $ph['status'] = 'published';
+            }
 
-		if($modx->hasPermission('edit_document')) {
-			$ph['edit_btn'] = str_replace('[+id+]', $docid, $btntpl['edit']);
-		} else {
-			$ph['edit_btn'] = '';
-		}
+            if ($modx->hasPermission('edit_document')) {
+                $ph['edit_btn'] = str_replace('[+id+]', $docid, $btntpl['edit']);
+            } else {
+                $ph['edit_btn'] = '';
+            }
 
-		$preview_disabled = ($ph['deleted'] == 1) ? 'disabled' : '';
-		$ph['preview_btn'] = str_replace(array(
-			'[+id+]',
-			'[+preview_disabled+]'
-		), array(
-			$docid,
-			$preview_disabled
-		), $btntpl['preview_btn']);
+            $preview_disabled = ($ph['deleted'] == 1) ? 'disabled' : '';
+            $ph['preview_btn'] = str_replace(array(
+                '[+id+]',
+                '[+preview_disabled+]'
+            ), array(
+                $docid,
+                $preview_disabled
+            ), $btntpl['preview_btn']);
 
-		if($modx->hasPermission('delete_document')) {
-			if($ph['deleted'] == 0) {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]" target="main"><i class="fa fa-trash fa-fw"></i></a> ';
-			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
-			}
-			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
-		} else {
-			$ph['delete_btn'] = '';
-		}
+            if ($modx->hasPermission('delete_document')) {
+                if ($ph['deleted'] == 0) {
+                    $delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]" target="main"><i class="fa fa-trash fa-fw"></i></a> ';
+                } else {
+                    $delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+                }
+                $ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
+            } else {
+                $ph['delete_btn'] = '';
+            }
 
-		if($ph['deleted'] == 1 && $ph['published'] == 0) {
-			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
-		} elseif($ph['deleted'] == 1 && $ph['published'] == 1) {
-			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
-		} elseif($ph['deleted'] == 0 && $ph['published'] == 0) {
-			$publish_btn = '<a title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
-		} else {
-			$publish_btn = '<a title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
-		}
-		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
+            if ($ph['deleted'] == 1 && $ph['published'] == 0) {
+                $publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            } elseif ($ph['deleted'] == 1 && $ph['published'] == 1) {
+                $publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            } elseif ($ph['deleted'] == 0 && $ph['published'] == 0) {
+                $publish_btn = '<a title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            } else {
+                $publish_btn = '<a title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            }
+            $ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
+            $ph['info_btn'] = str_replace('[+id+]', $docid,
+                '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
-		if($ph['longtitle'] == '') {
-			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['description'] == '') {
-			$ph['description'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['introtext'] == '') {
-			$ph['introtext'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['alias'] == '') {
-			$ph['alias'] = '(<i>[%not_set%]</i>)';
-		}
+            if ($ph['longtitle'] == '') {
+                $ph['longtitle'] = '(<i>[%not_set%]</i>)';
+            }
+            if ($ph['description'] == '') {
+                $ph['description'] = '(<i>[%not_set%]</i>)';
+            }
+            if ($ph['introtext'] == '') {
+                $ph['introtext'] = '(<i>[%not_set%]</i>)';
+            }
+            if ($ph['alias'] == '') {
+                $ph['alias'] = '(<i>[%not_set%]</i>)';
+            }
 
-		$output[] = $modx->parseText($tpl, $ph);
-	}
-	return implode("\n", $output);
+            $output[] = $modx->parseText($tpl, $ph);
+        }
+
+        return implode("\n", $output);
+    }
 }
 
-function getRecentInfoRowTpl() {
-	$tpl = '
+if(!function_exists('getRecentInfoRowTpl')) {
+    function getRecentInfoRowTpl()
+    {
+        $tpl = '
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
@@ -607,16 +621,24 @@ function getRecentInfoRowTpl() {
 								</div>
 							</td>
 						</tr>';
-	return $tpl;
+
+        return $tpl;
+    }
 }
 
+if(!function_exists('wrapIcon')) {
 // setup icons
-function wrapIcon($i, $action) {
-	return sprintf('<a href="index.php?a=%s" target="main"><span class="wm_button" style="border:0">%s</span></a>', $action, $i);
+    function wrapIcon($i, $action)
+    {
+        return sprintf('<a href="index.php?a=%s" target="main"><span class="wm_button" style="border:0">%s</span></a>',
+            $action, $i);
+    }
 }
 
-function getStartUpScript() {
-	$script = '
+if(!function_exists('getStartUpScript')) {
+    function getStartUpScript()
+    {
+        $script = '
         <script type="text/javascript">
         function hideConfigCheckWarning(key) {
         	var xhr = new XMLHttpRequest();
@@ -640,5 +662,7 @@ function getStartUpScript() {
 		})(jQuery);        
         </script>
 ';
-	return $script;
+
+        return $script;
+    }
 }

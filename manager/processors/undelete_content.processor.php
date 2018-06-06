@@ -25,8 +25,7 @@ $add_path=$sd.$sb.$pg;
 
 
 // check permissions on the document
-include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
-$udperms = new udperms();
+$udperms = new EvolutionCMS\Legacy\Permissions();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
@@ -44,22 +43,26 @@ if(!$deltime) {
 
 $children = array();
 
-/**
- * @param int $parent
- */
-function getChildren($parent) {
+if(!function_exists('getChildren')) {
+    /**
+     * @param int $parent
+     */
+    function getChildren($parent)
+    {
 
-	$modx = evolutionCMS();
-	global $children;
-	global $deltime;
+        $modx = evolutionCMS();
+        global $children;
+        global $deltime;
 
-	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='".(int)$parent."' AND deleted=1 AND deletedon='".(int)$deltime."'");
-		// the document has children documents, we'll need to delete those too
-		while ($row=$modx->db->getRow($rs)) {
-			$children[] = $row['id'];
-			getChildren($row['id']);
-			//echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
-		}
+        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'),
+            "parent='" . (int)$parent . "' AND deleted=1 AND deletedon='" . (int)$deltime . "'");
+        // the document has children documents, we'll need to delete those too
+        while ($row = $modx->db->getRow($rs)) {
+            $children[] = $row['id'];
+            getChildren($row['id']);
+            //echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
+        }
+    }
 }
 
 getChildren($id);

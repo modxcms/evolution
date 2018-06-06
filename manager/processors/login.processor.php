@@ -21,9 +21,6 @@ if($manager_language !== 'english' && is_file("{$core_path}lang/{$manager_langua
 	include_once("{$core_path}lang/{$manager_language}.inc.php");
 }
 
-// include the logger
-include_once("{$core_path}log.class.inc.php");
-
 // Initialize System Alert Message Queque
 if(!isset($_SESSION['SystemAlertMsgQueque'])) {
 	$_SESSION['SystemAlertMsgQueque'] = array();
@@ -91,7 +88,7 @@ if($failedlogins >= $failed_allowed && $blockeduntildate > time()) {
 	} else {
 		$ip = "UNKNOWN";
 	}
-	$log = new logHandler;
+	$log = new EvolutionCMS\Legacy\LogHandler();
 	$log->initAndWriteLog("Login Fail (Temporary Block)", $internalKey, $username, "119", $internalKey, "IP: " . $ip);
 	jsAlert($_lang['login_processor_many_failed_logins']);
 	return;
@@ -261,7 +258,7 @@ if(!$activeSession) {
 	}
 }
 
-$log = new logHandler;
+$log = new EvolutionCMS\Legacy\LogHandler();
 $log->initAndWriteLog('Logged in', $modx->getLoginUserID(), $_SESSION['mgrShortname'], '58', '-', 'MODX');
 
 // invoke OnManagerLogin event
@@ -291,118 +288,139 @@ if($id > 0) {
 	}
 }
 
-/**
- * show javascript alert
- *
- * @param string $msg
- */
-function jsAlert($msg) {
-	$modx = evolutionCMS();
-	if($_POST['ajax'] != 1) {
-		echo "<script>window.setTimeout(\"alert('" . addslashes($modx->db->escape($msg)) . "')\",10);history.go(-1)</script>";
-	} else {
-		echo $msg . "\n";
-	}
+if(!function_exists('jsAlert')) {
+    /**
+     * show javascript alert
+     *
+     * @param string $msg
+     */
+    function jsAlert($msg)
+    {
+        $modx = evolutionCMS();
+        if ($_POST['ajax'] != 1) {
+            echo "<script>window.setTimeout(\"alert('" . addslashes($modx->db->escape($msg)) . "')\",10);history.go(-1)</script>";
+        } else {
+            echo $msg . "\n";
+        }
+    }
 }
 
-/**
- * @param string $username
- * @param string $givenPassword
- * @param string $dbasePassword
- * @return bool
- */
-function login($username, $givenPassword, $dbasePassword) {
-	$modx = evolutionCMS();
-	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
+if(!function_exists('login')) {
+    /**
+     * @param string $username
+     * @param string $givenPassword
+     * @param string $dbasePassword
+     * @return bool
+     */
+    function login($username, $givenPassword, $dbasePassword)
+    {
+        $modx = evolutionCMS();
+
+        return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
+    }
 }
 
-/**
- * @param int $internalKey
- * @param string $givenPassword
- * @param string $dbasePassword
- * @param string $username
- * @return bool
- */
-function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
-	$modx = evolutionCMS();
+if(!function_exists('loginV1')) {
+    /**
+     * @param int $internalKey
+     * @param string $givenPassword
+     * @param string $dbasePassword
+     * @param string $username
+     * @return bool
+     */
+    function loginV1($internalKey, $givenPassword, $dbasePassword, $username)
+    {
+        $modx = evolutionCMS();
 
-	$user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
+        $user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
 
-	if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) {
-		$modx->config['pwd_hash_algo'] = 'UNCRYPT';
-	}
+        if (!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) {
+            $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+        }
 
-	if($user_algo !== $modx->config['pwd_hash_algo']) {
-		$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
-		$modx->config['pwd_hash_algo'] = $user_algo;
-	}
+        if ($user_algo !== $modx->config['pwd_hash_algo']) {
+            $bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+            $modx->config['pwd_hash_algo'] = $user_algo;
+        }
 
-	if($dbasePassword != $modx->manager->genV1Hash($givenPassword, $internalKey)) {
-		return false;
-	}
+        if ($dbasePassword != $modx->manager->genV1Hash($givenPassword, $internalKey)) {
+            return false;
+        }
 
-	updateNewHash($username, $givenPassword);
+        updateNewHash($username, $givenPassword);
 
-	return true;
+        return true;
+    }
 }
 
-/**
- * @param int $internalKey
- * @param string $givenPassword
- * @param string $dbasePassword
- * @param string $username
- * @return bool
- */
-function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
-	$modx = evolutionCMS();
+if(!function_exists('loginMD5')) {
+    /**
+     * @param int $internalKey
+     * @param string $givenPassword
+     * @param string $dbasePassword
+     * @param string $username
+     * @return bool
+     */
+    function loginMD5($internalKey, $givenPassword, $dbasePassword, $username)
+    {
+        $modx = evolutionCMS();
 
-	if($dbasePassword != md5($givenPassword)) {
-		return false;
-	}
-	updateNewHash($username, $givenPassword);
-	return true;
+        if ($dbasePassword != md5($givenPassword)) {
+            return false;
+        }
+        updateNewHash($username, $givenPassword);
+
+        return true;
+    }
 }
 
-/**
- * @param string $username
- * @param string $password
- */
-function updateNewHash($username, $password) {
-	$modx = evolutionCMS();
+if(!function_exists('updateNewHash')) {
+    /**
+     * @param string $username
+     * @param string $password
+     */
+    function updateNewHash($username, $password)
+    {
+        $modx = evolutionCMS();
 
-	$field = array();
-	$field['password'] = $modx->phpass->HashPassword($password);
-	$modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
+        $field = array();
+        $field['password'] = $modx->phpass->HashPassword($password);
+        $modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
+    }
 }
 
-/**
- * @param int $internalKey
- * @param int $failedlogins
- * @param int $failed_allowed
- * @param int $blocked_minutes
- */
-function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes) {
-	$modx = evolutionCMS();
+if(!function_exists('incrementFailedLoginCount')) {
+    /**
+     * @param int $internalKey
+     * @param int $failedlogins
+     * @param int $failed_allowed
+     * @param int $blocked_minutes
+     */
+    function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes)
+    {
+        $modx = evolutionCMS();
 
-	$failedlogins += 1;
+        $failedlogins += 1;
 
-	$fields = array('failedlogincount' => $failedlogins);
-	if($failedlogins >= $failed_allowed) //block user for too many fail attempts
-	{
-		$fields['blockeduntil'] = time() + ($blocked_minutes * 60);
-	}
+        $fields = array('failedlogincount' => $failedlogins);
+        if ($failedlogins >= $failed_allowed) //block user for too many fail attempts
+        {
+            $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
+        }
 
-	$modx->db->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+        $modx->db->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
 
-	if($failedlogins < $failed_allowed) {
-		//sleep to help prevent brute force attacks
-		$sleep = (int) $failedlogins / 2;
-		if($sleep > 5) {
-			$sleep = 5;
-		}
-		sleep($sleep);
-	}
-	@session_destroy();
-	session_unset();
-	return;
+        if ($failedlogins < $failed_allowed) {
+            //sleep to help prevent brute force attacks
+            $sleep = (int)$failedlogins / 2;
+            if ($sleep > 5) {
+                $sleep = 5;
+            }
+            sleep($sleep);
+        }
+        @session_destroy();
+        session_unset();
+
+        return;
+    }
 }

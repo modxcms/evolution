@@ -11,17 +11,21 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
-/**
- * create globally unique identifiers (guid)
- *
- * @return string
- */
-function createGUID(){
-	srand((double)microtime()*1000000);
-	$r = rand() ;
-	$u = uniqid(getmypid() . $r . (double)microtime()*1000000,1);
-	$m = md5 ($u);
-	return $m;
+if(!function_exists('createGUID')) {
+    /**
+     * create globally unique identifiers (guid)
+     *
+     * @return string
+     */
+    function createGUID()
+    {
+        srand((double)microtime() * 1000000);
+        $r = rand();
+        $u = uniqid(getmypid() . $r . (double)microtime() * 1000000, 1);
+        $m = md5($u);
+
+        return $m;
+    }
 }
 
 // count duplicates

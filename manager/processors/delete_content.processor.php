@@ -27,8 +27,7 @@ $deltime = time();
 $children = array();
 
 // check permissions on the document
-include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
-$udperms = new udperms();
+$udperms = new EvolutionCMS\Legacy\Permissions();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
@@ -37,38 +36,40 @@ if (!$udperms->checkPermissions()) {
     $modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
-/**
- * @param int $parent
- */
-function getChildren($parent)
-{
-    $modx = evolutionCMS();
-    global $children;
-    global $site_start;
-    global $site_unavailable_page;
-    global $error_page;
-    global $unauthorized_page;
+if (! function_exists('getChildren')) {
+    /**
+     * @param int $parent
+     */
+    function getChildren($parent)
+    {
+        $modx = evolutionCMS();
+        global $children;
+        global $site_start;
+        global $site_unavailable_page;
+        global $error_page;
+        global $unauthorized_page;
 
-    $parent = $modx->db->escape($parent);
-    $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
+        $parent = $modx->db->escape($parent);
+        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
         // the document has children documents, we'll need to delete those too
-        while ($childid=$modx->db->getValue($rs)) {
-            if ($childid==$site_start) {
+        while ($childid = $modx->db->getValue($rs)) {
+            if ($childid == $site_start) {
                 $modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.");
             }
-            if ($childid==$site_unavailable_page) {
+            if ($childid == $site_unavailable_page) {
                 $modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site unavailable page' document, and cannot be deleted. Please assign another document as your 'Site unavailable page' document and try again.");
             }
-            if ($childid==$error_page) {
+            if ($childid == $error_page) {
                 $modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site error page' document, and cannot be deleted. Please assign another document as your 'Site error page' document and try again.");
             }
-            if ($childid==$unauthorized_page) {
+            if ($childid == $unauthorized_page) {
                 $modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site unauthorized page' document, and cannot be deleted. Please assign another document as your 'Site unauthorized page' document and try again.");
             }
             $children[] = $childid;
             getChildren($childid);
             //echo "Found childNode of parentNode $parent: ".$childid."<br />";
         }
+    }
 }
 
 getChildren($id);
