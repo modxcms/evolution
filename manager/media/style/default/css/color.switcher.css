@@ -1,6 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 .evocp-box { position: fixed; width: 300px; min-height: 100%; top: 35px; right: -300px; color: #444; z-index: 10; transition: 0.5s cubic-bezier(1, 1.48, 0.76, 0.95) right, box-shadow .5s; }
-.evocp-icon { position: absolute; width: 34px; height: 29px; vertical-align: middle; line-height: 28px; left: -34px; background: #fafafa; box-shadow: -3px 0 2px 1px rgba(0, 0, 0, 0.1); border-radius: 50% 0 0 50%; text-align: center; font-size: 17px; cursor: pointer; z-index: 10; -webkit-animation: colorchange 15s infinite alternate; }
+.evocp-icon { position: absolute; bottom:60px; width: 34px; height: 29px; vertical-align: middle; line-height: 28px; left: -34px; background: #fafafa; box-shadow: -3px 0 2px 1px rgba(0, 0, 0, 0.1); border-radius: 50% 0 0 50%; text-align: center; font-size: 17px; cursor: pointer; z-index: 10; -webkit-animation: colorchange 15s infinite alternate; }
 .dark .evocp-icon { background: #2f323a; border: 1px solid #2f323a; border-right: 0; -webkit-animation: colorchange 15s infinite alternate; }
 i.evocpicon:hover { -webkit-transform: rotate(30deg); -moz-transform: rotate(30deg); -ms-transform: rotate(30deg); -o-transform: rotate(30deg); transform: rotate(30deg); }
 @keyframes colorchange {
