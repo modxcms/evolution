@@ -207,10 +207,12 @@ if(!function_exists('getExtension')) {
     /**
      * @param string $string
      * @return bool|string
+     *
+     * @TODO: not work if $string contains folder name with dot
      */
     function getExtension($string)
     {
-        $pos = strrpos($string, '.');
+        $pos = explode($string, '.');
         if ($pos !== false) {
             $ext = substr($string, $pos);
             $ext = strtolower($ext);

@@ -10,7 +10,7 @@
         </tr>
         </thead>
         <tbody>
-        [[manager#recentInfoList]]
+        [[manager#welcome\recentInfoList]]
         </tbody>
     </table>
 </div>

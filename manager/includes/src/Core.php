@@ -5889,6 +5889,50 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
+     * @param $type
+     * @param $scanPath
+     * @param array $ext
+     * @return array
+     * @throws \Exception
+     */
+    public function findElements($type, $scanPath, array $ext)
+    {
+        $out = array();
+
+        if (! is_dir($scanPath) || empty($ext)) {
+            return $out;
+        }
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($scanPath, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($iterator as $item) {
+            /**
+             * @var \SplFileInfo $item
+             */
+            if ($item->isFile() && $item->isReadable() && \in_array($item->getExtension(), $ext)) {
+                $name = $item->getBasename('.' . $item->getExtension());
+                $path = str_replace($scanPath, '', $item->getPath() . '/');
+                if (!empty($path)) {
+                    $name = str_replace('/', '\\', $path) . $name;
+                }
+                switch ($type) {
+                    case 'chunk':
+                        $out[$name] = file_get_contents($item->getRealPath());
+                        break;
+                    case 'snippet':
+                        $out[$name] = "return require '" . $item->getRealPath() . "';";
+                        break;
+                    default:
+                        throw new \Exception;
+                }
+            }
+        }
+
+        return $out;
+    }
+
+    /**
      * @param string $phpcode
      * @param string $evalmode
      * @param string $safe_functions
