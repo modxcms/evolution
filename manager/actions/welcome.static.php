@@ -31,7 +31,7 @@ if($modx->hasPermission('messages')) {
 	$ph['MessageInfo'] = implode("\n", $msg);
 }
 
-$iconTpl = $managerTheme->getPartial('welcome/WrapIcon');
+$iconTpl = $managerTheme->getChunk('welcome/WrapIcon');
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
 	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%user_management_title%]';
@@ -122,8 +122,7 @@ if($count > 1) {
 }*/
 $ph['show_multiple_sessions'] = 'none';
 
-$modx->addSnippet('recentInfoList', $managerTheme->getPartial('welcome/RecentInfo/Snippet'));
-$ph['RecentInfo'] = $managerTheme->getPartial('welcome/RecentInfo/Template');
+$ph['RecentInfo'] = $managerTheme->getChunk('welcome/RecentInfo');
 
 $tpl = '
 <table class="table data">
@@ -250,7 +249,7 @@ $ph['modx_news_title'] = $_lang['modx_news_title'];
 
 $modx->toPlaceholders($ph);
 
-$script = $managerTheme->getPartial('welcome/StartUpScript');
+$script = $managerTheme->getChunk('welcome/StartUpScript');
 $modx->regClientScript($script);
 
 // invoke event OnManagerWelcomePrerender
@@ -397,7 +396,7 @@ usort($widgets, function ($a, $b) {
 	return $a['menuindex'] - $b['menuindex'];
 });
 
-$tpl = $managerTheme->getPartial('welcome/Widget');
+$tpl = $managerTheme->getChunk('welcome/Widget');
 $output = '';
 foreach($widgets as $widget) {
 	if ($widget['hide'] != '1'){

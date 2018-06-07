@@ -11,14 +11,37 @@
  * This file is mormally called from the installer
  *
  */
-include_once dirname(__DIR__) . '/includes/functions/processors.php';
+if (!function_exists('rmdirRecursive')) {
+    /**
+     * rmdirRecursive - detects symbollic links on unix
+     *
+     * @param string $path
+     * @param bool $followLinks
+     * @return bool
+     */
+    function rmdirRecursive($path, $followLinks = false)
+    {
+        $dir = opendir($path);
+        while ($entry = readdir($dir)) {
+            if (is_file("$path/$entry") || ((!$followLinks) && is_link("$path/$entry"))) {
+                @unlink("$path/$entry");
+            } elseif (is_dir("$path/$entry") && $entry !== '.' && $entry !== '..') {
+                rmdirRecursive("$path/$entry"); // recursive
+            }
+        }
+        closedir($dir);
+
+        return @rmdir($path);
+    }
+}
+
 $msg = '';
 $pth = dirname(dirname(__DIR__)) . '/install/';
 $pth = str_replace('\\', '/', $pth);
 
 if (isset($_GET['rminstall'])) {
     if (is_dir($pth)) {
-        if (! rmdirRecursive($pth)) {
+        if (!rmdirRecursive($pth)) {
             $msg = 'An error occured while attempting to remove the install folder';
         }
     }

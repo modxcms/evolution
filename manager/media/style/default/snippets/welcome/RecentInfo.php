@@ -1,3 +1,4 @@
+<?php
 $rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
 
 if ($modx->db->getRecordCount($rs) < 1) {

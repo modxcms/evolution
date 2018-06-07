@@ -24,15 +24,37 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         $this->theme = $theme;
+
+        $this->loadSnippets();
     }
 
-    public function makePartial($name)
+    public function loadSnippets()
     {
-        return MODX_MANAGER_PATH . sprintf('media/style/%s/partials/%s.tpl', $this->theme, $name);
+        $this->core->addSnippet('recentInfoList', $this->pathElement('snippet', 'welcome/RecentInfo'));
     }
 
-    public function getPartial($name)
+    public function pathSnippet($name)
     {
-        return file_get_contents($this->makePartial($name));
+        return MODX_MANAGER_PATH . sprintf('media/style/%s/chunks/%s.tpl', $this->theme, $name);
+    }
+
+    public function pathElement($type, $name)
+    {
+        return MODX_MANAGER_PATH . sprintf('media/style/%s/%s/%s.tpl', $this->theme, $type, $name);
+    }
+
+    public function getElement($type, $name)
+    {
+        return file_get_contents($this->pathElement($type, $name));
+    }
+
+    public function getSnippet($name)
+    {
+        return $this->getElement('snippets', $name);
+    }
+
+    public function getChunk($name)
+    {
+        return $this->getElement('chunks', $name);
     }
 }

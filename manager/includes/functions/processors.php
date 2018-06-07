@@ -402,30 +402,6 @@ if(!function_exists('incrementFailedLoginCount')) {
     }
 }
 
-if (! function_exists('rmdirRecursive')) {
-    /**
-     * rmdirRecursive - detects symbollic links on unix
-     *
-     * @param string $path
-     * @param bool $followLinks
-     * @return bool
-     */
-    function rmdirRecursive($path, $followLinks = false)
-    {
-        $dir = opendir($path);
-        while ($entry = readdir($dir)) {
-            if (is_file("$path/$entry") || ((!$followLinks) && is_link("$path/$entry"))) {
-                @unlink("$path/$entry");
-            } elseif (is_dir("$path/$entry") && $entry != '.' && $entry != '..') {
-                rmdirRecursive("$path/$entry"); // recursive
-            }
-        }
-        closedir($dir);
-
-        return @rmdir($path);
-    }
-}
-
 if(!function_exists('saveUserGroupAccessPermissons')) {
     /**
      * saves module user group access
