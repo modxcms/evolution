@@ -1,3 +1,3 @@
 <?php
 
-include_once MODX_BASE_PATH . 'functions/tv.php';
+include_once MODX_MANAGER_PATH . 'includes/functions/tv.php';
