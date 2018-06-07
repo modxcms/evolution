@@ -3518,14 +3518,15 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
-     * @param array $params
+     * @param string|array $params
      * @param string $msg
      * @param array $files
-     * @return mixed
+     * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function sendmail($params = array(), $msg = '', $files = array())
     {
-        if (isset($params) && is_string($params)) {
+        if (\is_scalar($params)) {
             if (strpos($params, '=') === false) {
                 if (strpos($params, '@') !== false) {
                     $p['to'] = $params;
@@ -3587,11 +3588,13 @@ class Core implements Interfaces\CoreInterface
         if (isset($p['from']) && strpos($p['from'], '<') !== false && substr($p['from'], -1) === '>') {
             list($p['fromname'], $p['from']) = $this->mail->address_split($p['from']);
         }
-        $this->mail->From = (!isset($p['from'])) ? $this->config['emailsender'] : $p['from'];
-        $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
+        $this->mail->setFrom(
+            isset($p['from']) ? $p['from'] : $this->config['emailsender'],
+            isset($p['fromname']) ? $p['fromname'] : $this->config['site_name']
+        );
         $this->mail->Subject = (!isset($p['subject'])) ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body = $p['body'];
-        if (isset($p['type']) && $p['type'] == 'text') {
+        if (isset($p['type']) && $p['type'] === 'text') {
             $this->mail->IsHTML(false);
         }
         if (!is_array($files)) {
@@ -3602,8 +3605,7 @@ class Core implements Interfaces\CoreInterface
                 $this->mail->AddAttachment(MODX_BASE_PATH . $f);
             }
         }
-        $rs = $this->mail->send();
-        return $rs;
+        return $this->mail->send();
     }
 
     /**

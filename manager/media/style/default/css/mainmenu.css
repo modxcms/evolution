@@ -128,23 +128,23 @@ border: none !important; border-left: 1px solid rgba(0, 0, 0, 0.05) !important; 
 /* theme modes */
 /* lightness */
 .lightness #mainMenu { -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); }
-.lightness #mainMenu, .lightness #mainMenu #nav #site a::before { background-color: #f1f1f1; color: #464646; }
+.lightness #mainMenu { background-color: #f1f1f1; color: #464646; }
 .lightness #mainMenu .nav > li > a, .lightness #mainMenu .nav .label_searchid { color: #464646 }
 .lightness #mainMenu.show .nav > li.dropdown.hover > a { color: #222; }
 .lightness #mainMenu #nav #site a::before { background-image: url("../images/misc/login-logo.png") }
 /* light */
 .light #mainMenu { -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .3); box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .3); }
-.light #mainMenu, .light #mainMenu #nav #site a::before { background-color: #343944; color: #cacaca; }
+.light #mainMenu { background-color: #343944; color: #cacaca; }
 .light #mainMenu .nav > li > a, .light #mainMenu .nav .label_searchid { color: #dcd9e3; }
 .light #mainMenu.show .nav > li.dropdown.hover > a { color: #444; }
 /* dark */
 .dark #mainMenu { -webkit-box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3); }
-.dark #mainMenu, .dark #mainMenu #nav #site a::before { background-color: #202329; color: #bbb; }
+.dark #mainMenu { background-color: #202329; color: #bbb; }
 .dark #mainMenu .nav > li > a, .dark #mainMenu .nav .label_searchid { color: #bbb }
 .dark #mainMenu.show .nav > li.dropdown.hover > a { color: #444; }
 /* darkness */
 .darkness #mainMenu { -webkit-box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.3); }
-.darkness #mainMenu, .darkness #mainMenu #nav #site a::before { background-color: #202329; color: #bbb; }
+.darkness #mainMenu { background-color: #202329; color: #bbb; }
 .darkness #mainMenu .nav > li > a, .darkness #mainMenu .nav .label_searchid { color: #bbb; }
 .darkness #mainMenu.show .nav > li.dropdown.hover > a { color: #eee; background-color: #343942; }
 .darkness #mainMenu .nav > li > ul { background-color: #343942; }
