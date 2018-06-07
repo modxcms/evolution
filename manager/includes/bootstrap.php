@@ -50,7 +50,7 @@ require_once 'functions/actions/help.php';
 require_once 'functions/actions/import.php';
 require_once 'functions/actions/logging.php';
 require_once 'functions/actions/mutate_content.php';
-require_once 'functions/actions/mutate_content.php';
+require_once 'functions/actions/mutate_plugin.php';
 require_once 'functions/actions/mutate_role.php';
 require_once 'functions/actions/search.php';
 require_once 'functions/actions/settings.php';
