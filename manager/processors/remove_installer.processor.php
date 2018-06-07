@@ -11,7 +11,7 @@
  * This file is mormally called from the installer
  *
  */
-
+include_once dirname(__DIR__) . '/includes/functions/processors.php';
 $msg = '';
 $pth = dirname(dirname(__DIR__)) . '/install/';
 $pth = str_replace('\\', '/', $pth);
