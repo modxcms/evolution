@@ -2092,7 +2092,7 @@ class Core implements Interfaces\CoreInterface
         $params = $this->getParamsFromString($snip_call['params']);
 
         if (!isset($snippetObject['properties'])) {
-            $snippetObject['properties'] = '';
+            $snippetObject['properties'] = array();
         }
         $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
         $params = array_merge($default_params, $params);
@@ -5477,65 +5477,70 @@ class Core implements Interfaces\CoreInterface
     /**
      * Parses a resource property string and returns the result as an array
      *
-     * @param string $propertyString
+     * @param string|array $propertyString
      * @param string|null $elementName
      * @param string|null $elementType
      * @return array Associative array in the form property name => property value
      */
     public function parseProperties($propertyString, $elementName = null, $elementType = null)
     {
-        $propertyString = trim($propertyString);
-        $propertyString = str_replace('{}', '', $propertyString);
-        $propertyString = str_replace('} {', ',', $propertyString);
-        $property = array();
-        if (!empty($propertyString) && $propertyString != '{}') {
-            $jsonFormat = $this->isJson($propertyString, true);
-            // old format
-            if ($jsonFormat === false) {
-                $props = explode('&', $propertyString);
-                foreach ($props as $prop) {
+        if(\is_scalar($propertyString)) {
+            $property = array();
+            $propertyString = trim($propertyString);
+            $propertyString = str_replace('{}', '', $propertyString);
+            $propertyString = str_replace('} {', ',', $propertyString);
+            if (!empty($propertyString) && $propertyString != '{}') {
+                $jsonFormat = $this->isJson($propertyString, true);
+                // old format
+                if ($jsonFormat === false) {
+                    $props = explode('&', $propertyString);
+                    foreach ($props as $prop) {
 
-                    if (empty($prop)) {
-                        continue;
-                    } elseif (strpos($prop, '=') === false) {
-                        $property[trim($prop)] = '';
-                        continue;
-                    }
-
-                    $_ = explode('=', $prop, 2);
-                    $key = trim($_[0]);
-                    $p = explode(';', trim($_[1]));
-                    switch ($p[1]) {
-                        case 'list':
-                        case 'list-multi':
-                        case 'checkbox':
-                        case 'radio':
-                            $value = !isset($p[3]) ? '' : $p[3];
-                            break;
-                        default:
-                            $value = !isset($p[2]) ? '' : $p[2];
-                    }
-                    if (!empty($key)) {
-                        $property[$key] = $value;
-                    }
-                }
-                // new json-format
-            } else if (!empty($jsonFormat)) {
-                foreach ($jsonFormat as $key => $row) {
-                    if (!empty($key)) {
-                        if (is_array($row)) {
-                            if (isset($row[0]['value'])) {
-                                $value = $row[0]['value'];
-                            }
-                        } else {
-                            $value = $row;
+                        if (empty($prop)) {
+                            continue;
+                        } elseif (strpos($prop, '=') === false) {
+                            $property[trim($prop)] = '';
+                            continue;
                         }
-                        if (isset($value) && $value !== '') {
+
+                        $_ = explode('=', $prop, 2);
+                        $key = trim($_[0]);
+                        $p = explode(';', trim($_[1]));
+                        switch ($p[1]) {
+                            case 'list':
+                            case 'list-multi':
+                            case 'checkbox':
+                            case 'radio':
+                                $value = !isset($p[3]) ? '' : $p[3];
+                                break;
+                            default:
+                                $value = !isset($p[2]) ? '' : $p[2];
+                        }
+                        if (!empty($key)) {
                             $property[$key] = $value;
+                        }
+                    }
+                    // new json-format
+                } else if (!empty($jsonFormat)) {
+                    foreach ($jsonFormat as $key => $row) {
+                        if (!empty($key)) {
+                            if (is_array($row)) {
+                                if (isset($row[0]['value'])) {
+                                    $value = $row[0]['value'];
+                                }
+                            } else {
+                                $value = $row;
+                            }
+                            if (isset($value) && $value !== '') {
+                                $property[$key] = $value;
+                            }
                         }
                     }
                 }
             }
+        }
+        elseif(\is_array($propertyString)) {
+            $property = $propertyString;
         }
         if (!empty($elementName) && !empty($elementType)) {
             $out = $this->invokeEvent('OnParseProperties', array(
@@ -5864,19 +5869,23 @@ class Core implements Interfaces\CoreInterface
     /**
      * @param string $name
      * @param string $phpCode
+     * @param string $namespace
+     * @param array defaultParams
      */
-    public function addSnippet($name, $phpCode)
+    public function addSnippet($name, $phpCode, $namespace = '#', array $defaultParams = array())
     {
-        $this->snippetCache['#' . $name] = $phpCode;
+        $this->snippetCache[$namespace . $name] = $phpCode;
+        $this->snippetCache[$namespace . $name . 'Props'] = $defaultParams;
     }
 
     /**
      * @param string $name
      * @param string $text
+     * @param string $namespace
      */
-    public function addChunk($name, $text)
+    public function addChunk($name, $text, $namespace = '#')
     {
-        $this->chunkCache['#' . $name] = $text;
+        $this->chunkCache[$namespace . $name] = $text;
     }
 
     /**
