@@ -179,34 +179,3 @@ switch ($_POST['mode']) {
     default:
         $modx->webAlertAndQuit("No operation set in request.");
 }
-
-if(!function_exists('saveUserGroupAccessPermissons')) {
-    /**
-     * saves module user group access
-     */
-    function saveUserGroupAccessPermissons()
-    {
-        $modx = evolutionCMS();
-        global $id, $newid;
-        global $use_udperms;
-
-        if ($newid) {
-            $id = $newid;
-        }
-        $usrgroups = $_POST['usrgroups'];
-
-        // check for permission update access
-        if ($use_udperms == 1) {
-            // delete old permissions on the module
-            $modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
-            if (is_array($usrgroups)) {
-                foreach ($usrgroups as $value) {
-                    $modx->db->insert(array(
-                        'module'    => $id,
-                        'usergroup' => stripslashes($value),
-                    ), $modx->getFullTableName('site_module_access'));
-                }
-            }
-        }
-    }
-}

@@ -12,30 +12,6 @@
  *
  */
 
-if (! function_exists('rmdirRecursive')) {
-    /**
-     * rmdirRecursive - detects symbollic links on unix
-     *
-     * @param string $path
-     * @param bool $followLinks
-     * @return bool
-     */
-    function rmdirRecursive($path, $followLinks = false)
-    {
-        $dir = opendir($path);
-        while ($entry = readdir($dir)) {
-            if (is_file("$path/$entry") || ((!$followLinks) && is_link("$path/$entry"))) {
-                @unlink("$path/$entry");
-            } elseif (is_dir("$path/$entry") && $entry != '.' && $entry != '..') {
-                rmdirRecursive("$path/$entry"); // recursive
-            }
-        }
-        closedir($dir);
-
-        return @rmdir($path);
-    }
-}
-
 $msg = '';
 $pth = dirname(dirname(__DIR__)) . '/install/';
 $pth = str_replace('\\', '/', $pth);

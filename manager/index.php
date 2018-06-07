@@ -274,6 +274,8 @@ function includeFileProcessor ($filepath,$manager_theme) {
 	return $element;
 }
 
+$managerTheme = new EvolutionCMS\ManagerTheme($modx, $manager_theme);
+
 // Now we decide what to do according to the action request. This is a BIG list :)
 switch ($action) {
 /********************************************************************/

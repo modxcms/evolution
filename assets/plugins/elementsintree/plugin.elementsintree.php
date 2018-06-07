@@ -15,9 +15,6 @@ if ( $adminRoleOnly == 'yes' && $role != 1 ) {
 }
 
 $eit_base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
-
-include_once($eit_base_path.'includes/functions.inc.php');
-
 global $_lang;
 
 $e = &$modx->event;

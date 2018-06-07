@@ -37,26 +37,6 @@ if ($use_udperms == 1) {
 	}
 }
 
-if(!function_exists('allChildren')) {
-    /**
-     * @param int $currDocID
-     * @return array
-     */
-    function allChildren($currDocID)
-    {
-        $modx = evolutionCMS();
-        $children = array();
-        $currDocID = $modx->db->escape($currDocID);
-        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
-        while ($child = $modx->db->getRow($rs)) {
-            $children[] = $child['id'];
-            $children = array_merge($children, allChildren($child['id']));
-        }
-
-        return $children;
-    }
-}
-
 $evtOut = $modx->invokeEvent("onBeforeMoveDocument", array (
 	"id_document" => $documentID,
 	"old_parent" => $oldparent,
