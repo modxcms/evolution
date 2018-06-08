@@ -1946,6 +1946,9 @@ class Core implements Interfaces\CoreInterface
         }
         ob_start();
         if (strpos($phpcode, ';') !== false) {
+            if (substr($phpcode, 0, 5) === '<?php') {
+                $phpcode = substr($phpcode, 5);
+            }
             $return = eval($phpcode);
         } else {
             $return = call_user_func_array($phpcode, array($params));
