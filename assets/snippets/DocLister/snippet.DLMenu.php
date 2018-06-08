@@ -6,10 +6,9 @@ if (!isset($params['addWhereList'])) {
     $params['addWhereList'] = 'c.hidemenu = 0';
 }
 if (!isset($params['sortBy'])) {
-    if (isset($params['sortType']) && $params['sortType'] === 'doclist') {
-        $params['sortBy'] = 'c.id';
-    } else {
-        $params['sortBy'] = 'c.menuindex';
+    $params['sortBy'] = 'c.menuindex';
+    if (isset($params['sortType1']) && $params['sortType1'] === 'doclist') {
+        $params['sortBy1'] = 'c.id';
     }
 }
 if (!isset($params['sortDir'])) {

@@ -22,7 +22,7 @@ $genpassword = $input['newpassword'];
 $passwordgenmethod = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
 $specifiedpassword = $input['specifiedpassword'];
-$email = $input['email'];
+$email = trim($input['email']);
 $oldemail = $input['oldemail'];
 $phone = $input['phone'];
 $mobilephone = $input['mobilephone'];
@@ -357,7 +357,7 @@ switch($input['mode']) {
  * @param string $ufn
  */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	global $modx, $_lang, $signupemail_message;
+	$modx = evolutionCMS(); global $_lang, $signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name;
 	$manager_url = MODX_MANAGER_URL;
@@ -390,7 +390,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
  * @param int $id
  */
 function saveUserSettings($id) {
-	global $modx;
+	$modx = evolutionCMS();
 	$tbl_user_settings = $modx->getFullTableName('user_settings');
 
 	$ignore = array(

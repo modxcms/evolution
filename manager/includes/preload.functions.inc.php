@@ -3,6 +3,29 @@
 global $site_sessionname;
 $site_sessionname = genEvoSessionName(); // For legacy extras not using startCMSSession
 
+
+if( ! function_exists('evolutionCMS')) {
+    /**
+     * @return DocumentParser
+     */
+    function evolutionCMS()
+    {
+        if( ! defined('MODX_CLASS')) {
+            if( ! class_exists('DocumentParser')) {
+                throw new RuntimeException('MODX_CLASS not defined and DocumentParser class not exists');
+            }
+            define('MODX_CLASS', 'DocumentParser');
+        }
+        
+        global $modx;
+        if ($modx === null) {
+            $obj = new ReflectionClass(MODX_CLASS);
+            $modx = $obj->newInstanceWithoutConstructor()->getInstance();
+        }
+        return $modx;
+    }
+}
+
 /**
  * @return string
  */

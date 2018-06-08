@@ -30,19 +30,36 @@ $css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . $last
 if ($modx->config['manager_theme'] == 'default') {
     if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')
         && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
+        $files = array(
+            'bootstrap' => MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css',
+            'font-awesome' => MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css',
+            'fonts' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css',
+            'forms' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css',
+            'mainmenu' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css',
+            'tree' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css',
+            'custom' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css',
+            'tabpane' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css',
+            'contextmenu' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css',
+            'index' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css',
+            'main' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css'
+        );
+        $evtOut = $modx->invokeEvent('OnBeforeMinifyCss', array(
+            'files' => $files,
+            'source' => 'manager',
+            'theme' => $modx->config['manager_theme']
+        ));
+        switch (true) {
+            case empty($evtOut):
+            case is_array($evtOut) && count($evtOut) === 0:
+                break;
+            case is_array($evtOut) && count($evtOut) === 1:
+                $files = $evtOut[0];
+                break;
+            default:
+                $modx->webAlertAndQuit(sprintf($_lang['invalid_event_response'], 'OnBeforeMinifyManagerCss'));
+        }
         require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
-        $minifier = new Formatter\CSSMinify();
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css');
-        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css');
+        $minifier = new Formatter\CSSMinify($files);
         $css = $minifier->minify();
         file_put_contents(
             MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css',
@@ -85,6 +102,7 @@ if ($modx->config['manager_theme'] == 'default') {
         var evo = {};
       }
       var actions;
+      var actionStay = [];
       var dontShowWorker = false;
       var documentDirty = false;
       var timerForUnload;

@@ -95,7 +95,7 @@ class DBAPI
      */
     public function connect($host = '', $dbase = '', $uid = '', $pwd = '', $persist = 0)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $uid = $uid ? $uid : $this->config['user'];
         $pwd = $pwd ? $pwd : $this->config['pass'];
         $host = $host ? $host : $this->config['host'];
@@ -204,7 +204,7 @@ class DBAPI
      */
     public function query($sql, $watchError = true)
     {
-        global $modx;
+        $modx = evolutionCMS();
         if (empty ($this->conn) || !is_resource($this->conn)) {
             $this->connect();
         }
@@ -271,7 +271,7 @@ class DBAPI
      */
     public function delete($from, $where = '', $orderby = '', $limit = '')
     {
-        global $modx;
+        $modx = evolutionCMS();
         if (!$from) {
             $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
         } else {
@@ -299,7 +299,7 @@ class DBAPI
      */
     public function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if (is_array($fields)) {
             $fields = $this->_getFieldsStringFromArray($fields);
@@ -340,7 +340,7 @@ class DBAPI
      */
     public function update($fields, $table, $where = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
         if (!$table) {
             $modx->messageQuit("Empty \$table parameter in DBAPI::update().");
         } else {
@@ -371,7 +371,7 @@ class DBAPI
      */
     public function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
         if (!$intotable) {
             $modx->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
         } else {
@@ -544,7 +544,7 @@ class DBAPI
             } elseif ($mode == 'both') {
                 return mysql_fetch_array($ds, MYSQL_BOTH);
             } else {
-                global $modx;
+                $modx = evolutionCMS();
                 $modx->messageQuit("Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num' or 'both'.");
             }
         }

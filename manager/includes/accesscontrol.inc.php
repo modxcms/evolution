@@ -81,9 +81,25 @@ if (!isset($_SESSION['mgrValidated'])) {
     $modx->setPlaceholder('manager_path', MGR_DIR);
     $modx->setPlaceholder('logo_slogan', $_lang["logo_slogan"]);
     $modx->setPlaceholder('login_message', $_lang["login_message"]);
-    $modx->setPlaceholder('manager_theme_url',
-        MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
+    $modx->setPlaceholder('manager_theme_url', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
     $modx->setPlaceholder('year', date('Y'));
+
+    // set login logo image
+    if ( !empty($modx->config['login_logo']) ) {
+        $modx->setPlaceholder('login_logo', MODX_SITE_URL . $modx->config['login_logo']);
+    } else {
+        $modx->setPlaceholder('login_logo', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-logo.png');
+    }
+
+    // set login background image
+    if ( !empty($modx->config['login_bg']) ) {
+        $modx->setPlaceholder('login_bg', MODX_SITE_URL . $modx->config['login_bg']);
+    } else {
+        $modx->setPlaceholder('login_bg', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/login/default/login-background.jpg');
+    }
+  
+    // set form position css class
+    $modx->setPlaceholder('login_form_position_class', 'loginbox-' . $modx->config['login_form_position']);
     
     switch ($modx->config['manager_theme_mode']) {
       case '1':
@@ -97,8 +113,8 @@ if (!isset($_SESSION['mgrValidated'])) {
         break;
       case '4':
         $modx->setPlaceholder('manager_theme_style', 'darkness');
-        break;    }
-
+        break;
+	}
 
     // andrazk 20070416 - notify user of install/update
     if (isset($_GET['installGoingOn'])) {

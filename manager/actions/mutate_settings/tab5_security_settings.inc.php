@@ -1,6 +1,10 @@
 <?php
     $MODX_SITE_HOSTNAMES = MODX_SITE_HOSTNAMES; // Fix for PHP 5.4
-    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) $valid_hostnames = $_SERVER['HTTP_HOST'];
+    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) {
+        $valid_hostnames = $_SERVER['HTTP_HOST'];
+    } else {
+        $valid_hostnames = $MODX_SITE_HOSTNAMES;
+    }
 ?>
 <!-- Interface & editor settings -->
 <div class="tab-page" id="tabPageSecurity">
@@ -216,6 +220,15 @@ if(!$gdAvailable) $use_captcha = 0;
   </tr>
   <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
     <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+        <?php
+            // invoke OnMiscSettingsRender event
+            $evtOut = $modx->invokeEvent('OnSecuritySettingsRender');
+            if(is_array($evtOut)) echo implode("",$evtOut);
+        ?>
+    </td>
   </tr>
 </table>
 </div>

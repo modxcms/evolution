@@ -1,5 +1,5 @@
 <?php
-	$site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
+  $site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 ?>
 <style>
 table.sysSettings > tbody td, table.sysSettings > tbody th {border-bottom:1px dotted #ccc;padding:10px;}
@@ -20,38 +20,38 @@ table.sysSettings tr.noborder td {border:none;}
   <tr>
       <th><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?><br><small>[(site_name)]</small></th>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" />
-	<div class="comment"><?php echo $_lang['sitename_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['sitename_message'] ?></div>
+  </td>
     </tr>
   <tr>
     <th><?php echo $_lang['emailsender_title'] ?><br><small>[(emailsender)]</small></th>
     <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="emailsender" value="<?php echo $emailsender; ?>" />
-	<div class="comment"><?php echo $_lang['emailsender_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['emailsender_message'] ?></div>
+  </td>
   </tr>
   <tr>
     <th><?php echo $_lang['sitestart_title'] ?><br><small>[(site_start)]</small></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" />
-	<div class="comment"><?php echo $_lang['sitestart_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['sitestart_message'] ?></div>
+  </td>
   </tr>
   <tr>
     <th><?php echo $_lang['errorpage_title'] ?><br><small>[(error_page)]</small></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="error_page" value="<?php echo $error_page; ?>" />
-	<div class="comment"><?php echo $_lang['errorpage_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['errorpage_message'] ?></div>
+  </td>
   </tr>
   <tr>
     <th><?php echo $_lang['unauthorizedpage_title'] ?><br><small>[(unauthorized_page)]</small></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="unauthorized_page" value="<?php echo $unauthorized_page; ?>" />
-	<div class="comment"><?php echo $_lang['unauthorizedpage_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['unauthorizedpage_message'] ?></div>
+  </td>
   </tr>
   <tr>
     <th><?php echo $_lang['siteunavailable_page_title'] ?><br><small>[(site_unavailable_page)]</small></th>
     <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo $site_unavailable_page; ?>" />
-	<div class="comment"><?php echo $_lang['siteunavailable_page_message'] ?></div>
-	</td>
+  <div class="comment"><?php echo $_lang['siteunavailable_page_message'] ?></div>
+  </td>
   </tr>
   <tr>
     <th><?php echo $_lang['siteunavailable_title'] ?><br><small>[(site_unavailable_message)]</small>
@@ -63,7 +63,7 @@ table.sysSettings tr.noborder td {border:none;}
     </th>
     <td> <textarea name="site_unavailable_message" id="site_unavailable_message_textarea" style="width:100%; height: 120px;"><?php echo $site_unavailable_message_view; ?></textarea>
         <input type="hidden" name="siteunavailable_message_default" id="siteunavailable_message_default_hidden" value="<?php echo addslashes($_lang['siteunavailable_message_default']);?>" />
-	<div class="comment"><?php echo $_lang['siteunavailable_message'];?></div>
+  <div class="comment"><?php echo $_lang['siteunavailable_message'];?></div>
     </td>
   </tr>
   <tr>
@@ -117,7 +117,7 @@ table.sysSettings tr.noborder td {border:none;}
             <label><input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'],$oldTmpName); ?></label>
         </div>
         <input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
-	<div class="comment"><?php echo $_lang['defaulttemplate_message'] ?></div>
+  <div class="comment"><?php echo $_lang['defaulttemplate_message'] ?></div>
     </td>
   </tr>
   <tr>
@@ -268,8 +268,8 @@ table.sysSettings tr.noborder td {border:none;}
       }
       ?>
         </select>
-      	<div class="comment"><?php printf($_lang['serveroffset_message'], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></div>
-      	</td>
+        <div class="comment"><?php printf($_lang['serveroffset_message'], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></div>
+        </td>
     </tr>
     <tr>
       <th><?php echo $_lang['server_protocol_title'] ?><br><small>[(server_protocol)]</small></th>
@@ -282,7 +282,7 @@ table.sysSettings tr.noborder td {border:none;}
     <tr>
       <th><?php echo $_lang['rss_url_news_title'] ?><br><small>[(rss_url_news)]</small></th>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_news" value="<?php echo $rss_url_news; ?>" />
-      	<div class="comment"><?php echo $_lang['rss_url_news_message'] ?></div>
+        <div class="comment"><?php echo $_lang['rss_url_news_message'] ?></div>
       </td>
     </tr>
     <tr>
@@ -293,12 +293,9 @@ table.sysSettings tr.noborder td {border:none;}
          <div class="comment"><?php echo $_lang['track_visitors_message'] ?></div>
      </td>
    </tr>
-  <tr class="noborder">
-    <th><?php echo $_lang['top_howmany_title'] ?><br><small>[(top_howmany)]</small></th>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" />
-      	<div class="comment"><?php echo $_lang['top_howmany_message'] ?></div>
-      	</td>
-  </tr>
+
+
+
   <tr>
     <td colspan="2" style="border:none;">
         <?php
@@ -309,4 +306,5 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
 </table>
+
 </div>

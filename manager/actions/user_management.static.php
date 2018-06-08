@@ -127,7 +127,7 @@ echo $cm->render();
 					if(!empty($sqlQuery)) {
 						$where .= (empty($where) ? "" : " AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
 					}
-					$ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin", $modx->getFullTableName('manager_users') . " AS mu 
+					$ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getFullTableName('manager_users') . " AS mu 
 			INNER JOIN " . $modx->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
 			LEFT JOIN " . $modx->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
 					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
@@ -137,28 +137,28 @@ echo $cm->render();
 					$grd->columnHeaderClass = "tableHeader";
 					$grd->itemClass = "tableItem";
 					$grd->altItemClass = "tableAltItem";
-					$grd->fields = "id,username,fullname,role,email,gender,blocked,thislogin";
+					$grd->fields = "id,username,fullname,role,email,thislogin,logincount,blocked";
 					$grd->columns = implode(',', array(
 						$_lang["icon"],
 						$_lang["name"],
 						$_lang["user_full_name"],
 						$_lang['role'],
 						$_lang["email"],
-						$_lang["user_gender"],
-						$_lang["user_block"],
-						$_lang["login_button"]
+						$_lang["user_prevlogin"],
+						$_lang["user_logincount"],
+						$_lang["user_block"]
 					));
-					$grd->colWidths = "1%,,,,,,1%,1%";
-					$grd->colAligns = "center,,,,,center,center,right' nowrap='nowrap";
+					$grd->colWidths = "1%,,,,,1%,1%,1%";
+					$grd->colAligns = "center,,,,,right' nowrap='nowrap,right,center";
 					$grd->colTypes = implode('||', array(
 						'template:<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu([+id+],event);" title="' . $_lang['click_to_context'] . '"><i class="' . $_style['icons_user'] . '"></i></a>',
 						'template:<a href="index.php?a=12&id=[+id+]" title="' . $_lang['click_to_edit_title'] . '">[+value+]</a>',
 						'template:[+fullname+]',
 						'template:[+role+]',
 						'template:[+email+]',
-						'template:[+gender+]',
-						'template:[+blocked+]',
-						'date: ' . $modx->toDateFormat('[+thislogin+]', 'formatOnly') . ' %H:%M'
+						'date: ' . $modx->toDateFormat('[+thislogin+]', 'formatOnly') . ' %H:%M',
+						'template:[+logincount+]',
+						'template:[+blocked+]'
 					));
 					if($listmode == '1') {
 						$grd->pageSize = 0;

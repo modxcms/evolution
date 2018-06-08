@@ -964,8 +964,8 @@ abstract class DocLister
             2,
             array('html', null)
         );
-
-        $out = $this->DLTemplate->parseChunk($name, $data, $parseDocumentSource);
+        $disablePHx = $this->getCFGDef('disablePHx', 0);
+        $out = $this->DLTemplate->parseChunk($name, $data, $parseDocumentSource, (bool)$disablePHx);
         $out = $this->parseLang($out);
         if (empty($out)) {
             $this->debug->debug("Empty chunk: " . $this->debug->dumpData($name), '', 2);

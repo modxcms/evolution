@@ -1061,6 +1061,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('83','OnFriendlyURLSettingsRender','1','System Settings'),
 ('84','OnUserSettingsRender','1','System Settings'),
 ('85','OnInterfaceSettingsRender','1','System Settings'),
+('109','OnSecuritySettingsRender','1','System Settings'),
+('110','OnFileManagerSettingsRender','1','System Settings'),
 ('86','OnMiscSettingsRender','1','System Settings'),
 ('87','OnRichTextEditorRegister','1','RichText Editor'),
 ('88','OnRichTextEditorInit','1','RichText Editor'),
@@ -1100,6 +1102,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('214','OnManagerMenuPrerender','2',''),
 ('215','OnManagerTopPrerender','2',''),
 ('224','OnDocFormTemplateRender','1','Documents'),
+('225','OnBeforeMinifyCss', '1', ''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1',''),
 ('1001','OnFileBrowserUpload','1','File Browser Events');

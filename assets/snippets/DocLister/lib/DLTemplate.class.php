@@ -328,7 +328,7 @@ class DLTemplate
      * @param bool $parseDocumentSource render html template via DocumentParser::parseDocumentSource()
      * @return string html template with data without placeholders
      */
-    public function parseChunk($name, $data = array(), $parseDocumentSource = false)
+    public function parseChunk($name, $data = array(), $parseDocumentSource = false, $disablePHx = false)
     {
         $out = $this->getChunk($name);
         if ($this->twigEnabled && ($out != '') && ($twig = $this->getTwig($name, $out))) {
@@ -342,7 +342,7 @@ class DLTemplate
                     $item = $this->renameKeyArr($data, '[', ']', '+');
                     $out = str_replace(array_keys($item), array_values($item), $out);
                 }
-                if (preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
+                if (!$disablePHx && preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
                     if (is_null($this->phx) || !($this->phx instanceof DLphx)) {
                         $this->phx = $this->createPHx(0, 1000);
                     }

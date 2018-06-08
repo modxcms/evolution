@@ -59,7 +59,11 @@ $parameter = $modx->parseProperties($content["properties"], $content["guid"], 'm
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
 
+
 $output = evalModule($content["modulecode"],$parameter);
+if (strpos(trim($output),'<')===0 && strpos(trim($output),'<?xml')!==0) {
+	echo "<style>@supports (-webkit-overflow-scrolling: touch) {body,html {-webkit-overflow-scrolling: touch;overflow:auto!important;height:100%!important}}</style>"; // for iframe scroller
+}
 echo $output;
 include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
 
@@ -71,7 +75,7 @@ include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
  * @return string
  */
 function evalModule($moduleCode,$params){
-	global $modx;
+	$modx = evolutionCMS();
 	$modx->event->params = &$params; // store params inside event object
 	if(is_array($params)) {
 		extract($params, EXTR_SKIP);

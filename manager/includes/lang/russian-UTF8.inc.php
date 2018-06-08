@@ -1457,3 +1457,23 @@ $_lang["viewopts_radio_inline"] = 'Инлайн';
 $_lang["viewopts_radio_flex"] = 'Флекс';
 $_lang["viewopts_fontsize"] = 'Размер шрифта';
 $_lang["viewopts_cb_alltabs"] = 'Все табы';
+
+$_lang['email_sender_method'] = 'The envelope sender of the message';
+$_lang['auto'] = 'Auto-detect';
+$_lang['use_emailsender'] = 'Use [(emailsender)] value';
+$_lang['email_sender_method_message'] = 'The envelope sender of the message. This will usually be turned into a Return-Path header by the receiver, and is the address that bounces will be sent to. Auto-detect will work in most cases.';
+
+$_lang['login_form_position_title'] = 'Положение формы авторизации';
+$_lang['login_form_position_left'] = 'слева';
+$_lang['login_form_position_center'] = 'по центру';
+$_lang['login_form_position_right'] = 'справа';
+$_lang['login_logo_title'] = 'Логотип на странице авторизации';
+$_lang['login_logo_message'] = 'Рекомендованный размер логотипа по ширине: 360px, тип .png';
+$_lang['login_bg_title'] = 'Фоновое изображение на странице авторизации';
+$_lang['login_bg_message'] = 'Рекомендованный размер фонового изображения по ширине: 1920px';
+
+$_lang['manager_menu_position_title'] = 'Расположение основного меню';
+$_lang['manager_menu_position_top'] = 'вверху';
+$_lang['manager_menu_position_left'] = 'слева';
+
+$_lang['invalid_event_response'] = 'Событие %s вернуло неверный результат';

@@ -1029,7 +1029,7 @@
               this.restoreTree();
             } else {
               modx.tabs({url: modx.MODX_MANAGER_URL + href, title: title + '<small>(' + id + ')</small>'});
-              if (modx.isMobile) modx.resizer.toggle();
+              if (modx.isMobile && w.innerWidth < modx.minWidth) modx.resizer.toggle();
             }
           }
           this.itemToChange = id;
@@ -1543,8 +1543,12 @@
           }
           this.page = d.createElement('div');
           this.page.id = 'evo-tab-page-' + this.uid;
-          this.page.className = 'evo-tab-page show';
-          this.page.innerHTML = '<iframe src="' + this.url + '" name="' + this.name + '" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>';
+          this.page.className = 'evo-tab-page iframe-scroller show';
+          if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>';
+			  } else {
+              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
+          };
           d.getElementById('main').appendChild(this.page);
           console.time('load-tab');
           this.page.firstElementChild.onload = function(e) {
