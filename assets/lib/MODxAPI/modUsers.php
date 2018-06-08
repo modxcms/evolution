@@ -17,7 +17,7 @@ class modUsers extends MODxAPI
         ),
         'attribute' => array(
             'fullname'         => '',
-            'role'             => '',
+            'role'             => 0,
             'email'            => '',
             'phone'            => '',
             'mobilephone'      => '',
