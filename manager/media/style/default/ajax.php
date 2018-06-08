@@ -65,7 +65,7 @@ if (isset($action)) {
                     case 'element_templates':
                         $a = 16;
                         $sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->db->escape($filter) . '%"' : '';
-                        $sql = $modx->db->query('SELECT t1.*, t1.templatename AS name
+                        $sql = $modx->db->query('SELECT t1.id, t1.templatename AS name, t1.locked, 0 AS disabled
                         FROM ' . $modx->getFullTableName('site_templates') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.templatename ASC
@@ -79,7 +79,7 @@ if (isset($action)) {
 
                     case 'element_tplvars':
                         $a = 301;
-                        $sql = $modx->db->query('SELECT t1.id,t1.name,t1.locked, IF(MIN(t2.tmplvarid),0,1) AS disabled
+                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, 0 AS disabled
                         FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
                         LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
                         ' . $sqlLike . '
@@ -95,7 +95,7 @@ if (isset($action)) {
 
                     case 'element_htmlsnippets':
                         $a = 78;
-                        $sql = $modx->db->query('SELECT t1.*
+                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_htmlsnippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
@@ -109,7 +109,7 @@ if (isset($action)) {
 
                     case 'element_snippets':
                         $a = 22;
-                        $sql = $modx->db->query('SELECT t1.*
+                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_snippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
@@ -123,7 +123,7 @@ if (isset($action)) {
 
                     case 'element_plugins':
                         $a = 102;
-                        $sql = $modx->db->query('SELECT t1.*
+                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_plugins') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
