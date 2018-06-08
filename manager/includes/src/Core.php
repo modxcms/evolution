@@ -5484,8 +5484,9 @@ class Core implements Interfaces\CoreInterface
      */
     public function parseProperties($propertyString, $elementName = null, $elementType = null)
     {
+        $property = array();
+
         if(\is_scalar($propertyString)) {
-            $property = array();
             $propertyString = trim($propertyString);
             $propertyString = str_replace('{}', '', $propertyString);
             $propertyString = str_replace('} {', ',', $propertyString);
