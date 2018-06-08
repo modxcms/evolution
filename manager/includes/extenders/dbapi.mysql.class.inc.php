@@ -5,7 +5,7 @@
  *
  */
 
-class DBAPI
+class DBAPI implements EvolutionCMS\Interfaces\DatabaseInterface
 {
 
     public $conn;

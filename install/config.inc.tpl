@@ -37,7 +37,7 @@ if (!defined('MGR_DIR')) {
 }
 
 if (defined('MODX_CLI')) {
-    throw new RuntimeException("MODX_CLI");
+    throw new RuntimeException('MODX_CLI');
 } else {
     define('MODX_CLI', (php_sapi_name() === 'cli' && (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
 }
@@ -93,27 +93,27 @@ if (empty($base_path) || empty($base_url)) {
     $base_path = $pth . (substr($pth, -1) != '/' && substr($pth, -1) != '\\' ? '/' : '');
 }
 
-if (!defined('MODX_BASE_PATH')) {
+if (! defined('MODX_BASE_PATH')) {
     define('MODX_BASE_PATH', $base_path);
 }
 
-if( ! preg_match('/\/$/', MODX_BASE_PATH)) {
+if(! preg_match('/\/$/', MODX_BASE_PATH)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_PATH');
 }
 
-if (!defined('MODX_BASE_URL')) {
+if (! defined('MODX_BASE_URL')) {
     define('MODX_BASE_URL', $base_url);
 }
 
-if( ! preg_match('/\/$/', MODX_BASE_URL)) {
+if (! preg_match('/\/$/', MODX_BASE_URL)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_URL');
 }
 
-if (!defined('MODX_MANAGER_PATH')) {
+if (! defined('MODX_MANAGER_PATH')) {
     define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
 }
 
-if (!defined('MODX_SITE_HOSTNAMES')) {
+if (! defined('MODX_SITE_HOSTNAMES')) {
     $site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
     if (is_file($site_hostnames_path)) {
         include_once($site_hostnames_path);
@@ -124,12 +124,12 @@ if (!defined('MODX_SITE_HOSTNAMES')) {
 // check for valid hostnames
 $site_hostname = MODX_CLI ? 'localhost' : str_replace(':' . $_SERVER['SERVER_PORT'], '', $_SERVER['HTTP_HOST']);
 $site_hostnames = explode(',', MODX_SITE_HOSTNAMES);
-if (!empty($site_hostnames[0]) && !in_array($site_hostname, $site_hostnames)) {
+if (! empty($site_hostnames[0]) && ! in_array($site_hostname, $site_hostnames)) {
     $site_hostname = $site_hostnames[0];
 }
 
 // assign site_url
-if (!defined('MODX_SITE_URL')) {
+if(! defined('MODX_SITE_URL')) {
     $secured = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
     $site_url = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port || $secured) ? 'https://' : 'http://';
     $site_url .= $site_hostname;
@@ -143,12 +143,15 @@ if (!defined('MODX_SITE_URL')) {
     define('MODX_SITE_URL', $site_url);
 }
 
-if( ! preg_match('/\/$/', MODX_SITE_URL)) {
+if (! preg_match('/\/$/', MODX_SITE_URL)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_SITE_URL');
 }
 
-if (!defined('MODX_MANAGER_URL')) {
+if (! defined('MODX_MANAGER_URL')) {
     define('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/');
 }
 
-include_once(MODX_MANAGER_PATH . 'includes/preload.functions.inc.php');
+if (! defined('EVO_BOOTSTRAP_FILE')) {
+    define('EVO_BOOTSTRAP_FILE', MODX_MANAGER_PATH . 'includes/bootstrap.php');
+    require EVO_BOOTSTRAP_FILE;
+}

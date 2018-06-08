@@ -6,8 +6,6 @@ if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang['error_no_privileges']);
 }
 
-include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/functions.inc.php');
-
 // check to see the edit settings page isn't locked
 $rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='" . $modx->getLoginUserID() . "'");
 if($username = $modx->db->getValue($rs)) {

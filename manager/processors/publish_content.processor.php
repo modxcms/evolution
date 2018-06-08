@@ -26,8 +26,7 @@ $add_path=$sd.$sb.$pg;
 
 
 // check permissions on the document
-include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
-$udperms = new udperms();
+$udperms = new EvolutionCMS\Legacy\Permissions();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];

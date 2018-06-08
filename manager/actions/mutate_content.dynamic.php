@@ -24,8 +24,7 @@ switch($modx->manager->action) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 		} elseif(isset($_REQUEST['pid']) && $_REQUEST['pid'] != '0') {
 			// check user has permissions for parent
-			include_once(MODX_MANAGER_PATH . 'processors/user_documents_permissions.class.php');
-			$udperms = new udperms();
+			$udperms = new EvolutionCMS\Legacy\Permissions();
 			$udperms->user = $modx->getLoginUserID();
 			$udperms->document = empty($_REQUEST['pid']) ? 0 : $_REQUEST['pid'];
 			$udperms->role = $_SESSION['mgrRole'];
@@ -56,8 +55,7 @@ $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 if($modx->manager->action == 27) {
 	//editing an existing document
 	// check permissions on the document
-	include_once(MODX_MANAGER_PATH . 'processors/user_documents_permissions.class.php');
-	$udperms = new udperms();
+	$udperms = new EvolutionCMS\Legacy\Permissions();
 	$udperms->user = $modx->getLoginUserID();
 	$udperms->document = $id;
 	$udperms->role = $_SESSION['mgrRole'];
@@ -954,9 +952,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $rs = $modx->db->select($field, $from, $where, $sort);
                                 if ($modx->db->getRecordCount($rs)) {
                                     $tvsArray = $modx->db->makeArray($rs, 'name');
-                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
-                                    require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-
                                     $templateVariablesOutput = '';
                                     $templateVariablesGeneral = '';
 
@@ -1552,50 +1547,4 @@ if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager
 			}
 		}
 	}
-}
-
-/**
- * @return string
- */
-function getDefaultTemplate() {
-	$modx = evolutionCMS();
-
-    $default_template = '';
-	switch($modx->config['auto_template_logic']) {
-		case 'sibling':
-			if(!isset($_GET['pid']) || empty($_GET['pid'])) {
-				$site_start = $modx->config['site_start'];
-				$where = "sc.isfolder=0 AND sc.id!='{$site_start}'";
-				$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', $where, 'menuindex', 'ASC', 1);
-				if(isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
-					$default_template = $sibl[0]['template'];
-				}
-			} else {
-				$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
-				if(isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
-					$default_template = $sibl[0]['template'];
-				} else {
-					$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
-					if(isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
-						$default_template = $sibl[0]['template'];
-					}
-				}
-			}
-			if(isset($default_template)) {
-				break;
-			} // If $default_template could not be determined, fall back / through to "parent"-mode
-		case 'parent':
-			if(isset($_REQUEST['pid']) && !empty($_REQUEST['pid'])) {
-				$parent = $modx->getPageInfo($_REQUEST['pid'], 0, 'template');
-				if(isset($parent['template'])) {
-					$default_template = $parent['template'];
-				}
-			}
-			break;
-		case 'system':
-		default: // default_template is already set
-			$default_template = $modx->config['default_template'];
-	}
-
-	return empty($default_template) ? $modx->config['default_template'] : $default_template;
 }

@@ -447,8 +447,7 @@ if ($installData && $moduleSQLDataFile) {
 
 // always empty cache after install
 
-include_once MGR."/processors/cache_sync.class.processor.php";
-$sync = new synccache();
+$sync = new EvolutionCMS\Cache();
 $sync->setCachepath(MODX_BASE_PATH."assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache

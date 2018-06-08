@@ -13,7 +13,7 @@ $tbl_web_groups = $modx->getFullTableName('web_groups');
 $input = $_POST;
 foreach($input as $k => $v) {
 	if($k !== 'comment') {
-		$v = sanitize($v);
+		$v = $modx->htmlspecialchars($v, ENT_NOQUOTES);
 	}
 	$input[$k] = $v;
 }
@@ -51,12 +51,12 @@ $user_groups = $input['user_groups'];
 
 // verify password
 if($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
-	webAlertAndQuit("Password typed is mismatched");
+	webAlertAndQuit("Password typed is mismatched", 88);
 }
 
 // verify email
 if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
-	webAlertAndQuit("E-mail address doesn't seem to be valid!");
+	webAlertAndQuit("E-mail address doesn't seem to be valid!", 88);
 }
 
 switch($input['mode']) {
@@ -65,7 +65,7 @@ switch($input['mode']) {
 		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}'");
 		$limit = $modx->db->getValue($rs);
 		if($limit > 0) {
-			webAlertAndQuit("User name is already in use!");
+			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exist
@@ -73,23 +73,23 @@ switch($input['mode']) {
 			$rs = $modx->db->select('count(id)', $tbl_web_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
 			$limit = $modx->db->getValue($rs);
 			if($limit > 0) {
-				webAlertAndQuit("Email is already in use!");
+				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
 
 		// generate a new password for this user
 		if($specifiedpassword != "" && $passwordgenmethod == "spec") {
 			if(strlen($specifiedpassword) < 6) {
-				webAlertAndQuit("Password is too short!");
+				webAlertAndQuit("Password is too short!", 88);
 			} else {
 				$newpassword = $specifiedpassword;
 			}
 		} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
-			webAlertAndQuit("You didn't specify a password for this user!");
+			webAlertAndQuit("You didn't specify a password for this user!", 88);
 		} elseif($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
-			webAlertAndQuit("No password generation method specified!");
+			webAlertAndQuit("No password generation method specified!", 88);
 		}
 
 		// invoke OnBeforeWUsrFormSave event
@@ -108,7 +108,7 @@ switch($input['mode']) {
 		$modx->db->insert($field, $tbl_web_user_attributes);
 
 		// Save User Settings
-		saveUserSettings($internalKey);
+        saveWebUserSettings($internalKey);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
@@ -145,7 +145,7 @@ switch($input['mode']) {
         ));
 
 		if($passwordnotifymethod == 'e') {
-			sendMailMessage($email, $newusername, $newpassword, $fullname);
+            sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $websignupemail_message, $site_url);
 			if($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$internalKey}" : "87";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
@@ -193,27 +193,27 @@ switch($input['mode']) {
 		if($genpassword == 1) {
 			if($specifiedpassword != "" && $passwordgenmethod == "spec") {
 				if(strlen($specifiedpassword) < 6) {
-					webAlertAndQuit("Password is too short!");
+					webAlertAndQuit("Password is too short!", 88);
 				} else {
 					$newpassword = $specifiedpassword;
 				}
 			} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
-				webAlertAndQuit("You didn't specify a password for this user!");
+				webAlertAndQuit("You didn't specify a password for this user!", 88);
 			} elseif($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
-				webAlertAndQuit("No password generation method specified!");
+				webAlertAndQuit("No password generation method specified!", 88);
 			}
 		}
 		if($passwordnotifymethod == 'e') {
-			sendMailMessage($email, $newusername, $newpassword, $fullname);
+            sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $websignupemail_message, $site_url);
 		}
 
 		// check if the username already exist
 		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}' AND id!='{$id}'");
 		$limit = $modx->db->getValue($rs);
 		if($limit > 0) {
-			webAlertAndQuit("User name is already in use!");
+			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exists
@@ -221,7 +221,7 @@ switch($input['mode']) {
 			$rs = $modx->db->select('count(internalKey)', $tbl_web_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
 			$limit = $modx->db->getValue($rs);
 			if($limit > 0) {
-				webAlertAndQuit("Email is already in use!");
+				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
 
@@ -243,7 +243,7 @@ switch($input['mode']) {
 		$modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
 
 		// Save User Settings
-		saveUserSettings($id);
+        saveWebUserSettings($id);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
@@ -335,123 +335,5 @@ switch($input['mode']) {
 		}
 		break;
 	default :
-		webAlertAndQuit("No operation set in request.");
-}
-
-/**
- * in case any plugins include a quoted_printable function
- *
- * @param string $string
- * @return string
- */
-function save_user_quoted_printable($string) {
-	$crlf = "\n";
-	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf;
-	$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e';
-	$r[] = "'=' . sprintf('%02X', ord('\\1'))";
-	$f[] = '/([\011\040])' . $crlf . '/e';
-	$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'";
-	$string = preg_replace($f, $r, $string);
-	return trim(wordwrap($string, 70, ' =' . $crlf));
-}
-
-/**
- * Send an email to the user
- *
- * @param string $email
- * @param string $uid
- * @param string $pwd
- * @param string $ufn
- */
-function sendMailMessage($email, $uid, $pwd, $ufn) {
-	$modx = evolutionCMS(); global $_lang, $websignupemail_message;
-	global $emailsubject, $emailsender;
-	global $site_name, $site_url;
-	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
-	// replace placeholders
-	$message = str_replace("[+uid+]", $uid, $message);
-	$message = str_replace("[+pwd+]", $pwd, $message);
-	$message = str_replace("[+ufn+]", $ufn, $message);
-	$message = str_replace("[+sname+]", $site_name, $message);
-	$message = str_replace("[+saddr+]", $emailsender, $message);
-	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $site_url, $message);
-
-	$param = array();
-	$param['from'] = "{$site_name}<{$emailsender}>";
-	$param['subject'] = $emailsubject;
-	$param['body'] = $message;
-	$param['to'] = $email;
-	$param['type'] = 'text';
-	$rs = $modx->sendmail($param);
-	if(!$rs) {
-		$modx->manager->saveFormValues();
-		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
-	}
-}
-
-// Save User Settings
-function saveUserSettings($id) {
-	$modx = evolutionCMS();
-	$tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
-
-	$settings = array(
-		"login_home",
-		"allowed_ip",
-		"allowed_days"
-	);
-
-	$modx->db->delete($tbl_web_user_settings, "webuser='{$id}'");
-
-	foreach($settings as $n) {
-		$vl = $_POST[$n];
-		if(is_array($vl)) {
-			$vl = implode(",", $vl);
-		}
-		if($vl != '') {
-			$f = array();
-			$f['webuser'] = $id;
-			$f['setting_name'] = $n;
-			$f['setting_value'] = $vl;
-			$f = $modx->db->escape($f);
-			$modx->db->insert($f, $tbl_web_user_settings);
-		}
-	}
-}
-
-// Web alert -  sends an alert to web browser
-function webAlertAndQuit($msg) {
-	global $id, $modx;
-	$mode = $_POST['mode'];
-	$modx->manager->saveFormValues($mode);
-	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : ''));
-}
-
-// Generate password
-function generate_password($length = 10) {
-	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-	$ps_len = strlen($allowable_characters);
-	mt_srand((double) microtime() * 1000000);
-	$pass = "";
-	for($i = 0; $i < $length; $i++) {
-		$pass .= $allowable_characters[mt_rand(0, $ps_len - 1)];
-	}
-	return $pass;
-}
-
-function sanitize($str = '', $safecount = 0) {
-	$modx = evolutionCMS();
-	$safecount++;
-	if(1000 < $safecount) {
-		exit("error too many loops '{$safecount}'");
-	}
-	if(is_array($str)) {
-		foreach($str as $i => $v) {
-			$str[$i] = sanitize($v, $safecount);
-		}
-	} else {
-		// $str = strip_tags($str); // LEAVE < and > intact
-		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
-	}
-	return $str;
+		webAlertAndQuit("No operation set in request.", 88);
 }

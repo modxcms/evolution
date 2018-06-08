@@ -352,8 +352,7 @@ abstract class MODxAPI extends MODxAPIhelpers
         $IDs = array();
         if ($custom === false) {
             $this->modx->clearCache();
-            include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
-            $sync = new synccache();
+            $sync = new EvolutionCMS\Cache();
             $path = $this->getCachePath(true);
             $sync->setCachepath($path);
             $sync->setReport(false);

@@ -8,8 +8,6 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
-include_once('nodes.functions.inc.php');
-
 // save folderstate
 if (isset($_REQUEST['opened'])) {
     $_SESSION['openedArray'] = $_REQUEST['opened'];

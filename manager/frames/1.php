@@ -505,6 +505,25 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         </form>
     </div>
 
+    <?php
+    if(!function_exists('constructLink')) {
+        /**
+         * @param string $action
+         * @param string $img
+         * @param string $text
+         * @param bool $allowed
+         */
+        function constructLink($action, $img, $text, $allowed)
+        {
+            if ((bool)$allowed) {
+                echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action,
+                    $action);
+                echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+            }
+        }
+    }
+    ?>
+
     <!-- Contextual Menu Popup Code -->
     <div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
         <div id="nameHolder">&nbsp;</div>
@@ -533,23 +552,6 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         ?>
 
     </div>
-
-    <?php
-    /**
-     * @param string $action
-     * @param string $img
-     * @param string $text
-     * @param bool $allowed
-     */
-    function constructLink($action, $img, $text, $allowed)
-    {
-        if ((bool)$allowed) {
-            echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
-            echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
-        }
-    }
-
-    ?>
 
     <script type="text/javascript">
 

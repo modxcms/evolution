@@ -10,20 +10,6 @@ $id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
-
-/**
- * create globally unique identifiers (guid)
- *
- * @return string
- */
-function createGUID(){
-	srand((double)microtime()*1000000);
-	$r = rand() ;
-	$u = uniqid(getmypid() . $r . (double)microtime()*1000000,1);
-	$m = md5 ($u);
-	return $m;
-}
-
 // count duplicates
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_modules'), "id='{$id}'"));
 $count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_modules'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
