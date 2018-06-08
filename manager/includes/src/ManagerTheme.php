@@ -31,14 +31,13 @@ class ManagerTheme implements ManagerThemeInterface
         $this->loadSnippets();
 
         $this->loadChunks();
-		
     }
 
     public function loadSnippets()
     {
         $found = $this->core->findElements(
             'chunk',
-            MODX_MANAGER_PATH . 'media/style/'. $this->theme .'/snippets/',
+            MODX_MANAGER_PATH . 'media/style/' . $this->theme . '/snippets/',
             array('php')
         );
         foreach ($found as $name => $code) {
@@ -50,7 +49,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         $found = $this->core->findElements(
             'chunk',
-            MODX_MANAGER_PATH . 'media/style/'. $this->theme .'/chunks/',
+            MODX_MANAGER_PATH . 'media/style/' . $this->theme . '/chunks/',
             array('tpl', 'html')
         );
         foreach ($found as $name => $code) {
@@ -63,7 +62,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->core->addSnippet(
             $name,
             $code,
-            $this->templateNamespace  . '#',
+            $this->templateNamespace . '#',
             array(
                 'managerTheme' => $this
             )

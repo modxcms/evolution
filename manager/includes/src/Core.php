@@ -5868,10 +5868,7 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
-     * @param string $name
-     * @param string $phpCode
-     * @param string $namespace
-     * @param array defaultParams
+     * {@inheritdoc}
      */
     public function addSnippet($name, $phpCode, $namespace = '#', array $defaultParams = array())
     {
@@ -5880,9 +5877,7 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
-     * @param string $name
-     * @param string $text
-     * @param string $namespace
+     * {@inheritdoc}
      */
     public function addChunk($name, $text, $namespace = '#')
     {
@@ -5890,11 +5885,7 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
-     * @param $type
-     * @param $scanPath
-     * @param array $ext
-     * @return array
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function findElements($type, $scanPath, array $ext)
     {
@@ -5913,9 +5904,14 @@ class Core implements Interfaces\CoreInterface
              */
             if ($item->isFile() && $item->isReadable() && \in_array($item->getExtension(), $ext)) {
                 $name = $item->getBasename('.' . $item->getExtension());
-                $path = str_replace($scanPath, '', $item->getPath() . '/');
+                $path = ltrim(str_replace(
+                    array(rtrim($scanPath, '//'), '/'),
+                    array('', '\\'),
+                    $item->getPath() . '/'
+                ), '\\');
+
                 if (!empty($path)) {
-                    $name = str_replace('/', '\\', $path) . $name;
+                    $name = $path . $name;
                 }
                 switch ($type) {
                     case 'chunk':
