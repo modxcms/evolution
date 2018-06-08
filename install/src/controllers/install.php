@@ -217,7 +217,7 @@ $confph['table_prefix']       = $table_prefix;
 $confph['lastInstallTime']    = time();
 $confph['site_sessionname']   = $site_sessionname;
 
-$configString = file_get_contents(dirname(__DIR__) . '/stubs/config.tpl');
+$configString = file_get_contents(dirname(dirname(__DIR__)) . '/config.inc.tpl');
 $configString = parse($configString, $confph);
 
 $filename = '../'.MGR_DIR.'/includes/config.inc.php';
@@ -520,7 +520,7 @@ if (isset ($_POST['plugin']) || $installData) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
     $selPlugs = $_POST['plugin'];
     foreach ($modulePlugins as $k=>$modulePlugin) {
-        $installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
+        $installSample = is_array($modulePlugin[8]) && in_array('sample', $modulePlugin[8]) && $installData == 1;
         if($installSample || in_array($k, $selPlugs)) {
             $name = mysqli_real_escape_string($conn, $modulePlugin[0]);
             $desc = mysqli_real_escape_string($conn, $modulePlugin[1]);

@@ -26,6 +26,7 @@ if (empty($_GET['self'])) {
 
     require_once '../' . MGR_DIR . '/includes/version.inc.php';
     include_once '../'.MGR_DIR.'/includes/preload.functions.inc.php';
+    include_once '../'.MGR_DIR.'/includes/bootstrap.php';
 
     // start session
     session_start();
