@@ -212,7 +212,7 @@ if(!function_exists('getExtension')) {
      */
     function getExtension($string)
     {
-        $pos = explode($string, '.');
+        $pos = strrpos($string, '.');
         if ($pos !== false) {
             $ext = substr($string, $pos);
             $ext = strtolower($ext);
