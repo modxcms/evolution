@@ -4,16 +4,6 @@ $host = $_POST['host'];
 $uid = $_POST['uid'];
 $pwd = $_POST['pwd'];
 
-$self = 'install/connection.collation.php';
-$base_path = str_replace($self, '', str_replace('\\', '/', __FILE__));
-if (is_file("{$base_path}assets/cache/siteManager.php")) {
-    include_once("{$base_path}assets/cache/siteManager.php");
-}
-if (!defined('MGR_DIR') && is_dir("{$base_path}manager")) {
-    define('MGR_DIR', 'manager');
-}
-require_once('lang.php');
-
 if (function_exists('mysqli_connect')) {
     $conn = mysqli_connect($host, $uid, $pwd);
     if (!$conn) {
@@ -40,22 +30,22 @@ if (mysqli_num_rows($rs) > 0) {
     } elseif (isset($_['utf8mb4_general_ci'])) {
         $_['utf8mb4_general_ci'] = ' selected';
     } elseif (isset($_['utf8_general_ci'])) {
-        $_['utf8_general_ci']    = ' selected';
+        $_['utf8_general_ci'] = ' selected';
     } elseif (!empty($database_collation) && isset($_[$database_collation])) {
-        $_[$database_collation]  = ' selected';
+        $_[$database_collation] = ' selected';
     }
 
     $_ = sortItem($_, $_lang['recommend_collations_order']);
 
-    foreach ($_ as $collation=>$selected) {
+    foreach ($_ as $collation => $selected) {
         $collation = htmlentities($collation);
         // if(substr($collation,0,4)!=='utf8') continue;
-        if (strpos($collation, 'sjis')===0) {
+        if (strpos($collation, 'sjis') === 0) {
             continue;
         }
-        if ($collation=='recommend') {
+        if ($collation == 'recommend') {
             $output .= '<optgroup label="recommend">';
-        } elseif ($collation=='unrecommend') {
+        } elseif ($collation == 'unrecommend') {
             $output .= '</optgroup><optgroup label="unrecommend">';
         } else {
             $output .= sprintf('<option value="%s" %s>%s</option>', $collation, $selected, $collation);
@@ -66,19 +56,3 @@ if (mysqli_num_rows($rs) > 0) {
 
 echo $output;
 exit;
-
-function sortItem($array=array(), $order='utf8mb4,utf8')
-{
-    $rs = array('recommend'=>'');
-    $order = explode(',', $order);
-    foreach ($order as $v) {
-        foreach ($array as $name=>$sel) {
-            if (strpos($name, $v)!==false) {
-                $rs[$name] = $array[$name];
-                unset($array[$name]);
-            }
-        }
-    }
-    $rs['unrecommend']='';
-    return $rs + $array;
-}

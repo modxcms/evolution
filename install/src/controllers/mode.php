@@ -27,6 +27,6 @@ $ph['install_language'] = $install_language;
 $ph['disabledUpg']      = ($upgradeable!=1) ? 'disabled' : '';
 $ph['disabledAdvUpg']   = ($upgradeable==0) ? 'disabled' : '';
 
-$tpl = file_get_contents($base_path . 'install/actions/tpl_mode.html');
+$tpl = file_get_contents(dirname(__DIR__) . '/template/actions/mode.tpl');
 $content = parse($tpl, $ph);
 echo parse($content, $_lang,'[%','%]');
