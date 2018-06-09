@@ -149,7 +149,7 @@ border: none !important; border-left: 1px solid rgba(0, 0, 0, 0.05) !important; 
 .darkness #mainMenu.show .nav > li.dropdown.hover > a, .dark.navbar-left #mainMenu.show .nav > li.dropdown.hover > a { color: #eee; background-color: #343942; }
 .darkness #mainMenu .nav > li > ul, .dark.navbar-left #mainMenu .nav > li > ul { background-color: #343942; }
 .darkness #mainMenu .nav > li > ul > li > a:first-child, .darkness #mainMenu .nav > li > ul > li > span, .dark.navbar-left #mainMenu .nav > li > ul > li > a:first-child, .dark.navbar-left #mainMenu .nav > li > ul > li > span, .dark.navbar-left #mainMenu .nav li.item-group > * { color: #eee; }
-.darkness #mainMenu .nav > li > ul > li > span:hover { background-color: inherit; }
+.darkness #mainMenu .nav > li > ul > li > span:hover, .dark.navbar-left #mainMenu .nav > li > ul > li > span:hover { background-color: inherit; }
 .darkness #mainMenu .nav li.item-group > *, .dark.navbar-left #mainMenu .nav li.item-group > * { background-color: transparent }
 .darkness #searchresult { background-color: #202329; border-left: 1px solid #282c34; }
 .darkness #searchresult .ajaxSearchResults b { background-color: #1a1c21; }

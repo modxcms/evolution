@@ -77,4 +77,4 @@
 /* darkness */
 .darkness #tree .treeframebody { background-color: #202329; border-color: #414449; }
 .darkness #treeMenu { background-color: #1a1c21; border-color: #414449; }
-.darkness #mainMenu .nav > li > ul > li { border-bottom-color: rgba(0, 0, 0, 0.15); }
+.darkness #mainMenu .nav > li > ul > li, .dark.navbar-left #mainMenu .nav > li > ul > li { border-bottom-color: rgba(0, 0, 0, 0.15); }
