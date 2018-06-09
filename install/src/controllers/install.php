@@ -93,9 +93,7 @@ if ($conn) {
         // check table prefix
         if ($installMode === 0) {
             $query = "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`";
-            @$checkPrefix = mysqli_query($conn, $query);
-
-            if ($checkPrefix === false) {
+            if (@mysqli_query($conn, $query)) {
                 $errors += 1;
             } else {
                 $installLevel = 2;
