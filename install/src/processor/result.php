@@ -248,5 +248,5 @@ if (is_dir($modulePath) && is_readable($modulePath)) {
 }
 
 // setup callback function
-$callBackFnc = "clean_up";
+$callBackFnc = 'clean_up';
 

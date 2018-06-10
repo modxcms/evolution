@@ -534,39 +534,39 @@ if (!function_exists('parse_docblock')) {
     }
 }
 
-//if (!function_exists('parseProperties')) {
-//    /**
-//     * parses a resource property string and returns the result as an array
-//     * duplicate of method in documentParser class
-//     *
-//     * @param string $propertyString
-//     * @return array
-//     */
-//    function parseProperties($propertyString)
-//    {
-//        $parameter = array();
-//        if (!empty ($propertyString)) {
-//            $tmpParams = explode("&", $propertyString);
-//            $countParams = count($tmpParams);
-//            for ($x = 0; $x < $countParams; $x++) {
-//                if (strpos($tmpParams[$x], '=', 0)) {
-//                    $pTmp = explode("=", $tmpParams[$x]);
-//                    $pvTmp = explode(";", trim($pTmp[1]));
-//                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "") {
-//                        $parameter[trim($pTmp[0])] = $pvTmp[3];
-//                    } //list default
-//                    else {
-//                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "") {
-//                            $parameter[trim($pTmp[0])] = $pvTmp[2];
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return $parameter;
-//    }
-//}
+if (!function_exists('propertiesNameValue')) {
+    /**
+     * parses a resource property string and returns the result as an array
+     * duplicate of method in documentParser class
+     *
+     * @param string $propertyString
+     * @return array
+     */
+    function propertiesNameValue($propertyString)
+    {
+        $parameter = array();
+        if (!empty ($propertyString)) {
+            $tmpParams = explode("&", $propertyString);
+            $countParams = count($tmpParams);
+            for ($x = 0; $x < $countParams; $x++) {
+                if (strpos($tmpParams[$x], '=', 0)) {
+                    $pTmp = explode("=", $tmpParams[$x]);
+                    $pvTmp = explode(";", trim($pTmp[1]));
+                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "") {
+                        $parameter[trim($pTmp[0])] = $pvTmp[3];
+                    } //list default
+                    else {
+                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "") {
+                            $parameter[trim($pTmp[0])] = $pvTmp[2];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $parameter;
+    }
+}
 
 if (!function_exists('propUpdate')) {
     /**
@@ -597,18 +597,15 @@ if (!function_exists('parseProperties')) {
     /**
      * @param string $propertyString
      * @param bool|mixed $json
-     * @return string
+     * @return string|array
      */
     function parseProperties($propertyString, $json = false)
     {
         $propertyString = str_replace('{}', '', $propertyString);
         $propertyString = str_replace('} {', ',', $propertyString);
 
-        if (empty($propertyString)) {
-            return array();
-        }
-        if ($propertyString == '{}' || $propertyString == '[]') {
-            return array();
+        if (empty($propertyString) || $propertyString == '{}' || $propertyString == '[]') {
+            $propertyString = '';
         }
 
         $jsonFormat = isJson($propertyString, true);
@@ -656,6 +653,7 @@ if (!function_exists('parseProperties')) {
                 $property = $jsonFormat;
             }
         }
+
         if ($json) {
             $property = json_encode($property, JSON_UNESCAPED_UNICODE);
         }
@@ -746,5 +744,36 @@ if (!function_exists('removeDocblock')) {
 
         // fileBinding not found - return code incl docblock
         return $code;
+    }
+}
+
+if (!function_exists('removeFolder')) {
+    /**
+     * RemoveFolder
+     *
+     * @param string $path
+     * @return string
+     */
+    function removeFolder($path)
+    {
+        $dir = realpath($path);
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $it = new RecursiveDirectoryIterator($dir);
+        $files = new RecursiveIteratorIterator($it,
+            RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->getFilename() === "." || $file->getFilename() === "..") {
+                continue;
+            }
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+        rmdir($dir);
     }
 }

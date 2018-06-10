@@ -31,9 +31,9 @@ require_once($base_path . MGR_DIR . '/includes/version.inc.php');
 $moduleName = "EVO";
 $moduleVersion = $modx_branch . ' ' . $modx_version;
 $moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = $path . '/src/stubs/sql/setup.sql';
-$moduleSQLDataFile = $path . 'src/stubs/sql/setup.data.sql';
-$moduleSQLResetFile = $path . 'src/stubs/sql/setup.data.reset.sql';
+$moduleSQLBaseFile = $path . 'stubs/sql/setup.sql';
+$moduleSQLDataFile = $path . 'stubs/sql/setup.data.sql';
+$moduleSQLResetFile = $path . 'stubs/sql/setup.data.reset.sql';
 
 $moduleChunks = array(); // chunks - array : name, description, type - 0:file or 1:content, file or content
 $moduleTemplates = array(); // templates - array : name, description, type - 0:file or 1:content, file or content
@@ -531,7 +531,7 @@ if ($installMode == 0) {
     }
 }
 
-if (!function_exists('parseProperties')) {
+if (!function_exists('propertiesNameValue')) {
     /**
      * parses a resource property string and returns the result as an array
      * duplicate of method in documentParser class
@@ -539,7 +539,7 @@ if (!function_exists('parseProperties')) {
      * @param string $propertyString
      * @return array
      */
-    function parseProperties($propertyString)
+    function propertiesNameValue($propertyString)
     {
         $parameter = array();
         if (!empty ($propertyString)) {
@@ -833,128 +833,6 @@ if (is_dir($modulePath) && is_readable($modulePath)) {
 // setup callback function
 $callBackFnc = "clean_up";
 
-if (!function_exists('clean_up')) {
-    function clean_up($sqlParser)
-    {
-        $ids = array();
-
-        // secure web documents - privateweb
-        mysqli_query($sqlParser->conn,
-            "UPDATE `" . $sqlParser->prefix . "site_content` SET privateweb = 0 WHERE privateweb = 1");
-        $sql = "SELECT DISTINCT sc.id
-             FROM `" . $sqlParser->prefix . "site_content` sc
-             LEFT JOIN `" . $sqlParser->prefix . "document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `" . $sqlParser->prefix . "webgroup_access` wga ON wga.documentgroup = dg.document_group
-             WHERE wga.id>0";
-        $ds = mysqli_query($sqlParser->conn, $sql);
-        if (!$ds) {
-            echo "An error occurred while executing a query: " . mysqli_error($sqlParser->conn);
-        } else {
-            while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r["id"];
-            }
-            if (count($ids) > 0) {
-                mysqli_query($sqlParser->conn,
-                    "UPDATE `" . $sqlParser->prefix . "site_content` SET privateweb = 1 WHERE id IN (" . implode(", ",
-                        $ids) . ")");
-                unset($ids);
-            }
-        }
-
-        // secure manager documents privatemgr
-        mysqli_query($sqlParser->conn,
-            "UPDATE `" . $sqlParser->prefix . "site_content` SET privatemgr = 0 WHERE privatemgr = 1");
-        $sql = "SELECT DISTINCT sc.id
-             FROM `" . $sqlParser->prefix . "site_content` sc
-             LEFT JOIN `" . $sqlParser->prefix . "document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `" . $sqlParser->prefix . "membergroup_access` mga ON mga.documentgroup = dg.document_group
-             WHERE mga.id>0";
-        $ds = mysqli_query($sqlParser->conn, $sql);
-        if (!$ds) {
-            echo "An error occurred while executing a query: " . mysqli_error($sqlParser->conn);
-        } else {
-            while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r["id"];
-            }
-            if (count($ids) > 0) {
-                mysqli_query($sqlParser->conn,
-                    "UPDATE `" . $sqlParser->prefix . "site_content` SET privatemgr = 1 WHERE id IN (" . implode(", ",
-                        $ids) . ")");
-                unset($ids);
-            }
-        }
-    }
-}
-
-if (!function_exists('parse_docblock')) {
-    function parse_docblock($element_dir, $filename)
-    {
-        $params = array();
-        $fullpath = $element_dir . '/' . $filename;
-        if (is_readable($fullpath)) {
-            $tpl = @fopen($fullpath, "r");
-            if ($tpl) {
-                $params['filename'] = $filename;
-                $docblock_start_found = false;
-                $name_found = false;
-                $description_found = false;
-
-                while (!feof($tpl)) {
-                    $line = fgets($tpl);
-                    if (!$docblock_start_found) {
-                        // find docblock start
-                        if (strpos($line, '/**') !== false) {
-                            $docblock_start_found = true;
-                        }
-                        continue;
-                    } elseif (!$name_found) {
-                        // find name
-                        $ma = null;
-                        if (preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
-                            $params['name'] = trim($ma[1]);
-                            $name_found = !empty($params['name']);
-                        }
-                        continue;
-                    } elseif (!$description_found) {
-                        // find description
-                        $ma = null;
-                        if (preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
-                            $params['description'] = trim($ma[1]);
-                            $description_found = !empty($params['description']);
-                        }
-                        continue;
-                    } else {
-                        $ma = null;
-                        if (preg_match("/^\s+\*\s+\@([^\s]+)\s+(.+)/", $line, $ma)) {
-                            $param = trim($ma[1]);
-                            $val = trim($ma[2]);
-                            if (!empty($param) && !empty($val)) {
-                                if ($param == 'internal') {
-                                    $ma = null;
-                                    if (preg_match("/\@([^\s]+)\s+(.+)/", $val, $ma)) {
-                                        $param = trim($ma[1]);
-                                        $val = trim($ma[2]);
-                                    }
-                                    //if($val !== '0' && (empty($param) || empty($val))) {
-                                    if (empty($param)) {
-                                        continue;
-                                    }
-                                }
-                                $params[$param] = $val;
-                            }
-                        } elseif (preg_match("/^\s*\*\/\s*$/", $line)) {
-                            break;
-                        }
-                    }
-                }
-                @fclose($tpl);
-            }
-        }
-
-        return $params;
-    }
-}
-
 include $path . "src/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase),
     $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage,
@@ -1010,7 +888,7 @@ $confph['table_prefix'] = $table_prefix;
 $confph['lastInstallTime'] = time();
 $confph['site_sessionname'] = $site_sessionname;
 
-$configString = file_get_contents($path . 'src/stubs/config.tpl');
+$configString = file_get_contents($path . 'stubs/config.tpl');
 $configString = parse($configString, $confph);
 
 $filename = $base_path . MGR_DIR . '/includes/config.inc.php';
@@ -1643,221 +1521,9 @@ if (empty($args)) {
     $removeInstall = readline("Type 'y' or 'n' to continue: ");
 }
 //remove installFolder
-if ($removeInstall == 'y') {
+if ($removeInstall === 'y') {
     removeFolder($path);
     removeFolder($base_path . '.tx');
     unlink($base_path . 'README.md');
     echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
-}
-
-if (!function_exists('removeFolder')) {
-    /**
-     * RemoveFolder
-     *
-     * @param string $path
-     * @return string
-     */
-    function removeFolder($path)
-    {
-        $dir = realpath($path);
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        $it = new RecursiveDirectoryIterator($dir);
-        $files = new RecursiveIteratorIterator($it,
-            RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($files as $file) {
-            if ($file->getFilename() === "." || $file->getFilename() === "..") {
-                continue;
-            }
-            if ($file->isDir()) {
-                rmdir($file->getRealPath());
-            } else {
-                unlink($file->getRealPath());
-            }
-        }
-        rmdir($dir);
-    }
-}
-
-if (!function_exists('propUpdate')) {
-    /**
-     * Property Update function
-     *
-     * @param string $new
-     * @param string $old
-     * @return string
-     */
-    function propUpdate($new, $old)
-    {
-        $newArr = parseProperties($new);
-        $oldArr = parseProperties($old);
-        foreach ($oldArr as $k => $v) {
-            if (isset($v['0']['options'])) {
-                $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
-            }
-        }
-        $return = $oldArr + $newArr;
-        $return = json_encode($return, JSON_UNESCAPED_UNICODE);
-        $return = ($return !== '[]') ? $return : '';
-
-        return $return;
-    }
-}
-
-if (!function_exists('parseProperties')) {
-    /**
-     * @param string $propertyString
-     * @param bool|mixed $json
-     * @return string
-     */
-    function parseProperties($propertyString, $json = false)
-    {
-        $propertyString = str_replace('{}', '', $propertyString);
-        $propertyString = str_replace('} {', ',', $propertyString);
-
-        if (empty($propertyString)) {
-            return array();
-        }
-        if ($propertyString == '{}' || $propertyString == '[]') {
-            return array();
-        }
-
-        $jsonFormat = isJson($propertyString, true);
-        $property = array();
-        // old format
-        if ($jsonFormat === false) {
-            $props = explode('&', $propertyString);
-            foreach ($props as $prop) {
-                $prop = trim($prop);
-                if ($prop === '') {
-                    continue;
-                }
-
-                $arr = explode(';', $prop);
-                if (!is_array($arr)) {
-                    $arr = array();
-                }
-                $key = explode('=', isset($arr[0]) ? $arr[0] : '');
-                if (!is_array($key) || empty($key[0])) {
-                    continue;
-                }
-
-                $property[$key[0]]['0']['label'] = isset($key[1]) ? trim($key[1]) : '';
-                $property[$key[0]]['0']['type'] = isset($arr[1]) ? trim($arr[1]) : '';
-                switch ($property[$key[0]]['0']['type']) {
-                    case 'list':
-                    case 'list-multi':
-                    case 'checkbox':
-                    case 'radio':
-                    case 'menu':
-                        $property[$key[0]]['0']['value'] = isset($arr[3]) ? trim($arr[3]) : '';
-                        $property[$key[0]]['0']['options'] = isset($arr[2]) ? trim($arr[2]) : '';
-                        $property[$key[0]]['0']['default'] = isset($arr[3]) ? trim($arr[3]) : '';
-                        break;
-                    default:
-                        $property[$key[0]]['0']['value'] = isset($arr[2]) ? trim($arr[2]) : '';
-                        $property[$key[0]]['0']['default'] = isset($arr[2]) ? trim($arr[2]) : '';
-                }
-                $property[$key[0]]['0']['desc'] = '';
-
-            }
-            // new json-format
-        } else {
-            if (!empty($jsonFormat)) {
-                $property = $jsonFormat;
-            }
-        }
-        if ($json) {
-            $property = json_encode($property, JSON_UNESCAPED_UNICODE);
-        }
-        $property = ($property !== '[]') ? $property : '';
-
-        return $property;
-    }
-}
-
-if (!function_exists('isJson')) {
-    /**
-     * @param string $string
-     * @param bool $returnData
-     * @return bool|mixed
-     */
-    function isJson($string, $returnData = false)
-    {
-        $data = json_decode($string, true);
-
-        return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
-    }
-}
-
-if (!function_exists('getCreateDbCategory')) {
-    /**
-     * @param string|int $category
-     * @param SqlParser $sqlParser
-     * @return int
-     */
-    function getCreateDbCategory($category, $sqlParser)
-    {
-        $dbase = $sqlParser->dbname;
-        $dbase = '`' . trim($dbase, '`') . '`';
-        $table_prefix = $sqlParser->prefix;
-        $category_id = 0;
-        if (!empty($category)) {
-            $category = mysqli_real_escape_string($sqlParser->conn, $category);
-            $rs = mysqli_query($sqlParser->conn,
-                "SELECT id FROM $dbase.`" . $table_prefix . "categories` WHERE category = '" . $category . "'");
-            if (mysqli_num_rows($rs) && ($row = mysqli_fetch_assoc($rs))) {
-                $category_id = $row['id'];
-            } else {
-                $q = "INSERT INTO $dbase.`" . $table_prefix . "categories` (`category`) VALUES ('{$category}');";
-                $rs = mysqli_query($sqlParser->conn, $q);
-                if ($rs) {
-                    $category_id = mysqli_insert_id($sqlParser->conn);
-                }
-            }
-        }
-
-        return $category_id;
-    }
-}
-
-if (!function_exists('removeDocblock')) {
-    /**
-     * Remove installer Docblock only from components using plugin FileSource / fileBinding
-     *
-     * @param string $code
-     * @param string $type
-     * @return string
-     */
-    function removeDocblock($code, $type)
-    {
-
-        $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
-
-        // Procedure taken from plugin.filesource.php
-        switch ($type) {
-            case 'snippet':
-                $elm_name = 'snippets';
-                $include = 'return require';
-                $count = 47;
-                break;
-
-            case 'plugin':
-                $elm_name = 'plugins';
-                $include = 'require';
-                $count = 39;
-                break;
-
-            default:
-                return $cleaned;
-        };
-        if (substr(trim($cleaned), 0, $count) == $include . ' MODX_BASE_PATH.\'assets/' . $elm_name . '/') {
-            return $cleaned;
-        }
-
-        // fileBinding not found - return code incl docblock
-        return $code;
-    }
 }

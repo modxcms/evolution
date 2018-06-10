@@ -25,8 +25,6 @@ if (empty($_GET['self'])) {
     }
 
     require_once '../' . MGR_DIR . '/includes/version.inc.php';
-    include_once '../'.MGR_DIR.'/includes/preload.functions.inc.php';
-    include_once '../'.MGR_DIR.'/includes/bootstrap.php';
 
     // start session
     session_start();
@@ -36,9 +34,9 @@ if (empty($_GET['self'])) {
     $moduleName = 'EVO';
     $moduleVersion = $modx_branch . ' ' . $modx_version;
     $moduleRelease = $modx_release_date;
-    $moduleSQLBaseFile = 'src/stubs/sql/setup.sql';
-    $moduleSQLDataFile = 'src/stubs/sql/setup.data.sql';
-    $moduleSQLResetFile = 'src/stubs/sql/setup.data.reset.sql';
+    $moduleSQLBaseFile = 'stubs/sql/setup.sql';
+    $moduleSQLDataFile = 'stubs/sql/setup.data.sql';
+    $moduleSQLResetFile = 'stubs/sql/setup.data.reset.sql';
 
     // chunks - array : name, description, type - 0:file or 1:content, file or content
     $moduleChunks = array();
