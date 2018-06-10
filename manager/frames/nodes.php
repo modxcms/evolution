@@ -56,8 +56,8 @@ echo makeHTML($indent, $parent, $expandAll, $hereid);
 
 // check for deleted documents on reload
 if ($expandAll == 2) {
-    $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), 'deleted=1 LIMIT 1');
-    if ($modx->db->getRecordCount($rs)) {
+    $rs = $modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), 'deleted=1 LIMIT 1');
+    if ($modx->getDatabase()->getRecordCount($rs)) {
         echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
     }
 }

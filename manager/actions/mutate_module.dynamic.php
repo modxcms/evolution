@@ -40,8 +40,8 @@ if($lockedEl = $modx->elementIsLocked(6, $id)) {
 $modx->lockElement(6, $id);
 
 if(isset($_GET['id'])) {
-	$rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
-	$content = $modx->db->getRow($rs);
+	$rs = $modx->getDatabase()->select('*', $tbl_site_modules, "id='{$id}'");
+	$content = $modx->getDatabase()->getRow($rs);
 	if(!$content) {
 		$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 	}
@@ -433,7 +433,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	}
 
 	// Prepare internal params & info-tab via parseDocBlock
-	$modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
+	$modulecode = isset($content['modulecode']) ? $modx->getDatabase()->escape($content['modulecode']) : '';
 	$docBlock = $modx->parseDocBlockFromString($modulecode);
 	$docBlockList = $modx->convertDocBlockIntoList($docBlock);
 	$internal = array();
@@ -466,7 +466,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<label class="col-md-3 col-lg-2"><?= $_lang['module_name'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
-								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+								<input name="name" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -492,7 +492,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php
 								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
 								foreach(getCategories() as $n => $v) {
-									echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . "</option>\n";
+									echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($v['category']) . "</option>\n";
 								}
 								?>
 							</select>
@@ -539,7 +539,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<span><?= $_lang['module_code'] ?></span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['modulecode']) ?></textarea>
+				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($content['modulecode']) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
@@ -601,7 +601,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
-					$ds = $modx->db->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+					$ds = $modx->getDatabase()->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
 					CASE smd.type
 						WHEN 10 THEN 'Chunk'
 						WHEN 20 THEN 'Document'
@@ -640,8 +640,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<?php if($use_udperms == 1) : ?>
 					<?php
 					// fetch user access permissions for the module
-					$rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
-					$groupsarray = $modx->db->getColumn('usergroup', $rs);
+					$rs = $modx->getDatabase()->select('usergroup', $tbl_site_module_access, "module='{$id}'");
+					$groupsarray = $modx->getDatabase()->getColumn('usergroup', $rs);
 
 					if($modx->hasPermission('access_permissions')) {
 						?>
@@ -670,8 +670,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<?php
 					}
 					$chk = '';
-					$rs = $modx->db->select('name, id', $tbl_membergroup_names, '', 'name');
-					while($row = $modx->db->getRow($rs)) {
+					$rs = $modx->getDatabase()->select('name, id', $tbl_membergroup_names, '', 'name');
+					while($row = $modx->getDatabase()->getRow($rs)) {
 						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
 						$checked = in_array($row['id'], $groupsarray);
 						if($modx->hasPermission('access_permissions')) {

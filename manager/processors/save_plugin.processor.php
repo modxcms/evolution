@@ -7,13 +7,13 @@ if (!$modx->hasPermission('save_plugin')) {
 }
 
 $id = (int)$_POST['id'];
-$name = $modx->db->escape(trim($_POST['name']));
-$description = $modx->db->escape($_POST['description']);
+$name = $modx->getDatabase()->escape(trim($_POST['name']));
+$description = $modx->getDatabase()->escape($_POST['description']);
 $locked = $_POST['locked'] == 'on' ? '1' : '0';
-$plugincode = $modx->db->escape($_POST['post']);
-$properties = $modx->db->escape($_POST['properties']);
+$plugincode = $modx->getDatabase()->escape($_POST['post']);
+$properties = $modx->getDatabase()->escape($_POST['properties']);
 $disabled = $_POST['disabled'] == 'on' ? '1' : '0';
-$moduleguid = $modx->db->escape($_POST['moduleguid']);
+$moduleguid = $modx->getDatabase()->escape($_POST['moduleguid']);
 $sysevents = !empty($_POST['sysevents']) ? $_POST['sysevents'] : array();
 $parse_docblock = $_POST['parse_docblock'] == '1' ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
@@ -63,8 +63,8 @@ switch ($_POST['mode']) {
 
         // disallow duplicate names for active plugins
         if ($disabled == '0') {
-            $rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND disabled='0'");
-            $count = $modx->db->getValue($rs);
+            $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND disabled='0'");
+            $count = $modx->getDatabase()->getValue($rs);
             if ($count > 0) {
                 $modx->manager->saveFormValues(101);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), 'index.php?a=101');
@@ -72,7 +72,7 @@ switch ($_POST['mode']) {
         }
 
         //do stuff to save the new plugin
-        $newid = $modx->db->insert(array(
+        $newid = $modx->getDatabase()->insert(array(
             'name' => $name,
             'description' => $description,
             'plugincode' => $plugincode,
@@ -120,15 +120,15 @@ switch ($_POST['mode']) {
 
         // disallow duplicate names for active plugins
         if ($disabled == '0') {
-            $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}' AND disabled='0'");
-            if ($modx->db->getValue($rs) > 0) {
+            $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}' AND disabled='0'");
+            if ($modx->getDatabase()->getValue($rs) > 0) {
                 $modx->manager->saveFormValues(102);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
             }
         }
 
         //do stuff to save the edited plugin
-        $modx->db->update(array(
+        $modx->getDatabase()->update(array(
             'name' => $name,
             'description' => $description,
             'plugincode' => $plugincode,

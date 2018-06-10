@@ -46,7 +46,7 @@ class Permissions
             return true; // permissions aren't in use
         }
 
-        $parent = $modx->db->getValue($modx->db->select('parent', $tblsc, "id='{$this->document}'"));
+        $parent = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $tblsc, "id='{$this->document}'"));
         if ($document == 0 && $parent == null && $udperms_allowroot == 1) {
             return true;
         } // User is allowed to create new document in root
@@ -68,14 +68,14 @@ class Permissions
          */
         $permissionsok = false;  // set permissions to false
 
-        $rs = $modx->db->select(
+        $rs = $modx->getDatabase()->select(
             'count(DISTINCT sc.id)',
             "{$tblsc} AS sc 
 				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
 				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
             "sc.id='{$this->document}' AND (" . (empty($docgrp) ? '' : "dg.document_group = " . $docgrp . " ||") . " sc.privatemgr = 0)"
         );
-        $limit = $modx->db->getValue($rs);
+        $limit = $modx->getDatabase()->getValue($rs);
         if ($limit == 1) {
             $permissionsok = true;
         }

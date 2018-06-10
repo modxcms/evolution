@@ -13,10 +13,10 @@ if (!function_exists('getChildrenForDelete')) {
         global $error_page;
         global $unauthorized_page;
 
-        $parent = $modx->db->escape($parent);
-        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
+        $parent = $modx->getDatabase()->escape($parent);
+        $rs = $modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
         // the document has children documents, we'll need to delete those too
-        while ($childid = $modx->db->getValue($rs)) {
+        while ($childid = $modx->getDatabase()->getValue($rs)) {
             if ($childid == $site_start) {
                 $modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.");
             }
@@ -62,19 +62,19 @@ if(!function_exists('duplicateDocument')) {
         $tblsc = $modx->getFullTableName('site_content');
 
         // Grab the original document
-        $rs = $modx->db->select('*', $tblsc, "id='{$docid}'");
-        $content = $modx->db->getRow($rs);
+        $rs = $modx->getDatabase()->select('*', $tblsc, "id='{$docid}'");
+        $content = $modx->getDatabase()->getRow($rs);
 
         // Handle incremental ID
         switch ($modx->config['docid_incrmnt_method']) {
             case '1':
                 $from = "{$tblsc} AS T0 LEFT JOIN {$tblsc} AS T1 ON T0.id + 1 = T1.id";
-                $rs = $modx->db->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
-                $content['id'] = $modx->db->getValue($rs);
+                $rs = $modx->getDatabase()->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
+                $content['id'] = $modx->getDatabase()->getValue($rs);
                 break;
             case '2':
-                $rs = $modx->db->select('MAX(id)+1', $tblsc);
-                $content['id'] = $modx->db->getValue($rs);
+                $rs = $modx->getDatabase()->select('MAX(id)+1', $tblsc);
+                $content['id'] = $modx->getDatabase()->getValue($rs);
                 break;
 
             default:
@@ -84,10 +84,10 @@ if(!function_exists('duplicateDocument')) {
         // Once we've grabbed the document object, start doing some modifications
         if ($_toplevel == 0) {
             // count duplicates
-            $pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'),
+            $pagetitle = $modx->getDatabase()->getValue($modx->getDatabase()->select('pagetitle', $modx->getFullTableName('site_content'),
                 "id='{$docid}'"));
-            $pagetitle = $modx->db->escape($pagetitle);
-            $count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'),
+            $pagetitle = $modx->getDatabase()->escape($pagetitle);
+            $count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('pagetitle', $modx->getFullTableName('site_content'),
                 "pagetitle LIKE '{$pagetitle} Duplicate%'"));
             if ($count >= 1) {
                 $count = ' ' . ($count + 1);
@@ -126,10 +126,10 @@ if(!function_exists('duplicateDocument')) {
         $content['published'] = $content['pub_date'] = 0;
 
         // Escape the proper strings
-        $content = $modx->db->escape($content);
+        $content = $modx->getDatabase()->escape($content);
 
         // Duplicate the Document
-        $newparent = $modx->db->insert($content, $tblsc);
+        $newparent = $modx->getDatabase()->insert($content, $tblsc);
 
         // duplicate document's TVs
         duplicateTVs($docid, $newparent);
@@ -143,8 +143,8 @@ if(!function_exists('duplicateDocument')) {
 
         // Start duplicating all the child documents that aren't deleted.
         $_toplevel++;
-        $rs = $modx->db->select('id', $tblsc, "parent='{$docid}' AND deleted=0", 'id ASC');
-        while ($row = $modx->db->getRow($rs)) {
+        $rs = $modx->getDatabase()->select('id', $tblsc, "parent='{$docid}' AND deleted=0", 'id ASC');
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             duplicateDocument($row['id'], $newparent, $_toplevel);
         }
 
@@ -169,7 +169,7 @@ if(!function_exists('duplicateTVs')) {
         $newid = (int)$newid;
         $oldid = (int)$oldid;
 
-        $modx->db->insert(
+        $modx->getDatabase()->insert(
             array('contentid' => '', 'tmplvarid' => '', 'value' => ''), $tbltvc, // Insert into
             "{$newid}, tmplvarid, value", $tbltvc, "contentid='{$oldid}'" // Copy from
         );
@@ -192,7 +192,7 @@ if(!function_exists('duplicateAccess')) {
         $newid = (int)$newid;
         $oldid = (int)$oldid;
 
-        $modx->db->insert(
+        $modx->getDatabase()->insert(
             array('document' => '', 'document_group' => ''), $tbldg, // Insert into
             "{$newid}, document_group", $tbldg, "document='{$oldid}'" // Copy from
         );
@@ -254,9 +254,9 @@ if(!function_exists('allChildren')) {
     {
         $modx = evolutionCMS();
         $children = array();
-        $currDocID = $modx->db->escape($currDocID);
-        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
-        while ($child = $modx->db->getRow($rs)) {
+        $currDocID = $modx->getDatabase()->escape($currDocID);
+        $rs = $modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
+        while ($child = $modx->getDatabase()->getRow($rs)) {
             $children[] = $child['id'];
             $children = array_merge($children, allChildren($child['id']));
         }
@@ -275,7 +275,7 @@ if(!function_exists('jsAlert')) {
     {
         $modx = evolutionCMS();
         if ($_POST['ajax'] != 1) {
-            echo "<script>window.setTimeout(\"alert('" . addslashes($modx->db->escape($msg)) . "')\",10);history.go(-1)</script>";
+            echo "<script>window.setTimeout(\"alert('" . addslashes($modx->getDatabase()->escape($msg)) . "')\",10);history.go(-1)</script>";
         } else {
             echo $msg . "\n";
         }
@@ -362,7 +362,7 @@ if(!function_exists('updateNewHash')) {
 
         $field = array();
         $field['password'] = $modx->phpass->HashPassword($password);
-        $modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
+        $modx->getDatabase()->update($field, '[+prefix+]manager_users', "username='{$username}'");
     }
 }
 
@@ -385,7 +385,7 @@ if(!function_exists('incrementFailedLoginCount')) {
             $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
         }
 
-        $modx->db->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+        $modx->getDatabase()->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
 
         if ($failedlogins < $failed_allowed) {
             //sleep to help prevent brute force attacks
@@ -420,10 +420,10 @@ if(!function_exists('saveUserGroupAccessPermissons')) {
         // check for permission update access
         if ($use_udperms == 1) {
             // delete old permissions on the module
-            $modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
+            $modx->getDatabase()->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
             if (is_array($usrgroups)) {
                 foreach ($usrgroups as $value) {
-                    $modx->db->insert(array(
+                    $modx->getDatabase()->insert(array(
                         'module'    => $id,
                         'usergroup' => stripslashes($value),
                     ), $modx->getFullTableName('site_module_access'));
@@ -445,13 +445,13 @@ if(!function_exists('saveEventListeners')) {
                 $evtId = getEventIdByName($evtId);
             }
             if ($mode == '101') {
-                $rs = $modx->db->select('max(priority) as priority', '[+prefix+]site_plugin_events',
+                $rs = $modx->getDatabase()->select('max(priority) as priority', '[+prefix+]site_plugin_events',
                     "evtid='{$evtId}'");
             } else {
-                $rs = $modx->db->select('priority', '[+prefix+]site_plugin_events',
+                $rs = $modx->getDatabase()->select('priority', '[+prefix+]site_plugin_events',
                     "evtid='{$evtId}' and pluginid='{$id}'");
             }
-            $prevPriority = $modx->db->getValue($rs);
+            $prevPriority = $modx->getDatabase()->getValue($rs);
             if ($mode == '101') {
                 $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
             } else {
@@ -463,14 +463,14 @@ if(!function_exists('saveEventListeners')) {
         $evtids = array();
         foreach ($formEventList as $eventInfo) {
             $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
-            $modx->db->save($eventInfo, '[+prefix+]site_plugin_events', $where);
+            $modx->getDatabase()->save($eventInfo, '[+prefix+]site_plugin_events', $where);
             $evtids[] = $eventInfo['evtid'];
         }
 
-        $rs = $modx->db->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
+        $rs = $modx->getDatabase()->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
         $dbEventList = array();
         $del = array();
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             if (!in_array($row['evtid'], $evtids)) {
                 $del[] = $row['evtid'];
             }
@@ -481,7 +481,7 @@ if(!function_exists('saveEventListeners')) {
         }
 
         foreach ($del as $delid) {
-            $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
+            $modx->getDatabase()->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
         }
     }
 }
@@ -500,8 +500,8 @@ if(!function_exists('getEventIdByName')) {
             return $eventIds[$name];
         }
 
-        $rs = $modx->db->select('id, name', '[+prefix+]system_eventnames');
-        while ($row = $modx->db->getRow($rs)) {
+        $rs = $modx->getDatabase()->select('id, name', '[+prefix+]system_eventnames');
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             $eventIds[$row['name']] = $row['id'];
         }
 
@@ -520,17 +520,17 @@ if(!function_exists('saveTemplateAccess')) {
             $newAssignedTvs = $_POST['assignedTv'];
 
             // Preserve rankings of already assigned TVs
-            $rs = $modx->db->select("tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'),
+            $rs = $modx->getDatabase()->select("tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'),
                 "templateid='{$id}'", "");
 
             $ranksArr = array();
             $highest = 0;
-            while ($row = $modx->db->getRow($rs)) {
+            while ($row = $modx->getDatabase()->getRow($rs)) {
                 $ranksArr[$row['tmplvarid']] = $row['rank'];
                 $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
             };
 
-            $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
+            $modx->getDatabase()->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
             if (empty($newAssignedTvs)) {
                 return;
             }
@@ -538,7 +538,7 @@ if(!function_exists('saveTemplateAccess')) {
                 if (!$id || !$tvid) {
                     continue;
                 }    // Dont link zeros
-                $modx->db->insert(array(
+                $modx->getDatabase()->insert(array(
                     'templateid' => $id,
                     'tmplvarid'  => $tvid,
                     'rank'       => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
@@ -567,17 +567,17 @@ if(!function_exists('saveTemplateVarAccess')) {
 
         $getRankArray = array();
 
-        $getRank = $modx->db->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+        $getRank = $modx->getDatabase()->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 
-        while ($row = $modx->db->getRow($getRank)) {
+        while ($row = $modx->getDatabase()->getRow($getRank)) {
             $getRankArray[$row['templateid']] = $row['rank'];
         }
 
-        $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
+        $modx->getDatabase()->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
         if (!empty($templates)) {
             for ($i = 0; $i < count($templates); $i++) {
                 $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-                $modx->db->insert(array(
+                $modx->getDatabase()->insert(array(
                     'tmplvarid'  => $id,
                     'templateid' => $templates[$i],
                     'rank'       => $setRank,
@@ -604,10 +604,10 @@ if(!function_exists('saveDocumentAccessPermissons')) {
         // check for permission update access
         if ($use_udperms == 1) {
             // delete old permissions on the tv
-            $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+            $modx->getDatabase()->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
             if (is_array($docgroups)) {
                 foreach ($docgroups as $value) {
-                    $modx->db->insert(array(
+                    $modx->getDatabase()->insert(array(
                         'tmplvarid'     => $id,
                         'documentgroup' => stripslashes($value),
                     ), $tbl_site_tmplvar_templates);
@@ -669,7 +669,7 @@ if (!function_exists('saveWebUserSettings')) {
             "allowed_days"
         );
 
-        $modx->db->delete($tbl_web_user_settings, "webuser='{$id}'");
+        $modx->getDatabase()->delete($tbl_web_user_settings, "webuser='{$id}'");
 
         foreach ($settings as $n) {
             $vl = $_POST[$n];
@@ -681,8 +681,8 @@ if (!function_exists('saveWebUserSettings')) {
                 $f['webuser'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->db->escape($f);
-                $modx->db->insert($f, $tbl_web_user_settings);
+                $f = $modx->getDatabase()->escape($f);
+                $modx->getDatabase()->insert($f, $tbl_web_user_settings);
             }
         }
     }
@@ -762,7 +762,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        $modx->db->delete($tbl_user_settings, "user='{$id}'");
+        $modx->getDatabase()->delete($tbl_user_settings, "user='{$id}'");
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -773,8 +773,8 @@ if (!function_exists('saveManagerUserSettings')) {
                 $f['user'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->db->escape($f);
-                $modx->db->insert($f, $tbl_user_settings);
+                $f = $modx->getDatabase()->escape($f);
+                $modx->getDatabase()->insert($f, $tbl_user_settings);
             }
         }
     }
@@ -806,10 +806,10 @@ if (!function_exists('getChildrenForUnDelete')) {
         global $children;
         global $deltime;
 
-        $rs = $modx->db->select('id', $modx->getFullTableName('site_content'),
+        $rs = $modx->getDatabase()->select('id', $modx->getFullTableName('site_content'),
             "parent='" . (int)$parent . "' AND deleted=1 AND deletedon='" . (int)$deltime . "'");
         // the document has children documents, we'll need to delete those too
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             $children[] = $row['id'];
             getChildrenForUnDelete($row['id']);
             //echo "Found childNode of parentNode $parent: ".$row['id']."<br />";

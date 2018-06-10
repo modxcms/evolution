@@ -6,7 +6,7 @@ if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
 include_once(__DIR__ . '/../../index.php');
-$modx->db->connect();
+$modx->getDatabase()->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 $modx->loadExtension('ManagerAPI');
@@ -30,8 +30,8 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // initiate the content manager class
 // for backward compatibility
 
-$username = $modx->db->escape($modx->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
-$givenPassword = $modx->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
+$username = $modx->getDatabase()->escape($modx->getPhpCompat()->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
+$givenPassword = $modx->getPhpCompat()->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme = $_REQUEST['rememberme'];
 $failed_allowed = $modx->config['failed_login_attempts'];
@@ -45,15 +45,15 @@ $modx->invokeEvent('OnBeforeManagerLogin', array(
 $fields = 'mu.*, ua.*';
 $from = '[+prefix+]manager_users AS mu, [+prefix+]user_attributes AS ua';
 $where = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
-$rs = $modx->db->select($fields, $from, $where);
-$limit = $modx->db->getRecordCount($rs);
+$rs = $modx->getDatabase()->select($fields, $from, $where);
+$limit = $modx->getDatabase()->getRecordCount($rs);
 
 if($limit == 0 || $limit > 1) {
 	jsAlert($_lang['login_processor_unknown_user']);
 	return;
 }
 
-$row = $modx->db->getRow($rs);
+$row = $modx->getDatabase()->getRow($rs);
 
 $internalKey = $row['internalKey'];
 $dbasePassword = $row['password'];
@@ -69,8 +69,8 @@ $fullname = $row['fullname'];
 $email = $row['email'];
 
 // get the user settings from the database
-$rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
-while($row = $modx->db->getRow($rs)) {
+$rs = $modx->getDatabase()->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
+while($row = $modx->getDatabase()->getRow($rs)) {
 	extract($row);
 	${$setting_name} = $setting_value;
 }
@@ -99,7 +99,7 @@ if($failedlogins >= $failed_allowed && $blockeduntildate < time()) {
 	$fields = array();
 	$fields['failedlogincount'] = '0';
 	$fields['blockeduntil'] = time() - 1;
-	$modx->db->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+	$modx->getDatabase()->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -211,17 +211,17 @@ $_SESSION['mgrFailedlogins'] = $failedlogins;
 $_SESSION['mgrLastlogin'] = $lastlogin;
 $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
-$rs = $modx->db->select('*', $modx->getFullTableName('user_roles'), "id='{$role}'");
-$_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
+$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_roles'), "id='{$role}'");
+$_SESSION['mgrPermissions'] = $modx->getDatabase()->getRow($rs);
 
 // successful login so reset fail count and update key values
-$modx->db->update('failedlogincount=0, ' . 'logincount=logincount+1, ' . 'lastlogin=thislogin, ' . 'thislogin=' . time() . ', ' . "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+$modx->getDatabase()->update('failedlogincount=0, ' . 'logincount=logincount+1, ' . 'lastlogin=thislogin, ' . 'thislogin=' . time() . ', ' . "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
 
 // get user's document groups
 $i = 0;
-$rs = $modx->db->select('uga.documentgroup', $modx->getFullTableName('member_groups') . ' ug
+$rs = $modx->getDatabase()->select('uga.documentgroup', $modx->getFullTableName('member_groups') . ' ug
 		INNER JOIN ' . $modx->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
-$_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
+$_SESSION['mgrDocgroups'] = $modx->getDatabase()->getColumn('documentgroup', $rs);
 
 $_SESSION['mgrToken'] = md5($currentsessionid);
 
@@ -246,11 +246,11 @@ if($rememberme == '1') {
 }
 
 // Check if user already has an active session, if not check if user pressed logout end of last session
-$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
-$activeSession = $modx->db->getValue($rs);
+$rs = $modx->getDatabase()->select('lasthit', $modx->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
+$activeSession = $modx->getDatabase()->getValue($rs);
 if(!$activeSession) {
-	$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
-	if($lastHit = $modx->db->getValue($rs)) {
+	$rs = $modx->getDatabase()->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
+	if($lastHit = $modx->getDatabase()->getValue($rs)) {
 		$_SESSION['show_logout_reminder'] = array(
 			'type' => 'logout_reminder',
 			'lastHit' => $lastHit
@@ -270,8 +270,8 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 
 // check if we should redirect user to a web page
-$rs = $modx->db->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
-$id = (int)$modx->db->getValue($rs);
+$rs = $modx->getDatabase()->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
+$id = (int)$modx->getDatabase()->getValue($rs);
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');
 	if($_POST['ajax'] == 1) {

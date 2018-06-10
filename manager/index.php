@@ -152,7 +152,7 @@ $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 
 // connect to the database
-$modx->db->connect();
+$modx->getDatabase()->connect();
 
 // start session
 startCMSSession();

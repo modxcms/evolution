@@ -34,8 +34,8 @@ $modx->lockElement(3, $id);
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id'] != '' && is_numeric($_REQUEST['id'])) {
-    $rs = $modx->db->select('*', $tbl_site_htmlsnippets, "id='{$id}'");
-    $content = $modx->db->getRow($rs);
+    $rs = $modx->getDatabase()->select('*', $tbl_site_htmlsnippets, "id='{$id}'");
+    $content = $modx->getDatabase()->getRow($rs);
     if (!$content) {
         $modx->webAlertAndQuit("Chunk not found for id '{$id}'.");
     }
@@ -158,7 +158,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <label class="col-md-3 col-lg-2"><?= $_lang['htmlsnippet_name'] ?></label>
                         <div class="col-md-9 col-lg-10">
                             <div class="form-control-name clearfix">
-                                <input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+                                <input name="name" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
                                 <?php if ($modx->hasPermission('save_role')): ?>
                                     <label class="custom-control" title="<?= $_lang['lock_htmlsnippet'] . "\n" . $_lang['lock_htmlsnippet_msg'] ?>" tooltip>
                                         <input name="locked" type="checkbox" value="on"<?= ($content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : '') ?> />
@@ -175,7 +175,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <div class="row form-row">
                         <label class="col-md-3 col-lg-2"><?= $_lang['htmlsnippet_desc'] ?></label>
                         <div class="col-md-9 col-lg-10">
-                            <input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;" />
+                            <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;" />
                         </div>
                     </div>
                     <div class="row form-row">
@@ -186,7 +186,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <?php
                                 include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
                                 foreach (getCategories() as $n => $v) {
-                                    echo "\t\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . "</option>\n";
+                                    echo "\t\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($v['category']) . "</option>\n";
                                 }
                                 ?>
                             </select>
@@ -224,7 +224,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				</span>
                 </div>
                 <div class="section-editor clearfix">
-                    <textarea dir="ltr" class="phptextarea" id="post" name="post" rows="20" onChange="documentDirty=true;"><?= isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet']) ?></textarea>
+                    <textarea dir="ltr" class="phptextarea" id="post" name="post" rows="20" onChange="documentDirty=true;"><?= isset($content['post']) ? $modx->getPhpCompat()->htmlspecialchars($content['post']) : $modx->getPhpCompat()->htmlspecialchars($content['snippet']) ?></textarea>
                 </div>
                 <!-- HTML text editor end -->
             </div>

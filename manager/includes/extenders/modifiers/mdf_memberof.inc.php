@@ -11,8 +11,8 @@ if(!is_array($groupNames)) return 0;
 if (isset($modx->filter->cache['mo'][$userID])) $grpNames = $modx->filter->cache['mo'][$userID];
 else {
     $from = sprintf("[+prefix+]webgroup_names wgn INNER JOIN [+prefix+]web_groups wg ON wg.webgroup=wgn.id AND wg.webuser='%s'",$userID);
-    $rs = $modx->db->select('wgn.name',$from);
-    $modx->filter->cache['mo'][$userID] = $grpNames = $modx->db->getColumn('name',$rs);
+    $rs = $modx->getDatabase()->select('wgn.name',$from);
+    $modx->filter->cache['mo'][$userID] = $grpNames = $modx->getDatabase()->getColumn('name',$rs);
 }
 
 // Check if a supplied group matches a webgroup from the array we just created

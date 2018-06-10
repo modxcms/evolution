@@ -33,8 +33,8 @@ $modx->lockElement(1, $id);
 
 $content = array();
 if(!empty($id)) {
-	$rs = $modx->db->select('*', $tbl_site_templates, "id='{$id}'");
-	$content = $modx->db->getRow($rs);
+	$rs = $modx->getDatabase()->select('*', $tbl_site_templates, "id='{$id}'");
+	$content = $modx->getDatabase()->getRow($rs);
 	if(!$content) {
 		$modx->webAlertAndQuit("No database record has been found for this template.");
 	}
@@ -138,7 +138,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
-								<input name="templatename" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
+								<input name="templatename" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_template'] . "\n" . $_lang['lock_template_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -153,7 +153,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['template_desc'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;">
+							<input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;">
 						</div>
 					</div>
 					<div class="row form-row">
@@ -164,7 +164,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php
 								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
 								foreach(getCategories() as $n => $v) {
-									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->getPhpCompat()->htmlspecialchars($v["category"]) . "</option>";
 								}
 								?>
 							</select>
@@ -190,7 +190,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<span><?= $_lang['template_code'] ?></span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['content'])) ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= (isset($content['post']) ? $modx->getPhpCompat()->htmlspecialchars($content['post']) : $modx->getPhpCompat()->htmlspecialchars($content['content'])) ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 
@@ -199,21 +199,21 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<?php
 			$selectedTvs = array();
 			if(!isset($_POST['assignedTv'])) {
-				$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
+				$rs = $modx->getDatabase()->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
                 LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
 				);
-				while($row = $modx->db->getRow($rs)) {
+				while($row = $modx->getDatabase()->getRow($rs)) {
 					$selectedTvs[$row['tvid']] = $row;
 				}
 				$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
 			}
 
 			$unselectedTvs = array();
-			$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
+			$rs = $modx->getDatabase()->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "", "category, tvcaption");
-			while($row = $modx->db->getRow($rs)) {
+			while($row = $modx->getDatabase()->getRow($rs)) {
 				$unselectedTvs[$row['tvid']] = $row;
 			}
 

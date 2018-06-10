@@ -32,8 +32,8 @@ if ($lockedEl = $modx->elementIsLocked(8, $role)) {
 $modx->lockElement(8, $role);
 
 if ($modx->manager->action == '35') {
-    $rs = $modx->db->select('*', $tbl_user_roles, "id='{$role}'");
-    $roledata = $modx->db->getRow($rs);
+    $rs = $modx->getDatabase()->select('*', $tbl_user_roles, "id='{$role}'");
+    $roledata = $modx->getDatabase()->getRow($rs);
     if (!$roledata) {
         $modx->webAlertAndQuit("No role returned!");
     }

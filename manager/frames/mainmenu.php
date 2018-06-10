@@ -224,17 +224,17 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 
 if($modx->hasPermission('exec_module')) {
 	if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.icon, mg.member
+		$rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.icon, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
                 WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
                 ORDER BY sm.name');
 	} else {
-		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1', 'name');
+		$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1', 'name');
 	}
-	if($modx->db->getRecordCount($rs)) {
-	    while ($row = $modx->db->getRow($rs)) {
+	if($modx->getDatabase()->getRecordCount($rs)) {
+	    while ($row = $modx->getDatabase()->getRow($rs)) {
             $sitemenu['module' . $row['id']] = array(
                 'module' . $row['id'],
                 'modules',

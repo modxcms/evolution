@@ -115,13 +115,13 @@ class ModuleCategoriesManager extends Categories
             'category' => (int)$category_id
         );
 
-        $this->db->update(
+        $this->getDatabase()->update(
             $_update,
             $this->db_tbl[$element],
             "`id` = '" . (int)$element_id . "'"
         );
 
-        return $this->db->getAffectedRows() === 1;
+        return $this->getDatabase()->getAffectedRows() === 1;
     }
 
 

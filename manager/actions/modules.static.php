@@ -15,7 +15,7 @@ if ($_REQUEST['op'] == 'reset') {
     $_PAGE['vs']['search'] = '';
 } else {
     $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-    $sqlQuery = $modx->db->escape($query);
+    $sqlQuery = $modx->getDatabase()->escape($query);
     $_PAGE['vs']['search'] = $query;
 }
 
@@ -108,7 +108,7 @@ echo $cm->render();
     <div class="table-responsive">
         <?php
         if ($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-            $rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icons_modules'] . '") as icon
+            $rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icons_modules'] . '") as icon
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
@@ -122,7 +122,7 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->db->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";

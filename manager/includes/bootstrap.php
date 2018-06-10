@@ -3,40 +3,50 @@
  * @see https://github.com/theseer/Autoload
  */
 spl_autoload_register(
-    function ($class) {
+    function($class) {
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'evolutioncms\\cache'                             => '/Cache.php',
-                'evolutioncms\\core'                              => '/Core.php',
-                'evolutioncms\\event'                             => '/Event.php',
-                'evolutioncms\\managertheme'                      => '/ManagerTheme.php',
-                'evolutioncms\\interfaces\\captchainterface'      => '/Interfaces/CaptchaInterface.php',
-                'evolutioncms\\interfaces\\coreinterface'         => '/Interfaces/CoreInterface.php',
-                'evolutioncms\\interfaces\\databaseinterface'     => '/Interfaces/DatabaseInterface.php',
-                'evolutioncms\\interfaces\\eventinterface'        => '/Interfaces/EventInterface.php',
-                'evolutioncms\\interfaces\\maketableinterface'    => '/Interfaces/MakeTableInterface.php',
-                'evolutioncms\\interfaces\\managerthemeinterface' => '/Interfaces/ManagerThemeInterface.php',
-                'evolutioncms\\interfaces\\menuinterface'         => '/Interfaces/MenuInterface.php',
-                'evolutioncms\\interfaces\\mysqldumperinterface'  => '/Interfaces/MysqlDumperInterface.php',
-                'evolutioncms\\interfaces\\paginginateinterface'  => '/Interfaces/PaginginateInterface.php',
-                'evolutioncms\\legacy\\categories'                => '/Legacy/Categories.php',
-                'evolutioncms\\legacy\\errorhandler'              => '/Legacy/ErrorHandler.php',
-                'evolutioncms\\legacy\\loghandler'                => '/Legacy/LogHandler.php',
-                'evolutioncms\\legacy\\mgrresources'              => '/Legacy/mgrResources.php',
-                'evolutioncms\\legacy\\modulecategoriesmanager'   => '/Legacy/ModuleCategoriesManager.php',
-                'evolutioncms\\legacy\\permissions'               => '/Legacy/Permissions.php',
-                'evolutioncms\\legacy\\templateparser'            => '/Legacy/TemplateParser.php',
-                'evolutioncms\\support\\captcha'                  => '/Support/Captcha.php',
-                'evolutioncms\\support\\maketable'                => '/Support/MakeTable.php',
-                'evolutioncms\\support\\menu'                     => '/Support/Menu.php',
-                'evolutioncms\\support\\mysqldumper'              => '/Support/MysqlDumper.php',
-                'evolutioncms\\support\\paginate'                 => '/Support/Paginate.php'
+                'evolutioncms\\cache' => '/src/Cache.php',
+                'evolutioncms\\core' => '/src/Core.php',
+                'evolutioncms\\database' => '/src/Database.php',
+                'evolutioncms\\event' => '/src/Event.php',
+                'evolutioncms\\exceptions\\containerexception' => '/src/Exceptions/ContainerException.php',
+                'evolutioncms\\exceptions\\parameternotfoundexception' => '/src/Exceptions/ParameterNotFoundException.php',
+                'evolutioncms\\exceptions\\servicenotfoundexception' => '/src/Exceptions/ServiceNotFoundException.php',
+                'evolutioncms\\interfaces\\captchainterface' => '/src/Interfaces/CaptchaInterface.php',
+                'evolutioncms\\interfaces\\coreinterface' => '/src/Interfaces/CoreInterface.php',
+                'evolutioncms\\interfaces\\databaseinterface' => '/src/Interfaces/DatabaseInterface.php',
+                'evolutioncms\\interfaces\\eventinterface' => '/src/Interfaces/EventInterface.php',
+                'evolutioncms\\interfaces\\maketableinterface' => '/src/Interfaces/MakeTableInterface.php',
+                'evolutioncms\\interfaces\\managerthemeinterface' => '/src/Interfaces/ManagerThemeInterface.php',
+                'evolutioncms\\interfaces\\menuinterface' => '/src/Interfaces/MenuInterface.php',
+                'evolutioncms\\interfaces\\mysqldumperinterface' => '/src/Interfaces/MysqlDumperInterface.php',
+                'evolutioncms\\interfaces\\paginginateinterface' => '/src/Interfaces/PaginginateInterface.php',
+                'evolutioncms\\interfaces\\phpcompatinterface' => '/src/Interfaces/PhpCompatInterface.php',
+                'evolutioncms\\interfaces\\parameterproviderinterface' => '/src/Interfaces/ParameterProviderInterface.php',
+                'evolutioncms\\interfaces\\serviceproviderinterface' => '/src/Interfaces/ServiceProviderInterface.php',
+                'evolutioncms\\legacy\\categories' => '/src/Legacy/Categories.php',
+                'evolutioncms\\legacy\\errorhandler' => '/src/Legacy/ErrorHandler.php',
+                'evolutioncms\\legacy\\loghandler' => '/src/Legacy/LogHandler.php',
+                'evolutioncms\\legacy\\mgrresources' => '/src/Legacy/mgrResources.php',
+                'evolutioncms\\legacy\\modulecategoriesmanager' => '/src/Legacy/ModuleCategoriesManager.php',
+                'evolutioncms\\legacy\\permissions' => '/src/Legacy/Permissions.php',
+                'evolutioncms\\legacy\\templateparser' => '/src/Legacy/TemplateParser.php',
+                'evolutioncms\\legacy\\phpcompat' => '/src/Legacy/PhpCompat.php',
+                'evolutioncms\\managertheme' => '/src/ManagerTheme.php',
+                'evolutioncms\\parameterprovider' => '/src/ParameterProvider.php',
+                'evolutioncms\\serviceprovider' => '/src/ServiceProvider.php',
+                'evolutioncms\\support\\captcha' => '/src/Support/Captcha.php',
+                'evolutioncms\\support\\maketable' => '/src/Support/MakeTable.php',
+                'evolutioncms\\support\\menu' => '/src/Support/Menu.php',
+                'evolutioncms\\support\\mysqldumper' => '/src/Support/MysqlDumper.php',
+                'evolutioncms\\support\\paginate' => '/src/Support/Paginate.php'
             );
         }
         $cn = strtolower($class);
         if (isset($classes[$cn])) {
-            require __DIR__ . '/src' . $classes[$cn];
+            require __DIR__ . $classes[$cn];
         }
     },
     true,

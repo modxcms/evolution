@@ -34,8 +34,8 @@ if ($lockedEl = $modx->elementIsLocked(5, $id)) {
 $modx->lockElement(5, $id);
 
 if (isset($_GET['id'])) {
-    $rs = $modx->db->select('*', $tbl_site_plugins, "id='{$id}'");
-    $content = $modx->db->getRow($rs);
+    $rs = $modx->getDatabase()->select('*', $tbl_site_plugins, "id='{$id}'");
+    $content = $modx->getDatabase()->getRow($rs);
     if (!$content) {
         header("Location: {$modx->config['site_url']}");
     }
@@ -450,7 +450,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
     }
 
     // Prepare internal params & info-tab via parseDocBlock
-    $plugincode = isset($content['plugincode']) ? $modx->db->escape($content['plugincode']) : '';
+    $plugincode = isset($content['plugincode']) ? $modx->getDatabase()->escape($content['plugincode']) : '';
     $parsed = $modx->parseDocBlockFromString($plugincode);
     $docBlockList = $modx->convertDocBlockIntoList($parsed);
     $internal = array();
@@ -497,7 +497,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <label class="col-md-3 col-lg-2"><?= $_lang['plugin_name'] ?></label>
                         <div class="col-md-9 col-lg-10">
                             <div class="form-control-name clearfix">
-                                <input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+                                <input name="name" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
                                 <?php if ($modx->hasPermission('save_role')): ?>
                                 <label class="custom-control" title="<?= $_lang['lock_plugin'] . "\n" . $_lang['lock_plugin_msg'] ?>" tooltip>
                                     <input name="locked" type="checkbox" value="on"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -525,7 +525,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <?php
                                 include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
                                 foreach (getCategories() as $n => $v) {
-                                    echo '<option value="' . $v['id'] . '"' . ($content["category"] == $v["id"] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v["category"]) . "</option>";
+                                    echo '<option value="' . $v['id'] . '"' . ($content["category"] == $v["id"] ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($v["category"]) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -557,7 +557,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                 <span><?= $_lang['plugin_code'] ?></span>
             </div>
             <div class="section-editor clearfix">
-                <textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']) ?></textarea>
+                <textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($content['plugincode']) ?></textarea>
             </div>
             <!-- PHP text editor end -->
         </div>
@@ -588,11 +588,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             <select name="moduleguid" class="form-control" onchange="documentDirty=true;">
                                 <option>&nbsp;</option>
                                 <?php
-                                $ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
+                                $ds = $modx->getDatabase()->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
 								INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
 								INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
-                                while ($row = $modx->db->getRow($ds)) {
-                                    echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
+                                while ($row = $modx->getDatabase()->getRow($ds)) {
+                                    echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->getPhpCompat()->htmlspecialchars($row["name"]) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -621,8 +621,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                 // get selected events
                 if (is_numeric($id) && $id > 0) {
-                    $rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
-                    $evts = $modx->db->getColumn('evtid', $rs);
+                    $rs = $modx->getDatabase()->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
+                    $evts = $modx->getDatabase()->getColumn('evtid', $rs);
                 } else {
                     if (isset($content['sysevents']) && is_array($content['sysevents'])) {
                         $evts = $content['sysevents'];
@@ -641,12 +641,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     "Template Service Events",
                     "User Defined Events"
                 );
-                $rs = $modx->db->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
-                $limit = $modx->db->getRecordCount($rs);
+                $rs = $modx->getDatabase()->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
+                $limit = $modx->getDatabase()->getRecordCount($rs);
                 if ($limit == 0) {
                     echo "";
                 } else {
-                    while ($row = $modx->db->getRow($rs)) {
+                    while ($row = $modx->getDatabase()->getRow($rs)) {
                         // display records
                         if ($srv != $row['service']) {
                             $srv = $row['service'];

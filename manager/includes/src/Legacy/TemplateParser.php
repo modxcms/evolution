@@ -16,15 +16,15 @@ Class TemplateParser
         $tab = isset($config['tab']) ? ' AND tab IN(' . $config['tab'] . ')' : '';
 
         if($action) {
-            $sql = $modx->db->query('SELECT t1.*, IF(t1.alias=\'\',t1.name,t1.alias) AS alias, t2.category AS category_name
+            $sql = $modx->getDatabase()->query('SELECT t1.*, IF(t1.alias=\'\',t1.name,t1.alias) AS alias, t2.category AS category_name
 			FROM ' . $modx->getFullTableName('system_templates') . ' AS t1
 			INNER JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 			WHERE t1.action IN(' . $action . ') ' . $tab . '
 			ORDER BY t1.tab ASC, t1.rank ASC');
 
-            if($modx->db->getRecordCount($sql)) {
+            if($modx->getDatabase()->getRecordCount($sql)) {
                 $tabs = array();
-                while($row = $modx->db->getRow($sql)) {
+                while($row = $modx->getDatabase()->getRow($sql)) {
                     if(!$row['value'] && !empty($data[$row['name']])) {
                         $row['value'] = $data[$row['name']];
                     }
@@ -68,7 +68,7 @@ Class TemplateParser
         $modx = evolutionCMS(); global $_lang, $_country_lang;
 
         $data['lang.name'] = (isset($_lang[$data['alias']]) ? $_lang[$data['alias']] : $data['alias']);
-        $data['value'] = (isset($_POST[$data['name']][$data['value']]) ? $_POST[$data['name']][$data['value']] : (isset($data['value']) ? $modx->htmlspecialchars($data['value']) : ''));
+        $data['value'] = (isset($_POST[$data['name']][$data['value']]) ? $_POST[$data['name']][$data['value']] : (isset($data['value']) ? $modx->getPhpCompat()->htmlspecialchars($data['value']) : ''));
         $data['readonly'] = ($data['readonly'] ? ' readonly' : '');
 
         $output = '';

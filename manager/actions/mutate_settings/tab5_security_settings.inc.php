@@ -44,7 +44,7 @@
     <th><?php echo $_lang['check_files_onlogin_title'] ?><br><small>[(check_files_onlogin)]</small></th>
     <td>
       <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
-        
+
 </td>
 </tr>
    <tr>
@@ -66,7 +66,7 @@
     </tr>
     <tr>
       <td nowrap class="warning"><?php echo $_lang['valid_hostnames_title'] ?><br><small>[(valid_hostnames)]</small></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="valid_hostnames" value="<?php echo $modx->htmlspecialchars($valid_hostnames); ?>" /></td>
+      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="valid_hostnames" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($valid_hostnames); ?>" /></td>
     </tr>
     <tr>
       <td width="200">&nbsp;</td>

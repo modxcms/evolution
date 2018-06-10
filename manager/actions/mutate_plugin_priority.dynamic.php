@@ -26,7 +26,7 @@ if (isset($_POST['listSubmitted'])) {
                     continue;
                 }
                 $pluginId = ltrim($item, 'item_');
-                $modx->db->update(array('priority' => $key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
+                $modx->getDatabase()->update(array('priority' => $key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
             }
         }
     }
@@ -34,7 +34,7 @@ if (isset($_POST['listSubmitted'])) {
     $modx->clearCache('full');
 }
 
-$rs = $modx->db->select("sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled", $modx->getFullTableName('system_eventnames') . " sysevt
+$rs = $modx->getDatabase()->select("sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled", $modx->getFullTableName('system_eventnames') . " sysevt
 		INNER JOIN " . $modx->getFullTableName('site_plugin_events') . " pe ON pe.evtid = sysevt.id
 		INNER JOIN " . $modx->getFullTableName('site_plugins') . " plugs ON plugs.id = pe.pluginid", '', 'sysevt.name,pe.priority');
 
@@ -43,7 +43,7 @@ $preEvt = '';
 $sortableList = '';
 $sortables = array();
 
-while ($plugins = $modx->db->getRow($rs)) {
+while ($plugins = $modx->getDatabase()->getRow($rs)) {
     if ($preEvt !== $plugins['evtid']) {
         $sortables[] = $plugins['evtid'];
         $sortableList .= $insideUl ? '</ul></div>' : '';

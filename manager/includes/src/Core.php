@@ -9,14 +9,6 @@ class Core implements Interfaces\CoreInterface
     public $apiVersion = '1.0.0';
 
     /**
-     * db object
-     * @var \DBAPI
-     * @see /manager/includes/extenders/ex_dbapi.inc.php
-     * @example $this->loadExtension('DBAPI')
-     */
-    public $db;
-
-    /**
      * @var \MODxMailer
      * @see /manager/includes/extenders/ex_modxmailer.inc.php
      * @example $this->loadExtension('MODxMailer');
@@ -24,7 +16,17 @@ class Core implements Interfaces\CoreInterface
     public $mail;
 
     /**
-     * @var \PHPCOMPAT
+     * db object
+     * @deprecated use ->getDatabase()
+     * @var Database
+     * @see /manager/includes/extenders/ex_dbapi.inc.php
+     * @example $this->loadExtension('DBAPI')
+     */
+    public $db;
+
+    /**
+     * @var Legacy\PhpCompat
+     * @deprecated use ->getPhpCompat()
      * @see /manager/includes/extenders/ex_phpcompat.inc.php
      * @example $this->loadExtension('PHPCOMPAT');
      */
@@ -168,12 +170,199 @@ class Core implements Interfaces\CoreInterface
      */
     private static $instance = null;
 
+    private $services;
+    private $parameters;
+    private $serviceStore = [];
+
+    public $providerAliases = [
+        'db' => Interfaces\DatabaseInterface::class,
+        //'mail' => 'MODxMailer', //@TODO
+        'phpcompat' => Interfaces\PhpCompatInterface::class
+    ];
+
+    public $extensionAlias = [
+        'DBAPI' => Interfaces\DatabaseInterface::class,
+        //'MODxMailer' => '', //@TODO
+        'PHPCOMPAT' => Interfaces\PhpCompatInterface::class
+    ];
+
     /**
-     * Document constructor
-     *
-     * @return self
+     * @param array $services
+     * @param array $parameters
      */
-    public function __construct()
+    public function __construct(array $services = array(), array $parameters = array())
+    {
+        self::$instance = $this;
+        if (empty($services) && empty($parameters)) {
+            $services   = include EVO_SERVICES_FILE;
+            $parameters = include EVO_PARAMETERS_FILE;
+        }
+        $this->services     =  $services;
+        $this->parameters     =  $parameters;
+
+        $this->initialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getService($name)
+    {
+        if (!$this->hasService($name)) {
+            throw new Exceptions\ServiceNotFoundException('Service not found: '.$name);
+        }
+        // If we haven't created it, create it and save to store
+        if (!isset($this->serviceStore[$name])) {
+            $this->serviceStore[$name] = $this->createService($name);
+        }
+        // Return service from store
+        return $this->serviceStore[$name];
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function hasService($name)
+    {
+        return isset($this->services[$name]);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getServiceParameter($name)
+    {
+        $tokens  = explode('.', $name);
+        $context = $this->parameters;
+        while (null !== ($token = array_shift($tokens))) {
+            if (!isset($context[$token])) {
+                throw new Exceptions\ParameterNotFoundException('Parameter not found: '.$name);
+            }
+            $context = $context[$token];
+        }
+        return $context;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function hasServiceParameter($name)
+    {
+        try {
+            $this->getServiceParameter($name);
+        } catch (Exceptions\ParameterNotFoundException $exception) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * Attempt to create a service.
+     *
+     * @param string $name The service name.
+     *
+     * @return mixed The created service.
+     *
+     * @throws Exceptions\ContainerException On failure.
+     */
+    private function createService($name)
+    {
+        $entry = &$this->services[$name];
+        if (!is_array($entry) || !isset($entry['class'])) {
+            throw new Exceptions\ContainerException($name.' service entry must be an array containing a \'class\' key');
+        } elseif (!class_exists($entry['class'])) {
+            throw new Exceptions\ContainerException($name.' service class does not exist: '.$entry['class']);
+        } elseif (isset($entry['lock'])) {
+            throw new Exceptions\ContainerException($name.' contains circular reference');
+        }
+        $entry['lock'] = true;
+        $arguments = isset($entry['arguments']) ? $this->resolveServiceArguments($entry['arguments']) : [];
+        $reflector = new \ReflectionClass($entry['class']);
+        $service = $reflector->newInstanceArgs($arguments);
+        if (isset($entry['calls'])) {
+            $this->initializeService($service, $name, $entry['calls']);
+        }
+
+        if ($alias = $this->checkServiceAlias($name)) {
+            $this->{$alias} = $service;
+        }
+
+        return $service;
+    }
+
+    private function checkServiceAlias($name){
+        foreach($this->providerAliases as $alias => $interface) {
+            if($name === $interface) {
+                return $alias;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve argument definitions into an array of arguments.
+     *
+     * @param array  $argumentDefinitions The service arguments definition.
+     *
+     * @return array The service constructor arguments.
+     *
+     * @throws Exceptions\ContainerException On failure.
+     */
+    private function resolveServiceArguments(array $argumentDefinitions)
+    {
+        $arguments = [];
+        foreach ($argumentDefinitions as $argumentDefinition) {
+            if ($argumentDefinition instanceof Interfaces\ServiceProviderInterface) {
+                $argumentServiceName = $argumentDefinition->getName();
+                $arguments[] = $this->getService($argumentServiceName);
+            } elseif ($argumentDefinition instanceof Interfaces\ParameterProviderInterface) {
+                $argumentParameterName = $argumentDefinition->getName();
+                $arguments[] = $this->getServiceParameter($argumentParameterName);
+            } else {
+                $arguments[] = $argumentDefinition;
+            }
+        }
+        return $arguments;
+    }
+    /**
+     * Initialize a service using the call definitions.
+     *
+     * @param object $service         The service.
+     * @param string $name            The service name.
+     * @param array  $callDefinitions The service calls definition.
+     *
+     * @throws Exceptions\ContainerException On failure.
+     */
+    private function initializeService($service, $name, array $callDefinitions)
+    {
+        foreach ($callDefinitions as $callDefinition) {
+            if (!is_array($callDefinition) || !isset($callDefinition['method'])) {
+                throw new Exceptions\ContainerException($name.' service calls must be arrays containing a \'method\' key');
+            } elseif (!is_callable([$service, $callDefinition['method']])) {
+                throw new Exceptions\ContainerException($name.' service asks for call to uncallable method: '.$callDefinition['method']);
+            }
+            $arguments = isset($callDefinition['arguments']) ? $this->resolveServiceArguments($callDefinition['arguments']) : [];
+
+            call_user_func_array([$service, $callDefinition['method']], $arguments);
+        }
+    }
+
+    /**
+     * @return Database
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getDatabase()
+    {
+        return $this->getService(Interfaces\DatabaseInterface::class);
+    }
+
+    /**
+     * @return Legacy\PhpCompat
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getPhpCompat()
+    {
+        return $this->getService(Interfaces\PhpCompatInterface::class);
+    }
+
+    public function initialize()
     {
         if ($this->isLoggedIn()) {
             ini_set('display_errors', 1);
@@ -182,8 +371,7 @@ class Core implements Interfaces\CoreInterface
         if (substr(PHP_OS, 0, 3) === 'WIN' && $database_server === 'localhost') {
             $database_server = '127.0.0.1';
         }
-        $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
-        $this->dbConfig = &$this->db->config; // alias for backward compatibility
+        $this->dbConfig = &$this->getDatabase()->config; // alias for backward compatibility
         // events
         $this->event = new Event();
         $this->Event = &$this->event; //alias for backward compatibility
@@ -197,13 +385,16 @@ class Core implements Interfaces\CoreInterface
     final public function __clone()
     {
     }
+
     /**
+     * @param array $services
+     * @param array $parameters
      * @return self
      */
-    public static function getInstance()
+    public static function getInstance(array $services = array(), array $parameters = array())
     {
         if (self::$instance === null) {
-            self::$instance = new static();
+            self::$instance = new self($services, $parameters);
         }
         return self::$instance;
     }
@@ -225,10 +416,10 @@ class Core implements Interfaces\CoreInterface
         if (!isset($this->config['error_reporting']) || 1 < $this->config['error_reporting']) {
             if ($error_type == 1) {
                 $title = 'Call deprecated method';
-                $msg = $this->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+                $msg = $this->getPhpCompat()->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
             } else {
                 $title = 'Call undefined method';
-                $msg = $this->htmlspecialchars("\$modx->{$method_name}() is undefined function");
+                $msg = $this->getPhpCompat()->htmlspecialchars("\$modx->{$method_name}() is undefined function");
             }
             $info = debug_backtrace();
             $m[] = $msg;
@@ -254,7 +445,7 @@ class Core implements Interfaces\CoreInterface
     public function checkSQLconnect($connector = 'db')
     {
         $flag = false;
-        if (is_scalar($connector) && !empty($connector) && isset($this->{$connector}) && $this->{$connector} instanceof DBAPI) {
+        if (is_scalar($connector) && !empty($connector) && isset($this->{$connector}) && $this->{$connector} instanceof Interfaces\DatabaseInterface) {
             $flag = (bool)$this->{$connector}->conn;
         }
         return $flag;
@@ -266,6 +457,7 @@ class Core implements Interfaces\CoreInterface
      * MODX_MANAGER_PATH."includes/extenders/ex_{$extname}.inc.php"
      * $extname - extension name in lowercase
      *
+     * @deprecated use getService
      * @param $extname
      * @param bool $reload
      * @return bool
@@ -273,20 +465,24 @@ class Core implements Interfaces\CoreInterface
     public function loadExtension($extname, $reload = true)
     {
         $out = false;
-        $flag = ($reload || !in_array($extname, $this->extensions));
-        if ($this->checkSQLconnect('db') && $flag) {
-            $evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
-            if (is_array($evtOut) && count($evtOut) > 0) {
-                $out = array_pop($evtOut);
+        if (isset($this->extensionAlias[$extname])) {
+            $out = $this->getService($this->extensionAlias[$extname]);
+        } else {
+            $flag = ($reload || !in_array($extname, $this->extensions));
+            if ($this->checkSQLconnect('db') && $flag) {
+                $evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+                if (is_array($evtOut) && count($evtOut) > 0) {
+                    $out = array_pop($evtOut);
+                }
             }
-        }
-        if (!$out && $flag) {
-            $extname = trim(str_replace(array('..', '/', '\\'), '', strtolower($extname)));
-            $filename = MODX_MANAGER_PATH . "includes/extenders/ex_{$extname}.inc.php";
-            $out = is_file($filename) ? include $filename : false;
-        }
-        if ($out && !in_array($extname, $this->extensions)) {
-            $this->extensions[] = $extname;
+            if (!$out && $flag) {
+                $extname = trim(str_replace(array('..', '/', '\\'), '', strtolower($extname)));
+                $filename = MODX_MANAGER_PATH . "includes/extenders/ex_{$extname}.inc.php";
+                $out = is_file($filename) ? include $filename : false;
+            }
+            if ($out && !in_array($extname, $this->extensions)) {
+                $this->extensions[] = $extname;
+            }
         }
         return $out;
     }
@@ -484,8 +680,8 @@ class Core implements Interfaces\CoreInterface
             return;
         }
 
-        $rs = $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
-        while ($row = $this->db->getRow($rs)) {
+        $rs = $this->getDatabase()->select('setting_name, setting_value', '[+prefix+]system_settings');
+        while ($row = $this->getDatabase()->getRow($rs)) {
             $this->config[$row['setting_name']] = $row['setting_value'];
         }
 
@@ -494,8 +690,8 @@ class Core implements Interfaces\CoreInterface
         }
 
         $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $rs = $this->db->select('id', '[+prefix+]site_plugins', $where);
-        if ($this->db->getRecordCount($rs)) {
+        $rs = $this->getDatabase()->select('id', '[+prefix+]site_plugins', $where);
+        if ($this->getDatabase()->getRecordCount($rs)) {
             $this->config['enable_filter'] = '0';
         }
     }
@@ -535,8 +731,8 @@ class Core implements Interfaces\CoreInterface
 
                 $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
 
-                $result = $this->db->select('setting_name, setting_value', $from, $where);
-                while ($row = $this->db->getRow($result)) {
+                $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
+                while ($row = $this->getDatabase()->getRow($result)) {
                     if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
                         $row['setting_value'] = $which_browser_default;
                     }
@@ -552,8 +748,8 @@ class Core implements Interfaces\CoreInterface
             if (isset ($_SESSION['mgrUsrConfigSet'])) {
                 $musrSettings = &$_SESSION['mgrUsrConfigSet'];
             } else {
-                if ($result = $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
-                    while ($row = $this->db->getRow($result)) {
+                if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
+                    while ($row = $this->getDatabase()->getRow($result)) {
                         $musrSettings[$row['setting_name']] = $row['setting_value'];
                     }
                     $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
@@ -587,7 +783,7 @@ class Core implements Interfaces\CoreInterface
     {
         // function to test the query and find the retrieval method
         if ($method === 'alias') {
-            return $this->db->escape($_REQUEST['q']);
+            return $this->getDatabase()->escape($_REQUEST['q']);
         }
 
         $id_ = filter_input(INPUT_GET, 'id');
@@ -834,8 +1030,8 @@ class Core implements Interfaces\CoreInterface
                 if (!$pass) {
                     if ($this->config['unauthorized_page']) {
                         // check if file is not public
-                        $rs = $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
-                        $total = $this->db->getValue($rs);
+                        $rs = $this->getDatabase()->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                        $total = $this->getDatabase()->getValue($rs);
                     } else {
                         $total = 0;
                     }
@@ -1094,10 +1290,10 @@ class Core implements Interfaces\CoreInterface
         // now, check for documents that need publishing
         $field = array('published' => 1, 'publishedon' => $timeNow);
         $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
-        $result_pub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
-        $this->db->update($field, '[+prefix+]site_content', $where);
-        if ($this->db->getRecordCount($result_pub) >= 1) { //Event unPublished doc
-            while ($row_pub = $this->db->getRow($result_pub)) {
+        $result_pub = $this->getDatabase()->select( 'id', '[+prefix+]site_content',  $where);
+        $this->getDatabase()->update($field, '[+prefix+]site_content', $where);
+        if ($this->getDatabase()->getRecordCount($result_pub) >= 1) { //Event unPublished doc
+            while ($row_pub = $this->getDatabase()->getRow($result_pub)) {
                 $this->invokeEvent("OnDocUnPublished", array(
                     "docid" => $row_pub['id']
                 ));
@@ -1107,10 +1303,10 @@ class Core implements Interfaces\CoreInterface
         // now, check for documents that need un-publishing
         $field = array('published' => 0, 'publishedon' => 0);
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
-        $result_unpub = $this->db->select( 'id', '[+prefix+]site_content',  $where);
-        $this->db->update($field, '[+prefix+]site_content', $where);
-        if ($this->db->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
-            while ($row_unpub = $this->db->getRow($result_unpub)) {
+        $result_unpub = $this->getDatabase()->select( 'id', '[+prefix+]site_content',  $where);
+        $this->getDatabase()->update($field, '[+prefix+]site_content', $where);
+        if ($this->getDatabase()->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
+            while ($row_unpub = $this->getDatabase()->getRow($result_unpub)) {
                 $this->invokeEvent("OnDocUnPublished", array(
                     "docid" => $row_unpub['id']
                 ));
@@ -1144,8 +1340,8 @@ class Core implements Interfaces\CoreInterface
             if (!empty($this->cacheKey) && is_scalar($this->cacheKey)) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $where = "document='{$this->documentIdentifier}'";
-                $rs = $this->db->select('document_group', '[+prefix+]document_groups', $where);
-                $docGroups = $this->db->getColumn('document_group', $rs);
+                $rs = $this->getDatabase()->select('document_group', '[+prefix+]document_groups', $where);
+                $docGroups = $this->getDatabase()->getColumn('document_group', $rs);
 
                 // Attach Document Groups and Scripts
                 if (is_array($docGroups)) {
@@ -2109,9 +2305,9 @@ class Core implements Interfaces\CoreInterface
         if ($this->dumpSnippets) {
             $eventtime = $this->getMicroTime() - $eventtime;
             $eventtime = sprintf('%2.2f ms', $eventtime * 1000);
-            $code = str_replace("\t", '  ', $this->htmlspecialchars($value));
-            $piece = str_replace("\t", '  ', $this->htmlspecialchars($piece));
-            $print_r_params = str_replace("\t", '  ', $this->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
+            $code = str_replace("\t", '  ', $this->getPhpCompat()->htmlspecialchars($value));
+            $piece = str_replace("\t", '  ', $this->getPhpCompat()->htmlspecialchars($piece));
+            $print_r_params = str_replace("\t", '  ', $this->getPhpCompat()->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
             $this->snippetsCode .= sprintf('<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>', $snippetObject['name'], $eventtime, $piece, $print_r_params, $code);
             $this->snippetsTime[] = array('sname' => $key, 'time' => $eventtime);
         }
@@ -2352,14 +2548,14 @@ class Core implements Interfaces\CoreInterface
             $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));', trim($snip_name, '@'));
             $snippetObject['properties'] = '';
         } else {
-            $where = sprintf("name='%s' AND disabled=0", $this->db->escape($snip_name));
-            $rs = $this->db->select('name,snippet,properties', '[+prefix+]site_snippets', $where);
-            $count = $this->db->getRecordCount($rs);
+            $where = sprintf("name='%s' AND disabled=0", $this->getDatabase()->escape($snip_name));
+            $rs = $this->getDatabase()->select('name,snippet,properties', '[+prefix+]site_snippets', $where);
+            $count = $this->getDatabase()->getRecordCount($rs);
             if (1 < $count) {
                 exit('Error $modx->_getSnippetObject()' . $snip_name);
             }
             if ($count) {
-                $row = $this->db->getRow($rs);
+                $row = $this->getDatabase()->getRow($rs);
                 $snip_content = $row['snippet'];
                 $snip_prop = $row['properties'];
             } else {
@@ -2451,8 +2647,8 @@ class Core implements Interfaces\CoreInterface
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
-                    $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
-                    while ($row = $this->db->getRow($res)) {
+                    $res = $this->getDatabase()->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
+                    while ($row = $this->getDatabase()->getRow($res)) {
                         if ($this->config['use_alias_path'] == '1' && $row['parent'] != 0) {
                             $parent = $row['parent'];
                             $path = $aliases[$parent];
@@ -2601,19 +2797,19 @@ class Core implements Interfaces\CoreInterface
             }
             // get document
             $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $rs = $this->db->select('sc.*', "{$tblsc} sc
+            $rs = $this->getDatabase()->select('sc.*', "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg ON dg.document = sc.id", "sc.{$method} = '{$identifier}' AND ({$access})", "", 1);
-            if ($this->db->getRecordCount($rs) < 1) {
+            if ($this->getDatabase()->getRecordCount($rs) < 1) {
                 $seclimit = 0;
                 if ($this->config['unauthorized_page']) {
                     // method may still be alias, while identifier is not full path alias, e.g. id not found above
                     if ($method === 'alias') {
-                        $secrs = $this->db->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc", "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
+                        $secrs = $this->getDatabase()->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc", "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
                     } else {
-                        $secrs = $this->db->select('count(id)', $tbldg, "document = '{$identifier}'", '', 1);
+                        $secrs = $this->getDatabase()->select('count(id)', $tbldg, "document = '{$identifier}'", '', 1);
                     }
                     // check if file is not public
-                    $seclimit = $this->db->getValue($secrs);
+                    $seclimit = $this->getDatabase()->getValue($secrs);
                 }
                 if ($seclimit > 0) {
                     // match found but not publicly accessible, send the visitor to the unauthorized_page
@@ -2625,7 +2821,7 @@ class Core implements Interfaces\CoreInterface
                 }
             }
             # this is now the document :) #
-            $documentObject = $this->db->getRow($rs);
+            $documentObject = $this->getDatabase()->getRow($rs);
 
             if ($isPrepareResponse === 'prepareResponse') {
                 $this->documentObject = &$documentObject;
@@ -2636,11 +2832,11 @@ class Core implements Interfaces\CoreInterface
             }
             if ($documentObject['template']) {
                 // load TVs and merge with document - Orig by Apodigm - Docvars
-                $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getFullTableName("site_tmplvars") . " tv
+                $rs = $this->getDatabase()->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getFullTableName("site_tmplvars") . " tv
                 INNER JOIN " . $this->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
                 LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
                 $tmplvars = array();
-                while ($row = $this->db->getRow($rs)) {
+                while ($row = $this->getDatabase()->getRow($rs)) {
                     $tmplvars[$row['name']] = array(
                         $row['name'],
                         $row['value'],
@@ -2735,7 +2931,7 @@ class Core implements Interfaces\CoreInterface
             & $this,
             "phpError"
         ), E_ALL);
-        $this->db->connect();
+        $this->getDatabase()->connect();
 
         // get the settings
         if (empty ($this->config)) {
@@ -2783,13 +2979,13 @@ class Core implements Interfaces\CoreInterface
                         $parentId = $this->getIdFromAlias($this->virtualDir);
                         $parentId = ($parentId > 0) ? $parentId : '0';
 
-                        $docAlias = $this->db->escape($this->documentIdentifier);
+                        $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
 
-                        $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
-                        if ($this->db->getRecordCount($rs) == 0) {
+                        $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
+                        if ($this->getDatabase()->getRecordCount($rs) == 0) {
                             $this->sendErrorPage();
                         }
-                        $docId = $this->db->getValue($rs);
+                        $docId = $this->getDatabase()->getValue($rs);
 
                         if (!$docId) {
                             $alias = $this->q;
@@ -2807,12 +3003,12 @@ class Core implements Interfaces\CoreInterface
                             $this->documentIdentifier = $docId;
                         } else {
                             /*
-                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
-                            if($this->db->getRecordCount($rs)==0)
+                            $rs  = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
+                            if($this->getDatabase()->getRecordCount($rs)==0)
                             {
-                                $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
+                                $rs  = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
                             }
-                            $docId = $this->db->getValue($rs);
+                            $docId = $this->getDatabase()->getValue($rs);
 
                             if ($docId > 0)
                             {
@@ -2831,9 +3027,9 @@ class Core implements Interfaces\CoreInterface
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
                 } else {
-                    $docAlias = $this->db->escape($this->documentIdentifier);
-                    $rs = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
-                    $this->documentIdentifier = (int)$this->db->getValue($rs);
+                    $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
+                    $rs = $this->getDatabase()->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+                    $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
                 }
             }
             $this->documentMethod = 'id';
@@ -3015,9 +3211,9 @@ class Core implements Interfaces\CoreInterface
      */
     public function _getTemplateCodeFromDB($templateID)
     {
-        $rs = $this->db->select('content', '[+prefix+]site_templates', "id = '{$templateID}'");
-        if ($this->db->getRecordCount($rs) == 1) {
-            return $this->db->getValue($rs);
+        $rs = $this->getDatabase()->select('content', '[+prefix+]site_templates', "id = '{$templateID}'");
+        if ($this->getDatabase()->getRecordCount($rs) == 1) {
+            return $this->getDatabase()->getValue($rs);
         } else {
             $this->messageQuit('Incorrect number of templates returned from database');
         }
@@ -3036,7 +3232,7 @@ class Core implements Interfaces\CoreInterface
         while ($id && $height--) {
             $thisid = $id;
             if ($this->config['aliaslistingfolder'] == 1) {
-                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->db->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
                 if (!$id || $id == '0') {
                     break;
                 }
@@ -3087,9 +3283,9 @@ class Core implements Interfaces\CoreInterface
 
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
+            $res = $this->getDatabase()->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
             $idx = array();
-            while ($row = $this->db->getRow($res)) {
+            while ($row = $this->getDatabase()->getRow($res)) {
                 $pAlias = '';
                 if (isset($this->aliasListing[$row['parent']])) {
                     $pAlias .= !empty($this->aliasListing[$row['parent']]['path']) ? $this->aliasListing[$row['parent']]['path'] . '/' : '';
@@ -3279,9 +3475,9 @@ class Core implements Interfaces\CoreInterface
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
-            $rs = $this->db->select('sid,internalKey,elementType,elementId,lasthit,username', $this->getFullTableName('active_user_locks') . " ul
+            $rs = $this->getDatabase()->select('sid,internalKey,elementType,elementId,lasthit,username', $this->getFullTableName('active_user_locks') . " ul
                 LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id");
-            while ($row = $this->db->getRow($rs)) {
+            while ($row = $this->getDatabase()->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'sid' => $row['sid'],
                     'internalKey' => $row['internalKey'],
@@ -3304,21 +3500,21 @@ class Core implements Interfaces\CoreInterface
         // Clean-up active_user_sessions first
         $timeout = (int)$this->config['session_timeout'] < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
-        $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
+        $this->getDatabase()->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
         // Clean-up active_user_locks
-        $rs = $this->db->select('sid,internalKey', $this->getFullTableName('active_user_sessions'));
-        $count = $this->db->getRecordCount($rs);
+        $rs = $this->getDatabase()->select('sid,internalKey', $this->getFullTableName('active_user_sessions'));
+        $count = $this->getDatabase()->getRecordCount($rs);
         if ($count) {
-            $rs = $this->db->makeArray($rs);
+            $rs = $this->getDatabase()->makeArray($rs);
             $userSids = array();
             foreach ($rs as $row) {
                 $userSids[] = $row['sid'];
             }
             $userSids = "'" . implode("','", $userSids) . "'";
-            $this->db->delete($this->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
+            $this->getDatabase()->delete($this->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
         } else {
-            $this->db->delete($this->getFullTableName('active_user_locks'));
+            $this->getDatabase()->delete($this->getFullTableName('active_user_locks'));
         }
 
     }
@@ -3332,18 +3528,18 @@ class Core implements Interfaces\CoreInterface
         $validSessionTimeLimit = $this->time - $timeout;
 
         $activeUserSids = array();
-        $rs = $this->db->select('sid', $this->getFullTableName('active_user_sessions'));
-        $count = $this->db->getRecordCount($rs);
+        $rs = $this->getDatabase()->select('sid', $this->getFullTableName('active_user_sessions'));
+        $count = $this->getDatabase()->getRecordCount($rs);
         if ($count) {
-            $rs = $this->db->makeArray($rs);
+            $rs = $this->getDatabase()->makeArray($rs);
             foreach ($rs as $row) {
                 $activeUserSids[] = $row['sid'];
             }
         }
 
-        $rs = $this->db->select("sid,internalKey,lasthit", "{$this->getFullTableName('active_users')}", "", "lasthit DESC");
-        if ($this->db->getRecordCount($rs)) {
-            $rs = $this->db->makeArray($rs);
+        $rs = $this->getDatabase()->select("sid,internalKey,lasthit", "{$this->getFullTableName('active_users')}", "", "lasthit DESC");
+        if ($this->getDatabase()->getRecordCount($rs)) {
+            $rs = $this->getDatabase()->makeArray($rs);
             $internalKeyCount = array();
             $deleteSids = '';
             foreach ($rs as $row) {
@@ -3359,7 +3555,7 @@ class Core implements Interfaces\CoreInterface
 
             }
             if ($deleteSids) {
-                $this->db->delete($this->getFullTableName('active_users'), $deleteSids);
+                $this->getDatabase()->delete($this->getFullTableName('active_users'), $deleteSids);
             }
         }
 
@@ -3407,7 +3603,7 @@ class Core implements Interfaces\CoreInterface
 
         $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
                 VALUES (%d, %d, %d, %d, \'%s\')', $this->getFullTableName('active_user_locks'), $userId, $type, $id, $this->time, $this->sid);
-        $this->db->query($sql);
+        $this->getDatabase()->query($sql);
     }
 
     /**
@@ -3432,7 +3628,7 @@ class Core implements Interfaces\CoreInterface
         } else {
             $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;', $this->getFullTableName('active_user_locks'), $type, $id);
         }
-        $this->db->query($sql);
+        $this->getDatabase()->query($sql);
     }
 
     /**
@@ -3461,7 +3657,7 @@ class Core implements Interfaces\CoreInterface
 
         $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
             VALUES (%d, %d, \'%s\', \'%s\')', $this->getFullTableName('active_user_sessions'), $userId, $this->time, $ip, $this->sid);
-        $this->db->query($sql);
+        $this->getDatabase()->query($sql);
     }
 
     /**
@@ -3475,13 +3671,13 @@ class Core implements Interfaces\CoreInterface
      */
     public function logEvent($evtid, $type, $msg, $source = 'Parser')
     {
-        $msg = $this->db->escape($msg);
+        $msg = $this->getDatabase()->escape($msg);
         if (strpos($GLOBALS['database_connection_charset'], 'utf8') === 0 && extension_loaded('mbstring')) {
             $esc_source = mb_substr($source, 0, 50, "UTF-8");
         } else {
             $esc_source = substr($source, 0, 50);
         }
-        $esc_source = $this->db->escape($esc_source);
+        $esc_source = $this->getDatabase()->escape($esc_source);
 
         $LoginUserID = $this->getLoginUserID();
         if ($LoginUserID == '') {
@@ -3499,7 +3695,7 @@ class Core implements Interfaces\CoreInterface
             $type = 3;
         }
 
-        $this->db->insert(array(
+        $this->getDatabase()->insert(array(
             'eventid' => $evtid,
             'type' => $type,
             'createdon' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
@@ -3623,13 +3819,13 @@ class Core implements Interfaces\CoreInterface
         }
 
         $table_name = $this->getFullTableName($target);
-        $count = $this->db->getValue($this->db->select('COUNT(id)', $table_name));
+        $count = $this->getDatabase()->getValue($this->getDatabase()->select('COUNT(id)', $table_name));
         $over = $count - $limit;
         if (0 < $over) {
             $trim = ($over + $trim);
-            $this->db->delete($table_name, '', '', $trim);
+            $this->getDatabase()->delete($table_name, '', '', $trim);
         }
-        $this->db->optimize($table_name);
+        $this->getDatabase()->optimize($table_name);
     }
 
     /**
@@ -3682,9 +3878,9 @@ class Core implements Interfaces\CoreInterface
         }
         // build query
         $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
+        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$id}' AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
-        $resourceArray = $this->db->makeArray($result);
+        $resourceArray = $this->getDatabase()->makeArray($result);
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
         return $resourceArray;
     }
@@ -3719,9 +3915,9 @@ class Core implements Interfaces\CoreInterface
         }
         // build query
         $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
+        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$id}' AND sc.published=1 AND sc.deleted=0 AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
-        $resourceArray = $this->db->makeArray($result);
+        $resourceArray = $this->getDatabase()->makeArray($result);
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -3775,10 +3971,10 @@ class Core implements Interfaces\CoreInterface
         $tblsc = $this->getFullTableName('site_content');
         $tbldg = $this->getFullTableName('document_groups');
 
-        $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
+        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
 
-        $resourceArray = $this->db->makeArray($result);
+        $resourceArray = $this->getDatabase()->makeArray($result);
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -3841,10 +4037,10 @@ class Core implements Interfaces\CoreInterface
             $tblsc = $this->getFullTableName('site_content');
             $tbldg = $this->getFullTableName('document_groups');
 
-            $result = $this->db->select("DISTINCT {$fields}", "{$tblsc} sc
+            $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                     LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',', $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
 
-            $resourceArray = $this->db->makeArray($result);
+            $resourceArray = $this->getDatabase()->makeArray($result);
 
             $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -3953,8 +4149,8 @@ class Core implements Interfaces\CoreInterface
                 $docgrp = implode(",", $docgrp);
             }
             $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $result = $this->db->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
-            $pageInfo = $this->db->getRow($result);
+            $result = $this->getDatabase()->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
+            $pageInfo = $this->getDatabase()->getRow($result);
 
             $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
 
@@ -3999,8 +4195,8 @@ class Core implements Interfaces\CoreInterface
     {
         if ($this->currentSnippet) {
             $tbl = $this->getFullTableName("site_snippets");
-            $rs = $this->db->select('id', $tbl, "name='" . $this->db->escape($this->currentSnippet) . "'", '', 1);
-            if ($snippetId = $this->db->getValue($rs)) {
+            $rs = $this->getDatabase()->select('id', $tbl, "name='" . $this->getDatabase()->escape($this->currentSnippet) . "'", '', 1);
+            if ($snippetId = $this->getDatabase()->getValue($rs)) {
                 return $snippetId;
             }
         }
@@ -4180,9 +4376,9 @@ class Core implements Interfaces\CoreInterface
         if (isset($this->aliasListing[$id])) {
             $out = $this->aliasListing[$id];
         } else {
-            $q = $this->db->query("SELECT id,alias,isfolder,parent FROM " . $this->getFullTableName("site_content") . " WHERE id=" . (int)$id);
-            if ($this->db->getRecordCount($q) == '1') {
-                $q = $this->db->getRow($q);
+            $q = $this->getDatabase()->query("SELECT id,alias,isfolder,parent FROM " . $this->getFullTableName("site_content") . " WHERE id=" . (int)$id);
+            if ($this->getDatabase()->getRecordCount($q) == '1') {
+                $q = $this->getDatabase()->getRow($q);
                 $this->aliasListing[$id] = array(
                     'id' => (int)$q['id'],
                     'alias' => $q['alias'] == '' ? $q['id'] : $q['alias'],
@@ -4259,10 +4455,10 @@ class Core implements Interfaces\CoreInterface
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN " . $this->getFullTableName('site_modules') . " as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "'  AND ss.disabled=0;";
-            $result = $this->db->query($sql);
-            if ($this->db->getRecordCount($result) == 1) {
-                $row = $this->db->getRow($result);
+            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN " . $this->getFullTableName('site_modules') . " as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->getDatabase()->escape($snippetName) . "'  AND ss.disabled=0;";
+            $result = $this->getDatabase()->query($sql);
+            if ($this->getDatabase()->getRecordCount($result) == 1) {
+                $row = $this->getDatabase()->getRow($result);
                 $snippet = $this->snippetCache[$snippetName] = $row['snippet'];
                 $mergedProperties = array_merge($this->parseProperties($row['properties']), $this->parseProperties($row['sharedproperties']));
                 $properties = $this->snippetCache[$snippetName . "Props"] = json_encode($mergedProperties);
@@ -4296,10 +4492,10 @@ class Core implements Interfaces\CoreInterface
         } else if (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
-            $rs = $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
-            if ($this->db->getRecordCount($rs) == 1) {
-                $row = $this->db->getRow($rs);
+            $where = sprintf("`name`='%s' AND disabled=0", $this->getDatabase()->escape($chunkName));
+            $rs = $this->getDatabase()->select('snippet', '[+prefix+]site_htmlsnippets', $where);
+            if ($this->getDatabase()->getRecordCount($rs) == 1) {
+                $row = $this->getDatabase()->getRow($rs);
                 $out = $this->chunkCache[$chunkName] = $row['snippet'];
             } else {
                 $out = $this->chunkCache[$chunkName] = null;
@@ -4428,7 +4624,7 @@ class Core implements Interfaces\CoreInterface
                 $template = $doc['content'];
                 break;
             case 'SELECT':
-                $this->db->getValue($this->db->query("SELECT {$template}"));
+                $this->getDatabase()->getValue($this->getDatabase()->query("SELECT {$template}"));
                 break;
             default:
                 if (!($template = $this->getChunk($tpl))) {
@@ -4590,10 +4786,10 @@ class Core implements Interfaces\CoreInterface
 
                 $docid = $doc['id'];
 
-                $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
+                $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
                         INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
                         LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'", "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
-                $tvs = $this->db->makeArray($rs);
+                $tvs = $this->getDatabase()->makeArray($rs);
 
                 // get default/built-in template variables
                 ksort($doc);
@@ -4752,11 +4948,11 @@ class Core implements Interfaces\CoreInterface
                 $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
             }
 
-            $rs = $this->db->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getFullTableName('site_tmplvars') . " tv
+            $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getFullTableName('site_tmplvars') . " tv
                     INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
                     LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'", "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
 
-            $result = $this->db->makeArray($rs);
+            $result = $this->getDatabase()->makeArray($rs);
 
             // get default/built-in template variables
             if(is_array($docRow)){
@@ -4833,7 +5029,7 @@ class Core implements Interfaces\CoreInterface
      */
     public function getFullTableName($tbl)
     {
-        return $this->db->config['dbase'] . ".`" . $this->db->config['table_prefix'] . $tbl . "`";
+        return $this->getDatabase()->config['dbase'] . ".`" . $this->getDatabase()->config['table_prefix'] . $tbl . "`";
     }
 
     /**
@@ -4932,16 +5128,16 @@ class Core implements Interfaces\CoreInterface
         $private = ($private) ? 1 : 0;
         if (!is_numeric($to)) {
             // Query for the To ID
-            $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$to}'");
-            $to = $this->db->getValue($rs);
+            $rs = $this->getDatabase()->select('id', $this->getFullTableName("manager_users"), "username='{$to}'");
+            $to = $this->getDatabase()->getValue($rs);
         }
         if (!is_numeric($from)) {
             // Query for the From ID
-            $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$from}'");
-            $from = $this->db->getValue($rs);
+            $rs = $this->getDatabase()->select('id', $this->getFullTableName("manager_users"), "username='{$from}'");
+            $from = $this->getDatabase()->getValue($rs);
         }
         // insert a new message into user_messages
-        $this->db->insert(array(
+        $this->getDatabase()->insert(array(
             'type' => $type,
             'subject' => $subject,
             'message' => $msg,
@@ -5040,14 +5236,14 @@ class Core implements Interfaces\CoreInterface
         }
 
         $from = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
-        $where = sprintf("mu.id='%s'", $this->db->escape($uid));
-        $rs = $this->db->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        $where = sprintf("mu.id='%s'", $this->getDatabase()->escape($uid));
+        $rs = $this->getDatabase()->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
 
-        if (!$this->db->getRecordCount($rs)) {
+        if (!$this->getDatabase()->getRecordCount($rs)) {
             return $this->tmpCache[__FUNCTION__][$uid] = false;
         }
 
-        $row = $this->db->getRow($rs);
+        $row = $this->getDatabase()->getRow($rs);
         if (!isset($row['usertype']) || !$row['usertype']) {
             $row['usertype'] = 'manager';
         }
@@ -5065,9 +5261,9 @@ class Core implements Interfaces\CoreInterface
      */
     public function getWebUserInfo($uid)
     {
-        $rs = $this->db->select('wu.username, wu.password, wua.*', $this->getFullTableName("web_users") . " wu
+        $rs = $this->getDatabase()->select('wu.username, wu.password, wua.*', $this->getFullTableName("web_users") . " wu
                 INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id", "wu.id='{$uid}'");
-        if ($row = $this->db->getRow($rs)) {
+        if ($row = $this->getDatabase()->getRow($rs)) {
             if (!isset($row['usertype']) or !$row["usertype"]) {
                 $row["usertype"] = "web";
             }
@@ -5102,8 +5298,8 @@ class Core implements Interfaces\CoreInterface
         } else if (is_array($dg)) {
             // resolve ids to names
             $dgn = array();
-            $ds = $this->db->select('name', $this->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
-            while ($row = $this->db->getRow($ds)) {
+            $ds = $this->getDatabase()->select('name', $this->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
+            while ($row = $this->getDatabase()->getRow($ds)) {
                 $dgn[] = $row['name'];
             }
             // cache docgroup names to session
@@ -5130,16 +5326,16 @@ class Core implements Interfaces\CoreInterface
         $rt = false;
         if ($_SESSION["webValidated"] == 1) {
             $tbl = $this->getFullTableName("web_users");
-            $ds = $this->db->select('id, username, password', $tbl, "id='" . $this->getLoginUserID() . "'");
-            if ($row = $this->db->getRow($ds)) {
+            $ds = $this->getDatabase()->select('id, username, password', $tbl, "id='" . $this->getLoginUserID() . "'");
+            if ($row = $this->getDatabase()->getRow($ds)) {
                 if ($row["password"] == md5($oldPwd)) {
                     if (strlen($newPwd) < 6) {
                         return "Password is too short!";
                     } elseif ($newPwd == "") {
                         return "You didn't specify a password for this user!";
                     } else {
-                        $this->db->update(array(
-                            'password' => $this->db->escape($newPwd),
+                        $this->getDatabase()->update(array(
+                            'password' => $this->getDatabase()->escape($newPwd),
                         ), $tbl, "id='" . $this->getLoginUserID() . "'");
                         // invoke OnWebChangePassword event
                         $this->invokeEvent("OnWebChangePassword", array(
@@ -5171,9 +5367,9 @@ class Core implements Interfaces\CoreInterface
         // check cache
         $grpNames = isset ($_SESSION['webUserGroupNames']) ? $_SESSION['webUserGroupNames'] : false;
         if (!is_array($grpNames)) {
-            $rs = $this->db->select('wgn.name', $this->getFullTableName("webgroup_names") . " wgn
+            $rs = $this->getDatabase()->select('wgn.name', $this->getFullTableName("webgroup_names") . " wgn
                     INNER JOIN " . $this->getFullTableName("web_groups") . " wg ON wg.webgroup=wgn.id AND wg.webuser='" . $this->getLoginUserID() . "'");
-            $grpNames = $this->db->getColumn("name", $rs);
+            $grpNames = $this->getDatabase()->getColumn("name", $rs);
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
         }
@@ -5461,9 +5657,9 @@ class Core implements Interfaces\CoreInterface
             $pluginCode = $this->pluginCache[$pluginName];
             $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
         } else {
-            $pluginName = $this->db->escape($pluginName);
-            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-            if ($row = $this->db->getRow($result)) {
+            $pluginName = $this->getDatabase()->escape($pluginName);
+            $result = $this->getDatabase()->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            if ($row = $this->getDatabase()->getRow($result)) {
                 $pluginCode = $this->pluginCache[$row['name']] = $row['plugincode'];
                 $pluginProperties = $this->pluginCache[$row['name'] . "Props"] = $row['properties'];
             } else {
@@ -5605,9 +5801,9 @@ class Core implements Interfaces\CoreInterface
                             if (!isset($params[$param])) {
                                 $params[$param] = array();
                             }
-                            $params[$param][] = $escapeValues ? $this->db->escape($val) : $val;
+                            $params[$param][] = $escapeValues ? $this->getDatabase()->escape($val) : $val;
                         } else {
-                            $params[$param] = $escapeValues ? $this->db->escape($val) : $val;
+                            $params[$param] = $escapeValues ? $this->getDatabase()->escape($val) : $val;
                         }
                     }
                 }
@@ -5655,9 +5851,9 @@ class Core implements Interfaces\CoreInterface
                         if (!isset($params[$param])) {
                             $params[$param] = array();
                         }
-                        $params[$param][] = $escapeValues ? $this->db->escape($val) : $val;
+                        $params[$param][] = $escapeValues ? $this->getDatabase()->escape($val) : $val;
                     } else {
-                        $params[$param] = $escapeValues ? $this->db->escape($val) : $val;
+                        $params[$param] = $escapeValues ? $this->getDatabase()->escape($val) : $val;
                     }
                 }
             }
@@ -5966,7 +6162,7 @@ class Core implements Interfaces\CoreInterface
 
         if (!$isSafe) {
             $msg = $phpcode . "\n" . $this->currentSnippet . "\n" . print_r($_SERVER, true);
-            $title = sprintf('Unknown eval was executed (%s)', $this->htmlspecialchars(substr(trim($phpcode), 0, 50)));
+            $title = sprintf('Unknown eval was executed (%s)', $this->getPhpCompat()->htmlspecialchars(substr(trim($phpcode), 0, 50)));
             $this->messageQuit($title, '', true, '', '', 'Parser', $msg);
             return;
         }
@@ -5981,7 +6177,7 @@ class Core implements Interfaces\CoreInterface
 
         $output = $echo . $return;
         modx_sanitize_gpc($output);
-        return $this->htmlspecialchars($output); // Maybe, all html tags are dangerous
+        return $this->getPhpCompat()->htmlspecialchars($output); // Maybe, all html tags are dangerous
     }
 
     /**
@@ -6143,7 +6339,7 @@ class Core implements Interfaces\CoreInterface
         }
         if (is_readable($file)) {
             $source = file($file);
-            $source = $this->htmlspecialchars($source[$line - 1]);
+            $source = $this->getPhpCompat()->htmlspecialchars($source[$line - 1]);
         } else {
             $source = "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
@@ -6181,9 +6377,9 @@ class Core implements Interfaces\CoreInterface
         $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
         $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
-        $request_uri = $this->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
-        $ua = $this->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
-        $referer = $this->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
+        $request_uri = $this->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
+        $ua = $this->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
+        $referer = $this->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
         if ($is_error) {
             $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
             if ($msg != 'PHP Parse Error') {
@@ -6411,7 +6607,7 @@ class Core implements Interfaces\CoreInterface
                         break;
                     }
                     case is_scalar($arg): {
-                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
+                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->getPhpCompat()->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
                         break;
                     }
                     case is_bool($arg): {
@@ -6507,13 +6703,13 @@ class Core implements Interfaces\CoreInterface
     public function getHiddenIdFromAlias($parentid, $alias)
     {
         $table = $this->getFullTableName('site_content');
-        $query = $this->db->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
+        $query = $this->getDatabase()->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
             FROM {$table} sc
             JOIN {$table} children ON children.parent = sc.id
             LEFT JOIN {$table} children2 ON children2.parent = children.id
             WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;");
 
-        while ($child = $this->db->getRow($query)) {
+        while ($child = $this->getDatabase()->getRow($query)) {
             if ($child['alias'] == $alias || $child['child_id'] == $alias) {
                 return $child['child_id'];
             }
@@ -6556,17 +6752,17 @@ class Core implements Interfaces\CoreInterface
                 if ($id === false) {
                     break;
                 }
-                $alias = $this->db->escape($alias);
-                $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
-                if ($this->db->getRecordCount($rs) == 0) {
-                    $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
+                $alias = $this->getDatabase()->escape($alias);
+                $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
+                if ($this->getDatabase()->getRecordCount($rs) == 0) {
+                    $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
                 }
-                $next = $this->db->getValue($rs);
+                $next = $this->getDatabase()->getValue($rs);
                 $id = !$next ? $this->getHiddenIdFromAlias($id, $alias) : $next;
             }
         } else {
-            $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$alias}'", 'parent, menuindex');
-            $id = $this->db->getValue($rs);
+            $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and alias='{$alias}'", 'parent, menuindex');
+            $id = $this->getDatabase()->getValue($rs);
             if (!$id) {
                 $id = false;
             }
@@ -6631,8 +6827,7 @@ class Core implements Interfaces\CoreInterface
      */
     public function htmlspecialchars($str, $flags = ENT_COMPAT, $encode = '')
     {
-        $this->loadExtension('PHPCOMPAT');
-        return $this->phpcompat->htmlspecialchars($str, $flags, $encode);
+        return $this->getPhpCompat()->htmlspecialchars($str, $flags, $encode);
     }
 
     /**

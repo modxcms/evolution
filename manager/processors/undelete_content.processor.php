@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 /************ webber ********/
-$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
@@ -35,8 +35,8 @@ if(!$udperms->checkPermissions()) {
 }
 
 // get the timestamp on which the document was deleted.
-$rs = $modx->db->select('deletedon', $modx->getFullTableName('site_content'), "id='{$id}' AND deleted=1");
-$deltime = $modx->db->getValue($rs);
+$rs = $modx->getDatabase()->select('deletedon', $modx->getFullTableName('site_content'), "id='{$id}' AND deleted=1");
+$deltime = $modx->getDatabase()->getValue($rs);
 if(!$deltime) {
 	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
 }
@@ -46,7 +46,7 @@ $children = array();
 getChildrenForUnDelete($id);
 
 if(count($children)>0) {
-	$modx->db->update(
+	$modx->getDatabase()->update(
 		array(
 			'deleted'   => 0,
 			'deletedby' => 0,
@@ -54,7 +54,7 @@ if(count($children)>0) {
 		), $modx->getFullTableName('site_content'), "id IN(".implode(", ", $children).")");
 }
 //'undelete' the document.
-$modx->db->update(
+$modx->getDatabase()->update(
 	array(
 		'deleted'   => 0,
 		'deletedby' => 0,

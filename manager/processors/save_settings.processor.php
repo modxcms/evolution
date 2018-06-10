@@ -134,13 +134,13 @@ if (isset($data) && count($data) > 0) {
 
 		$modx->config[$k] = $v;
 
-		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
+		if(!empty($k)) $savethese[] = '(\''.$modx->getDatabase()->escape($k).'\', \''.$modx->getDatabase()->escape($v).'\')';
 	}
 
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
-	$modx->db->query($sql);
+	$modx->getDatabase()->query($sql);
 
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
@@ -148,8 +148,8 @@ if (isset($data) && count($data) > 0) {
 		$oldtemplate = (int)$data['old_template'];
 		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
-		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
-		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
+		if($reset==1) $modx->getDatabase()->update(array('template' => $newtemplate), $tbl, "type='document'");
+		else if($reset==2) $modx->getDatabase()->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
 	}
 
 	// empty cache

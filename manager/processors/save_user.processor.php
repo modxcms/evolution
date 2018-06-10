@@ -60,8 +60,8 @@ if($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
-	$limit = $modx->db->getValue($rs);
+	$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
+	$limit = $modx->getDatabase()->getValue($rs);
 	if($limit > 0) {
 		webAlertAndQuit("You cannot alter an administrative user.", 12);
 	}
@@ -71,15 +71,15 @@ if($_SESSION['mgrRole'] != 1) {
 switch($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('count(id)', $tbl_manager_users, sprintf("username='%s'", $modx->db->escape($newusername)));
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(id)', $tbl_manager_users, sprintf("username='%s'", $modx->getDatabase()->escape($newusername)));
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND id!='%s'", $modx->db->escape($email), $id));
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND id!='%s'", $modx->getDatabase()->escape($email), $id));
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
@@ -105,15 +105,15 @@ switch($input['mode']) {
 		));
 
 		// create the user account
-		$internalKey = $modx->db->insert(array('username' => $modx->db->escape($newusername)), $tbl_manager_users);
+		$internalKey = $modx->getDatabase()->insert(array('username' => $modx->getDatabase()->escape($newusername)), $tbl_manager_users);
 
 		$field = array();
 		$field['password'] = $modx->phpass->HashPassword($newpassword);
-		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
+		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$internalKey}'");
 
 		$field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->db->escape($field);
-		$modx->db->insert($field, $tbl_user_attributes);
+		$field = $modx->getDatabase()->escape($field);
+		$modx->getDatabase()->insert($field, $tbl_user_attributes);
 
 		// Save user settings
         saveManagerUserSettings($internalKey);
@@ -147,7 +147,7 @@ switch($input['mode']) {
 					$f = array();
 					$f['user_group'] = (int)$user_groups[$i];
 					$f['member'] = $internalKey;
-					$modx->db->insert($f, $tbl_member_groups);
+					$modx->getDatabase()->insert($f, $tbl_member_groups);
 				}
 			}
 		}
@@ -187,7 +187,7 @@ switch($input['mode']) {
 				<div class="sectionBody">
 					<div id="disp">
 						<p>
-							<?php echo sprintf($_lang["password_msg"], $modx->htmlspecialchars($newusername), $modx->htmlspecialchars($newpassword)); ?>
+							<?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername), $modx->getPhpCompat()->htmlspecialchars($newpassword)); ?>
 						</p>
 					</div>
 				</div>
@@ -219,15 +219,15 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('count(id)', $tbl_manager_users, sprintf("username='%s' AND id!='%s'", $modx->db->escape($newusername), $id));
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(id)', $tbl_manager_users, sprintf("username='%s' AND id!='%s'", $modx->getDatabase()->escape($newusername), $id));
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND internalKey!='%s'", $modx->db->escape($email), $id));
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND internalKey!='%s'", $modx->getDatabase()->escape($email), $id));
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
@@ -240,14 +240,14 @@ switch($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $modx->db->escape($newusername);
+		$field['username'] = $modx->getDatabase()->escape($newusername);
 		if($genpassword == 1) {
 			$field['password'] = $modx->phpass->HashPassword($newpassword);
 		}
-		$modx->db->update($field, $tbl_manager_users, "id='{$id}'");
+		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$id}'");
 		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->db->escape($field);
-		$modx->db->update($field, $tbl_user_attributes, "internalKey='{$id}'");
+		$field = $modx->getDatabase()->escape($field);
+		$modx->getDatabase()->update($field, $tbl_user_attributes, "internalKey='{$id}'");
 
 		// Save user settings
         saveManagerUserSettings($id);
@@ -288,13 +288,13 @@ switch($input['mode']) {
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$modx->db->delete($tbl_member_groups, "member='{$id}'");
+			$modx->getDatabase()->delete($tbl_member_groups, "member='{$id}'");
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
-					$modx->db->insert($field, $tbl_member_groups);
+					$modx->getDatabase()->insert($field, $tbl_member_groups);
 				}
 			}
 		}
@@ -326,7 +326,7 @@ switch($input['mode']) {
 				<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 				<div class="sectionBody">
 					<div id="disp">
-						<p><?php echo sprintf($_lang["password_msg"], $modx->htmlspecialchars($newusername), $modx->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID()) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
+						<p><?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername), $modx->getPhpCompat()->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID()) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
 					</div>
 				</div>
 			</div>

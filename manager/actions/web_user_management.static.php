@@ -15,7 +15,7 @@ if($_REQUEST['op'] == 'reset') {
 	$_PAGE['vs']['search'] = '';
 } else {
 	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-	$sqlQuery = $modx->db->escape($query);
+	$sqlQuery = $modx->getDatabase()->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 
@@ -120,7 +120,7 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-					$ds = $modx->db->select("wu.id, wu.username, wua.fullname, wua.email, wua.lastlogin, wua.logincount, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 
+					$ds = $modx->getDatabase()->select("wu.id, wu.username, wua.fullname, wua.email, wua.lastlogin, wua.logincount, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 
 			INNER JOIN " . $modx->getFullTableName("web_user_attributes") . " wua ON wua.internalKey=wu.id", ($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '%{$sqlQuery}%')" : ""), 'username');
 					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
 					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items

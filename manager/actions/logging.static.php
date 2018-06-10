@@ -6,8 +6,8 @@ if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
-$logs = $modx->db->makeArray($rs);
+$rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
+$logs = $modx->getDatabase()->makeArray($rs);
 ?>
     <h1>
         <?= $_style['page_manager_logs'] ?><?= $_lang['mgrlog_view'] ?>
@@ -148,10 +148,10 @@ if (isset($_REQUEST['log_submit'])) {
         $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";
     }
     if ($_REQUEST['itemname'] != '0') {
-        $sqladd[] = "itemname='" . $modx->db->escape($_REQUEST['itemname']) . "'";
+        $sqladd[] = "itemname='" . $modx->getDatabase()->escape($_REQUEST['itemname']) . "'";
     }
     if ($_REQUEST['message'] != "") {
-        $sqladd[] = "message LIKE '%" . $modx->db->escape($_REQUEST['message']) . "%'";
+        $sqladd[] = "message LIKE '%" . $modx->getDatabase()->escape($_REQUEST['message']) . "%'";
     }
     // date stuff
     if ($_REQUEST['datefrom'] != "") {
@@ -174,9 +174,9 @@ if (isset($_REQUEST['log_submit'])) {
     $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
     // build the sql
-    $limit = $num_rows = $modx->db->getValue($modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
+    $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
 
-    $rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+    $rs = $modx->getDatabase()->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 
 if ($limit < 1) {
     echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
@@ -242,7 +242,7 @@ if ($limit < 1) {
                 // grab the entire log file...
                 $logentries = array();
                 $i = 0;
-                while ($logentry = $modx->db->getRow($rs)) {
+                while ($logentry = $modx->getDatabase()->getRow($rs)) {
                     if (!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
                         $item = '<div style="text-align:center;">-</div>';
                     } elseif ($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {

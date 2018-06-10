@@ -27,18 +27,18 @@ if (isset($_POST['listSubmitted'])) {
             }
             $key = $reset ? 0 : $key;
             $id = ltrim($item, 'item_');
-            $modx->db->update(array('rank' => $key), $tbl_site_tmplvars, "id='{$id}'");
+            $modx->getDatabase()->update(array('rank' => $key), $tbl_site_tmplvars, "id='{$id}'");
         }
     }
     // empty cache
     $modx->clearCache('full');
 }
 
-$rs = $modx->db->select("name, caption, id, rank", $tbl_site_tmplvars, "", "rank ASC, id ASC");
+$rs = $modx->getDatabase()->select("name, caption, id, rank", $tbl_site_tmplvars, "", "rank ASC, id ASC");
 
-if ($modx->db->getRecordCount($rs)) {
+if ($modx->getDatabase()->getRecordCount($rs)) {
     $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
-    while ($row = $modx->db->getRow($rs)) {
+    while ($row = $modx->getDatabase()->getRow($rs)) {
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
         $sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
     }

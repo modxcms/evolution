@@ -92,14 +92,14 @@ class DataSetPager {
     public function render() {
 		$modx = evolutionCMS(); global $_PAGE;
 
-		$isDataset = $modx->db->isResult($this->ds);
+		$isDataset = $modx->getDatabase()->isResult($this->ds);
 
 		if(!$this->selPageStyle) {
 			$this->selPageStyle = "font-weight:bold";
 		}
 
 		// get total number of rows
-		$tnr = ($isDataset) ? $modx->db->getRecordCount($this->ds) : count($this->ds);
+		$tnr = ($isDataset) ? $modx->getDatabase()->getRecordCount($this->ds) : count($this->ds);
 
 		// render: no records found
 		if($tnr <= 0) {
@@ -172,7 +172,7 @@ class DataSetPager {
 			$fncObject = is_object($fnc);
 			$minitems = (($p - 1) * $this->pageSize) + 1;
 			$maxitems = (($p - 1) * $this->pageSize) + $this->pageSize;
-			while($i <= $maxitems && ($row = ($isDataset) ? $modx->db->getRow($this->ds) : $this->ds[$i - 1])) {
+			while($i <= $maxitems && ($row = ($isDataset) ? $modx->getDatabase()->getRow($this->ds) : $this->ds[$i - 1])) {
 				if($i >= $minitems && $i <= $maxitems) {
 					if($fncObject) {
 						if($args != "") {

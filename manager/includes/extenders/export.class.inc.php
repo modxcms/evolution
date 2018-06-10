@@ -121,8 +121,8 @@ class EXPORT_SITE
 
         $noncache = ($noncache == 1) ? '' : 'AND cacheable=1';
         $where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-        $rs = $modx->db->select('count(id)', $tbl_site_content, $where);
-        $this->total = (int)$modx->db->getValue($rs);
+        $rs = $modx->getDatabase()->select('count(id)', $tbl_site_content, $where);
+        $this->total = (int)$modx->getDatabase()->getValue($rs);
 
         return $this->total;
     }
@@ -268,12 +268,12 @@ class EXPORT_SITE
         $fields = "id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, published";
         $noncache = $_POST['includenoncache'] == 1 ? '' : 'AND cacheable=1';
         $where = "parent = '{$parent}' AND deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-        $rs = $modx->db->select($fields, $tbl_site_content, $where);
+        $rs = $modx->getDatabase()->select($fields, $tbl_site_content, $where);
 
         $ph = array();
         $ph['total'] = $this->total;
         $folder_permission = octdec($modx->config['new_folder_permissions']);
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             $this->count++;
             $filename = '';
             $row['count'] = $this->count;

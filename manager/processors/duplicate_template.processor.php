@@ -12,13 +12,13 @@ if($id==0) {
 }
 
 // count duplicates
-$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
-$count = $modx->db->getRecordCount($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "templatename LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "templatename LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
 // duplicate template
-$newid = $modx->db->insert(
+$newid = $modx->getDatabase()->insert(
 	array(
 		'templatename'=>'',
 		'description'=>'',
@@ -28,7 +28,7 @@ $newid = $modx->db->insert(
 	"CONCAT(templatename, ' {$_lang['duplicated_el_suffix']}{$count}') AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
 
 // duplicate TV values
-$modx->db->insert(
+$modx->getDatabase()->insert(
 	array(
 		'tmplvarid'=>'',
 		'templateid'=>'',
@@ -37,7 +37,7 @@ $modx->db->insert(
 	"tmplvarid, '{$newid}', rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'"); // Copy from
 
 // Set the item name for logger
-$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$newid}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "id='{$newid}'"));
 $_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new template

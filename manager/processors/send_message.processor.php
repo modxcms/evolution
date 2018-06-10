@@ -9,9 +9,9 @@ if(!$modx->hasPermission('messages')) {
 $sendto = $_REQUEST['sendto'];
 $userid = $_REQUEST['user'];
 $groupid = $_REQUEST['group'];
-$subject = $modx->db->escape($_REQUEST['messagesubject']);
+$subject = $modx->getDatabase()->escape($_REQUEST['messagesubject']);
 if($subject=="") $subject="(no subject)";
-$message = $modx->db->escape($_REQUEST['messagebody']);
+$message = $modx->getDatabase()->escape($_REQUEST['messagebody']);
 if($message=="") $message="(no message)";
 $postdate = time();
 
@@ -19,7 +19,7 @@ if($sendto=='u') {
 	if($userid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_user_selected"]);
 	}
-	$modx->db->insert(
+	$modx->getDatabase()->insert(
 		array(
 			'recipient' => $userid,
 			'sender'    => $modx->getLoginUserID(),
@@ -35,9 +35,9 @@ if($sendto=='g') {
 	if($groupid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_group_selected"]);
 	}
-	$rs = $modx->db->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}' AND internalKey!='".$modx->getLoginUserID()."'");
-	while ($row=$modx->db->getRow($rs)) {
-		$modx->db->insert(
+	$rs = $modx->getDatabase()->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}' AND internalKey!='".$modx->getLoginUserID()."'");
+	while ($row=$modx->getDatabase()->getRow($rs)) {
+		$modx->getDatabase()->insert(
 			array(
 				'recipient' => $row['internalKey'],
 				'sender'    => $modx->getLoginUserID(),
@@ -52,9 +52,9 @@ if($sendto=='g') {
 
 
 if($sendto=='a') {
-	$rs = $modx->db->select('id', $modx->getFullTableName('manager_users'), "id!='".$modx->getLoginUserID()."'");
-	while ($row=$modx->db->getRow($rs)) {
-		$modx->db->insert(
+	$rs = $modx->getDatabase()->select('id', $modx->getFullTableName('manager_users'), "id!='".$modx->getLoginUserID()."'");
+	while ($row=$modx->getDatabase()->getRow($rs)) {
+		$modx->getDatabase()->insert(
 			array(
 				'recipient' => $row['id'],
 				'sender'    => $modx->getLoginUserID(),

@@ -1,9 +1,11 @@
-<?php
+<?php namespace EvolutionCMS\Legacy;
+
+use EvolutionCMS\Interfaces\PhpCompatInterface;
 
 /**
  * @TODO file_put_contents(), strftime(), mb_*()
  */
-class PHPCOMPAT
+class PhpCompat implements PhpCompatInterface
 {
     /**
      * @param string|array $str

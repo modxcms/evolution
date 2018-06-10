@@ -7,19 +7,19 @@ if (!$modx->hasPermission('save_module')) {
 }
 
 $id = (int)$_POST['id'];
-$name = $modx->db->escape(trim($_POST['name']));
-$description = $modx->db->escape($_POST['description']);
-$resourcefile = $modx->db->escape($_POST['resourcefile']);
+$name = $modx->getDatabase()->escape(trim($_POST['name']));
+$description = $modx->getDatabase()->escape($_POST['description']);
+$resourcefile = $modx->getDatabase()->escape($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource'] == 'on' ? 1 : 0;
-$icon = $modx->db->escape($_POST['icon']);
+$icon = $modx->getDatabase()->escape($_POST['icon']);
 //$category = (int)$_POST['category'];
 $disabled = $_POST['disabled'] == 'on' ? 1 : 0;
 $wrap = $_POST['wrap'] == 'on' ? 1 : 0;
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
-$modulecode = $modx->db->escape($_POST['post']);
-$properties = $modx->db->escape($_POST['properties']);
+$modulecode = $modx->getDatabase()->escape($_POST['post']);
+$properties = $modx->getDatabase()->escape($_POST['properties']);
 $enable_sharedparams = $_POST['enable_sharedparams'] == 'on' ? 1 : 0;
-$guid = $modx->db->escape($_POST['guid']);
+$guid = $modx->getDatabase()->escape($_POST['guid']);
 $parse_docblock = $_POST['parse_docblock'] == "1" ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
 
@@ -67,15 +67,15 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->db->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
-        $count = $modx->db->getValue($rs);
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
+        $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->manager->saveFormValues(107);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
         }
 
         // save the new module
-        $newid = $modx->db->insert(array(
+        $newid = $modx->getDatabase()->insert(array(
             'name' => $name,
             'description' => $description,
             'disabled' => $disabled,
@@ -126,14 +126,14 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->db->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
-        if ($modx->db->getValue($rs) > 0) {
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
+        if ($modx->getDatabase()->getValue($rs) > 0) {
             $modx->manager->saveFormValues(108);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
         }
 
         // save the edited module
-        $modx->db->update(array(
+        $modx->getDatabase()->update(array(
             'name' => $name,
             'description' => $description,
             'icon' => $icon,

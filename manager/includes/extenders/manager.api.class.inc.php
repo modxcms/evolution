@@ -183,9 +183,9 @@ class ManagerAPI
     {
         $modx = evolutionCMS();
         $tbl_manager_users = $modx->getFullTableName('manager_users');
-        $uid = $modx->db->escape($uid);
-        $rs = $modx->db->select('password', $tbl_manager_users, "id='{$uid}'");
-        $password = $modx->db->getValue($rs);
+        $uid = $modx->getDatabase()->escape($uid);
+        $rs = $modx->getDatabase()->select('password', $tbl_manager_users, "id='{$uid}'");
+        $password = $modx->getDatabase()->getValue($rs);
 
         if (strpos($password, '>') === false) {
             $algo = 'NOSALT';
@@ -294,8 +294,8 @@ class ManagerAPI
     {
         $modx = evolutionCMS();
         $tbl_system_settings = $modx->getFullTableName('system_settings');
-        $sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->db->escape($checksum) . "')";
-        $modx->db->query($sql);
+        $sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->getDatabase()->escape($checksum) . "')";
+        $modx->getDatabase()->query($sql);
     }
 
     /**
@@ -337,11 +337,11 @@ class ManagerAPI
     {
         $modx = evolutionCMS();
 
-        $rs = $modx->db->select('*', $modx->getFullTableName('user_settings'),
+        $rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_settings'),
             "user = '{$_SESSION['mgrInternalKey']}'");
 
         $usersettings = array();
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             if (substr($row['setting_name'], 0, 6) == '_LAST_') {
                 $name = substr($row['setting_name'], 6);
                 $usersettings[$name] = $row['setting_value'];
@@ -373,10 +373,10 @@ class ManagerAPI
                 $f['user'] = $_SESSION['mgrInternalKey'];
                 $f['setting_name'] = '_LAST_' . $key;
                 $f['setting_value'] = $val;
-                $f = $modx->db->escape($f);
+                $f = $modx->getDatabase()->escape($f);
                 $f = "(`" . implode("`, `", array_keys($f)) . "`) VALUES('" . implode("', '", array_values($f)) . "')";
                 $f .= " ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
-                $modx->db->insert($f, $modx->getFullTableName('user_settings'));
+                $modx->getDatabase()->insert($f, $modx->getFullTableName('user_settings'));
             }
         }
     }

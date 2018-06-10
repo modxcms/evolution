@@ -77,9 +77,9 @@ if ($mode == 'restore1') {
     if (!is_writable(rtrim($modx->config['snapshot_path'], '/'))) {
         $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->config['snapshot_path'])));
     }
-    $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->db->escape($modx->db->config['table_prefix']) . "%'";
-    $rs = $modx->db->query($sql);
-    $tables = $modx->db->getColumn('Name', $rs);
+    $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->config['table_prefix']) . "%'";
+    $rs = $modx->getDatabase()->query($sql);
+    $tables = $modx->getDatabase()->getColumn('Name', $rs);
     $today = date('Y-m-d_H-i-s');
     global $path;
     $path = "{$modx->config['snapshot_path']}{$today}.sql";
@@ -223,10 +223,10 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 </thead>
                                 <tbody>
                                 <?php
-                                $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->db->escape($modx->db->config['table_prefix']) . "%'";
-                                $rs = $modx->db->query($sql);
+                                $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->config['table_prefix']) . "%'";
+                                $rs = $modx->getDatabase()->query($sql);
                                 $i = 0;
-                                while ($db_status = $modx->db->getRow($rs)) {
+                                while ($db_status = $modx->getDatabase()->getRow($rs)) {
                                     if (isset($tables)) {
                                         $table_string = implode(',', $table);
                                     } else {
@@ -240,8 +240,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 
                                     // Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
                                     $truncateable = array(
-                                        $modx->db->config['table_prefix'] . 'event_log',
-                                        $modx->db->config['table_prefix'] . 'manager_log',
+                                        $modx->getDatabase()->config['table_prefix'] . 'event_log',
+                                        $modx->getDatabase()->config['table_prefix'] . 'manager_log',
                                     );
                                     if ($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
                                         echo '<td class="text-xs-right"><a class="text-danger" href="index.php?a=54&mode=' . $action . '&u=' . $db_status['Name'] . '" title="' . $_lang['truncate_table'] . '">' . $modx->nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</a>' . '</td>' . "\n";

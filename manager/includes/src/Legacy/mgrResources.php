@@ -117,19 +117,19 @@ class mgrResources {
 
         $selectableTemplates = $resourceTable === 'site_templates' ? "{$resourceTable}.selectable, " : "";
 
-        $rs = $modx->db->select(
+        $rs = $modx->getDatabase()->select(
             "{$sttfield} {$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
             $modx->getFullTableName($resourceTable) . " AS {$resourceTable}
 	            LEFT JOIN " . $modx->getFullTableName('categories') . " AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
             "",
             "category,name"
         );
-        $limit = $modx->db->getRecordCount($rs);
+        $limit = $modx->getDatabase()->getRecordCount($rs);
 
         if($limit < 1) return false;
 
         $result = array();
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             $result[] = $row;
         }
         return $result;

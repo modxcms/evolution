@@ -438,7 +438,7 @@ class MODIFIERS {
                 return str_replace(array('[', ']', '`'),array('&#91;', '&#93;', '&#96;'),$value);
             case 'sql_escape':
             case 'encode_js':
-                return $modx->db->escape($value);
+                return $modx->getDatabase()->escape($value);
             case 'htmlspecialchars':
             case 'hsc':
             case 'encode_html':
@@ -775,8 +775,8 @@ class MODIFIERS {
                 $menutitle = $this->getDocumentObject($value,'menutitle');
                 return $menutitle ? $menutitle : $pagetitle;
             case 'templatename':
-                $rs = $modx->db->select('templatename','[+prefix+]site_templates',"id='{$value}'");
-                $templateName = $modx->db->getValue($rs);
+                $rs = $modx->getDatabase()->select('templatename','[+prefix+]site_templates',"id='{$value}'");
+                $templateName = $modx->getDatabase()->getValue($rs);
                 return !$templateName ? '(blank)' : $templateName;
             case 'getfield':
                 if(!$opt) $opt = 'content';
@@ -995,12 +995,12 @@ class MODIFIERS {
         }
         else
         {
-            $esc_elmName = $modx->db->escape($this->elmName);
-            $result = $modx->db->select('snippet','[+prefix+]site_snippets',"name='{$esc_elmName}'");
-            $total = $modx->db->getRecordCount($result);
+            $esc_elmName = $modx->getDatabase()->escape($this->elmName);
+            $result = $modx->getDatabase()->select('snippet','[+prefix+]site_snippets',"name='{$esc_elmName}'");
+            $total = $modx->getDatabase()->getRecordCount($result);
             if($total == 1)
             {
-                $row = $modx->db->getRow($result);
+                $row = $modx->getDatabase()->getRow($result);
                 $php = $row['snippet'];
             }
             elseif($total == 0)

@@ -21,7 +21,7 @@ if($_REQUEST['op'] == 'reset') {
 } else {
 	$sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
 	if(!is_numeric($sqlQuery)) {
-		$sqlQuery = $modx->db->escape($query);
+		$sqlQuery = $modx->getDatabase()->escape($query);
 	}
 	$_PAGE['vs']['search'] = $query;
 }
@@ -125,7 +125,7 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-					$ds = $modx->db->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
+					$ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
 					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
