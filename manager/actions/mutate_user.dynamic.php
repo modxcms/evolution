@@ -35,6 +35,10 @@ if($modx->manager->action == '12') {
 		$modx->webAlertAndQuit("No user returned!");
 	}
 
+    if($_SESSION['mgrRole'] != 1 && $userdata['role'] == 1) {
+        $modx->webAlertAndQuit('Illegal attempt to create/modify administrator by non-administrator!');
+    }
+
 
 	// get user settings
 	$rs = $modx->db->select('*', $modx->getFullTableName('user_settings'), "user = '{$user}'");
