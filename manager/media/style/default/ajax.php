@@ -169,6 +169,11 @@ if (isset($action)) {
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
+            if(!$modx->hasPermission('save_role')) {
+                $sqlLike .= $sqlLike ? ' AND ' : 'WHERE ';
+                $sqlLike .= 't2.role != 1';
+            }
+
             $sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
 				FROM ' . $modx->getFullTableName('manager_users') . ' AS t1
 				LEFT JOIN ' . $modx->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
