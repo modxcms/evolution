@@ -56,8 +56,8 @@ if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $
 // verify admin security
 if($_SESSION['mgrRole'] != 1) {
 	// Check to see if user tried to spoof a "1" (admin) role
-	if(!$modx->hasPermission('save_role')) {
-		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!");
+	if(!$modx->hasPermission('save_user')) {
+		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
 	$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
