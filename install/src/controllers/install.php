@@ -26,7 +26,7 @@ global $errors;
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 $installMode = (int)$_POST['installmode'];
-$installData = (int)empty($_POST['installdata']);
+$installData = (int)!empty($_POST['installdata']);
 
 // get db info from post
 $database_server = $_POST['databasehost'];
