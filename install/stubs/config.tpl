@@ -14,7 +14,7 @@ $table_prefix = '[+table_prefix+]';
 $lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
-define('MODX_CLASS', '\EvolutionCMS\Core');
+$coreClass = '\EvolutionCMS\Core';
 $session_cookie_path = '';
 $session_cookie_domain = '';
 
@@ -30,6 +30,10 @@ $session_cookie_domain = '';
  */
 if (file_exists(__DIR__ . '/config_mutator.php')) {
     require_once __DIR__ . '/config_mutator.php';
+}
+
+if (! defined('MODX_CLASS')) {
+    define('MODX_CLASS', $coreClass);
 }
 
 if (defined('MODX_CLI')) {

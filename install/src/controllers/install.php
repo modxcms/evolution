@@ -971,9 +971,15 @@ if ($conn) {
             require_once dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/bootstrap.php';
         }
 
-        include_once(dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/document.parser.class.inc.php');
-        $modx = new DocumentParser;
-        $modx->db->connect();
+        if (! defined('EVO_SERVICES_FILE')) {
+            define('EVO_SERVICES_FILE', __DIR__ . '/services.php');
+        }
+        if (! defined('MODX_CLASS')) {
+            define('MODX_CLASS', '\EvolutionCMS\Core');
+        }
+        
+        $modx = evolutionCMS();
+        $modx->getDatabase()->connect();
         // always empty cache after install
         $sync = new EvolutionCMS\Cache();
         $sync->setCachepath(dirname(dirname(dirname(__DIR__))) . '/assets/cache/');
