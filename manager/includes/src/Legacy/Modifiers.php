@@ -1,9 +1,10 @@
 <?php namespace EvolutionCMS\Legacy;
 
 use EvolutionCMS\Interfaces\ModifiersInterface;
-use DataGrid;
+use EvolutionCMS\Support\DataGrid;
 
-class Modifiers implements ModifiersInterface{
+class Modifiers implements ModifiersInterface
+{
     /**
      * @var array
      */
@@ -61,7 +62,9 @@ class Modifiers implements ModifiersInterface{
     public function __construct()
     {
         $modx = evolutionCMS();
-        if (function_exists('mb_internal_encoding')) mb_internal_encoding($modx->config['modx_charset']);
+        if (function_exists('mb_internal_encoding')) {
+            mb_internal_encoding($modx->config['modx_charset']);
+        }
         $this->condModifiers = '=,is,eq,equals,ne,neq,notequals,isnot,isnt,not,%,isempty,isnotempty,isntempty,>=,gte,eg,gte,greaterthan,>,gt,isgreaterthan,isgt,lowerthan,<,lt,<=,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
 
@@ -71,14 +74,16 @@ class Modifiers implements ModifiersInterface{
      * @param string $modifiers
      * @return bool|mixed|string
      */
-    public function phxFilter($key,$value,$modifiers)
+    public function phxFilter($key, $value, $modifiers)
     {
         $modx = evolutionCMS();
-        if(substr($modifiers,0,3)!=='id(') $value = $this->parseDocumentSource($value);
+        if (substr($modifiers, 0, 3) !== 'id(') {
+            $value = $this->parseDocumentSource($value);
+        }
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
-        $modifiers = ':'.trim($modifiers,':');
-        $modifiers = str_replace(array("\r\n","\r"), "\n", $modifiers);
+        $modifiers = ':' . trim($modifiers, ':');
+        $modifiers = str_replace(array("\r\n", "\r"), "\n", $modifiers);
         $modifiers = $this->splitEachModifiers($modifiers);
 
         $this->placeholders = array();
@@ -86,9 +91,10 @@ class Modifiers implements ModifiersInterface{
         $this->placeholders['dummy'] = '';
         $this->condition = array();
         $this->vars = array();
-        $this->vars['name']    = & $key;
-        $value = $this->parsePhx($key,$value,$modifiers);
+        $this->vars['name'] = &$key;
+        $value = $this->parsePhx($key, $value, $modifiers);
         $this->vars = array();
+
         return $value;
     }
 
@@ -97,15 +103,20 @@ class Modifiers implements ModifiersInterface{
      * @param string $modifiers
      * @return bool|string
      */
-    public function _getDelim($mode,$modifiers) {
-        $c = substr($modifiers,0,1);
-        if(!in_array($c, array('"', "'", '`')) ) return false;
+    public function _getDelim($mode, $modifiers)
+    {
+        $c = substr($modifiers, 0, 1);
+        if (!in_array($c, array('"', "'", '`'))) {
+            return false;
+        }
 
-        $modifiers = substr($modifiers,1);
-        $closure = $mode=='(' ? "{$c})" : $c;
-        if(strpos($modifiers, $closure)===false) return false;
+        $modifiers = substr($modifiers, 1);
+        $closure = $mode == '(' ? "{$c})" : $c;
+        if (strpos($modifiers, $closure) === false) {
+            return false;
+        }
 
-        return  $c;
+        return $c;
     }
 
     /**
@@ -114,278 +125,345 @@ class Modifiers implements ModifiersInterface{
      * @param string $modifiers
      * @return bool|string
      */
-    public function _getOpt($mode,$delim,$modifiers) {
-        if($delim) {
-            if($mode=='(') return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);
+    public function _getOpt($mode, $delim, $modifiers)
+    {
+        if ($delim) {
+            if ($mode == '(') {
+                return substr($modifiers, 1, strpos($modifiers, $delim . ')') - 1);
+            }
 
-            return substr($modifiers,1,strpos($modifiers,$delim,1)-1);
-        }
-        else {
-            if($mode=='(') return substr($modifiers,0,strpos($modifiers, ')') );
+            return substr($modifiers, 1, strpos($modifiers, $delim, 1) - 1);
+        } else {
+            if ($mode == '(') {
+                return substr($modifiers, 0, strpos($modifiers, ')'));
+            }
 
             $chars = str_split($modifiers);
-            $opt='';
-            foreach($chars as $c) {
-                if($c==':' || $c==')') break;
-                $opt .=$c;
+            $opt = '';
+            foreach ($chars as $c) {
+                if ($c == ':' || $c == ')') {
+                    break;
+                }
+                $opt .= $c;
             }
+
             return $opt;
         }
     }
-    public function _getRemainModifiers($mode,$delim,$modifiers) {
-        if($delim) {
-            if($mode=='(')
+
+    public function _getRemainModifiers($mode, $delim, $modifiers)
+    {
+        if ($delim) {
+            if ($mode == '(') {
                 return $this->_fetchContent($modifiers, $delim . ')');
-            else {
+            } else {
                 $modifiers = trim($modifiers);
-                $modifiers = substr($modifiers,1);
+                $modifiers = substr($modifiers, 1);
+
                 return $this->_fetchContent($modifiers, $delim);
             }
-        }
-        else {
-            if($mode=='(') return $this->_fetchContent($modifiers, ')');
-            $chars = str_split($modifiers);
-            foreach($chars as $c) {
-                if($c==':') return $modifiers;
-                else $modifiers = substr($modifiers,1);
+        } else {
+            if ($mode == '(') {
+                return $this->_fetchContent($modifiers, ')');
             }
+            $chars = str_split($modifiers);
+            foreach ($chars as $c) {
+                if ($c == ':') {
+                    return $modifiers;
+                } else {
+                    $modifiers = substr($modifiers, 1);
+                }
+            }
+
             return $modifiers;
         }
     }
 
-    public function _fetchContent($string,$delim) {
+    public function _fetchContent($string, $delim)
+    {
         $len = strlen($delim);
         $string = $this->parseDocumentSource($string);
-        return substr($string,strpos($string, $delim)+$len);
+
+        return substr($string, strpos($string, $delim) + $len);
     }
 
-    public function splitEachModifiers($modifiers) {
+    public function splitEachModifiers($modifiers)
+    {
         $modx = evolutionCMS();
 
         $cmd = '';
         $bt = '';
         $result = array();
-        while($bt!==$modifiers) {
+        while ($bt !== $modifiers) {
             $bt = $modifiers;
-            $c = substr($modifiers,0,1);
-            $modifiers = substr($modifiers,1);
+            $c = substr($modifiers, 0, 1);
+            $modifiers = substr($modifiers, 1);
 
-            if($c===':' && preg_match('@^(!?[<>=]{1,2})@', $modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
-                $c = substr($modifiers,strlen($match[1]),1);
+            if ($c === ':' && preg_match('@^(!?[<>=]{1,2})@', $modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
+                $c = substr($modifiers, strlen($match[1]), 1);
                 $debuginfo = "#i=0 #c=[{$c}] #m=[{$modifiers}]";
-                if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
-                else         $modifiers = substr($modifiers,strlen($match[1]));
+                if ($c === '(') {
+                    $modifiers = substr($modifiers, strlen($match[1]) + 1);
+                } else {
+                    $modifiers = substr($modifiers, strlen($match[1]));
+                }
 
-                $delim     = $this->_getDelim($c,$modifiers);
-                $opt       = $this->_getOpt($c,$delim,$modifiers);
-                $modifiers = trim($this->_getRemainModifiers($c,$delim,$modifiers));
+                $delim = $this->_getDelim($c, $modifiers);
+                $opt = $this->_getOpt($c, $delim, $modifiers);
+                $modifiers = trim($this->_getRemainModifiers($c, $delim, $modifiers));
 
-                $result[]=array('cmd'=>trim($match[1]),'opt'=>$opt,'debuginfo'=>$debuginfo);
+                $result[] = array('cmd' => trim($match[1]), 'opt' => $opt, 'debuginfo' => $debuginfo);
                 $cmd = '';
-            }
-            elseif(in_array($c,array('+','-','*','/')) && preg_match('@^[0-9]+@', $modifiers, $match)) { // :+3, :-3, :*3 ...
-                $modifiers = substr($modifiers,strlen($match[0]));
-                $result[]=array('cmd'=>'math','opt'=>'%s'.$c.$match[0]);
+            } elseif (in_array($c, array('+', '-', '*', '/')) && preg_match('@^[0-9]+@', $modifiers,
+                    $match)) { // :+3, :-3, :*3 ...
+                $modifiers = substr($modifiers, strlen($match[0]));
+                $result[] = array('cmd' => 'math', 'opt' => '%s' . $c . $match[0]);
                 $cmd = '';
-            }
-            elseif($c==='(' || $c==='=') {
+            } elseif ($c === '(' || $c === '=') {
                 $modifiers = $m1 = trim($modifiers);
-                $delim     = $this->_getDelim($c,$modifiers);
-                $opt       = $this->_getOpt($c,$delim,$modifiers);
-                $modifiers = trim($this->_getRemainModifiers($c,$delim,$modifiers));
+                $delim = $this->_getDelim($c, $modifiers);
+                $opt = $this->_getOpt($c, $delim, $modifiers);
+                $modifiers = trim($this->_getRemainModifiers($c, $delim, $modifiers));
                 $debuginfo = "#i=1 #c=[{$c}] #delim=[{$delim}] #m1=[{$m1}] remainMdf=[{$modifiers}]";
 
-                $result[]=array('cmd'=>trim($cmd),'opt'=>$opt,'debuginfo'=>$debuginfo);
+                $result[] = array('cmd' => trim($cmd), 'opt' => $opt, 'debuginfo' => $debuginfo);
 
                 $cmd = '';
-            }
-            elseif($c==':') {
+            } elseif ($c == ':') {
                 $debuginfo = "#i=2 #c=[{$c}] #m=[{$modifiers}]";
-                if($cmd!=='') $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
+                if ($cmd !== '') {
+                    $result[] = array('cmd' => trim($cmd), 'opt' => '', 'debuginfo' => $debuginfo);
+                }
 
                 $cmd = '';
-            }
-            elseif(trim($modifiers)=='' && trim($cmd)!=='') {
+            } elseif (trim($modifiers) == '' && trim($cmd) !== '') {
                 $debuginfo = "#i=3 #c=[{$c}] #m=[{$modifiers}]";
                 $cmd .= $c;
-                $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
+                $result[] = array('cmd' => trim($cmd), 'opt' => '', 'debuginfo' => $debuginfo);
 
                 break;
-            }
-            else {
+            } else {
                 $cmd .= $c;
             }
         }
 
-        if(empty($result)) return array();
+        if (empty($result)) {
+            return array();
+        }
 
-        foreach($result as $i=>$a)
-        {
+        foreach ($result as $i => $a) {
             $a['opt'] = $this->parseDocumentSource($a['opt']);
-            $result[$i]['opt'] = $modx->mergePlaceholderContent($a['opt'],$this->placeholders);
+            $result[$i]['opt'] = $modx->mergePlaceholderContent($a['opt'], $this->placeholders);
         }
 
         return $result;
     }
 
-    public function parsePhx($key,$value,$modifiers)
+    public function parsePhx($key, $value, $modifiers)
     {
         $modx = evolutionCMS();
         $lastKey = '';
-        $cacheKey = md5(sprintf('parsePhx#%s#%s#%s',$key,$value,print_r($modifiers,true)));
-        if(isset($this->tmpCache[$cacheKey])) return $this->tmpCache[$cacheKey];
-        if(empty($modifiers)) return '';
+        $cacheKey = md5(sprintf('parsePhx#%s#%s#%s', $key, $value, print_r($modifiers, true)));
+        if (isset($this->tmpCache[$cacheKey])) {
+            return $this->tmpCache[$cacheKey];
+        }
+        if (empty($modifiers)) {
+            return '';
+        }
 
-        foreach($modifiers as $m)
-        {
+        foreach ($modifiers as $m) {
             $lastKey = strtolower($m['cmd']);
         }
-        $_ = explode(',',$this->condModifiers);
-        if(in_array($lastKey,$_))
-        {
-            $modifiers[] = array('cmd'=>'then','opt'=>'1');
-            $modifiers[] = array('cmd'=>'else','opt'=>'0');
+        $_ = explode(',', $this->condModifiers);
+        if (in_array($lastKey, $_)) {
+            $modifiers[] = array('cmd' => 'then', 'opt' => '1');
+            $modifiers[] = array('cmd' => 'else', 'opt' => '0');
         }
 
-        foreach($modifiers as $i=>$a)
-        {
-            $value = $this->Filter($key,$value, $a['cmd'], $a['opt']);
+        foreach ($modifiers as $i => $a) {
+            $value = $this->Filter($key, $value, $a['cmd'], $a['opt']);
         }
         $this->tmpCache[$cacheKey] = $value;
+
         return $value;
     }
 
     // Parser: modifier detection and eXtended processing if needed
-    public function Filter($key, $value, $cmd, $opt='')
+    public function Filter($key, $value, $cmd, $opt = '')
     {
         $modx = evolutionCMS();
 
-        if($key==='documentObject') $value = $modx->documentIdentifier;
+        if ($key === 'documentObject') {
+            $value = $modx->documentIdentifier;
+        }
         $cmd = $this->parseDocumentSource($cmd);
-        if(preg_match('@^[1-9][/0-9]*$@',$cmd))
-        {
-            if(strpos($cmd,'/')!==false)
-                $cmd = $this->substr($cmd,strrpos($cmd,'/')+1);
+        if (preg_match('@^[1-9][/0-9]*$@', $cmd)) {
+            if (strpos($cmd, '/') !== false) {
+                $cmd = $this->substr($cmd, strrpos($cmd, '/') + 1);
+            }
             $opt = $cmd;
             $cmd = 'id';
         }
 
-        if(isset($modx->snippetCache["phx:{$cmd}"]))   $this->elmName = "phx:{$cmd}";
-        elseif(isset($modx->chunkCache["phx:{$cmd}"])) $this->elmName = "phx:{$cmd}";
-        else                                           $this->elmName = '';
+        if (isset($modx->snippetCache["phx:{$cmd}"])) {
+            $this->elmName = "phx:{$cmd}";
+        } elseif (isset($modx->chunkCache["phx:{$cmd}"])) {
+            $this->elmName = "phx:{$cmd}";
+        } else {
+            $this->elmName = '';
+        }
 
         $cmd = strtolower($cmd);
-        if($this->elmName!=='')
+        if ($this->elmName !== '') {
             $value = $this->getValueFromElement($key, $value, $cmd, $opt);
-        else
+        } else {
             $value = $this->getValueFromPreset($key, $value, $cmd, $opt);
+        }
 
         $value = str_replace('[+key+]', $key, $value);
 
         return $value;
     }
 
-    public function isEmpty($cmd,$value)
+    public function isEmpty($cmd, $value)
     {
-        if($value!=='') return false;
+        if ($value !== '') {
+            return false;
+        }
 
-        $_ = explode(',', $this->condModifiers . ',_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
-        if(in_array($cmd,$_)) return false;
-        else                  return true;
+        $_ = explode(',',
+            $this->condModifiers . ',_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
+        if (in_array($cmd, $_)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function getValueFromPreset($key, $value, $cmd, $opt)
     {
         $modx = evolutionCMS();
 
-        if($this->isEmpty($cmd,$value)) return '';
+        if ($this->isEmpty($cmd, $value)) {
+            return '';
+        }
 
         $this->key = $key;
-        $this->value  = $value;
-        $this->opt    = $opt;
+        $this->value = $value;
+        $this->opt = $opt;
 
-        switch ($cmd)
-        {
+        switch ($cmd) {
             #####  Conditional Modifiers
             case 'input':
             case 'if':
-                if(!$opt) return $value;
+                if (!$opt) {
+                    return $value;
+                }
+
                 return $opt;
             case '=':
             case 'eq':
             case 'is':
             case 'equals':
-                $this->condition[] = (int)($value == $opt); break;
+                $this->condition[] = (int)($value == $opt);
+                break;
             case 'neq':
             case 'ne':
             case 'notequals':
             case 'isnot':
             case 'isnt':
             case 'not':
-                $this->condition[] = (int)($value != $opt);break;
+                $this->condition[] = (int)($value != $opt);
+                break;
             case '%':
-                $this->condition[] = (int)($value%$opt==0);break;
+                $this->condition[] = (int)($value % $opt == 0);
+                break;
             case 'isempty':
-                $this->condition[] = (int)(empty($value)); break;
+                $this->condition[] = (int)(empty($value));
+                break;
             case 'isntempty':
             case 'isnotempty':
-                $this->condition[] = (int)(!empty($value)); break;
+                $this->condition[] = (int)(!empty($value));
+                break;
             case '>=':
             case 'gte':
             case 'eg':
             case 'isgte':
-                $this->condition[] = (int)($value >= $opt);break;
+                $this->condition[] = (int)($value >= $opt);
+                break;
             case '<=':
             case 'lte':
             case 'el':
             case 'islte':
-                $this->condition[] = (int)($value <= $opt);break;
+                $this->condition[] = (int)($value <= $opt);
+                break;
             case '>':
             case 'gt':
             case 'greaterthan':
             case 'isgreaterthan':
             case 'isgt':
-                $this->condition[] = (int)($value > $opt);break;
+                $this->condition[] = (int)($value > $opt);
+                break;
             case '<':
             case 'lt':
             case 'lowerthan':
             case 'islowerthan':
             case 'islt':
-                $this->condition[] = (int)($value < $opt);break;
+                $this->condition[] = (int)($value < $opt);
+                break;
             case 'find':
-                $this->condition[] = (int)(strpos($value, $opt)!==false);break;
+                $this->condition[] = (int)(strpos($value, $opt) !== false);
+                break;
             case 'inarray':
             case 'in_array':
             case 'in':
                 $opt = explode(',', $opt);
-                $this->condition[] = (int)(in_array($value, $opt)!==false);break;
+                $this->condition[] = (int)(in_array($value, $opt) !== false);
+                break;
             case 'wildcard_match':
             case 'wcard_match':
             case 'wildcard':
             case 'wcard':
             case 'fnmatch':
-                $this->condition[] = (int)(fnmatch($opt, $value)!==false);break;
+                $this->condition[] = (int)(fnmatch($opt, $value) !== false);
+                break;
             case 'is_file':
             case 'is_dir':
             case 'file_exists':
             case 'is_readable':
             case 'is_writable':
-                if(!$opt) $path = $value;
-                else      $path = $opt;
-                if(strpos($path,MODX_MANAGER_PATH)!==false) exit('Can not read core path');
-                if(strpos($path,$modx->config['base_path'])===false) $path = ltrim($path,'/');
-                $this->condition[] = (int)($cmd($path)!==false);break;
+                if (!$opt) {
+                    $path = $value;
+                } else {
+                    $path = $opt;
+                }
+                if (strpos($path, MODX_MANAGER_PATH) !== false) {
+                    exit('Can not read core path');
+                }
+                if (strpos($path, $modx->config['base_path']) === false) {
+                    $path = ltrim($path, '/');
+                }
+                $this->condition[] = (int)($cmd($path) !== false);
+                break;
             case 'is_image':
-                if(!$opt) $path = $value;
-                else      $path = $opt;
-                if(!is_file($path)) {$this->condition[]='0';break;}
+                if (!$opt) {
+                    $path = $value;
+                } else {
+                    $path = $opt;
+                }
+                if (!is_file($path)) {
+                    $this->condition[] = '0';
+                    break;
+                }
                 $_ = getimagesize($path);
-                $this->condition[] = (int)($_[0]);break;
+                $this->condition[] = (int)($_[0]);
+                break;
             case 'regex':
             case 'preg':
             case 'preg_match':
             case 'isinrole':
-                $this->condition[] = (int)(preg_match($opt,$value));break;
+                $this->condition[] = (int)(preg_match($opt, $value));
+                break;
             case 'ir':
             case 'memberof':
             case 'mo':
@@ -393,50 +471,65 @@ class Modifiers implements ModifiersInterface{
                 $this->condition[] = $this->includeMdfFile('memberof');
                 break;
             case 'or':
-                $this->condition[] = '||';break;
+                $this->condition[] = '||';
+                break;
             case 'and':
-                $this->condition[] = '&&';break;
+                $this->condition[] = '&&';
+                break;
             case 'show':
             case 'this':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode(' ', $this->condition);
                 $isvalid = (int)(eval("return ({$conditional});"));
-                if ($isvalid) return $this->srcValue;
-                return NULL;
+                if ($isvalid) {
+                    return $this->srcValue;
+                }
+
+                return null;
             case 'then':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode(' ', $this->condition);
                 $isvalid = (int)eval("return ({$conditional});");
-                if ($isvalid)  return $opt;
+                if ($isvalid) {
+                    return $opt;
+                }
+
                 return null;
             case 'else':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode(' ', $this->condition);
                 $isvalid = (int)eval("return ({$conditional});");
-                if (!$isvalid) return $opt;
+                if (!$isvalid) {
+                    return $opt;
+                }
                 break;
             case 'select':
             case 'switch':
-                $raw = explode('&',$opt);
+                $raw = explode('&', $opt);
                 $map = array();
                 $c = count($raw);
-                for($m=0; $m<$c; $m++) {
-                    $mi = explode('=',$raw[$m],2);
+                for ($m = 0; $m < $c; $m++) {
+                    $mi = explode('=', $raw[$m], 2);
                     $map[$mi[0]] = $mi[1];
                 }
-                if(isset($map[$value])) return $map[$value];
-                else                    return '';
+                if (isset($map[$value])) {
+                    return $map[$value];
+                } else {
+                    return '';
+                }
             ##### End of Conditional Modifiers
 
             #####  Encode / Decode / Hash / Escape
             case 'htmlent':
             case 'htmlentities':
-                return htmlentities($value,ENT_QUOTES,$modx->config['modx_charset']);
+                return htmlentities($value, ENT_QUOTES, $modx->config['modx_charset']);
             case 'html_entity_decode':
             case 'decode_html':
             case 'html_decode':
-                return html_entity_decode($value,ENT_QUOTES,$modx->config['modx_charset']);
+                return html_entity_decode($value, ENT_QUOTES, $modx->config['modx_charset']);
             case 'esc':
             case 'escape':
-                $value = preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;', htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
-                return str_replace(array('[', ']', '`'),array('&#91;', '&#93;', '&#96;'),$value);
+                $value = preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;',
+                    htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
+
+                return str_replace(array('[', ']', '`'), array('&#91;', '&#93;', '&#96;'), $value);
             case 'sql_escape':
             case 'encode_js':
                 return $modx->getDatabase()->escape($value);
@@ -444,42 +537,51 @@ class Modifiers implements ModifiersInterface{
             case 'hsc':
             case 'encode_html':
             case 'html_encode':
-                return preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;', htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
+                return preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;',
+                    htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
             case 'spam_protect':
-                return str_replace(array('@','.'),array('&#64;','&#46;'),$value);
+                return str_replace(array('@', '.'), array('&#64;', '&#46;'), $value);
             case 'strip':
-                if($opt==='') $opt = ' ';
+                if ($opt === '') {
+                    $opt = ' ';
+                }
+
                 return preg_replace('/[\n\r\t\s]+/', $opt, $value);
             case 'strip_linefeeds':
-                return str_replace(array("\n","\r"), '', $value);
+                return str_replace(array("\n", "\r"), '', $value);
             case 'notags':
             case 'strip_tags':
             case 'remove_html':
-                if($opt!=='')
-                {
+                if ($opt !== '') {
                     $param = array();
-                    foreach(explode(',',$opt) as $v)
-                    {
-                        $v = trim($v,'</> ');
+                    foreach (explode(',', $opt) as $v) {
+                        $v = trim($v, '</> ');
                         $param[] = "<{$v}>";
                     }
-                    $params = implode(',',$param);
+                    $params = implode(',', $param);
+                } else {
+                    $params = '';
                 }
-                else $params = '';
-                if(!strpos($params,'<br>')===false) {
-                    $value = preg_replace('@(<br[ /]*>)\n@','$1',$value);
-                    $value = preg_replace('@<br[ /]*>@',"\n",$value);
+                if (!strpos($params, '<br>') === false) {
+                    $value = preg_replace('@(<br[ /]*>)\n@', '$1', $value);
+                    $value = preg_replace('@<br[ /]*>@', "\n", $value);
                 }
-                return $this->strip_tags($value,$params);
+
+                return $this->strip_tags($value, $params);
             case 'urlencode':
             case 'url_encode':
             case 'encode_url':
                 return urlencode($value);
             case 'base64_decode':
-                if($opt!=='false') $opt = true;
-                else               $opt = false;
-                return base64_decode($value,$opt);
-            case 'encode_sha1': $cmd = 'sha1';
+                if ($opt !== 'false') {
+                    $opt = true;
+                } else {
+                    $opt = false;
+                }
+
+                return base64_decode($value, $opt);
+            case 'encode_sha1':
+                $cmd = 'sha1';
             case 'addslashes':
             case 'urldecode':
             case 'url_decode':
@@ -502,18 +604,24 @@ class Modifiers implements ModifiersInterface{
             case 'upper_case':
                 return $this->strtoupper($value);
             case 'capitalize':
-                $_ = explode(' ',$value);
-                foreach($_ as $i=>$v)
-                {
+                $_ = explode(' ', $value);
+                foreach ($_ as $i => $v) {
                     $_[$i] = ucfirst($v);
                 }
-                return implode(' ',$_);
+
+                return implode(' ', $_);
             case 'zenhan':
-                if(empty($opt)) $opt='VKas';
-                return mb_convert_kana($value,$opt,$modx->config['modx_charset']);
+                if (empty($opt)) {
+                    $opt = 'VKas';
+                }
+
+                return mb_convert_kana($value, $opt, $modx->config['modx_charset']);
             case 'hanzen':
-                if(empty($opt)) $opt='VKAS';
-                return mb_convert_kana($value,$opt,$modx->config['modx_charset']);
+                if (empty($opt)) {
+                    $opt = 'VKAS';
+                }
+
+                return mb_convert_kana($value, $opt, $modx->config['modx_charset']);
             case 'str_shuffle':
             case 'shuffle':
                 return $this->str_shuffle($value);
@@ -527,7 +635,8 @@ class Modifiers implements ModifiersInterface{
                 return $this->strlen($value);
             case 'count_words':
                 $value = trim($value);
-                return count(preg_split('/\s+/',$value));
+
+                return count(preg_split('/\s+/', $value));
             case 'str_word_count':
             case 'word_count':
             case 'wordcount':
@@ -535,55 +644,70 @@ class Modifiers implements ModifiersInterface{
             case 'count_paragraphs':
                 $value = trim($value);
                 $value = preg_replace('/\r/', '', $value);
-                return count(preg_split('/\n+/',$value));
+
+                return count(preg_split('/\n+/', $value));
             case 'strpos':
-                if($opt!=0&&empty($opt)) return $value;
-                return $this->strpos($value,$opt);
+                if ($opt != 0 && empty($opt)) {
+                    return $value;
+                }
+
+                return $this->strpos($value, $opt);
             case 'wordwrap':
                 // default: 70
                 $wrapat = (int)$opt > 0 ? (int)$opt : 70;
-                if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
-                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
+                if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+                    return $this->includeMdfFile('wordwrap');
+                } else {
+                    return preg_replace("@(\b\w+\b)@e", "wordwrap('\\1',\$wrapat,' ',1)", $value);
+                }
             case 'wrap_text':
-                $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
-                if($modx->config['manager_language']==='japanese-utf8') {
+                $width = preg_match('/^[1-9][0-9]*$/', $opt) ? $opt : 70;
+                if ($modx->config['manager_language'] === 'japanese-utf8') {
                     $chunk = array();
-                    $bt='';
-                    while($bt!=$value) {
+                    $bt = '';
+                    while ($bt != $value) {
                         $bt = $value;
-                        if($this->strlen($value)<$width) {
+                        if ($this->strlen($value) < $width) {
                             $chunk[] = $value;
                             break;
                         }
-                        $chunk[] = $this->substr($value,0,$width);
-                        $value = $this->substr($value,$width);
+                        $chunk[] = $this->substr($value, 0, $width);
+                        $value = $this->substr($value, $width);
                     }
-                    return implode("\n",$chunk);
+
+                    return implode("\n", $chunk);
+                } else {
+                    return wordwrap($value, $width, "\n", true);
                 }
-                else
-                    return wordwrap($value,$width,"\n",true);
             case 'substr':
-                if(empty($opt)) break;
-                if(strpos($opt,',')!==false) {
-                    list($b,$e) = explode(',',$opt,2);
-                    return $this->substr($value,$b,(int)$e);
+                if (empty($opt)) {
+                    break;
                 }
-                else return $this->substr($value,$opt);
+                if (strpos($opt, ',') !== false) {
+                    list($b, $e) = explode(',', $opt, 2);
+
+                    return $this->substr($value, $b, (int)$e);
+                } else {
+                    return $this->substr($value, $opt);
+                }
             case 'limit':
             case 'trim_to': // http://www.movabletype.jp/documentation/appendices/modifiers/trim_to.html
-                if(strpos($opt,'+')!==false)
-                    list($len,$str) = explode('+',$opt,2);
-                else {
+                if (strpos($opt, '+') !== false) {
+                    list($len, $str) = explode('+', $opt, 2);
+                } else {
                     $len = $opt;
                     $str = '';
                 }
-                if($len==='') $len = 100;
-                if(abs($len) > $this->strlen($value)) $str ='';
-                if(preg_match('/^[1-9][0-9]*$/',$len)) {
-                    return $this->substr($value,0,$len) . $str;
+                if ($len === '') {
+                    $len = 100;
                 }
-                elseif(preg_match('/^\-[1-9][0-9]*$/',$len)) {
-                    return $str . $this->substr($value,$len);
+                if (abs($len) > $this->strlen($value)) {
+                    $str = '';
+                }
+                if (preg_match('/^[1-9][0-9]*$/', $len)) {
+                    return $this->substr($value, 0, $len) . $str;
+                } elseif (preg_match('/^\-[1-9][0-9]*$/', $len)) {
+                    return $str . $this->substr($value, $len);
                 }
                 break;
             case 'summary':
@@ -592,81 +716,121 @@ class Modifiers implements ModifiersInterface{
                 return $this->includeMdfFile('summary');
             case 'replace':
             case 'str_replace':
-                if(empty($opt) || strpos($opt,',')===false) break;
-                if    (substr_count($opt, ',') ==1) $delim = ',';
-                elseif(substr_count($opt, '|') ==1) $delim = '|';
-                elseif(substr_count($opt, '=>')==1) $delim = '=>';
-                elseif(substr_count($opt, '/') ==1) $delim = '/';
-                else break;
-                list($s,$r) = explode($delim,$opt);
-                if($value!=='') return str_replace($s,$r,$value);
+                if (empty($opt) || strpos($opt, ',') === false) {
+                    break;
+                }
+                if (substr_count($opt, ',') == 1) {
+                    $delim = ',';
+                } elseif (substr_count($opt, '|') == 1) {
+                    $delim = '|';
+                } elseif (substr_count($opt, '=>') == 1) {
+                    $delim = '=>';
+                } elseif (substr_count($opt, '/') == 1) {
+                    $delim = '/';
+                } else {
+                    break;
+                }
+                list($s, $r) = explode($delim, $opt);
+                if ($value !== '') {
+                    return str_replace($s, $r, $value);
+                }
                 break;
             case 'replace_to':
             case 'tpl':
-                if($value!=='') return str_replace(array('[+value+]','[+output+]','{value}','%s'),$value,$opt);
+                if ($value !== '') {
+                    return str_replace(array('[+value+]', '[+output+]', '{value}', '%s'), $value, $opt);
+                }
                 break;
             case 'eachtpl':
-                $value = explode('||',$value);
+                $value = explode('||', $value);
                 $_ = array();
-                foreach($value as $v) {
-                    $_[] = str_replace(array('[+value+]','[+output+]','{value}','%s'),$v,$opt);
+                foreach ($value as $v) {
+                    $_[] = str_replace(array('[+value+]', '[+output+]', '{value}', '%s'), $v, $opt);
                 }
+
                 return implode("\n", $_);
             case 'array_pop':
             case 'array_shift':
-                if(strpos($value,'||')!==false) $delim = '||';
-                else                            $delim = ',';
-                return $cmd(explode($delim,$value));
+                if (strpos($value, '||') !== false) {
+                    $delim = '||';
+                } else {
+                    $delim = ',';
+                }
+
+                return $cmd(explode($delim, $value));
             case 'preg_replace':
             case 'regex_replace':
-                if(empty($opt) || strpos($opt,',')===false) break;
-                list($s,$r) = explode(',',$opt,2);
-                if($value!=='') return preg_replace($s,$r,$value);
+                if (empty($opt) || strpos($opt, ',') === false) {
+                    break;
+                }
+                list($s, $r) = explode(',', $opt, 2);
+                if ($value !== '') {
+                    return preg_replace($s, $r, $value);
+                }
                 break;
             case 'cat':
             case 'concatenate':
             case '.':
-                if($value!=='') return $value . $opt;
+                if ($value !== '') {
+                    return $value . $opt;
+                }
                 break;
             case 'sprintf':
             case 'string_format':
-                if($value!=='') return sprintf($opt,$value);
+                if ($value !== '') {
+                    return sprintf($opt, $value);
+                }
                 break;
             case 'number_format':
-                if($opt=='') $opt = 0;
-                return number_format($value,$opt);
+                if ($opt == '') {
+                    $opt = 0;
+                }
+
+                return number_format($value, $opt);
             case 'money_format':
-                setlocale(LC_MONETARY,setlocale(LC_TIME,0));
-                if($value!=='') return money_format($opt,(double)$value);
+                setlocale(LC_MONETARY, setlocale(LC_TIME, 0));
+                if ($value !== '') {
+                    return money_format($opt, (double)$value);
+                }
                 break;
             case 'tobool':
                 return boolval($value);
             case 'nl2lf':
-                if($value!=='') return str_replace(array("\r\n","\n", "\r"), '\n', $value);
+                if ($value !== '') {
+                    return str_replace(array("\r\n", "\n", "\r"), '\n', $value);
+                }
                 break;
             case 'br2nl':
                 return preg_replace('@<br[\s/]*>@i', "\n", $value);
             case 'nl2br':
-                if (version_compare(PHP_VERSION, '5.3.0', '<'))
+                if (version_compare(PHP_VERSION, '5.3.0', '<')) {
                     return nl2br($value);
-                if($opt!=='')
-                {
+                }
+                if ($opt !== '') {
                     $opt = trim($opt);
                     $opt = strtolower($opt);
-                    if($opt==='false') $opt = false;
-                    elseif($opt==='0') $opt = false;
-                    else               $opt = true;
-                }
-                elseif(isset($modx->config['mce_element_format'])&&$modx->config['mce_element_format']==='html')
+                    if ($opt === 'false') {
+                        $opt = false;
+                    } elseif ($opt === '0') {
+                        $opt = false;
+                    } else {
+                        $opt = true;
+                    }
+                } elseif (isset($modx->config['mce_element_format']) && $modx->config['mce_element_format'] === 'html') {
                     $opt = false;
-                else                   $opt = true;
-                return nl2br($value,$opt);
+                } else {
+                    $opt = true;
+                }
+
+                return nl2br($value, $opt);
             case 'ltrim':
             case 'rtrim':
             case 'trim': // ref http://mblo.info/modifiers/custom-modifiers/rtrim_opt.html
-                if($opt==='')
+                if ($opt === '') {
                     return $cmd($value);
-                else return $cmd($value,$opt);
+                } else {
+                    return $cmd($value, $opt);
+                }
             // These are all straight wrappers for PHP functions
             case 'ucfirst':
             case 'lcfirst':
@@ -677,16 +841,26 @@ class Modifiers implements ModifiersInterface{
             case 'strftime':
             case 'date':
             case 'dateformat':
-                if(empty($opt)) $opt = $modx->toDateFormat(null, 'formatOnly');
-                if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
-                if(strpos($opt,'%')!==false)
-                    return strftime($opt,0+$value);
-                else
-                    return date($opt,0+$value);
+                if (empty($opt)) {
+                    $opt = $modx->toDateFormat(null, 'formatOnly');
+                }
+                if (!preg_match('@^[0-9]+$@', $value)) {
+                    $value = strtotime($value);
+                }
+                if (strpos($opt, '%') !== false) {
+                    return strftime($opt, 0 + $value);
+                } else {
+                    return date($opt, 0 + $value);
+                }
             case 'time':
-                if(empty($opt)) $opt = '%H:%M';
-                if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
-                return strftime($opt,0+$value);
+                if (empty($opt)) {
+                    $opt = '%H:%M';
+                }
+                if (!preg_match('@^[0-9]+$@', $value)) {
+                    $value = strtotime($value);
+                }
+
+                return strftime($opt, 0 + $value);
             case 'strtotime':
                 return strtotime($value);
             #####  mathematical function
@@ -695,11 +869,14 @@ class Modifiers implements ModifiersInterface{
             case 'tofloat':
                 return floatval($value);
             case 'round':
-                if(!$opt) $opt = 0;
-                return $cmd($value,$opt);
+                if (!$opt) {
+                    $opt = 0;
+                }
+
+                return $cmd($value, $opt);
             case 'max':
             case 'min':
-                return $cmd(explode(',',$value));
+                return $cmd(explode(',', $value));
             case 'floor':
             case 'ceil':
             case 'abs':
@@ -707,28 +884,45 @@ class Modifiers implements ModifiersInterface{
             case 'math':
             case 'calc':
                 $value = (int)$value;
-                if(empty($value)) $value = '0';
-                $filter = str_replace(array('[+value+]','[+output+]','{value}','%s'),'?',$opt);
-                $filter = preg_replace('@([a-zA-Z\n\r\t\s])@','',$filter);
-                if(strpos($filter,'?')===false) $filter = "?{$filter}";
-                $filter = str_replace('?',$value,$filter);
+                if (empty($value)) {
+                    $value = '0';
+                }
+                $filter = str_replace(array('[+value+]', '[+output+]', '{value}', '%s'), '?', $opt);
+                $filter = preg_replace('@([a-zA-Z\n\r\t\s])@', '', $filter);
+                if (strpos($filter, '?') === false) {
+                    $filter = "?{$filter}";
+                }
+                $filter = str_replace('?', $value, $filter);
+
                 return eval("return {$filter};");
             case 'count':
-                if($value=='') return 0;
-                $value = explode(',',$value);
+                if ($value == '') {
+                    return 0;
+                }
+                $value = explode(',', $value);
+
                 return count($value);
             case 'sort':
             case 'rsort':
-                if(strpos($value,"\n")!==false) $delim="\n";
-                else $delim = ',';
-                $swap = explode($delim,$value);
-                if(!$opt) $opt = SORT_REGULAR;
-                else      $opt = constant($opt);
-                $cmd($swap,$opt);
-                return implode($delim,$swap);
+                if (strpos($value, "\n") !== false) {
+                    $delim = "\n";
+                } else {
+                    $delim = ',';
+                }
+                $swap = explode($delim, $value);
+                if (!$opt) {
+                    $opt = SORT_REGULAR;
+                } else {
+                    $opt = constant($opt);
+                }
+                $cmd($swap, $opt);
+
+                return implode($delim, $swap);
             #####  Resource fields
             case 'id':
-                if($opt) return $this->getDocumentObject($opt,$key);
+                if ($opt) {
+                    return $this->getDocumentObject($opt, $key);
+                }
                 break;
             case 'type':
             case 'contenttype':
@@ -765,111 +959,187 @@ class Modifiers implements ModifiersInterface{
             case 'privatemgr':
             case 'content_dispo':
             case 'hidemenu':
-                if($cmd==='contenttype') $cmd = 'contentType';
-                return $this->getDocumentObject($value,$cmd);
+                if ($cmd === 'contenttype') {
+                    $cmd = 'contentType';
+                }
+
+                return $this->getDocumentObject($value, $cmd);
             case 'title':
-                $pagetitle = $this->getDocumentObject($value,'pagetitle');
-                $longtitle = $this->getDocumentObject($value,'longtitle');
+                $pagetitle = $this->getDocumentObject($value, 'pagetitle');
+                $longtitle = $this->getDocumentObject($value, 'longtitle');
+
                 return $longtitle ? $longtitle : $pagetitle;
             case 'shorttitle':
-                $pagetitle = $this->getDocumentObject($value,'pagetitle');
-                $menutitle = $this->getDocumentObject($value,'menutitle');
+                $pagetitle = $this->getDocumentObject($value, 'pagetitle');
+                $menutitle = $this->getDocumentObject($value, 'menutitle');
+
                 return $menutitle ? $menutitle : $pagetitle;
             case 'templatename':
-                $rs = $modx->getDatabase()->select('templatename','[+prefix+]site_templates',"id='{$value}'");
+                $rs = $modx->getDatabase()->select('templatename', '[+prefix+]site_templates', "id='{$value}'");
                 $templateName = $modx->getDatabase()->getValue($rs);
+
                 return !$templateName ? '(blank)' : $templateName;
             case 'getfield':
-                if(!$opt) $opt = 'content';
-                return $modx->getField($opt,$value);
+                if (!$opt) {
+                    $opt = 'content';
+                }
+
+                return $modx->getField($opt, $value);
             case 'children':
             case 'childids':
-                if($value=='') $value = 0; // 値がない場合はルートと見なす
+                if ($value == '') {
+                    $value = 0;
+                } // 値がない場合はルートと見なす
                 $published = 1;
-                if($opt=='') $opt = 'page';
-                $_ = explode(',',$opt);
+                if ($opt == '') {
+                    $opt = 'page';
+                }
+                $_ = explode(',', $opt);
                 $where = array();
-                foreach($_ as $opt) {
-                    switch(trim($opt)) {
-                        case 'page'; case '!folder'; case '!isfolder': $where[] = 'sc.isfolder=0'; break;
-                        case 'folder'; case 'isfolder':                $where[] = 'sc.isfolder=1'; break;
-                        case  'menu';  case  'show_menu':              $where[] = 'sc.hidemenu=0'; break;
-                        case '!menu';  case '!show_menu':              $where[] = 'sc.hidemenu=1'; break;
-                        case  'published':                             $published = 1; break;
-                        case '!published':                             $published = 0; break;
+                foreach ($_ as $opt) {
+                    switch (trim($opt)) {
+                        case 'page';
+                        case '!folder';
+                        case '!isfolder':
+                            $where[] = 'sc.isfolder=0';
+                            break;
+                        case 'folder';
+                        case 'isfolder':
+                            $where[] = 'sc.isfolder=1';
+                            break;
+                        case  'menu';
+                        case  'show_menu':
+                            $where[] = 'sc.hidemenu=0';
+                            break;
+                        case '!menu';
+                        case '!show_menu':
+                            $where[] = 'sc.hidemenu=1';
+                            break;
+                        case  'published':
+                            $published = 1;
+                            break;
+                        case '!published':
+                            $published = 0;
+                            break;
                     }
                 }
                 $where = implode(' AND ', $where);
                 $children = $modx->getDocumentChildren($value, $published, '0', 'id', $where);
                 $result = array();
-                foreach((array)$children as $child){
+                foreach ((array)$children as $child) {
                     $result[] = $child['id'];
                 }
+
                 return implode(',', $result);
             case 'fullurl':
-                if(!is_numeric($value)) return $value;
+                if (!is_numeric($value)) {
+                    return $value;
+                }
+
                 return $modx->makeUrl($value);
             case 'makeurl':
-                if(!is_numeric($value)) return $value;
-                if(!$opt) $opt = 'full';
-                return $modx->makeUrl($value,'','',$opt);
+                if (!is_numeric($value)) {
+                    return $value;
+                }
+                if (!$opt) {
+                    $opt = 'full';
+                }
+
+                return $modx->makeUrl($value, '', '', $opt);
 
             #####  File system
             case 'getimageinfo':
             case 'imageinfo':
-                if(!is_file($value)) return '';
+                if (!is_file($value)) {
+                    return '';
+                }
                 $_ = getimagesize($value);
-                if(!$_[0]) return '';
-                $info['width']  = $_[0];
+                if (!$_[0]) {
+                    return '';
+                }
+                $info['width'] = $_[0];
                 $info['height'] = $_[1];
-                if    ($_[0] > $_[1]) $info['aspect'] = 'landscape';
-                elseif($_[0] < $_[1]) $info['aspect'] = 'portrait';
-                else                  $info['aspect'] = 'square';
-                switch($_[2]) {
-                    case IMAGETYPE_GIF  : $info['type'] = 'gif'; break;
-                    case IMAGETYPE_JPEG : $info['type'] = 'jpg'; break;
-                    case IMAGETYPE_PNG  : $info['type'] = 'png'; break;
-                    default             : $info['type'] = 'unknown';
+                if ($_[0] > $_[1]) {
+                    $info['aspect'] = 'landscape';
+                } elseif ($_[0] < $_[1]) {
+                    $info['aspect'] = 'portrait';
+                } else {
+                    $info['aspect'] = 'square';
+                }
+                switch ($_[2]) {
+                    case IMAGETYPE_GIF  :
+                        $info['type'] = 'gif';
+                        break;
+                    case IMAGETYPE_JPEG :
+                        $info['type'] = 'jpg';
+                        break;
+                    case IMAGETYPE_PNG  :
+                        $info['type'] = 'png';
+                        break;
+                    default             :
+                        $info['type'] = 'unknown';
                 }
                 $info['attrib'] = $_[3];
-                switch($opt) {
-                    case 'width' : return $info['width'];
-                    case 'height': return $info['height'];
-                    case 'aspect': return $info['aspect'];
-                    case 'type'  : return $info['type'];
-                    case 'attrib': return $info['attrib'];
-                    default      : return print_r($info,true);
+                switch ($opt) {
+                    case 'width' :
+                        return $info['width'];
+                    case 'height':
+                        return $info['height'];
+                    case 'aspect':
+                        return $info['aspect'];
+                    case 'type'  :
+                        return $info['type'];
+                    case 'attrib':
+                        return $info['attrib'];
+                    default      :
+                        return print_r($info, true);
                 }
 
             case 'file_get_contents':
             case 'readfile':
-                if(!is_file($value)) return $value;
+                if (!is_file($value)) {
+                    return $value;
+                }
                 $value = realpath($value);
-                if(strpos($value,MODX_MANAGER_PATH)!==false) exit('Can not read core file');
-                $ext = strtolower(substr($value,-4));
-                if($ext==='.php') exit('Can not read php file');
-                if($ext==='.cgi') exit('Can not read cgi file');
+                if (strpos($value, MODX_MANAGER_PATH) !== false) {
+                    exit('Can not read core file');
+                }
+                $ext = strtolower(substr($value, -4));
+                if ($ext === '.php') {
+                    exit('Can not read php file');
+                }
+                if ($ext === '.cgi') {
+                    exit('Can not read cgi file');
+                }
+
                 return file_get_contents($value);
             case 'filesize':
-                if($value == '') return '';
+                if ($value == '') {
+                    return '';
+                }
                 $filename = $value;
 
                 $site_url = $modx->config['site_url'];
-                if(strpos($filename,$site_url) === 0)
-                    $filename = substr($filename,0,strlen($site_url));
-                $filename = trim($filename,'/');
+                if (strpos($filename, $site_url) === 0) {
+                    $filename = substr($filename, 0, strlen($site_url));
+                }
+                $filename = trim($filename, '/');
 
-                $opt = trim($opt,'/');
-                if($opt!=='') $opt .= '/';
+                $opt = trim($opt, '/');
+                if ($opt !== '') {
+                    $opt .= '/';
+                }
 
-                $filename = MODX_BASE_PATH.$opt.$filename;
+                $filename = MODX_BASE_PATH . $opt . $filename;
 
-                if(is_file($filename)){
+                if (is_file($filename)) {
                     clearstatcache();
                     $size = filesize($filename);
+
                     return $size;
+                } else {
+                    return '';
                 }
-                else return '';
             #####  User info
             case 'username':
             case 'fullname':
@@ -895,43 +1165,66 @@ class Modifiers implements ModifiersInterface{
             case 'photo':
             case 'comment':
                 $this->opt = $cmd;
+
                 return $this->includeMdfFile('moduser');
             case 'userinfo':
-                if(empty($opt)) $this->opt = 'username';
+                if (empty($opt)) {
+                    $this->opt = 'username';
+                }
+
                 return $this->includeMdfFile('moduser');
             case 'webuserinfo':
-                if(empty($opt)) $this->opt = 'username';
+                if (empty($opt)) {
+                    $this->opt = 'username';
+                }
                 $this->value = -$value;
+
                 return $this->includeMdfFile('moduser');
             #####  Special functions
             case 'ifempty':
             case '_default':
             case 'default':
-                if (empty($value)) return $opt; break;
+                if (empty($value)) {
+                    return $opt;
+                }
+                break;
             case 'ifnotempty':
-                if (!empty($value)) return $opt; break;
+                if (!empty($value)) {
+                    return $opt;
+                }
+                break;
             case 'datagrid':
-                include_once(MODX_CORE_PATH . 'controls/datagrid.class.php');
+                include_once(MODX_MANAGER_PATH . 'includes/controls/datagrid.class.php');
                 $grd = new DataGrid(null, trim($value));
                 $grd->itemStyle = '';
                 $grd->altItemStyle = '';
-                $pos = strpos($value,"\n");
-                if($pos) $_ = substr($value,0,$pos);
-                else $_ = $pos;
-                $grd->cdelim = strpos($_,"\t")!==false ? 'tab' : ',';
+                $pos = strpos($value, "\n");
+                if ($pos) {
+                    $_ = substr($value, 0, $pos);
+                } else {
+                    $_ = $pos;
+                }
+                $grd->cdelim = strpos($_, "\t") !== false ? 'tab' : ',';
+
                 return $grd->render();
             case 'rotate':
             case 'evenodd':
-                if(strpos($opt,',')===false) $opt = 'odd,even';
+                if (strpos($opt, ',') === false) {
+                    $opt = 'odd,even';
+                }
                 $_ = explode(',', $opt);
                 $c = count($_);
                 $i = $value + $c;
                 $i = $i % $c;
+
                 return $_[$i];
             case 'takeval':
-                $arr = explode(",",$opt);
+                $arr = explode(",", $opt);
                 $idx = $value;
-                if(!is_numeric($idx)) return $value;
+                if (!is_numeric($idx)) {
+                    return $value;
+                }
+
                 return $arr[$idx];
             case 'getimage':
                 return $this->includeMdfFile('getimage');
@@ -939,35 +1232,47 @@ class Modifiers implements ModifiersInterface{
                 return $modx->nicesize($value);
             case 'googlemap':
             case 'googlemaps':
-                if(empty($opt)) $opt = 'border:none;width:500px;height:350px;';
+                if (empty($opt)) {
+                    $opt = 'border:none;width:500px;height:350px;';
+                }
                 $tpl = '<iframe style="[+style+]" src="https://maps.google.co.jp/maps?ll=[+value+]&output=embed&z=15"></iframe>';
                 $ph['style'] = $opt;
                 $ph['value'] = $value;
-                return $modx->parseText($tpl,$ph);
+
+                return $modx->parseText($tpl, $ph);
             case 'youtube':
             case 'youtube16x9':
-                if(empty($opt)) $opt = 560;
-                $h = round($opt*0.5625);
+                if (empty($opt)) {
+                    $opt = 560;
+                }
+                $h = round($opt * 0.5625);
                 $tpl = '<iframe width="%s" height="%s" src="https://www.youtube.com/embed/%s" frameborder="0" allowfullscreen></iframe>';
-                return sprintf($tpl,$opt,$h,$value);
+
+                return sprintf($tpl, $opt, $h, $value);
             //case 'youtube4x3':%s*0.75＋25
             case 'setvar':
                 $modx->placeholders[$opt] = $value;
+
                 return '';
             case 'csstohead':
                 $modx->regClientCSS($value);
+
                 return '';
             case 'htmltohead':
                 $modx->regClientStartupHTMLBlock($value);
+
                 return '';
             case 'htmltobottom':
                 $modx->regClientHTMLBlock($value);
+
                 return '';
             case 'jstohead':
                 $modx->regClientStartupScript($value);
+
                 return '';
             case 'jstobottom':
                 $modx->regClientScript($value);
+
                 return '';
             case 'dummy':
                 return $value;
@@ -976,235 +1281,323 @@ class Modifiers implements ModifiersInterface{
             default:
                 $value = $this->getValueFromElement($key, $value, $cmd, $opt);
         }
+
         return $value;
     }
 
-    public function includeMdfFile($cmd) {
+    public function includeMdfFile($cmd)
+    {
         $modx = evolutionCMS();
         $key = $this->key;
-        $value  = $this->value;
-        $opt    = $this->opt;
-        return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
+        $value = $this->value;
+        $opt = $this->opt;
+
+        return include(MODX_MANAGER_PATH . "includes/extenders/modifiers/mdf_{$cmd}.inc.php");
     }
 
     public function getValueFromElement($key, $value, $cmd, $opt)
     {
         $modx = evolutionCMS();
-        if( isset($modx->snippetCache[$this->elmName]) )
-        {
+        if (isset($modx->snippetCache[$this->elmName])) {
             $php = $modx->snippetCache[$this->elmName];
-        }
-        else
-        {
+        } else {
             $esc_elmName = $modx->getDatabase()->escape($this->elmName);
-            $result = $modx->getDatabase()->select('snippet','[+prefix+]site_snippets',"name='{$esc_elmName}'");
+            $result = $modx->getDatabase()->select('snippet', '[+prefix+]site_snippets', "name='{$esc_elmName}'");
             $total = $modx->getDatabase()->getRecordCount($result);
-            if($total == 1)
-            {
+            if ($total == 1) {
                 $row = $modx->getDatabase()->getRow($result);
                 $php = $row['snippet'];
-            }
-            elseif($total == 0)
-            {
-                $assets_path = MODX_BASE_PATH.'assets/';
-                if(is_file($assets_path."modifiers/mdf_{$cmd}.inc.php"))
-                    $modifiers_path = $assets_path."modifiers/mdf_{$cmd}.inc.php";
-                elseif(is_file($assets_path."plugins/phx/modifiers/{$cmd}.phx.php"))
-                    $modifiers_path = $assets_path."plugins/phx/modifiers/{$cmd}.phx.php";
-                elseif(is_file(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php"))
-                    $modifiers_path = MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php";
-                else $modifiers_path = false;
+            } elseif ($total == 0) {
+                $assets_path = MODX_BASE_PATH . 'assets/';
+                if (is_file($assets_path . "modifiers/mdf_{$cmd}.inc.php")) {
+                    $modifiers_path = $assets_path . "modifiers/mdf_{$cmd}.inc.php";
+                } elseif (is_file($assets_path . "plugins/phx/modifiers/{$cmd}.phx.php")) {
+                    $modifiers_path = $assets_path . "plugins/phx/modifiers/{$cmd}.phx.php";
+                } elseif (is_file(MODX_MANAGER_PATH . "includes/extenders/modifiers/mdf_{$cmd}.inc.php")) {
+                    $modifiers_path = MODX_MANAGER_PATH . "includes/extenders/modifiers/mdf_{$cmd}.inc.php";
+                } else {
+                    $modifiers_path = false;
+                }
 
-                if($modifiers_path !== false) {
+                if ($modifiers_path !== false) {
                     $php = @file_get_contents($modifiers_path);
                     $php = trim($php);
-                    if(substr($php,0,5)==='<?php') $php = substr($php,6);
-                    if(substr($php,0,2)==='<?')    $php = substr($php,3);
-                    if(substr($php,-2)==='?>')     $php = substr($php,0,-2);
-                    if($this->elmName!=='')
-                        $modx->snippetCache[$this->elmName.'Props'] = '';
-                }
-                else
+                    if (substr($php, 0, 5) === '<?php') {
+                        $php = substr($php, 6);
+                    }
+                    if (substr($php, 0, 2) === '<?') {
+                        $php = substr($php, 3);
+                    }
+                    if (substr($php, -2) === '?>') {
+                        $php = substr($php, 0, -2);
+                    }
+                    if ($this->elmName !== '') {
+                        $modx->snippetCache[$this->elmName . 'Props'] = '';
+                    }
+                } else {
                     $php = false;
+                }
+            } else {
+                $php = false;
             }
-            else $php = false;
-            if($this->elmName!=='') $modx->snippetCache[$this->elmName]= $php;
+            if ($this->elmName !== '') {
+                $modx->snippetCache[$this->elmName] = $php;
+            }
         }
-        if($php==='') $php=false;
+        if ($php === '') {
+            $php = false;
+        }
 
-        if($php===false) $html = $modx->getChunk($this->elmName);
-        else             $html = false;
+        if ($php === false) {
+            $html = $modx->getChunk($this->elmName);
+        } else {
+            $html = false;
+        }
 
         $self = '[+output+]';
 
-        if($php !== false)
-        {
+        if ($php !== false) {
             ob_start();
             $options = $opt;
             $output = $value;
-            $name   = $key;
+            $name = $key;
             $this->bt = $value;
-            $this->vars['value']   = & $value;
-            $this->vars['input']   = & $value;
-            $this->vars['option']  = & $opt;
-            $this->vars['options'] = & $opt;
+            $this->vars['value'] = &$value;
+            $this->vars['input'] = &$value;
+            $this->vars['option'] = &$opt;
+            $this->vars['options'] = &$opt;
             $custom = eval($php);
             $msg = ob_get_contents();
-            if($value===$this->bt) $value = $msg . $custom;
+            if ($value === $this->bt) {
+                $value = $msg . $custom;
+            }
             ob_end_clean();
+        } elseif ($html !== false && isset($value) && $value !== '') {
+            $html = str_replace(array($self, '[+value+]'), $value, $html);
+            $value = str_replace(array('[+options+]', '[+param+]'), $opt, $html);
+        } else {
+            return false;
         }
-        elseif($html!==false && isset($value) && $value!=='')
-        {
-            $html = str_replace(array($self,'[+value+]'), $value, $html);
-            $value = str_replace(array('[+options+]','[+param+]'), $opt, $html);
-        }
-        else return false;
 
-        if($php===false && $html===false && $value!==''
-            && (strpos($cmd,'[+value+]')!==false || strpos($cmd,$self)!==false))
-        {
-            $value = str_replace(array('[+value+]',$self),$value,$cmd);
+        if ($php === false && $html === false && $value !== ''
+            && (strpos($cmd, '[+value+]') !== false || strpos($cmd, $self) !== false)) {
+            $value = str_replace(array('[+value+]', $self), $value, $cmd);
         }
+
         return $value;
     }
 
-    public function parseDocumentSource($content='')
+    public function parseDocumentSource($content = '')
     {
         $modx = evolutionCMS();
 
-        if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
+        if (strpos($content, '[') === false && strpos($content, '{') === false) {
+            return $content;
+        }
 
-        if(!$modx->maxParserPasses) $modx->maxParserPasses = 10;
-        $bt='';
-        $i=0;
-        while($bt!==$content)
-        {
+        if (!$modx->maxParserPasses) {
+            $modx->maxParserPasses = 10;
+        }
+        $bt = '';
+        $i = 0;
+        while ($bt !== $content) {
             $bt = $content;
-            if(strpos($content,'[*')!==false && $modx->documentIdentifier)
+            if (strpos($content, '[*') !== false && $modx->documentIdentifier) {
                 $content = $modx->mergeDocumentContent($content);
-            if(strpos($content,'[(')!==false) $content = $modx->mergeSettingsContent($content);
-            if(strpos($content,'{{')!==false) $content = $modx->mergeChunkContent($content);
-            if(strpos($content,'[!')!==false) $content = str_replace(array('[!','!]'),array('[[',']]'),$content);
-            if(strpos($content,'[[')!==false) $content = $modx->evalSnippets($content);
+            }
+            if (strpos($content, '[(') !== false) {
+                $content = $modx->mergeSettingsContent($content);
+            }
+            if (strpos($content, '{{') !== false) {
+                $content = $modx->mergeChunkContent($content);
+            }
+            if (strpos($content, '[!') !== false) {
+                $content = str_replace(array('[!', '!]'), array('[[', ']]'), $content);
+            }
+            if (strpos($content, '[[') !== false) {
+                $content = $modx->evalSnippets($content);
+            }
 
-            if($content===$bt)              break;
-            if($modx->maxParserPasses < $i) break;
+            if ($content === $bt) {
+                break;
+            }
+            if ($modx->maxParserPasses < $i) {
+                break;
+            }
             $i++;
         }
+
         return $content;
     }
 
-    public function getDocumentObject($target='',$field='pagetitle')
+    public function getDocumentObject($target = '', $field = 'pagetitle')
     {
         $modx = evolutionCMS();
 
         $target = trim($target);
-        if(empty($target)) $target = $modx->config['site_start'];
-        if(preg_match('@^[1-9][0-9]*$@',$target)) $method='id';
-        else $method = 'alias';
-
-        if(!isset($this->documentObject[$target]))
-        {
-            $this->documentObject[$target] = $modx->getDocumentObject($method,$target,'direct');
+        if (empty($target)) {
+            $target = $modx->config['site_start'];
+        }
+        if (preg_match('@^[1-9][0-9]*$@', $target)) {
+            $method = 'id';
+        } else {
+            $method = 'alias';
         }
 
-        if($this->documentObject[$target]['publishedon']==='0')
+        if (!isset($this->documentObject[$target])) {
+            $this->documentObject[$target] = $modx->getDocumentObject($method, $target, 'direct');
+        }
+
+        if ($this->documentObject[$target]['publishedon'] === '0') {
             return '';
-        elseif(isset($this->documentObject[$target][$field]))
-        {
-            if(is_array($this->documentObject[$target][$field]))
-            {
-                $a = $modx->getTemplateVarOutput($field,$target);
+        } elseif (isset($this->documentObject[$target][$field])) {
+            if (is_array($this->documentObject[$target][$field])) {
+                $a = $modx->getTemplateVarOutput($field, $target);
                 $this->documentObject[$target][$field] = $a[$field];
             }
+        } else {
+            $this->documentObject[$target][$field] = false;
         }
-        else $this->documentObject[$target][$field] = false;
 
         return $this->documentObject[$target][$field];
     }
 
-    public function setPlaceholders($value = '', $key = '', $path = '') {
-        if($path!=='') $key = "{$path}.{$key}";
+    public function setPlaceholders($value = '', $key = '', $path = '')
+    {
+        if ($path !== '') {
+            $key = "{$path}.{$key}";
+        }
         if (is_array($value)) {
             foreach ($value as $subkey => $subval) {
                 $this->setPlaceholders($subval, $subkey, $key);
             }
+        } else {
+            $this->setModifiersVariable($key, $value);
         }
-        else $this->setModifiersVariable($key, $value);
     }
 
     // Sets a placeholder variable which can only be access by Modifiers
-    public function setModifiersVariable($key, $value) {
-        if ($key != 'phx' && $key != 'dummy') $this->placeholders[$key] = $value;
+    public function setModifiersVariable($key, $value)
+    {
+        if ($key != 'phx' && $key != 'dummy') {
+            $this->placeholders[$key] = $value;
+        }
     }
 
     //mbstring
-    public function substr($str, $s, $l = null) {
+    public function substr($str, $s, $l = null)
+    {
         $modx = evolutionCMS();
-        if(is_null($l)) $l = $this->strlen($str);
-        if (function_exists('mb_substr'))
-        {
-            if(strpos($str,"\r")!==false)
-                $str = str_replace(array("\r\n","\r"), "\n", $str);
+        if (is_null($l)) {
+            $l = $this->strlen($str);
+        }
+        if (function_exists('mb_substr')) {
+            if (strpos($str, "\r") !== false) {
+                $str = str_replace(array("\r\n", "\r"), "\n", $str);
+            }
+
             return mb_substr($str, $s, $l, $modx->config['modx_charset']);
         }
+
         return substr($str, $s, $l);
     }
-    public function strpos($haystack,$needle,$offset=0) {
+
+    public function strpos($haystack, $needle, $offset = 0)
+    {
         $modx = evolutionCMS();
-        if (function_exists('mb_strpos')) return mb_strpos($haystack,$needle,$offset,$modx->config['modx_charset']);
-        return strpos($haystack,$needle,$offset);
+        if (function_exists('mb_strpos')) {
+            return mb_strpos($haystack, $needle, $offset, $modx->config['modx_charset']);
+        }
+
+        return strpos($haystack, $needle, $offset);
     }
-    public function strlen($str) {
+
+    public function strlen($str)
+    {
         $modx = evolutionCMS();
-        if (function_exists('mb_strlen')) return mb_strlen(str_replace("\r\n", "\n", $str),$modx->config['modx_charset']);
+        if (function_exists('mb_strlen')) {
+            return mb_strlen(str_replace("\r\n", "\n", $str), $modx->config['modx_charset']);
+        }
+
         return strlen($str);
     }
-    public function strtolower($str) {
-        if (function_exists('mb_strtolower')) return mb_strtolower($str);
+
+    public function strtolower($str)
+    {
+        if (function_exists('mb_strtolower')) {
+            return mb_strtolower($str);
+        }
+
         return strtolower($str);
     }
-    public function strtoupper($str) {
-        if (function_exists('mb_strtoupper')) return mb_strtoupper($str);
+
+    public function strtoupper($str)
+    {
+        if (function_exists('mb_strtoupper')) {
+            return mb_strtoupper($str);
+        }
+
         return strtoupper($str);
     }
-    public function ucfirst($str) {
-        if (function_exists('mb_strtoupper'))
-            return mb_strtoupper($this->substr($str, 0, 1)).$this->substr($str, 1, $this->strlen($str));
+
+    public function ucfirst($str)
+    {
+        if (function_exists('mb_strtoupper')) {
+            return mb_strtoupper($this->substr($str, 0, 1)) . $this->substr($str, 1, $this->strlen($str));
+        }
+
         return ucfirst($str);
     }
-    public function lcfirst($str) {
-        if (function_exists('mb_strtolower'))
-            return mb_strtolower($this->substr($str, 0, 1)).$this->substr($str, 1, $this->strlen($str));
+
+    public function lcfirst($str)
+    {
+        if (function_exists('mb_strtolower')) {
+            return mb_strtolower($this->substr($str, 0, 1)) . $this->substr($str, 1, $this->strlen($str));
+        }
+
         return lcfirst($str);
     }
-    public function ucwords($str) {
-        if (function_exists('mb_convert_case'))
+
+    public function ucwords($str)
+    {
+        if (function_exists('mb_convert_case')) {
             return mb_convert_case($str, MB_CASE_TITLE);
+        }
+
         return ucwords($str);
     }
-    public function strrev($str) {
+
+    public function strrev($str)
+    {
         preg_match_all('/./us', $str, $ar);
+
         return implode(array_reverse($ar[0]));
     }
-    public function str_shuffle($str) {
+
+    public function str_shuffle($str)
+    {
         preg_match_all('/./us', $str, $ar);
         shuffle($ar[0]);
+
         return implode($ar[0]);
     }
-    public function str_word_count($str) {
-        return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
+
+    public function str_word_count($str)
+    {
+        return count(preg_split('~[^\p{L}\p{N}\']+~u', $str));
     }
-    public function strip_tags($value,$params='') {
+
+    public function strip_tags($value, $params = '')
+    {
         $modx = evolutionCMS();
 
-        if(stripos($params,'style')===false && stripos($value,'</style>')!==false) {
+        if (stripos($params, 'style') === false && stripos($value, '</style>') !== false) {
             $value = preg_replace('@<style.*?>.*?</style>@is', '', $value);
         }
-        if(stripos($params,'script')===false && stripos($value,'</script>')!==false) {
+        if (stripos($params, 'script') === false && stripos($value, '</script>') !== false) {
             $value = preg_replace('@<script.*?>.*?</script>@is', '', $value);
         }
 
-        return trim(strip_tags($value,$params));
+        return trim(strip_tags($value, $params));
     }
 }
