@@ -7,10 +7,10 @@ if (!function_exists('evolutionCMS')) {
     function evolutionCMS()
     {
         if (!defined('MODX_CLASS')) {
-            if (!class_exists('DocumentParser')) {
-                throw new RuntimeException('MODX_CLASS not defined and DocumentParser class not exists');
+            if (!class_exists('\EvolutionCMS\Core')) {
+                throw new RuntimeException('MODX_CLASS not defined and EvolutionCMS\Core class not exists');
             }
-            define('MODX_CLASS', 'DocumentParser');
+            define('MODX_CLASS', '\EvolutionCMS\Core');
         }
 
         global $modx;
