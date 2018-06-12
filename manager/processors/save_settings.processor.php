@@ -70,7 +70,7 @@ if (isset($data) && count($data) > 0) {
 	foreach ($data as $k => $v) {
 		switch ($k) {
 			case 'site_name':
-				$v = htmlspecialchars($v);
+				$v = htmlentities($v, ENT_COMPAT | ENT_SUBSTITUTE, $modx->config['modx_charset'], false);
 				break;
             case 'settings_version':{
                 if($modx->getVersionData('version')!=$data['settings_version']){
