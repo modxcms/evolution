@@ -5,9 +5,6 @@
  */
 class Categories
 {
-    /**
-     * @var DBAPI
-     */
     public $db;
     public $db_tbl = array();
     public $elements = array('templates', 'tmplvars', 'htmlsnippets', 'snippets', 'plugins', 'modules');
@@ -16,7 +13,7 @@ class Categories
     {
         $modx = evolutionCMS();
 
-        $this->db = &$modx->db;
+        $this->db = $modx->getDatabase();
         $this->db_tbl['categories'] = $modx->getFullTableName('categories');
 
         foreach ($this->elements as $element) {
@@ -31,8 +28,8 @@ class Categories
      */
     public function getCategories()
     {
-        $categories = $this->getDatabase()->makeArray(
-            $this->getDatabase()->select(
+        $categories = $this->db->makeArray(
+            $this->db->select(
                 '*',
                 $this->db_tbl['categories'],
                 '1',
@@ -50,11 +47,11 @@ class Categories
      */
     public function getCategory($search, $where = 'category')
     {
-        $category = $this->getDatabase()->getRow(
-            $this->getDatabase()->select(
+        $category = $this->db->getRow(
+            $this->db->select(
                 '*',
                 $this->db_tbl['categories'],
-                "`" . $where . "` = '" . $this->getDatabase()->escape($search) . "'"
+                "`" . $where . "` = '" . $this->db->escape($search) . "'"
             )
         );
 
@@ -69,11 +66,11 @@ class Categories
      */
     public function getCategoryValue($value, $search, $where = 'category')
     {
-        $_value = $this->getDatabase()->getValue(
-            $this->getDatabase()->select(
+        $_value = $this->db->getValue(
+            $this->db->select(
                 '`' . $value . '`',
                 $this->db_tbl['categories'],
-                "`" . $where . "` = '" . $this->getDatabase()->escape($search) . "'"
+                "`" . $where . "` = '" . $this->db->escape($search) . "'"
             )
         );
 
@@ -88,8 +85,8 @@ class Categories
     public function getAssignedElements($category_id, $element)
     {
         if (in_array($element, $this->elements, true)) {
-            $elements = $this->getDatabase()->makeArray(
-                $this->getDatabase()->select(
+            $elements = $this->db->makeArray(
+                $this->db->select(
                     '*',
                     $this->db_tbl[$element],
                     "`category` = '" . (int)$category_id . "'"
@@ -132,19 +129,19 @@ class Categories
     {
         $_update = array('category' => 0);
         foreach ($this->elements as $element) {
-            $this->getDatabase()->update(
+            $this->db->update(
                 $_update,
                 $this->db_tbl[$element],
                 "`category` = '" . (int)$category_id . "'"
             );
         }
 
-        $this->getDatabase()->delete(
+        $this->db->delete(
             $this->db_tbl['categories'],
             "`id` = '" . (int)$category_id . "'"
         );
 
-        return $this->getDatabase()->getAffectedRows() === 1;
+        return $this->db->getAffectedRows() === 1;
     }
 
     /**
@@ -159,17 +156,17 @@ class Categories
         }
 
         $_update = array(
-            'category' => $this->getDatabase()->escape($data['category']),
+            'category' => $this->db->escape($data['category']),
             'rank'     => (int)$data['rank']
         );
 
-        $this->getDatabase()->update(
+        $this->db->update(
             $_update,
             $this->db_tbl['categories'],
             "`id` = '" . (int)$category_id . "'"
         );
 
-        if ($this->getDatabase()->getAffectedRows() === 1) {
+        if ($this->db->getAffectedRows() === 1) {
             return true;
         }
 
@@ -188,17 +185,17 @@ class Categories
         }
 
         $_insert = array(
-            'category' => $this->getDatabase()->escape($category_name),
+            'category' => $this->db->escape($category_name),
             'rank'     => (int)$category_rank
         );
 
-        $this->getDatabase()->insert(
+        $this->db->insert(
             $_insert,
             $this->db_tbl['categories']
         );
 
-        if ($this->getDatabase()->getAffectedRows() === 1) {
-            return $this->getDatabase()->getInsertId();
+        if ($this->db->getAffectedRows() === 1) {
+            return $this->db->getInsertId();
         }
 
         return false;
@@ -210,17 +207,17 @@ class Categories
      */
     public function isCategoryExists($category_name)
     {
-        $category = $this->getDatabase()->escape($category_name);
+        $category = $this->db->escape($category_name);
 
-        $category_id = $this->getDatabase()->getValue(
-            $this->getDatabase()->select(
+        $category_id = $this->db->getValue(
+            $this->db->select(
                 '`id`',
                 $this->db_tbl['categories'],
                 "`category` = '" . $category . "'"
             )
         );
 
-        if ($this->getDatabase()->getAffectedRows() === 1) {
+        if ($this->db->getAffectedRows() === 1) {
             return $category_id;
         }
 

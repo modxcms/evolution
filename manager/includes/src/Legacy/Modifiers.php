@@ -1194,7 +1194,6 @@ class Modifiers implements ModifiersInterface
                 }
                 break;
             case 'datagrid':
-                include_once(MODX_MANAGER_PATH . 'includes/controls/datagrid.class.php');
                 $grd = new DataGrid(null, trim($value));
                 $grd->itemStyle = '';
                 $grd->altItemStyle = '';

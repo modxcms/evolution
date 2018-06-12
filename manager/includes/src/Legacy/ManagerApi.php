@@ -391,7 +391,7 @@ class ManagerApi implements ManagerApiInterface
     {
         $modx = evolutionCMS();
         include_once($path);
-        $dp = new DATEPICKER();
+        $dp = new \DATEPICKER();
 
         return $modx->mergeSettingsContent($dp->getDP());
     }
