@@ -1,3 +1,5 @@
 <?php namespace EvolutionCMS\Interfaces;
 
-interface ParameterProviderInterface{}
+interface DataSetPagerInterface
+{
+}

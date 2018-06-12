@@ -53,13 +53,13 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('COUNT(*)', $tbl_site_tmplvars, "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(300);
+            $modx->getManagerApi()->saveFormValues(300);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=300");
         }
         // disallow reserved names
         if (in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'donthit', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu', 'alias_visible'))) {
             $_POST['name'] = '';
-            $modx->manager->saveFormValues(300);
+            $modx->getManagerApi()->saveFormValues(300);
             $modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=300");
         }
 
@@ -116,12 +116,12 @@ switch ($_POST['mode']) {
         // disallow duplicate names for tvs
         $rs = $modx->getDatabase()->select('COUNT(*)', $tbl_site_tmplvars, "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
-            $modx->manager->saveFormValues(300);
+            $modx->getManagerApi()->saveFormValues(300);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
         }
         // disallow reserved names
         if (in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'donthit', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu', 'alias_visible'))) {
-            $modx->manager->saveFormValues(300);
+            $modx->getManagerApi()->saveFormValues(300);
             $modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
         }
 

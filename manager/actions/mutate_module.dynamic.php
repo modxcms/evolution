@@ -2,7 +2,7 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-switch($modx->manager->action) {
+switch($modx->getManagerApi()->action) {
 	case 107:
 		if(!$modx->hasPermission('new_module')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -54,8 +54,8 @@ if(isset($_GET['id'])) {
 	$_SESSION['itemname'] = $_lang["new_module"];
 	$content['wrap'] = '1';
 }
-if($modx->manager->hasFormValues()) {
-	$modx->manager->loadFormValues();
+if($modx->getManagerApi()->hasFormValues()) {
+	$modx->getManagerApi()->loadFormValues();
 }
 
 // Add lock-element JS-Script
@@ -439,7 +439,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	$internal = array();
 	?>
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
 	<h1>
 		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
@@ -528,7 +528,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 					<div class="form-row">
 						<label for="parse_docblock">
-							<input name="parse_docblock" id="parse_docblock" type="checkbox" value="1"<?= ($modx->manager->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?></label>
+							<input name="parse_docblock" id="parse_docblock" type="checkbox" value="1"<?= ($modx->getManagerApi()->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?></label>
 						<small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
 					</div>
 				</div>
@@ -567,7 +567,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['guid'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="guid" type="text" maxlength="32" value="<?= ($modx->manager->action == 107 ? createGUID() : $content['guid']) ?>" class="form-control" onchange="documentDirty=true;" />
+							<input name="guid" type="text" maxlength="32" value="<?= ($modx->getManagerApi()->action == 107 ? createGUID() : $content['guid']) ?>" class="form-control" onchange="documentDirty=true;" />
 							<small class="form-text text-muted"><?= $_lang['import_params_msg'] ?></small>
 						</div>
 					</div>
@@ -589,7 +589,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			</div>
 			<!-- HTML text editor end -->
 		</div>
-		<?php if($modx->manager->action == '108'): ?>
+		<?php if($modx->getManagerApi()->action == '108'): ?>
 			<!-- Dependencies -->
 			<div class="tab-page" id="tabDepend">
 				<h2 class="tab"><?= $_lang['settings_dependencies'] ?></h2>

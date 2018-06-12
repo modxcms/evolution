@@ -1,4 +1,7 @@
-<?php
+<?php namespace EvolutionCMS\Support;
+
+use EvolutionCMS\Interfaces\DataGridInterface;
+
 #
 # DataGrid Class
 # Created By Raymond Irving 15-Feb,2004
@@ -8,9 +11,7 @@
 # -----------------------------------------
 #
 
-$__DataGridCnt = 0;
-
-class DataGrid {
+class DataGrid implements DataGridInterface{
 
 	public $ds; // datasource
     public $id;
@@ -72,12 +73,12 @@ class DataGrid {
      */
     public $cdelim;
 
-    public function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
-		global $__DataGridCnt;
+    public static $dataGridCnt;
 
+    public function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
 		// set id
-		$__DataGridCnt++;
-		$this->id = $this->id ? empty($id) : "dg" . $__DataGridCnt;
+		self::$dataGridCnt++;
+		$this->id = $this->id ? empty($id) : "dg" . self::$dataGridCnt;
 
 		// set datasource
 		$this->ds = $ds;
@@ -168,7 +169,6 @@ class DataGrid {
 				}
 			} else {
 				if(!$this->pager) {
-					include_once dirname(__FILE__) . "/datasetpager.class.php";
 					$this->pager = new DataSetPager($this->id, $this->ds, $this->pageSize, $this->pageNumber);
 					$this->pager->setRenderRowFnc($this); // pass this object
 					$this->pager->cssStyle = $pagerStyle;

@@ -44,12 +44,6 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-
-$autoloader = __DIR__.'/vendor/autoload.php';
-if (file_exists($autoloader) && is_readable($autoloader)) {
-	include_once($autoloader);
-}
-
 if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';

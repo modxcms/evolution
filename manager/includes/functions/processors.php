@@ -293,7 +293,7 @@ if(!function_exists('login')) {
     {
         $modx = evolutionCMS();
 
-        return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
+        return $modx->getPasswordHash()->CheckPassword($givenPassword, $dbasePassword);
     }
 }
 
@@ -309,7 +309,7 @@ if(!function_exists('loginV1')) {
     {
         $modx = evolutionCMS();
 
-        $user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
+        $user_algo = $modx->getManagerApi()->getV1UserHashAlgorithm($internalKey);
 
         if (!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) {
             $modx->config['pwd_hash_algo'] = 'UNCRYPT';
@@ -320,7 +320,7 @@ if(!function_exists('loginV1')) {
             $modx->config['pwd_hash_algo'] = $user_algo;
         }
 
-        if ($dbasePassword != $modx->manager->genV1Hash($givenPassword, $internalKey)) {
+        if ($dbasePassword != $modx->getManagerApi()->genV1Hash($givenPassword, $internalKey)) {
             return false;
         }
 
@@ -361,7 +361,7 @@ if(!function_exists('updateNewHash')) {
         $modx = evolutionCMS();
 
         $field = array();
-        $field['password'] = $modx->phpass->HashPassword($password);
+        $field['password'] = $modx->getPasswordHash()->HashPassword($password);
         $modx->getDatabase()->update($field, '[+prefix+]manager_users', "username='{$username}'");
     }
 }
@@ -650,7 +650,7 @@ if (!function_exists('sendMailMessageForUser')) {
         $param['type'] = 'text';
         $rs = $modx->sendmail($param);
         if (!$rs) {
-            $modx->manager->saveFormValues();
+            $modx->getManagerApi()->saveFormValues();
             $modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
         }
     }
@@ -790,7 +790,7 @@ if (!function_exists('webAlertAndQuit')) {
     {
         global $id, $modx;
         $mode = $_POST['mode'];
-        $modx->manager->saveFormValues($mode);
+        $modx->getManagerApi()->saveFormValues($mode);
         $modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode === $action ? "&id={$id}" : ''));
     }
 }

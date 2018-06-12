@@ -9,7 +9,8 @@ class Core implements Interfaces\CoreInterface
     public $apiVersion = '1.0.0';
 
     /**
-     * @var \MODxMailer
+     * @var Mail
+     * @deprecated use ->getMail()
      * @see /manager/includes/extenders/ex_modxmailer.inc.php
      * @example $this->loadExtension('MODxMailer');
      */
@@ -34,34 +35,39 @@ class Core implements Interfaces\CoreInterface
 
     /**
      * @var \MODIFIERS
+     * @deprecated use ->getModifiers()
      * @see /manager/includes/extenders/ex_modifiers.inc.php
      * @example $this->loadExtension('MODIFIERS');
      */
     public $filter;
 
     /**
-     * @var \EXPORT_SITE
+     * @var Legacy\ExportSite
+     * @deprecated use ->getExportSite()
      * @see /manager/includes/extenders/ex_export_site.inc.php
      * @example $this->loadExtension('EXPORT_SITE');
      */
     public $export;
 
     /**
-     * @var \MakeTable
+     * @var Support\MakeTable
+     * @deprecated use ->getMakeTable
      * @see /manager/includes/extenders/ex_maketable.inc.php
      * @example $this->loadExtension('makeTable');
      */
     public $table;
 
     /**
-     * @var \ManagerAPI
+     * @var Legacy\ManagerApi
+     * @deprecated use ->getManagerApi()
      * @see /manager/includes/extenders/ex_managerapi.inc.php
      * @example $this->loadExtension('ManagerAPI');
      */
     public $manager;
 
     /**
-     * @var \PasswordHash
+     * @var Legacy\PasswordHash
+     * @deprecated use ->getPasswordHash()
      * @see manager/includes/extenders/ex_phpass.inc.php
      * @example $this->loadExtension('phpass');
      */
@@ -160,7 +166,8 @@ class Core implements Interfaces\CoreInterface
     private $q;
     public $decoded_request_uri;
     /**
-     * @var \OldFunctions
+     * @var Legacy\DeprecatedCore
+     * @deprecated use ->getDeprecatedCore()
      */
     public $old;
 
@@ -171,34 +178,49 @@ class Core implements Interfaces\CoreInterface
     private static $instance = null;
 
     private $services;
-    private $parameters;
     private $serviceStore = [];
 
+    /**
+     * @var array
+     * $this->{$key}
+     */
     public $providerAliases = [
         'db' => Interfaces\DatabaseInterface::class,
-        //'mail' => 'MODxMailer', //@TODO
-        'phpcompat' => Interfaces\PhpCompatInterface::class
+        'mail' => Interfaces\MailInterface::class,
+        'phpcompat' => Interfaces\PhpCompatInterface::class,
+        'phpass' => Interfaces\PasswordHashInterface::class,
+        'table' => Interfaces\MakeTableInterface::class,
+        'export' => Interfaces\ExportSiteInerface::class,
+        'manager' => Interfaces\ManagerApiInterface::class,
+        'filter' => Interfaces\ModifiersInterface::class
     ];
 
+    /**
+     * @var array
+     * $this->loadExtension($key)
+     */
     public $extensionAlias = [
         'DBAPI' => Interfaces\DatabaseInterface::class,
-        //'MODxMailer' => '', //@TODO
-        'PHPCOMPAT' => Interfaces\PhpCompatInterface::class
+        'MODxMailer' => Interfaces\MailInterface::class,
+        'PHPCOMPAT' => Interfaces\PhpCompatInterface::class,
+        'phpass' => Interfaces\PasswordHashInterface::class,
+        'makeTable' => Interfaces\MakeTableInterface::class,
+        'EXPORT_SITE' => Interfaces\ExportSiteInerface::class,
+        'ManagerAPI' => Interfaces\ManagerApiInterface::class,
+        'MODIFIERS' => Interfaces\ModifiersInterface::class
     ];
 
     /**
      * @param array $services
      * @param array $parameters
      */
-    public function __construct(array $services = array(), array $parameters = array())
+    public function __construct(array $services = array())
     {
         self::$instance = $this;
-        if (empty($services) && empty($parameters)) {
+        if (empty($services)) {
             $services   = include EVO_SERVICES_FILE;
-            $parameters = include EVO_PARAMETERS_FILE;
         }
         $this->services     =  $services;
-        $this->parameters     =  $parameters;
 
         $this->initialize();
     }
@@ -225,33 +247,7 @@ class Core implements Interfaces\CoreInterface
     {
         return isset($this->services[$name]);
     }
-    /**
-     * {@inheritDoc}
-     */
-    public function getServiceParameter($name)
-    {
-        $tokens  = explode('.', $name);
-        $context = $this->parameters;
-        while (null !== ($token = array_shift($tokens))) {
-            if (!isset($context[$token])) {
-                throw new Exceptions\ParameterNotFoundException('Parameter not found: '.$name);
-            }
-            $context = $context[$token];
-        }
-        return $context;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public function hasServiceParameter($name)
-    {
-        try {
-            $this->getServiceParameter($name);
-        } catch (Exceptions\ParameterNotFoundException $exception) {
-            return false;
-        }
-        return true;
-    }
+
     /**
      * Attempt to create a service.
      *
@@ -287,7 +283,7 @@ class Core implements Interfaces\CoreInterface
     }
 
     private function checkServiceAlias($name){
-        foreach($this->providerAliases as $alias => $interface) {
+        foreach ($this->providerAliases as $alias => $interface) {
             if($name === $interface) {
                 return $alias;
             }
@@ -312,9 +308,6 @@ class Core implements Interfaces\CoreInterface
             if ($argumentDefinition instanceof Interfaces\ServiceProviderInterface) {
                 $argumentServiceName = $argumentDefinition->getName();
                 $arguments[] = $this->getService($argumentServiceName);
-            } elseif ($argumentDefinition instanceof Interfaces\ParameterProviderInterface) {
-                $argumentParameterName = $argumentDefinition->getName();
-                $arguments[] = $this->getServiceParameter($argumentParameterName);
             } else {
                 $arguments[] = $argumentDefinition;
             }
@@ -354,12 +347,75 @@ class Core implements Interfaces\CoreInterface
     }
 
     /**
+     * @return Mail
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getMail()
+    {
+        return $this->getService(Interfaces\MailInterface::class);
+    }
+
+    /**
      * @return Legacy\PhpCompat
      * @throws Exceptions\ServiceNotFoundException
      */
     public function getPhpCompat()
     {
         return $this->getService(Interfaces\PhpCompatInterface::class);
+    }
+
+    /**
+     * @return Legacy\PasswordHash
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getPasswordHash()
+    {
+        return $this->getService(Interfaces\PasswordHashInterface::class);
+    }
+
+    /**
+     * @return Support\MakeTable
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getMakeTable()
+    {
+        return $this->getService(Interfaces\MakeTableInterface::class);
+    }
+
+    /**
+     * @return Legacy\ExportSite
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getExportSite()
+    {
+        return $this->getService(Interfaces\ExportSiteInerface::class);
+    }
+
+    /**
+     * @return mixed
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getDeprecatedCore()
+    {
+        return $this->getService(Interfaces\DeprecatedCoreInterface::class);
+    }
+
+    /**
+     * @return mixed
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getManagerApi()
+    {
+        return $this->getService(Interfaces\ManagerApiInterface::class);
+    }
+
+    /**
+     * @return mixed
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function getModifiers()
+    {
+        return $this->getService(Interfaces\ModifiersInterface::class);
     }
 
     public function initialize()
@@ -388,13 +444,12 @@ class Core implements Interfaces\CoreInterface
 
     /**
      * @param array $services
-     * @param array $parameters
      * @return self
      */
-    public static function getInstance(array $services = array(), array $parameters = array())
+    public static function getInstance(array $services = array())
     {
         if (self::$instance === null) {
-            self::$instance = new self($services, $parameters);
+            self::$instance = new self($services);
         }
         return self::$instance;
     }
@@ -406,8 +461,9 @@ class Core implements Interfaces\CoreInterface
      */
     function __call($method_name, $arguments)
     {
-        include_once(MODX_MANAGER_PATH . 'includes/extenders/deprecated.functions.inc.php');
-        if (method_exists($this->old, $method_name)) {
+        $old = $this->getDeprecatedCore();
+        //////////@TODO LOAD DeprecatedCore
+        if (method_exists($old, $method_name)) {
             $error_type = 1;
         } else {
             $error_type = 3;
@@ -433,8 +489,8 @@ class Core implements Interfaces\CoreInterface
             $msg = implode('<br />', $m);
             $this->logEvent(0, $error_type, $msg, $title);
         }
-        if (method_exists($this->old, $method_name)) {
-            return call_user_func_array(array($this->old, $method_name), $arguments);
+        if (method_exists($old, $method_name)) {
+            return call_user_func_array(array($old, $method_name), $arguments);
         }
     }
 
@@ -3763,48 +3819,47 @@ class Core implements Interfaces\CoreInterface
             $p['body'] = $msg;
         }
 
-        $this->loadExtension('MODxMailer');
         $sendto = (!isset($p['to'])) ? $this->config['emailsender'] : $p['to'];
         $sendto = explode(',', $sendto);
         foreach ($sendto as $address) {
-            list($name, $address) = $this->mail->address_split($address);
-            $this->mail->AddAddress($address, $name);
+            list($name, $address) = $this->getMail()->address_split($address);
+            $this->getMail()->AddAddress($address, $name);
         }
         if (isset($p['cc'])) {
             $p['cc'] = explode(',', $p['cc']);
             foreach ($p['cc'] as $address) {
-                list($name, $address) = $this->mail->address_split($address);
-                $this->mail->AddCC($address, $name);
+                list($name, $address) = $this->getMail()->address_split($address);
+                $this->getMail()->AddCC($address, $name);
             }
         }
         if (isset($p['bcc'])) {
             $p['bcc'] = explode(',', $p['bcc']);
             foreach ($p['bcc'] as $address) {
-                list($name, $address) = $this->mail->address_split($address);
-                $this->mail->AddBCC($address, $name);
+                list($name, $address) = $this->getMail()->address_split($address);
+                $this->getMail()->AddBCC($address, $name);
             }
         }
         if (isset($p['from']) && strpos($p['from'], '<') !== false && substr($p['from'], -1) === '>') {
-            list($p['fromname'], $p['from']) = $this->mail->address_split($p['from']);
+            list($p['fromname'], $p['from']) = $this->getMail()->address_split($p['from']);
         }
-        $this->mail->setFrom(
+        $this->getMail()->setFrom(
             isset($p['from']) ? $p['from'] : $this->config['emailsender'],
             isset($p['fromname']) ? $p['fromname'] : $this->config['site_name']
         );
-        $this->mail->Subject = (!isset($p['subject'])) ? $this->config['emailsubject'] : $p['subject'];
-        $this->mail->Body = $p['body'];
+        $this->getMail()->Subject = (!isset($p['subject'])) ? $this->config['emailsubject'] : $p['subject'];
+        $this->getMail()->Body = $p['body'];
         if (isset($p['type']) && $p['type'] === 'text') {
-            $this->mail->IsHTML(false);
+            $this->getMail()->IsHTML(false);
         }
         if (!is_array($files)) {
             $files = array();
         }
         foreach ($files as $f) {
             if (file_exists(MODX_BASE_PATH . $f) && is_file(MODX_BASE_PATH . $f) && is_readable(MODX_BASE_PATH . $f)) {
-                $this->mail->AddAttachment(MODX_BASE_PATH . $f);
+                $this->getMail()->AddAttachment(MODX_BASE_PATH . $f);
             }
         }
-        return $this->mail->send();
+        return $this->getMail()->send();
     }
 
     /**
@@ -6449,12 +6504,12 @@ class Core implements Interfaces\CoreInterface
         $table = array();
         $table[] = array('REQUEST_URI', $request_uri);
 
-        if ($this->manager->action) {
+        if ($this->getManagerApi()->action) {
             include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
             global $action_list;
-            $actionName = (isset($action_list[$this->manager->action])) ? " - {$action_list[$this->manager->action]}" : '';
+            $actionName = (isset($action_list[$this->getManagerApi()->action])) ? " - {$action_list[$this->getManagerApi()->action]}" : '';
 
-            $table[] = array('Manager action', $this->manager->action . $actionName);
+            $table[] = array('Manager action', $this->getManagerApi()->action . $actionName);
         }
 
         if (preg_match('@^[0-9]+@', $this->documentIdentifier)) {
@@ -6876,8 +6931,7 @@ class Core implements Interfaces\CoreInterface
             $modifiers = trim($modifiers);
         }
 
-        $this->loadExtension('MODIFIERS');
-        return $this->filter->phxFilter($key, $value, $modifiers);
+        return $this->getModifiers()->phxFilter($key, $value, $modifiers);
     }
 
     // End of class.

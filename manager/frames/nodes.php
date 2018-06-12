@@ -35,7 +35,7 @@ $sortParams = array(
 foreach ($sortParams as $param) {
     if (isset($_REQUEST[$param])) {
         $_SESSION[$param] = $_REQUEST[$param];
-        $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+        $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
     }
 }
 

@@ -3,7 +3,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-switch ($modx->manager->action) {
+switch ($modx->getManagerApi()->action) {
     case 78:
         if (!$modx->hasPermission('edit_chunk')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -50,8 +50,8 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] != '' && is_numeric($_REQUEST['id'
     $content['category'] = (int)$_REQUEST['catid'];
 }
 
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
+if ($modx->getManagerApi()->hasFormValues()) {
+    $modx->getManagerApi()->loadFormValues();
 }
 
 if (isset($_POST['which_editor'])) {
@@ -133,7 +133,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         ?>
         <input type="hidden" name="a" value="79" />
         <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>" />
-        <input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
+        <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
 
         <h1>
             <i class="fa fa-th-large"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_htmlsnippet']) ?><i class="fa fa-question-circle help"></i>

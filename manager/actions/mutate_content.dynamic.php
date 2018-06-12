@@ -11,7 +11,7 @@ $add_path = $sd . $sb . $pg;
 /*******************/
 
 // check permissions
-switch($modx->manager->action) {
+switch($modx->getManagerApi()->action) {
 	case 27:
 		if(!$modx->hasPermission('edit_document')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -52,7 +52,7 @@ $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentv
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
-if($modx->manager->action == 27) {
+if($modx->getManagerApi()->action == 27) {
 	//editing an existing document
 	// check permissions on the document
 	$udperms = new EvolutionCMS\Legacy\Permissions();
@@ -105,7 +105,7 @@ if(!empty ($id)) {
 }
 
 // restore saved form
-$formRestored = $modx->manager->loadFormValues();
+$formRestored = $modx->getManagerApi()->loadFormValues();
 if(isset($_REQUEST['newtemplate'])) {
 	$formRestored = true;
 }
@@ -306,7 +306,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			if(documentDirty === true) {
 				if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
 					documentDirty = false;
-					document.mutate.a.value = <?= $modx->manager->action ?>;
+					document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 					document.mutate.newtemplate.value = newTemplate;
 					document.mutate.submit();
 				} else {
@@ -314,7 +314,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				}
 			}
 			else {
-				document.mutate.a.value = <?= $modx->manager->action ?>;
+				document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 				document.mutate.newtemplate.value = newTemplate;
 				document.mutate.submit();
 			}
@@ -344,7 +344,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			}
 
 			documentDirty = false;
-			document.mutate.a.value = <?= $modx->manager->action ?>;
+			document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 			document.mutate.newtemplate.value = newTemplate;
 			document.mutate.which_editor.value = newEditor;
 			document.mutate.submit();
@@ -476,7 +476,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
-		<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+		<?php if ($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 		var lastImageCtrl;
 		var lastFileCtrl;
 
@@ -562,7 +562,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		?>
 		<input type="hidden" name="a" value="5" />
 		<input type="hidden" name="id" value="<?= $content['id'] ?>" />
-		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
+		<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
 		<input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
 		<input type="hidden" name="refresh_preview" value="0" />
 		<input type="hidden" name="newtemplate" value="" />
@@ -576,9 +576,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
 					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
-				    if ($modx->manager->action == '4') {
+				    if ($modx->getManagerApi()->action == '4') {
                         echo $_lang['add_resource'];
-                    } else if ($modx->manager->action == '72') {
+                    } else if ($modx->getManagerApi()->action == '72') {
                         echo $_lang['add_weblink'];
                     } else {
                         echo $_lang['create_resource_title'];
@@ -692,7 +692,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</td>
 								</tr>
 
-								<?php if($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+								<?php if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 
 									<tr>
 										<td><span class="warning"><?= $_lang['weblink'] ?></span>
@@ -832,7 +832,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr></tr>
 								<?php
 								/*
-								if($content['type'] == 'reference' || $modx->manager->action == '72') {
+								if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') {
 									?>
 									<tr>
 										<td colspan="2">
@@ -861,7 +861,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								}*/
 								?>
 
-								<?php if($content['type'] == 'document' || $modx->manager->action == '4') { ?>
+								<?php if($content['type'] == 'document' || $modx->getManagerApi()->action == '4') { ?>
 									<tr>
 										<td colspan="2">
 											<hr>
@@ -886,7 +886,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											</div>
 											<div id="content_body">
 												<?php
-												if(($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
+												if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4') && $use_editor == 1) {
 													$htmlContent = $content['content'];
 													?>
 													<div class="section-editor clearfix">
@@ -913,7 +913,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             $templateVariables = '';
 
-                            if (($content['type'] == 'document' || $modx->manager->action == '4') || ($content['type'] == 'reference' || $modx->manager->action == 72)) {
+                            if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = $default_template;
                                 $group_tvs = empty($modx->config['group_tvs']) ? 0 : (int)$modx->config['group_tvs'];
                                 if (isset ($_REQUEST['newtemplate'])) {
@@ -1207,7 +1207,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 								<?php
 
-								if($_SESSION['mgrRole'] == 1 || $modx->manager->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
+								if($_SESSION['mgrRole'] == 1 || $modx->getManagerApi()->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
 									?>
 									<tr>
 										<td>
@@ -1216,8 +1216,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										</td>
 										<td>
 											<select name="type" class="inputBox" onchange="documentDirty=true;">
-												<option value="document"<?= (($content['type'] == "document" || $modx->manager->action == '85' || $modx->manager->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
-												<option value="reference"<?= (($content['type'] == "reference" || $modx->manager->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
+												<option value="document"<?= (($content['type'] == "document" || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
+												<option value="reference"<?= (($content['type'] == "reference" || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
 											</select>
 										</td>
 									</tr>
@@ -1262,7 +1262,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</tr>
 									<?php
 								} else {
-									if($content['type'] != 'reference' && $modx->manager->action != '72') {
+									if($content['type'] != 'reference' && $modx->getManagerApi()->action != '72') {
 										// non-admin managers creating or editing a document resource
 										?>
 										<input type="hidden" name="contentType" value="<?= (isset($content['contentType']) ? $content['contentType'] : "text/html") ?>" />
@@ -1285,8 +1285,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_folder_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
-										<input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
+										<input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
+										<input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 
@@ -1306,8 +1306,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_richtext_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
-										<input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
+										<input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
+										<input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
@@ -1366,7 +1366,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						$groupsarray = array();
 						$sql = '';
 
-						$documentId = ($modx->manager->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
+						$documentId = ($modx->getManagerApi()->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
 						if($documentId > 0) {
 							// Load up, the permissions from the parent (if new document) or existing document
 							$rs = $modx->getDatabase()->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
@@ -1533,7 +1533,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		storeCurTemplate();
 	</script>
 <?php
-if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager->action == '72') && $use_editor == 1) {
+if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $use_editor == 1) {
 	if(is_array($richtexteditorIds)) {
 		foreach($richtexteditorIds as $editor => $elements) {
 			// invoke OnRichTextEditorInit event

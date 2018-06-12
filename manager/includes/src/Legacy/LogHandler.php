@@ -39,7 +39,7 @@ class LogHandler
     ) {
         $modx = evolutionCMS();
         $this->entry['msg'] = $msg; // writes testmessage to the object
-        $this->entry['action'] = empty($action) ? $modx->manager->action : $action;    // writes the action to the object
+        $this->entry['action'] = empty($action) ? $modx->getManagerApi()->action : $action;    // writes the action to the object
 
         // User Credentials
         $this->entry['internalKey'] = $internalKey == "" ? $modx->getLoginUserID() : $internalKey;

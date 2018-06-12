@@ -1,4 +1,7 @@
-<?php
+<?php namespace EvolutionCMS\Support;
+
+use EvolutionCMS\Interfaces\DataSetPagerInterface;
+
 #
 # DataSetPager Class
 # Created By Raymond Irving 2-Dec,2004
@@ -8,9 +11,7 @@
 # -----------------------------------------
 #
 
-$__DataSetPagerCnt = 0;
-
-class DataSetPager {
+class DataSetPager implements DataSetPagerInterface{
 
 	public $ds; // datasource
     public $pageSize;
@@ -30,15 +31,14 @@ class DataSetPager {
     public $renderRowFncArgs;
     public $renderPagerFnc;
     public $renderPagerFncArgs;
+    public static $dataSetPagerCnt;
 
     public function __construct($id, $ds, $pageSize = 10, $pageNumber = -1) {
 		global $_PAGE; // use view state object
 
-		global $__DataSetPagerCnt;
-
 		// set id
-		$__DataSetPagerCnt++;
-		$this->id = !empty($id) ? $id : "dsp" . $__DataSetPagerCnt;
+		self::$dataSetPagerCnt++;
+		$this->id = !empty($id) ? $id : "dsp" . self::$dataSetPagerCnt;
 
 		// get pagenumber
 		// by setting pager to -1 cause pager to load it's last page number

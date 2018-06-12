@@ -1,13 +1,14 @@
-<?php
-$this->old = new OldFunctions();
+<?php namespace EvolutionCMS\Legacy;
 
-class OldFunctions
+use EvolutionCMS\Interfaces\DeprecatedCoreInterface;
+
+class DeprecatedCore implements DeprecatedCoreInterface
 {
     /**
-     * @deprecated
-     *
-     * return @void
-     */
+    * @deprecated
+    *
+    * return @void
+    */
     public function dbConnect()
     {
         $modx = evolutionCMS();

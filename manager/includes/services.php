@@ -1,69 +1,49 @@
 <?php
-use EvolutionCMS\ParameterProvider;
+global $database_server, $dbase, $database_user, $database_password, $table_prefix, $database_connection_charset, $database_connection_method;
 
 return [
-    EvolutionCMS\Interfaces\DatabaseInterface::class => [
+    EvolutionCMS\Interfaces\DatabaseInterface::class => array(
         'class' => EvolutionCMS\Database::class,
-        'arguments' => [
-            new ParameterProvider('db.server'),
-            new ParameterProvider('db.base'),
-            new ParameterProvider('db.user'),
-            new ParameterProvider('db.password'),
-            new ParameterProvider('db.prefix'),
-            new ParameterProvider('db.charset'),
-            new ParameterProvider('db.method'),
-        ],
-        'calls' => [
-            [
+        'arguments' => array(
+            $database_server,
+            $dbase,
+            $database_user,
+            $database_password,
+            $table_prefix,
+            $database_connection_charset,
+            $database_connection_method,
+        ),
+        'calls' => array(
+            array(
                 'method' => 'query',
-                'arguments' => [
+                'arguments' => array(
                     "SET SQL_MODE = '';"
-                ]
-            ]
-        ]
-    ],
+                )
+            )
+        )
+    ),
     EvolutionCMS\Interfaces\PhpCompatInterface::class => array(
         'class' => EvolutionCMS\Legacy\PhpCompat::class
+    ),
+    EvolutionCMS\Interfaces\MailInterface::class => array(
+        'class' => EvolutionCMS\Mail::class
+    ),
+    EvolutionCMS\Interfaces\PasswordHashInterface::class => array(
+        'class' => EvolutionCMS\Legacy\PasswordHash::class
+    ),
+    EvolutionCMS\Interfaces\MakeTableInterface::class => array(
+        'class' => EvolutionCMS\Support\MakeTable::class
+    ),
+    EvolutionCMS\Interfaces\ExportSiteInerface::class => array(
+        'class' => EvolutionCMS\Legacy\ExportSite::class
+    ),
+    EvolutionCMS\Interfaces\ManagerApiInterface::class => array(
+        'class' => EvolutionCMS\Legacy\ManagerApi::class
+    ),
+    EvolutionCMS\Interfaces\DeprecatedCoreInterface::class => array(
+        'class'=> EvolutionCMS\Legacy\DeprecatedCore::class
+    ),
+    EvolutionCMS\Interfaces\ModifiersInterface::class => array(
+        'class' => EvolutionCMS\Legacy\Modifiers::class
     )
-    /*Evo\Interfaces\ConfigInterface::class => [
-        'class' => Evo\Config::class,
-        'arguments' => [
-            new ParameterProvider('config')
-        ],
-        'calls' => []
-    ],
-    Evo\Interfaces\LoggerInterface::class => [
-        'class' => Evo\Logger::class,
-        'arguments' => [
-            null, null
-        ],
-        'calls' => []
-    ],
-    Evo\Interfaces\SessionInterface::class => [
-        'class' => Evo\Session::class,
-        'arguments' => [
-            new ParameterProvider('session.domain'),
-            new ParameterProvider('session.start')
-        ],
-        'calls' => []
-    ],
-    Evo\Interfaces\SystemEventInterface::class => [
-        'class' => Evo\SystemEvent::class,
-        'arguments' => [],
-        'calls' => []
-    ],
-    Doctrine\Common\Cache\Cache::class => [
-        'class' => Doctrine\Common\Cache\VoidCache::class,
-        'arguments' => [
-            //MODX_BASE_PATH.'assets/cache/data/'
-        ],
-        'calls' => [
-            [
-                'method' => 'setNamespace',
-                'arguments' => [
-                    'site_name'
-                ]
-            ]
-        ]
-    ]*/
 ];

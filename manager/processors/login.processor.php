@@ -9,8 +9,6 @@ include_once(__DIR__ . '/../../index.php');
 $modx->getDatabase()->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
-$modx->loadExtension('ManagerAPI');
-$modx->loadExtension('phpass');
 
 $core_path = MODX_MANAGER_PATH . 'includes/';
 // include_once the language file
@@ -163,7 +161,7 @@ $rt = $modx->invokeEvent('OnManagerAuthentication', array(
 $matchPassword = false;
 if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 	// check user password - local authentication
-	$hashType = $modx->manager->getHashType($dbasePassword);
+	$hashType = $modx->getManagerApi()->getHashType($dbasePassword);
 	if($hashType == 'phpass') {
 		$matchPassword = login($username, $_REQUEST['password'], $dbasePassword);
 	} elseif($hashType == 'md5') {

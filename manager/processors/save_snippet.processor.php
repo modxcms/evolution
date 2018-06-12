@@ -78,7 +78,7 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_snippets'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(23);
+            $modx->getManagerApi()->saveFormValues(23);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
         }
 
@@ -128,7 +128,7 @@ switch ($_POST['mode']) {
         // disallow duplicate names for snippets
         $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
-            $modx->manager->saveFormValues(22);
+            $modx->getManagerApi()->saveFormValues(22);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
         }
 

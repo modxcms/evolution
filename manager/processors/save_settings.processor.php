@@ -65,7 +65,7 @@ if (isset($data) && count($data) > 0) {
 		}
 	}
 	$savethese = array();
-	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
+	$data['sys_files_checksum'] = $modx->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {

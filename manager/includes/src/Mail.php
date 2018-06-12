@@ -1,24 +1,9 @@
-<?php
-/*******************************************************
- *
- * MODxMailer Class extends PHPMailer
- * Created by ZeRo (http://www.petit-power.com/)
- * updated by yama (http://kyms.jp/)
- *
- *******************************************************
- */
+<?php namespace EvolutionCMS;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
-require MODX_MANAGER_PATH . 'includes/controls/phpmailer/Exception.php';
-require MODX_MANAGER_PATH . 'includes/controls/phpmailer/PHPMailer.php';
-require MODX_MANAGER_PATH . 'includes/controls/phpmailer/SMTP.php';
-
-/**
- * Class MODxMailer
- */
-class MODxMailer extends PHPMailer
+class Mail extends PHPMailer
 {
     /**
      * @var string
@@ -36,15 +21,13 @@ class MODxMailer extends PHPMailer
     public $PluginDir;
 
     /**
-     * @var DocumentParser $modx
+     * @var Core $modx
      */
     protected $modx;
 
-    /**
-     * @param DocumentParser $modx
-     */
-    public function init(DocumentParser $modx)
+    public function init()
     {
+        $modx = evolutionCMS();
         $this->modx = $modx;
         $this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
 

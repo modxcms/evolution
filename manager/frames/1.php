@@ -453,10 +453,10 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         );
         foreach ($sortParams as $param) {
             if (isset($_REQUEST[$param])) {
-                $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+                $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
                 $_SESSION[$param] = $_REQUEST[$param];
             } else if (!isset($_SESSION[$param])) {
-                $_SESSION[$param] = $modx->manager->getLastUserSetting($param);
+                $_SESSION[$param] = $modx->getManagerApi()->getLastUserSetting($param);
             }
         }
         ?>

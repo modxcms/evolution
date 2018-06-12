@@ -1,6 +1,8 @@
-<?php
+<?php namespace EvolutionCMS\Legacy;
 
-class EXPORT_SITE
+use EvolutionCMS\Interfaces\ExportSiteInerface;
+
+class ExportSite implements ExportSiteInerface
 {
     /**
      * @var string

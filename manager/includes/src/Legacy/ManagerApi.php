@@ -1,14 +1,16 @@
-<?php
+<?php namespace EvolutionCMS\Legacy;
+
+use EvolutionCMS\Interfaces\ManagerApiInterface;
 /*
  * MODX Manager API Class
  * Written by Raymond Irving 2005
  *
  */
 
-global $_PAGE; // page view state object. Usage $_PAGE['vs']['propertyname'] = $value;
+//global $_PAGE; // page view state object. Usage $_PAGE['vs']['propertyname'] = $value;
 
 // Content manager wrapper class
-class ManagerAPI
+class ManagerApi implements ManagerApiInterface
 {
     /**
      * @var string

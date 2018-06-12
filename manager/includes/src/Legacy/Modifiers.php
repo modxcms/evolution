@@ -1,8 +1,9 @@
-<?php
+<?php namespace EvolutionCMS\Legacy;
 
-if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_MANAGER_PATH.'includes/');
+use EvolutionCMS\Interfaces\ModifiersInterface;
+use DataGrid;
 
-class MODIFIERS {
+class Modifiers implements ModifiersInterface{
     /**
      * @var array
      */
@@ -384,7 +385,7 @@ class MODIFIERS {
             case 'preg':
             case 'preg_match':
             case 'isinrole':
-            $this->condition[] = (int)(preg_match($opt,$value));break;
+                $this->condition[] = (int)(preg_match($opt,$value));break;
             case 'ir':
             case 'memberof':
             case 'mo':
@@ -540,7 +541,7 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $wrapat = (int)$opt > 0 ? (int)$opt : 70;
+                $wrapat = (int)$opt > 0 ? (int)$opt : 70;
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
                 else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
@@ -632,12 +633,12 @@ class MODIFIERS {
                 if($value!=='') return sprintf($opt,$value);
                 break;
             case 'number_format':
-                    if($opt=='') $opt = 0;
-                    return number_format($value,$opt);
+                if($opt=='') $opt = 0;
+                return number_format($value,$opt);
             case 'money_format':
-                    setlocale(LC_MONETARY,setlocale(LC_TIME,0));
-                    if($value!=='') return money_format($opt,(double)$value);
-                    break;
+                setlocale(LC_MONETARY,setlocale(LC_TIME,0));
+                if($value!=='') return money_format($opt,(double)$value);
+                break;
             case 'tobool':
                 return boolval($value);
             case 'nl2lf':
@@ -657,7 +658,7 @@ class MODIFIERS {
                     else               $opt = true;
                 }
                 elseif(isset($modx->config['mce_element_format'])&&$modx->config['mce_element_format']==='html')
-                                       $opt = false;
+                    $opt = false;
                 else                   $opt = true;
                 return nl2br($value,$opt);
             case 'ltrim':
@@ -935,7 +936,7 @@ class MODIFIERS {
             case 'getimage':
                 return $this->includeMdfFile('getimage');
             case 'nicesize':
-                    return $modx->nicesize($value);
+                return $modx->nicesize($value);
             case 'googlemap':
             case 'googlemaps':
                 if(empty($opt)) $opt = 'border:none;width:500px;height:350px;';
@@ -1060,7 +1061,7 @@ class MODIFIERS {
         else return false;
 
         if($php===false && $html===false && $value!==''
-           && (strpos($cmd,'[+value+]')!==false || strpos($cmd,$self)!==false))
+            && (strpos($cmd,'[+value+]')!==false || strpos($cmd,$self)!==false))
         {
             $value = str_replace(array('[+value+]',$self),$value,$cmd);
         }
@@ -1080,7 +1081,7 @@ class MODIFIERS {
         {
             $bt = $content;
             if(strpos($content,'[*')!==false && $modx->documentIdentifier)
-                                              $content = $modx->mergeDocumentContent($content);
+                $content = $modx->mergeDocumentContent($content);
             if(strpos($content,'[(')!==false) $content = $modx->mergeSettingsContent($content);
             if(strpos($content,'{{')!==false) $content = $modx->mergeChunkContent($content);
             if(strpos($content,'[!')!==false) $content = str_replace(array('[!','!]'),array('[[',']]'),$content);

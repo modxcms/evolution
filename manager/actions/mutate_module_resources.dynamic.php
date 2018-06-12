@@ -21,7 +21,7 @@ $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
 // initialize page view state - the $_PAGE object
-$modx->manager->initPageViewState();
+$modx->getManagerApi()->initPageViewState();
 
 // check to see the  editor isn't locked
 $rs = $modx->getDatabase()->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='" . $modx->getLoginUserID() . "'");

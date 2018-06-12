@@ -70,7 +70,7 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(107);
+            $modx->getManagerApi()->saveFormValues(107);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
         }
 
@@ -128,7 +128,7 @@ switch ($_POST['mode']) {
         // disallow duplicate names for new modules
         $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
-            $modx->manager->saveFormValues(108);
+            $modx->getManagerApi()->saveFormValues(108);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
         }
 

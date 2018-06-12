@@ -68,8 +68,6 @@ $_SESSION['itemname'] = $content['pagetitle'];
 $maxpageSize = $modx->config['number_of_results'];
 define('MAX_DISPLAY_RECORDS_NUM', $maxpageSize);
 
-$modx->loadExtension('makeTable');
-
 // Get child document count
 $rs = $modx->getDatabase()->select('count(DISTINCT sc.id)', "{$tbl_site_content} AS sc
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.parent='{$content['id']}' AND ({$access})");
@@ -80,7 +78,7 @@ $dir = isset($_REQUEST['dir']) ? $_REQUEST['dir'] : 'DESC';
 
 // Get child documents (with paging)
 $rs = $modx->getDatabase()->select('DISTINCT sc.*', "{$tbl_site_content} AS sc
-		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.parent='{$content['id']}' AND ({$access})", "{$sort} {$dir}", $modx->table->handlePaging() // add limit clause
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.parent='{$content['id']}' AND ({$access})", "{$sort} {$dir}", $modx->getMakeTable()->handlePaging() // add limit clause
 );
 $filter_sort = '';
 $filter_dir = '';
@@ -107,11 +105,11 @@ if($numRecords > 0) {
 	);
 
 
-	$modx->table->setTableClass($tableClass);
-	$modx->table->setColumnHeaderClass($columnHeaderClass);
-	//	$modx->table->setRowHeaderClass($rowHeaderClass);
-	//	$modx->table->setRowRegularClass($rowRegularClass);
-	//	$modx->table->setRowAlternateClass($rowAlternateClass);
+	$modx->getMakeTable()->setTableClass($tableClass);
+	$modx->getMakeTable()->setColumnHeaderClass($columnHeaderClass);
+	//	$modx->getMakeTable()->setRowHeaderClass($rowHeaderClass);
+	//	$modx->getMakeTable()->setRowRegularClass($rowRegularClass);
+	//	$modx->getMakeTable()->setRowAlternateClass($rowAlternateClass);
 
 	// Table header
 	$listTableHeader = array(
@@ -130,7 +128,7 @@ if($numRecords > 0) {
 		'1%',
 		'1%'
 	);
-	$modx->table->setColumnWidths($tbWidth);
+	$modx->getMakeTable()->setColumnWidths($tbWidth);
 
 	$sd = isset($_REQUEST['dir']) ? '&amp;dir=' . $_REQUEST['dir'] : '&amp;dir=DESC';
 	$sb = isset($_REQUEST['sort']) ? '&amp;sort=' . $_REQUEST['sort'] : '&amp;sort=createdon';
@@ -208,8 +206,8 @@ if($numRecords > 0) {
 		);
 	}
 
-	$modx->table->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
-	$children_output = $modx->table->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
+	$modx->getMakeTable()->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
+	$children_output = $modx->getMakeTable()->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
 } else {
 	// No Child documents
 	$children_output = '<div class="container"><p>' . $_lang['resources_in_container_no'] . '</p></div>';

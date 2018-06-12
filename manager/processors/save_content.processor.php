@@ -109,10 +109,10 @@ if ($friendly_urls) {
         }
         if ($docid > 0) {
             if ($actionToTake == 'edit') {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->manager->saveFormValues(4);
+                $modx->getManagerApi()->saveFormValues(4);
                 $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
             }
         }
@@ -125,10 +125,10 @@ if ($friendly_urls) {
         $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
         if ($docid > 0) {
             if ($actionToTake == 'edit') {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->manager->saveFormValues(4);
+                $modx->getManagerApi()->saveFormValues(4);
                 $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
             }
         }
@@ -179,10 +179,10 @@ if ($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
         $count = $modx->getDatabase()->getValue($rs);
         if ($count == 0) {
             if ($actionToTake == 'edit') {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
             } else {
-                $modx->manager->saveFormValues(4);
+                $modx->getManagerApi()->saveFormValues(4);
                 $modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=4");
             }
         }
@@ -263,10 +263,10 @@ if ($use_udperms == 1) {
 
         if (!$udperms->checkPermissions()) {
             if ($actionToTake == 'edit') {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->manager->saveFormValues(4);
+                $modx->getManagerApi()->saveFormValues(4);
                 $modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=4");
             }
         }
@@ -449,16 +449,16 @@ switch ($actionToTake) {
             $doctype = $existingDocument['type'];
 
             if ($id == $site_start && $published == 0) {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
             }
             $today = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
             if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
             }
             if ($parent == $id) {
-                $modx->manager->saveFormValues(27);
+                $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit("Document can not be it's own parent!");
             }
 

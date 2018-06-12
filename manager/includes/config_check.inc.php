@@ -6,9 +6,9 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 // PROCESSOR FIRST
 if($_SESSION['mgrRole'] == 1) {
 	if($_REQUEST['b'] == 'resetSysfilesChecksum' && $modx->hasPermission('settings')) {
-		$current = $modx->manager->getSystemChecksum($modx->config['check_files_onlogin']);
+		$current = $modx->getManagerApi()->getSystemChecksum($modx->config['check_files_onlogin']);
 		if(!empty($current)) {
-			$modx->manager->setSystemChecksum($current);
+			$modx->getManagerApi()->setSystemChecksum($current);
 			$modx->clearCache('full');
 			$modx->config['sys_files_checksum'] = $current;
 		};
@@ -18,7 +18,7 @@ if($_SESSION['mgrRole'] == 1) {
 // NOW CHECK CONFIG
 $warningspresent = 0;
 
-$sysfiles_check = $modx->manager->checkSystemChecksum();
+$sysfiles_check = $modx->getManagerApi()->checkSystemChecksum();
 if ($sysfiles_check!=='0'){
       $warningspresent = 1;
       $warnings[] = array($_lang['configcheck_sysfiles_mod']);

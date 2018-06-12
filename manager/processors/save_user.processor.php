@@ -6,8 +6,6 @@ if(!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$modx->loadExtension('phpass');
-
 $tbl_manager_users = $modx->getFullTableName('manager_users');
 $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 $tbl_member_groups = $modx->getFullTableName('member_groups');
@@ -108,7 +106,7 @@ switch($input['mode']) {
 		$internalKey = $modx->getDatabase()->insert(array('username' => $modx->getDatabase()->escape($newusername)), $tbl_manager_users);
 
 		$field = array();
-		$field['password'] = $modx->phpass->HashPassword($newpassword);
+		$field['password'] = $modx->getPasswordHash()->HashPassword($newpassword);
 		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$internalKey}'");
 
 		$field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
@@ -242,7 +240,7 @@ switch($input['mode']) {
 		$field = array();
 		$field['username'] = $modx->getDatabase()->escape($newusername);
 		if($genpassword == 1) {
-			$field['password'] = $modx->phpass->HashPassword($newpassword);
+			$field['password'] = $modx->getPasswordHash()->HashPassword($newpassword);
 		}
 		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$id}'");
 		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');

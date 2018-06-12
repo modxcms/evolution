@@ -3,7 +3,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-switch ($modx->manager->action) {
+switch ($modx->getManagerApi()->action) {
     case 22:
         if (!$modx->hasPermission('edit_snippet')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -53,8 +53,8 @@ if (isset($_GET['id'])) {
     $content['category'] = (int)$_REQUEST['catid'];
 }
 
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
+if ($modx->getManagerApi()->hasFormValues()) {
+    $modx->getManagerApi()->loadFormValues();
 }
 
 $content = array_merge($content, $_POST);
@@ -428,7 +428,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
     $docBlockList = $modx->convertDocBlockIntoList($parsed);
     ?>
     <input type="hidden" name="id" value="<?= $content['id'] ?>">
-    <input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+    <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
     <h1 class="pagetitle">
         <i class="fa fa-code"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_snippet']) ?><i class="fa fa-question-circle help"></i>
@@ -505,7 +505,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <?php endif; ?>
                         <div class="form-row">
                             <label>
-                                <input name="parse_docblock" type="checkbox"<?= ($modx->manager->action == 23 ? ' checked="checked"' : '') ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
+                                <input name="parse_docblock" type="checkbox"<?= ($modx->getManagerApi()->action == 23 ? ' checked="checked"' : '') ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
                             <small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
                         </div>
                     </div>

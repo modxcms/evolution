@@ -66,7 +66,7 @@ switch ($_POST['mode']) {
             $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND disabled='0'");
             $count = $modx->getDatabase()->getValue($rs);
             if ($count > 0) {
-                $modx->manager->saveFormValues(101);
+                $modx->getManagerApi()->saveFormValues(101);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), 'index.php?a=101');
             }
         }
@@ -122,7 +122,7 @@ switch ($_POST['mode']) {
         if ($disabled == '0') {
             $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}' AND disabled='0'");
             if ($modx->getDatabase()->getValue($rs) > 0) {
-                $modx->manager->saveFormValues(102);
+                $modx->getManagerApi()->saveFormValues(102);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
             }
         }

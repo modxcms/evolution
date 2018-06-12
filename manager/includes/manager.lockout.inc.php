@@ -3,7 +3,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-if($modx->manager->action!='8' && isset($_SESSION['mgrValidated'])){
+if($modx->getManagerApi()->action!='8' && isset($_SESSION['mgrValidated'])){
 
     $homeurl = $modx->makeUrl($manager_login_startup>0 ? $manager_login_startup:$site_start);
     $logouturl = MODX_MANAGER_URL.'index.php?a=8';

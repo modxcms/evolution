@@ -48,11 +48,6 @@
  *          content
  */
 
-$autoloader = realpath(__DIR__.'/../vendor/autoload.php');
-if (file_exists($autoloader) && is_readable($autoloader)) {
-	include_once($autoloader);
-}
-
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
@@ -241,7 +236,7 @@ if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 }
 
 // save page to manager object
-$modx->manager->action = $action;
+$modx->getManagerApi()->action = $action;
 
 // attempt to foil some simple types of CSRF attacks
 if (isset($modx->config['validate_referer']) && (int)$modx->config['validate_referer']) {

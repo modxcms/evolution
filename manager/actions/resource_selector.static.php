@@ -154,7 +154,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 
 <form name="selector" method="get">
     <input type="hidden" name="id" value="<?= $id ?>" />
-    <input type="hidden" name="a" value="<?= $modx->manager->action ?>" />
+    <input type="hidden" name="a" value="<?= $modx->getManagerApi()->action ?>" />
     <input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
     <input type="hidden" name="op" value="" />
     <input type="hidden" name="rt" value="<?= $rt ?>" />

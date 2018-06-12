@@ -803,7 +803,7 @@ if (! function_exists('renderFormElement')) {
                     global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->manager->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
                         $field_html .= "
 						<script type=\"text/javascript\">
 							/* <![CDATA[ */
@@ -872,7 +872,7 @@ if (! function_exists('renderFormElement')) {
                     global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->manager->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
                         /* I didn't understand the meaning of the condition above, so I left it untouched ;-) */
                         $field_html .= "
 						<script type=\"text/javascript\">

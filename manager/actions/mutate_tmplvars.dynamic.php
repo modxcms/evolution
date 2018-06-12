@@ -2,10 +2,10 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('edit_template') && $modx->manager->action == '301') {
+if(!$modx->hasPermission('edit_template') && $modx->getManagerApi()->action == '301') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-if(!$modx->hasPermission('new_template') && $modx->manager->action == '300') {
+if(!$modx->hasPermission('new_template') && $modx->getManagerApi()->action == '300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
@@ -47,8 +47,8 @@ if(isset($_GET['id'])) {
 	$content['category'] = (int)$_REQUEST['catid'];
 }
 
-if($modx->manager->hasFormValues()) {
-	$modx->manager->loadFormValues();
+if($modx->getManagerApi()->hasFormValues()) {
+	$modx->getManagerApi()->loadFormValues();
 }
 
 $content = array_merge($content, $_POST);
@@ -287,7 +287,7 @@ if(is_array($evtOut)) {
 	<input type="hidden" name="a" value="302">
 	<input type="hidden" name="or" value="<?= $origin ?>">
 	<input type="hidden" name="oid" value="<?= $originId ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 	<input type="hidden" name="params" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['display_params']) ?>">
 
 	<h1>
@@ -470,7 +470,7 @@ if(is_array($evtOut)) {
 						$insideUl = 1;
 					}
 
-					if($modx->manager->action == '300' && $modx->config['default_template'] == $row['id']) {
+					if($modx->getManagerApi()->action == '300' && $modx->config['default_template'] == $row['id']) {
 						$checked = true;
 					} elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id']) {
 						$checked = true;

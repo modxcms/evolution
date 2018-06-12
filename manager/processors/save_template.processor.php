@@ -45,7 +45,7 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(19);
+            $modx->getManagerApi()->saveFormValues(19);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=19");
         }
 
@@ -98,7 +98,7 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(16);
+            $modx->getManagerApi()->saveFormValues(16);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=16&id={$id}");
         }
 

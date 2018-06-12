@@ -21,8 +21,7 @@ if(strlen($pass1)<6){
     $pass1 = $modx->getPhpCompat()->htmlspecialchars($pass1, ENT_NOQUOTES);
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
-	$modx->loadExtension('phpass');
-	$f['password'] = $modx->phpass->HashPassword($pass1);
+	$f['password'] = $modx->getPasswordHash()->HashPassword($pass1);
 	$modx->getDatabase()->update($f,$tbl_manager_users,"id='{$uid}'");
 
 	// invoke OnManagerChangePassword event

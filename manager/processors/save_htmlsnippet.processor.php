@@ -47,7 +47,7 @@ switch ($_POST['mode']) {
         $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
-            $modx->manager->saveFormValues(77);
+            $modx->getManagerApi()->saveFormValues(77);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
         }
 
@@ -97,7 +97,7 @@ switch ($_POST['mode']) {
         // disallow duplicate names for chunks
         $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
-            $modx->manager->saveFormValues(78);
+            $modx->getManagerApi()->saveFormValues(78);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=78&id={$id}");
         }
 

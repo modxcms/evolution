@@ -3,7 +3,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-switch ((int)$modx->manager->action) {
+switch ((int)$modx->getManagerApi()->action) {
     case 35:
         if (!$modx->hasPermission('edit_role')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -31,7 +31,7 @@ if ($lockedEl = $modx->elementIsLocked(8, $role)) {
 // Lock snippet for other users to edit
 $modx->lockElement(8, $role);
 
-if ($modx->manager->action == '35') {
+if ($modx->getManagerApi()->action == '35') {
     $rs = $modx->getDatabase()->select('*', $tbl_user_roles, "id='{$role}'");
     $roledata = $modx->getDatabase()->getRow($rs);
     if (!$roledata) {
@@ -78,7 +78,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 </script>
 
 <form action="index.php?a=36" method="post" name="userform" enctype="multipart/form-data">
-    <input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+    <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
     <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
 
     <h1>

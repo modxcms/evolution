@@ -158,12 +158,12 @@
 <td>
 <?php
 if(empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
-$phm['e']['BLOWFISH_Y'] = $modx->manager->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
-$phm['e']['BLOWFISH_A'] = $modx->manager->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
-$phm['e']['SHA512']     = $modx->manager->checkHashAlgorithm('SHA512') ? 0:1;
-$phm['e']['SHA256']     = $modx->manager->checkHashAlgorithm('SHA256') ? 0:1;
-$phm['e']['MD5']        = $modx->manager->checkHashAlgorithm('MD5') ? 0:1;
-$phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
+$phm['e']['BLOWFISH_Y'] = $modx->getManagerApi()->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
+$phm['e']['BLOWFISH_A'] = $modx->getManagerApi()->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
+$phm['e']['SHA512']     = $modx->getManagerApi()->checkHashAlgorithm('SHA512') ? 0:1;
+$phm['e']['SHA256']     = $modx->getManagerApi()->checkHashAlgorithm('SHA256') ? 0:1;
+$phm['e']['MD5']        = $modx->getManagerApi()->checkHashAlgorithm('MD5') ? 0:1;
+$phm['e']['UNCRYPT']    = $modx->getManagerApi()->checkHashAlgorithm('UNCRYPT') ? 0:1;
 ?>
 <?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_Y', '', $phm['e']['BLOWFISH_Y']));?><br />
 <?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_A', '', $phm['e']['BLOWFISH_A']));?><br />
