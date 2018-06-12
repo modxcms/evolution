@@ -1112,28 +1112,29 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <div id="templateVariables" class="tab-page tmplvars">
                         <h2 class="tab">' . $_lang['settings_templvars'] . '</h2>
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'templateVariables\'));</script>
-                        
                         <div class="tab-pane" id="paneTemplateVariables">
                             <script type="text/javascript">
                                 tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
                             </script>';
                                     }
-                                    $templateVariables .= $templateVariablesOutput;
-                                    $templateVariables .= '
+                                    if ($templateVariablesOutput) {
+                                        $templateVariables .= $templateVariablesOutput;
+                                        $templateVariables .= '
                                     </table>
                                 </div>' . "\n";
-                                    if ($group_tvs == 1) {
-                                        $templateVariables .= '
+                                        if ($group_tvs == 1) {
+                                            $templateVariables .= '
                             </div>' . "\n";
-                                    } else if ($group_tvs == 2 || $group_tvs == 4) {
-                                        $templateVariables .= '
+                                        } else if ($group_tvs == 2 || $group_tvs == 4) {
+                                            $templateVariables .= '
                             </div>
                         </div>
                     </div>' . "\n";
-                                    } else if ($group_tvs == 3) {
-                                        $templateVariables .= '
+                                        } else if ($group_tvs == 3) {
+                                            $templateVariables .= '
                             </div>
                         </div>' . "\n";
+                                        }
                                     }
                                     $templateVariables .= '
                         <!-- end Template Variables -->' . "\n";
@@ -1141,7 +1142,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             }
 
                             // Template Variables
-                            if ($modx->config['group_tvs'] < 3) {
+                            if ($group_tvs < 3) {
                                 echo $templateVariables;
                             }
                             ?>
