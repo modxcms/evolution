@@ -972,7 +972,7 @@ if ($conn) {
         }
 
         if (! defined('EVO_SERVICES_FILE')) {
-            define('EVO_SERVICES_FILE', __DIR__ . '/services.php');
+            define('EVO_SERVICES_FILE', dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/services.php');
         }
         if (! defined('MODX_CLASS')) {
             define('MODX_CLASS', '\EvolutionCMS\Core');
