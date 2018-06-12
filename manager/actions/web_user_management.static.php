@@ -25,8 +25,7 @@ $_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
 $cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["actions_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["actions_delete"], (!$modx->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
@@ -122,8 +121,7 @@ echo $cm->render();
 					<?php
 					$ds = $modx->getDatabase()->select("wu.id, wu.username, wua.fullname, wua.email, wua.lastlogin, wua.logincount, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 
 			INNER JOIN " . $modx->getFullTableName("web_user_attributes") . " wua ON wua.internalKey=wu.id", ($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '%{$sqlQuery}%')" : ""), 'username');
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";

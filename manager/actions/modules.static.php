@@ -25,8 +25,7 @@ $_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
 $cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['actions_run'], (!$modx->hasPermission('exec_module') ? 1 : 0));
 if ($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') || $modx->hasPermission('delete_module')) {
     $cm->addSeparator();
@@ -125,8 +124,7 @@ echo $cm->render();
             $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
-        include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-        $grd = new DataGrid('', $rs, $number_of_results); // set page size to 0 t show all items
+        $grd = new \EvolutionCMS\Support\DataGrid('', $rs, $number_of_results); // set page size to 0 t show all items
         $grd->noRecordMsg = $_lang["no_records_found"];
         $grd->cssClass = "table data";
         $grd->columnHeaderClass = "tableHeader";

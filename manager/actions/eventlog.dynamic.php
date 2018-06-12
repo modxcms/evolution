@@ -31,8 +31,7 @@ $listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : $_PAGE['vs'][
 $_PAGE['vs']['lm'] = $listmode;
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
 $cm->addItem($_lang['view_log'], "js:menuAction(1)", $_style['actions_preview']);
 $cm->addSeparator();
 $cm->addItem($_lang['delete'], "js:menuAction(2)", $_style['actions_delete'], (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
@@ -128,8 +127,7 @@ echo $cm->render();
 					$ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
 					$grd->pagerClass = '';
 					$grd->pageClass = 'page-item';
 					$grd->selPageClass = 'page-item active';

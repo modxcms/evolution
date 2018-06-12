@@ -451,8 +451,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 break;
 
             case "datagrid":
-                include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-                $grd = new DataGrid('', $value);
+                $grd = new \EvolutionCMS\Support\DataGrid('', $value);
 
                 $grd->noRecordMsg = $params['egmsg'];
 

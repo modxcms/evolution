@@ -25,8 +25,7 @@ $_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
 $cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["actions_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["actions_delete"], (!$modx->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
@@ -130,8 +129,7 @@ echo $cm->render();
 					$ds = $modx->getDatabase()->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getFullTableName('manager_users') . " AS mu 
 			INNER JOIN " . $modx->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
 			LEFT JOIN " . $modx->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, $modx->config['number_of_results']); // set page size to 0 t show all items
+					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, $modx->config['number_of_results']); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";
