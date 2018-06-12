@@ -222,7 +222,7 @@ class site_content_menuDocLister extends site_contentDocLister
                 }
                 $q = $this->dbQuery("SELECT `parent`,COUNT(*) as `count` FROM {$this->getTable('site_content')} WHERE `parent` IN ({$_ids}) AND `published`=1 AND `deleted`=0 GROUP BY `parent`");
                 $_ids = array();
-                while ($row = $this->modx->db->getRow($q)) {
+                while ($row = $this->modx->getDatabase()->getRow($q)) {
                     $_ids[] = $row['parent'];
                     $out[$row['parent']] = $row['count'];
                 }

@@ -2,6 +2,7 @@
 
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
+use EvolutionCMS\Core as DocumentParser;
 /**
  * Class DLTemplate
  */
@@ -311,7 +312,7 @@ class DLTemplate
         $tpl = null;
         $id = (int)$id;
         if ($id > 0) {
-            $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = {$id}");
+            $tpl = $this->modx->getDatabase()->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = {$id}");
         }
         if (is_null($tpl)) {
             $tpl = '[*content*]';

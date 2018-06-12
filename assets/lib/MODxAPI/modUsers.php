@@ -65,11 +65,11 @@ class modUsers extends MODxAPI
 
     /**
      * MODxAPI constructor.
-     * @param DocumentParser $modx
+     * @param EvolutionCMS\Core $modx
      * @param bool $debug
      * @throws Exception
      */
-    public function __construct(DocumentParser $modx, $debug = false)
+    public function __construct(EvolutionCMS\Core $modx, $debug = false)
     {
         $this->setRememberTime(60 * 60 * 24 * 365 * 5);
         parent::__construct($modx, $debug);
@@ -208,7 +208,7 @@ class modUsers extends MODxAPI
             LEFT JOIN {$this->makeTable('web_users')} as user ON user.id=attribute.internalKey
             WHERE {$find}='{$this->escape($id)}'
         ");
-        $this->field = $this->modx->db->getRow($result);
+        $this->field = $this->modx->getDatabase()->getRow($result);
     }
 
     /**
@@ -228,9 +228,9 @@ class modUsers extends MODxAPI
                     session_regenerate_id(false);
                     $value = session_id();
                     if ($mid = $this->modx->getLoginUserID('mgr')) {
-                        $this->modx->db->query("UPDATE {$this->makeTable('active_user_locks')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
-                        $this->modx->db->query("UPDATE {$this->makeTable('active_user_sessions')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
-                        $this->modx->db->query("UPDATE {$this->makeTable('active_users')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
+                        $this->modx->getDatabase()->query("UPDATE {$this->makeTable('active_user_locks')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
+                        $this->modx->getDatabase()->query("UPDATE {$this->makeTable('active_user_sessions')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
+                        $this->modx->getDatabase()->query("UPDATE {$this->makeTable('active_users')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
                     }
                     break;
                 case 'editedon':
@@ -306,7 +306,7 @@ class modUsers extends MODxAPI
         }
 
         if ($this->newDoc) {
-            $this->id = $this->modx->db->getInsertId();
+            $this->id = $this->modx->getDatabase()->getInsertId();
         }
 
         $this->saveQuery($fld);
@@ -317,7 +317,7 @@ class modUsers extends MODxAPI
                 continue;
             }
             $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('web_user_settings')} WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}'");
-            if ($this->modx->db->getRecordCount($result) > 0) {
+            if ($this->modx->getDatabase()->getRecordCount($result) > 0) {
                 $this->query("UPDATE {$this->makeTable('web_user_settings')} SET `setting_value` = '{$value}' WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}';");
             } else {
                 $this->query("INSERT into {$this->makeTable('web_user_settings')} SET `webuser` = {$this->id},`setting_name` = '{$key}',`setting_value` = '{$value}';");
@@ -532,8 +532,8 @@ class modUsers extends MODxAPI
                     $fulltime = (int)$cookie[4];
                 }
                 $this->close();
-                $q = $this->modx->db->query("SELECT id FROM " . $this->makeTable('web_users') . " WHERE md5(username)='{$this->escape($cookie[0])}'");
-                $id = $this->modx->db->getValue($q);
+                $q = $this->modx->getDatabase()->query("SELECT id FROM " . $this->makeTable('web_users') . " WHERE md5(username)='{$this->escape($cookie[0])}'");
+                $id = $this->modx->getDatabase()->getValue($q);
                 if ($this->edit($id)
                     && null !== $this->getID()
                     && $this->get('password') == $cookie[1]
@@ -677,7 +677,7 @@ class modUsers extends MODxAPI
             $sql = "SELECT `uga`.`documentgroup` FROM {$web_groups} as `ug`
                 INNER JOIN {$webgroup_access} as `uga` ON `uga`.`webgroup`=`ug`.`webgroup`
                 WHERE `ug`.`webuser` = " . $user->getID();
-            $out = $this->modx->db->getColumn('documentgroup', $this->query($sql));
+            $out = $this->modx->getDatabase()->getColumn('documentgroup', $this->query($sql));
         }
         unset($user);
 
@@ -699,7 +699,7 @@ class modUsers extends MODxAPI
             $rs = $this->query("SELECT `ug`.`webgroup`, `ugn`.`name` FROM {$web_groups} as `ug`
                 INNER JOIN {$webgroup_names} as `ugn` ON `ugn`.`id`=`ug`.`webgroup`
                 WHERE `ug`.`webuser` = " . $user->getID());
-            while ($row = $this->modx->db->getRow($rs)) {
+            while ($row = $this->modx->getDatabase()->getRow($rs)) {
                 $out[$row['webgroup']] = $row['name'];
             }
         }

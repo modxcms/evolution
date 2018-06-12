@@ -12,6 +12,7 @@
 ####*/
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
+use EvolutionCMS\Core as DocumentParser;
 /**
  * Class DLphx
  */
@@ -470,14 +471,14 @@ class DLphx
                             $snippet = $this->modx->snippetCache[$snippetName];
                         } else {
 // not in cache so let's check the db
-                            $sql = "SELECT snippet FROM " . $this->modx->getFullTableName("site_snippets") . " WHERE " . $this->modx->getFullTableName("site_snippets") . ".name='" . $this->modx->db->escape($snippetName) . "';";
-                            $result = $this->modx->db->query($sql);
-                            if ($this->modx->db->getRecordCount($result) == 1) {
-                                $row = $this->modx->db->getRow($result);
+                            $sql = "SELECT snippet FROM " . $this->modx->getFullTableName("site_snippets") . " WHERE " . $this->modx->getFullTableName("site_snippets") . ".name='" . $this->modx->getDatabase()->escape($snippetName) . "';";
+                            $result = $this->modx->getDatabase()->query($sql);
+                            if ($this->modx->getDatabase()->getRecordCount($result) == 1) {
+                                $row = $this->modx->getDatabase()->getRow($result);
                                 $snippet = $this->modx->snippetCache[$row['name']] = $row['snippet'];
                                 $this->Log("  |--- DB -> Custom Modifier");
                             } else {
-                                if ($this->modx->db->getRecordCount($result) == 0) {
+                                if ($this->modx->getDatabase()->getRecordCount($result) == 0) {
 // If snippet not found, look in the modifiers folder
                                     $filename = $this->modx->config['rb_base_dir'] . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
                                     if (@file_exists($filename)) {
@@ -606,7 +607,7 @@ class DLphx
 
     // Returns the specified field from the user record
     // positive userid = manager, negative integer = webuser
-    
+
 /**
      * @param $userid
      * @param $field
@@ -653,7 +654,7 @@ class DLphx
             $tbl = $this->modx->getFullTableName("webgroup_names");
             $tbl2 = $this->modx->getFullTableName("web_groups");
             $sql = "SELECT `wgn`.`name` FROM {$tbl} `wgn` INNER JOIN {$tbl2} `wg` ON `wg`.`webgroup`=`wgn`.`id` AND `wg`.`webuser`={$userid}";
-            $this->cache["mo"][$userid] = $grpNames = $this->modx->db->getColumn("name", $sql);
+            $this->cache["mo"][$userid] = $grpNames = $this->modx->getDatabase()->getColumn("name", $sql);
         } else {
             $grpNames = $this->cache["mo"][$userid];
         }

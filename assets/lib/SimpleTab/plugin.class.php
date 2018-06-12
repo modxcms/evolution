@@ -1,5 +1,4 @@
-<?php
-namespace SimpleTab;
+<?php namespace SimpleTab;
 
 include_once(MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLTemplate.class.php');
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
@@ -103,9 +102,9 @@ abstract class Plugin
         $roles = isset($this->params['roles']) ? explode(',', $this->params['roles']) : false;
 
         $tplFlag = ($this->checkTemplate && !$templates || ($templates && !in_array(
-            $this->params['template'],
-            $templates
-        )));
+                    $this->params['template'],
+                    $templates
+                )));
 
         $documents = isset($this->params['documents']) ? explode(',', $this->params['documents']) : false;
         $docFlag = ($this->checkId && $tplFlag) ? !($documents && in_array($this->params['id'], $documents)) : $tplFlag;
@@ -190,9 +189,9 @@ abstract class Plugin
                 $ph = $this->getTplPlaceholders();
                 $ph['js'] = $this->renderJS($this->jsListDefault, $ph) . $this->renderJS($this->jsListCustom, $ph);
                 $ph['styles'] = $this->renderJS($this->cssListDefault, $ph) . $this->renderJS(
-                    $this->cssListCustom,
-                    $ph
-                );
+                        $this->cssListCustom,
+                        $ph
+                    );
                 $output = $this->DLTemplate->parseChunk('@CODE:' . $output, $ph);
             }
 
@@ -227,7 +226,7 @@ abstract class Plugin
     {
         $sql = "SHOW TABLES LIKE '{$this->_table}'";
 
-        return $this->modx->db->getRecordCount($this->modx->db->query($sql));
+        return $this->modx->getDatabase()->getRecordCount($this->modx->getDatabase()->query($sql));
     }
 
     /**
@@ -237,7 +236,7 @@ abstract class Plugin
     {
         $sql = '';
 
-        return $this->modx->db->query($sql);
+        return $this->modx->getDatabase()->query($sql);
     }
 
     /**
@@ -248,10 +247,10 @@ abstract class Plugin
     {
         $eventsTable = $this->modx->getFullTableName('system_eventnames');
         foreach ($events as $event) {
-            $result = $this->modx->db->select('`id`', $eventsTable, "`name` = '{$event}'");
-            if (!$this->modx->db->getRecordCount($result)) {
+            $result = $this->modx->getDatabase()->select('`id`', $eventsTable, "`name` = '{$event}'");
+            if (!$this->modx->getDatabase()->getRecordCount($result)) {
                 $sql = "INSERT INTO {$eventsTable} VALUES (NULL, '{$event}', '{$eventsType}', '{$this->pluginName} Events')";
-                if (!$this->modx->db->query($sql)) {
+                if (!$this->modx->getDatabase()->query($sql)) {
                     $this->modx->logEvent(0, 3, "Cannot register {$event} event.", $this->pluginName);
                 }
             }

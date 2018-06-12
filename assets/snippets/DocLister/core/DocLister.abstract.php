@@ -14,6 +14,7 @@ require_once(dirname(dirname(__FILE__)) . "/lib/DLTemplate.class.php");
 require_once(dirname(dirname(__FILE__)) . "/lib/DLCollection.class.php");
 require_once(dirname(dirname(__FILE__)) . "/lib/xnop.class.php");
 
+use EvolutionCMS\Core as DocumentParser;
 /**
  * Class DocLister
  */
@@ -759,7 +760,7 @@ abstract class DocLister
         $out = array();
         foreach ($data as $item) {
             if ($item !== '') {
-                $out[] = $this->modx->db->escape($item);
+                $out[] = $this->modx->getDatabase()->escape($item);
             }
         }
         $q = $quote ? "'" : "";
@@ -1798,7 +1799,7 @@ abstract class DocLister
     public function dbQuery($q)
     {
         $this->debug->debug($q, "query", 1, 'sql');
-        $out = $this->modx->db->query($q);
+        $out = $this->modx->getDatabase()->query($q);
         $this->debug->debugEnd("query");
 
         return $out;

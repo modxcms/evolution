@@ -3,7 +3,8 @@ include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 include_once(MODX_BASE_PATH . 'assets/snippets/DocLister/lib/jsonHelper.class.php');
 include_once(MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLCollection.class.php');
 
-use \Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\Cache;
+use EvolutionCMS\Core as DocumentParser;
 
 /**
  * Class MODxAPIhelpers
@@ -69,7 +70,7 @@ abstract class MODxAPI extends MODxAPIhelpers
 {
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var \DocumentParser
+     * @var DocumentParser
      * @access protected
      */
     protected $modx = null;
@@ -251,7 +252,7 @@ abstract class MODxAPI extends MODxAPIhelpers
             $this->addQuery($SQL);
         }
 
-        return empty($SQL) ? null : $this->modx->db->query($SQL);
+        return empty($SQL) ? null : $this->modx->getDatabase()->query($SQL);
     }
 
     /**
@@ -263,7 +264,7 @@ abstract class MODxAPI extends MODxAPIhelpers
         if (!is_scalar($value)) {
             $value = '';
         } else {
-            $value = $this->modx->db->escape($value);
+            $value = $this->modx->getDatabase()->escape($value);
         }
 
         return $value;
@@ -352,7 +353,8 @@ abstract class MODxAPI extends MODxAPIhelpers
         $IDs = array();
         if ($custom === false) {
             $this->modx->clearCache();
-            $sync = new EvolutionCMS\Cache();
+            include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
+            $sync = new synccache();
             $path = $this->getCachePath(true);
             $sync->setCachepath($path);
             $sync->setReport(false);
@@ -730,7 +732,7 @@ abstract class MODxAPI extends MODxAPIhelpers
 
         if ($where != '') {
             $sql = $this->query("SELECT `" . $this->escape($PK) . "` FROM " . $this->makeTable($table) . " WHERE " . $where);
-            $id = $this->modx->db->getValue($sql);
+            $id = $this->modx->getDatabase()->getValue($sql);
             if (!$id || (!$this->newDoc && $id == $this->getID())) {
                 $flag = true;
             } else {
