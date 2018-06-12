@@ -107,9 +107,9 @@ if(isset($_SESSION['show_logout_reminder'])) {
 }
 
 // Check multiple sessions
-//$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
-//$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
-//$count = $modx->db->getValue($rs);
+//$where = sprintf("internalKey='%s'", $modx->getDatabase()->escape($_SESSION['mgrInternalKey']));
+//$rs = $modx->getDatabase()->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
+//$count = $modx->getDatabase()->getValue($rs);
 /*
 if($count > 1) {
 	$ph['multiple_sessions_msg'] = $modx->parseText($_lang['multiple_sessions_msg'], array(
@@ -161,9 +161,9 @@ $ph['UserInfo'] = $modx->parseText($tpl, array(
 $from = array();
 $from[] = '[+prefix+]active_user_sessions';
 $from[] = " us LEFT JOIN [+prefix+]active_users au ON au.sid=us.sid WHERE au.action <> '8'";
-$rs = $modx->db->select('*', $from, '', 'username ASC, au.sid ASC');
+$rs = $modx->getDatabase()->select('*', $from, '', 'username ASC, au.sid ASC');
 
-if($modx->db->getRecordCount($rs) < 1) {
+if($modx->getDatabase()->getRecordCount($rs) < 1) {
 	$html = '<p>[%no_active_users_found%]</p>';
 } else {
 	include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
@@ -191,7 +191,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 	$userList = array();
 	$userCount = array();
 	// Create userlist with session-count first before output
-	while($activeusers = $modx->db->getRow($rs)) {
+	while($activeusers = $modx->getDatabase()->getRow($rs)) {
 		$userCount[$activeusers['internalKey']] = isset($userCount[$activeusers['internalKey']]) ? $userCount[$activeusers['internalKey']] + 1 : 1;
 
 		$idle = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';

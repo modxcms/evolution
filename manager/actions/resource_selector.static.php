@@ -27,38 +27,38 @@ $sm = strtolower($_REQUEST['sm']);
 
 // get search string
 $query = $_REQUEST['search'];
-$sqlQuery = $modx->db->escape($query);
+$sqlQuery = $modx->getDatabase()->escape($query);
 
 // select SQL
 switch ($rt) {
     case "snip":
         $title = $_lang["snippet"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case "tpl":
         $title = $_lang["template"];
-        $ds = $modx->db->select('id,templatename as name,description', $modx->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
+        $ds = $modx->getDatabase()->select('id,templatename as name,description', $modx->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
         break;
 
     case("tv"):
         $title = $_lang["tv"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("chunk"):
         $title = $_lang["chunk"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("plug"):
         $title = $_lang["plugin"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("doc"):
         $title = $_lang["resource"];
-        $ds = $modx->db->select('id,pagetitle as name,longtitle as description', $modx->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
+        $ds = $modx->getDatabase()->select('id,pagetitle as name,longtitle as description', $modx->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
         break;
 
 }
@@ -154,7 +154,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 
 <form name="selector" method="get">
     <input type="hidden" name="id" value="<?= $id ?>" />
-    <input type="hidden" name="a" value="<?= $modx->manager->action ?>" />
+    <input type="hidden" name="a" value="<?= $modx->getManagerApi()->action ?>" />
     <input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
     <input type="hidden" name="op" value="" />
     <input type="hidden" name="rt" value="<?= $rt ?>" />

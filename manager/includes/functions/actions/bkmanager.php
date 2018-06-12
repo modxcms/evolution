@@ -29,13 +29,13 @@ if(!function_exists('import_sql')) {
             if (empty($sql_entry)) {
                 continue;
             }
-            $rs = $modx->db->query($sql_entry);
+            $rs = $modx->getDatabase()->query($sql_entry);
         }
         restoreSettings($settings);
 
         $modx->clearCache();
 
-        $_SESSION['last_result'] = ($rs !== null) ? null : $modx->db->makeArray($rs);
+        $_SESSION['last_result'] = ($rs !== null) ? null : $modx->getDatabase()->makeArray($rs);
         $_SESSION['result_msg'] = $result_code;
     }
 }
@@ -89,10 +89,10 @@ if(!function_exists('getSettings')) {
         $modx = evolutionCMS();
         $tbl_system_settings = $modx->getFullTableName('system_settings');
 
-        $rs = $modx->db->select('setting_name, setting_value', $tbl_system_settings);
+        $rs = $modx->getDatabase()->select('setting_name, setting_value', $tbl_system_settings);
 
         $settings = array();
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             switch ($row['setting_name']) {
                 case 'rb_base_dir':
                 case 'filemanager_path':
@@ -117,7 +117,7 @@ if(!function_exists('restoreSettings')) {
         $tbl_system_settings = $modx->getFullTableName('system_settings');
 
         foreach ($settings as $k => $v) {
-            $modx->db->update(array('setting_value' => $v), $tbl_system_settings, "setting_name='{$k}'");
+            $modx->getDatabase()->update(array('setting_value' => $v), $tbl_system_settings, "setting_name='{$k}'");
         }
     }
 }

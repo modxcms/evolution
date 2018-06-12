@@ -24,8 +24,8 @@ if(!function_exists('run')) {
         $importstart = $mtime;
 
         if ($_POST['reset'] == 'on') {
-            $modx->db->truncate($tbl_site_content);
-            $modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
+            $modx->getDatabase()->truncate($tbl_site_content);
+            $modx->getDatabase()->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
         }
 
         $parent = (int)$_POST['parent'];
@@ -48,7 +48,7 @@ if(!function_exists('run')) {
 
         // import files
         if (0 < count($files)) {
-            $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+            $modx->getDatabase()->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
             importFiles($parent, $filedir, $files, 'root');
         }
 
@@ -126,16 +126,16 @@ if(!function_exists('importFiles')) {
                         $field['pagetitle'] = $pagetitle;
                         $field['longtitle'] = $pagetitle;
                         $field['description'] = $description;
-                        $field['content'] = $modx->db->escape($content);
+                        $field['content'] = $modx->getDatabase()->escape($content);
                         $field['createdon'] = $date;
                         $field['editedon'] = $date;
-                        $newid = $modx->db->insert($field, $tbl_site_content);
+                        $newid = $modx->getDatabase()->insert($field, $tbl_site_content);
                         if ($newid) {
                             $find = true;
                             echo ' - <span class="success">' . $_lang['import_site_success'] . '</span><br />' . "\n";
                             importFiles($newid, $filedir . $alias . '/', $value, 'sub');
                         } else {
-                            echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->db->getLastError();
+                            echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->getDatabase()->getLastError();
                             exit;
                         }
                     }
@@ -147,13 +147,13 @@ if(!function_exists('importFiles')) {
                     $field['createdon'] = $date;
                     $field['editedon'] = $date;
                     $field['hidemenu'] = '1';
-                    $newid = $modx->db->insert($field, $tbl_site_content);
+                    $newid = $modx->getDatabase()->insert($field, $tbl_site_content);
                     if ($newid) {
                         $find = true;
                         echo ' - <span class="success">' . $_lang['import_site_success'] . '</span><br />' . "\n";
                         importFiles($newid, $filedir . $alias . '/', $value, 'sub');
                     } else {
-                        echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->db->getLastError();
+                        echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->getDatabase()->getLastError();
                         exit;
                     }
                 }
@@ -185,7 +185,7 @@ if(!function_exists('importFiles')) {
                     $field['alias'] = $modx->stripAlias($alias);
                     $field['published'] = $publish_default;
                     $field['parent'] = $parent;
-                    $field['content'] = $modx->db->escape($content);
+                    $field['content'] = $modx->getDatabase()->escape($content);
                     $field['richtext'] = $richtext;
                     $field['template'] = $modx->config['default_template'];
                     $field['searchable'] = $search_default;
@@ -195,11 +195,11 @@ if(!function_exists('importFiles')) {
                     $field['editedon'] = $date;
                     $field['isfolder'] = 0;
                     $field['menuindex'] = ($alias == 'index') ? 0 : 2;
-                    $newid = $modx->db->insert($field, $tbl_site_content);
+                    $newid = $modx->getDatabase()->insert($field, $tbl_site_content);
                     if ($newid) {
                         echo ' - <span class="success">' . $_lang['import_site_success'] . '</span><br />' . "\n";
                     } else {
-                        echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->db->getLastError();
+                        echo '<span class="fail">' . $_lang["import_site_failed"] . "</span> " . $_lang["import_site_failed_db_error"] . $modx->getDatabase()->getLastError();
                         exit;
                     }
 
@@ -208,9 +208,9 @@ if(!function_exists('importFiles')) {
                         $is_site_start = true;
                     }
                     if ($is_site_start == true && $_POST['reset'] == 'on') {
-                        $modx->db->update(array('setting_value' => $newid), $tbl_system_settings,
+                        $modx->getDatabase()->update(array('setting_value' => $newid), $tbl_system_settings,
                             "setting_name='site_start'");
-                        $modx->db->update(array('menuindex' => 0), $tbl_site_content, "id='{$newid}'");
+                        $modx->getDatabase()->update(array('menuindex' => 0), $tbl_site_content, "id='{$newid}'");
                     }
                 }
             }
@@ -335,7 +335,7 @@ if(!function_exists('treatContent')) {
         }
         $content = str_replace('[*content*]', '[ *content* ]', $content);
         $content = trim($content);
-        $pagetitle = $modx->db->escape($pagetitle);
+        $pagetitle = $modx->getDatabase()->escape($pagetitle);
 
         return array(
             $pagetitle,
@@ -354,11 +354,11 @@ if(!function_exists('convertLink')) {
         $modx = evolutionCMS();
         $tbl_site_content = $modx->getFullTableName('site_content');
 
-        $rs = $modx->db->select('id,content', $tbl_site_content);
+        $rs = $modx->getDatabase()->select('id,content', $tbl_site_content);
         $p = array();
         $target = array();
         $dir = '';
-        while ($row = $modx->db->getRow($rs)) {
+        while ($row = $modx->getDatabase()->getRow($rs)) {
             $id = $row['id'];
             $array = explode('<a href=', $row['content']);
             $c = 0;
@@ -408,8 +408,8 @@ if(!function_exists('convertLink')) {
                 $c++;
             }
             $content = implode('', $array);
-            $f['content'] = $modx->db->escape($content);
-            $modx->db->update($f, $tbl_site_content, "id='{$id}'");
+            $f['content'] = $modx->getDatabase()->escape($content);
+            $modx->getDatabase()->update($f, $tbl_site_content, "id='{$id}'");
         }
     }
 }

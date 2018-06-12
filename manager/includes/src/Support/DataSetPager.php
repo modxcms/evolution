@@ -1,4 +1,7 @@
-<?php
+<?php namespace EvolutionCMS\Support;
+
+use EvolutionCMS\Interfaces\DataSetPagerInterface;
+
 #
 # DataSetPager Class
 # Created By Raymond Irving 2-Dec,2004
@@ -8,9 +11,7 @@
 # -----------------------------------------
 #
 
-$__DataSetPagerCnt = 0;
-
-class DataSetPager {
+class DataSetPager implements DataSetPagerInterface{
 
 	public $ds; // datasource
     public $pageSize;
@@ -30,15 +31,14 @@ class DataSetPager {
     public $renderRowFncArgs;
     public $renderPagerFnc;
     public $renderPagerFncArgs;
+    public static $dataSetPagerCnt;
 
     public function __construct($id, $ds, $pageSize = 10, $pageNumber = -1) {
 		global $_PAGE; // use view state object
 
-		global $__DataSetPagerCnt;
-
 		// set id
-		$__DataSetPagerCnt++;
-		$this->id = !empty($id) ? $id : "dsp" . $__DataSetPagerCnt;
+		self::$dataSetPagerCnt++;
+		$this->id = !empty($id) ? $id : "dsp" . self::$dataSetPagerCnt;
 
 		// get pagenumber
 		// by setting pager to -1 cause pager to load it's last page number
@@ -92,14 +92,14 @@ class DataSetPager {
     public function render() {
 		$modx = evolutionCMS(); global $_PAGE;
 
-		$isDataset = $modx->db->isResult($this->ds);
+		$isDataset = $modx->getDatabase()->isResult($this->ds);
 
 		if(!$this->selPageStyle) {
 			$this->selPageStyle = "font-weight:bold";
 		}
 
 		// get total number of rows
-		$tnr = ($isDataset) ? $modx->db->getRecordCount($this->ds) : count($this->ds);
+		$tnr = ($isDataset) ? $modx->getDatabase()->getRecordCount($this->ds) : count($this->ds);
 
 		// render: no records found
 		if($tnr <= 0) {
@@ -172,7 +172,7 @@ class DataSetPager {
 			$fncObject = is_object($fnc);
 			$minitems = (($p - 1) * $this->pageSize) + 1;
 			$maxitems = (($p - 1) * $this->pageSize) + $this->pageSize;
-			while($i <= $maxitems && ($row = ($isDataset) ? $modx->db->getRow($this->ds) : $this->ds[$i - 1])) {
+			while($i <= $maxitems && ($row = ($isDataset) ? $modx->getDatabase()->getRow($this->ds) : $this->ds[$i - 1])) {
 				if($i >= $minitems && $i <= $maxitems) {
 					if($fncObject) {
 						if($args != "") {

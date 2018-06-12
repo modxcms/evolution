@@ -1,18 +1,19 @@
-<?php
-$this->old = new OldFunctions();
+<?php namespace EvolutionCMS\Legacy;
 
-class OldFunctions
+use EvolutionCMS\Interfaces\DeprecatedCoreInterface;
+
+class DeprecatedCore implements DeprecatedCoreInterface
 {
     /**
-     * @deprecated
-     *
-     * return @void
-     */
+    * @deprecated
+    *
+    * return @void
+    */
     public function dbConnect()
     {
         $modx = evolutionCMS();
-        $modx->db->connect();
-        $modx->rs = $modx->db->conn;
+        $modx->getDatabase()->connect();
+        $modx->rs = $modx->getDatabase()->conn;
     }
 
     /**
@@ -25,7 +26,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
 
-        return $modx->db->query($sql);
+        return $modx->getDatabase()->query($sql);
     }
 
     /**
@@ -38,7 +39,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
 
-        return $modx->db->getRecordCount($rs);
+        return $modx->getDatabase()->getRecordCount($rs);
     }
 
     /**
@@ -52,7 +53,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
 
-        return $modx->db->getRow($rs, $mode);
+        return $modx->getDatabase()->getRow($rs, $mode);
     }
 
     /**
@@ -65,7 +66,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
 
-        return $modx->db->getAffectedRows($rs);
+        return $modx->getDatabase()->getAffectedRows($rs);
     }
 
     /**
@@ -78,7 +79,7 @@ class OldFunctions
     {
         $modx = evolutionCMS();
 
-        return $modx->db->getInsertId($rs);
+        return $modx->getDatabase()->getInsertId($rs);
     }
 
     /**
@@ -89,7 +90,7 @@ class OldFunctions
     public function dbClose()
     {
         $modx = evolutionCMS();
-        $modx->db->disconnect();
+        $modx->getDatabase()->disconnect();
     }
 
     /**
@@ -295,7 +296,7 @@ class OldFunctions
     public function webAlert($msg, $url = "")
     {
         $modx = evolutionCMS();
-        $msg = addslashes($modx->db->escape($msg));
+        $msg = addslashes($modx->getDatabase()->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $act = "__WebAlert();";
             $fnc = "function __WebAlert(){" . substr($url, 11) . "};";

@@ -1,4 +1,7 @@
-<?php
+<?php namespace EvolutionCMS\Support;
+
+use EvolutionCMS\Interfaces\DataGridInterface;
+
 #
 # DataGrid Class
 # Created By Raymond Irving 15-Feb,2004
@@ -8,9 +11,7 @@
 # -----------------------------------------
 #
 
-$__DataGridCnt = 0;
-
-class DataGrid {
+class DataGrid implements DataGridInterface{
 
 	public $ds; // datasource
     public $id;
@@ -72,12 +73,12 @@ class DataGrid {
      */
     public $cdelim;
 
-    public function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
-		global $__DataGridCnt;
+    public static $dataGridCnt;
 
+    public function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
 		// set id
-		$__DataGridCnt++;
-		$this->id = $this->id ? empty($id) : "dg" . $__DataGridCnt;
+		self::$dataGridCnt++;
+		$this->id = $this->id ? empty($id) : "dg" . self::$dataGridCnt;
 
 		// set datasource
 		$this->ds = $ds;
@@ -110,7 +111,7 @@ class DataGrid {
 		$this->_alt = 0;
 		$this->_total = 0;
 
-		$this->_isDataset = $modx->db->isResult($this->ds); // if not dataset then treat as array
+		$this->_isDataset = $modx->getDatabase()->isResult($this->ds); // if not dataset then treat as array
 
 		if(!$cssStyle && !$cssClass) {
 			$cssStyle = "style='width:100%;border:1px solid silver;font-family:verdana,arial; font-size:11px;'";
@@ -126,8 +127,8 @@ class DataGrid {
 		}
 
 		if($this->_isDataset && !$this->columns) {
-			$cols = $modx->db->numFields($this->ds);
-			for($i = 0; $i < $cols; $i++) $this->columns .= ($i ? "," : "") . $modx->db->fieldName($this->ds, $i);
+			$cols = $modx->getDatabase()->numFields($this->ds);
+			for($i = 0; $i < $cols; $i++) $this->columns .= ($i ? "," : "") . $modx->getDatabase()->fieldName($this->ds, $i);
 		}
 
 		// start grid
@@ -155,7 +156,7 @@ class DataGrid {
 		$tblColHdr .= "</tr></thead>\n";
 
 		// build rows
-		$rowcount = $this->_isDataset ? $modx->db->getRecordCount($this->ds) : count($this->ds);
+		$rowcount = $this->_isDataset ? $modx->getDatabase()->getRecordCount($this->ds) : count($this->ds);
 		$this->_fieldnames = explode(",", $this->fields);
 		if($rowcount == 0) {
 			$tblRows .= "<tr><td " . $this->_itemStyle . " " . $this->_itemClass . " colspan='" . $this->_colcount . "'>" . $this->noRecordMsg . "</td></tr>\n";
@@ -163,12 +164,11 @@ class DataGrid {
 			// render grid items
 			if($this->pageSize <= 0) {
 				for($r = 0; $r < $rowcount; $r++) {
-					$row = $this->_isDataset ? $modx->db->getRow($this->ds) : $this->ds[$r];
+					$row = $this->_isDataset ? $modx->getDatabase()->getRow($this->ds) : $this->ds[$r];
 					$tblRows .= $this->RenderRowFnc($r + 1, $row);
 				}
 			} else {
 				if(!$this->pager) {
-					include_once dirname(__FILE__) . "/datasetpager.class.php";
 					$this->pager = new DataSetPager($this->id, $this->ds, $this->pageSize, $this->pageNumber);
 					$this->pager->setRenderRowFnc($this); // pass this object
 					$this->pager->cssStyle = $pagerStyle;

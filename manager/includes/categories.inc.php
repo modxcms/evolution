@@ -11,9 +11,9 @@ function newCategory($newCat)
 {
     $modx = evolutionCMS();
     $useTable = $modx->getFullTableName('categories');
-    $categoryId = $modx->db->insert(
+    $categoryId = $modx->getDatabase()->insert(
         array(
-            'category' => $modx->db->escape($newCat),
+            'category' => $modx->getDatabase()->escape($newCat),
         ), $useTable);
     if (!$categoryId) {
         $categoryId = 0;
@@ -31,9 +31,9 @@ function newCategory($newCat)
 function checkCategory($newCat = '')
 {
     $modx = evolutionCMS();
-    $newCat = $modx->db->escape($newCat);
-    $cats = $modx->db->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
-    if ($cat = $modx->db->getValue($cats)) {
+    $newCat = $modx->getDatabase()->escape($newCat);
+    $cats = $modx->getDatabase()->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
+    if ($cat = $modx->getDatabase()->getValue($cats)) {
         return (int)$cat;
     }
 
@@ -65,9 +65,9 @@ function getCategories()
 {
     $modx = evolutionCMS();
     $useTable = $modx->getFullTableName('categories');
-    $cats = $modx->db->select('id, category', $modx->getFullTableName('categories'), '', 'category');
+    $cats = $modx->getDatabase()->select('id, category', $modx->getFullTableName('categories'), '', 'category');
     $resourceArray = array();
-    while ($row = $modx->db->getRow($cats)) {
+    while ($row = $modx->getDatabase()->getRow($cats)) {
         $row['category'] = stripslashes($row['category']);
         $resourceArray[] = $row;
     }
@@ -94,9 +94,9 @@ function deleteCategory($catId = 0)
         );
         foreach ($resetTables as $n => $v) {
             $useTable = $modx->getFullTableName($v);
-            $modx->db->update(array('category' => 0), $useTable, "category='{$catId}'");
+            $modx->getDatabase()->update(array('category' => 0), $useTable, "category='{$catId}'");
         }
         $catTable = $modx->getFullTableName('categories');
-        $modx->db->delete($catTable, "id='{$catId}'");
+        $modx->getDatabase()->delete($catTable, "id='{$catId}'");
     }
 }

@@ -44,7 +44,7 @@ if(!function_exists('makeHTML')) {
                 $sortby = 'sc.' . $_SESSION['tree_sortby'];
         };
 
-        $orderby = $modx->db->escape($sortby . ' ' . $_SESSION['tree_sortdir']);
+        $orderby = $modx->getDatabase()->escape($sortby . ' ' . $_SESSION['tree_sortdir']);
 
         // Folder sorting gets special setup ;) Add menuindex and pagetitle
         if ($_SESSION['tree_sortby'] == 'isfolder') {
@@ -72,15 +72,15 @@ if(!function_exists('makeHTML')) {
         MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess, GROUP_CONCAT(document_group SEPARATOR ',') AS roles";
         $from = "{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id LEFT JOIN {$tblst} st on st.id = sc.template";
         $where = "(parent={$parent}) {$access} GROUP BY sc.id";
-        $result = $modx->db->select($field, $from, $where, $orderby);
-        if ($modx->db->getRecordCount($result) == 0) {
+        $result = $modx->getDatabase()->select($field, $from, $where, $orderby);
+        if ($modx->getDatabase()->getRecordCount($result) == 0) {
             $output .= sprintf('<div><a class="empty">%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer,
                 $_style['tree_deletedpage'], $_lang['empty_folder']);
         }
 
         $nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
 
-        while ($row = $modx->db->getRow($result)) {
+        while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
             $nodetitle = getNodeTitle($nodeNameSource, $row);
             $nodetitleDisplay = $nodetitle;
@@ -144,7 +144,7 @@ if(!function_exists('makeHTML')) {
             $title .= '[+lf+]' . $_lang['resource_opt_richtext'] . ': ' . ($row['richtext'] == 0 ? $_lang['no'] : $_lang['yes']);
             $title .= '[+lf+]' . $_lang['page_data_searchable'] . ': ' . ($row['searchable'] == 0 ? $_lang['no'] : $_lang['yes']);
             $title .= '[+lf+]' . $_lang['page_data_cacheable'] . ': ' . ($row['cacheable'] == 0 ? $_lang['no'] : $_lang['yes']);
-            $title = $modx->htmlspecialchars($title);
+            $title = $modx->getPhpCompat()->htmlspecialchars($title);
             $title = str_replace('[+lf+]', ' &#13;', $title);   // replace line-breaks with empty space as fall-back
 
             $data = array(
@@ -523,7 +523,7 @@ if(!function_exists('getNodeTitle')) {
             default:
                 $nodetitle = $row['pagetitle'];
         }
-        $nodetitle = $modx->htmlspecialchars(str_replace(array(
+        $nodetitle = $modx->getPhpCompat()->htmlspecialchars(str_replace(array(
             "\r\n",
             "\n",
             "\r"
@@ -563,7 +563,7 @@ if(!function_exists('checkIsFolder')) {
     {
         $modx = evolutionCMS();
 
-        return (int)$modx->db->getValue($modx->db->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
+        return (int)$modx->getDatabase()->getValue($modx->getDatabase()->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
     }
 }
 

@@ -44,12 +44,6 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-
-$autoloader = __DIR__.'/vendor/autoload.php';
-if (file_exists($autoloader) && is_readable($autoloader)) {
-	include_once($autoloader);
-}
-
 if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
@@ -107,13 +101,7 @@ if(! isset($database_user) || $database_user==="") {
 startCMSSession();
 
 // initiate a new document parser
-if (isset($coreClass) && class_exists($coreClass)) {
-	$modx = new $coreClass;
-}
-if (!isset($modx) || !($modx instanceof \DocumentParser)) {
-	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = DocumentParser::getInstance();
-}
+$modx = evolutionCMS();
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes

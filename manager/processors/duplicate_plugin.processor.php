@@ -12,13 +12,13 @@ if($id==0) {
 }
 
 // count duplicates
-$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_plugins'), "id='{$id}'"));
-$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_plugins'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_plugins'), "id='{$id}'"));
+$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('name', $modx->getFullTableName('site_plugins'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
 // duplicate Plugin
-$newid = $modx->db->insert(
+$newid = $modx->getDatabase()->insert(
 	array(
 		'name'=>'',
 		'description'=>'',
@@ -31,7 +31,7 @@ $newid = $modx->db->insert(
 	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, '1' AS disabled, moduleguid, plugincode, properties, category", $modx->getFullTableName('site_plugins'), "id='{$id}'"); // Copy from
 
 // duplicate Plugin Event Listeners
-$modx->db->insert(
+$modx->getDatabase()->insert(
 	array(
 		'pluginid'=>'',
 		'evtid'=>'',
@@ -40,7 +40,7 @@ $modx->db->insert(
 	"'{$newid}', evtid, priority", $modx->getFullTableName('site_plugin_events'), "pluginid='{$id}'"); // Copy from
 
 // Set the item name for logger
-$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_plugins'), "id='{$newid}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_plugins'), "id='{$newid}'"));
 $_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new plugin

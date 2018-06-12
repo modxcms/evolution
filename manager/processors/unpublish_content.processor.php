@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 /************webber ********/
-$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
@@ -36,7 +36,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$modx->db->update(
+$modx->getDatabase()->update(
 	array(
 		'published'   => 0,
 		'pub_date'    => 0,

@@ -31,20 +31,20 @@ if (isset($_POST['listSubmitted'])) {
             }
             $key = $reset ? 0 : $key;
             $tmplvar = ltrim($item, 'item_');
-            $modx->db->update(array('rank' => $key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
+            $modx->getDatabase()->update(array('rank' => $key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
         }
     }
     // empty cache
     $modx->clearCache('full');
 }
 
-$rs = $modx->db->select("tv.name AS name, tv.caption AS caption, tv.id AS id, tr.templateid, tr.rank, tm.templatename", "{$tbl_site_tmplvar_templates} AS tr
+$rs = $modx->getDatabase()->select("tv.name AS name, tv.caption AS caption, tv.id AS id, tr.templateid, tr.rank, tm.templatename", "{$tbl_site_tmplvar_templates} AS tr
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id", "tr.templateid='{$id}'", "tr.rank ASC, tv.rank ASC, tv.id ASC");
 
-if ($modx->db->getRecordCount($rs)) {
+if ($modx->getDatabase()->getRecordCount($rs)) {
     $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
-    while ($row = $modx->db->getRow($rs)) {
+    while ($row = $modx->getDatabase()->getRow($rs)) {
         $templatename = $row['templatename'];
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
         $sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';

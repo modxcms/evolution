@@ -19,8 +19,8 @@ if($newParentID < 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
 $parents = $modx->getParentIds($newParentID);
 if (in_array($documentID, $parents))  $modx->webAlertAndQuit($_lang["error_movedocument2"]);
 
-$rs = $modx->db->select('parent', $modx->getFullTableName('site_content'), "id='{$documentID}'");
-$oldparent = $modx->db->getValue($rs);
+$rs = $modx->getDatabase()->select('parent', $modx->getFullTableName('site_content'), "id='{$documentID}'");
+$oldparent = $modx->getDatabase()->getValue($rs);
 
 // check user has permission to move document to chosen location
 
@@ -53,27 +53,27 @@ if (is_array($evtOut) && count($evtOut) > 0){
 
 $children = allChildren($documentID);
 if (!array_search($newParentID, $children)) {
-	$modx->db->update(array(
+	$modx->getDatabase()->update(array(
 		'isfolder' => 1,
 	), $modx->getFullTableName('site_content'), "id='{$newParentID}'");
 
-	$modx->db->update(array(
+	$modx->getDatabase()->update(array(
 		'parent'   => $newParentID,
 		'editedby' => $modx->getLoginUserID(),
 		'editedon' => time(),
 	), $modx->getFullTableName('site_content'), "id='{$documentID}'");
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
-	$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_content'), "parent='{$oldparent}'");
-	$limit = $modx->db->getValue($rs);
+	$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_content'), "parent='{$oldparent}'");
+	$limit = $modx->getDatabase()->getValue($rs);
 
 	if(!$limit>0) {
-		$modx->db->update(array(
+		$modx->getDatabase()->update(array(
 			'isfolder' => 0,
 		), $modx->getFullTableName('site_content'), "id='{$oldparent}'");
 	}
 	// Set the item name for logger
-	$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$documentID}'"));
+	$pagetitle = $modx->getDatabase()->getValue($modx->getDatabase()->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$documentID}'"));
 	$_SESSION['itemname'] = $pagetitle;
 
 	$modx->invokeEvent("onAfterMoveDocument", array (

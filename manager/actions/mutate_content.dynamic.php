@@ -11,7 +11,7 @@ $add_path = $sd . $sb . $pg;
 /*******************/
 
 // check permissions
-switch($modx->manager->action) {
+switch($modx->getManagerApi()->action) {
 	case 27:
 		if(!$modx->hasPermission('edit_document')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -52,7 +52,7 @@ $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentv
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
-if($modx->manager->action == 27) {
+if($modx->getManagerApi()->action == 27) {
 	//editing an existing document
 	// check permissions on the document
 	$udperms = new EvolutionCMS\Legacy\Permissions();
@@ -84,9 +84,9 @@ if(!empty ($id)) {
 	if($docgrp) {
 		$access .= " OR dg.document_group IN ({$docgrp})";
 	}
-	$rs = $modx->db->select('sc.*', "{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id", "sc.id='{$id}' AND ({$access})");
+	$rs = $modx->getDatabase()->select('sc.*', "{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id", "sc.id='{$id}' AND ({$access})");
 	$content = array();
-	$content = $modx->db->getRow($rs);
+	$content = $modx->getDatabase()->getRow($rs);
 	$modx->documentObject = &$content;
 	if(!$content) {
 		$modx->webAlertAndQuit($_lang["access_permission_denied"]);
@@ -105,7 +105,7 @@ if(!empty ($id)) {
 }
 
 // restore saved form
-$formRestored = $modx->manager->loadFormValues();
+$formRestored = $modx->getManagerApi()->loadFormValues();
 if(isset($_REQUEST['newtemplate'])) {
 	$formRestored = true;
 }
@@ -135,8 +135,8 @@ if(!isset ($_REQUEST['id'])) {
 	}
 	if($modx->config['auto_menuindex']) {
 		$pid = (int)$_REQUEST['pid'];
-		$rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
-		$content['menuindex'] = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(*)', $tbl_site_content, "parent='{$pid}'");
+		$content['menuindex'] = $modx->getDatabase()->getValue($rs);
 	} else {
 		$content['menuindex'] = 0;
 	}
@@ -306,7 +306,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			if(documentDirty === true) {
 				if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
 					documentDirty = false;
-					document.mutate.a.value = <?= $modx->manager->action ?>;
+					document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 					document.mutate.newtemplate.value = newTemplate;
 					document.mutate.submit();
 				} else {
@@ -314,7 +314,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				}
 			}
 			else {
-				document.mutate.a.value = <?= $modx->manager->action ?>;
+				document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 				document.mutate.newtemplate.value = newTemplate;
 				document.mutate.submit();
 			}
@@ -344,7 +344,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			}
 
 			documentDirty = false;
-			document.mutate.a.value = <?= $modx->manager->action ?>;
+			document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
 			document.mutate.newtemplate.value = newTemplate;
 			document.mutate.which_editor.value = newEditor;
 			document.mutate.submit();
@@ -476,7 +476,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
-		<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+		<?php if ($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 		var lastImageCtrl;
 		var lastFileCtrl;
 
@@ -562,7 +562,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		?>
 		<input type="hidden" name="a" value="5" />
 		<input type="hidden" name="id" value="<?= $content['id'] ?>" />
-		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
+		<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
 		<input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
 		<input type="hidden" name="refresh_preview" value="0" />
 		<input type="hidden" name="newtemplate" value="" />
@@ -576,9 +576,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
 					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
-				    if ($modx->manager->action == '4') {
+				    if ($modx->getManagerApi()->action == '4') {
                         echo $_lang['add_resource'];
-                    } else if ($modx->manager->action == '72') {
+                    } else if ($modx->getManagerApi()->action == '72') {
                         echo $_lang['add_weblink'];
                     } else {
                         echo $_lang['create_resource_title'];
@@ -608,8 +608,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					if(!empty($parents)) {
 						$where = "FIND_IN_SET(id,'{$parents}') DESC";
-						$rs = $modx->db->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
-						while($row = $modx->db->getRow($rs)) {
+						$rs = $modx->getDatabase()->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
+						while($row = $modx->getDatabase()->getRow($rs)) {
 							$out .= '<li class="breadcrumbs__li">
                                 <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
                                 <span class="breadcrumbs__sep">&gt;</span>
@@ -651,7 +651,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="pagetitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+										<input name="pagetitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 										<script>document.getElementsByName("pagetitle")[0].focus();</script>
 									</td>
 								</tr>
@@ -661,7 +661,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_long_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="longtitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+										<input name="longtitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 									</td>
 								</tr>
 								<tr>
@@ -670,7 +670,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_description_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+										<input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
 									</td>
 								</tr>
 								<tr>
@@ -688,11 +688,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['link_attributes_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="link_attributes" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
+										<input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 
-								<?php if($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+								<?php if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 
 									<tr>
 										<td><span class="warning"><?= $_lang['weblink'] ?></span>
@@ -712,7 +712,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
 									</td>
 									<td valign="top">
-										<textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
+										<textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
 									</td>
 								</tr>
 								<tr>
@@ -726,9 +726,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											<?php
 											$field = "t.templatename, t.selectable, t.id, c.category";
 											$from = "{$tbl_site_templates} AS t LEFT JOIN {$tbl_categories} AS c ON t.category = c.id";
-											$rs = $modx->db->select($field, $from, '', 'c.category, t.templatename ASC');
+											$rs = $modx->getDatabase()->select($field, $from, '', 'c.category, t.templatename ASC');
 											$currentCategory = '';
-											while($row = $modx->db->getRow($rs)) {
+											while($row = $modx->getDatabase()->getRow($rs)) {
 												if($row['selectable'] != 1 && $row['id'] != $content['template']) {
 													continue;
 												};
@@ -763,7 +763,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_menu_title_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="menutitle" type="text" maxlength="255" value="<?= $modx->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
+										<input name="menutitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
@@ -817,8 +817,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											$content['parent'] = 0;
 										}
 										if($parentlookup !== false && is_numeric($parentlookup)) {
-											$rs = $modx->db->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
-											$parentname = $modx->db->getValue($rs);
+											$rs = $modx->getDatabase()->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
+											$parentname = $modx->getDatabase()->getValue($rs);
 											if(!$parentname) {
 												$modx->webAlertAndQuit($_lang["error_no_parent"]);
 											}
@@ -832,7 +832,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr></tr>
 								<?php
 								/*
-								if($content['type'] == 'reference' || $modx->manager->action == '72') {
+								if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') {
 									?>
 									<tr>
 										<td colspan="2">
@@ -861,7 +861,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								}*/
 								?>
 
-								<?php if($content['type'] == 'document' || $modx->manager->action == '4') { ?>
+								<?php if($content['type'] == 'document' || $modx->getManagerApi()->action == '4') { ?>
 									<tr>
 										<td colspan="2">
 											<hr>
@@ -886,11 +886,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											</div>
 											<div id="content_body">
 												<?php
-												if(($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
+												if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4') && $use_editor == 1) {
 													$htmlContent = $content['content'];
 													?>
 													<div class="section-editor clearfix">
-														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($htmlContent) ?></textarea>
+														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($htmlContent) ?></textarea>
 													</div>
 													<?php
 													// Richtext-[*content*]
@@ -899,7 +899,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 													$richtexteditorIds[$modx->config['which_editor']][] = 'ta';
 													$richtexteditorOptions[$modx->config['which_editor']]['ta'] = '';
 												} else {
-													echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
+													echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->getPhpCompat()->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
 												}
 												?>
 											</div>
@@ -913,7 +913,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             $templateVariables = '';
 
-                            if (($content['type'] == 'document' || $modx->manager->action == '4') || ($content['type'] == 'reference' || $modx->manager->action == 72)) {
+                            if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = $default_template;
                                 $group_tvs = empty($modx->config['group_tvs']) ? 0 : (int)$modx->config['group_tvs'];
                                 if (isset ($_REQUEST['newtemplate'])) {
@@ -949,9 +949,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $sort = 'cat.rank,cat.id,' . $sort;
                                 }
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
-                                $rs = $modx->db->select($field, $from, $where, $sort);
-                                if ($modx->db->getRecordCount($rs)) {
-                                    $tvsArray = $modx->db->makeArray($rs, 'name');
+                                $rs = $modx->getDatabase()->select($field, $from, $where, $sort);
+                                if ($modx->getDatabase()->getRecordCount($rs)) {
+                                    $tvsArray = $modx->getDatabase()->makeArray($rs, 'name');
                                     $templateVariablesOutput = '';
                                     $templateVariablesGeneral = '';
 
@@ -1207,7 +1207,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 								<?php
 
-								if($_SESSION['mgrRole'] == 1 || $modx->manager->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
+								if($_SESSION['mgrRole'] == 1 || $modx->getManagerApi()->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
 									?>
 									<tr>
 										<td>
@@ -1216,8 +1216,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										</td>
 										<td>
 											<select name="type" class="inputBox" onchange="documentDirty=true;">
-												<option value="document"<?= (($content['type'] == "document" || $modx->manager->action == '85' || $modx->manager->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
-												<option value="reference"<?= (($content['type'] == "reference" || $modx->manager->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
+												<option value="document"<?= (($content['type'] == "document" || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
+												<option value="reference"<?= (($content['type'] == "reference" || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
 											</select>
 										</td>
 									</tr>
@@ -1262,7 +1262,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</tr>
 									<?php
 								} else {
-									if($content['type'] != 'reference' && $modx->manager->action != '72') {
+									if($content['type'] != 'reference' && $modx->getManagerApi()->action != '72') {
 										// non-admin managers creating or editing a document resource
 										?>
 										<input type="hidden" name="contentType" value="<?= (isset($content['contentType']) ? $content['contentType'] : "text/html") ?>" />
@@ -1285,8 +1285,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_folder_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
-										<input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->manager->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
+										<input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
+										<input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 
@@ -1306,8 +1306,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_richtext_help'] ?>"></i>
 									</td>
 									<td>
-										<input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
-										<input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->manager->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
+										<input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
+										<input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr>
@@ -1366,11 +1366,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						$groupsarray = array();
 						$sql = '';
 
-						$documentId = ($modx->manager->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
+						$documentId = ($modx->getManagerApi()->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
 						if($documentId > 0) {
 							// Load up, the permissions from the parent (if new document) or existing document
-							$rs = $modx->db->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
-							while($currentgroup = $modx->db->getRow($rs)) $groupsarray[] = $currentgroup['document_group'] . ',' . $currentgroup['id'];
+							$rs = $modx->getDatabase()->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
+							while($currentgroup = $modx->getDatabase()->getRow($rs)) $groupsarray[] = $currentgroup['document_group'] . ',' . $currentgroup['id'];
 
 							// Load up the current permissions and names
 							$vs = array(
@@ -1379,10 +1379,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								$documentId
 							);
 							$from = vsprintf("%s AS dgn LEFT JOIN %s AS groups ON groups.document_group=dgn.id AND groups.document='%s'", $vs);
-							$rs = $modx->db->select('dgn.*, groups.id AS link_id', $from, '', 'name');
+							$rs = $modx->getDatabase()->select('dgn.*, groups.id AS link_id', $from, '', 'name');
 						} else {
 							// Just load up the names, we're starting clean
-							$rs = $modx->db->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
+							$rs = $modx->getDatabase()->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
 						}
 
 						// retain selected doc groups between post
@@ -1405,7 +1405,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						$permissions_no = 0; // count permissions the current mgr user doesn't have
 
 						// Loop through the permissions list
-						while($row = $modx->db->getRow($rs)) {
+						while($row = $modx->getDatabase()->getRow($rs)) {
 
 							// Create an inputValue pair (group ID and group link (if it exists))
 							$inputValue = $row['id'] . ',' . ($row['link_id'] ? $row['link_id'] : 'new');
@@ -1444,8 +1444,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								$_SESSION['mgrInternalKey']
 							);
 							$where = vsprintf("mga.membergroup=mg.user_group AND mga.documentgroup=%s AND mg.member=%s", $vs);
-							$rsp = $modx->db->select('COUNT(mg.id)', $from, $where);
-							$count = $modx->db->getValue($rsp);
+							$rsp = $modx->getDatabase()->select('COUNT(mg.id)', $from, $where);
+							$count = $modx->getDatabase()->getValue($rsp);
 							if($count > 0) {
 								++$permissions_yes;
 							} else {
@@ -1533,7 +1533,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		storeCurTemplate();
 	</script>
 <?php
-if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager->action == '72') && $use_editor == 1) {
+if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $use_editor == 1) {
 	if(is_array($richtexteditorIds)) {
 		foreach($richtexteditorIds as $editor => $elements) {
 			// invoke OnRichTextEditorInit event

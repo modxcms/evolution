@@ -39,7 +39,7 @@ class LogHandler
     ) {
         $modx = evolutionCMS();
         $this->entry['msg'] = $msg; // writes testmessage to the object
-        $this->entry['action'] = empty($action) ? $modx->manager->action : $action;    // writes the action to the object
+        $this->entry['action'] = empty($action) ? $modx->getManagerApi()->action : $action;    // writes the action to the object
 
         // User Credentials
         $this->entry['internalKey'] = $internalKey == "" ? $modx->getLoginUserID() : $internalKey;
@@ -85,18 +85,18 @@ class LogHandler
         }
 
         $fields['timestamp'] = time();
-        $fields['internalKey'] = $modx->db->escape($this->entry['internalKey']);
-        $fields['username'] = $modx->db->escape($this->entry['username']);
+        $fields['internalKey'] = $modx->getDatabase()->escape($this->entry['internalKey']);
+        $fields['username'] = $modx->getDatabase()->escape($this->entry['username']);
         $fields['action'] = $this->entry['action'];
         $fields['itemid'] = $this->entry['itemId'];
-        $fields['itemname'] = $modx->db->escape($this->entry['itemName']);
-        $fields['message'] = $modx->db->escape($this->entry['msg']);
+        $fields['itemname'] = $modx->getDatabase()->escape($this->entry['itemName']);
+        $fields['message'] = $modx->getDatabase()->escape($this->entry['msg']);
         $fields['ip'] = $this->getUserIP();
         $fields['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
-        $insert_id = $modx->db->insert($fields, $tbl_manager_log);
+        $insert_id = $modx->getDatabase()->insert($fields, $tbl_manager_log);
         if (!$insert_id) {
-            $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->db->getLastError());
+            $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->getDatabase()->getLastError());
         } else {
             $limit = (isset($modx->config['manager_log_limit'])) ? (int)$modx->config['manager_log_limit'] : 3000;
             $trim = (isset($modx->config['manager_log_trim'])) ? (int)$modx->config['manager_log_trim'] : 100;

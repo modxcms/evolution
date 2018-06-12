@@ -1,7 +1,7 @@
 <?php
-$rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
+$rs = $modx->getDatabase()->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
 
-if ($modx->db->getRecordCount($rs) < 1) {
+if ($modx->getDatabase()->getRecordCount($rs) < 1) {
     return '<tr><td>[%no_activity_message%]</td></tr>';
 }
 $tpl = '<tr>
@@ -32,7 +32,7 @@ $btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id
 $btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
 $output = array();
-while ($ph = $modx->db->getRow($rs)) {
+while ($ph = $modx->getDatabase()->getRow($rs)) {
     $docid = $ph['id'];
     $_ = $modx->getUserInfo($ph['editedby']);
     $ph['username'] = $_['username'];

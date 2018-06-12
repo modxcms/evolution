@@ -13,7 +13,7 @@ if($id==0) {
 
 // check if user has access permission, except admins
 if($_SESSION['mgrRole']!=1){
-	$rs = $modx->db->select(
+	$rs = $modx->getDatabase()->select(
 		'sma.usergroup,mg.member',
 		$modx->getFullTableName("site_module_access")." sma
 			LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
@@ -23,7 +23,7 @@ if($_SESSION['mgrRole']!=1){
 	//attached so permission granted
 	$permissionAccessInt = -1;
 
-	while ($row = $modx->db->getRow($rs)) {
+	while ($row = $modx->getDatabase()->getRow($rs)) {
 		if($row["usergroup"] && $row["member"]) {
 			//if there are permissions and this member has permission, ofcourse
 			//this is granted
@@ -41,8 +41,8 @@ if($_SESSION['mgrRole']!=1){
 }
 
 // get module data
-$rs = $modx->db->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
-$content = $modx->db->getRow($rs);
+$rs = $modx->getDatabase()->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
+$content = $modx->getDatabase()->getRow($rs);
 if(!$content) {
 	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
 }

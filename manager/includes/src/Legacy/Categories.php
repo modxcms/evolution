@@ -5,9 +5,6 @@
  */
 class Categories
 {
-    /**
-     * @var DBAPI
-     */
     public $db;
     public $db_tbl = array();
     public $elements = array('templates', 'tmplvars', 'htmlsnippets', 'snippets', 'plugins', 'modules');
@@ -16,7 +13,7 @@ class Categories
     {
         $modx = evolutionCMS();
 
-        $this->db = &$modx->db;
+        $this->db = $modx->getDatabase();
         $this->db_tbl['categories'] = $modx->getFullTableName('categories');
 
         foreach ($this->elements as $element) {

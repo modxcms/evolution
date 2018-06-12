@@ -12,7 +12,7 @@ if ($id==0) {
 }
 
 /*******ищем родителя чтобы к нему вернуться********/
-$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************ а заодно и путь возврата (сам путь внизу файла) **********/
@@ -46,7 +46,7 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
                         ));
 
 if (count($children)>0) {
-    $modx->db->update(
+    $modx->getDatabase()->update(
         array(
             'deleted'   => 1,
             'deletedby' => $modx->getLoginUserID(),
@@ -71,7 +71,7 @@ if ($unauthorized_page==$id) {
 }
 
 // delete the document.
-$modx->db->update(
+$modx->getDatabase()->update(
     array(
         'deleted'   => 1,
         'deletedby' => $modx->getLoginUserID(),

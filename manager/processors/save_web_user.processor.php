@@ -13,7 +13,7 @@ $tbl_web_groups = $modx->getFullTableName('web_groups');
 $input = $_POST;
 foreach($input as $k => $v) {
 	if($k !== 'comment') {
-		$v = $modx->htmlspecialchars($v, ENT_NOQUOTES);
+		$v = $modx->getPhpCompat()->htmlspecialchars($v, ENT_NOQUOTES);
 	}
 	$input[$k] = $v;
 }
@@ -21,14 +21,14 @@ foreach($input as $k => $v) {
 $id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
-$esc_newusername = $modx->db->escape($newusername);
+$esc_newusername = $modx->getDatabase()->escape($newusername);
 $fullname = $input['fullname'];
 $genpassword = $input['newpassword'];
 $passwordgenmethod = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
 $specifiedpassword = $input['specifiedpassword'];
 $email = trim($input['email']);
-$esc_email = $modx->db->escape($email);
+$esc_email = $modx->getDatabase()->escape($email);
 $oldemail = $input['oldemail'];
 $phone = $input['phone'];
 $mobilephone = $input['mobilephone'];
@@ -62,16 +62,16 @@ if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $
 switch($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(id)', $tbl_web_users, "username='{$esc_newusername}'");
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exist
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			$rs = $modx->db->select('count(id)', $tbl_web_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
-			$limit = $modx->db->getValue($rs);
+			$rs = $modx->getDatabase()->select('count(id)', $tbl_web_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+			$limit = $modx->getDatabase()->getValue($rs);
 			if($limit > 0) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
@@ -101,11 +101,11 @@ switch($input['mode']) {
 		$field = array();
 		$field['username'] = $esc_newusername;
 		$field['password'] = md5($newpassword);
-		$internalKey = $modx->db->insert($field, $tbl_web_users);
+		$internalKey = $modx->getDatabase()->insert($field, $tbl_web_users);
 
 		$field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->db->escape($field);
-		$modx->db->insert($field, $tbl_web_user_attributes);
+		$field = $modx->getDatabase()->escape($field);
+		$modx->getDatabase()->insert($field, $tbl_web_user_attributes);
 
 		// Save User Settings
         saveWebUserSettings($internalKey);
@@ -122,7 +122,7 @@ switch($input['mode']) {
 					$f = array();
 					$f['webgroup'] = (int)$user_groups[$i];
 					$f['webuser'] = $internalKey;
-					$modx->db->insert($f, $tbl_web_groups);
+					$modx->getDatabase()->insert($f, $tbl_web_groups);
 				}
 			}
 		}
@@ -210,16 +210,16 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}' AND id!='{$id}'");
-		$limit = $modx->db->getValue($rs);
+		$rs = $modx->getDatabase()->select('count(id)', $tbl_web_users, "username='{$esc_newusername}' AND id!='{$id}'");
+		$limit = $modx->getDatabase()->getValue($rs);
 		if($limit > 0) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exists
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			$rs = $modx->db->select('count(internalKey)', $tbl_web_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
-			$limit = $modx->db->getValue($rs);
+			$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_web_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
+			$limit = $modx->getDatabase()->getValue($rs);
 			if($limit > 0) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
@@ -237,10 +237,10 @@ switch($input['mode']) {
 		if($genpassword == 1) {
 			$field['password'] = md5($newpassword);
 		}
-		$modx->db->update($field, $tbl_web_users, "id='{$id}'");
+		$modx->getDatabase()->update($field, $tbl_web_users, "id='{$id}'");
 		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->db->escape($field);
-		$modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
+		$field = $modx->getDatabase()->escape($field);
+		$modx->getDatabase()->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
 
 		// Save User Settings
         saveWebUserSettings($id);
@@ -253,13 +253,13 @@ switch($input['mode']) {
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$modx->db->delete($tbl_web_groups, "webuser='{$id}'");
+			$modx->getDatabase()->delete($tbl_web_groups, "webuser='{$id}'");
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['webgroup'] = (int)$user_groups[$i];
 					$field['webuser'] = $id;
-					$modx->db->insert($field, $tbl_web_groups);
+					$modx->getDatabase()->insert($field, $tbl_web_groups);
 				}
 			}
 		}

@@ -75,10 +75,10 @@ class MysqlDumper implements MysqlDumperInterface
         $lf = "\n";
         $tempfile_path = $modx->config['base_path'] . 'assets/backup/temp.php';
 
-        $result = $modx->db->query('SHOW TABLES');
+        $result = $modx->getDatabase()->query('SHOW TABLES');
         $tables = $this->result2Array(0, $result);
         foreach ($tables as $tblval) {
-            $result = $modx->db->query("SHOW CREATE TABLE `{$tblval}`");
+            $result = $modx->getDatabase()->query("SHOW CREATE TABLE `{$tblval}`");
             $createtable[$tblval] = $this->result2Array(1, $result);
         }
 
@@ -91,7 +91,7 @@ class MysqlDumper implements MysqlDumperInterface
         $output .= "# {$lf}";
         $output .= "# Host: {$this->database_server}{$lf}";
         $output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
-        $output .= "# Server version: " . $modx->db->getVersion() . $lf;
+        $output .= "# Server version: " . $modx->getDatabase()->getVersion() . $lf;
         $output .= "# PHP Version: " . phpversion() . $lf;
         $output .= "# Database: `{$this->dbname}`{$lf}";
         $output .= "# Description: " . trim($_REQUEST['backup_title']) . "{$lf}";
@@ -113,7 +113,7 @@ class MysqlDumper implements MysqlDumperInterface
                 }
             }
             if ($callBack === 'snapshot') {
-                if (!preg_match('@^' . $modx->db->config['table_prefix'] . '@', $tblval)) {
+                if (!preg_match('@^' . $modx->getDatabase()->config['table_prefix'] . '@', $tblval)) {
                     continue;
                 }
             }
@@ -129,7 +129,7 @@ class MysqlDumper implements MysqlDumperInterface
             $output .= "{$createtable[$tblval][0]};{$lf}";
             $output .= $lf;
             $output .= "#{$lf}# Dumping data for table `{$tblval}`{$lf}#{$lf}";
-            $result = $modx->db->select('*', $tblval);
+            $result = $modx->getDatabase()->select('*', $tblval);
             $rows = $this->loadObjectList('', $result);
             foreach ($rows as $row) {
                 $insertdump = $lf;
@@ -187,10 +187,10 @@ class MysqlDumper implements MysqlDumperInterface
     {
         $modx = evolutionCMS();
         $array = array();
-        while ($row = $modx->db->getRow($resource, 'num')) {
+        while ($row = $modx->getDatabase()->getRow($resource, 'num')) {
             $array[] = $row[$numinarray];
         }
-        $modx->db->freeResult($resource);
+        $modx->getDatabase()->freeResult($resource);
 
         return $array;
     }
@@ -212,14 +212,14 @@ class MysqlDumper implements MysqlDumperInterface
     {
         $modx = evolutionCMS();
         $array = array();
-        while ($row = $modx->db->getRow($resource, 'object')) {
+        while ($row = $modx->getDatabase()->getRow($resource, 'object')) {
             if ($key) {
                 $array[$row->$key] = $row;
             } else {
                 $array[] = $row;
             }
         }
-        $modx->db->freeResult($resource);
+        $modx->getDatabase()->freeResult($resource);
 
         return $array;
     }

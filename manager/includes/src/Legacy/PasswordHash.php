@@ -1,4 +1,6 @@
-<?php
+<?php namespace EvolutionCMS\Legacy;
+
+use EvolutionCMS\Interfaces\PasswordHashInterface;
 //
 // Portable PHP password hashing framework.
 //
@@ -24,7 +26,7 @@
 // Obviously, since this code is in the public domain, the above are not
 // requirements (there can be none), but merely suggestions.
 //
-class PasswordHash
+class PasswordHash implements PasswordHashInterface
 {
     public $itoa64;
     public $iteration_count_log2;

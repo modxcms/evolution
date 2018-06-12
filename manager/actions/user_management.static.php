@@ -7,7 +7,7 @@ if(!$modx->hasPermission('edit_user')) {
 }
 
 // initialize page view state - the $_PAGE object
-$modx->manager->initPageViewState();
+$modx->getManagerApi()->initPageViewState();
 
 // get and save search string
 if($_REQUEST['op'] == 'reset') {
@@ -15,7 +15,7 @@ if($_REQUEST['op'] == 'reset') {
 	$_PAGE['vs']['search'] = '';
 } else {
 	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-	$sqlQuery = $modx->db->escape($query);
+	$sqlQuery = $modx->getDatabase()->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 
@@ -127,7 +127,7 @@ echo $cm->render();
 					if(!empty($sqlQuery)) {
 						$where .= (empty($where) ? "" : " AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
 					}
-					$ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getFullTableName('manager_users') . " AS mu 
+					$ds = $modx->getDatabase()->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getFullTableName('manager_users') . " AS mu 
 			INNER JOIN " . $modx->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
 			LEFT JOIN " . $modx->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
 					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";

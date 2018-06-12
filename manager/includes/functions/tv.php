@@ -44,14 +44,14 @@ if (! function_exists('ProcessTVCommand')) {
                 case "SELECT" : // selects a record from the cms database
                     $rt = array();
                     $replacementVars = array(
-                        'DBASE'  => $modx->db->config['dbase'],
-                        'PREFIX' => $modx->db->config['table_prefix']
+                        'DBASE'  => $modx->getDatabase()->config['dbase'],
+                        'PREFIX' => $modx->getDatabase()->config['table_prefix']
                     );
                     foreach ($replacementVars as $rvKey => $rvValue) {
                         $modx->setPlaceholder($rvKey, $rvValue);
                     }
                     $param = $modx->mergePlaceholderContent($param);
-                    $rs = $modx->db->query("SELECT $param;");
+                    $rs = $modx->getDatabase()->query("SELECT $param;");
                     $output = $rs;
                     break;
 
@@ -247,7 +247,7 @@ if (! function_exists('getTVDisplayFormat')) {
                             'class' => $params['class'],
                             'src'   => $src,
                             'id'    => ($params['id'] ? $params['id'] : ''),
-                            'alt'   => $modx->htmlspecialchars($params['alttext']),
+                            'alt'   => $modx->getPhpCompat()->htmlspecialchars($params['alttext']),
                             'style' => $params['style']
                         );
                         if (isset($params['align']) && $params['align'] != 'none') {
@@ -325,7 +325,7 @@ if (! function_exists('getTVDisplayFormat')) {
                         // setup the link attributes
                         $attr = array(
                             'href'   => $url,
-                            'title'  => $params['title'] ? $modx->htmlspecialchars($params['title']) : $name,
+                            'title'  => $params['title'] ? $modx->getPhpCompat()->htmlspecialchars($params['title']) : $name,
                             'class'  => $params['class'],
                             'style'  => $params['style'],
                             'target' => $params['target'],
@@ -336,7 +336,7 @@ if (! function_exists('getTVDisplayFormat')) {
                         $attributes .= ' ' . $params['attrib']; // add extra
 
                         // Output the link
-                        $o .= '<a' . rtrim($attributes) . '>' . ($params['text'] ? $modx->htmlspecialchars($params['text']) : $name) . '</a>';
+                        $o .= '<a' . rtrim($attributes) . '>' . ($params['text'] ? $modx->getPhpCompat()->htmlspecialchars($params['text']) : $name) . '</a>';
                     }
                 }
                 break;
@@ -377,7 +377,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $h = $params['h'] ? $params['h'] : '400px';
                 $richtexteditor = $params['edt'] ? $params['edt'] : "";
                 $o = '<div class="MODX_RichTextWidget"><textarea id="' . $id . '" name="' . $id . '" style="width:' . $w . '; height:' . $h . ';">';
-                $o .= $modx->htmlspecialchars($value);
+                $o .= $modx->getPhpCompat()->htmlspecialchars($value);
                 $o .= '</textarea></div>';
                 $replace_richtext = array($id);
                 // setup editors
@@ -575,10 +575,10 @@ if (! function_exists('parseInput')) {
     function parseInput($src, $delim = "||", $type = "string", $columns = true)
     { // type can be: string, array
         $modx = evolutionCMS();
-        if ($modx->db->isResult($src)) {
+        if ($modx->getDatabase()->isResult($src)) {
             // must be a recordset
             $rows = array();
-            while ($cols = $modx->db->getRow($src, 'num')) {
+            while ($cols = $modx->getDatabase()->getRow($src, 'num')) {
                 $rows[] = ($columns) ? $cols : implode(" ", $cols);
             }
 
@@ -665,22 +665,22 @@ if (! function_exists('renderFormElement')) {
 
                 case "text": // handler for regular text boxes
                 case "rawtext"; // non-htmlentity converted text boxes
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
                     break;
                 case "email": // handles email input fields
-                    $field_html .= '<input type="email" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%"/>';
+                    $field_html .= '<input type="email" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%"/>';
                     break;
                 case "number": // handles the input of numbers
-                    $field_html .= '<input type="number" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
+                    $field_html .= '<input type="number" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
                     break;
                 case "textareamini": // handler for textarea mini boxes
-                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->htmlspecialchars($field_value) . '</textarea>';
+                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
                     break;
                 case "textarea": // handler for textarea boxes
                 case "rawtextarea": // non-htmlentity convertex textarea boxes
                 case "htmlarea": // handler for textarea boxes (deprecated)
                 case "richtext": // handler for textarea boxes
-                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . $modx->htmlspecialchars($field_value) . '</textarea>';
+                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
                     break;
                 case "date":
                     $field_id = str_replace(array(
@@ -703,7 +703,7 @@ if (! function_exists('renderFormElement')) {
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($item) . '</option>';
+                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
                     }
                     $field_html .= "</select>";
                     break;
@@ -716,7 +716,7 @@ if (! function_exists('renderFormElement')) {
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($item) . '</option>';
+                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
                     }
                     $field_html .= "</select>";
                     break;
@@ -730,8 +730,8 @@ if (! function_exists('renderFormElement')) {
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue,
-                                $field_value) ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($item) . '</option>';
+                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue,
+                                $field_value) ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
                     }
                     $field_html .= "</select>";
                     break;
@@ -753,7 +753,7 @@ if (! function_exists('renderFormElement')) {
                         }
                     }
                     $field_html .= '</select></td><td>';
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->htmlspecialchars($field_value) . '" width="100" ' . $field_style . ' onchange="documentDirty=true;" /></td></tr></table>';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" width="100" ' . $field_style . ' onchange="documentDirty=true;" /></td></tr></table>';
                     break;
                 case 'checkbox': // handles check boxes
                     $values = !is_array($field_value) ? explode('||', $field_value) : $field_value;
@@ -775,7 +775,7 @@ if (! function_exists('renderFormElement')) {
                         }
                         $checked = in_array($value, $values) ? ' checked="checked"' : '';
                         $param = array(
-                            $modx->htmlspecialchars($value),
+                            $modx->getPhpCompat()->htmlspecialchars($value),
                             $i,
                             $field_id,
                             $checked,
@@ -795,7 +795,7 @@ if (! function_exists('renderFormElement')) {
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<input type="radio" value="' . $modx->htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '" ' . ($itemvalue == $field_value ? 'checked="checked"' : '') . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '" class="radio">' . $item . '</label><br />';
+                        $field_html .= '<input type="radio" value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '" ' . ($itemvalue == $field_value ? 'checked="checked"' : '') . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '" class="radio">' . $item . '</label><br />';
                         $i++;
                     }
                     break;
@@ -803,7 +803,7 @@ if (! function_exists('renderFormElement')) {
                     global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->manager->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
                         $field_html .= "
 						<script type=\"text/javascript\">
 							/* <![CDATA[ */
@@ -872,7 +872,7 @@ if (! function_exists('renderFormElement')) {
                     global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->manager->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
                         /* I didn't understand the meaning of the condition above, so I left it untouched ;-) */
                         $field_html .= "
 						<script type=\"text/javascript\">
@@ -977,7 +977,7 @@ if (! function_exists('renderFormElement')) {
                         '[+field_type+]'   => $field_type,
                         '[+field_id+]'     => $field_id,
                         '[+default_text+]' => $default_text,
-                        '[+field_value+]'  => $modx->htmlspecialchars($field_value),
+                        '[+field_value+]'  => $modx->getPhpCompat()->htmlspecialchars($field_value),
                         '[+field_style+]'  => $field_style,
                     );
                     $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);
@@ -988,7 +988,7 @@ if (! function_exists('renderFormElement')) {
                     break;
 
                 default: // the default handler -- for errors, mostly
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->htmlspecialchars($field_value) . '" ' . $field_style . ' onchange="documentDirty=true;" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' onchange="documentDirty=true;" />';
 
             } // end switch statement
         } else {
@@ -1007,7 +1007,7 @@ if (! function_exists('renderFormElement')) {
                 '[+field_type+]'   => $field_type,
                 '[+field_id+]'     => $field_id,
                 '[+default_text+]' => $default_text,
-                '[+field_value+]'  => $modx->htmlspecialchars($field_value),
+                '[+field_value+]'  => $modx->getPhpCompat()->htmlspecialchars($field_value),
                 '[+field_style+]'  => $field_style,
             );
             $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);
@@ -1032,11 +1032,11 @@ if (! function_exists('ParseIntputOptions')) {
         if (is_array($v)) {
             return $v;
         } else {
-            if ($modx->db->isResult($v)) {
+            if ($modx->getDatabase()->isResult($v)) {
                 /**
                  * @todo May be, should use DBAPI::makeArray($v);
                  */
-                while ($cols = $modx->db->getRow($v, 'num')) {
+                while ($cols = $modx->getDatabase()->getRow($v, 'num')) {
                     $a[] = $cols;
                 }
             } else {
