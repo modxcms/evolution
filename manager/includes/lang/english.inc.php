@@ -710,6 +710,7 @@ $_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
 $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each Event header. The first plugin to execute should go at the top.';
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["purge_plugin"] = 'Purge obsolete plugins';
+$_lang["purge_plugin_confirm"] = 'Are you sure you want to purge obsolete plugins?';
 $_lang["plugin_title"] = 'Create/edit Plugin';
 $_lang["preview"] = 'Preview';
 $_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="javascript:;" onclick="saveRefreshPreview();">Save and Refresh</a> your current changes';
