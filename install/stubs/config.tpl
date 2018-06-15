@@ -14,7 +14,7 @@ $table_prefix = '[+table_prefix+]';
 $lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
-$coreClass = '\EvolutionCMS\Core';
+$coreClass = '\DocumentParser';
 $session_cookie_path = '';
 $session_cookie_domain = '';
 

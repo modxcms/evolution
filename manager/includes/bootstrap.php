@@ -74,6 +74,9 @@ spl_autoload_register(
 );
 
 global $site_sessionname;
+
+require_once 'document.parser.class.inc.php';
+
 require_once 'functions/actions/bkmanager.php';
 require_once 'functions/actions/files.php';
 require_once 'functions/actions/help.php';

@@ -449,7 +449,7 @@ class Core implements Interfaces\CoreInterface
     public static function getInstance(array $services = array())
     {
         if (self::$instance === null) {
-            self::$instance = new self($services);
+            self::$instance = new static($services);
         }
         return self::$instance;
     }
