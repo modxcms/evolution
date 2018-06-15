@@ -124,7 +124,7 @@ if (!preg_match('/\/$/', MODX_BASE_URL)) {
 }
 
 if (!defined('MODX_MANAGER_PATH')) {
-    define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
+    define('MODX_MANAGER_PATH', MODX_BASE_PATH . MGR_DIR . '/');
 }
 
 if (!defined('MODX_SITE_HOSTNAMES') && is_file(MODX_BASE_PATH . '/assets/cache/siteHostnames.php')) {
