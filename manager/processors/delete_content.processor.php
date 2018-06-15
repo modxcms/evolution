@@ -12,7 +12,7 @@ if ($id==0) {
 }
 
 /*******ищем родителя чтобы к нему вернуться********/
-$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************ а заодно и путь возврата (сам путь внизу файла) **********/
@@ -51,7 +51,7 @@ if (count($children)>0) {
             'deleted'   => 1,
             'deletedby' => $modx->getLoginUserID(),
             'deletedon' => $deltime,
-        ), $modx->getFullTableName('site_content'), "id IN (".implode(", ", $children).")");
+        ), $modx->getDatabase()->getFullTableName('site_content'), "id IN (".implode(", ", $children).")");
 }
 
 if ($site_start==$id) {
@@ -76,7 +76,7 @@ $modx->getDatabase()->update(
         'deleted'   => 1,
         'deletedby' => $modx->getLoginUserID(),
         'deletedon' => $deltime,
-    ), $modx->getFullTableName('site_content'), "id='{$id}'");
+    ), $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocFormDelete event
 $modx->invokeEvent("OnDocFormDelete",

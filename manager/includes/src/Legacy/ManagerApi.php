@@ -184,7 +184,7 @@ class ManagerApi implements ManagerApiInterface
     public function getV1UserHashAlgorithm($uid)
     {
         $modx = evolutionCMS();
-        $tbl_manager_users = $modx->getFullTableName('manager_users');
+        $tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
         $uid = $modx->getDatabase()->escape($uid);
         $rs = $modx->getDatabase()->select('password', $tbl_manager_users, "id='{$uid}'");
         $password = $modx->getDatabase()->getValue($rs);
@@ -295,7 +295,7 @@ class ManagerApi implements ManagerApiInterface
     public function setSystemChecksum($checksum)
     {
         $modx = evolutionCMS();
-        $tbl_system_settings = $modx->getFullTableName('system_settings');
+        $tbl_system_settings = $modx->getDatabase()->getFullTableName('system_settings');
         $sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->getDatabase()->escape($checksum) . "')";
         $modx->getDatabase()->query($sql);
     }
@@ -339,7 +339,7 @@ class ManagerApi implements ManagerApiInterface
     {
         $modx = evolutionCMS();
 
-        $rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_settings'),
+        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_settings'),
             "user = '{$_SESSION['mgrInternalKey']}'");
 
         $usersettings = array();
@@ -378,7 +378,7 @@ class ManagerApi implements ManagerApiInterface
                 $f = $modx->getDatabase()->escape($f);
                 $f = "(`" . implode("`, `", array_keys($f)) . "`) VALUES('" . implode("', '", array_values($f)) . "')";
                 $f .= " ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
-                $modx->getDatabase()->insert($f, $modx->getFullTableName('user_settings'));
+                $modx->getDatabase()->insert($f, $modx->getDatabase()->getFullTableName('user_settings'));
             }
         }
     }

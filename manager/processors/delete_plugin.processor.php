@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_plugins'), "id='{$id}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_plugins'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforePluginFormDelete event
@@ -22,10 +22,10 @@ $modx->invokeEvent("OnBeforePluginFormDelete",
 	));
 
 // delete the plugin.
-$modx->getDatabase()->delete($modx->getFullTableName('site_plugins'), "id='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_plugins'), "id='{$id}'");
 
 // delete the plugin events.
-$modx->getDatabase()->delete($modx->getFullTableName('site_plugin_events'), "pluginid='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_plugin_events'), "pluginid='{$id}'");
 
 // invoke OnPluginFormDelete event
 $modx->invokeEvent("OnPluginFormDelete",

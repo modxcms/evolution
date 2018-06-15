@@ -1,5 +1,5 @@
 <?php
-$rs = $modx->getDatabase()->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
+$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_content'), '', 'editedon DESC', 10);
 
 if ($modx->getDatabase()->getRecordCount($rs) < 1) {
     return '<tr><td>[%no_activity_message%]</td></tr>';

@@ -14,10 +14,10 @@ class Categories
         $modx = evolutionCMS();
 
         $this->db = $modx->getDatabase();
-        $this->db_tbl['categories'] = $modx->getFullTableName('categories');
+        $this->db_tbl['categories'] = $modx->getDatabase()->getFullTableName('categories');
 
         foreach ($this->elements as $element) {
-            $this->db_tbl[$element] = $modx->getFullTableName('site_' . $element);
+            $this->db_tbl[$element] = $modx->getDatabase()->getFullTableName('site_' . $element);
         }
     }
 

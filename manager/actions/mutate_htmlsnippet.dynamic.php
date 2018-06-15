@@ -21,7 +21,7 @@ switch ($modx->getManagerApi()->action) {
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
-$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
+$tbl_site_htmlsnippets = $modx->getDatabase()->getFullTableName('site_htmlsnippets');
 
 // check to see the snippet editor isn't locked
 if ($lockedEl = $modx->elementIsLocked(3, $id)) {

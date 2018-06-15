@@ -135,7 +135,7 @@ if (isset($data) && count($data) > 0) {
 	}
 
 	// Run a single query to save all the values
-	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
+	$sql = "REPLACE INTO ".$modx->getDatabase()->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
 	$modx->getDatabase()->query($sql);
 
@@ -143,7 +143,7 @@ if (isset($data) && count($data) > 0) {
 	if (isset($data['reset_template'])) {
 		$newtemplate = (int)$data['default_template'];
 		$oldtemplate = (int)$data['old_template'];
-		$tbl = $modx->getFullTableName('site_content');
+		$tbl = $modx->getDatabase()->getFullTableName('site_content');
 		$reset = $data['reset_template'];
 		if($reset==1) $modx->getDatabase()->update(array('template' => $newtemplate), $tbl, "type='document'");
 		else if($reset==2) $modx->getDatabase()->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");

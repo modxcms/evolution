@@ -10,7 +10,7 @@
 function newCategory($newCat)
 {
     $modx = evolutionCMS();
-    $useTable = $modx->getFullTableName('categories');
+    $useTable = $modx->getDatabase()->getFullTableName('categories');
     $categoryId = $modx->getDatabase()->insert(
         array(
             'category' => $modx->getDatabase()->escape($newCat),
@@ -32,7 +32,7 @@ function checkCategory($newCat = '')
 {
     $modx = evolutionCMS();
     $newCat = $modx->getDatabase()->escape($newCat);
-    $cats = $modx->getDatabase()->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
+    $cats = $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('categories'), "category='{$newCat}'");
     if ($cat = $modx->getDatabase()->getValue($cats)) {
         return (int)$cat;
     }
@@ -64,8 +64,8 @@ function getCategory($category = '')
 function getCategories()
 {
     $modx = evolutionCMS();
-    $useTable = $modx->getFullTableName('categories');
-    $cats = $modx->getDatabase()->select('id, category', $modx->getFullTableName('categories'), '', 'category');
+    $useTable = $modx->getDatabase()->getFullTableName('categories');
+    $cats = $modx->getDatabase()->select('id, category', $modx->getDatabase()->getFullTableName('categories'), '', 'category');
     $resourceArray = array();
     while ($row = $modx->getDatabase()->getRow($cats)) {
         $row['category'] = stripslashes($row['category']);
@@ -93,10 +93,10 @@ function deleteCategory($catId = 0)
             'site_modules'
         );
         foreach ($resetTables as $n => $v) {
-            $useTable = $modx->getFullTableName($v);
+            $useTable = $modx->getDatabase()->getFullTableName($v);
             $modx->getDatabase()->update(array('category' => 0), $useTable, "category='{$catId}'");
         }
-        $catTable = $modx->getFullTableName('categories');
+        $catTable = $modx->getDatabase()->getFullTableName('categories');
         $modx->getDatabase()->delete($catTable, "id='{$catId}'");
     }
 }

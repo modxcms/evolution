@@ -51,9 +51,9 @@ if(!function_exists('makeHTML')) {
             $orderby .= ', menuindex ASC, pagetitle';
         }
 
-        $tblsc = $modx->getFullTableName('site_content');
-        $tbldg = $modx->getFullTableName('document_groups');
-        $tblst = $modx->getFullTableName('site_templates');
+        $tblsc = $modx->getDatabase()->getFullTableName('site_content');
+        $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
+        $tblst = $modx->getDatabase()->getFullTableName('site_templates');
         // get document groups for current user
         $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',',
             $_SESSION['mgrDocgroups']) : '';
@@ -563,7 +563,7 @@ if(!function_exists('checkIsFolder')) {
     {
         $modx = evolutionCMS();
 
-        return (int)$modx->getDatabase()->getValue($modx->getDatabase()->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
+        return (int)$modx->getDatabase()->getValue($modx->getDatabase()->query('SELECT count(*) FROM ' . $modx->getDatabase()->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
     }
 }
 

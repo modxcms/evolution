@@ -13,10 +13,10 @@ $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
 $originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : NULL;
 
-$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-$tbl_site_templates = $modx->getFullTableName('site_templates');
-$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
-$tbl_documentgroup_names = $modx->getFullTableName('documentgroup_names');
+$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
+$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
+$tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
+$tbl_documentgroup_names = $modx->getDatabase()->getFullTableName('documentgroup_names');
 
 // check to see the snippet editor isn't locked
 if($lockedEl = $modx->elementIsLocked(2, $id)) {
@@ -457,7 +457,7 @@ if(is_array($evtOut)) {
 				<?php
 				$rs = $modx->getDatabase()->select(sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']), sprintf("%s as tpl
                     LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
-                    LEFT JOIN %s as cat ON tpl.category=cat.id", $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')), '', "category, templatename");
+                    LEFT JOIN %s as cat ON tpl.category=cat.id", $modx->getDatabase()->getFullTableName('site_templates'), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), $id, $modx->getDatabase()->getFullTableName('categories')), '', "category, templatename");
 
 				$tplList = '<ul>';
 				$preCat = '';
@@ -508,7 +508,7 @@ if(is_array($evtOut)) {
 				<?php
 				if($use_udperms == 1) {
 					// fetch permissions for the variable
-					$rs = $modx->getDatabase()->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
+					$rs = $modx->getDatabase()->select('documentgroup', $modx->getDatabase()->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
 					$groupsarray = $modx->getDatabase()->getColumn('documentgroup', $rs);
 
 					?>

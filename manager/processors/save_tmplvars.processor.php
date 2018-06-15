@@ -38,7 +38,7 @@ $name = $name != '' ? $name : "Untitled variable";
 $caption = $caption != '' ? $caption : $name;
 
 // get table names
-$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
+$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 switch ($_POST['mode']) {
     case '300':

@@ -28,14 +28,14 @@ if($sendto=='u') {
 			'postdate'  => $postdate,
 			'type'      => 'Message',
 			'private'   => 1,
-		), $modx->getFullTableName('user_messages'));
+		), $modx->getDatabase()->getFullTableName('user_messages'));
 }
 
 if($sendto=='g') {
 	if($groupid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_group_selected"]);
 	}
-	$rs = $modx->getDatabase()->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}' AND internalKey!='".$modx->getLoginUserID()."'");
+	$rs = $modx->getDatabase()->select('internalKey', $modx->getDatabase()->getFullTableName('user_attributes'), "role='{$groupid}' AND internalKey!='".$modx->getLoginUserID()."'");
 	while ($row=$modx->getDatabase()->getRow($rs)) {
 		$modx->getDatabase()->insert(
 			array(
@@ -46,13 +46,13 @@ if($sendto=='g') {
 				'postdate'  => $postdate,
 				'type'      => 'Message',
 				'private'   => 0,
-			), $modx->getFullTableName('user_messages'));
+			), $modx->getDatabase()->getFullTableName('user_messages'));
 	}
 }
 
 
 if($sendto=='a') {
-	$rs = $modx->getDatabase()->select('id', $modx->getFullTableName('manager_users'), "id!='".$modx->getLoginUserID()."'");
+	$rs = $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('manager_users'), "id!='".$modx->getLoginUserID()."'");
 	while ($row=$modx->getDatabase()->getRow($rs)) {
 		$modx->getDatabase()->insert(
 			array(
@@ -63,7 +63,7 @@ if($sendto=='a') {
 				'postdate'  => $postdate,
 				'type'      => 'Message',
 				'private'   => 0,
-			), $modx->getFullTableName('user_messages'));
+			), $modx->getDatabase()->getFullTableName('user_messages'));
 	}
 }
 

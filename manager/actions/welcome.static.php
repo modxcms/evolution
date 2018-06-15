@@ -108,7 +108,7 @@ if(isset($_SESSION['show_logout_reminder'])) {
 
 // Check multiple sessions
 //$where = sprintf("internalKey='%s'", $modx->getDatabase()->escape($_SESSION['mgrInternalKey']));
-//$rs = $modx->getDatabase()->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
+//$rs = $modx->getDatabase()->select('count(*) AS count', $modx->getDatabase()->getFullTableName('active_user_sessions'), $where);
 //$count = $modx->getDatabase()->getValue($rs);
 /*
 if($count > 1) {
@@ -159,8 +159,8 @@ $ph['UserInfo'] = $modx->parseText($tpl, array(
 ));
 
 $from = array();
-$from[] = '[+prefix+]active_user_sessions';
-$from[] = " us LEFT JOIN [+prefix+]active_users au ON au.sid=us.sid WHERE au.action <> '8'";
+$from[] = $modx->getDatabase()->getFullTableName('active_user_sessions');
+$from[] = " us LEFT JOIN " . $modx->getDatabase()->getFullTableName('active_users') . " au ON au.sid=us.sid WHERE au.action <> '8'";
 $rs = $modx->getDatabase()->select('*', $from, '', 'username ASC, au.sid ASC');
 
 if($modx->getDatabase()->getRecordCount($rs) < 1) {

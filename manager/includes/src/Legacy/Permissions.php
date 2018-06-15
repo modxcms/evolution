@@ -31,9 +31,9 @@ class Permissions
         global $udperms_allowroot;
         $modx = evolutionCMS();
 
-        $tblsc = $modx->getFullTableName('site_content');
-        $tbldg = $modx->getFullTableName('document_groups');
-        $tbldgn = $modx->getFullTableName('documentgroup_names');
+        $tblsc = $modx->getDatabase()->getFullTableName('site_content');
+        $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
+        $tbldgn = $modx->getDatabase()->getFullTableName('documentgroup_names');
 
         $document = $this->document;
         $role = $this->role;

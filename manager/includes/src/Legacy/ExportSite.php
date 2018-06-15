@@ -110,7 +110,7 @@ class ExportSite implements ExportSiteInerface
     public function getTotal($ignore_ids = '', $noncache = '0')
     {
         $modx = evolutionCMS();
-        $tbl_site_content = $modx->getFullTableName('site_content');
+        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
 
         $ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
         if (count($ignore_ids) > 0) {
@@ -237,7 +237,7 @@ class ExportSite implements ExportSiteInerface
         global $_lang;
         $modx = evolutionCMS();
 
-        $tbl_site_content = $modx->getFullTableName('site_content');
+        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
 
         $ignore_ids = $this->ignore_ids;
         $dirpath = $this->targetDir . '/';

@@ -12,7 +12,7 @@ if($id == 0) {
 }
 
 // delete the template, but first check it doesn't have any documents using it
-$rs = $modx->getDatabase()->select('id, pagetitle,introtext', $modx->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
+$rs = $modx->getDatabase()->select('id, pagetitle,introtext', $modx->getDatabase()->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
 $limit = $modx->getDatabase()->getRecordCount($rs);
 if($limit > 0) {
 	include "header.inc.php";
@@ -45,7 +45,7 @@ if($id == $default_template) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTempFormDelete event
@@ -54,9 +54,9 @@ $modx->invokeEvent("OnBeforeTempFormDelete", array(
 	));
 
 // delete the document.
-$modx->getDatabase()->delete($modx->getFullTableName('site_templates'), "id='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'");
 
-$modx->getDatabase()->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
 
 // invoke OnTempFormDelete event
 $modx->invokeEvent("OnTempFormDelete", array(

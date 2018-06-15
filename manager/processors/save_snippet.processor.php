@@ -75,7 +75,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for new snippets
-        $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_snippets'), "name='{$name}'");
+        $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getDatabase()->getFullTableName('site_snippets'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(23);
@@ -94,7 +94,7 @@ switch ($_POST['mode']) {
             'disabled' => $disabled,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_snippets'));
+        ), $modx->getDatabase()->getFullTableName('site_snippets'));
 
         // invoke OnSnipFormSave event
         $modx->invokeEvent("OnSnipFormSave", array(
@@ -126,7 +126,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for snippets
-        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
+        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
             $modx->getManagerApi()->saveFormValues(22);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
@@ -143,7 +143,7 @@ switch ($_POST['mode']) {
             'category' => $categoryid,
             'disabled' => $disabled,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_snippets'), "id='{$id}'");
+        ), $modx->getDatabase()->getFullTableName('site_snippets'), "id='{$id}'");
 
         // invoke OnSnipFormSave event
         $modx->invokeEvent("OnSnipFormSave", array(

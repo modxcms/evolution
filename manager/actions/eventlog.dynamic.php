@@ -7,9 +7,9 @@ if(!$modx->hasPermission('view_eventlog')) {
 }
 
 // Get table Names (alphabetical)
-$tbl_event_log = $modx->getFullTableName('event_log');
-$tbl_manager_users = $modx->getFullTableName('manager_users');
-$tbl_web_users = $modx->getFullTableName('web_users');
+$tbl_event_log = $modx->getDatabase()->getFullTableName('event_log');
+$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
+$tbl_web_users = $modx->getDatabase()->getFullTableName('web_users');
 
 // initialize page view state - the $_PAGE object
 $modx->getManagerApi()->initPageViewState();

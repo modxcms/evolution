@@ -9,9 +9,9 @@ if(!$modx->hasPermission('view_eventlog')) {
 // get id
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-$ds = $modx->getDatabase()->select('el.*, IFNULL(wu.username,mu.username) as username', $modx->getFullTableName("event_log") . " el 
-		LEFT JOIN " . $modx->getFullTableName("manager_users") . " mu ON mu.id=el.user AND el.usertype=0
-		LEFT JOIN " . $modx->getFullTableName("web_users") . " wu ON wu.id=el.user AND el.usertype=1", "el.id='{$id}'");
+$ds = $modx->getDatabase()->select('el.*, IFNULL(wu.username,mu.username) as username', $modx->getDatabase()->getFullTableName("event_log") . " el 
+		LEFT JOIN " . $modx->getDatabase()->getFullTableName("manager_users") . " mu ON mu.id=el.user AND el.usertype=0
+		LEFT JOIN " . $modx->getDatabase()->getFullTableName("web_users") . " wu ON wu.id=el.user AND el.usertype=1", "el.id='{$id}'");
 $content = $modx->getDatabase()->getRow($ds);
 
 ?>

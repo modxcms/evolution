@@ -67,7 +67,7 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('site_modules'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(107);
@@ -91,7 +91,7 @@ switch ($_POST['mode']) {
             'properties' => $properties,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_modules'));
+        ), $modx->getDatabase()->getFullTableName('site_modules'));
 
         // save user group access permissions
         saveUserGroupAccessPermissons();
@@ -126,7 +126,7 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
             $modx->getManagerApi()->saveFormValues(108);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
@@ -148,7 +148,7 @@ switch ($_POST['mode']) {
             'modulecode' => $modulecode,
             'properties' => $properties,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_modules'), "id='{$id}'");
+        ), $modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'");
 
         // save user group access permissions
         saveUserGroupAccessPermissons();

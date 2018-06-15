@@ -10,15 +10,15 @@ if(!$modx->hasPermission('edit_module')) {
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
-$tbl_active_users = $modx->getFullTableName('active_users');
-$tbl_site_content = $modx->getFullTableName('site_content');
-$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
-$tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
-$tbl_site_modules = $modx->getFullTableName('site_modules');
-$tbl_site_plugins = $modx->getFullTableName('site_plugins');
-$tbl_site_snippets = $modx->getFullTableName('site_snippets');
-$tbl_site_templates = $modx->getFullTableName('site_templates');
-$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
+$tbl_active_users = $modx->getDatabase()->getFullTableName('active_users');
+$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
+$tbl_site_htmlsnippets = $modx->getDatabase()->getFullTableName('site_htmlsnippets');
+$tbl_site_module_depobj = $modx->getDatabase()->getFullTableName('site_module_depobj');
+$tbl_site_modules = $modx->getDatabase()->getFullTableName('site_modules');
+$tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
+$tbl_site_snippets = $modx->getDatabase()->getFullTableName('site_snippets');
+$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
+$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 // initialize page view state - the $_PAGE object
 $modx->getManagerApi()->initPageViewState();

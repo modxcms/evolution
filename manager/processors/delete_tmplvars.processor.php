@@ -15,8 +15,8 @@ $forced = isset($_GET['force']) ? $_GET['force'] : 0;
 
 // check for relations
 if(!$forced) {
-	$drs = $modx->getDatabase()->select('sc.id, sc.pagetitle,sc.description', $modx->getFullTableName('site_content') . " AS sc
-			INNER JOIN " . $modx->getFullTableName('site_tmplvar_contentvalues') . " AS stcv ON stcv.contentid=sc.id", "stcv.tmplvarid='{$id}'");
+	$drs = $modx->getDatabase()->select('sc.id, sc.pagetitle,sc.description', $modx->getDatabase()->getFullTableName('site_content') . " AS sc
+			INNER JOIN " . $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " AS stcv ON stcv.contentid=sc.id", "stcv.tmplvarid='{$id}'");
 	$count = $modx->getDatabase()->getRecordCount($drs);
 	if($count > 0) {
 		include_once "header.inc.php";
@@ -56,7 +56,7 @@ if(!$forced) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_tmplvars'), "id='{$id}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTVFormDelete event
@@ -65,16 +65,16 @@ $modx->invokeEvent("OnBeforeTVFormDelete", array(
 ));
 
 // delete variable
-$modx->getDatabase()->delete($modx->getFullTableName('site_tmplvars'), "id='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'");
 
 // delete variable's content values
-$modx->getDatabase()->delete($modx->getFullTableName('site_tmplvar_contentvalues'), "tmplvarid='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues'), "tmplvarid='{$id}'");
 
 // delete variable's template access
-$modx->getDatabase()->delete($modx->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'");
 
 // delete variable's access permissions
-$modx->getDatabase()->delete($modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
 
 // invoke OnTVFormDelete event
 $modx->invokeEvent("OnTVFormDelete", array(

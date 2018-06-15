@@ -16,10 +16,10 @@ if(isset($_GET['opened'])) {
 $url = $modx->config['site_url'];
 
 // Get table names (alphabetical)
-$tbl_document_groups = $modx->getFullTableName('document_groups');
-$tbl_manager_users = $modx->getFullTableName('manager_users');
-$tbl_site_content = $modx->getFullTableName('site_content');
-$tbl_site_templates = $modx->getFullTableName('site_templates');
+$tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
+$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
+$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
+$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
 
 // Get access permissions
 if($_SESSION['mgrDocgroups']) {

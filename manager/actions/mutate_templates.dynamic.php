@@ -20,7 +20,7 @@ switch($modx->getManagerApi()->action) {
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-$tbl_site_templates = $modx->getFullTableName('site_templates');
+$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
 
 // check to see the snippet editor isn't locked
 if($lockedEl = $modx->elementIsLocked(1, $id)) {
@@ -201,7 +201,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			if(!isset($_POST['assignedTv'])) {
 				$rs = $modx->getDatabase()->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
-                LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
+                LEFT JOIN %s cat ON tv.category=cat.id", $modx->getDatabase()->getFullTableName('site_tmplvars'), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), $modx->getDatabase()->getFullTableName('categories')), "templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
 				);
 				while($row = $modx->getDatabase()->getRow($rs)) {
 					$selectedTvs[$row['tvid']] = $row;
@@ -212,7 +212,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			$unselectedTvs = array();
 			$rs = $modx->getDatabase()->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
-	    LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "", "category, tvcaption");
+	    LEFT JOIN %s cat ON tv.category=cat.id", $modx->getDatabase()->getFullTableName('site_tmplvars'), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), $modx->getDatabase()->getFullTableName('categories')), "", "category, tvcaption");
 			while($row = $modx->getDatabase()->getRow($rs)) {
 				$unselectedTvs[$row['tvid']] = $row;
 			}

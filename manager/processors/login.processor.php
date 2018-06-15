@@ -41,7 +41,8 @@ $modx->invokeEvent('OnBeforeManagerLogin', array(
 		'rememberme' => $rememberme
 	));
 $fields = 'mu.*, ua.*';
-$from = '[+prefix+]manager_users AS mu, [+prefix+]user_attributes AS ua';
+$from = $modx->getDatabase()->getFullTableName('manager_users') . ' AS mu, ' .
+    $modx->getDatabase()->getFullTableName('user_attributes') . ' AS ua';
 $where = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
 $rs = $modx->getDatabase()->select($fields, $from, $where);
 $limit = $modx->getDatabase()->getRecordCount($rs);
@@ -67,7 +68,11 @@ $fullname = $row['fullname'];
 $email = $row['email'];
 
 // get the user settings from the database
-$rs = $modx->getDatabase()->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
+$rs = $modx->getDatabase()->select(
+    'setting_name, setting_value',
+    $modx->getDatabase()->getFullTableName('user_settings'),
+    "user='{$internalKey}' AND setting_value!=''"
+);
 while($row = $modx->getDatabase()->getRow($rs)) {
 	extract($row);
 	${$setting_name} = $setting_value;
@@ -97,7 +102,11 @@ if($failedlogins >= $failed_allowed && $blockeduntildate < time()) {
 	$fields = array();
 	$fields['failedlogincount'] = '0';
 	$fields['blockeduntil'] = time() - 1;
-	$modx->getDatabase()->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+	$modx->getDatabase()->update(
+	    $fields,
+        $modx->getDatabase()->getFullTableName('user_attributes'),
+        "internalKey='{$internalKey}'"
+    );
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -209,16 +218,20 @@ $_SESSION['mgrFailedlogins'] = $failedlogins;
 $_SESSION['mgrLastlogin'] = $lastlogin;
 $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
-$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_roles'), "id='{$role}'");
+$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_roles'), "id='{$role}'");
 $_SESSION['mgrPermissions'] = $modx->getDatabase()->getRow($rs);
 
 // successful login so reset fail count and update key values
-$modx->getDatabase()->update('failedlogincount=0, ' . 'logincount=logincount+1, ' . 'lastlogin=thislogin, ' . 'thislogin=' . time() . ', ' . "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+$modx->getDatabase()->update(
+    'failedlogincount=0, ' . 'logincount=logincount+1, ' . 'lastlogin=thislogin, ' . 'thislogin=' . time() . ', ' . "sessionid='{$currentsessionid}'",
+    $modx->getDatabase()->getFullTableName('user_attributes'),
+    "internalKey='{$internalKey}'"
+);
 
 // get user's document groups
 $i = 0;
-$rs = $modx->getDatabase()->select('uga.documentgroup', $modx->getFullTableName('member_groups') . ' ug
-		INNER JOIN ' . $modx->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
+$rs = $modx->getDatabase()->select('uga.documentgroup', $modx->getDatabase()->getFullTableName('member_groups') . ' ug
+		INNER JOIN ' . $modx->getDatabase()->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
 $_SESSION['mgrDocgroups'] = $modx->getDatabase()->getColumn('documentgroup', $rs);
 
 $_SESSION['mgrToken'] = md5($currentsessionid);
@@ -244,10 +257,10 @@ if($rememberme == '1') {
 }
 
 // Check if user already has an active session, if not check if user pressed logout end of last session
-$rs = $modx->getDatabase()->select('lasthit', $modx->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
+$rs = $modx->getDatabase()->select('lasthit', $modx->getDatabase()->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
 $activeSession = $modx->getDatabase()->getValue($rs);
 if(!$activeSession) {
-	$rs = $modx->getDatabase()->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
+	$rs = $modx->getDatabase()->select('lasthit', $modx->getDatabase()->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
 	if($lastHit = $modx->getDatabase()->getValue($rs)) {
 		$_SESSION['show_logout_reminder'] = array(
 			'type' => 'logout_reminder',
@@ -268,7 +281,11 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 
 // check if we should redirect user to a web page
-$rs = $modx->getDatabase()->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
+$rs = $modx->getDatabase()->select(
+    'setting_value',
+    $modx->getDatabase()->getFullTableName('user_settings'),
+    "user='{$internalKey}' AND setting_name='manager_login_startup'"
+);
 $id = (int)$modx->getDatabase()->getValue($rs);
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');

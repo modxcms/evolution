@@ -29,20 +29,20 @@ switch (true) {
         break;
     }
     case ($action == 'setsetting' && !empty($key) && !empty($value)): {
-        $sql = "REPLACE INTO " . $modx->getFullTableName("system_settings") . " (setting_name, setting_value) VALUES('{$key}', '{$value}');";
+        $sql = "REPLACE INTO " . $modx->getDatabase()->getFullTableName("system_settings") . " (setting_name, setting_value) VALUES('{$key}', '{$value}');";
         $str = "true";
         $modx->getDatabase()->query($sql);
         $emptyCache = true;
         break;
     }
     case ($action == 'updateplugin' && ($key == '_delete_' && !empty($lang))): {
-        $modx->getDatabase()->delete($modx->getFullTableName("site_plugins"), "name='{$lang}'");
+        $modx->getDatabase()->delete($modx->getDatabase()->getFullTableName("site_plugins"), "name='{$lang}'");
         $str = "true";
         $emptyCache = true;
         break;
     }
     case ($action == 'updateplugin' && (!empty($key) && !empty($lang) && !empty($value))): {
-        $modx->getDatabase()->update(array($key => $value), $modx->getFullTableName("site_plugins"), "name = '{$lang}'");
+        $modx->getDatabase()->update(array($key => $value), $modx->getDatabase()->getFullTableName("site_plugins"), "name = '{$lang}'");
         $str = "true";
         $emptyCache = true;
         break;

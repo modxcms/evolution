@@ -8,7 +8,7 @@ if(!function_exists('run')) {
         $modx = evolutionCMS();
         global $_lang;
 
-        $tbl_site_content = $modx->getFullTableName('site_content');
+        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
         $output = '';
         $maxtime = $_POST['maxtime'];
 
@@ -80,8 +80,8 @@ if(!function_exists('importFiles')) {
         global $_lang, $allowedfiles;
         global $search_default, $cache_default, $publish_default;
 
-        $tbl_site_content = $modx->getFullTableName('site_content');
-        $tbl_system_settings = $modx->getFullTableName('system_settings');
+        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
+        $tbl_system_settings = $modx->getDatabase()->getFullTableName('system_settings');
 
         $createdby = $modx->getLoginUserID();
         if (!is_array($files)) {
@@ -352,7 +352,7 @@ if(!function_exists('convertLink')) {
     function convertLink()
     {
         $modx = evolutionCMS();
-        $tbl_site_content = $modx->getFullTableName('site_content');
+        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
 
         $rs = $modx->getDatabase()->select('id,content', $tbl_site_content);
         $p = array();

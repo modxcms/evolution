@@ -6,9 +6,9 @@ if(!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$tbl_manager_users = $modx->getFullTableName('manager_users');
-$tbl_user_attributes = $modx->getFullTableName('user_attributes');
-$tbl_member_groups = $modx->getFullTableName('member_groups');
+$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
+$tbl_user_attributes = $modx->getDatabase()->getFullTableName('user_attributes');
+$tbl_member_groups = $modx->getDatabase()->getFullTableName('member_groups');
 
 $input = $_POST;
 

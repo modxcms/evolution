@@ -6,7 +6,7 @@ if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
+$rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getDatabase()->getFullTableName('manager_log'));
 $logs = $modx->getDatabase()->makeArray($rs);
 ?>
     <h1>
@@ -174,9 +174,9 @@ if (isset($_REQUEST['log_submit'])) {
     $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
     // build the sql
-    $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
+    $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
 
-    $rs = $modx->getDatabase()->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+    $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 
 if ($limit < 1) {
     echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';

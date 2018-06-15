@@ -110,7 +110,7 @@ class mgrResources {
         $tvjoin = '';
         if ($resourceTable === 'site_tmplvars') {
             $tvsql    = 'site_tmplvars.caption, ';
-            $tvjoin   = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getFullTableName('site_tmplvar_templates'));
+            $tvjoin   = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getDatabase()->getFullTableName('site_tmplvar_templates'));
             $sttfield = 'IF(stt.templateid,1,0) AS reltpl,';
         }
         else $sttfield = '';
@@ -119,8 +119,8 @@ class mgrResources {
 
         $rs = $modx->getDatabase()->select(
             "{$sttfield} {$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
-            $modx->getFullTableName($resourceTable) . " AS {$resourceTable}
-	            LEFT JOIN " . $modx->getFullTableName('categories') . " AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
+            $modx->getDatabase()->getFullTableName($resourceTable) . " AS {$resourceTable}
+	            LEFT JOIN " . $modx->getDatabase()->getFullTableName('categories') . " AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
             "",
             "category,name"
         );

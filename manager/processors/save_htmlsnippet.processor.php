@@ -44,7 +44,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for new chunks
-        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}'");
+        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "name='{$name}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(77);
@@ -63,7 +63,7 @@ switch ($_POST['mode']) {
             'disabled' => $disabled,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_htmlsnippets'));
+        ), $modx->getDatabase()->getFullTableName('site_htmlsnippets'));
 
         // invoke OnChunkFormSave event
         $modx->invokeEvent("OnChunkFormSave", array(
@@ -95,7 +95,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for chunks
-        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}' AND id!='{$id}'");
+        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "name='{$name}' AND id!='{$id}'");
         if ($modx->getDatabase()->getValue($rs) > 0) {
             $modx->getManagerApi()->saveFormValues(78);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=78&id={$id}");
@@ -112,7 +112,7 @@ switch ($_POST['mode']) {
             'editor_name' => $editor_name,
             'disabled' => $disabled,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
+        ), $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "id='{$id}'");
 
         // invoke OnChunkFormSave event
         $modx->invokeEvent("OnChunkFormSave", array(

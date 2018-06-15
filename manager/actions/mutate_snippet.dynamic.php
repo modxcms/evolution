@@ -21,9 +21,9 @@ switch ($modx->getManagerApi()->action) {
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table Names (alphabetical)
-$tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
-$tbl_site_modules = $modx->getFullTableName('site_modules');
-$tbl_site_snippets = $modx->getFullTableName('site_snippets');
+$tbl_site_module_depobj = $modx->getDatabase()->getFullTableName('site_module_depobj');
+$tbl_site_modules = $modx->getDatabase()->getFullTableName('site_modules');
+$tbl_site_snippets = $modx->getDatabase()->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
 if ($lockedEl = $modx->elementIsLocked(4, $id)) {

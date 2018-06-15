@@ -8,11 +8,11 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 $ctime = $_SERVER['REQUEST_TIME'];
 
 $where = "pub_date < {$ctime} AND pub_date!=0 AND unpub_date > {$ctime}";
-$modx->getDatabase()->update('published=1', '[+prefix+]site_content', $where);
+$modx->getDatabase()->update('published=1', $modx->getDatabase()->getFullTableName('site_content'), $where);
 $num_rows_pub = $modx->getDatabase()->getAffectedRows();
 
 $where = "unpub_date < {$ctime} AND unpub_date!=0 AND published=1";
-$modx->getDatabase()->update('published=0', '[+prefix+]site_content', $where);
+$modx->getDatabase()->update('published=0', $modx->getDatabase()->getFullTableName('site_content'), $where);
 $num_rows_unpub = $modx->getDatabase()->getAffectedRows();
 
 ?>

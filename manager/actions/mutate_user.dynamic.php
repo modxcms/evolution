@@ -21,7 +21,7 @@ switch($modx->getManagerApi()->action) {
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
 }
@@ -29,7 +29,7 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 
 if($modx->getManagerApi()->action == '12') {
 	// get user attribute
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_attributes'), "internalKey = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_attributes'), "internalKey = '{$user}'");
 	$userdata = $modx->getDatabase()->getRow($rs);
 	if(!$userdata) {
 		$modx->webAlertAndQuit("No user returned!");
@@ -41,7 +41,7 @@ if($modx->getManagerApi()->action == '12') {
 
 
 	// get user settings
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('user_settings'), "user = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_settings'), "user = '{$user}'");
 	$usersettings = array();
 	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
 	// manually extract so that user display settings are not overwritten
@@ -52,7 +52,7 @@ if($modx->getManagerApi()->action == '12') {
 	}
 
 	// get user name
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('manager_users'), "id = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('manager_users'), "id = '{$user}'");
 	$usernamedata = $modx->getDatabase()->getRow($rs);
 	if(!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
@@ -305,7 +305,11 @@ if($which_browser == 'default') {
 						<td>&nbsp;</td>
 						<td><?php
 
-							$rs = $modx->getDatabase()->select('name, id', '[+prefix+]user_roles', ($modx->hasPermission('save_role')) ? '' : 'id != 1');
+							$rs = $modx->getDatabase()->select(
+							        'name, id',
+                                    $modx->getDatabase()->getFullTableName('user_roles'),
+                                    ($modx->hasPermission('save_role')) ? '' : 'id != 1'
+                            );
 							?>
 							<select name="role" class="inputBox" onChange='documentDirty=true;' style="width:300px">
 								<?php
@@ -768,7 +772,7 @@ if($which_browser == 'default') {
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '12') { // only do this bit if the user is being edited
-				$rs = $modx->getDatabase()->select('user_group', $modx->getFullTableName('member_groups'), "member='{$user}'");
+				$rs = $modx->getDatabase()->select('user_group', $modx->getDatabase()->getFullTableName('member_groups'), "member='{$user}'");
 				$groupsarray = $modx->getDatabase()->getColumn('user_group', $rs);
 			}
 			// retain selected doc groups between post
@@ -781,7 +785,7 @@ if($which_browser == 'default') {
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabAccess"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-				$rs = $modx->getDatabase()->select('name, id', $modx->getFullTableName('membergroup_names'), '', 'name');
+				$rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('membergroup_names'), '', 'name');
 				while($row = $modx->getDatabase()->getRow($rs)) {
 					echo "<label><input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "</label><br />";
 				}

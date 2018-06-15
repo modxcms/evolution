@@ -10,11 +10,11 @@ if(!$modx->hasPermission('access_permissions')) {
 // figure out what the user wants to do...
 
 // Get table names (alphabetical)
-$tbl_document_groups     = $modx->getFullTableName('document_groups');
-$tbl_documentgroup_names = $modx->getFullTableName('documentgroup_names');
-$tbl_member_groups       = $modx->getFullTableName('member_groups');
-$tbl_membergroup_access  = $modx->getFullTableName('membergroup_access');
-$tbl_membergroup_names   = $modx->getFullTableName('membergroup_names');
+$tbl_document_groups     = $modx->getDatabase()->getFullTableName('document_groups');
+$tbl_documentgroup_names = $modx->getDatabase()->getFullTableName('documentgroup_names');
+$tbl_member_groups       = $modx->getDatabase()->getFullTableName('member_groups');
+$tbl_membergroup_access  = $modx->getDatabase()->getFullTableName('membergroup_access');
+$tbl_membergroup_names   = $modx->getDatabase()->getFullTableName('membergroup_names');
 
 $updategroupaccess = false;
 $operation = $_REQUEST['operation'];

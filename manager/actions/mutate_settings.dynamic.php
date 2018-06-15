@@ -7,7 +7,7 @@ if(!$modx->hasPermission('settings')) {
 }
 
 // check to see the edit settings page isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=17 AND internalKey!='" . $modx->getLoginUserID() . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang['lock_settings_msg'], $username));
 }
@@ -17,7 +17,7 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
 include_once(MODX_MANAGER_PATH . 'includes/default_config.php');
-$rs = $modx->getDatabase()->select('setting_name, setting_value', '[+prefix+]system_settings');
+$rs = $modx->getDatabase()->select('setting_name, setting_value', $modx->getDatabase()->getFullTableName('system_settings'));
 while($row = $modx->getDatabase()->getRow($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
 }

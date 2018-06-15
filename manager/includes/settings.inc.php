@@ -8,7 +8,7 @@ $settings = array();
 if ($modx && count($modx->config) > 0) {
     $settings = $modx->config;
 } else {
-    $rs = $modx->getDatabase()->select('setting_name, setting_value', $modx->getFullTableName('system_settings'));
+    $rs = $modx->getDatabase()->select('setting_name, setting_value', $modx->getDatabase()->getFullTableName('system_settings'));
     while ($row = $modx->getDatabase()->getRow($rs)) {
         $settings[$row['setting_name']] = $row['setting_value'];
     }

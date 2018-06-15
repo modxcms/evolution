@@ -22,7 +22,7 @@ $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 }
@@ -30,20 +30,20 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
 	$userdata = $modx->getDatabase()->getRow($rs);
 	if(!$userdata) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
 
 	// get user settings
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('web_user_settings'), "webuser = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_settings'), "webuser = '{$user}'");
 	$usersettings = array();
 	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
 	extract($usersettings, EXTR_OVERWRITE);
 
 	// get user name
-	$rs = $modx->getDatabase()->select('*', $modx->getFullTableName('web_users'), "id = '{$user}'");
+	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_users'), "id = '{$user}'");
 	$usernamedata = $modx->getDatabase()->getRow($rs);
 	if(!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
@@ -501,7 +501,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '88') { // only do this bit if the user is being edited
-				$rs = $modx->getDatabase()->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
+				$rs = $modx->getDatabase()->select('webgroup', $modx->getDatabase()->getFullTableName('web_groups'), "webuser='{$user}'");
 				$groupsarray = $modx->getDatabase()->getColumn('webgroup', $rs);
 			}
 			// retain selected user groups between post
@@ -514,7 +514,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabPermissions"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-				$rs = $modx->getDatabase()->select('name, id', $modx->getFullTableName('webgroup_names'), '', 'name');
+				$rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('webgroup_names'), '', 'name');
 				while($row = $modx->getDatabase()->getRow($rs)) {
 					echo '<label><input type="checkbox" name="user_groups[]" value="' . $row['id'] . '"' . (in_array($row['id'], $groupsarray) ? ' checked="checked"' : '') . ' />' . $row['name'] . '</label><br />';
 				}

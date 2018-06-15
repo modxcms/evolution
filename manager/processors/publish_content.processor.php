@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 /************webber ********/
-$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
@@ -45,7 +45,7 @@ $modx->getDatabase()->update(
 		'editedon'    => time(),
 		'publishedby' => $modx->getLoginUserID(),
 		'publishedon' => time(),
-	), $modx->getFullTableName('site_content'), "id='{$id}'");
+	), $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocPublished  event
 $modx->invokeEvent("OnDocPublished",array("docid"=>$id));

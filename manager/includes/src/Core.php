@@ -98,7 +98,6 @@ class Core implements Interfaces\CoreInterface
     /**
      * @var array
      */
-    public $dbConfig = array();
     public $configGlobal = null; // contains backup of settings overwritten by user-settings
     public $rs;
     public $result;
@@ -427,7 +426,6 @@ class Core implements Interfaces\CoreInterface
         if (substr(PHP_OS, 0, 3) === 'WIN' && $database_server === 'localhost') {
             $database_server = '127.0.0.1';
         }
-        $this->dbConfig = &$this->getDatabase()->config; // alias for backward compatibility
         // events
         $this->event = new Event();
         $this->Event = &$this->event; //alias for backward compatibility
@@ -736,7 +734,10 @@ class Core implements Interfaces\CoreInterface
             return;
         }
 
-        $rs = $this->getDatabase()->select('setting_name, setting_value', '[+prefix+]system_settings');
+        $rs = $this->getDatabase()->select(
+            'setting_name, setting_value',
+            $this->getDatabase()->getFullTableName('system_settings')
+        );
         while ($row = $this->getDatabase()->getRow($rs)) {
             $this->config[$row['setting_name']] = $row['setting_value'];
         }
@@ -746,7 +747,7 @@ class Core implements Interfaces\CoreInterface
         }
 
         $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $rs = $this->getDatabase()->select('id', '[+prefix+]site_plugins', $where);
+        $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_plugins'), $where);
         if ($this->getDatabase()->getRecordCount($rs)) {
             $this->config['enable_filter'] = '0';
         }
@@ -758,8 +759,8 @@ class Core implements Interfaces\CoreInterface
      */
     public function getUserSettings()
     {
-        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
-        $tbl_user_settings = $this->getFullTableName('user_settings');
+        $tbl_web_user_settings = $this->getDatabase()->getFullTableName('web_user_settings');
+        $tbl_user_settings = $this->getDatabase()->getFullTableName('user_settings');
 
         // load user setting if user is logged in
         $usrSettings = array();
@@ -1086,7 +1087,13 @@ class Core implements Interfaces\CoreInterface
                 if (!$pass) {
                     if ($this->config['unauthorized_page']) {
                         // check if file is not public
-                        $rs = $this->getDatabase()->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                        $rs = $this->getDatabase()->select(
+                            'count(id)',
+                            $this->getDatabase()->getFullTableName('document_groups'),
+                            "document='{$id}'",
+                            '',
+                            '1'
+                        );
                         $total = $this->getDatabase()->getValue($rs);
                     } else {
                         $total = 0;
@@ -1346,8 +1353,12 @@ class Core implements Interfaces\CoreInterface
         // now, check for documents that need publishing
         $field = array('published' => 1, 'publishedon' => $timeNow);
         $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
-        $result_pub = $this->getDatabase()->select( 'id', '[+prefix+]site_content',  $where);
-        $this->getDatabase()->update($field, '[+prefix+]site_content', $where);
+        $result_pub = $this->getDatabase()->select(
+            'id',
+            $this->getDatabase()->getFullTableName('site_content'),
+            $where
+        );
+        $this->getDatabase()->update($field, $this->getDatabase()->getFullTableName('site_content'), $where);
         if ($this->getDatabase()->getRecordCount($result_pub) >= 1) { //Event unPublished doc
             while ($row_pub = $this->getDatabase()->getRow($result_pub)) {
                 $this->invokeEvent("OnDocUnPublished", array(
@@ -1359,8 +1370,12 @@ class Core implements Interfaces\CoreInterface
         // now, check for documents that need un-publishing
         $field = array('published' => 0, 'publishedon' => 0);
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
-        $result_unpub = $this->getDatabase()->select( 'id', '[+prefix+]site_content',  $where);
-        $this->getDatabase()->update($field, '[+prefix+]site_content', $where);
+        $result_unpub = $this->getDatabase()->select(
+            'id',
+            $this->getDatabase()->getFullTableName('site_content'),
+            $where
+        );
+        $this->getDatabase()->update($field, $this->getDatabase()->getFullTableName('site_content'), $where);
         if ($this->getDatabase()->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
             while ($row_unpub = $this->getDatabase()->getRow($result_unpub)) {
                 $this->invokeEvent("OnDocUnPublished", array(
@@ -1396,7 +1411,11 @@ class Core implements Interfaces\CoreInterface
             if (!empty($this->cacheKey) && is_scalar($this->cacheKey)) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $where = "document='{$this->documentIdentifier}'";
-                $rs = $this->getDatabase()->select('document_group', '[+prefix+]document_groups', $where);
+                $rs = $this->getDatabase()->select(
+                    'document_group',
+                    $this->getDatabase()->getFullTableName('document_groups'),
+                    $where
+                );
                 $docGroups = $this->getDatabase()->getColumn('document_group', $rs);
 
                 // Attach Document Groups and Scripts
@@ -2605,7 +2624,11 @@ class Core implements Interfaces\CoreInterface
             $snippetObject['properties'] = '';
         } else {
             $where = sprintf("name='%s' AND disabled=0", $this->getDatabase()->escape($snip_name));
-            $rs = $this->getDatabase()->select('name,snippet,properties', '[+prefix+]site_snippets', $where);
+            $rs = $this->getDatabase()->select(
+                '`name`, `snippet`, `properties`',
+                $this->getDatabase()->getFullTableName('site_snippets'),
+                $where
+            );
             $count = $this->getDatabase()->getRecordCount($rs);
             if (1 < $count) {
                 exit('Error $modx->_getSnippetObject()' . $snip_name);
@@ -2703,7 +2726,7 @@ class Core implements Interfaces\CoreInterface
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
-                    $res = $this->getDatabase()->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
+                    $res = $this->getDatabase()->select("id,alias,isfolder,parent,alias_visible", $this->getDatabase()->getFullTableName('site_content'), "id IN (" . $ids . ") AND isfolder = '0'");
                     while ($row = $this->getDatabase()->getRow($res)) {
                         if ($this->config['use_alias_path'] == '1' && $row['parent'] != 0) {
                             $parent = $row['parent'];
@@ -2830,8 +2853,8 @@ class Core implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $tblsc = $this->getFullTableName("site_content");
-        $tbldg = $this->getFullTableName("document_groups");
+        $tblsc = $this->getDatabase()->getFullTableName("site_content");
+        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
 
         // allow alias to be full path
         if ($method == 'alias') {
@@ -2888,9 +2911,9 @@ class Core implements Interfaces\CoreInterface
             }
             if ($documentObject['template']) {
                 // load TVs and merge with document - Orig by Apodigm - Docvars
-                $rs = $this->getDatabase()->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getFullTableName("site_tmplvars") . " tv
-                INNER JOIN " . $this->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
-                LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
+                $rs = $this->getDatabase()->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getDatabase()->getFullTableName("site_tmplvars") . " tv
+                INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
+                LEFT JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
                 $tmplvars = array();
                 while ($row = $this->getDatabase()->getRow($rs)) {
                     $tmplvars[$row['name']] = array(
@@ -3030,7 +3053,7 @@ class Core implements Interfaces\CoreInterface
                 } else {
                     //@TODO: check new $alias;
                     if ($this->config['aliaslistingfolder'] == 1) {
-                        $tbl_site_content = $this->getFullTableName('site_content');
+                        $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
 
                         $parentId = $this->getIdFromAlias($this->virtualDir);
                         $parentId = ($parentId > 0) ? $parentId : '0';
@@ -3084,7 +3107,7 @@ class Core implements Interfaces\CoreInterface
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
                 } else {
                     $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
-                    $rs = $this->getDatabase()->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+                    $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
                     $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
                 }
             }
@@ -3267,7 +3290,11 @@ class Core implements Interfaces\CoreInterface
      */
     public function _getTemplateCodeFromDB($templateID)
     {
-        $rs = $this->getDatabase()->select('content', '[+prefix+]site_templates', "id = '{$templateID}'");
+        $rs = $this->getDatabase()->select(
+            'content',
+            $this->getDatabase()->getFullTableName('site_templates'),
+            "id = '{$templateID}'"
+        );
         if ($this->getDatabase()->getRecordCount($rs) == 1) {
             return $this->getDatabase()->getValue($rs);
         } else {
@@ -3288,7 +3315,7 @@ class Core implements Interfaces\CoreInterface
         while ($id && $height--) {
             $thisid = $id;
             if ($this->config['aliaslistingfolder'] == 1) {
-                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
                 if (!$id || $id == '0') {
                     break;
                 }
@@ -3339,7 +3366,7 @@ class Core implements Interfaces\CoreInterface
 
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->getDatabase()->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
+            $res = $this->getDatabase()->select("id,alias,isfolder,parent", $this->getDatabase()->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
             $idx = array();
             while ($row = $this->getDatabase()->getRow($res)) {
                 $pAlias = '';
@@ -3531,8 +3558,8 @@ class Core implements Interfaces\CoreInterface
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
-            $rs = $this->getDatabase()->select('sid,internalKey,elementType,elementId,lasthit,username', $this->getFullTableName('active_user_locks') . " ul
-                LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id");
+            $rs = $this->getDatabase()->select('sid,internalKey,elementType,elementId,lasthit,username', $this->getDatabase()->getFullTableName('active_user_locks') . " ul
+                LEFT JOIN {$this->getDatabase()->getFullTableName('manager_users')} mu on ul.internalKey = mu.id");
             while ($row = $this->getDatabase()->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'sid' => $row['sid'],
@@ -3556,10 +3583,10 @@ class Core implements Interfaces\CoreInterface
         // Clean-up active_user_sessions first
         $timeout = (int)$this->config['session_timeout'] < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
-        $this->getDatabase()->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
+        $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
         // Clean-up active_user_locks
-        $rs = $this->getDatabase()->select('sid,internalKey', $this->getFullTableName('active_user_sessions'));
+        $rs = $this->getDatabase()->select('sid,internalKey', $this->getDatabase()->getFullTableName('active_user_sessions'));
         $count = $this->getDatabase()->getRecordCount($rs);
         if ($count) {
             $rs = $this->getDatabase()->makeArray($rs);
@@ -3568,9 +3595,9 @@ class Core implements Interfaces\CoreInterface
                 $userSids[] = $row['sid'];
             }
             $userSids = "'" . implode("','", $userSids) . "'";
-            $this->getDatabase()->delete($this->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
+            $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
         } else {
-            $this->getDatabase()->delete($this->getFullTableName('active_user_locks'));
+            $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'));
         }
 
     }
@@ -3584,7 +3611,7 @@ class Core implements Interfaces\CoreInterface
         $validSessionTimeLimit = $this->time - $timeout;
 
         $activeUserSids = array();
-        $rs = $this->getDatabase()->select('sid', $this->getFullTableName('active_user_sessions'));
+        $rs = $this->getDatabase()->select('sid', $this->getDatabase()->getFullTableName('active_user_sessions'));
         $count = $this->getDatabase()->getRecordCount($rs);
         if ($count) {
             $rs = $this->getDatabase()->makeArray($rs);
@@ -3593,7 +3620,7 @@ class Core implements Interfaces\CoreInterface
             }
         }
 
-        $rs = $this->getDatabase()->select("sid,internalKey,lasthit", "{$this->getFullTableName('active_users')}", "", "lasthit DESC");
+        $rs = $this->getDatabase()->select("sid,internalKey,lasthit", "{$this->getDatabase()->getFullTableName('active_users')}", "", "lasthit DESC");
         if ($this->getDatabase()->getRecordCount($rs)) {
             $rs = $this->getDatabase()->makeArray($rs);
             $internalKeyCount = array();
@@ -3611,7 +3638,7 @@ class Core implements Interfaces\CoreInterface
 
             }
             if ($deleteSids) {
-                $this->getDatabase()->delete($this->getFullTableName('active_users'), $deleteSids);
+                $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_users'), $deleteSids);
             }
         }
 
@@ -3658,7 +3685,7 @@ class Core implements Interfaces\CoreInterface
         }
 
         $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
-                VALUES (%d, %d, %d, %d, \'%s\')', $this->getFullTableName('active_user_locks'), $userId, $type, $id, $this->time, $this->sid);
+                VALUES (%d, %d, %d, %d, \'%s\')', $this->getDatabase()->getFullTableName('active_user_locks'), $userId, $type, $id, $this->time, $this->sid);
         $this->getDatabase()->query($sql);
     }
 
@@ -3680,9 +3707,9 @@ class Core implements Interfaces\CoreInterface
         }
 
         if (!$includeAllUsers) {
-            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;', $this->getFullTableName('active_user_locks'), $userId, $type, $id);
+            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;', $this->getDatabase()->getFullTableName('active_user_locks'), $userId, $type, $id);
         } else {
-            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;', $this->getFullTableName('active_user_locks'), $type, $id);
+            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;', $this->getDatabase()->getFullTableName('active_user_locks'), $type, $id);
         }
         $this->getDatabase()->query($sql);
     }
@@ -3712,7 +3739,7 @@ class Core implements Interfaces\CoreInterface
         $_SESSION['ip'] = $ip;
 
         $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
-            VALUES (%d, %d, \'%s\', \'%s\')', $this->getFullTableName('active_user_sessions'), $userId, $this->time, $ip, $this->sid);
+            VALUES (%d, %d, \'%s\', \'%s\')', $this->getDatabase()->getFullTableName('active_user_sessions'), $userId, $this->time, $ip, $this->sid);
         $this->getDatabase()->query($sql);
     }
 
@@ -3759,7 +3786,7 @@ class Core implements Interfaces\CoreInterface
             'description' => $msg,
             'user' => $LoginUserID,
             'usertype' => $usertype
-        ), $this->getFullTableName("event_log"));
+        ), $this->getDatabase()->getFullTableName("event_log"));
 
         if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
             if ($this->config['send_errormail'] <= $type) {
@@ -3873,7 +3900,7 @@ class Core implements Interfaces\CoreInterface
             $trim = $limit;
         }
 
-        $table_name = $this->getFullTableName($target);
+        $table_name = $this->getDatabase()->getFullTableName($target);
         $count = $this->getDatabase()->getValue($this->getDatabase()->select('COUNT(id)', $table_name));
         $over = $count - $limit;
         if (0 < $over) {
@@ -3922,8 +3949,8 @@ class Core implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $tblsc = $this->getFullTableName("site_content");
-        $tbldg = $this->getFullTableName("document_groups");
+        $tblsc = $this->getDatabase()->getFullTableName("site_content");
+        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
         // modify field names to use sc. table reference
         $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
         $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
@@ -3958,8 +3985,8 @@ class Core implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $tblsc = $this->getFullTableName("site_content");
-        $tbldg = $this->getFullTableName("document_groups");
+        $tblsc = $this->getDatabase()->getFullTableName("site_content");
+        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
 
         // modify field names to use sc. table reference
         $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
@@ -4023,8 +4050,8 @@ class Core implements Interfaces\CoreInterface
         // build query
         $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
 
-        $tblsc = $this->getFullTableName('site_content');
-        $tbldg = $this->getFullTableName('document_groups');
+        $tblsc = $this->getDatabase()->getFullTableName('site_content');
+        $tbldg = $this->getDatabase()->getFullTableName('document_groups');
 
         $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id", "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
@@ -4089,8 +4116,8 @@ class Core implements Interfaces\CoreInterface
 
             $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
 
-            $tblsc = $this->getFullTableName('site_content');
-            $tbldg = $this->getFullTableName('document_groups');
+            $tblsc = $this->getDatabase()->getFullTableName('site_content');
+            $tbldg = $this->getDatabase()->getFullTableName('document_groups');
 
             $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
                     LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',', $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id", ($sort ? "{$sort} {$dir}" : ""), $limit);
@@ -4194,8 +4221,8 @@ class Core implements Interfaces\CoreInterface
         if ($pageid == 0) {
             return false;
         } else {
-            $tblsc = $this->getFullTableName("site_content");
-            $tbldg = $this->getFullTableName("document_groups");
+            $tblsc = $this->getDatabase()->getFullTableName("site_content");
+            $tbldg = $this->getDatabase()->getFullTableName("document_groups");
             $activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
             // modify field names to use sc. table reference
             $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
@@ -4249,7 +4276,7 @@ class Core implements Interfaces\CoreInterface
     public function getSnippetId()
     {
         if ($this->currentSnippet) {
-            $tbl = $this->getFullTableName("site_snippets");
+            $tbl = $this->getDatabase()->getFullTableName("site_snippets");
             $rs = $this->getDatabase()->select('id', $tbl, "name='" . $this->getDatabase()->escape($this->currentSnippet) . "'", '', 1);
             if ($snippetId = $this->getDatabase()->getValue($rs)) {
                 return $snippetId;
@@ -4431,7 +4458,7 @@ class Core implements Interfaces\CoreInterface
         if (isset($this->aliasListing[$id])) {
             $out = $this->aliasListing[$id];
         } else {
-            $q = $this->getDatabase()->query("SELECT id,alias,isfolder,parent FROM " . $this->getFullTableName("site_content") . " WHERE id=" . (int)$id);
+            $q = $this->getDatabase()->query("SELECT id,alias,isfolder,parent FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE id=" . (int)$id);
             if ($this->getDatabase()->getRecordCount($q) == '1') {
                 $q = $this->getDatabase()->getRow($q);
                 $this->aliasListing[$id] = array(
@@ -4507,7 +4534,7 @@ class Core implements Interfaces\CoreInterface
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN " . $this->getFullTableName('site_modules') . " as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->getDatabase()->escape($snippetName) . "'  AND ss.disabled=0;";
+            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getDatabase()->getFullTableName("site_snippets") . " as ss LEFT JOIN " . $this->getDatabase()->getFullTableName('site_modules') . " as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->getDatabase()->escape($snippetName) . "'  AND ss.disabled=0;";
             $result = $this->getDatabase()->query($sql);
             if ($this->getDatabase()->getRecordCount($result) == 1) {
                 $row = $this->getDatabase()->getRow($result);
@@ -4545,7 +4572,11 @@ class Core implements Interfaces\CoreInterface
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
             $where = sprintf("`name`='%s' AND disabled=0", $this->getDatabase()->escape($chunkName));
-            $rs = $this->getDatabase()->select('snippet', '[+prefix+]site_htmlsnippets', $where);
+            $rs = $this->getDatabase()->select(
+                'snippet',
+                $this->getDatabase()->getFullTableName('site_htmlsnippets'),
+                $where
+            );
             if ($this->getDatabase()->getRecordCount($rs) == 1) {
                 $row = $this->getDatabase()->getRow($rs);
                 $out = $this->chunkCache[$chunkName] = $row['snippet'];
@@ -4838,9 +4869,18 @@ class Core implements Interfaces\CoreInterface
 
                 $docid = $doc['id'];
 
-                $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
-                        INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
-                        LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'", "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
+                $rs = $this->getDatabase()->select(
+                    "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ",
+
+                    $this->getDatabase()->getFullTableName("site_tmplvars") .
+                    " tv INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") .
+                    " tvtpl ON tvtpl.tmplvarid = tv.id LEFT JOIN " .
+                    $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") .
+                    " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
+
+                    "{$query} AND tvtpl.templateid = '{$doc['template']}'",
+                    ($tvsort ? "{$tvsort} {$tvsortdir}" : "")
+                );
                 $tvs = $this->getDatabase()->makeArray($rs);
 
                 // get default/built-in template variables
@@ -5000,9 +5040,9 @@ class Core implements Interfaces\CoreInterface
                 $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
             }
 
-            $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getFullTableName('site_tmplvars') . " tv
-                    INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
-                    LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'", "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
+            $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getDatabase()->getFullTableName('site_tmplvars') . " tv
+                    INNER JOIN " . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
+                    LEFT JOIN " . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'", "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
 
             $result = $this->getDatabase()->makeArray($rs);
 
@@ -5078,10 +5118,11 @@ class Core implements Interfaces\CoreInterface
      *
      * @param string $tbl Table name
      * @return string Table name with prefix
+     * @deprecated use ->getDatabase()->getFullTableName()
      */
     public function getFullTableName($tbl)
     {
-        return $this->getDatabase()->config['dbase'] . ".`" . $this->getDatabase()->config['table_prefix'] . $tbl . "`";
+        return $this->getDatabase()->getFullTableName($tbl);
     }
 
     /**
@@ -5180,12 +5221,12 @@ class Core implements Interfaces\CoreInterface
         $private = ($private) ? 1 : 0;
         if (!is_numeric($to)) {
             // Query for the To ID
-            $rs = $this->getDatabase()->select('id', $this->getFullTableName("manager_users"), "username='{$to}'");
+            $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName("manager_users"), "username='{$to}'");
             $to = $this->getDatabase()->getValue($rs);
         }
         if (!is_numeric($from)) {
             // Query for the From ID
-            $rs = $this->getDatabase()->select('id', $this->getFullTableName("manager_users"), "username='{$from}'");
+            $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName("manager_users"), "username='{$from}'");
             $from = $this->getDatabase()->getValue($rs);
         }
         // insert a new message into user_messages
@@ -5198,7 +5239,7 @@ class Core implements Interfaces\CoreInterface
             'private' => $private,
             'postdate' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
             'messageread' => 0,
-        ), $this->getFullTableName('user_messages'));
+        ), $this->getDatabase()->getFullTableName('user_messages'));
     }
 
     /**
@@ -5287,7 +5328,8 @@ class Core implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$uid];
         }
 
-        $from = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
+        $from = $this->getDatabase()->getFullTableName('manager_users') . ' mu INNER JOIN ' .
+            $this->getDatabase()->getFullTableName('user_attributes'). ' mua ON mua.internalkey=mu.id';
         $where = sprintf("mu.id='%s'", $this->getDatabase()->escape($uid));
         $rs = $this->getDatabase()->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
 
@@ -5313,8 +5355,8 @@ class Core implements Interfaces\CoreInterface
      */
     public function getWebUserInfo($uid)
     {
-        $rs = $this->getDatabase()->select('wu.username, wu.password, wua.*', $this->getFullTableName("web_users") . " wu
-                INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id", "wu.id='{$uid}'");
+        $rs = $this->getDatabase()->select('wu.username, wu.password, wua.*', $this->getDatabase()->getFullTableName("web_users") . " wu
+                INNER JOIN " . $this->getDatabase()->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id", "wu.id='{$uid}'");
         if ($row = $this->getDatabase()->getRow($rs)) {
             if (!isset($row['usertype']) or !$row["usertype"]) {
                 $row["usertype"] = "web";
@@ -5350,7 +5392,7 @@ class Core implements Interfaces\CoreInterface
         } else if (is_array($dg)) {
             // resolve ids to names
             $dgn = array();
-            $ds = $this->getDatabase()->select('name', $this->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
+            $ds = $this->getDatabase()->select('name', $this->getDatabase()->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
             while ($row = $this->getDatabase()->getRow($ds)) {
                 $dgn[] = $row['name'];
             }
@@ -5377,7 +5419,7 @@ class Core implements Interfaces\CoreInterface
     {
         $rt = false;
         if ($_SESSION["webValidated"] == 1) {
-            $tbl = $this->getFullTableName("web_users");
+            $tbl = $this->getDatabase()->getFullTableName("web_users");
             $ds = $this->getDatabase()->select('id, username, password', $tbl, "id='" . $this->getLoginUserID() . "'");
             if ($row = $this->getDatabase()->getRow($ds)) {
                 if ($row["password"] == md5($oldPwd)) {
@@ -5419,8 +5461,8 @@ class Core implements Interfaces\CoreInterface
         // check cache
         $grpNames = isset ($_SESSION['webUserGroupNames']) ? $_SESSION['webUserGroupNames'] : false;
         if (!is_array($grpNames)) {
-            $rs = $this->getDatabase()->select('wgn.name', $this->getFullTableName("webgroup_names") . " wgn
-                    INNER JOIN " . $this->getFullTableName("web_groups") . " wg ON wg.webgroup=wgn.id AND wg.webuser='" . $this->getLoginUserID() . "'");
+            $rs = $this->getDatabase()->select('wgn.name', $this->getDatabase()->getFullTableName("webgroup_names") . " wgn
+                    INNER JOIN " . $this->getDatabase()->getFullTableName("web_groups") . " wg ON wg.webgroup=wgn.id AND wg.webuser='" . $this->getLoginUserID() . "'");
             $grpNames = $this->getDatabase()->getColumn("name", $rs);
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
@@ -5710,7 +5752,7 @@ class Core implements Interfaces\CoreInterface
             $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
         } else {
             $pluginName = $this->getDatabase()->escape($pluginName);
-            $result = $this->getDatabase()->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            $result = $this->getDatabase()->select('name, plugincode, properties', $this->getDatabase()->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
             if ($row = $this->getDatabase()->getRow($result)) {
                 $pluginCode = $this->pluginCache[$row['name']] = $row['plugincode'];
                 $pluginProperties = $this->pluginCache[$row['name'] . "Props"] = $row['properties'];
@@ -6754,7 +6796,7 @@ class Core implements Interfaces\CoreInterface
      */
     public function getHiddenIdFromAlias($parentid, $alias)
     {
-        $table = $this->getFullTableName('site_content');
+        $table = $this->getDatabase()->getFullTableName('site_content');
         $query = $this->getDatabase()->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
             FROM {$table} sc
             JOIN {$table} children ON children.parent = sc.id
@@ -6787,7 +6829,7 @@ class Core implements Interfaces\CoreInterface
             return $this->documentListing[$alias];
         }
 
-        $tbl_site_content = $this->getFullTableName('site_content');
+        $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
         if ($this->config['use_alias_path'] == 1) {
             if ($alias == '.') {
                 return 0;

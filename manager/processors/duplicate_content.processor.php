@@ -28,7 +28,7 @@ if(!$udperms->checkPermissions()) {
 $id = duplicateDocument($id);
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('pagetitle', $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // finish cloning - redirect

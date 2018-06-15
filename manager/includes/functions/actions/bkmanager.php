@@ -87,7 +87,7 @@ if(!function_exists('getSettings')) {
     function getSettings()
     {
         $modx = evolutionCMS();
-        $tbl_system_settings = $modx->getFullTableName('system_settings');
+        $tbl_system_settings = $modx->getDatabase()->getFullTableName('system_settings');
 
         $rs = $modx->getDatabase()->select('setting_name, setting_value', $tbl_system_settings);
 
@@ -114,7 +114,7 @@ if(!function_exists('restoreSettings')) {
     function restoreSettings($settings)
     {
         $modx = evolutionCMS();
-        $tbl_system_settings = $modx->getFullTableName('system_settings');
+        $tbl_system_settings = $modx->getDatabase()->getFullTableName('system_settings');
 
         foreach ($settings as $k => $v) {
             $modx->getDatabase()->update(array('setting_value' => $v), $tbl_system_settings, "setting_name='{$k}'");

@@ -53,15 +53,15 @@ if (trim($no_esc_pagetitle) == "") {
 }
 
 // get table names
-$tbl_document_groups            = $modx->getFullTableName('document_groups');
-$tbl_documentgroup_names        = $modx->getFullTableName('documentgroup_names');
-$tbl_member_groups              = $modx->getFullTableName('member_groups');
-$tbl_membergroup_access         = $modx->getFullTableName('membergroup_access');
-$tbl_site_content               = $modx->getFullTableName('site_content');
-$tbl_site_tmplvar_access        = $modx->getFullTableName('site_tmplvar_access');
-$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
-$tbl_site_tmplvar_templates     = $modx->getFullTableName('site_tmplvar_templates');
-$tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
+$tbl_document_groups            = $modx->getDatabase()->getFullTableName('document_groups');
+$tbl_documentgroup_names        = $modx->getDatabase()->getFullTableName('documentgroup_names');
+$tbl_member_groups              = $modx->getDatabase()->getFullTableName('member_groups');
+$tbl_membergroup_access         = $modx->getDatabase()->getFullTableName('membergroup_access');
+$tbl_site_content               = $modx->getDatabase()->getFullTableName('site_content');
+$tbl_site_tmplvar_access        = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
+$tbl_site_tmplvar_contentvalues = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
+$tbl_site_tmplvar_templates     = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
+$tbl_site_tmplvars              = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 $actionToTake = "new";
 if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {

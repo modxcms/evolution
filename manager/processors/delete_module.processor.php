@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_modules'), "id='{$id}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeModFormDelete event
@@ -22,13 +22,13 @@ $modx->invokeEvent("OnBeforeModFormDelete",
 	));
 
 // delete the module.
-$modx->getDatabase()->delete($modx->getFullTableName('site_modules'), "id='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'");
 
 // delete the module dependencies.
-$modx->getDatabase()->delete($modx->getFullTableName('site_module_depobj'), "module='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_module_depobj'), "module='{$id}'");
 
 // delete the module user group access.
-$modx->getDatabase()->delete($modx->getFullTableName('site_module_access'), "module='{$id}'");
+$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_module_access'), "module='{$id}'");
 
 // invoke OnModFormDelete event
 $modx->invokeEvent("OnModFormDelete",

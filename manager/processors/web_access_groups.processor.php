@@ -10,11 +10,11 @@ if(!$modx->hasPermission('web_access_permissions')) {
 // figure out what the user wants to do...
 
 // Get table names (alphabetical)
-$tbl_document_groups     = $modx->getFullTableName('document_groups');
-$tbl_documentgroup_names = $modx->getFullTableName('documentgroup_names');
-$tbl_web_groups          = $modx->getFullTableName('web_groups');
-$tbl_webgroup_access     = $modx->getFullTableName('webgroup_access');
-$tbl_webgroup_names      = $modx->getFullTableName('webgroup_names');
+$tbl_document_groups     = $modx->getDatabase()->getFullTableName('document_groups');
+$tbl_documentgroup_names = $modx->getDatabase()->getFullTableName('documentgroup_names');
+$tbl_web_groups          = $modx->getDatabase()->getFullTableName('web_groups');
+$tbl_webgroup_access     = $modx->getDatabase()->getFullTableName('webgroup_access');
+$tbl_webgroup_names      = $modx->getDatabase()->getFullTableName('webgroup_names');
 
 $updategroupaccess = false;
 $operation = $_REQUEST['operation'];

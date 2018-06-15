@@ -15,8 +15,8 @@ if($id==0) {
 if($_SESSION['mgrRole']!=1){
 	$rs = $modx->getDatabase()->select(
 		'sma.usergroup,mg.member',
-		$modx->getFullTableName("site_module_access")." sma
-			LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
+		$modx->getDatabase()->getFullTableName("site_module_access")." sma
+			LEFT JOIN ".$modx->getDatabase()->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
 		"sma.module = '{$id}'"
 		);
 	//initialize permission to -1, if it stays -1 no permissions
@@ -41,7 +41,7 @@ if($_SESSION['mgrRole']!=1){
 }
 
 // get module data
-$rs = $modx->getDatabase()->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
+$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName("site_modules"), "id='{$id}'");
 $content = $modx->getDatabase()->getRow($rs);
 if(!$content) {
 	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");

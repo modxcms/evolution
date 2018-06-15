@@ -7,13 +7,13 @@ if(!$modx->hasPermission('access_permissions')) {
 }
 
 // Get table names (alphabetical)
-$tbl_document_groups = $modx->getFullTableName('document_groups');
-$tbl_documentgroup_names = $modx->getFullTableName('documentgroup_names');
-$tbl_manager_users = $modx->getFullTableName('manager_users');
-$tbl_member_groups = $modx->getFullTableName('member_groups');
-$tbl_membergroup_access = $modx->getFullTableName('membergroup_access');
-$tbl_membergroup_names = $modx->getFullTableName('membergroup_names');
-$tbl_site_content = $modx->getFullTableName('site_content');
+$tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
+$tbl_documentgroup_names = $modx->getDatabase()->getFullTableName('documentgroup_names');
+$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
+$tbl_member_groups = $modx->getDatabase()->getFullTableName('member_groups');
+$tbl_membergroup_access = $modx->getDatabase()->getFullTableName('membergroup_access');
+$tbl_membergroup_names = $modx->getDatabase()->getFullTableName('membergroup_names');
+$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
 
 // find all document groups, for the select :)
 $rs = $modx->getDatabase()->select('*', $tbl_documentgroup_names, '', 'name');

@@ -11,8 +11,8 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 // count duplicates
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_modules'), "id='{$id}'"));
-$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('name', $modx->getFullTableName('site_modules'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'"));
+$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_modules'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
@@ -33,8 +33,8 @@ $newid = $modx->getDatabase()->insert(
 		'enable_sharedparams'=>'',
 		'properties'=>'',
 		'modulecode'=>'',
-		), $modx->getFullTableName('site_modules'), // Insert into
-	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, '1' AS disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' AS guid, enable_sharedparams, properties, modulecode", $modx->getFullTableName('site_modules'), "id='{$id}'"); // Copy from
+		), $modx->getDatabase()->getFullTableName('site_modules'), // Insert into
+	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, '1' AS disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' AS guid, enable_sharedparams, properties, modulecode", $modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'"); // Copy from
 
 // duplicate module dependencies
 $modx->getDatabase()->insert(
@@ -42,19 +42,19 @@ $modx->getDatabase()->insert(
 		'module'=>'',
 		'resource'=>'',
 		'type'=>'',
-		), $modx->getFullTableName('site_module_depobj'), // Insert into
-	"'{$newid}', resource, type", $modx->getFullTableName('site_module_depobj'), "module='{$id}'"); // Copy from
+		), $modx->getDatabase()->getFullTableName('site_module_depobj'), // Insert into
+	"'{$newid}', resource, type", $modx->getDatabase()->getFullTableName('site_module_depobj'), "module='{$id}'"); // Copy from
 
 // duplicate module user group access
 $modx->getDatabase()->insert(
 	array(
 		'module'=>'',
 		'usergroup'=>'',
-		), $modx->getFullTableName('site_module_access'), // Insert into
-	"'{$newid}', usergroup", $modx->getFullTableName('site_module_access'), "module='{$id}'"); // Copy from
+		), $modx->getDatabase()->getFullTableName('site_module_access'), // Insert into
+	"'{$newid}', usergroup", $modx->getDatabase()->getFullTableName('site_module_access'), "module='{$id}'"); // Copy from
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getFullTableName('site_modules'), "id='{$newid}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_modules'), "id='{$newid}'"));
 $_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new module

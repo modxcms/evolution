@@ -8,8 +8,8 @@ if(!$modx->hasPermission('delete_plugin')) {
 	$e->dumpError();
 }
 
-$tbl_site_plugins = $modx->getFullTablename('site_plugins');
-$tbl_site_plugin_events = $modx->getFullTablename('site_plugin_events');
+$tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
+$tbl_site_plugin_events = $modx->getDatabase()->getFullTableName('site_plugin_events');
 
 // Get unique list of latest added plugins by highest sql-id
 $rs = $modx->getDatabase()->query("SELECT t1.id FROM {$tbl_site_plugins} t1 LEFT JOIN {$tbl_site_plugins} t2 ON (t1.name = t2.name AND t1.id < t2.id) WHERE t2.id IS NULL;");

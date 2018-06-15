@@ -44,7 +44,7 @@ if (!extension_loaded('gd') || !extension_loaded('zip')) {
 
 if(!isset($modx->config['_hide_configcheck_validate_referer']) || $modx->config['_hide_configcheck_validate_referer'] !== '1') {
     if(isset($_SESSION['mgrPermissions']['settings']) && $_SESSION['mgrPermissions']['settings'] == '1') {
-        if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(setting_value)', $modx->getFullTableName('system_settings'), "setting_name='validate_referer' AND setting_value='0'"))) {
+        if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(setting_value)', $modx->getDatabase()->getFullTableName('system_settings'), "setting_name='validate_referer' AND setting_value='0'"))) {
             $warningspresent = 1;
             $warnings[] = array($_lang['configcheck_validate_referer']);
         }
@@ -54,7 +54,7 @@ if(!isset($modx->config['_hide_configcheck_validate_referer']) || $modx->config[
 // check for Template Switcher plugin
 if(!isset($modx->config['_hide_configcheck_templateswitcher_present']) || $modx->config['_hide_configcheck_templateswitcher_present'] !== '1') {
     if(isset($_SESSION['mgrPermissions']['edit_plugin']) && $_SESSION['mgrPermissions']['edit_plugin'] == '1') {
-        $rs = $modx->getDatabase()->select('name, disabled', $modx->getFullTableName('site_plugins'), "name IN ('TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher') OR plugincode LIKE '%TemplateSwitcher%'");
+        $rs = $modx->getDatabase()->select('name, disabled', $modx->getDatabase()->getFullTableName('site_plugins'), "name IN ('TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher') OR plugincode LIKE '%TemplateSwitcher%'");
         $row = $modx->getDatabase()->getRow($rs);
         if($row && $row['disabled'] == 0) {
             $warningspresent = 1;
@@ -96,22 +96,22 @@ JS;
     }
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 0) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 0) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getFullTableName('site_content'), "id='{$error_page}'")) == 0) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$error_page}'")) == 0) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_errorpage_unpublished']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 1) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 1) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_unauthorizedpage_unavailable']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getFullTableName('site_content'), "id='{$error_page}'")) == 1) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$error_page}'")) == 1) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
 }

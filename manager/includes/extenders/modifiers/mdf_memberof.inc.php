@@ -10,7 +10,14 @@ if(!is_array($groupNames)) return 0;
 // Creates an array with all webgroups the user id is in
 if (isset($modx->getModifiers()->cache['mo'][$userID])) $grpNames = $modx->getModifiers()->cache['mo'][$userID];
 else {
-    $from = sprintf("[+prefix+]webgroup_names wgn INNER JOIN [+prefix+]web_groups wg ON wg.webgroup=wgn.id AND wg.webuser='%s'",$userID);
+    $from = sprintf(
+        $modx->getDatabase()->getFullTableName('webgroup_names') .
+        " wgn INNER JOIN " .
+        $modx->getDatabase()->getFullTableName('web_groups') .
+        " wg ON wg.webgroup=wgn.id AND wg.webuser='%s'",
+
+        $userID
+    );
     $rs = $modx->getDatabase()->select('wgn.name',$from);
     $modx->getModifiers()->cache['mo'][$userID] = $grpNames = $modx->getDatabase()->getColumn('name',$rs);
 }

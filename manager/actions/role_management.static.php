@@ -18,7 +18,7 @@ if(!$modx->hasPermission('edit_user')) {
 		<div class="form-group"><?= $_lang['role_management_msg'] ?> <a class="btn btn-secondary btn-sm" href="index.php?a=38"><i class="<?= $_style["actions_new"] ?> hide4desktop"></i> <?= $_lang['new_role'] ?></a></div>
 		<div class="form-group">
 			<?php
-			$rs = $modx->getDatabase()->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
+			$rs = $modx->getDatabase()->select('name, id, description', $modx->getDatabase()->getFullTableName('user_roles'), '', 'name');
 			$limit = $modx->getDatabase()->getRecordCount($rs);
 			if($limit < 1) {
 				?>

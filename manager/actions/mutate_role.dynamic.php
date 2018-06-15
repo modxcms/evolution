@@ -20,7 +20,7 @@ switch ((int)$modx->getManagerApi()->action) {
 
 $role = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-$tbl_user_roles = $modx->getFullTableName('user_roles');
+$tbl_user_roles = $modx->getDatabase()->getFullTableName('user_roles');
 
 // check to see the snippet editor isn't locked
 if ($lockedEl = $modx->elementIsLocked(8, $role)) {

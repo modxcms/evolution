@@ -30,7 +30,7 @@ if (isset($_POST['listSubmitted'])) {
             $docid = ltrim($value, 'item_');
             $key = $reset ? 0 : $key;
             if (is_numeric($docid)) {
-                $modx->getDatabase()->update(array('menuindex' => $key), $modx->getFullTableName('site_content'), "id='{$docid}'");
+                $modx->getDatabase()->update(array('menuindex' => $key), $modx->getDatabase()->getFullTableName('site_content'), "id='{$docid}'");
             }
         }
     }
@@ -40,8 +40,8 @@ $disabled = 'true';
 $pagetitle = '';
 $ressourcelist = '';
 if ($id !== null) {
-    $tblsc = $modx->getFullTableName('site_content');
-    $tbldg = $modx->getFullTableName('document_groups');
+    $tblsc = $modx->getDatabase()->getFullTableName('site_content');
+    $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
 
     $rs = $modx->getDatabase()->select('pagetitle', $tblsc, 'id=' . $id . '');
     $pagetitle = $modx->getDatabase()->getValue($rs);

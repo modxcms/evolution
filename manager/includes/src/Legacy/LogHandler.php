@@ -68,7 +68,7 @@ class LogHandler
     public function writeToLog()
     {
         $modx = evolutionCMS();
-        $tbl_manager_log = $modx->getFullTableName('manager_log');
+        $tbl_manager_log = $modx->getDatabase()->getFullTableName('manager_log');
 
         if ($this->entry['internalKey'] == "") {
             $modx->webAlertAndQuit("Logging error: internalKey not set.");

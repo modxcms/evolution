@@ -17,8 +17,8 @@ Class TemplateParser
 
         if($action) {
             $sql = $modx->getDatabase()->query('SELECT t1.*, IF(t1.alias=\'\',t1.name,t1.alias) AS alias, t2.category AS category_name
-			FROM ' . $modx->getFullTableName('system_templates') . ' AS t1
-			INNER JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
+			FROM ' . $modx->getDatabase()->getFullTableName('system_templates') . ' AS t1
+			INNER JOIN ' . $modx->getDatabase()->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 			WHERE t1.action IN(' . $action . ') ' . $tab . '
 			ORDER BY t1.tab ASC, t1.rank ASC');
 

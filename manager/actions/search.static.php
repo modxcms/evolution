@@ -39,7 +39,7 @@ if (isset($_REQUEST['searchid'])) {
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_template_id'] ?></div>
                     <div class="col-md-9 col-lg-10">
                         <?php
-                        $rs = $modx->getDatabase()->select('*', $modx->getFullTableName('site_templates'));
+                        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_templates'));
                         $option[] = '<option value="">No selected</option>';
                         $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? (int)$_REQUEST['templateid'] : '';
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
@@ -80,8 +80,8 @@ if (isset($_REQUEST['searchid'])) {
 <?php
 //TODO: сделать поиск по уму пока сделаю что б одно поле было для id,longtitle,pagetitle,alias далее нужно думаю добавить что б и в елементах искало
 if (isset($_REQUEST['submitok'])) {
-    $tbl_site_content = $modx->getFullTableName('site_content');
-    $tbldg = $modx->getFullTableName('document_groups');
+    $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
+    $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
 
     $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, $modx_manager_charset);
     $searchlongtitle = $modx->getDatabase()->escape(trim($_REQUEST['searchfields']));
@@ -114,7 +114,7 @@ if (isset($_REQUEST['submitok'])) {
     if ($searchfields != '') {
 
 		/*start search by TV. Added Rising13*/
-		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+		$tbl_site_tmplvar_contentvalues = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
 		$articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
 		$articul_result = $modx->getDatabase()->query($articul_query);
 		$articul_id_array = $modx->getDatabase()->makeArray($articul_result);
@@ -307,7 +307,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //templates
                 if ($modx->hasPermission('edit_template')) {
-                    $rs = $modx->getDatabase()->select("id,templatename,locked", $modx->getFullTableName('site_templates'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,templatename,locked", $modx->getDatabase()->getFullTableName('site_templates'), "`id` like '%" . $searchfields . "%' 
 					OR `templatename` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `content` like '%" . $searchfields . "%'");
@@ -322,7 +322,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //tvs
                 if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked", $modx->getFullTableName('site_tmplvars'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,name,locked", $modx->getDatabase()->getFullTableName('site_tmplvars'), "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `type` like '%" . $searchfields . "%' 
@@ -341,7 +341,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //Chunks
                 if ($modx->hasPermission('edit_chunk')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getFullTableName('site_htmlsnippets'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%'     
 					OR `snippet` like '%" . $searchfields . "%'");
@@ -356,7 +356,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //Snippets
                 if ($modx->hasPermission('edit_snippet')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getFullTableName('site_snippets'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_snippets'), "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `snippet` like '%" . $searchfields . "%'  
@@ -373,7 +373,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //plugins
                 if ($modx->hasPermission('edit_plugin')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getFullTableName('site_plugins'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_plugins'), "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `plugincode` like '%" . $searchfields . "%'  
@@ -390,7 +390,7 @@ if (isset($_REQUEST['submitok'])) {
 
                 //modules
                 if ($modx->hasPermission('edit_module')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
                     OR `name` like '%" . $searchfields . "%' 
                     OR `description` like '%" . $searchfields . "%' 
                     OR `modulecode` like '%" . $searchfields . "%'  

@@ -17,7 +17,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 		<div class="form-group" id="lyr1">
 			<b><?= $_lang["publish_events"] ?></b>
 			<?php
-			$rs = $modx->getDatabase()->select('id, pagetitle, pub_date', $modx->getFullTableName('site_content'), "pub_date > " . time() . "", 'pub_date ASC');
+			$rs = $modx->getDatabase()->select('id, pagetitle, pub_date', $modx->getDatabase()->getFullTableName('site_content'), "pub_date > " . time() . "", 'pub_date ASC');
 			$limit = $modx->getDatabase()->getRecordCount($rs);
 			if($limit < 1) {
 				?>
@@ -56,7 +56,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 		<div class="form-group" id="lyr2">
 			<b><?= $_lang["unpublish_events"] ?></b>
 			<?php
-			$rs = $modx->getDatabase()->select('id, pagetitle, unpub_date', $modx->getFullTableName('site_content'), "unpub_date > " . time() . "", 'unpub_date ASC');
+			$rs = $modx->getDatabase()->select('id, pagetitle, unpub_date', $modx->getDatabase()->getFullTableName('site_content'), "unpub_date > " . time() . "", 'unpub_date ASC');
 			$limit = $modx->getDatabase()->getRecordCount($rs);
 			if($limit < 1) {
 				?>
@@ -95,7 +95,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 		<div class="form-group">
 			<b><?= $_lang["all_events"] ?></b>
 			<?php
-			$rs = $modx->getDatabase()->select('id, pagetitle, pub_date, unpub_date', $modx->getFullTableName('site_content'), "pub_date > 0 OR unpub_date > 0", "pub_date DESC");
+			$rs = $modx->getDatabase()->select('id, pagetitle, pub_date, unpub_date', $modx->getDatabase()->getFullTableName('site_content'), "pub_date > 0 OR unpub_date > 0", "pub_date DESC");
 			$limit = $modx->getDatabase()->getRecordCount($rs);
 			if($limit < 1) {
 				?>

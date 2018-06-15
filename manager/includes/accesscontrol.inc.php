@@ -225,7 +225,7 @@ if (!isset($_SESSION['mgrValidated'])) {
             $itemid = null;
         }
         $sql = sprintf("REPLACE INTO %s (sid, internalKey, username, lasthit, action, id) VALUES ('%s', %d, '%s', %d, '%s', %s)",
-            $modx->getFullTableName('active_users') // Table
+            $modx->getDatabase()->getFullTableName('active_users') // Table
             , session_id(), $modx->getLoginUserID(), $_SESSION['mgrShortname'], $lasthittime, (string)$action,
             $itemid == null ? var_export(null, true) : $itemid);
         $modx->getDatabase()->query($sql);

@@ -72,8 +72,8 @@ table.sysSettings tr.noborder td {border:none;}
     <?php
         $rs = $modx->getDatabase()->select(
             't.templatename, t.id, c.category',
-            $modx->getFullTableName('site_templates')." AS t
-                LEFT JOIN ".$modx->getFullTableName('categories')." AS c ON t.category = c.id",
+            $modx->getDatabase()->getFullTableName('site_templates')." AS t
+                LEFT JOIN ".$modx->getDatabase()->getFullTableName('categories')." AS c ON t.category = c.id",
             "",
             'c.category, t.templatename ASC'
             );
@@ -135,7 +135,7 @@ table.sysSettings tr.noborder td {border:none;}
         <?php
             // Check if PHX is enabled
             $count = $modx->getDatabase()->getRecordCount(
-              $modx->getDatabase()->select('id', '[+prefix+]site_plugins',
+              $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_plugins'),
               "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
             );
             if($count) {

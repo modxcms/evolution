@@ -975,7 +975,7 @@ class Modifiers implements ModifiersInterface
 
                 return $menutitle ? $menutitle : $pagetitle;
             case 'templatename':
-                $rs = $modx->getDatabase()->select('templatename', '[+prefix+]site_templates', "id='{$value}'");
+                $rs = $modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$value}'");
                 $templateName = $modx->getDatabase()->getValue($rs);
 
                 return !$templateName ? '(blank)' : $templateName;
@@ -1301,7 +1301,11 @@ class Modifiers implements ModifiersInterface
             $php = $modx->snippetCache[$this->elmName];
         } else {
             $esc_elmName = $modx->getDatabase()->escape($this->elmName);
-            $result = $modx->getDatabase()->select('snippet', '[+prefix+]site_snippets', "name='{$esc_elmName}'");
+            $result = $modx->getDatabase()->select(
+                'snippet',
+                $modx->getDatabase()->getFullTableName('site_snippets'),
+                "name='{$esc_elmName}'"
+            );
             $total = $modx->getDatabase()->getRecordCount($result);
             if ($total == 1) {
                 $row = $modx->getDatabase()->getRow($result);

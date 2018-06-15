@@ -20,9 +20,9 @@ switch ($modx->getManagerApi()->action) {
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-$tbl_site_plugins = $modx->getFullTableName('site_plugins');
-$tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
-$tbl_system_eventnames = $modx->getFullTableName('system_eventnames');
+$tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
+$tbl_site_plugin_events = $modx->getDatabase()->getFullTableName('site_plugin_events');
+$tbl_system_eventnames = $modx->getDatabase()->getFullTableName('system_eventnames');
 
 // check to see the plugin isn't locked
 if ($lockedEl = $modx->elementIsLocked(5, $id)) {
@@ -588,9 +588,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             <select name="moduleguid" class="form-control" onchange="documentDirty=true;">
                                 <option>&nbsp;</option>
                                 <?php
-                                $ds = $modx->getDatabase()->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
-								INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
-								INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
+                                $ds = $modx->getDatabase()->select('sm.id,sm.name,sm.guid', $modx->getDatabase()->getFullTableName("site_modules") . " sm 
+								INNER JOIN " . $modx->getDatabase()->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
+								INNER JOIN " . $modx->getDatabase()->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
                                 while ($row = $modx->getDatabase()->getRow($ds)) {
                                     echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->getPhpCompat()->htmlspecialchars($row["name"]) . "</option>";
                                 }

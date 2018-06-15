@@ -33,32 +33,32 @@ $sqlQuery = $modx->getDatabase()->escape($query);
 switch ($rt) {
     case "snip":
         $title = $_lang["snippet"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case "tpl":
         $title = $_lang["template"];
-        $ds = $modx->getDatabase()->select('id,templatename as name,description', $modx->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
+        $ds = $modx->getDatabase()->select('id,templatename as name,description', $modx->getDatabase()->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
         break;
 
     case("tv"):
         $title = $_lang["tv"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("chunk"):
         $title = $_lang["chunk"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("plug"):
         $title = $_lang["plugin"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("doc"):
         $title = $_lang["resource"];
-        $ds = $modx->getDatabase()->select('id,pagetitle as name,longtitle as description', $modx->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
+        $ds = $modx->getDatabase()->select('id,pagetitle as name,longtitle as description', $modx->getDatabase()->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
         break;
 
 }

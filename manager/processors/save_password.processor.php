@@ -19,7 +19,7 @@ if(strlen($pass1)<6){
 }
 
     $pass1 = $modx->getPhpCompat()->htmlspecialchars($pass1, ENT_NOQUOTES);
-	$tbl_manager_users = $modx->getFullTableName('manager_users');
+	$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
 	$f['password'] = $modx->getPasswordHash()->HashPassword($pass1);
 	$modx->getDatabase()->update($f,$tbl_manager_users,"id='{$uid}'");

@@ -650,6 +650,11 @@ class Database implements Interfaces\DatabaseInterface
         return $this->conn->server_info;
     }
 
+    public function getFullTableName($tbl)
+    {
+        return $this->config['dbase'] . ".`" . $this->config['table_prefix'] . $tbl . "`";
+    }
+
     /**
      * @param string $tableName
      * @param bool $force

@@ -12,8 +12,8 @@ if($id==0) {
 }
 
 // count duplicates
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
-$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "templatename LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'"));
+$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "templatename LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
@@ -24,8 +24,8 @@ $newid = $modx->getDatabase()->insert(
 		'description'=>'',
 		'content'=>'',
 		'category'=>'',
-		), $modx->getFullTableName('site_templates'), // Insert into
-	"CONCAT(templatename, ' {$_lang['duplicated_el_suffix']}{$count}') AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
+		), $modx->getDatabase()->getFullTableName('site_templates'), // Insert into
+	"CONCAT(templatename, ' {$_lang['duplicated_el_suffix']}{$count}') AS templatename, description, content, category", $modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
 
 // duplicate TV values
 $modx->getDatabase()->insert(
@@ -33,11 +33,11 @@ $modx->getDatabase()->insert(
 		'tmplvarid'=>'',
 		'templateid'=>'',
 		'rank'=>'',
-		), $modx->getFullTableName('site_tmplvar_templates'), // Insert into
-	"tmplvarid, '{$newid}', rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'"); // Copy from
+		), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), // Insert into
+	"tmplvarid, '{$newid}', rank", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'"); // Copy from
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getFullTableName('site_templates'), "id='{$newid}'"));
+$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$newid}'"));
 $_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new template

@@ -85,8 +85,11 @@ class Cache
     { // modx:returns child's parent
         $modx = evolutionCMS();
         if (empty($this->aliases)) {
-            $f = "id, IF(alias='', id, alias) AS alias, parent, alias_visible";
-            $rs = $modx->getDatabase()->select($f, '[+prefix+]site_content', 'deleted=0');
+            $rs = $modx->getDatabase()->select(
+                "id, IF(alias='', id, alias) AS alias, parent, alias_visible",
+                $modx->getDatabase()->getFullTableName('site_content'),
+                'deleted=0'
+            );
             while ($row = $modx->getDatabase()->getRow($rs)) {
                 $docid = $row['id'];
                 $this->aliases[$docid] = $row['alias'];
@@ -204,8 +207,11 @@ class Cache
         // update publish time file
         $timesArr = array();
 
-        $result = $modx->getDatabase()->select('MIN(pub_date) AS minpub', '[+prefix+]site_content',
-            'pub_date>' . $this->request_time);
+        $result = $modx->getDatabase()->select(
+            'MIN(pub_date) AS minpub',
+            $modx->getDatabase()->getFullTableName('site_content'),
+            'pub_date>' . $this->request_time
+        );
         if (!$result) {
             echo "Couldn't determine next publish event!";
         }
@@ -215,8 +221,11 @@ class Cache
             $timesArr[] = $minpub;
         }
 
-        $result = $modx->getDatabase()->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content',
-            'unpub_date>' . $this->request_time);
+        $result = $modx->getDatabase()->select(
+            'MIN(unpub_date) AS minunpub',
+            $modx->getDatabase()->getFullTableName('site_content'),
+            'unpub_date>' . $this->request_time
+        );
         if (!$result) {
             echo "Couldn't determine next unpublish event!";
         }
@@ -251,7 +260,7 @@ class Cache
         // SETTINGS & DOCUMENT LISTINGS CACHE
 
         // get settings
-        $rs = $modx->getDatabase()->select('*', '[+prefix+]system_settings');
+        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('system_settings'));
         $config = array();
         $content .= '$c=&$this->config;';
         while (list($key, $value) = $modx->getDatabase()->getRow($rs, 'num')) {
@@ -261,7 +270,9 @@ class Cache
 
         if ($config['enable_filter']) {
             $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-            $count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('id', '[+prefix+]site_plugins', $where));
+            $count = $modx->getDatabase()->getRecordCount(
+                $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_plugins'), $where)
+            );
             if ($count) {
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
@@ -274,13 +285,17 @@ class Cache
             $f['isfolder'] = 'c.isfolder';
             $f['alias_visible'] = 'c.alias_visible';
             $from = array();
-            $from[] = '[+prefix+]site_content c';
-            $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
+            $from[] = $modx->getDatabase()->getFullTableName('site_content') . ' c';
+            $from[] = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_content') . ' p ON p.id=c.parent';
             $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
             $rs = $modx->getDatabase()->select($f, $from, $where, 'c.parent, c.menuindex');
         } else {
-            $f = "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible";
-            $rs = $modx->getDatabase()->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
+            $rs = $modx->getDatabase()->select(
+                "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible",
+                $modx->getDatabase()->getFullTableName('site_content'),
+                'deleted=0',
+                'parent, menuindex'
+            );
         }
 
         $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
@@ -306,14 +321,18 @@ class Cache
         }
 
         // get content types
-        $rs = $modx->getDatabase()->select('id, contentType', '[+prefix+]site_content', "contentType!='text/html'");
+        $rs = $modx->getDatabase()->select(
+            'id, contentType',
+            $modx->getDatabase()->getFullTableName('site_content'),
+            "contentType!='text/html'"
+        );
         $content .= '$c=&$this->contentTypes;';
         while ($doc = $modx->getDatabase()->getRow($rs)) {
             $content .= '$c[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
         }
 
         // WRITE Chunks to cache file
-        $rs = $modx->getDatabase()->select('*', '[+prefix+]site_htmlsnippets');
+        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_htmlsnippets'));
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->getDatabase()->getRow($rs)) {
             if ($modx->config['minifyphp_incache']) {
@@ -324,7 +343,8 @@ class Cache
 
         // WRITE snippets to cache file
         $f = 'ss.*, sm.properties as sharedproperties';
-        $from = '[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid';
+        $from = $modx->getDatabase()->getFullTableName('site_snippets') . ' ss LEFT JOIN ' .
+            $modx->getDatabase()->getFullTableName('site_modules') . ' sm on sm.guid=ss.moduleguid';
         $rs = $modx->getDatabase()->select($f, $from);
         $content .= '$s=&$this->snippetCache;';
         while ($row = $modx->getDatabase()->getRow($rs)) {
@@ -349,8 +369,8 @@ class Cache
         // WRITE plugins to cache file
         $f = 'sp.*, sm.properties as sharedproperties';
         $from = array();
-        $from[] = '[+prefix+]site_plugins sp';
-        $from[] = 'LEFT JOIN [+prefix+]site_modules sm on sm.guid=sp.moduleguid';
+        $from[] = $modx->getDatabase()->getFullTableName('site_plugins') . ' sp';
+        $from[] = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_modules') . ' sm on sm.guid=sp.moduleguid';
         $rs = $modx->getDatabase()->select($f, $from, 'sp.disabled=0');
         $content .= '$p=&$this->pluginCache;';
         while ($row = $modx->getDatabase()->getRow($rs)) {
@@ -373,9 +393,9 @@ class Cache
         // WRITE system event triggers
         $f = 'sysevt.name as evtname, event.pluginid, plugin.name as pname';
         $from = array();
-        $from[] = '[+prefix+]system_eventnames sysevt';
-        $from[] = 'INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id';
-        $from[] = 'INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid';
+        $from[] = $modx->getDatabase()->getFullTableName('system_eventnames') . ' sysevt';
+        $from[] = 'INNER JOIN ' . $modx->getDatabase()->getFullTableName('site_plugin_events') . ' event ON event.evtid=sysevt.id';
+        $from[] = 'INNER JOIN ' . $modx->getDatabase()->getFullTableName('site_plugins') . ' plugin ON plugin.id=event.pluginid';
         $rs = $modx->getDatabase()->select($f, $from, 'plugin.disabled=0', 'sysevt.name, event.priority');
         $content .= '$e=&$this->pluginEvent;';
         $events = array();

@@ -42,7 +42,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for new templates
-        $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
+        $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getDatabase()->getFullTableName('site_templates'), "templatename='{$templatename}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(19);
@@ -59,7 +59,7 @@ switch ($_POST['mode']) {
             'category' => $categoryid,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_templates'));
+        ), $modx->getDatabase()->getFullTableName('site_templates'));
 
         // invoke OnTempFormSave event
         $modx->invokeEvent("OnTempFormSave", array(
@@ -95,7 +95,7 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for templates
-        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
+        $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
         $count = $modx->getDatabase()->getValue($rs);
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(16);
@@ -111,7 +111,7 @@ switch ($_POST['mode']) {
             'selectable' => $selectable,
             'category' => $categoryid,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_templates'), "id='{$id}'");
+        ), $modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'");
         // Set new assigned Tvs
         saveTemplateAccess($id);
 
