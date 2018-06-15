@@ -637,7 +637,7 @@ if (!function_exists('sendMailMessageForUser')) {
         $message = str_replace("[+uid+]", $uid, $message);
         $message = str_replace("[+pwd+]", $pwd, $message);
         $message = str_replace("[+ufn+]", $ufn, $message);
-        $message = str_replace("[+sname+]", $site_name, $message);
+        $message = str_replace("[+sname+]", $modx->getPhpCompat()->entities($site_name), $message);
         $message = str_replace("[+saddr+]", $emailsender, $message);
         $message = str_replace("[+semail+]", $emailsender, $message);
         $message = str_replace("[+surl+]", $url, $message);

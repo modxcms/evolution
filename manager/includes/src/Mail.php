@@ -55,7 +55,7 @@ class Mail extends PHPMailer
         if (isset($modx->config['email_sender_method']) && !$modx->config['email_sender_method']) {
             $this->Sender = $modx->config['emailsender'];
         }
-        $this->FromName = $modx->config['site_name'];
+        $this->FromName = $modx->getPhpCompat()->entities($modx->config['site_name']);
         $this->isHTML(true);
 
         if (isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {

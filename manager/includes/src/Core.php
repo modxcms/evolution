@@ -4463,15 +4463,12 @@ class Core implements Interfaces\CoreInterface
      * Note: most code accesses the config array directly and we will continue to support this.
      *
      * @param string $name
+     * @param mixed $default
      * @return bool|string
      */
-    public function getConfig($name = '')
+    public function getConfig($name = '', $default = null)
     {
-        if (!empty ($this->config[$name])) {
-            return $this->config[$name];
-        } else {
-            return false;
-        }
+        return get_by_key($this->config, $name, $default);
     }
 
     /**

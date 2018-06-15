@@ -43,4 +43,9 @@ class PhpCompat implements PhpCompatInterface
 
         return $ent_str;
     }
+
+    public function entities($data)
+    {
+        return entities($data, evolutionCMS()->getConfig('modx_charset', 'UTF-8'));
+    }
 }

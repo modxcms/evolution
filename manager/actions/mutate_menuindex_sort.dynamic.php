@@ -148,14 +148,14 @@ $pagetitle = empty($id) ? $site_name : $pagetitle;
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $pagetitle . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
+    <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>
 
 <div class="tab-page">
     <div class="container container-body">
-        <b><?= $pagetitle ?> (<?= $id ?>)</b>
+        <b><?= $modx->getPhpCompat()->entities($pagetitle) ?> (<?= $id ?>)</b>
         <?php
         if ($ressourcelist) {
             ?>

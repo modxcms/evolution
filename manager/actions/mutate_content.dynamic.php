@@ -825,7 +825,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										}
 										?>
 										<i id="plock" class="<?= $_style["actions_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
-										<b><span id="parentName"><?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?> (<?= $parentname ?>)</span></b>
+										<b><span id="parentName"><?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?> (<?= $modx->getPhpCompat()->entities($parentname) ?>)</span></b>
 										<input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>

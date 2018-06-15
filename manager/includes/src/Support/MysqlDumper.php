@@ -86,7 +86,7 @@ class MysqlDumper implements MysqlDumperInterface
 
         // Set header
         $output = "#{$lf}";
-        $output .= "# " . addslashes($modx->config['site_name']) . " Database Dump{$lf}";
+        $output .= "# " . addslashes($modx->getPhpCompat()->entities($modx->config['site_name'])) . " Database Dump{$lf}";
         $output .= "# MODX Version:{$version['version']}{$lf}";
         $output .= "# {$lf}";
         $output .= "# Host: {$this->database_server}{$lf}";

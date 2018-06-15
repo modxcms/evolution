@@ -73,7 +73,7 @@ class Database implements Interfaces\DatabaseInterface
                         $ua = $modx->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT']);
                         $referer = $modx->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER']);
                         $modx->sendmail(array(
-                            'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
+                            'subject' => 'Missing to create the database connection! from ' . $modx->getPhpCompat()->entities($modx->config['site_name']),
                             'body'    => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
                             'type'    => 'text'
                         ));
