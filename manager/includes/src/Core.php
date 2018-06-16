@@ -1,5 +1,23 @@
 <?php namespace EvolutionCMS;
 
+/**
+ * @property Mail $mail
+ *      $this->loadExtension('MODxMailer');
+ * @property Database $db
+ *      $this->loadExtension('DBAPI')
+ * @property Legacy\PhpCompat $phpcompat
+ *      $this->loadExtension('PHPCOMPAT');
+ * @property Legacy\Modifiers $filter
+ *      $this->loadExtension('MODIFIERS');
+ * @property Legacy\ExportSite $export
+ *      $this->loadExtension('EXPORT_SITE');
+ * @property Support\MakeTable $table
+ *      $this->loadExtension('makeTable');
+ * @property Legacy\ManagerApi $manager
+ *      $this->loadExtension('ManagerAPI');
+ * @property Legacy\PasswordHash $phpass
+ *      $this->loadExtension('phpass');
+ */
 class Core implements Interfaces\CoreInterface
 {
     /**
@@ -7,71 +25,6 @@ class Core implements Interfaces\CoreInterface
      * @var string
      */
     public $apiVersion = '1.0.0';
-
-    /**
-     * @var Mail
-     * @deprecated use ->getMail()
-     * @see /manager/includes/extenders/ex_modxmailer.inc.php
-     * @example $this->loadExtension('MODxMailer');
-     */
-    public $mail;
-
-    /**
-     * db object
-     * @deprecated use ->getDatabase()
-     * @var Database
-     * @see /manager/includes/extenders/ex_dbapi.inc.php
-     * @example $this->loadExtension('DBAPI')
-     */
-    public $db;
-
-    /**
-     * @var Legacy\PhpCompat
-     * @deprecated use ->getPhpCompat()
-     * @see /manager/includes/extenders/ex_phpcompat.inc.php
-     * @example $this->loadExtension('PHPCOMPAT');
-     */
-    public $phpcompat;
-
-    /**
-     * @var \MODIFIERS
-     * @deprecated use ->getModifiers()
-     * @see /manager/includes/extenders/ex_modifiers.inc.php
-     * @example $this->loadExtension('MODIFIERS');
-     */
-    public $filter;
-
-    /**
-     * @var Legacy\ExportSite
-     * @deprecated use ->getExportSite()
-     * @see /manager/includes/extenders/ex_export_site.inc.php
-     * @example $this->loadExtension('EXPORT_SITE');
-     */
-    public $export;
-
-    /**
-     * @var Support\MakeTable
-     * @deprecated use ->getMakeTable
-     * @see /manager/includes/extenders/ex_maketable.inc.php
-     * @example $this->loadExtension('makeTable');
-     */
-    public $table;
-
-    /**
-     * @var Legacy\ManagerApi
-     * @deprecated use ->getManagerApi()
-     * @see /manager/includes/extenders/ex_managerapi.inc.php
-     * @example $this->loadExtension('ManagerAPI');
-     */
-    public $manager;
-
-    /**
-     * @var Legacy\PasswordHash
-     * @deprecated use ->getPasswordHash()
-     * @see manager/includes/extenders/ex_phpass.inc.php
-     * @example $this->loadExtension('phpass');
-     */
-    public $phpass;
 
     /**
      * event object
@@ -450,6 +403,27 @@ class Core implements Interfaces\CoreInterface
             self::$instance = new static($services);
         }
         return self::$instance;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed|null
+     * @throws Exceptions\ServiceNotFoundException
+     */
+    public function __get($name)
+    {
+        if (isset($this->providerAliases[$name])) {
+            if ($this->getConfig('error_reporting', 0) > 1) {
+                trigger_error(
+                    'Property $' . $name . ' is deprecated and should no longer be used. ' .
+                    'Alternative ->getService(' . $this->providerAliases[$name] . '::class)',
+                    E_USER_DEPRECATED
+                );
+            }
+            return $this->getService($this->providerAliases[$name]);
+        }
+
+        return null;
     }
 
     /**

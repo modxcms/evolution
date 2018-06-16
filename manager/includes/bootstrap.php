@@ -12,6 +12,7 @@ spl_autoload_register(
                 'evolutioncms\\database' => '/src/Database.php',
                 'evolutioncms\\event' => '/src/Event.php',
                 'evolutioncms\\exceptions\\containerexception' => '/src/Exceptions/ContainerException.php',
+                'evolutioncms\\exceptions\\propertyexception' => '/src/Exceptions/PropertyException.php',
                 'evolutioncms\\exceptions\\servicenotfoundexception' => '/src/Exceptions/ServiceNotFoundException.php',
                 'evolutioncms\\interfaces\\captchainterface' => '/src/Interfaces/CaptchaInterface.php',
                 'evolutioncms\\interfaces\\contextmenuinterface' => '/src/Interfaces/ContextMenuInterface.php',
