@@ -44,6 +44,15 @@ class Database implements Interfaces\DatabaseInterface
     }
 
     /**
+     * @param null $key
+     * @return mixed
+     */
+    public function getConfig($key = null)
+    {
+        return $key === null ? $this->config : get_by_key($this->config, $key);
+    }
+
+    /**
      * @param string $host
      * @param string $dbase
      * @param string $uid
@@ -53,13 +62,13 @@ class Database implements Interfaces\DatabaseInterface
     public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
     {
         $modx = evolutionCMS();
-        $uid = $uid ? $uid : $this->config['user'];
-        $pwd = $pwd ? $pwd : $this->config['pass'];
-        $host = $host ? $host : $this->config['host'];
-        $dbase = $dbase ? $dbase : $this->config['dbase'];
+        $uid = $uid ? $uid : $this->getConfig('user');
+        $pwd = $pwd ? $pwd : $this->getConfig('pass');
+        $host = $host ? $host : $this->getConfig('host');
+        $dbase = $dbase ? $dbase : $this->getConfig('dbase');
         $dbase = trim($dbase, '`'); // remove the `` chars
-        $charset = $this->config['charset'];
-        $connection_method = $this->config['connection_method'];
+        $charset = $this->getConfig('charset');
+        $connection_method = $this->getConfig('connection_method');
         $tstart = $modx->getMicroTime();
         $safe_count = 0;
         do {
@@ -91,7 +100,7 @@ class Database implements Interfaces\DatabaseInterface
                 $modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s",
                         $totaltime) . "</fieldset><br />";
             }
-            $this->conn->set_charset($this->config['charset']);
+            $this->conn->set_charset($this->getConfig('charset'));
             $this->isConnected = true;
             $modx->queryTime += $totaltime;
         } else {
@@ -650,9 +659,19 @@ class Database implements Interfaces\DatabaseInterface
         return $this->conn->server_info;
     }
 
+    public function getTableName($table, $escape = true)
+    {
+        $out = $this->getConfig('table_prefix') . $table;
+        return $escape ? '`' . $out . '`' : $out;
+    }
+
+    /**
+     * @param $tbl
+     * @return string
+     */
     public function getFullTableName($tbl)
     {
-        return $this->config['dbase'] . ".`" . $this->config['table_prefix'] . $tbl . "`";
+        return $this->getConfig('dbase') . "." . $this->getTableName($tbl);
     }
 
     /**
@@ -663,8 +682,8 @@ class Database implements Interfaces\DatabaseInterface
     public function replaceFullTableName($tableName, $force = false)
     {
         $tableName = trim($tableName);
-        $dbase = trim($this->config['dbase'], '`');
-        $prefix = $this->config['table_prefix'];
+        $dbase = trim($this->getConfig('dbase'), '`');
+        $prefix = $this->getConfig('table_prefix');
         if ((bool)$force === true) {
             $result = "`{$dbase}`.`{$prefix}{$tableName}`";
         } elseif (strpos($tableName, '[+prefix+]') !== false) {
