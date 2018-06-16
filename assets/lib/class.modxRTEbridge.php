@@ -54,7 +54,7 @@ class modxRTEbridge
         $this->gSettingsCustom        = isset($bridgeConfig['gSettingsCustom']) ? $bridgeConfig['gSettingsCustom'] : array();
         $this->gSettingsDefaultValues = isset($bridgeConfig['gSettingsDefaultValues']) ? $bridgeConfig['gSettingsDefaultValues'] : array();
 
-        $this->mgrAction = $modx->getService(EvolutionCMS\Interfaces\ManagerApiInterface::class)->action;
+        $this->mgrAction = $modx->getManagerApi()->action;
 
         // Determine settings from Modx
         $this->mgrAction = $this->mgrAction ? $this->mgrAction : 11;
