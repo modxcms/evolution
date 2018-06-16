@@ -471,7 +471,7 @@ class DLphx
                             $snippet = $this->modx->snippetCache[$snippetName];
                         } else {
 // not in cache so let's check the db
-                            $sql = "SELECT snippet FROM " . $this->modx->getFullTableName("site_snippets") . " WHERE " . $this->modx->getFullTableName("site_snippets") . ".name='" . $this->modx->getDatabase()->escape($snippetName) . "';";
+                            $sql = "SELECT snippet FROM " . $this->modx->getDatabase()->getFullTableName("site_snippets") . " WHERE " . $this->modx->getDatabase()->getFullTableName("site_snippets") . ".name='" . $this->modx->getDatabase()->escape($snippetName) . "';";
                             $result = $this->modx->getDatabase()->query($sql);
                             if ($this->modx->getDatabase()->getRecordCount($result) == 1) {
                                 $row = $this->modx->getDatabase()->getRow($result);
@@ -651,8 +651,8 @@ class DLphx
 
         // Creates an array with all webgroups the user id is in
         if (!array_key_exists($userid, $this->cache["mo"])) {
-            $tbl = $this->modx->getFullTableName("webgroup_names");
-            $tbl2 = $this->modx->getFullTableName("web_groups");
+            $tbl = $this->modx->getDatabase()->getFullTableName("webgroup_names");
+            $tbl2 = $this->modx->getDatabase()->getFullTableName("web_groups");
             $sql = "SELECT `wgn`.`name` FROM {$tbl} `wgn` INNER JOIN {$tbl2} `wg` ON `wg`.`webgroup`=`wgn`.`id` AND `wg`.`webuser`={$userid}";
             $this->cache["mo"][$userid] = $grpNames = $this->modx->getDatabase()->getColumn("name", $sql);
         } else {

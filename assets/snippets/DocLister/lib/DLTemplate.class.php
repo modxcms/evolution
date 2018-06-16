@@ -312,7 +312,7 @@ class DLTemplate
         $tpl = null;
         $id = (int)$id;
         if ($id > 0) {
-            $tpl = $this->modx->getDatabase()->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = {$id}");
+            $tpl = $this->modx->getDatabase()->getValue("SELECT `content` FROM {$this->modx->getDatabase()->getFullTableName("site_templates")} WHERE `id` = {$id}");
         }
         if (is_null($tpl)) {
             $tpl = '[*content*]';

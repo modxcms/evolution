@@ -671,8 +671,8 @@ class modUsers extends MODxAPI
         $out = array();
         $user = $this->switchObject($userID);
         if (null !== $user->getID()) {
-            $web_groups = $this->modx->getFullTableName('web_groups');
-            $webgroup_access = $this->modx->getFullTableName('webgroup_access');
+            $web_groups = $this->modx->getDatabase()->getFullTableName('web_groups');
+            $webgroup_access = $this->modx->getDatabase()->getFullTableName('webgroup_access');
 
             $sql = "SELECT `uga`.`documentgroup` FROM {$web_groups} as `ug`
                 INNER JOIN {$webgroup_access} as `uga` ON `uga`.`webgroup`=`ug`.`webgroup`

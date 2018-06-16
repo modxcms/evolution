@@ -681,7 +681,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     final public function makeTable($table)
     {
         //Без использования APIHelpers::getkey(). Иначе getFullTableName будет всегда выполняться
-        return (isset($this->_table[$table])) ? $this->_table[$table] : $this->modx->getFullTableName($table);
+        return (isset($this->_table[$table])) ? $this->_table[$table] : $this->modx->getDatabase()->getFullTableName($table);
     }
 
     /**

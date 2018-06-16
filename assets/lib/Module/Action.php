@@ -52,7 +52,7 @@ abstract class Action
      */
     protected static function _checkObj($id)
     {
-        $q = self::$modx->getDatabase()->select('id', self::$modx->getFullTableName(self::TABLE()), "id = " . $id);
+        $q = self::$modx->getDatabase()->select('id', self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $id);
 
         return (self::$modx->getDatabase()->getRecordCount($q) == 1);
     }
@@ -64,7 +64,7 @@ abstract class Action
      */
     protected static function _getValue($field, $id)
     {
-        $q = self::$modx->getDatabase()->select($field, self::$modx->getFullTableName(self::TABLE()), "id = " . $id);
+        $q = self::$modx->getDatabase()->select($field, self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $id);
 
         return self::$modx->getDatabase()->getValue($q);
     }
@@ -151,7 +151,7 @@ abstract class Action
             $oldValue = self::_getValue('deleted_at', $dataID);
             $q = self::$modx->getDatabase()->update(array(
                 'deleted_at' => empty($oldValue) ? date('Y-m-d H:i:s') : null
-            ), self::$modx->getFullTableName(self::TABLE()), "id = " . $dataID);
+            ), self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $dataID);
             if ($q) {
                 $data['log'] = $oldValue ? 'Запись с ID ' . $dataID . ' восстановлена' : 'Запись с ID ' . $dataID . ' удалена';
             } else {

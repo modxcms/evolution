@@ -418,7 +418,7 @@ abstract class DocLister
     public function getTable($name, $alias = '')
     {
         if (!isset($this->_table[$name])) {
-            $this->_table[$name] = $this->modx->getFullTableName($name);
+            $this->_table[$name] = $this->modx->getDatabase()->getFullTableName($name);
         }
         $table = $this->_table[$name];
         if (!empty($alias) && is_scalar($alias)) {

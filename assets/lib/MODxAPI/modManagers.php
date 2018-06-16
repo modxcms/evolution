@@ -68,7 +68,6 @@ class modManagers extends MODxAPI
     {
         $this->setRememberTime(60 * 60 * 24 * 365 * 5);
         parent::__construct($modx, $debug);
-        $this->modx->loadExtension('phpass');
     }
 
     /**
@@ -207,7 +206,7 @@ class modManagers extends MODxAPI
      */
     public function getPassword($pass)
     {
-        return $this->modx->phpass->HashPassword($pass);
+        return $this->modx->getPasswordHash()->HashPassword($pass);
     }
 
     /**
@@ -455,7 +454,7 @@ class modManagers extends MODxAPI
                 $hashType = $this->getPasswordHashType($_password);
                 switch ($hashType) {
                     case 'phpass':
-                        $flag = $this->modx->phpass->CheckPassword($password, $_password);
+                        $flag = $this->modx->getPasswordHash()->CheckPassword($password, $_password);
                         break;
                     case 'md5':
                         $flag = $_password == md5($password);
@@ -497,9 +496,9 @@ class modManagers extends MODxAPI
         );
         $this->invokeEvent('OnBeforeManagerLogout', $params, $fire_events);
         $this->SessionHandler('destroy', $cookieName ? $cookieName : 'modx_remember_manager');
-        $this->modx->getDatabase()->delete($this->modx->getFullTableName('active_user_locks'), "sid = '{$this->modx->sid}'");
+        $this->modx->getDatabase()->delete($this->modx->getDatabase()->getFullTableName('active_user_locks'), "sid = '{$this->modx->sid}'");
         // Clean up active_user_sessions
-        $this->modx->getDatabase()->delete($this->modx->getFullTableName('active_user_sessions'), "sid = '{$this->modx->sid}'");
+        $this->modx->getDatabase()->delete($this->modx->getDatabase()->getFullTableName('active_user_sessions'), "sid = '{$this->modx->sid}'");
         $this->invokeEvent('OnManagerLogout', $params, $fire_events);
     }
 
@@ -604,8 +603,8 @@ class modManagers extends MODxAPI
         $out = array();
         $user = $this->switchObject($userID);
         if (null !== $user->getID()) {
-            $member_groups = $this->modx->getFullTableName('member_groups');
-            $membergroup_access = $this->modx->getFullTableName('membergroup_access');
+            $member_groups = $this->modx->getDatabase()->getFullTableName('member_groups');
+            $membergroup_access = $this->modx->getDatabase()->getFullTableName('membergroup_access');
 
             $sql = "SELECT `uga`.`documentgroup` FROM {$member_groups} as `ug`
                 INNER JOIN {$membergroup_access} as `uga` ON `uga`.`membergroup`=`ug`.`user_group` WHERE `ug`.`member` = " . $user->getID();
