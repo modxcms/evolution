@@ -318,8 +318,8 @@ class MakeTable implements MakeTableInterface
     public function getColumnWidth($columnPosition)
     {
         $currentWidth = '';
-        if (is_array($this->columnWidths)) {
-            $currentWidth = $this->columnWidths[$columnPosition] ? ' width="' . $this->columnWidths[$columnPosition] . '" ' : '';
+        if (is_array($this->columnWidths) && ! empty($this->columnWidths[$columnPosition])) {
+            $currentWidth = ' width="' . $this->columnWidths[$columnPosition] . '" ';
         }
 
         return $currentWidth;
@@ -425,11 +425,13 @@ class MakeTable implements MakeTableInterface
     public function create($fieldsArray, $fieldHeadersArray = array(), $linkpage = "")
     {
         global $_lang;
+        $table = '';
+        $header = '';
         if (is_array($fieldsArray)) {
             $i = 0;
             foreach ($fieldsArray as $fieldName => $fieldValue) {
                 $table .= "\t<tr" . $this->determineRowClass($i) . ">\n";
-                $currentActionFieldValue = $fieldValue[$this->actionField];
+                $currentActionFieldValue = get_by_key($fieldValue, $this->actionField, '');
                 if (is_array($this->selectedValues)) {
                     $isChecked = array_search($currentActionFieldValue, $this->selectedValues) === false ? 0 : 1;
                 } else {
