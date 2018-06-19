@@ -6611,6 +6611,7 @@ class Core implements Interfaces\CoreInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
+        ob_get_clean();
         // Display error
         if (isset($_SESSION['mgrValidated'])) {
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
@@ -6650,7 +6651,7 @@ class Core implements Interfaces\CoreInterface
             if (strpos($path, MODX_BASE_PATH) === 0) {
                 $path = substr($path, strlen(MODX_BASE_PATH));
             }
-            switch ($val['type']) {
+            switch (get_by_key($val, 'type')) {
                 case '->':
                 case '::':
                     $functionName = $val['function'] = $val['class'] . $val['type'] . $val['function'];
