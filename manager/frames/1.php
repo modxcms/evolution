@@ -323,6 +323,11 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
+                        <?php if (!$modx->config['site_status']) { ?>                       
+                            <li id="siteOffline" title="<?= $_lang['site_offline'] ?>">
+                                <?= $_style['menu_site_offline'] ?>
+                            </li>
+                        <?php } ?>
                         <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
                                 <span class="username"><?= $user['username'] ?></span>
