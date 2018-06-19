@@ -27,6 +27,7 @@ $_style['menu_search']              = '<i class="fa fa-search"></i>';
 $_style['menu_preview_site']        = '<i class="fa fa-desktop"></i>';
 $_style['menu_new_resource']        = '<i class="fa fa-plus"></i>';
 $_style['menu_system']              = '<i class="fa fa-cogs"></i>';
+$_style['menu_site_offline']        = '<i class="fa fa-exclamation-triangle"></i>';
 $_style['menu_user']                = '<i class="fa fa-user-circle"></i>';
 // full screen
 $_style['menu_expand']              = 'fa-expand';
