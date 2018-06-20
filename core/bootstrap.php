@@ -58,11 +58,11 @@ spl_autoload_register(
                 'evolutioncms\\support\\menu' => '/src/Support/Menu.php',
                 'evolutioncms\\support\\mysqldumper' => '/src/Support/MysqlDumper.php',
                 'evolutioncms\\support\\paginate' => '/src/Support/Paginate.php',
-                'phpmailer\\phpmailer\\exception' => '/controls/phpmailer/Exception.php',
-                'phpmailer\\phpmailer\\oauth' => '/controls/phpmailer/OAuth.php',
-                'phpmailer\\phpmailer\\phpmailer' => '/controls/phpmailer/PHPMailer.php',
-                'phpmailer\\phpmailer\\pop3' => '/controls/phpmailer/POP3.php',
-                'phpmailer\\phpmailer\\smtp' => '/controls/phpmailer/SMTP.php'
+                'phpmailer\\phpmailer\\exception' => '/packages/phpmailer/Exception.php',
+                'phpmailer\\phpmailer\\oauth' => '/packages/phpmailer/OAuth.php',
+                'phpmailer\\phpmailer\\phpmailer' => '/packages/phpmailer/PHPMailer.php',
+                'phpmailer\\phpmailer\\pop3' => '/packages/phpmailer/POP3.php',
+                'phpmailer\\phpmailer\\smtp' => '/packages/phpmailer/SMTP.php'
             );
         }
         $cn = strtolower($class);
