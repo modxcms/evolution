@@ -7,16 +7,21 @@ if (!function_exists('evolutionCMS')) {
     function evolutionCMS()
     {
         if (!defined('MODX_CLASS')) {
-            if (!class_exists('\EvolutionCMS\Core')) {
+            if (!class_exists('\DocumentParser')) {
                 throw new RuntimeException('MODX_CLASS not defined and EvolutionCMS\Core class not exists');
             }
-            define('MODX_CLASS', '\EvolutionCMS\Core');
+            define('MODX_CLASS', '\DocumentParser');
         }
 
         global $modx;
         if ($modx === null) {
-            $obj = new ReflectionClass(MODX_CLASS);
-            $modx = $obj->newInstanceWithoutConstructor()->getInstance();
+            try {
+                $obj = new ReflectionClass(MODX_CLASS);
+                $modx = $obj->newInstanceWithoutConstructor()->getInstance();
+            } catch (ReflectionException $exception) {
+                echo $exception->getMessage();
+                exit($exception->getCode());
+            }
         }
 
         return $modx;

@@ -46,6 +46,10 @@
 # Core
 /core/composer.lock
 /core/vendor/bin
+/core/config.php
+/core/config_mutator.php
+/core/custom.json
+/core/.env
 
 # Manager
 /manager/includes/config.inc.php
@@ -77,5 +81,3 @@ Desktop.ini
 
 # except do not ignore .gitignore
 !.gitignore
-
-.env

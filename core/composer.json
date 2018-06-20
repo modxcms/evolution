@@ -33,26 +33,32 @@
     "source": "https://github.com/evolution-cms/evolution/"
   },
   "config": {
-    "vendor-dir": "vendor"
+    "vendor-dir": "vendor",
+    "preferred-install": "dist",
+    "prestissimo": {
+      "maxConnections": 6,
+      "minConnections": 3
+    }
   },
   "require": {
-    "phpmailer/phpmailer": "^6.0.5"
+    "phpmailer/phpmailer": "^6.0.5",
+    "wikimedia/composer-merge-plugin": "dev-master"
   },
   "autoload":{
     "psr-4": {
       "EvolutionCMS\\": "src/"
     },
     "files": [
-      "core/functions/actions/bkmanager.php",
-      "core/functions/actions/files.php",
-      "core/functions/actions/help.php",
-      "core/functions/actions/import.php",
-      "core/functions/actions/logging.php",
-      "core/functions/actions/mutate_content.php",
-      "core/functions/actions/mutate_plugin.php",
-      "core/functions/actions/mutate_role.php",
-      "core/functions/actions/search.php",
-      "core/functions/actions/settings.php",
+      "functions/actions/bkmanager.php",
+      "functions/actions/files.php",
+      "functions/actions/help.php",
+      "functions/actions/import.php",
+      "functions/actions/logging.php",
+      "functions/actions/mutate_content.php",
+      "functions/actions/mutate_plugin.php",
+      "functions/actions/mutate_role.php",
+      "functions/actions/search.php",
+      "functions/actions/settings.php",
       "functions/helper.php",
       "functions/nodes.php",
       "functions/preload.php",
@@ -60,6 +66,24 @@
       "functions/tv.php"
     ]
   },
+  "scripts": {
+    "upd": "composer update --lock --ansi"
+  },
+  "scripts-descriptions": {
+    "upd": "Updating sub-levels composer.json files"
+  },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "custom.json"
+      ],
+      "recurse": true,
+      "replace": true,
+      "merge-dev": false,
+      "merge-extra": true,
+      "merge-scripts": false
+    }
+  }
 }
