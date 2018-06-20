@@ -15,7 +15,7 @@ Class TemplateParser {
 	 * @return string
 	 */
 	public function output($config = array(), $data = array()) {
-		global $modx;
+        $modx = evolutionCMS();
 
 		$output = '';
 		$action = !empty($config['action']) ? $config['action'] : (!empty($_REQUEST['a']) ? $_REQUEST['a'] : '');
@@ -71,7 +71,7 @@ Class TemplateParser {
      * @return string
      */
 	private function render($data) {
-		global $modx, $_lang, $_country_lang;
+		$modx = evolutionCMS(); global $_lang, $_country_lang;
 
 		$data['lang.name'] = (isset($_lang[$data['alias']]) ? $_lang[$data['alias']] : $data['alias']);
 		$data['value'] = (isset($_POST[$data['name']][$data['value']]) ? $_POST[$data['name']][$data['value']] : (isset($data['value']) ? $modx->htmlspecialchars($data['value']) : ''));

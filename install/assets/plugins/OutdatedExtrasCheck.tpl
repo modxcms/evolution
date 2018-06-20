@@ -273,9 +273,9 @@ $wdgTitle = 'EVO '.$EVOversion.' - '.$_oec_lang['title'].'';
 $widgets['xtraCheck'] = array(
 				'menuindex' =>'0',
 				'id' => 'xtraCheck'.$pluginid.'',
-				'cols' => 'col-md-12',
+				'cols' => 'col-12',
                 'headAttr' => 'style="background-color:#B60205; color:#FFFFFF;"',
-				'bodyAttr' => 'style="background-color:#FFFFFF; color:#24292E;"',
+				'bodyAttr' => '',
 				'icon' => 'fa-warning',
 				'title' => ''.$wdgTitle.' '.$button_pl_config.'',
 				'body' => '<div class="card-body">'.$out.'</div>',

@@ -14,7 +14,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function secureMgrDocument($docid = '')
 {
-    global $modx;
+    $modx = evolutionCMS();
 
     $modx->db->update('privatemgr = 0', $modx->getFullTableName("site_content"),
         ($docid > 0 ? "id='$docid'" : "privatemgr = 1"));

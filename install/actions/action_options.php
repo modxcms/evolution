@@ -188,9 +188,9 @@ switch($installMode){
         $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
         $_POST['database_connection_charset'] = $database_charset;
-        if(empty($_SESSION['databaseloginpassword']))
+        if(!empty($_POST['databaseloginpassword']))
             $_SESSION['databaseloginpassword'] = $_POST['databaseloginpassword'];
-        if(empty($_SESSION['databaseloginname']))
+        if(!empty($_POST['databaseloginname']))
             $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
         break;
     case 1:

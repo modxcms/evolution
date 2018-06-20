@@ -88,13 +88,15 @@ class tv_DL_Extender extends extDocLister
             if ($this->modx->_TVnames === false) {
                 $this->modx->_TVnames = array();
                 $from = $this->DocLister->getTable('site_tmplvars');
-                $rs = $this->DocLister->dbQuery("SELECT `id`, `name`, `default_text`, `type` FROM {$from}");
+                $rs = $this->DocLister->dbQuery("SELECT `id`, `name`, `default_text`, `type`, `display`, `display_params` FROM {$from}");
 
                 while ($item = $this->modx->db->getRow($rs)) {
                     $this->modx->_TVnames[$item['name']] = array(
-                        "id"   => $item['id'],
-                        "type" => $item['type'],
-                        "default" => $item['default_text']
+                        'id'   => $item['id'],
+                        'type' => $item['type'],
+                        'default' => $item['default_text'],
+                        'display' => $item['display'],
+                        'display_params' => $item['display_params']
                     );
                 }
                 $this->saveToCache($this->modx->_TVnames, '_TVnames');
@@ -138,8 +140,8 @@ class tv_DL_Extender extends extDocLister
         $TVkeys = array_keys($tvDef);
         foreach ($out as $itemid => $item) {
             foreach ($TVkeys as $name) {
-                if (!isset($out[$itemid][$name])) {
-                    $out[$itemid][$name] = $tvDef[$name];
+                if (!isset($out[$itemid][$name]) || $out[$itemid][$name] === '' || is_null($out[$itemid][$name])) {
+                    $out[$itemid][$name] = $tvDef[$name]['default'];
                 }
                 if (in_array($name, $renderTV) || $renderTV == array("*")) {
                     $out[$itemid][$name] = $this->renderTV($itemid, $name, $out[$itemid][$name], $tvDef[$name]);
@@ -240,7 +242,7 @@ class tv_DL_Extender extends extDocLister
         $out = array();
         foreach ($tvId as $id) {
             $name = $tvs[$id];
-            $out[$this->_TVprefix . $name] = $this->modx->_TVnames[$name]['default'];
+            $out[$this->_TVprefix . $name] = $this->modx->_TVnames[$name];
         }
 
         return $out;

@@ -300,7 +300,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
  * @return string
  */
 function render_form($name, $label, $status = '') {
-	global $modx, $roledata;
+	$modx = evolutionCMS(); global $roledata;
 
 	$tpl = '<label class="d-block" for="[+name+]check">
 		<input name="[+name+]check" id="[+name+]check" class="click" type="checkbox" onchange="changestate(document.userform.[+name+])" [+checked+] [+status+]>

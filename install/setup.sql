@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `itemid` varchar(10) default '0',
   `itemname` varchar(255) default NULL,
   `message` varchar(255) NOT NULL default '',
+  `ip` varchar(15),
+  `useragent` varchar(255),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains a record of user interaction.';
 
@@ -860,6 +862,12 @@ ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`w
 
 ALTER TABLE `{PREFIX}document_groups` ADD UNIQUE INDEX `ix_dg_id` (`document_group`,`document`);
 
+ALTER TABLE `{PREFIX}manager_log`
+  ADD COLUMN `ip` varchar(15);
+
+ALTER TABLE `{PREFIX}manager_log`
+  ADD COLUMN `useragent` varchar(255);  
+
 # ]]upgrade-able
 
 
@@ -1053,6 +1061,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('83','OnFriendlyURLSettingsRender','1','System Settings'),
 ('84','OnUserSettingsRender','1','System Settings'),
 ('85','OnInterfaceSettingsRender','1','System Settings'),
+('109','OnSecuritySettingsRender','1','System Settings'),
+('110','OnFileManagerSettingsRender','1','System Settings'),
 ('86','OnMiscSettingsRender','1','System Settings'),
 ('87','OnRichTextEditorRegister','1','RichText Editor'),
 ('88','OnRichTextEditorInit','1','RichText Editor'),
@@ -1092,6 +1102,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('214','OnManagerMenuPrerender','2',''),
 ('215','OnManagerTopPrerender','2',''),
 ('224','OnDocFormTemplateRender','1','Documents'),
+('225','OnBeforeMinifyCss', '1', ''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1',''),
 ('1001','OnFileBrowserUpload','1','File Browser Events');

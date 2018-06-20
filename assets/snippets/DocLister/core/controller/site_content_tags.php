@@ -33,7 +33,7 @@ class site_content_tagsDocLister extends site_contentDocLister
     }
 
     /**
-     * @absctract
+     * @abstract
      */
     public function getUrl($id = 0)
     {

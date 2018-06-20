@@ -179,7 +179,7 @@ switch ($_POST['mode']) {
 function saveTemplateVarAccess()
 {
     global $id, $newid;
-    global $modx;
+    $modx = evolutionCMS();
 
     if ($newid) {
         $id = $newid;
@@ -197,22 +197,23 @@ function saveTemplateVarAccess()
         $getRankArray[$row['templateid']] = $row['rank'];
     }
 
-
     $modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
-    for ($i = 0; $i < count($templates); $i++) {
-        $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-        $modx->db->insert(array(
-            'tmplvarid' => $id,
-            'templateid' => $templates[$i],
-            'rank' => $setRank,
-        ), $tbl_site_tmplvar_templates);
+    if (!empty($templates)) {
+        for ($i = 0; $i < count($templates); $i++) {
+            $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
+            $modx->db->insert(array(
+                'tmplvarid' => $id,
+                'templateid' => $templates[$i],
+                'rank' => $setRank,
+            ), $tbl_site_tmplvar_templates);
+        }
     }
 }
 
 function saveDocumentAccessPermissons()
 {
     global $id, $newid;
-    global $modx, $use_udperms;
+    $modx = evolutionCMS(); global $use_udperms;
 
     $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
 

@@ -270,9 +270,10 @@ class MODxMailer extends PHPMailer
      */
     public function SetError($msg)
     {
-        $msg .= '<pre>' . print_r(call_user_func('get_object_vars', $this), true) . '</pre>';
+        $classDump = call_user_func('get_object_vars', $this);
+        unset($classDump['modx']);
         $this->modx->config['send_errormail'] = '0';
-        $this->modx->logEvent(0, 3, $msg, 'phpmailer');
+        $this->modx->logEvent(0, 3, $msg . '<pre>' . print_r($classDump, true) . '</pre>', 'phpmailer');
 
         return parent::SetError($msg);
     }

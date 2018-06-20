@@ -16,8 +16,8 @@ $excludes = array(
     '.svn'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
-$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
+$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
 $viewablefiles = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles = add_dot($editablefiles);
@@ -890,7 +890,7 @@ function rrmdir($dir)
  */
 function fileupload()
 {
-    global $modx, $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
+    $modx = evolutionCMS(); global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
     $msg = '';
     foreach ($_FILES['userfile']['name'] as $i => $name) {
         if (empty($_FILES['userfile']['tmp_name'][$i])) continue;

@@ -310,6 +310,7 @@ class modResource extends MODxAPI
             $tvID = APIHelpers::getkey($this->tv, $key, 0);
             if (in_array($tvID, $tvTPL) && is_null($out)) {
                 $out = APIHelpers::getkey($this->tvd, $key, null);
+                $out = $out['default'];
             }
         }
 
@@ -444,7 +445,7 @@ class modResource extends MODxAPI
         $this->close();
         $fld = array();
         foreach ($this->tvd as $name => $tv) {
-            $fld[$name] = $tv;
+            $fld[$name] = $tv['default'];
         };
         $this->store($fld);
 
@@ -468,13 +469,19 @@ class modResource extends MODxAPI
             $this->close();
             $this->markAllEncode();
             $this->newDoc = false;
-
             $result = $this->query("SELECT * from {$this->makeTable('site_content')} where `id`=" . (int)$id);
             $this->fromArray($this->modx->db->getRow($result));
             $result = $this->query("SELECT * from {$this->makeTable('site_tmplvar_contentvalues')} where `contentid`=" . (int)$id);
             while ($row = $this->modx->db->getRow($result)) {
                 $this->field[$this->tvid[$row['tmplvarid']]] = $row['value'];
             }
+            $fld = array();
+            foreach ($this->tvd as $name => $tv) {
+                if ($this->belongsToTemplate($this->tv[$name])) {
+                    $fld[$name] = $tv['default'];
+                }
+            };
+            $this->store(array_merge($fld, $this->field));
             if (empty($this->field['id'])) {
                 $this->id = null;
             } else {
@@ -482,10 +489,9 @@ class modResource extends MODxAPI
                 $this->set('editedby', null)->touch();
                 $this->decodeFields();
             }
-            $this->store($this->toArray(null, null, null, false));
             unset($this->field['id']);
         }
-
+        
         return $this;
     }
 
@@ -590,7 +596,7 @@ class modResource extends MODxAPI
         foreach ($fld as $key => $value) {
             if (empty($this->tv[$key]) || !$this->isChanged($key) || !$this->belongsToTemplate($this->tv[$key])) {
                 continue;
-            } elseif ($value === '') {
+            } elseif ($value === '' || is_null($value) || (isset($this->tvd[$key]) && $value == $this->tvd[$key]['default'])) {
                 $_deleteTVs[] = $this->tv[$key];
             } else {
                 $_insertTVs[$this->tv[$key]] = $this->escape($value);
@@ -794,7 +800,7 @@ class modResource extends MODxAPI
      */
     public function issetField($key)
     {
-        return (array_key_exists($key, $this->default_field) || array_key_exists($key, $this->tv));
+        return (array_key_exists($key, $this->default_field) || (array_key_exists($key, $this->tv) && $this->belongsToTemplate($this->tv[$key])));
     }
 
     /**
@@ -806,12 +812,14 @@ class modResource extends MODxAPI
         $this->modx->_TVnames = $this->loadFromCache('_TVnames');
         if ($this->modx->_TVnames === false || empty($this->modx->_TVnames) || $reload) {
             $this->modx->_TVnames = array();
-            $result = $this->query('SELECT `id`,`name`,`default_text`,`type` FROM ' . $this->makeTable('site_tmplvars'));
+            $result = $this->query('SELECT `id`,`name`,`default_text`,`type`,`display`,`display_params` FROM ' . $this->makeTable('site_tmplvars'));
             while ($row = $this->modx->db->GetRow($result)) {
                 $this->modx->_TVnames[$row['name']] = array(
-                    "id"      => $row['id'],
-                    "type"    => $row['type'],
-                    "default" => $row['default_text']
+                    'id'      => $row['id'],
+                    'type'    => $row['type'],
+                    'default' => $row['default_text'],
+                    'display' => $row['display'],
+                    'display_params' => $row['display_params']
                 );
             }
             $this->saveToCache($this->modx->_TVnames, '_TVnames');
@@ -861,7 +869,7 @@ class modResource extends MODxAPI
             $this->tvd = array();
             foreach ($tvId as $id) {
                 $name = $this->tvid[$id];
-                $this->tvd[$name] = $this->modx->_TVnames[$name]['default'];
+                $this->tvd[$name] = $this->modx->_TVnames[$name];
             }
         }
 

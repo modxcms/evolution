@@ -64,9 +64,34 @@
                 </select><input type="hidden" name="theme_refresher" value="" />
             </td>
         </tr>
+
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
+                <small>[(manager_theme_mode)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode1'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="2" <?= $manager_theme_mode == '2' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode2'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="3" <?= $manager_theme_mode == '3' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode3'] ?></label>
+                <br />
+                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($manager_theme_mode == '4') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['manager_theme_mode4'] ?></label>
+            </td>
+        </tr>
         <tr>
             <td width="200">&nbsp;</td>
-            <td class="comment"><?= $_lang['manager_theme_message'] ?></td>
+            <td class="comment"><?= $_lang['manager_theme_mode_message'] ?></td>
         </tr>
 
         <tr>
@@ -74,6 +99,112 @@
                 <div class="split"></div>
             </td>
         </tr>
+
+
+          <tr>
+        <th><?php echo $_lang["login_logo_title"] ?><br><small>[(login_logo)]</small></th>
+        <td>
+          <div style="float:right;"><img name="login_logo" style="max-height: 48px" src="<?php echo !empty($login_logo) ? MODX_SITE_URL . $login_logo : $_style['tx']; ?>" /></div>
+          <input name="login_logo" type="text" maxlength="100" style="width: 200px;" value="<?php echo $login_logo; ?>" /><input type="button" value="<?php echo $_lang['insert']; ?>" onclick='BrowseServer()' />
+          <div class="comment"><?php echo $_lang["login_logo_message"] ?></div>
+          <script type="text/javascript">
+            function OpenServerBrowser(url, width, height) {
+              var iLeft = (screen.width - width) / 2;
+              var iTop = (screen.height - height) / 2;
+
+              var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
+              sOptions += ",width=" + width;
+              sOptions += ",height=" + height;
+              sOptions += ",left=" + iLeft;
+              sOptions += ",top=" + iTop;
+
+              var oWindow = window.open(url, "FCKBrowseWindow", sOptions);
+            }
+
+            function BrowseServer() {
+              var w = screen.width * 0.7;
+              var h = screen.height * 0.7;
+              OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
+            }
+
+            function SetUrl(url, width, height, alt) {
+              document.settings.login_logo.value = url;
+              document.images['login_logo'].src = "<?php echo $base_url; ?>" + url;
+            }
+          </script>
+        </td>
+      </tr>
+       <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+      <tr>
+        <th><?php echo $_lang["login_bg_title"] ?><br><small>[(login_bg)]</small></th>
+        <td>
+          <div style="float:right;"><img name="login_bg" style="max-height: 48px" src="<?php echo !empty($login_bg) ? MODX_SITE_URL . $login_bg : $_style['tx']; ?>" /></div>
+          <input name="login_bg" type="text" maxlength="100" style="width: 200px;" value="<?php echo $login_bg; ?>" /><input type="button" value="<?php echo $_lang['insert']; ?>" onclick='BrowseServer()' />
+          <div class="comment"><?php echo $_lang["login_bg_message"] ?></div>
+          <script type="text/javascript">
+            function OpenServerBrowser(url, width, height) {
+              var iLeft = (screen.width - width) / 2;
+              var iTop = (screen.height - height) / 2;
+
+              var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
+              sOptions += ",width=" + width;
+              sOptions += ",height=" + height;
+              sOptions += ",left=" + iLeft;
+              sOptions += ",top=" + iTop;
+
+              var oWindow = window.open(url, "FCKBrowseWindow", sOptions);
+            }
+
+            function BrowseServer() {
+              var w = screen.width * 0.7;
+              var h = screen.height * 0.7;
+              OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
+            }
+
+            function SetUrl(url, width, height, alt) {
+              document.settings.login_bg.value = url;
+              document.images['login_bg'].src = "<?php echo $base_url; ?>" + url;
+            }
+          </script>
+        </td>
+      </tr>
+       <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+      <tr>
+        <th><?php echo $_lang['login_form_position_title'] ?><br><small>[(login_form_position)]</small></th>
+        <td>
+            <?php echo wrap_label($_lang['login_form_position_left'],form_radio('login_form_position', 'left'));?><br />
+            <?php echo wrap_label($_lang['login_form_position_center'], form_radio('login_form_position', 'center'));?><br />
+            <?php echo wrap_label($_lang['login_form_position_right'], form_radio('login_form_position', 'right'));?>
+        </td>
+      </tr>
+         <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+
+      <tr>
+        <th><?php echo $_lang['manager_menu_position_title'] ?><br><small>[(manager_menu_position)]</small></th>
+        <td>
+            <?php echo wrap_label($_lang['manager_menu_position_top'],form_radio('manager_menu_position', 'top'));?><br />
+            <?php echo wrap_label($_lang['manager_menu_position_left'], form_radio('manager_menu_position', 'left'));?><br />
+        </td>
+      </tr>
+
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+
         <tr>
             <td nowrap class="warning"><?= $_lang['show_picker'] ?><br>
                 <small>[(show_picker)]</small>

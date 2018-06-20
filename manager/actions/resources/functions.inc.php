@@ -17,7 +17,7 @@ $tpl = array(
  * @return string
  */
 function parsePh($tpl, $ph) {
-	global $modx, $_lang;
+	$modx = evolutionCMS(); global $_lang;
 	$tpl = $modx->parseText($tpl, $_lang, '[%', '%]');
 	return $modx->parseText($tpl, $ph);
 }
@@ -27,7 +27,7 @@ function parsePh($tpl, $ph) {
  * @return string
  */
 function renderViewSwitchButtons($cssId) {
-	global $modx, $_lang, $tpl;
+	$modx = evolutionCMS(); global $_lang, $tpl;
 
 	return parsePh($tpl['viewForm'], array(
 		'cssId' => $cssId
@@ -40,7 +40,7 @@ function renderViewSwitchButtons($cssId) {
  * @return string
  */
 function createResourceList($resourceTable, $resources) {
-	global $modx, $_lang, $_style, $modx_textdir, $tpl;
+	$modx = evolutionCMS(); global $_lang, $_style, $modx_textdir, $tpl;
 
 	$items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
 
@@ -93,7 +93,7 @@ function createResourceList($resourceTable, $resources) {
  * @return string
  */
 function createCombinedView($resources) {
-	global $modx, $_lang, $_style, $modx_textdir;
+	$modx = evolutionCMS(); global $_lang, $_style, $modx_textdir;
 
 	$itemsPerCategory = isset($resources->itemsPerCategory) ? $resources->itemsPerCategory : false;
 	$types = isset($resources->types) ? $resources->types : false;
@@ -150,7 +150,7 @@ function createCombinedView($resources) {
  * @return array
  */
 function prepareElementRowPh($row, $resourceTable, $resources) {
-	global $modx, $modx_textdir, $_style, $_lang;
+	$modx = evolutionCMS(); global $modx_textdir, $_style, $_lang;
 
 	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 

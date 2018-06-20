@@ -27,12 +27,18 @@ class onetableDocLister extends DocLister
     protected $parentField = 'parent';
 
     /**
-     * @absctract
+     * Экземпляр экстендера пагинации
+     * @var null|paginate_DL_Extender
+     */
+    protected $extPaginate = null;
+
+    /**
+     * @abstract
      */
     public function getDocs($tvlist = '')
     {
-        if ($this->checkExtender('paginate')) {
-            $this->extender['paginate']->init($this);
+        if ($this->extPaginate = $this->getExtender('paginate')) {
+            $this->extPaginate->init($this);
         }
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();
