@@ -1,13 +1,13 @@
 <?php
 define('MODX_API_MODE', true);
 
-if (file_exists(dirname(__DIR__) . '/config.php')) {
+if (file_exists(__DIR__ . '/config.php')) {
+    $config = require __DIR__ . '/config.php';
+} elseif (file_exists(dirname(__DIR__) . '/config.php')) {
     $config = require dirname(__DIR__) . '/config.php';
-} elseif (file_exists(dirname(dirname(__DIR__)) . '/config.php')) {
-    $config = require dirname(dirname(__DIR__)) . '/config.php';
 } else {
     $config = [
-        'root' => dirname(dirname(__DIR__))
+        'root' => dirname(__DIR__)
     ];
 }
 
