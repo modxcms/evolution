@@ -36,8 +36,7 @@
     "vendor-dir": "vendor"
   },
   "require": {
-    "phpmailer/phpmailer": "^6.0.5",
-    "kellan/magpierss": "dev-master"
+    "phpmailer/phpmailer": "^6.0.5"
   },
   "autoload":{
     "psr-4": {

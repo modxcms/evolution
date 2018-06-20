@@ -43,6 +43,10 @@
 !/assets/site/index.html
 !/assets/site/.htaccess
 
+# Core
+/core/composer.lock
+/core/vendor/bin
+
 # Manager
 /manager/includes/config.inc.php
 /manager/includes/config_mutator.php

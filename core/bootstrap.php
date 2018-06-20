@@ -3,10 +3,6 @@ require_once 'vendor/autoload.php';
 
 global $site_sessionname;
 
-if (! defined('MAGPIE_CACHE_DIR')) {
-    define('MAGPIE_CACHE_DIR', MODX_BASE_PATH . 'assets/cache/rss');
-}
-
 require_once 'legacy.php';
 
 require_once 'functions/actions/bkmanager.php';

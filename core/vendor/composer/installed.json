@@ -1,29 +1,5 @@
 [
     {
-        "name": "kellan/magpierss",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/satishsuggala/magpierss.git",
-            "reference": "669025871611100b269dce5dedc17ade0005c5cc"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/satishsuggala/magpierss/zipball/669025871611100b269dce5dedc17ade0005c5cc",
-            "reference": "669025871611100b269dce5dedc17ade0005c5cc",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2014-06-26T08:59:34+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "description": "A simple RSS integration tool"
-    },
-    {
         "name": "phpmailer/phpmailer",
         "version": "v6.0.5",
         "version_normalized": "6.0.5.0",
