@@ -9,7 +9,9 @@ if (file_exists( $root . '/config.php')) {
 } elseif (file_exists(dirname($root) . '/config.php')) {
     $config = require dirname($root) . '/config.php';
 } else {
-    $config = [];
+    $config = [
+        'root' => dirname($root)
+    ];
 }
 
 if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {

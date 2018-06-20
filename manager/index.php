@@ -57,7 +57,9 @@ if (file_exists(__DIR__ . '/config.php')) {
 } elseif (file_exists(dirname(__DIR__) . '/config.php')) {
     $config = require dirname(__DIR__) . '/config.php';
 } else {
-    $config = [];
+    $config = [
+        'core' => dirname(__DIR__) .'/core'
+    ];
 }
 
 if (!empty($config['core']) && file_exists($config['core'] . '/config.php')) {

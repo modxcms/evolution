@@ -1,7 +1,23 @@
 <?php
 define('MODX_API_MODE', true);
 
-include_once '../index.php';
+if (file_exists(dirname(__DIR__) . '/config.php')) {
+    $config = require dirname(__DIR__) . '/config.php';
+} elseif (file_exists(dirname(dirname(__DIR__)) . '/config.php')) {
+    $config = require dirname(dirname(__DIR__)) . '/config.php';
+} else {
+    $config = [
+        'root' => dirname(dirname(__DIR__))
+    ];
+}
+
+if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+    require_once $config['root'] . '/index.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the EVO <a href='../install'>install utility</a>";
+    exit;
+}
 
 $modx->getDatabase()->connect();
 $modx->getSettings();

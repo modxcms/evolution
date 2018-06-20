@@ -35,7 +35,7 @@ use EvolutionCMS\Interfaces\CaptchaInterface;
 class Captcha implements CaptchaInterface
 {
     /* path to font directory*/
-    public $dir_font   = "ttf/";
+    public $dir_font   = "fonts/ttf/";
     /* path to background image directory*/
     public $dir_noise  = "captcha/";
     public $word       = "";
