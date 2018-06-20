@@ -484,7 +484,7 @@ if (is_numeric($_GET['tab'])) {
     echo '<script type="text/javascript">tpDBM.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';
 }
 
-include_once "footer.inc.php"; // send footer
+include_once MODX_MANAGER_PATH . "includes/footer.inc.php"; // send footer
 ?>
 
 <?php

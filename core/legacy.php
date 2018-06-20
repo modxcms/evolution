@@ -5,4 +5,10 @@
  *
  */
 
-include_once EVO_CORE_PATH . 'legacy.php';
+class DocumentParser extends EvolutionCMS\Core
+{
+}
+
+class SystemEvent extends EvolutionCMS\Event
+{
+}

@@ -51,35 +51,31 @@
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
-$self      = str_replace('\\','/',__FILE__);
-$self_dir  = str_replace('/index.php','',$self);
-$mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
-$base_path = str_replace($mgr_dir . '/index.php','',$self);
-$site_mgr_path = $base_path . 'assets/cache/siteManager.php';
-if(is_file($site_mgr_path)) include_once($site_mgr_path);
-$site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
-if(is_file($site_hostnames_path)) include_once($site_hostnames_path);
-if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
-	$src = "<?php\n";
-	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
-	$rs = file_put_contents($site_mgr_path,$src);
-	if(!$rs) {
-		echo 'siteManager.php write error';
-		exit;
-	}
-	sleep(1);
-	header('Location:' . $_SERVER['REQUEST_URI']);
-	exit;
+
+if (file_exists(__DIR__ . '/config.php')) {
+    $config = require __DIR__ . '/config.php';
+} elseif (file_exists(dirname(__DIR__) . '/config.php')) {
+    $config = require dirname(__DIR__) . '/config.php';
+} else {
+    $config = [];
+}
+
+if (!empty($config['core']) && file_exists($config['core'] . '/config.php')) {
+    require_once $config['core'] . '/config.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the EVO <a href='../install'>install utility</a>";
+    exit;
 }
 
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
-if ( ! defined('IN_MANAGER_MODE')) {
+if (! defined('IN_MANAGER_MODE')) {
 	define('IN_MANAGER_MODE', true);
 }
 
 // harden it
-require_once('./includes/protect.inc.php');
+require_once EVO_CORE_PATH . 'includes/protect.inc.php';
 
 // send anti caching headers
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -92,10 +88,10 @@ header('X-XSS-Protection: 0');
 
 // provide english $_lang for error-messages
 $_lang = array();
-include_once "includes/lang/english.inc.php";
+include_once EVO_CORE_PATH . "lang/english.inc.php";
 
-// check PHP version. EVO is compatible with php 5 (5.0.0+)
-$php_ver_comp =  version_compare(phpversion(), "5.0.0");
+// check PHP version. EVO is compatible with php 5 (5.6.0+)
+$php_ver_comp =  version_compare(phpversion(), "5.6.0");
 		// -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
 	echo sprintf($_lang['php_version_check'], phpversion());
@@ -108,29 +104,18 @@ if(!function_exists('iconv')) {
 	exit;
 }
 
-// set some runtime options
-$incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
-set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
-
-if (!defined('ENT_COMPAT')) define('ENT_COMPAT', 2);
-if (!defined('ENT_NOQUOTES')) define('ENT_NOQUOTES', 0);
-if (!defined('ENT_QUOTES')) define('ENT_QUOTES', 3);
+if (! defined('ENT_COMPAT')) define('ENT_COMPAT', 2);
+if (! defined('ENT_NOQUOTES')) define('ENT_NOQUOTES', 0);
+if (! defined('ENT_QUOTES')) define('ENT_QUOTES', 3);
 
 // set the document_root :|
 if(!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
-	$_SERVER['DOCUMENT_ROOT'] = str_replace($_SERVER['PATH_INFO'], "", preg_replace("/\\\\/", "/", $_SERVER['PATH_TRANSLATED']))."/";
+	$_SERVER['DOCUMENT_ROOT'] = str_replace(
+	    $_SERVER['PATH_INFO'],
+        "",
+        preg_replace("/\\\\/", "/", $_SERVER['PATH_TRANSLATED'])
+    ) . "/";
 }
-
-// include_once config file
-$config_filename = "./includes/config.inc.php";
-if (!file_exists($config_filename)) {
-	echo "<h3>Unable to load configuration settings</h3>";
-	echo "Please run the EVO <a href='../install'>install utility</a>";
-	exit;
-}
-
-// include the database configuration file
-include_once "config.inc.php";
 
 // initiate the content manager class
 $modx = evolutionCMS();
@@ -153,19 +138,19 @@ $settings =& $modx->config;
 extract($modx->config, EXTR_OVERWRITE);
 
 // now include_once different language file as english
-if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+if(!isset($manager_language) || !file_exists(EVO_CORE_PATH."lang/".$manager_language.".inc.php")) {
 	$manager_language = "english"; // if not set, get the english language file.
 }
 
 // $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
-if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
-	include_once "lang/".$manager_language.".inc.php";
+if($manager_language != "english" && file_exists(EVO_CORE_PATH."lang/".$manager_language.".inc.php")) {
+	include_once EVO_CORE_PATH . "lang/".$manager_language.".inc.php";
 }
 
 // allow custom language overrides not altered by future EVO-updates
-if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
-	include_once "lang/override/".$manager_language.".inc.php";
+if(file_exists(EVO_CORE_PATH."lang/override/".$manager_language.".inc.php")) {
+	include_once EVO_CORE_PATH . "lang/override/".$manager_language.".inc.php";
 }
 
 $s = array('[+MGR_DIR+]');
@@ -183,7 +168,7 @@ header('Content-Type: text/html; charset='.$modx_manager_charset);
  */
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-include_once "accesscontrol.inc.php";
+include_once __DIR__ . "/includes/accesscontrol.inc.php";
 
 // double check the session
 if(!isset($_SESSION['mgrValidated'])){
@@ -194,12 +179,12 @@ if(!isset($_SESSION['mgrValidated'])){
 // include_once the style variables file
 if(isset($manager_theme) && !isset($_style)) {
 	$_style = array();
-	include_once "media/style/".$manager_theme."/style.php";
+	include_once __DIR__ . "/media/style/".$manager_theme."/style.php";
 }
 
 // check if user is allowed to access manager interface
 if(isset($allow_manager_access) && $allow_manager_access==0) {
-	include_once "manager.lockout.inc.php";
+	include_once __DIR__ . "/includes/manager.lockout.inc.php";
 }
 
 // Initialize System Alert Message Queque
@@ -209,10 +194,10 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // first we check to see if this is a frameset request
 if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
 	// this looks to be a top-level frameset request, so let's serve up a frameset
-	if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/frames/1.php")) {
-		include_once "media/style/".$manager_theme."/frames/1.php";
+	if(is_file(__DIR__ . "/media/style/".$manager_theme."/frames/1.php")) {
+		include_once __DIR__ . "/media/style/".$manager_theme."/frames/1.php";
 	}else{
-		include_once "frames/1.php";
+		include_once __DIR__ . "/frames/1.php";
 	}
 	exit;
 }
@@ -225,7 +210,7 @@ elseif(isset($_POST['a'])) $action = filter_input(INPUT_POST,'a',FILTER_VALIDATE
 else                       $action = null;
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
-	include_once 'messageCount.inc.php';
+	include_once __DIR__ . '/includes/messageCount.inc.php';
 }
 
 // save page to manager object
@@ -254,8 +239,8 @@ $modx->invokeEvent("OnManagerPageInit", array("action" => $action));
 // return element filepath
 function includeFileProcessor ($filepath,$manager_theme) {
 	$element = "";
-	if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/".$filepath)) {
-		$element = MODX_MANAGER_PATH."media/style/".$manager_theme."/".$filepath;
+	if(is_file(__DIR__ . "/media/style/" . $manager_theme . "/" . $filepath)) {
+		$element = __DIR__ . "/media/style/" . $manager_theme . "/" . $filepath;
 	}else{
 		$element = $filepath;
 	}
@@ -980,4 +965,4 @@ if($action!=1 && $action!=7 && $action!=2) {
 /********************************************************************/
 // show debug
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
-include_once "debug.inc.php";
+include_once __DIR__ . "/includes/debug.inc.php";

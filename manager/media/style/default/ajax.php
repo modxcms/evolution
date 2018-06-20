@@ -3,7 +3,22 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("./../../../../index.php");
+$root = dirname(dirname(dirname(__DIR__)));
+if (file_exists( $root . '/config.php')) {
+    $config = require $root . '/config.php';
+} elseif (file_exists(dirname($root) . '/config.php')) {
+    $config = require dirname($root) . '/config.php';
+} else {
+    $config = [];
+}
+
+if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+    require_once $config['root'] . '/index.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the EVO <a href='../install'>install utility</a>";
+    exit;
+}
 
 $modx->getDatabase()->connect();
 
@@ -18,9 +33,9 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
 $modx->sid = session_id();
 
 $_lang = array();
-include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
+include_once EVO_CORE_PATH . '/lang/english.inc.php';
 if ($modx->config['manager_language'] != 'english') {
-    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
+    include_once EVO_CORE_PATH . '/lang/' . $modx->config['manager_language'] . '.inc.php';
 }
 include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 

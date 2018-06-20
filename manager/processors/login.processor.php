@@ -1,16 +1,33 @@
 <?php
-if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	header('HTTP/1.0 404 Not Found');
 	exit('error');
 }
+
 define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
-include_once(__DIR__ . '/../../index.php');
+
+if (file_exists(dirname(__DIR__) . '/config.php')) {
+    $config = require dirname(__DIR__) . '/config.php';
+} elseif (file_exists(dirname(dirname(__DIR__)) . '/config.php')) {
+    $config = require dirname(dirname(__DIR__)) . '/config.php';
+} else {
+    $config = [];
+}
+
+if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+    require_once $config['root'] . '/index.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the EVO <a href='../install'>install utility</a>";
+    exit;
+}
+
 $modx->getDatabase()->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 
-$core_path = MODX_MANAGER_PATH . 'includes/';
+$core_path = EVO_CORE_PATH;
 // include_once the language file
 $_lang = array();
 include_once("{$core_path}lang/english.inc.php");
@@ -51,7 +68,6 @@ if($limit == 0 || $limit > 1) {
 	jsAlert($_lang['login_processor_unknown_user']);
 	return;
 }
-
 $row = $modx->getDatabase()->getRow($rs);
 
 $internalKey = $row['internalKey'];

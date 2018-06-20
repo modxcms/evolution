@@ -16,7 +16,7 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 // reload system settings from the database.
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
-include_once(MODX_MANAGER_PATH . 'includes/default_config.php');
+include_once(EVO_CORE_PATH . 'default_config.php');
 $rs = $modx->getDatabase()->select('setting_name, setting_value', $modx->getDatabase()->getFullTableName('system_settings'));
 while($row = $modx->getDatabase()->getRow($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
@@ -28,7 +28,7 @@ extract($settings, EXTR_OVERWRITE);
 
 // load languages and keys
 $lang_keys = array();
-$dir = dir('includes/lang');
+$dir = dir(EVO_CORE_PATH . 'lang');
 while($file = $dir->read()) {
 	if(strpos($file, '.inc.php') > 0) {
 		$endpos = strpos($file, '.');

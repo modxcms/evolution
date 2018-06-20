@@ -4481,18 +4481,14 @@ class Core implements Interfaces\CoreInterface
 
     public function getVersionData($data = null)
     {
-        $out = array();
         if (empty($this->version) || !is_array($this->version)) {
             //include for compatibility modx version < 1.0.10
-            include MODX_MANAGER_PATH . "includes/version.inc.php";
-            $this->version = array();
-            $this->version['version'] = isset($modx_version) ? $modx_version : '';
-            $this->version['branch'] = isset($modx_branch) ? $modx_branch : '';
-            $this->version['release_date'] = isset($modx_release_date) ? $modx_release_date : '';
-            $this->version['full_appname'] = isset($modx_full_appname) ? $modx_full_appname : '';
+            $version = include EVO_CORE_PATH . "version.php";
+            $this->version = $version;
             $this->version['new_version'] = isset($this->config['newversiontext']) ? $this->config['newversiontext'] : '';
         }
-        return (!is_null($data) && is_array($this->version) && isset($this->version[$data])) ? $this->version[$data] : $this->version;
+        return ($data !== null && \is_array($this->version) && isset($this->version[$data])) ?
+            $this->version[$data] : $this->version;
     }
 
     /**

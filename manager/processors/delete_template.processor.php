@@ -15,7 +15,7 @@ if($id == 0) {
 $rs = $modx->getDatabase()->select('id, pagetitle,introtext', $modx->getDatabase()->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
 $limit = $modx->getDatabase()->getRecordCount($rs);
 if($limit > 0) {
-	include "header.inc.php";
+	include MODX_MANAGER_PATH . "includes/header.inc.php";
 	?>
 
 	<h1><?php echo $_lang['manage_templates']; ?></h1>
@@ -36,7 +36,7 @@ if($limit > 0) {
 		</div>
 	</div>
 	<?php
-	include_once "footer.inc.php";
+	include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 	exit;
 }
 

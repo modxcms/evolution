@@ -46,21 +46,27 @@
  */
 if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 
-$base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
-if(is_file($base_path . 'assets/cache/siteManager.php'))
-    include_once($base_path . 'assets/cache/siteManager.php');
-if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
-	define('MGR_DIR', 'manager');
-if(is_file($base_path . 'assets/cache/siteHostnames.php'))
-    include_once($base_path . 'assets/cache/siteHostnames.php');
-if(!defined('MODX_SITE_HOSTNAMES'))
-	define('MODX_SITE_HOSTNAMES', '');
-
-// get start time
 $mstart = memory_get_usage();
+$config = [
+    'core' => __DIR__ . '/core',
+    'manager' => __DIR__ . '/manager',
+    'root' => __DIR__
+];
+
+if (file_exists(__DIR__ . '/config.php')) {
+    $config = array_merge($config, require __DIR__ . '/config.php');
+}
+if (! file_exists($config['core'] . '/config.php')) {
+    $path = __DIR__ . '/install/src/template/not_installed.tpl';
+    if (file_exists($path)) {
+        readfile($path);
+    }
+    exit;
+}
+require $config['core'] . '/config.php';
 
 // harden it
-require_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/protect.inc.php');
+require_once EVO_CORE_PATH . '/includes/protect.inc.php';
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
@@ -82,19 +88,6 @@ if ( ! defined('IN_MANAGER_MODE')) {
 }
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
-}
-
-// get the required includes
-if(! isset($database_user) || $database_user==="") {
-    $rt = @include_once(__DIR__ . '/' . MGR_DIR . '/includes/config.inc.php');
-    $path = 'install/src/template/not_installed.tpl';
-    // Be sure config.inc.php is there and that it contains some important values
-    if (!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-        if (file_exists($path)) {
-            readfile($path);
-        }
-        exit;
-    }
 }
 
 // start session

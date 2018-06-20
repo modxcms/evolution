@@ -162,7 +162,7 @@ switch($input['mode']) {
 				$stayUrl = "index.php?a=99&r=2";
 			}
 
-			include_once "header.inc.php";
+			include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 			?>
 
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
@@ -185,7 +185,7 @@ switch($input['mode']) {
 			</div>
 			<?php
 
-			include_once "footer.inc.php";
+			include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 		}
 		break;
 	case '88' : // edit user
@@ -301,7 +301,7 @@ switch($input['mode']) {
 				$stayUrl = "index.php?a=99&r=2";
 			}
 
-			include_once "header.inc.php";
+			include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 			?>
 
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
@@ -322,7 +322,7 @@ switch($input['mode']) {
 			</div>
 			<?php
 
-			include_once "footer.inc.php";
+			include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 		} else {
 			if($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$id}" : "87";

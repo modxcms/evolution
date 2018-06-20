@@ -56,8 +56,6 @@ class LogHandler
         } // to stop item name being empty
 
         $this->writeToLog();
-
-        return;
     }
 
     /**

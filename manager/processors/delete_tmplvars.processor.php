@@ -19,7 +19,7 @@ if(!$forced) {
 			INNER JOIN " . $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " AS stcv ON stcv.contentid=sc.id", "stcv.tmplvarid='{$id}'");
 	$count = $modx->getDatabase()->getRecordCount($drs);
 	if($count > 0) {
-		include_once "header.inc.php";
+		include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 		?>
 		<script>
 			var actions = {
@@ -50,7 +50,7 @@ if(!$forced) {
 			</div>
 		</div>
 		<?php
-		include_once "footer.inc.php";
+		include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 		exit;
 	}
 }

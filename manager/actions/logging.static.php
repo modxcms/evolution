@@ -41,7 +41,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                             <option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
                             <?php
                             // get all available actions in the log
-                            include_once "actionlist.inc.php";
+                            include_once MODX_MANAGER_PATH . "includes/actionlist.inc.php";
                             $logs_actions = record_sort(array_unique_multi($logs, 'action'), 'action');
                             foreach ($logs_actions as $row) {
                                 $action = getAction($row['action']);
