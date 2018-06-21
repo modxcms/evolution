@@ -1,17 +1,30 @@
 <?php
-global $database_server, $dbase, $database_user, $database_password, $table_prefix, $database_connection_charset, $database_connection_method;
+global $database_server,
+       $database_type,
+       $dbase,
+       $database_user,
+       $database_password,
+       $table_prefix,
+       $database_connection_charset,
+       $database_connection_method,
+       $database_collation;
 
 return [
     EvolutionCMS\Interfaces\DatabaseInterface::class => array(
         'class' => EvolutionCMS\Database::class,
         'arguments' => array(
-            $database_server,
-            $dbase,
-            $database_user,
-            $database_password,
-            $table_prefix,
-            $database_connection_charset,
-            $database_connection_method,
+            [
+                'host' => $database_server,
+                'base' => $dbase,
+                'user' => $database_user,
+                'pass' => $database_password,
+                'charset' => $database_connection_charset,
+                'collation' => $database_collation,
+                'prefix' => $table_prefix,
+                'method' => $database_connection_method,
+                'driver' => $database_type === 'mysqli' ? 'mysql' : $database_type
+            ],
+            AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver::class
         ),
         'calls' => array(
             array(

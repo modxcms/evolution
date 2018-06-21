@@ -1,0 +1,64 @@
+filter:
+    paths:
+        - 'src/*'
+    excluded_paths:
+        - 'example/*'
+        - 'test/*'
+        - 'vendor/*'
+build:
+    environment:
+        php:
+          version: 7.1
+          ini:
+            'date.timezone': 'Europe/Moscow'
+        mysql: 5.5             # 5.5 or 5.6 or 5.7
+        mongodb: false
+        postgresql: false
+        neo4j: false
+        memcached: false
+        redis: false
+        rabbitmq: false
+        variables:
+          DB_HOST: '127.0.0.1'
+          DB_BASE: 'modx'
+          DB_BASE2: 'laravel'
+          DB_USER: 'root'
+          DB_PASSWORD: ''
+          DB_PREFIX: '{PREFIX}'
+          DB_CHARSET: 'utf8mb4'
+          DB_METHOD: 'SET NAMES'
+          DB_COLLATION: 'utf8mb4_unicode_ci'
+    dependencies:
+        before:
+            - mysql -h 127.0.0.1 -u root -e "SET GLOBAL sql_mode = ''"
+            - mysql -h 127.0.0.1 -u root -e 'create database modx'
+            - mysql -h 127.0.0.1 -u root -e 'create database laravel'
+            - mysql -h 127.0.0.1 -u root modx < install/tables/site_content.sql
+            - mysql -h 127.0.0.1 -u root modx < install/data/site_content.sql
+    nodes:
+        analysis:
+            project_setup:
+                override:
+                    - 'true'
+            tests:
+                override:
+                    - php-scrutinizer-run
+                    -
+                        command: phpcs-run
+                        use_website_config: true
+                    -
+                        command: 'vendor/bin/phpunit --coverage-clover=coverage.clover'
+                        coverage:
+                            file: 'coverage.clover'
+                            format: 'clover'
+        tests: true
+
+checks:
+    php: true
+
+
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                concatenation: true

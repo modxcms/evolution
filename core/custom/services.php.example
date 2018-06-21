@@ -1,0 +1,53 @@
+<?php
+global $database_server,
+       $database_type,
+       $dbase,
+       $database_user,
+       $database_password,
+       $table_prefix,
+       $database_connection_charset,
+       $database_connection_method,
+       $database_collation;
+
+$capsule = new Illuminate\Database\Capsule\Manager;
+$capsule->setAsGlobal();
+$capsule->addConnection([
+    'driver' => 'mysql',
+    'host' => 'localhost',
+    'database' => 'modx',
+    'username' => '',
+    'password' => '',
+    'charset' => '',
+    'collation' => '',
+    'prefix' => ''
+], 'default');
+$capsule->getConnection('default');
+
+$config = include dirname(__DIR__) . '/services.php';
+
+return array_merge($config, [
+    EvolutionCMS\Interfaces\DatabaseInterface::class => [
+        'class' => EvolutionCMS\Database::class,
+        'arguments' => array(
+            [
+                'host' => $database_server,
+                'base' => $dbase,
+                'user' => $database_user,
+                'pass' => $database_password,
+                'charset' => $database_connection_charset,
+                'collation' => $database_collation,
+                'prefix' => $table_prefix,
+                'method' => $database_connection_method
+            ],
+            AgelxNash\Modx\Evo\Database\Drivers\MySqliDriver::class
+        ),
+        'calls' => array(
+            array(
+                'method' => 'query',
+                'arguments' => array(
+                    "SET SQL_MODE = '';"
+                )
+            )
+        )
+    ]
+]);

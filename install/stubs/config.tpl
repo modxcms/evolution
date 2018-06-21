@@ -2,19 +2,20 @@
 /**
  * MODX Configuration file
  */
-$database_type = 'mysqli';
+$database_type = 'mysql';
 $database_server = '[+database_server+]';
 $database_user = '[+user_name+]';
 $database_password = '[+password+]';
 $database_connection_charset = '[+connection_charset+]';
 $database_connection_method = '[+connection_method+]';
+$database_collation = '[+connection_collation+]';
 $dbase = '`[+dbase+]`';
 $table_prefix = '[+table_prefix+]';
+$https_port = '443';
+$coreClass = '\DocumentParser';
 
 $lastInstallTime = '[+lastInstallTime+]';
 
-$https_port = '443';
-$coreClass = '\DocumentParser';
 $session_cookie_path = '';
 $session_cookie_domain = '';
 
@@ -22,36 +23,26 @@ $session_cookie_domain = '';
  * Preventing the overwrite of the config when updating
  * Here you can
  *  - define manual constants, dedicated specifically for you project
- *  - inject composer
  *  - change predefined variables by the environment variables
  *  - ...
  *  - etc.
  *  - PROFIT!
  */
-if (file_exists(__DIR__ . '/config_mutator.php')) {
-    require_once __DIR__ . '/config_mutator.php';
+if (file_exists(__DIR__ . '/custom/config.php')) {
+    require_once __DIR__ . '/custom/config.php';
 }
 
-if (! defined('MODX_CLASS')) {
+if (!defined('MODX_CLASS')) {
     define('MODX_CLASS', $coreClass);
 }
 
-if (defined('MODX_CLI')) {
-    throw new RuntimeException("MODX_CLI");
-} else {
+if (!defined('MODX_CLI')) {
     define('MODX_CLI', (php_sapi_name() === 'cli' && (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
 }
 
 if (!defined('MGR_DIR')) {
-    if (is_file(dirname(dirname(__DIR__)) . '/assets/cache/siteManager.php')) {
-        require_once dirname(dirname(__DIR__)) . '/assets/cache/siteManager.php';
-    }
-}
-if (!defined('MGR_DIR')) {
-    if (is_dir(dirname(dirname(__DIR__)) . '/manager')) {
+    if (is_dir(dirname((__DIR__) . '/manager'))) {
         define('MGR_DIR', 'manager');
-    } else {
-        throw new RuntimeException('MGR_DIR is not defined');
     }
 }
 
@@ -111,6 +102,11 @@ if (!defined('MODX_BASE_PATH')) {
     define('MODX_BASE_PATH', $base_path);
 }
 
+
+if (!defined('EVO_CORE_PATH')) {
+    define('EVO_CORE_PATH', __DIR__ . '/');
+}
+
 if (!preg_match('/\/$/', MODX_BASE_PATH)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_PATH');
 }
@@ -124,16 +120,11 @@ if (!preg_match('/\/$/', MODX_BASE_URL)) {
 }
 
 if (!defined('MODX_MANAGER_PATH')) {
-    define('MODX_MANAGER_PATH', MODX_BASE_PATH . MGR_DIR . '/');
-}
-
-if (!defined('MODX_SITE_HOSTNAMES') && is_file(MODX_BASE_PATH . '/assets/cache/siteHostnames.php')) {
-    require_once MODX_BASE_PATH . '/assets/cache/siteHostnames.php';
+    define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
 }
 if (!defined('MODX_SITE_HOSTNAMES')) {
     define('MODX_SITE_HOSTNAMES', '');
 }
-
 
 // check for valid hostnames
 $site_hostname = MODX_CLI ? 'localhost' : str_replace(':' . $_SERVER['SERVER_PORT'], '', $_SERVER['HTTP_HOST']);
@@ -145,13 +136,13 @@ if (!empty($site_hostnames[0]) && !in_array($site_hostname, $site_hostnames)) {
 // assign site_url
 if (!defined('MODX_SITE_URL')) {
     $secured = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
-    $site_url = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $parameters['https_port'] || $secured) ? 'https://' : 'http://';
+    $site_url = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port || $secured) ? 'https://' : 'http://';
     $site_url .= $site_hostname;
     if ($_SERVER['SERVER_PORT'] != 80) {
         $site_url = str_replace(':' . $_SERVER['SERVER_PORT'], '', $site_url);
     } // remove port from HTTP_HOST
 
-    $site_url .= ($_SERVER['SERVER_PORT'] == 80 || (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $parameters['https_port']) ? '' : ':' . $_SERVER['SERVER_PORT'];
+    $site_url .= ($_SERVER['SERVER_PORT'] == 80 || (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port) ? '' : ':' . $_SERVER['SERVER_PORT'];
     $site_url .= $base_url;
 
     define('MODX_SITE_URL', $site_url);

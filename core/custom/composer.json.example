@@ -1,0 +1,6 @@
+{
+  "name": "evolutioncms/custom",
+  "require": {
+    "vlucas/phpdotenv": "~2.2"
+  }
+}
