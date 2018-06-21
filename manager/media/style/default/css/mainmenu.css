@@ -52,7 +52,6 @@ border: none !important; border-left: 1px solid rgba(0, 0, 0, 0.05) !important; 
 #mainMenu .nav li.item-group > *:not(:first-child) .fa { margin-right: 0 }
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 0.4rem; top: 0.4rem; width: 0.4rem; height: 0.4rem; background-color: #ffc107; font-size: 0; border-radius: 50%;; }
 #mainMenu .account #newMail { display: none }
-#mainMenu #siteOffline { color:#ffcc00 }
 /* statusbar */
 #statusbar { position: relative; width: 1rem; height: 2.2rem; line-height: 2.4rem; font-size: 0.875em; white-space: nowrap; float: left; }
 #statusbar .fa { font-size: 0.875rem }
