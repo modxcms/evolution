@@ -4663,6 +4663,7 @@ class Core implements Interfaces\CoreInterface
     public function getTpl($tpl)
     {
         $template = $tpl;
+        $command = '';
         if (preg_match("/^@([^:\s]+)[:\s]+(.+)$/s", trim($tpl), $match)) {
             $command = strtoupper($match[1]);
             $template = $match[2];
