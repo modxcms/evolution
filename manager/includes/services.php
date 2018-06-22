@@ -26,7 +26,12 @@ return [
         'class' => EvolutionCMS\Legacy\PhpCompat::class
     ),
     EvolutionCMS\Interfaces\MailInterface::class => array(
-        'class' => EvolutionCMS\Mail::class
+        'class' => EvolutionCMS\Mail::class,
+        'calls' => array(
+            array(
+                'method' => 'init'
+            )
+        )
     ),
     EvolutionCMS\Interfaces\PasswordHashInterface::class => array(
         'class' => EvolutionCMS\Legacy\PasswordHash::class
