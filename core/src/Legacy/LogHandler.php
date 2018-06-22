@@ -75,7 +75,7 @@ class LogHandler
             $modx->webAlertAndQuit("Logging error: action not set.");
         }
         if ($this->entry['msg'] == "") {
-            include_once "actionlist.inc.php";
+            include_once MODX_MANAGER_PATH . "includes/actionlist.inc.php";
             $this->entry['msg'] = getAction($this->entry['action'], $this->entry['itemId']);
             if ($this->entry['msg'] == "") {
                 $modx->webAlertAndQuit("Logging error: couldn't find message to write to log.");

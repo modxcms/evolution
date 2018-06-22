@@ -106,9 +106,9 @@ class ExceptionHandler
         $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
         $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
-        $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
-        $ua = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
-        $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
+        $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES, $this->container->getConfig('modx_charset'));
+        $ua = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->container->getConfig('modx_charset'));
+        $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->container->getConfig('modx_charset'));
         if ($is_error) {
             $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
             if ($msg != 'PHP Parse Error') {
@@ -186,15 +186,15 @@ class ExceptionHandler
             $table[] = array('Manager action', $this->container->getManagerApi()->action . $actionName);
         }
 
-        if (preg_match('@^[0-9]+@', $this->documentIdentifier)) {
-            $resource = $this->container->getDocumentObject('id', $this->documentIdentifier);
-            $url = $this->container->makeUrl($this->documentIdentifier, '', '', 'full');
-            $table[] = array('Resource', '[' . $this->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>');
+        if (preg_match('@^[0-9]+@', $this->container->documentIdentifier)) {
+            $resource = $this->container->getDocumentObject('id', $this->container->documentIdentifier);
+            $url = $this->container->makeUrl($this->container->documentIdentifier, '', '', 'full');
+            $table[] = array('Resource', '[' . $this->container->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>');
         }
         $table[] = array('Referer', $referer);
         $table[] = array('User Agent', $ua);
         $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time', date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time']));
+        $table[] = array('Current time', date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->container->getConfig('server_offset_time')));
         $str .= $MakeTable->create($table, array('Basic info', ''));
         $str .= "<br />";
 
@@ -209,7 +209,7 @@ class ExceptionHandler
         $totalTime = ($this->container->getMicroTime() - $this->container->tstart);
 
         $mem = memory_get_peak_usage(true);
-        $total_mem = $mem - $this->mstart;
+        $total_mem = $mem - $this->container->mstart;
         $total_mem = ($total_mem / 1024 / 1024) . ' mb';
 
         $queryTime = $this->container->queryTime;
@@ -269,13 +269,14 @@ class ExceptionHandler
         if ($this->container->error_reporting === '99' && !isset($_SESSION['mgrValidated'])) {
             return true;
         }
-
-        // Set 500 response header
-        if ($error_level !== 2) {
-            header('HTTP/1.1 500 Internal Server Error');
+        if (! headers_sent()) {
+            // Set 500 response header
+            if ($error_level !== 2) {
+                header('HTTP/1.1 500 Internal Server Error');
+            }
+            ob_get_clean();
         }
 
-        ob_get_clean();
         // Display error
         if ($this->shouldDisplay()) {
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
