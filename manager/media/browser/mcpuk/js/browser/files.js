@@ -87,7 +87,7 @@ browser.showFiles = function(callBack, selected) {
                     icon = 'themes/' + browser.theme + '/img/files/big/' + icon + '.png';
                 }
                 html += '<div class="file">' +
-                    '<div class="lazy ' + (file.skipthumb ? 'thumb' : 'skipthumb') + '" data-src="' + icon + '"></div>' +
+                    '<div class="lazy thumb ' + (file.thumb ? '' : 'skipthumb') + '" data-src="' + icon + '"></div>' +
                     '<div class="name">' + _.htmlData(file.name) + '</div>' +
                     '<div class="time">' + file.date + '</div>' +
                     '<div class="size">' + browser.humanSize(file.size) + '</div>' +
