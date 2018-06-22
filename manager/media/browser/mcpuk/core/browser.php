@@ -346,7 +346,7 @@ class browser extends uploader
         }
         $dir = $this->postDir();
         if (!dir::isWritable($dir)) {
-            $response['message'] = $this->errorMsg("Cannot access or write to upload folder.");
+            $response['message'] = $this->label("Cannot access or write to upload folder.");
 
             return json_encode($response);
         }
@@ -797,7 +797,7 @@ class browser extends uploader
     /**
      * @param $file
      * @param $dir
-     * @return string
+     * @return array
      */
     protected function moveUploadFile($file, $dir)
     {
