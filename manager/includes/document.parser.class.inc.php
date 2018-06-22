@@ -204,7 +204,7 @@ class DocumentParser
         $this->q = self::_getCleanQueryString();
     }
 
-    final private function __clone()
+    final public function __clone()
     {
     }
     /**
@@ -213,7 +213,7 @@ class DocumentParser
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new DocumentParser();
+            self::$instance = new static();
         }
         return self::$instance;
     }
@@ -2263,6 +2263,7 @@ class DocumentParser
         $closeOpt = false;
         $maybePos = false;
         $inFilter = false;
+        $pos = false;
         $total = strlen($str);
         for ($i = 0; $i < $total; $i++) {
             $c = substr($str, $i, 1);
@@ -3161,22 +3162,31 @@ class DocumentParser
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    public function webAlertAndQuit($msg, $url = "")
+    public function webAlertAndQuit($msg, $url = '')
     {
         global $modx_manager_charset;
-        if (substr(strtolower($url), 0, 11) == "javascript:") {
-            $fnc = substr($url, 11);
-        } elseif ($url) {
-            $fnc = "window.location.href='" . addslashes($url) . "';";
-        } else {
-            $fnc = "history.back(-1);";
+        switch (true) {
+            case (0 === stripos($url, 'javascript:')):
+                $fnc = substr($url, 11);
+                break;
+            case $url === '#':
+                $fnc = '';
+                break;
+            case empty($url):
+                $fnc = 'history.back(-1);';
+                break;
+            default:
+                $fnc = "window.location.href='" . addslashes($url) . "';";
         }
+
         echo "<html><head>
             <title>MODX :: Alert</title>
             <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
             <script>
                 function __alertQuit() {
-                    alert('" . addslashes($msg) . "');
+                    var el = document.querySelector('p');
+                    alert(el.innerHTML);
+                    el.remove();
                     {$fnc}
                 }
                 window.setTimeout('__alertQuit();',100);
@@ -3592,8 +3602,10 @@ class DocumentParser
         if (isset($p['from']) && strpos($p['from'], '<') !== false && substr($p['from'], -1) === '>') {
             list($p['fromname'], $p['from']) = $this->mail->address_split($p['from']);
         }
-        $this->mail->From = (!isset($p['from'])) ? $this->config['emailsender'] : $p['from'];
-        $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
+        $this->mail->setFrom(
+            isset($p['from']) ? $p['from'] : $this->config['emailsender'],
+            isset($p['fromname']) ? $p['fromname'] : $this->config['site_name']
+        );
         $this->mail->Subject = (!isset($p['subject'])) ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body = $p['body'];
         if (isset($p['type']) && $p['type'] == 'text') {
@@ -5441,8 +5453,8 @@ class DocumentParser
                 $this->pluginsCode .= '</fieldset><br />';
                 $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
-            if ($e->_output != '') {
-                $results[] = $e->_output;
+            if ($e->getOutput() != '') {
+                $results[] = $e->getOutput();
             }
             if ($e->_propagate != true) {
                 break;
@@ -5495,57 +5507,52 @@ class DocumentParser
         $propertyString = trim($propertyString);
         $propertyString = str_replace('{}', '', $propertyString);
         $propertyString = str_replace('} {', ',', $propertyString);
-        if (empty($propertyString)) {
-            return array();
-        }
-        if ($propertyString == '{}') {
-            return array();
-        }
-
-        $jsonFormat = $this->isJson($propertyString, true);
         $property = array();
-        // old format
-        if ($jsonFormat === false) {
-            $props = explode('&', $propertyString);
-            foreach ($props as $prop) {
+        if (!empty($propertyString) && $propertyString != '{}') {
+            $jsonFormat = $this->isJson($propertyString, true);
+            // old format
+            if ($jsonFormat === false) {
+                $props = explode('&', $propertyString);
+                foreach ($props as $prop) {
 
-                if (empty($prop)) {
-                    continue;
-                } elseif (strpos($prop, '=') === false) {
-                    $property[trim($prop)] = '';
-                    continue;
-                }
-
-                $_ = explode('=', $prop, 2);
-                $key = trim($_[0]);
-                $p = explode(';', trim($_[1]));
-                switch ($p[1]) {
-                    case 'list':
-                    case 'list-multi':
-                    case 'checkbox':
-                    case 'radio':
-                        $value = !isset($p[3]) ? '' : $p[3];
-                        break;
-                    default:
-                        $value = !isset($p[2]) ? '' : $p[2];
-                }
-                if (!empty($key)) {
-                    $property[$key] = $value;
-                }
-            }
-            // new json-format
-        } else if (!empty($jsonFormat)) {
-            foreach ($jsonFormat as $key => $row) {
-                if (!empty($key)) {
-                    if (is_array($row)) {
-                        if (isset($row[0]['value'])) {
-                            $value = $row[0]['value'];
-                        }
-                    } else {
-                        $value = $row;
+                    if (empty($prop)) {
+                        continue;
+                    } elseif (strpos($prop, '=') === false) {
+                        $property[trim($prop)] = '';
+                        continue;
                     }
-                    if (isset($value) && $value !== '') {
+
+                    $_ = explode('=', $prop, 2);
+                    $key = trim($_[0]);
+                    $p = explode(';', trim($_[1]));
+                    switch ($p[1]) {
+                        case 'list':
+                        case 'list-multi':
+                        case 'checkbox':
+                        case 'radio':
+                            $value = !isset($p[3]) ? '' : $p[3];
+                            break;
+                        default:
+                            $value = !isset($p[2]) ? '' : $p[2];
+                    }
+                    if (!empty($key)) {
                         $property[$key] = $value;
+                    }
+                }
+                // new json-format
+            } else if (!empty($jsonFormat)) {
+                foreach ($jsonFormat as $key => $row) {
+                    if (!empty($key)) {
+                        if (is_array($row)) {
+                            if (isset($row[0]['value'])) {
+                                $value = $row[0]['value'];
+                            }
+                        } else {
+                            $value = $row;
+                        }
+                        if (isset($value) && $value !== '') {
+                            $property[$key] = $value;
+                        }
                     }
                 }
             }
@@ -5563,6 +5570,7 @@ class DocumentParser
                 $property = $out;
             }
         }
+
         return $property;
     }
 
@@ -6707,7 +6715,11 @@ class SystemEvent
 {
     public $name = '';
     public $_propagate = true;
-    public $_output = '';
+    /**
+     * @deprecated use setOutput(), getOutput()
+     * @var string
+     */
+    public $_output;
     public $activated = false;
     public $activePlugin = '';
     public $params = array();
@@ -6746,10 +6758,27 @@ class SystemEvent
      * Output
      *
      * @param string $msg
+     * @deprecated see addOutput
      */
     public function output($msg)
     {
         $this->_output .= $msg;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setOutput($data)
+    {
+        $this->_output = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutput()
+    {
+        return $this->_output;
     }
 
     /**
@@ -6764,7 +6793,7 @@ class SystemEvent
     {
         unset ($this->returnedValues);
         $this->name = "";
-        $this->_output = "";
+        $this->setOutput(null);
         $this->_propagate = true;
         $this->activated = false;
     }

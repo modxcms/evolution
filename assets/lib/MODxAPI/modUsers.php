@@ -17,7 +17,7 @@ class modUsers extends MODxAPI
         ),
         'attribute' => array(
             'fullname'         => '',
-            'role'             => '',
+            'role'             => 0,
             'email'            => '',
             'phone'            => '',
             'mobilephone'      => '',
@@ -52,6 +52,11 @@ class modUsers extends MODxAPI
      */
     protected $givenPassword = '';
     protected $groupIds = array();
+    protected $userIdCache = array(
+        'attribute.internalKey' => '',
+        'attribute.email' => '',
+        'user.username' => ''
+    );
 
     /**
      * @var integer
@@ -136,13 +141,41 @@ class modUsers extends MODxAPI
     }
 
     /**
+     *
+     */
+    public function close()
+    {
+        parent::close();
+        $this->userIdCache = array(
+            'attribute.internalKey' => '',
+            'attribute.email' => '',
+            'user.username' => ''
+        );
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    protected function getUserId($id) {
+        $find = $this->findUser($id);
+        if ($find && !empty($this->userIdCache[$find])) {
+            $id = $this->userIdCache[$find];
+        } else {
+            $id = null;
+        }
+
+        return $id;
+    }
+
+    /**
      * @param $id
      * @return $this
      */
     public function edit($id)
     {
         $id = is_scalar($id) ? trim($id) : '';
-        if ($this->getID() != $id) {
+        if ($this->getUserId($id) != $id) {
             $this->close();
             $this->newDoc = false;
 
@@ -152,6 +185,9 @@ class modUsers extends MODxAPI
                 $this->set('editedon', time());
                 $this->editQuery($find, $id);
                 $this->id = empty($this->field['internalKey']) ? null : $this->get('internalKey');
+                $this->userIdCache['attribute.internalKey'] = $this->getID();
+                $this->userIdCache['attribute.email'] = $this->get('email');
+                $this->userIdCache['user.username'] = $this->get('username');
                 $this->store($this->toArray());
                 unset($this->field['id']);
                 unset($this->field['internalKey']);
@@ -233,7 +269,7 @@ class modUsers extends MODxAPI
             return false;
         }
 
-        if (!$this->checkUnique('web_users', 'username')) {
+        if ($this->isChanged('username') && !$this->checkUnique('web_users', 'username')) {
             $this->log['UniqueUsername'] = 'username not unique <pre>' . print_r(
                 $this->get('username'),
                 true
@@ -242,7 +278,7 @@ class modUsers extends MODxAPI
             return false;
         }
 
-        if (!$this->checkUnique('web_user_attributes', 'email', 'internalKey')) {
+        if ($this->isChanged('username') && !$this->checkUnique('web_user_attributes', 'email', 'internalKey')) {
             $this->log['UniqueEmail'] = 'Email not unique <pre>' . print_r($this->get('email'), true) . '</pre>';
 
             return false;
@@ -372,6 +408,9 @@ class modUsers extends MODxAPI
         return $flag;
     }
 
+    /**
+     * @return mixed
+     */
     protected function deleteQuery()
     {
         return $this->query("
@@ -415,8 +454,12 @@ class modUsers extends MODxAPI
      */
     public function checkBlock($id = 0)
     {
-        $tmp = clone $this;
-        if ($id && $tmp->getID() != $id) {
+        if ($this->getID()) {
+            $tmp = clone $this;
+        } else {
+            $tmp = $this;
+        }
+        if ($id && $tmp->getUserId($id) != $id) {
             $tmp->edit($id);
         }
         $now = time();
@@ -439,8 +482,12 @@ class modUsers extends MODxAPI
      */
     public function testAuth($id, $password, $blocker, $fire_events = false)
     {
-        $tmp = clone $this;
-        if ($id && $tmp->getID() != $id) {
+        if ($this->getID()) {
+            $tmp = clone $this;
+        } else {
+            $tmp = $this;
+        }
+        if ($id && $tmp->getUserId($id) != $id) {
             $tmp->edit($id);
         }
 

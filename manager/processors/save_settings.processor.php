@@ -69,6 +69,9 @@ if (isset($data) && count($data) > 0) {
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {
+			case 'site_name':
+				$v = htmlspecialchars($v);
+				break;
             case 'settings_version':{
                 if($modx->getVersionData('version')!=$data['settings_version']){
                     $modx->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');

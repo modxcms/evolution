@@ -4,6 +4,7 @@ if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
 }else{
     define('MGR_DIR', 'manager');
 }
+define('MODX_CLI', false);
 
 global $moduleName;
 global $moduleVersion;

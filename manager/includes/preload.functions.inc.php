@@ -16,8 +16,13 @@ if( ! function_exists('evolutionCMS')) {
             }
             define('MODX_CLASS', 'DocumentParser');
         }
-        $obj = new ReflectionClass(MODX_CLASS);
-        return $obj->newInstanceWithoutConstructor()->getInstance();
+        
+        global $modx;
+        if ($modx === null) {
+            $obj = new ReflectionClass(MODX_CLASS);
+            $modx = $obj->newInstanceWithoutConstructor()->getInstance();
+        }
+        return $modx;
     }
 }
 

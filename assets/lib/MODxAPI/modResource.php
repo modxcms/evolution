@@ -800,7 +800,7 @@ class modResource extends MODxAPI
      */
     public function issetField($key)
     {
-        return (array_key_exists($key, $this->default_field) || array_key_exists($key, $this->tv));
+        return (array_key_exists($key, $this->default_field) || (array_key_exists($key, $this->tv) && $this->belongsToTemplate($this->tv[$key])));
     }
 
     /**

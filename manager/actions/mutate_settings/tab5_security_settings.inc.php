@@ -221,5 +221,14 @@ if(!$gdAvailable) $use_captcha = 0;
   <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
     <td colspan="2"><div class="split"></div></td>
   </tr>
+  <tr>
+    <td colspan="2">
+        <?php
+            // invoke OnMiscSettingsRender event
+            $evtOut = $modx->invokeEvent('OnSecuritySettingsRender');
+            if(is_array($evtOut)) echo implode("",$evtOut);
+        ?>
+    </td>
+  </tr>
 </table>
 </div>

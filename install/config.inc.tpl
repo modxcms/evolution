@@ -18,6 +18,20 @@ $coreClass = '\DocumentParser';
 $session_cookie_path = '';
 $session_cookie_domain = '';
 
+/**
+ * Preventing the overwrite of the config when updating
+ * Here you can
+ *  - define manual constants, dedicated specifically for you project
+ *  - inject composer
+ *  - change predefined variables by the environment variables
+ *  - ...
+ *  - etc.
+ *  - PROFIT!
+ */
+if (file_exists(__DIR__ . '/config_mutator.php')) {
+    require_once __DIR__ . '/config_mutator.php';
+}
+
 if (!defined('MGR_DIR')) {
     define('MGR_DIR', 'manager');
 }
