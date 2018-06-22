@@ -44,7 +44,7 @@ tr.selected > td, tr.selected:hover > td { background-color: #5b9bda; color: #ff
 #collapseSide { padding: 5px 0; display: inline-block; float: left; margin: 0 0 0 5px; }
 #hide-side { display: inline-block; width: 20px; text-align: center; font-size: 1.3rem; color: #5a5a5a; background-color: transparent; border: none; padding: 0.7rem 0.6rem 0.4rem 0.6rem; margin: 0px; }
 #hide-side i.fa:hover { color: #292b2c; }
-#toolbar { min-width: 500px; padding: 5px 0 5px 0; display: inline-block; float: left; margin-top: 2px; }
+#toolbar { min-width: 500px; padding: 5px 0 5px 0; display: block; margin-top: 2px; }
 #toolbar a { font-size: 1.1rem; line-height: 2rem; color: #292b2c; background-color: #fff; border: 1px solid #d4d4d4; padding: 0.3rem 0.6rem; margin-left: 5px; display: block; float: left; }
 #toolbar a:before { font-family: FontAwesome; font-size: 1.3rem; display: inline-block; padding-right: 3px; margin-top: 0px; vertical-align: top; color: #404040; }
 #toolbar a:hover, #toolbar a.hover { color: #292b2c; background-color: #e6e6e6; border-color: #adadad }
@@ -128,7 +128,8 @@ span.close, span.clicked { float: right; width: 19px; height: 19px; background: 
 .selectThis:hover { background-color: #fff; }
 .pull-right { position: absolute; }
 .pull-right a { color: #bbb !important; }
-div.file .thumb { background-size: cover; }
+div.file .thumb { background-size: contain; }
+div.file .skipthumb { background-size: auto; }
 .rangeTextContainer, .rangeThumbContainer { display: inline-block; padding: 0.4rem 0.4rem 0.2rem 0.4rem; margin-left: 2px; }
 .hiddenrange { display: none }
 .thumbsize, .textsize { display: inline-block; margin-left: 10px; }

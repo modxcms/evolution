@@ -1,8 +1,6 @@
 <?php
-
 $c  = &$settings;
-
-$c['site_name']                = 'My MODX Site';
+$c['site_name']                = 'My EVO Site';
 $c['site_start']               = 1;
 $c['error_page']               = 1;
 $c['unauthorized_page']        = 1;
@@ -73,6 +71,8 @@ $c['clean_uploaded_filename']  = 1;
 $c['strip_image_paths']        = 1;
 $c['maxImageWidth']            = 2600;
 $c['maxImageHeight']           = 2200;
+$c['clientResize']             = 0;
+$c['noThumbnailsRecreation']   = 0;
 $c['thumbWidth']               = 150;
 $c['thumbHeight']              = 150;
 $c['thumbsDir']                = '.thumbs';
@@ -111,6 +111,3 @@ $c['manager_theme_mode']       = '3';
 $c['login_form_position']      = 'left';
 $c['manager_menu_position']    = 'top';
 $c['tinymce4_skin']            = 'lightgray';
-
-
-
