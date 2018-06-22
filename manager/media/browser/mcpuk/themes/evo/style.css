@@ -129,6 +129,7 @@ span.close, span.clicked { float: right; width: 19px; height: 19px; background: 
 .pull-right { position: absolute; }
 .pull-right a { color: #bbb !important; }
 div.file .thumb { background-size: contain; }
+div.file .skipthumb { background-size: auto; }
 .rangeTextContainer, .rangeThumbContainer { display: inline-block; padding: 0.4rem 0.4rem 0.2rem 0.4rem; margin-left: 2px; }
 .hiddenrange { display: none }
 .thumbsize, .textsize { display: inline-block; margin-left: 10px; }

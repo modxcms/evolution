@@ -338,7 +338,7 @@ class browser extends uploader
      */
     protected function act_upload()
     {
-        $response = array('success' => false, 'message' =>  $this->label("Unknown error."));
+        $response = array('success' => false, 'message' => $this->label("Unknown error."));
         if (!$this->config['access']['files']['upload'] ||
             !isset($this->post['dir'])
         ) {
@@ -458,7 +458,7 @@ class browser extends uploader
         }
 
         $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserDelete', array(
-            'element' => 'file',
+            'element'  => 'file',
             'filename' => $this->post['file'],
             'filepath' => realpath($dir)
         ));
@@ -473,7 +473,7 @@ class browser extends uploader
         }
 
         $this->modx->invokeEvent('OnFileBrowserDelete', array(
-            'element' => 'file',
+            'element'  => 'file',
             'filename' => $this->post['file'],
             'filepath' => realpath($dir)
         ));
@@ -641,7 +641,7 @@ class browser extends uploader
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             } else {
                 $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserDelete', array(
-                    'element' => 'file',
+                    'element'  => 'file',
                     'filename' => $base,
                     'filepath' => $filepath
                 ));
@@ -653,7 +653,7 @@ class browser extends uploader
                         $error[] = $this->label("Cannot delete '{file}'.", $replace);
                     } else {
                         $this->modx->invokeEvent('OnFileBrowserDelete', array(
-                            'element' => 'file',
+                            'element'  => 'file',
                             'filename' => $base,
                             'filepath' => $filepath
                         ));
@@ -814,7 +814,7 @@ class browser extends uploader
         }
 
         $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserUpload', array(
-            'file' => &$file,
+            'file'     => &$file,
             'filepath' => realpath($dir)
         ));
 
@@ -884,17 +884,21 @@ class browser extends uploader
         foreach ($files as $file) {
             $ext = file::getExtension($file);
             $smallThumb = false;
-            if (!$this->config['noThumbnailsRecreation'] && in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg'))) {
+            $preview = false;
+            if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg'))) {
                 $size = @getimagesize($file);
                 if (is_array($size) && count($size)) {
-                    $thumb_file = "$thumbDir/" . basename($file);
-                    if (!is_file($thumb_file) || filemtime($file) > filemtime($thumb_file)) {
-                        $this->makeThumb($file);
+                    $preview = true;
+                    if (!$this->config['noThumbnailsRecreation']) {
+                        $thumb_file = "$thumbDir/" . basename($file);
+                        if (!is_file($thumb_file) || filemtime($file) > filemtime($thumb_file)) {
+                            $this->makeThumb($file);
+                        }
+                        $smallThumb =
+                            ($size[0] <= $this->config['thumbWidth']) &&
+                            ($size[1] <= $this->config['thumbHeight']) &&
+                            in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
                     }
-                    $smallThumb =
-                        ($size[0] <= $this->config['thumbWidth']) &&
-                        ($size[1] <= $this->config['thumbHeight']) &&
-                        in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
                 }
             }
             $stat = stat($file);
@@ -923,7 +927,8 @@ class browser extends uploader
                 'bigIcon'    => $bigIcon,
                 'smallIcon'  => $smallIcon,
                 'thumb'      => $thumb,
-                'smallThumb' => $smallThumb
+                'smallThumb' => $smallThumb,
+                'preview'    => $preview
             );
         }
 
