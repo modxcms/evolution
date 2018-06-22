@@ -49,8 +49,7 @@
 /core/config.php
 
 # Manager
-/manager/includes/config.inc.php
-/manager/includes/config_mutator.php
+/manager/media/style/default/css/styles.min.css
 
 # Composer
 /composer.phar
