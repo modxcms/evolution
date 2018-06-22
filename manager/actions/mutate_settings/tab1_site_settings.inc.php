@@ -18,8 +18,8 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-      <th><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?><br><small>[(site_name)]</small></th>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" />
+      <th><?php echo $modx->getPhpCompat()->htmlspecialchars($_lang['sitename_title']) ?><br><small>[(site_name)]</small></th>
+      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($site_name); ?>" />
   <div class="comment"><?php echo $_lang['sitename_message'] ?></div>
   </td>
     </tr>
@@ -70,19 +70,19 @@ table.sysSettings tr.noborder td {border:none;}
     <th><?php echo $_lang['defaulttemplate_title'] ?><br><small>[(default_template)]</small></th>
     <td>
     <?php
-        $rs = $modx->db->select(
+        $rs = $modx->getDatabase()->select(
             't.templatename, t.id, c.category',
-            $modx->getFullTableName('site_templates')." AS t
-                LEFT JOIN ".$modx->getFullTableName('categories')." AS c ON t.category = c.id",
+            $modx->getDatabase()->getFullTableName('site_templates')." AS t
+                LEFT JOIN ".$modx->getDatabase()->getFullTableName('categories')." AS c ON t.category = c.id",
             "",
             'c.category, t.templatename ASC'
             );
     ?>
       <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
         <?php
-        
+
         $currentCategory = '';
-                        while ($row = $modx->db->getRow($rs)) {
+                        while ($row = $modx->getDatabase()->getRow($rs)) {
             $thisCategory = $row['category'];
             if($thisCategory == null) {
                 $thisCategory = $_lang['no_category'];
@@ -96,13 +96,13 @@ table.sysSettings tr.noborder td {border:none;}
             } else {
                 $closeOptGroup = false;
             }
-            
+
             $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
             if ($selectedtext) {
                 $oldTmpId = $row['id'];
                 $oldTmpName = $row['templatename'];
             }
-            
+
             echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
             $currentCategory = $thisCategory;
         }
@@ -134,8 +134,8 @@ table.sysSettings tr.noborder td {border:none;}
       <td >
         <?php
             // Check if PHX is enabled
-            $count = $modx->db->getRecordCount(
-              $modx->db->select('id', '[+prefix+]site_plugins', 
+            $count = $modx->getDatabase()->getRecordCount(
+              $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_plugins'),
               "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
             );
             if($count) {
@@ -220,7 +220,7 @@ table.sysSettings tr.noborder td {border:none;}
 <label><input type="radio" name="docid_incrmnt_method" value="0"
     <?php echo ($docid_incrmnt_method=='0') ? 'checked="checked"' : "" ; ?> />
     <?php echo $_lang['docid_incrmnt_method_0']?></label><br />
-    
+
 <label><input type="radio" name="docid_incrmnt_method" value="1"
     <?php echo ($docid_incrmnt_method=='1') ? 'checked="checked"' : "" ; ?> />
     <?php echo $_lang['docid_incrmnt_method_1']?></label><br />

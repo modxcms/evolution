@@ -19,7 +19,7 @@ class multicategories_DL_Extender extends extDocLister
             if ($ids) {
                 $ids = implode(',', $ids);
                 $q = $this->DocLister->dbQuery("SELECT `doc` FROM {$this->modx->getFullTableName('site_content_categories')} WHERE `category` IN ({$ids})");
-                $docs = $this->modx->db->getColumn('doc', $q);
+                $docs = $this->modx->getDatabase()->getColumn('doc', $q);
                 if ($docs) {
                     $docs = implode(',', $docs);
                     $documents = $this->DocLister->getCFGDef('documents', '');

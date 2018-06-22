@@ -113,7 +113,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
 <!DOCTYPE html>
 <html <?= (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"' ?>>
 <head>
-    <title><?= $site_name ?>- (EVO CMS Manager)</title>
+    <title><?= $modx->getPhpCompat()->entities($site_name) ?>- (EVO CMS Manager)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
@@ -354,7 +354,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 $version = 'Evolution';
                                 ?>
                                 <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($site_name), $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
                                 ?>
                             </ul>
                         </li>
@@ -453,10 +453,10 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         );
         foreach ($sortParams as $param) {
             if (isset($_REQUEST[$param])) {
-                $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+                $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
                 $_SESSION[$param] = $_REQUEST[$param];
             } else if (!isset($_SESSION[$param])) {
-                $_SESSION[$param] = $modx->manager->getLastUserSetting($param);
+                $_SESSION[$param] = $modx->getManagerApi()->getLastUserSetting($param);
             }
         }
         ?>
@@ -505,6 +505,25 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         </form>
     </div>
 
+    <?php
+    if(!function_exists('constructLink')) {
+        /**
+         * @param string $action
+         * @param string $img
+         * @param string $text
+         * @param bool $allowed
+         */
+        function constructLink($action, $img, $text, $allowed)
+        {
+            if ((bool)$allowed) {
+                echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action,
+                    $action);
+                echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+            }
+        }
+    }
+    ?>
+
     <!-- Contextual Menu Popup Code -->
     <div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
         <div id="nameHolder">&nbsp;</div>
@@ -533,23 +552,6 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         ?>
 
     </div>
-
-    <?php
-    /**
-     * @param string $action
-     * @param string $img
-     * @param string $text
-     * @param bool $allowed
-     */
-    function constructLink($action, $img, $text, $allowed)
-    {
-        if ((bool)$allowed) {
-            echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
-            echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
-        }
-    }
-
-    ?>
 
     <script type="text/javascript">
 
