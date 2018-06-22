@@ -48,6 +48,7 @@ browser.initFiles = function() {
         $('#files .file div.' + val).css('display', display);
     });
     this.statusDir();
+    lazyLoadInstance.update();
 };
 
 browser.showFiles = function(callBack, selected) {
@@ -86,7 +87,7 @@ browser.showFiles = function(callBack, selected) {
                     icon = 'themes/' + browser.theme + '/img/files/big/' + icon + '.png';
                 }
                 html += '<div class="file">' +
-                    '<div class="thumb" style="background-image:url(\'' + icon + '\')" ></div>' +
+                    '<div class="thumb lazy" data-src="' + icon + '"></div>' +
                     '<div class="name">' + _.htmlData(file.name) + '</div>' +
                     '<div class="time">' + file.date + '</div>' +
                     '<div class="size">' + browser.humanSize(file.size) + '</div>' +

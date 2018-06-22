@@ -125,7 +125,7 @@ browser.showAlert = function(shadow) {
     });
 };
 
-browser.hideAlert = function(shadow) {
+browser.hideAlert = function(shadow, callback) {
     if (typeof shadow == 'undefined')
         shadow = true;
     if (shadow)
@@ -133,14 +133,17 @@ browser.hideAlert = function(shadow) {
     $('#alert').css('display', 'none');
     $('#alert').html('');
     $('#alert').data('title', null);
+    if (typeof callback == 'function') {
+        callback();
+    }
 };
 
-browser.alert = function(msg, shadow) {
+browser.alert = function(msg, shadow, callback) {
     msg = msg.replace(/\r?\n/g, "<br />");
     var title = $('#alert').data('title') ? $('#alert').data('title') : browser.label("Attention");
     $('#alert').html('<div class="title"><span class="close"></span>' + title + '</div><div class="message">' + msg + '</div><div class="ok"><button>' + browser.label("OK") + '</button></div>');
     $('#alert div.ok button').click(function() {
-        browser.hideAlert(shadow);
+        browser.hideAlert(shadow, callback);
     });
     $('#alert div.title span.close').mousedown(function() {
         $(this).addClass('clicked');
@@ -149,7 +152,7 @@ browser.alert = function(msg, shadow) {
         $(this).removeClass('clicked');
     });
     $('#alert div.title span.close').click(function() {
-        browser.hideAlert(shadow);
+        browser.hideAlert(shadow, callback);
     });
     $('#alert').drag(browser.drag, {handle: "#alert div.title"});
     browser.showAlert(shadow);
@@ -241,7 +244,7 @@ browser.fileNameDialog = function(e, post, inputName, inputValue, url, labels, c
                 browser.hideDialog();
             },
             error: function() {
-                browser.alert(browser.label("Unknown error."), false);
+                browser.alert(browser.label(labels.errMain), false);
             }
         });
         return false;

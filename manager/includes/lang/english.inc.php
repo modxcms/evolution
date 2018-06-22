@@ -435,6 +435,10 @@ $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Insert';
 $_lang["maxImageWidth"] = 'Maximum image width';
 $_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["clientResize"] = 'Resize images on client-side';
+$_lang["clientResize_message"] = 'If enabled then images will be resized by browser before upload to the server';
+$_lang["noThumbnailsRecreation"] = 'Create thumbnails on upload only';
+$_lang["noThumbnailsRecreation_message"] = 'File browser will create thumbnails only on upload; if there\'s no thumbnails for some images, they will not be created';
 $_lang["thumbWidth"] = 'Maximum thumbnail width';
 $_lang["thumbHeight"] = 'Maximum thumbnail height';
 $_lang["thumbsDir"] = 'Thumbnails directory location';
@@ -1503,5 +1507,4 @@ $_lang['login_bg_message'] = 'Recomended login page background image width: 1920
 $_lang['manager_menu_position_title'] = 'Main menu position';
 $_lang['manager_menu_position_top'] = 'top';
 $_lang['manager_menu_position_left'] = 'left';
-
 $_lang['invalid_event_response'] = 'The %s event has ivalid output';
