@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Interfaces;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-interface CoreInterface
+interface CoreInterface extends ApplicationContract
 {
     /**
      * @param $type

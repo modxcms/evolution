@@ -1,6 +1,6 @@
 <?php namespace EvolutionCMS;
 
-use AgelxNash\Modx\Evo\Database\Database as BaseDatabase;
+use AgelxNash\Modx\Evo\Database\LegacyDatabase as BaseDatabase;
 use Exception;
 
 class Database extends BaseDatabase implements Interfaces\DatabaseInterface

@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS;
 
 /**
+ * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
  * @property Mail $mail
  *      $this->loadExtension('MODxMailer');
  * @property Database $db
@@ -18,7 +19,7 @@
  * @property Legacy\PasswordHash $phpass
  *      $this->loadExtension('phpass');
  */
-class Core implements Interfaces\CoreInterface
+class Core extends AbstractLaravel implements Interfaces\CoreInterface
 {
     /**
      * This is New evolution
@@ -123,251 +124,45 @@ class Core implements Interfaces\CoreInterface
      */
     public $old;
 
-    /**
-     * Hold the class instance.
-     * @var self
-     */
-    private static $instance = null;
-
-    private $services;
-    private $serviceStore = [];
+    protected $coreAliases = [
+        'app'                  => [Interfaces\CoreInterface::class, \Illuminate\Contracts\Container\Container::class, \Illuminate\Contracts\Foundation\Application::class,  \Psr\Container\ContainerInterface::class],
+        'auth.driver'          => [\Illuminate\Contracts\Auth\Guard::class],
+        'blade.compiler'       => [\Illuminate\View\Compilers\BladeCompiler::class],
+        'db'                   => [\Illuminate\Database\DatabaseManager::class],
+        'db.connection'        => [\Illuminate\Database\Connection::class, \Illuminate\Database\ConnectionInterface::class],
+        'events'               => [\Illuminate\Events\Dispatcher::class, \Illuminate\Contracts\Events\Dispatcher::class],
+        'files'                => [\Illuminate\Filesystem\Filesystem::class],
+        'filesystem'           => [\Illuminate\Filesystem\FilesystemManager::class, \Illuminate\Contracts\Filesystem\Factory::class],
+        'view'                 => [\Illuminate\View\Factory::class, \Illuminate\Contracts\View\Factory::class],
+    ];
 
     /**
      * @var array
      * $this->{$key}
      */
     public $providerAliases = [
-        'db' => Interfaces\DatabaseInterface::class,
-        'mail' => Interfaces\MailInterface::class,
-        'phpcompat' => Interfaces\PhpCompatInterface::class,
-        'phpass' => Interfaces\PasswordHashInterface::class,
-        'table' => Interfaces\MakeTableInterface::class,
-        'export' => Interfaces\ExportSiteInerface::class,
-        'manager' => Interfaces\ManagerApiInterface::class,
-        'filter' => Interfaces\ModifiersInterface::class
-    ];
-
-    /**
-     * @var array
-     * $this->loadExtension($key)
-     */
-    public $extensionAlias = [
-        'DBAPI' => Interfaces\DatabaseInterface::class,
-        'MODxMailer' => Interfaces\MailInterface::class,
-        'PHPCOMPAT' => Interfaces\PhpCompatInterface::class,
-        'phpass' => Interfaces\PasswordHashInterface::class,
-        'makeTable' => Interfaces\MakeTableInterface::class,
-        'EXPORT_SITE' => Interfaces\ExportSiteInerface::class,
-        'ManagerAPI' => Interfaces\ManagerApiInterface::class,
-        'MODIFIERS' => Interfaces\ModifiersInterface::class
+        'db' => 'DBAPI',
+        'mail' => 'MODxMailer',
+        'phpcompat' => 'PHPCOMPAT',
+        'phpass' => 'phpass',
+        'table' => 'makeTable',
+        'export' => 'EXPORT_SITE',
+        'manager' => 'ManagerAPI',
+        'filter' => 'MODIFIERS'
     ];
 
     /**
      * @param array $services
-     * @param array $parameters
      */
     public function __construct(array $services = array())
     {
-        self::$instance = $this;
         if (empty($services)) {
             $services   = include EVO_SERVICES_FILE;
         }
-        $this->services     =  $services;
+
+        parent::__construct($services);
 
         $this->initialize();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getService($name)
-    {
-        if (!$this->hasService($name)) {
-            throw new Exceptions\ServiceNotFoundException('Service not found: '.$name);
-        }
-        // If we haven't created it, create it and save to store
-        if (!isset($this->serviceStore[$name])) {
-            $this->serviceStore[$name] = $this->createService($name);
-        }
-        // Return service from store
-        return $this->serviceStore[$name];
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public function hasService($name)
-    {
-        return isset($this->services[$name]);
-    }
-
-    /**
-     * Attempt to create a service.
-     *
-     * @param string $name The service name.
-     *
-     * @return mixed The created service.
-     *
-     * @throws Exceptions\ContainerException On failure.
-     */
-    private function createService($name)
-    {
-        $entry = &$this->services[$name];
-        if (!is_array($entry) || !isset($entry['class'])) {
-            throw new Exceptions\ContainerException($name.' service entry must be an array containing a \'class\' key');
-        } elseif (!class_exists($entry['class'])) {
-            throw new Exceptions\ContainerException($name.' service class does not exist: '.$entry['class']);
-        } elseif (isset($entry['lock'])) {
-            throw new Exceptions\ContainerException($name.' contains circular reference');
-        }
-        $entry['lock'] = true;
-        $arguments = isset($entry['arguments']) ? $this->resolveServiceArguments($entry['arguments']) : [];
-        $reflector = new \ReflectionClass($entry['class']);
-        $service = $reflector->newInstanceArgs($arguments);
-        if (isset($entry['calls'])) {
-            $this->initializeService($service, $name, $entry['calls']);
-        }
-
-        if ($alias = $this->checkServiceAlias($name)) {
-            $this->{$alias} = $service;
-        }
-
-        return $service;
-    }
-
-    private function checkServiceAlias($name){
-        foreach ($this->providerAliases as $alias => $interface) {
-            if($name === $interface) {
-                return $alias;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Resolve argument definitions into an array of arguments.
-     *
-     * @param array  $argumentDefinitions The service arguments definition.
-     *
-     * @return array The service constructor arguments.
-     *
-     * @throws Exceptions\ContainerException On failure.
-     */
-    private function resolveServiceArguments(array $argumentDefinitions)
-    {
-        $arguments = [];
-        foreach ($argumentDefinitions as $argumentDefinition) {
-            if ($argumentDefinition instanceof Interfaces\ServiceProviderInterface) {
-                $argumentServiceName = $argumentDefinition->getName();
-                $arguments[] = $this->getService($argumentServiceName);
-            } else {
-                $arguments[] = $argumentDefinition;
-            }
-        }
-        return $arguments;
-    }
-    /**
-     * Initialize a service using the call definitions.
-     *
-     * @param object $service         The service.
-     * @param string $name            The service name.
-     * @param array  $callDefinitions The service calls definition.
-     *
-     * @throws Exceptions\ContainerException On failure.
-     */
-    private function initializeService($service, $name, array $callDefinitions)
-    {
-        foreach ($callDefinitions as $callDefinition) {
-            if (!is_array($callDefinition) || !isset($callDefinition['method'])) {
-                throw new Exceptions\ContainerException($name.' service calls must be arrays containing a \'method\' key');
-            } elseif (!is_callable([$service, $callDefinition['method']])) {
-                throw new Exceptions\ContainerException($name.' service asks for call to uncallable method: '.$callDefinition['method']);
-            }
-            $arguments = isset($callDefinition['arguments']) ? $this->resolveServiceArguments($callDefinition['arguments']) : [];
-
-            call_user_func_array([$service, $callDefinition['method']], $arguments);
-        }
-    }
-
-    /**
-     * @return Database
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getDatabase()
-    {
-        return $this->getService(Interfaces\DatabaseInterface::class);
-    }
-
-    /**
-     * @return Mail
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getMail()
-    {
-        return $this->getService(Interfaces\MailInterface::class);
-    }
-
-    /**
-     * @return Legacy\PhpCompat
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getPhpCompat()
-    {
-        return $this->getService(Interfaces\PhpCompatInterface::class);
-    }
-
-    /**
-     * @return Legacy\PasswordHash
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getPasswordHash()
-    {
-        return $this->getService(Interfaces\PasswordHashInterface::class);
-    }
-
-    /**
-     * @return Support\MakeTable
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getMakeTable()
-    {
-        return $this->getService(Interfaces\MakeTableInterface::class);
-    }
-
-    /**
-     * @return Legacy\ExportSite
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getExportSite()
-    {
-        return $this->getService(Interfaces\ExportSiteInerface::class);
-    }
-
-    /**
-     * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getDeprecatedCore()
-    {
-        return $this->getService(Interfaces\DeprecatedCoreInterface::class);
-    }
-
-    /**
-     * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getManagerApi()
-    {
-        return $this->getService(Interfaces\ManagerApiInterface::class);
-    }
-
-    /**
-     * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
-     */
-    public function getModifiers()
-    {
-        return $this->getService(Interfaces\ModifiersInterface::class);
     }
 
     public function initialize()
@@ -387,6 +182,7 @@ class Core implements Interfaces\CoreInterface
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
+        $this->getService('ExceptionHandler');
     }
 
     final public function __clone()
@@ -493,9 +289,15 @@ class Core implements Interfaces\CoreInterface
     public function loadExtension($extname, $reload = true)
     {
         $out = false;
-        if (isset($this->extensionAlias[$extname])) {
-            $out = $this->getService($this->extensionAlias[$extname]);
-        } else {
+        $found = false;
+        foreach ($this->providerAliases as $key => $alias) {
+            if ($alias === $extname) {
+                $found = true;
+                $out = $this->getService($alias);
+                break;
+            }
+        }
+        if ($found === false) {
             $flag = ($reload || !in_array($extname, $this->extensions));
             if ($this->checkSQLconnect('db') && $flag) {
                 $evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
@@ -2978,13 +2780,7 @@ class Core implements Interfaces\CoreInterface
         if(MODX_CLI) {
             throw new \RuntimeException('Call DocumentParser::executeParser on CLI mode');
         }
-
         //error_reporting(0);
-        set_error_handler(array(
-            & $this,
-            "phpError"
-        ), E_ALL);
-        $this->getDatabase()->connect();
 
         // get the settings
         if (empty ($this->config)) {
@@ -3728,6 +3524,7 @@ class Core implements Interfaces\CoreInterface
      */
     public function logEvent($evtid, $type, $msg, $source = 'Parser')
     {
+        if (! $this->getDatabase()->getDriver()->isConnected()) return;
         $msg = $this->getDatabase()->escape($msg);
         if (strpos($GLOBALS['database_connection_charset'], 'utf8') === 0 && extension_loaded('mbstring')) {
             $esc_source = mb_substr($source, 0, 50, "UTF-8");
@@ -6370,45 +6167,11 @@ class Core implements Interfaces\CoreInterface
      * @param string $file File where the error was detected
      * @param string $line Line number within $file
      * @return boolean
+     * @deprecated
      */
     public function phpError($nr, $text, $file, $line)
     {
-        if (error_reporting() == 0 || $nr == 0) {
-            return true;
-        }
-        if ($this->stopOnNotice == false) {
-            switch ($nr) {
-                case E_NOTICE:
-                    if ($this->error_reporting <= 2) {
-                        return true;
-                    }
-                    $isError = false;
-                    $msg = 'PHP Minor Problem (this message show logged in only)';
-                    break;
-                case E_STRICT:
-                case E_DEPRECATED:
-                    if ($this->error_reporting <= 1) {
-                        return true;
-                    }
-                    $isError = true;
-                    $msg = 'PHP Strict Standards Problem';
-                    break;
-                default:
-                    if ($this->error_reporting === 0) {
-                        return true;
-                    }
-                    $isError = true;
-                    $msg = 'PHP Parse Error';
-            }
-        }
-        if (is_readable($file)) {
-            $source = file($file);
-            $source = $this->getPhpCompat()->htmlspecialchars($source[$line - 1]);
-        } else {
-            $source = "";
-        } //Error $nr in $file at $line: <div><code>$source</code></div>
-
-        $this->messageQuit($msg, '', $isError, $nr, $file, $source, $text, $line);
+        $this->getService('ExceptionHandler')->phpError($nr, $text, $file, $line);
     }
 
     /**
@@ -6422,285 +6185,21 @@ class Core implements Interfaces\CoreInterface
      * @param string $line
      * @param string $output
      * @return bool
+     * @deprecated
      */
     public function messageQuit($msg = 'unspecified error', $query = '', $is_error = true, $nr = '', $file = '', $source = '', $text = '', $line = '', $output = '')
     {
-
-        if (0 < $this->messageQuitCount) {
-            return;
-        }
-        $this->messageQuitCount++;
-        $MakeTable = new Support\MakeTable();
-        $MakeTable->setTableClass('grid');
-        $MakeTable->setRowRegularClass('gridItem');
-        $MakeTable->setRowAlternateClass('gridAltItem');
-        $MakeTable->setColumnWidths(array('100px'));
-
-        $table = array();
-
-        $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
-        $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
-        $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
-        $request_uri = $this->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
-        $ua = $this->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
-        $referer = $this->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
-        if ($is_error) {
-            $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
-            if ($msg != 'PHP Parse Error') {
-                $str .= '<h3 style="color:red">' . $msg . '</h3>';
-            }
-        } else {
-            $str = '<h2 style="color:#003399">&laquo; Evo Debug/ stop message &raquo;</h2>';
-            $str .= '<h3 style="color:#003399">' . $msg . '</h3>';
-        }
-
-        if (!empty ($query)) {
-            $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>';
-        }
-
-        $errortype = array(
-            E_ERROR => "ERROR",
-            E_WARNING => "WARNING",
-            E_PARSE => "PARSING ERROR",
-            E_NOTICE => "NOTICE",
-            E_CORE_ERROR => "CORE ERROR",
-            E_CORE_WARNING => "CORE WARNING",
-            E_COMPILE_ERROR => "COMPILE ERROR",
-            E_COMPILE_WARNING => "COMPILE WARNING",
-            E_USER_ERROR => "USER ERROR",
-            E_USER_WARNING => "USER WARNING",
-            E_USER_NOTICE => "USER NOTICE",
-            E_STRICT => "STRICT NOTICE",
-            E_RECOVERABLE_ERROR => "RECOVERABLE ERROR",
-            E_DEPRECATED => "DEPRECATED",
-            E_USER_DEPRECATED => "USER DEPRECATED"
-        );
-
-        if (!empty($nr) || !empty($file)) {
-            if ($text != '') {
-                $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">Error : ' . $text . '</div>';
-            }
-            if ($output != '') {
-                $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">' . $output . '</div>';
-            }
-            if ($nr !== '') {
-                $table[] = array('ErrorType[num]', $errortype [$nr] . "[" . $nr . "]");
-            }
-            if ($file) {
-                $table[] = array('File', $file);
-            }
-            if ($line) {
-                $table[] = array('Line', $line);
-            }
-
-        }
-
-        if ($source != '') {
-            $table[] = array("Source", $source);
-        }
-
-        if (!empty($this->currentSnippet)) {
-            $table[] = array('Current Snippet', $this->currentSnippet);
-        }
-
-        if (!empty($this->event->activePlugin)) {
-            $table[] = array('Current Plugin', $this->event->activePlugin . '(' . $this->event->name . ')');
-        }
-
-        $str .= $MakeTable->create($table, array('Error information', ''));
-        $str .= "<br />";
-
-        $table = array();
-        $table[] = array('REQUEST_URI', $request_uri);
-
-        if ($this->getManagerApi()->action) {
-            include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
-            global $action_list;
-            $actionName = (isset($action_list[$this->getManagerApi()->action])) ? " - {$action_list[$this->getManagerApi()->action]}" : '';
-
-            $table[] = array('Manager action', $this->getManagerApi()->action . $actionName);
-        }
-
-        if (preg_match('@^[0-9]+@', $this->documentIdentifier)) {
-            $resource = $this->getDocumentObject('id', $this->documentIdentifier);
-            $url = $this->makeUrl($this->documentIdentifier, '', '', 'full');
-            $table[] = array('Resource', '[' . $this->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>');
-        }
-        $table[] = array('Referer', $referer);
-        $table[] = array('User Agent', $ua);
-        $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time', date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time']));
-        $str .= $MakeTable->create($table, array('Basic info', ''));
-        $str .= "<br />";
-
-        $table = array();
-        $table[] = array('MySQL', '[^qt^] ([^q^] Requests)');
-        $table[] = array('PHP', '[^p^]');
-        $table[] = array('Total', '[^t^]');
-        $table[] = array('Memory', '[^m^]');
-        $str .= $MakeTable->create($table, array('Benchmarks', ''));
-        $str .= "<br />";
-
-        $totalTime = ($this->getMicroTime() - $this->tstart);
-
-        $mem = memory_get_peak_usage(true);
-        $total_mem = $mem - $this->mstart;
-        $total_mem = ($total_mem / 1024 / 1024) . ' mb';
-
-        $queryTime = $this->queryTime;
-        $phpTime = $totalTime - $queryTime;
-        $queries = isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $queryTime = sprintf("%2.4f s", $queryTime);
-        $totalTime = sprintf("%2.4f s", $totalTime);
-        $phpTime = sprintf("%2.4f s", $phpTime);
-
-        $str = str_replace('[^q^]', $queries, $str);
-        $str = str_replace('[^qt^]', $queryTime, $str);
-        $str = str_replace('[^p^]', $phpTime, $str);
-        $str = str_replace('[^t^]', $totalTime, $str);
-        $str = str_replace('[^m^]', $total_mem, $str);
-
-        if (isset($php_errormsg) && !empty($php_errormsg)) {
-            $str = "<b>{$php_errormsg}</b><br />\n{$str}";
-        }
-        $str .= $this->get_backtrace(debug_backtrace());
-        // Log error
-        if (!empty($this->currentSnippet)) {
-            $source = 'Snippet - ' . $this->currentSnippet;
-        } elseif (!empty($this->event->activePlugin)) {
-            $source = 'Plugin - ' . $this->event->activePlugin;
-        } elseif ($source !== '') {
-            $source = 'Parser - ' . $source;
-        } elseif ($query !== '') {
-            $source = 'SQL Query';
-        } else {
-            $source = 'Parser';
-        }
-        if ($msg) {
-            $source .= ' / ' . $msg;
-        }
-        if (isset($actionName) && !empty($actionName)) {
-            $source .= $actionName;
-        }
-        switch ($nr) {
-            case E_DEPRECATED :
-            case E_USER_DEPRECATED :
-            case E_STRICT :
-            case E_NOTICE :
-            case E_USER_NOTICE :
-                $error_level = 2;
-                break;
-            default:
-                $error_level = 3;
-        }
-        $this->logEvent(0, $error_level, $str, $source);
-
-        if ($error_level === 2 && $this->error_reporting !== '99') {
-            return true;
-        }
-        if ($this->error_reporting === '99' && !isset($_SESSION['mgrValidated'])) {
-            return true;
-        }
-
-        // Set 500 response header
-        if ($error_level !== 2) {
-            header('HTTP/1.1 500 Internal Server Error');
-        }
-
-        ob_get_clean();
-        // Display error
-        if (isset($_SESSION['mgrValidated'])) {
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
-                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                 <link rel="stylesheet" type="text/css" href="' . $this->config['site_manager_url'] . 'media/style/' . $this->config['manager_theme'] . '/style.css" />
-                 <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
-                 </head><body>
-                 ' . $str . '</body></html>';
-
-        } else {
-            echo 'Error';
-        }
-        ob_end_flush();
-        exit;
+        return $this->getService('ExceptionHandler')->messageQuit($msg, $query, $is_error, $nr, $file, $source, $text, $line, $output);
     }
 
     /**
+     * @deprecated
      * @param $backtrace
      * @return string
      */
     public function get_backtrace($backtrace)
     {
-        $MakeTable = new Support\MakeTable();
-        $MakeTable->setTableClass('grid');
-        $MakeTable->setRowRegularClass('gridItem');
-        $MakeTable->setRowAlternateClass('gridAltItem');
-        $table = array();
-        $backtrace = array_reverse($backtrace);
-        foreach ($backtrace as $key => $val) {
-            $key++;
-            if (substr($val['function'], 0, 11) === 'messageQuit') {
-                break;
-            } elseif (substr($val['function'], 0, 8) === 'phpError') {
-                break;
-            }
-            $path = str_replace('\\', '/', $val['file']);
-            if (strpos($path, MODX_BASE_PATH) === 0) {
-                $path = substr($path, strlen(MODX_BASE_PATH));
-            }
-            switch (get_by_key($val, 'type')) {
-                case '->':
-                case '::':
-                    $functionName = $val['function'] = $val['class'] . $val['type'] . $val['function'];
-                    break;
-                default:
-                    $functionName = $val['function'];
-            }
-            $tmp = 1;
-            $_ = (!empty($val['args'])) ? count($val['args']) : 0;
-            $args = array_pad(array(), $_, '$var');
-            $args = implode(", ", $args);
-            $modx = &$this;
-            $args = preg_replace_callback('/\$var/', function () use ($modx, &$tmp, $val) {
-                $arg = $val['args'][$tmp - 1];
-                switch (true) {
-                    case is_null($arg): {
-                        $out = 'NULL';
-                        break;
-                    }
-                    case is_numeric($arg): {
-                        $out = $arg;
-                        break;
-                    }
-                    case is_scalar($arg): {
-                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->getPhpCompat()->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
-                        break;
-                    }
-                    case is_bool($arg): {
-                        $out = $arg ? 'TRUE' : 'FALSE';
-                        break;
-                    }
-                    case is_array($arg): {
-                        $out = 'array $var' . $tmp;
-                        break;
-                    }
-                    case is_object($arg): {
-                        $out = get_class($arg) . ' $var' . $tmp;
-                        break;
-                    }
-                    default: {
-                        $out = '$var' . $tmp;
-                    }
-                }
-                $tmp++;
-                return $out;
-            }, $args);
-            $line = array(
-                "<strong>" . $functionName . "</strong>(" . $args . ")",
-                $path . " on line " . $val['line']
-            );
-            $table[] = array(implode("<br />", $line));
-        }
-        return $MakeTable->create($table, array('Backtrace'));
+        return $this->getService('ExceptionHandler')->getBacktrace($backtrace);
     }
 
     /**

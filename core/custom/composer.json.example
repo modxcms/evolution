@@ -2,5 +2,10 @@
   "name": "evolutioncms/custom",
   "require": {
     "vlucas/phpdotenv": "~2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "EvolutionCMS\\Custom\\": "src/"
+    }
   }
 }

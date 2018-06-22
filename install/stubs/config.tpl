@@ -37,7 +37,7 @@ if (!defined('MODX_CLASS')) {
 }
 
 if (!defined('MODX_CLI')) {
-    define('MODX_CLI', (php_sapi_name() === 'cli' && (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
+    define('MODX_CLI', (php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg'));
 }
 
 if (!defined('MGR_DIR')) {

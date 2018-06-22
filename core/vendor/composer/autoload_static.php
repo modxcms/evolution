@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit06e984017e431da75110ebb8206587b0
+class ComposerStaticInita84785853a1d89f55dd2975c8704156b
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -27,6 +27,10 @@ class ComposerStaticInit06e984017e431da75110ebb8206587b0
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'Wikimedia\\Composer\\' => 19,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -54,6 +58,7 @@ class ComposerStaticInit06e984017e431da75110ebb8206587b0
         ),
         'E' => 
         array (
+            'EvolutionCMS\\Custom\\' => 20,
             'EvolutionCMS\\' => 13,
         ),
         'D' => 
@@ -67,6 +72,10 @@ class ComposerStaticInit06e984017e431da75110ebb8206587b0
     );
 
     public static $prefixDirsPsr4 = array (
+        'Wikimedia\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wikimedia/composer-merge-plugin/src',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -131,6 +140,10 @@ class ComposerStaticInit06e984017e431da75110ebb8206587b0
         array (
             0 => __DIR__ . '/..' . '/illuminate/container',
         ),
+        'EvolutionCMS\\Custom\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/custom/src',
+        ),
         'EvolutionCMS\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -152,9 +165,9 @@ class ComposerStaticInit06e984017e431da75110ebb8206587b0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit06e984017e431da75110ebb8206587b0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit06e984017e431da75110ebb8206587b0::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit06e984017e431da75110ebb8206587b0::$fallbackDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita84785853a1d89f55dd2975c8704156b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita84785853a1d89f55dd2975c8704156b::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInita84785853a1d89f55dd2975c8704156b::$fallbackDirsPsr4;
 
         }, null, ClassLoader::class);
     }
