@@ -74,6 +74,7 @@ $c['strip_image_paths']        = 1;
 $c['maxImageWidth']            = 2600;
 $c['maxImageHeight']           = 2200;
 $c['clientResize']             = 0;
+$c['noThumbnailsRecreation']   = 0;
 $c['thumbWidth']               = 150;
 $c['thumbHeight']              = 150;
 $c['thumbsDir']                = '.thumbs';

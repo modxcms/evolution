@@ -155,6 +155,20 @@
     <tr>
         <td colspan="2"><div class="split"></div></td>
     </tr>
+    <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
+        <td nowrap class="warning"><?php echo $_lang['noThumbnailsRecreation']?><br><small>[(noThumbnailsRecreation)]</small></td>
+        <td>
+            <?php echo wrap_label($_lang['yes'],form_radio('noThumbnailsRecreation', 1, ''));?><br />
+            <?php echo wrap_label($_lang['no'], form_radio('noThumbnailsRecreation', 0, ''));?>
+        </td>
+    </tr>
+    <tr>
+        <td width="200">&nbsp;</td>
+        <td class="comment"><?php echo $_lang['noThumbnailsRecreation_message']?></td>
+    </tr>
+    <tr>
+        <td colspan="2"><div class="split"></div></td>
+    </tr>
 
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
     <td nowrap class="warning"><?php echo $_lang['thumbWidth']?><br><small>[(thumbWidth)]</small></td>

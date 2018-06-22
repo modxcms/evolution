@@ -25,7 +25,7 @@ browser.initUploader = function() {
     });
     FileAPI.event.on(upload.get(0), 'change', function (evt){
         var files = FileAPI.getFiles(evt); // Retrieve file list
-        browser.uploadFiles(files);
+        browser.prepareFiles(files);
     });
     FileAPI.event.dnd($('#right').get(0), function (over){
         if (over) {
@@ -34,13 +34,42 @@ browser.initUploader = function() {
             $('#files').removeClass('drag');
         }
     }, function(files){
-        browser.uploadFiles(files);
+        browser.prepareFiles(files);
     });
 };
 browser.clearUpload = function() {
     var upload = $('input[name="upload"]', '#toolbar');
     upload.wrap('<form>').closest('form').get(0).reset();
     upload.unwrap();
+};
+browser.prepareFiles = function(files) {
+    FileAPI.filterFiles(
+        files,
+        function(file) {
+            var ext = file.name.split('.').pop().toLowerCase();
+            var result = browser.allowedExts.test(ext) && !browser.deniedExts.test(ext);
+            if (!result) {
+                file.message = browser.label("Denied file extension.");
+            }
+            if (result) {
+                result = browser.maxFileSize > file.size;
+                if (!result) {
+                    file.message = browser.label("The uploaded file exceeds {size} bytes.", {size: browser.maxFileSize});
+                }
+            }
+            return result;
+        }, function (files, rejected) {
+            if (rejected.length > 0) {
+                var messages = [];
+                $.each(rejected, function(i, file) {
+                    messages.push(file.name + ': ' +file.message);
+                });
+                browser.alert(messages.join('<br>'), true, function(){browser.uploadFiles(files)});
+            } else {
+                browser.uploadFiles(files);
+            }
+        }
+    );
 };
 browser.uploadFiles = function(files) {
     if (!this.dirWritable) {
@@ -78,7 +107,26 @@ browser.uploadFiles = function(files) {
                     progress: progress
                 }));
             },
-            filecomplete:function(err, xhr) {
+            filecomplete:function(err, xhr, file) {
+                if(err === false) {
+                    var response;
+                    try {
+                        response = $.parseJSON(xhr.response);
+                    } catch (error) {
+                        response = {
+                            success:false,
+                            message:browser.label("Unable to process server response")
+                        }
+                    }
+                    if (!response.success) {
+                        if (typeof response.message === 'object') {
+                            response.message = response.message.join('; ');
+                        };
+                        errors.push(file.name + ': ' + response.message);
+                    }
+                } else {
+                    errors.push(file.name + ': ' + browser.label("Server error") + ' ' + err);
+                }
                 uploaded++;
             },
             complete: function (err, xhr){
@@ -86,6 +134,9 @@ browser.uploadFiles = function(files) {
                 $('#loading').hide();
                 browser.refresh();
                 browser.clearUpload();
+                if (errors.length > 0) {
+                    browser.alert(errors.join('<br>'), false);
+                }
             }
         };
         if (Object.keys(browser.clientResize).length) {
