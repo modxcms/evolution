@@ -90,7 +90,7 @@ class tv_DL_Extender extends extDocLister
                 $from = $this->DocLister->getTable('site_tmplvars');
                 $rs = $this->DocLister->dbQuery("SELECT `id`, `name`, `default_text`, `type`, `display`, `display_params` FROM {$from}");
 
-                while ($item = $this->modx->db->getRow($rs)) {
+                while ($item = $this->modx->getDatabase()->getRow($rs)) {
                     $this->modx->_TVnames[$item['name']] = array(
                         'id'   => $item['id'],
                         'type' => $item['type'],
@@ -126,7 +126,7 @@ class tv_DL_Extender extends extDocLister
         $rs = $this->DocLister->dbQuery("SELECT tmplvarid,value,contentid FROM {$tbl_site_tmplvar_contentvalues} WHERE {$where}");
         $tvPrefix = $this->_TVprefix;
 
-        while ($item = $this->modx->db->getRow($rs)) {
+        while ($item = $this->modx->getDatabase()->getRow($rs)) {
             $out[$item['contentid']][$tvPrefix . $tv[$item['tmplvarid']]] = $item['value'];
         }
         $tmp = explode(",", $this->DocLister->sanitarIn($IDs, ',', false));

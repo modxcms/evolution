@@ -139,15 +139,6 @@
     <td class="comment"><?php echo $_lang['webpwdreminder_message'] ?></td>
   </tr>
   <tr>
-    <td colspan="2">
-        <?php
-            // invoke OnUserSettingsRender event
-            $evtOut = $modx->invokeEvent('OnUserSettingsRender');
-            if(is_array($evtOut)) echo implode("",$evtOut);
-        ?>
-    </td>
-  </tr>
-  <tr>
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
@@ -160,6 +151,15 @@
   <tr>
     <td width="200">&nbsp;</td>
     <td class="comment"><?php echo $_lang['allow_multiple_emails_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+        <?php
+            // invoke OnUserSettingsRender event
+            $evtOut = $modx->invokeEvent('OnUserSettingsRender');
+            if(is_array($evtOut)) echo implode("",$evtOut);
+        ?>
+    </td>
   </tr>
 </table>
 </div>
