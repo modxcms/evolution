@@ -184,7 +184,7 @@ if (!function_exists('getLangs')) {
             $manager_language = "english";
         }
         $langs = array();
-        if ($handle = opendir(dirname(dirname(__DIR__)) . '/' . MGR_DIR . '/includes/lang')) {
+        if ($handle = opendir(EVO_CORE_PATH . 'lang')) {
             while (false !== ($file = readdir($handle))) {
                 if (strpos($file, '.inc.') !== false) {
                     $langs[] = $file;
