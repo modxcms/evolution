@@ -1,3 +1,2 @@
-*
-!*.example
+default.php
 !.gitignore

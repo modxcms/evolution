@@ -11,7 +11,7 @@ if (! defined('SESSION_COOKIE_DOMAIN')) {
 }
 if (! defined('SESSION_COOKIE_NAME')) {
     // For legacy extras not using startCMSSession
-    define('SESSION_COOKIE_NAME', genEvoSessionName()); // $site_sessionname
+    define('SESSION_COOKIE_NAME', env('SESSION_COOKIE_NAME', genEvoSessionName())); // $site_sessionname
 }
 
 if (! defined('MODX_CLASS')) {

@@ -46,7 +46,7 @@
 # Core
 /core/composer.lock
 /core/vendor/bin
-/core/config.php
+/core/.install
 
 # Manager
 /manager/media/style/default/css/styles.min.css
