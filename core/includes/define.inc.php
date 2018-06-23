@@ -26,6 +26,10 @@ if (! defined('MGR_DIR')) {
     define('MGR_DIR', env('MGR_DIR', 'manager'));
 }
 
+if (! defined('EVO_CORE_PATH')) {
+    define('EVO_CORE_PATH', env('EVO_CORE_PATH', dirname(__DIR__) . '/'));
+}
+
 if (is_cli()) {
     if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
         throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');
@@ -43,7 +47,8 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
         dirname(
             get_by_key(
                 $_SERVER,
-                $_SERVER['PHP_SELF'] !== $_SERVER['SCRIPT_NAME'] && is_cli() ? 'PHP_SELF' : 'SCRIPT_NAME'
+                ($_SERVER['PHP_SELF'] !== $_SERVER['SCRIPT_NAME'] && ('undefined' === php_sapi_name() || is_cli())) ?
+                    'PHP_SELF' : 'SCRIPT_NAME'
             )
         )
     );
@@ -73,7 +78,7 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     unset($separator);
 
     reset($items);
-    $items = explode(MGR_DIR, str_replace('\\', '/', __DIR__));
+    $items = explode(MGR_DIR, str_replace('\\', '/', dirname(__DIR__, 2)));
     if (count($items) > 1) {
         array_pop($items);
     }
@@ -138,9 +143,8 @@ if (! defined('MODX_SITE_URL')) {
         $site_url = str_replace(':' . $_SERVER['SERVER_PORT'], '', $site_url);
     }
 
-    if ($_SERVER['SERVER_PORT'] !== 80 ||
-        ! (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') ||
-        $_SERVER['SERVER_PORT'] != HTTPS_PORT
+    if (! in_array((int)$_SERVER['SERVER_PORT'], [80, (int)HTTPS_PORT], true) &&
+        strtolower(get_by_key($_SERVER, 'HTTPS', 'off'))
     ) {
         $site_url .=  ':' . $_SERVER['SERVER_PORT'];
     }
@@ -158,9 +162,7 @@ if (!defined('MODX_MANAGER_URL')) {
     define('MODX_MANAGER_URL', env('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/'));
 }
 
-if (! defined('EVO_CORE_PATH')) {
-    define('EVO_CORE_PATH', env('EVO_CORE_PATH', dirname(__DIR__) . '/'));
-}
+
 
 if (! defined('MODX_SANITIZE_SEED')) {
     define('MODX_SANITIZE_SEED', 'sanitize_seed_' . base_convert(md5(__FILE__), 16, 36));
