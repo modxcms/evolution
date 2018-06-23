@@ -15,8 +15,7 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 
 // reload system settings from the database.
 // this will prevent user-defined settings from being saved as system setting
-$settings = array();
-include_once(EVO_CORE_PATH . 'default_config.php');
+$settings = include EVO_CORE_PATH . 'factory/settings.php';
 $rs = $modx->getDatabase()->select('setting_name, setting_value', $modx->getDatabase()->getFullTableName('system_settings'));
 while($row = $modx->getDatabase()->getRow($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];

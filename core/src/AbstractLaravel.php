@@ -9,6 +9,8 @@ use Illuminate\Events\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Config\Repository;
+use Symfony\Component\Finder\Finder;
 
 abstract class AbstractLaravel extends Container implements ApplicationContract
 {
@@ -20,8 +22,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     protected $booted = false;
 
     protected $coreAliases = [];
-
-    protected $configuredClasses = [];
 
     /**
      * All of the registered service providers.
@@ -63,21 +63,26 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @param array $classes
      */
-    public function __construct(array $classes = array())
+    public function __construct()
     {
         static::setInstance($this);
-
-        $this->configuredClasses = $classes;
 
         $this->instance('app', $this);
         $this->instance(Container::class, $this);
 
-        $this->bindIf('config', function () {
-            return [
-                'view.paths' => [MODX_BASE_PATH . 'templates/'],
-                'view.compiled' => MODX_BASE_PATH . 'assets/cache/blade/',
-            ];
-        }, true);
+        $items = [];
+
+        $this->instance('config', $config = new Repository($items));
+
+        $this->loadConfiguration($config, EVO_CORE_PATH . 'config');
+        $this->loadConfiguration($config, EVO_CORE_PATH . 'custom/config');
+
+        if (null === $this['config']->get('app')) {
+            throw new \Exception('Unable to load the "app" configuration file.');
+        }
+
+        date_default_timezone_set($config->get('app.timezone', 'UTC'));
+        mb_internal_encoding('UTF-8');
 
         $this->register(new EventServiceProvider($this));
         //$this->register(new LogServiceProvider($this));
@@ -94,11 +99,35 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
         Facade::clearResolvedInstances();
         Facade::setFacadeApplication($this);
-        AliasLoader::getInstance(get_by_key($this->configuredClasses, 'aliases'))->register();
+        AliasLoader::getInstance($this['config']->get('app.aliases'))->register();
 
         $this->registerConfiguredProviders();
 
         $this->boot();
+    }
+
+    protected function loadConfiguration($config, $dir)
+    {
+        $files = [];
+
+        $configPath = realpath($dir);
+        if ($configPath !== false) {
+            /**
+             * @var \SplFileInfo $file
+             */
+            foreach (Finder::create()->files()->name('*.php')->in($configPath) as $file) {
+                $directory = $file->getPath();
+                if ($directory = trim(str_replace($configPath, '', $directory), DIRECTORY_SEPARATOR)) {
+                    $directory = str_replace(DIRECTORY_SEPARATOR, '.', $directory) . '.';
+                }
+                $files[$directory . basename($file->getRealPath(), '.php')] = $file->getRealPath();
+            }
+            ksort($files, SORT_NATURAL);
+
+            foreach ($files as $key => $path) {
+                $config->set($key, require $path);
+            }
+        }
     }
 
     /**
@@ -130,7 +159,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function runningInConsole()
     {
-        return MODX_CLI;
+        return is_cli();
     }
 
     /**
@@ -191,7 +220,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function registerConfiguredProviders()
     {
-        $providers = Collection::make(get_by_key($this->configuredClasses, 'providers', [], 'is_array'))
+        $providers = Collection::make($this['config']->get('app.providers'))
             ->partition(function ($provider) {
                 return Str::startsWith($provider, 'Illuminate\\');
             });

@@ -13,8 +13,7 @@ if (file_exists( $root . '/config.php')) {
         'root' => dirname($root)
     ];
 }
-
-if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+if (!empty($config['root']) && file_exists($config['root'] . '/index.php')) {
     require_once $config['root'] . '/index.php';
 } else {
     echo "<h3>Unable to load configuration settings</h3>";

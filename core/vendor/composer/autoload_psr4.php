@@ -23,7 +23,7 @@ return array(
     'Illuminate\\Database\\' => array($vendorDir . '/illuminate/database'),
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
     'Illuminate\\Container\\' => array($vendorDir . '/illuminate/container'),
-    'EvolutionCMS\\Custom\\' => array($baseDir . '/custom/src'),
+    'Illuminate\\Config\\' => array($vendorDir . '/illuminate/config'),
     'EvolutionCMS\\' => array($baseDir . '/src'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector'),
     'AgelxNash\\Modx\\Evo\\Database\\' => array($vendorDir . '/agelxnash/modx-evo-database/src'),

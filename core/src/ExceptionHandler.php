@@ -379,15 +379,15 @@ class ExceptionHandler
     /**
      * Determine if the exception should be reported.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return bool
      */
-    public function shouldReport(Exception $e)
+    public function shouldReport(\Throwable $e)
     {
         return true;
     }
 
-    public function exception(Exception $exception) {
+    public function exception(\Throwable $exception) {
         if (
             $exception instanceof ConnectException ||
             ($exception instanceof \PDOException && $exception->getCode() === 1045)

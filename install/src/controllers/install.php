@@ -4,7 +4,6 @@ if (file_exists(dirname(dirname(dirname(__DIR__))) . "/assets/cache/siteManager.
 } else {
     define('MGR_DIR', 'manager');
 }
-define('MODX_CLI', false);
 
 global $moduleName;
 global $moduleVersion;
@@ -977,7 +976,7 @@ if ($conn) {
         if (! defined('MODX_CLASS')) {
             define('MODX_CLASS', '\EvolutionCMS\Core');
         }
-        
+
         $modx = evolutionCMS();
         $modx->getDatabase()->connect();
         // always empty cache after install

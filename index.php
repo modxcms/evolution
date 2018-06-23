@@ -44,9 +44,11 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
-
+if (! isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+    $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+}
 $mstart = memory_get_usage();
+
 $config = [
     'core' => __DIR__ . '/core',
     'manager' => __DIR__ . '/manager',
@@ -56,17 +58,14 @@ $config = [
 if (file_exists(__DIR__ . '/config.php')) {
     $config = array_merge($config, require __DIR__ . '/config.php');
 }
-if (! file_exists($config['core'] . '/config.php')) {
+if (! file_exists($config['core'] . '/bootstrap.php')) {
     $path = __DIR__ . '/install/src/template/not_installed.tpl';
     if (file_exists($path)) {
         readfile($path);
     }
     exit;
 }
-require $config['core'] . '/config.php';
-
-// harden it
-require_once EVO_CORE_PATH . '/includes/protect.inc.php';
+require $config['core'] . '/bootstrap.php';
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
@@ -83,15 +82,12 @@ ob_start();
  */
 
 define('IN_PARSER_MODE', true);
-if ( ! defined('IN_MANAGER_MODE')) {
+if (! defined('IN_MANAGER_MODE')) {
 	define('IN_MANAGER_MODE', false);
 }
-if (!defined('MODX_API_MODE')) {
+if (! defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
-
-// start session
-startCMSSession();
 
 // initiate a new document parser
 $modx = evolutionCMS();
@@ -102,7 +98,6 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->dumpPlugins = false;
-$modx->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
 $modx->mstart = $mstart;
 
 // Debugging mode:
@@ -113,7 +108,7 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
     @ini_set("display_errors","0");
 }
 
-if(MODX_CLI){
+if (is_cli()) {
     @set_time_limit(0);
     @ini_set('max_execution_time',0);
 }

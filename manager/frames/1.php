@@ -82,7 +82,7 @@ if ($user['which_browser'] == 'default') {
     $user['which_browser'] = $modx->config['which_browser'];
 }
 
-$css = 'media/style/' . $modx->config['manager_theme'] . '/css/page.css?v=' . $lastInstallTime;
+$css = 'media/style/' . $modx->config['manager_theme'] . '/css/page.css?v=' . EVO_INSTALL_TIME;
 
 if ($modx->config['manager_theme'] == 'default') {
     if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css') && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
@@ -103,7 +103,7 @@ if ($modx->config['manager_theme'] == 'default') {
         file_put_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css', $css);
     }
     if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
-        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . EVO_INSTALL_TIME;
     }
 }
 
@@ -248,7 +248,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
       echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
       ?>
     </script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= $lastInstallTime ?>"></script>
+    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= EVO_INSTALL_TIME ?>"></script>
     <?php if ($modx->config['show_picker'] != "0") { ?>
         <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>

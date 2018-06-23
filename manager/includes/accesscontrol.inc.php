@@ -39,10 +39,10 @@ if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
 }
 
 // andrazk 20070416 - if session started before install and was not destroyed yet
-if (isset($lastInstallTime)) {
+if (defined('EVO_INSTALL_TIME')) {
     if (isset($_SESSION['mgrValidated'])) {
         if (isset($_SESSION['modx.session.created.time'])) {
-            if ($_SESSION['modx.session.created.time'] < $lastInstallTime) {
+            if ($_SESSION['modx.session.created.time'] < EVO_INSTALL_TIME) {
                 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
                     if (isset($_COOKIE[session_name()])) {
                         session_unset();

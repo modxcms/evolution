@@ -1,6 +1,0 @@
-<?php
-$config = include dirname(__DIR__) . '/services.php';
-
-$config['providers']['DBAPI'] = EvolutionCMS\Custom\Providers\DatabaseProvider::class;
-
-return $config;

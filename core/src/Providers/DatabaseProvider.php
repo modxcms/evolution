@@ -1,8 +1,8 @@
 <?php namespace EvolutionCMS\Providers;
 
+use AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver;
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Database;
-use AgelxNash\Modx\Evo\Database\Drivers\MySqliDriver;
 
 class DatabaseProvider extends ServiceProvider
 {
@@ -13,28 +13,8 @@ class DatabaseProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('DBAPI', function () {
-            global $database_server,
-                   $database_type,
-                   $dbase,
-                   $database_user,
-                   $database_password,
-                   $table_prefix,
-                   $database_connection_charset,
-                   $database_connection_method,
-                   $database_collation;
-
-            return new Database(
-                $database_server,
-                $dbase,
-                $database_user,
-                $database_password,
-                $table_prefix,
-                $database_connection_charset,
-                $database_connection_method,
-                $database_collation,
-                $database_type === 'mysqli' ? MySqliDriver::class : $database_type
-            );
+        $this->app->singleton('DBAPI', function ($app) {
+            return new Database($app['config']->get('database.connections.default'), IlluminateDriver::class);
         });
     }
 }

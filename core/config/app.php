@@ -1,6 +1,6 @@
 <?php
-
 return [
+    'timezone' => 'UTC',
     'providers' => [
         'DBAPI' => EvolutionCMS\Providers\DatabaseProvider::class,
         'DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreProvider::class,
@@ -13,6 +13,7 @@ return [
         'phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
         'PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
     ],
+
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,

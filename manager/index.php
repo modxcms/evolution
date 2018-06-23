@@ -47,9 +47,9 @@
  *          depending on the request, will branch different
  *          content
  */
-
-// get start time
-$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
+if (! isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+    $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+}
 $mstart = memory_get_usage();
 
 if (file_exists(__DIR__ . '/config.php')) {
@@ -62,46 +62,43 @@ if (file_exists(__DIR__ . '/config.php')) {
     ];
 }
 
-if (!empty($config['core']) && file_exists($config['core'] . '/config.php')) {
-    require_once $config['core'] . '/config.php';
+if (!empty($config['core']) && file_exists($config['core'] . '/bootstrap.php')) {
+    require_once $config['core'] . '/bootstrap.php';
 } else {
     echo "<h3>Unable to load configuration settings</h3>";
     echo "Please run the EVO <a href='../install'>install utility</a>";
     exit;
 }
 
+// send anti caching headers
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+header('X-UA-Compatible: IE=edge;FF=3;OtherUA=4');
+header('X-XSS-Protection: 0');
+
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
 if (! defined('IN_MANAGER_MODE')) {
-	define('IN_MANAGER_MODE', true);
+    define('IN_MANAGER_MODE', true);
 }
-
-// harden it
-require_once EVO_CORE_PATH . 'includes/protect.inc.php';
-
-// send anti caching headers
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
-header('X-XSS-Protection: 0');
 
 // provide english $_lang for error-messages
 $_lang = array();
 include_once EVO_CORE_PATH . "lang/english.inc.php";
 
 // check PHP version. EVO is compatible with php 5 (5.6.0+)
-$php_ver_comp =  version_compare(phpversion(), "5.6.0");
+$php_ver_comp =  version_compare(phpversion(), "7.1.3");
 		// -1 if left is less, 0 if equal, +1 if left is higher
-if($php_ver_comp < 0) {
+if ($php_ver_comp < 0) {
 	echo sprintf($_lang['php_version_check'], phpversion());
 	exit;
 }
 
 // check if iconv is installed
-if(!function_exists('iconv')) {
+if(! function_exists('iconv')) {
 	echo $_lang['iconv_not_available'];
 	exit;
 }
@@ -123,14 +120,11 @@ if(!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
 $modx = evolutionCMS();
 
 $modx->getSettings();
-$modx->tstart = $tstart;
 $modx->mstart = $mstart;
 
 // connect to the database
 $modx->getDatabase()->connect();
 
-// start session
-startCMSSession();
 $modx->sid = session_id();
 
 // Now that session is given get user settings and merge into $modx->config

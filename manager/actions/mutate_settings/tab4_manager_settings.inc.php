@@ -28,7 +28,10 @@
             </td>
             <td>
                 <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onChange="documentDirty=true;">
-                    <?php include "charsets.php" ?>
+                    <?php $charsets = include EVO_CORE_PATH . '/factory/charsets.php'; ?>
+                    <?php foreach ($charsets as $value => $label) : ?>
+                        <?=sprintf('<option value="%s" %s>%s</option>', $value, $value===$modx_charset ? 'selected' : '', $label); ?>
+                    <?php endforeach; ?>
                 </select>
             </td>
         </tr>
@@ -70,7 +73,7 @@
                 <div class="split"></div>
             </td>
         </tr>
-        
+
         <tr>
             <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
                 <small>[(manager_theme_mode)]</small>

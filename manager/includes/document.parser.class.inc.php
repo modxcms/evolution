@@ -5,4 +5,4 @@
  *
  */
 
-include_once EVO_CORE_PATH . 'legacy.php';
+include_once EVO_CORE_PATH . 'includes/legacy.inc.php';

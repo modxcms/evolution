@@ -25,7 +25,7 @@ if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
     $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
 }
 
-$css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . $lastInstallTime;
+$css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . EVO_INSTALL_TIME;
 
 if ($modx->config['manager_theme'] == 'default') {
     if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')
@@ -67,7 +67,7 @@ if ($modx->config['manager_theme'] == 'default') {
         );
     }
     if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
-        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . EVO_INSTALL_TIME;
     }
 }
 

@@ -47,15 +47,15 @@ if (!function_exists('startCMSSession')) {
      */
     function startCMSSession()
     {
-        global $site_sessionname, $https_port, $session_cookie_path, $session_cookie_domain;
-        if (MODX_CLI) {
+        global $session_cookie_path, $session_cookie_domain;
+        if (is_cli()) {
             return;
         }
 
-        session_name($site_sessionname);
-        removeInvalidCmsSessionIds($site_sessionname);
+        session_name(SESSION_COOKIE_NAME);
+        removeInvalidCmsSessionIds(SESSION_COOKIE_NAME);
         $cookieExpiration = 0;
-        $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
+        $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == HTTPS_PORT);
         $cookiePath = !empty($session_cookie_path) ? $session_cookie_path : MODX_BASE_URL;
         $cookieDomain = !empty($session_cookie_domain) ? $session_cookie_domain : '';
         session_set_cookie_params($cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
@@ -95,7 +95,7 @@ if (!function_exists('removeInvalidCmsSessionIds')) {
      */
     function removeInvalidCmsSessionIds($session_name)
     {
-        if (MODX_CLI) {
+        if (is_cli()) {
             return;
         }
         // session ids is invalid iff it is empty string
@@ -103,5 +103,63 @@ if (!function_exists('removeInvalidCmsSessionIds')) {
         removeInvalidCmsSessionFromStorage($_COOKIE, $session_name);
         removeInvalidCmsSessionFromStorage($_GET, $session_name);
         removeInvalidCmsSessionFromStorage($_POST, $session_name);
+    }
+}
+
+if (!function_exists('modx_sanitize_gpc')) {
+    /**
+     * @param array|string $values
+     * @param int $depth
+     * @return array|string
+     */
+    function modx_sanitize_gpc(& $values, $depth = 0)
+    {
+        if (200 < $depth) {
+            exit('GPC Array nested too deep!');
+        }
+        if (is_array($values)) {
+            $depth++;
+            foreach ($values as $key => $value) {
+                if (is_array($value)) {
+                    modx_sanitize_gpc($value, $depth);
+                } else {
+                    $values[$key] = getSanitizedValue($value);
+                }
+            }
+        } else {
+            $values = getSanitizedValue($values);
+        }
+
+        return $values;
+    }
+}
+
+if (! function_exists('getSanitizedValue')) {
+    /**
+     * @param string $value
+     * @return string
+     */
+    function getSanitizedValue($value = '')
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        $brackets = explode(' ', '[[ ]] [! !] [* *] [( )] {{ }} [+ +] [~ ~] [^ ^]');
+        foreach ($brackets as $bracket) {
+            if (strpos($value, $bracket) === false) {
+                continue;
+            }
+            $sanitizedBracket = str_replace(
+                '#',
+                MODX_SANITIZE_SEED,
+                sprintf('#%s#%s#', substr($bracket, 0, 1), substr($bracket, 1, 1))
+            );
+            $value = str_replace($bracket, $sanitizedBracket, $value);
+        }
+        $value = str_ireplace('<script', 'sanitized_by_modx<s cript', $value);
+        $value = preg_replace('/&#(\d+);/', 'sanitized_by_modx& #$1', $value);
+
+        return $value;
     }
 }

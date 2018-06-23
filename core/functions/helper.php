@@ -65,3 +65,10 @@ if (! function_exists('get_by_key')) {
         return $out;
     }
 }
+
+if (! function_exists('is_cli')) {
+    function is_cli()
+    {
+        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+    }
+}

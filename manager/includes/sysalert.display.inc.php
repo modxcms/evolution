@@ -8,8 +8,6 @@
 	 *
 	 */
 
-	require_once(dirname(__FILE__).'/protect.inc.php');
-
 	$sysMsgs = "";
 	$limit = count($SystemAlertMsgQueque);
 	for($i=0;$i<$limit;$i++) {

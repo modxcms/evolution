@@ -122,6 +122,52 @@
         ]
     },
     {
+        "name": "illuminate/config",
+        "version": "v5.6.26",
+        "version_normalized": "5.6.26.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/illuminate/config.git",
+            "reference": "e8158dff3189deed846c84c66c60fa68c21ee579"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/illuminate/config/zipball/e8158dff3189deed846c84c66c60fa68c21ee579",
+            "reference": "e8158dff3189deed846c84c66c60fa68c21ee579",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/contracts": "5.6.*",
+            "illuminate/support": "5.6.*",
+            "php": "^7.1.3"
+        },
+        "time": "2017-11-07T20:23:51+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.6-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Illuminate\\Config\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylor@laravel.com"
+            }
+        ],
+        "description": "The Illuminate Config package.",
+        "homepage": "https://laravel.com"
+    },
+    {
         "name": "illuminate/container",
         "version": "v5.6.26",
         "version_normalized": "5.6.26.0",
