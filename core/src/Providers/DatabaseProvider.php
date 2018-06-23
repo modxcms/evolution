@@ -14,7 +14,10 @@ class DatabaseProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('DBAPI', function ($app) {
-            return new Database($app['config']->get('database.connections.default'), IlluminateDriver::class);
+            return new Database(
+                $app['config']->get('database.connections.default', []),
+                IlluminateDriver::class
+            );
         });
     }
 }
