@@ -374,10 +374,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             exit;
         } elseif ($type == 'REDIRECT_HEADER' || empty ($type)) {
             // check if url has /$base_url
-            global $base_url, $site_url;
-            if (substr($url, 0, strlen($base_url)) == $base_url) {
+            if (substr($url, 0, strlen(MODX_BASE_URL)) == MODX_BASE_URL) {
                 // append $site_url to make it work with Location:
-                $url = $site_url . substr($url, strlen($base_url));
+                $url = MODX_SITE_URL . substr($url, strlen(MODX_BASE_URL));
             }
             if (strpos($url, "\n") === false) {
                 $header = 'Location: ' . $url;
@@ -4619,6 +4618,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getTpl($tpl)
     {
         $template = $tpl;
+        $command = '';
         if (preg_match("/^@([^:\s]+)[:\s]+(.+)$/s", trim($tpl), $match)) {
             $command = strtoupper($match[1]);
             $template = $match[2];
@@ -5130,9 +5130,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getCachePath()
     {
-        global $base_url;
-        $pth = $base_url . $this->getCacheFolder();
-        return $pth;
+        return MODX_BASE_URL . $this->getCacheFolder();
     }
 
     /**

@@ -1658,6 +1658,9 @@
           var documentDirty = this.page.firstElementChild.contentWindow.documentDirty;
           var checkDirt = !!this.page.firstElementChild.contentWindow.checkDirt;
           if (documentDirty && checkDirt && confirm(this.page.firstElementChild.contentWindow.checkDirt(e)) || !documentDirty) {
+            if (modx.tabs.selected === this.tab) {
+              tree.ca = 'open';
+            }
             modx.tabs.selected = this.tab.classList.contains('selected') ? this.tab.previousElementSibling : this.row.querySelector('.selected');
             this.page.parentNode.removeChild(this.page);
             this.row.removeChild(this.tab);
