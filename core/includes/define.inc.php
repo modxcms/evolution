@@ -6,9 +6,11 @@ if (! defined('HTTPS_PORT')) {
 if (! defined('SESSION_COOKIE_PATH')) {
     define('SESSION_COOKIE_PATH', env('SESSION_COOKIE_PATH', '')); // $session_cookie_path
 }
+
 if (! defined('SESSION_COOKIE_DOMAIN')) {
     define('SESSION_COOKIE_DOMAIN', env('SESSION_COOKIE_DOMAIN', '')); //$session_cookie_domain
 }
+
 if (! defined('SESSION_COOKIE_NAME')) {
     // For legacy extras not using startCMSSession
     define('SESSION_COOKIE_NAME', env('SESSION_COOKIE_NAME', genEvoSessionName())); // $site_sessionname
@@ -39,6 +41,7 @@ if (is_cli()) {
         throw new RuntimeException('Please, define MODX_SITE_URL on cli mode');
     }
 }
+
 if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     // automatically assign base_path and base_url
     $script_name = str_replace(
@@ -101,9 +104,11 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     }
     unset($base_url);
 }
+
 if (! preg_match('/\/$/', MODX_BASE_PATH)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_PATH');
 }
+
 if (! preg_match('/\/$/', MODX_BASE_URL)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_BASE_URL');
 }
@@ -154,15 +159,14 @@ if (! defined('MODX_SITE_URL')) {
     define('MODX_SITE_URL', env('MODX_SITE_URL', $site_url));
     unset($site_url);
 }
-if (!preg_match('/\/$/', MODX_SITE_URL)) {
+
+if (! preg_match('/\/$/', MODX_SITE_URL)) {
     throw new RuntimeException('Please, use trailing slash at the end of MODX_SITE_URL');
 }
 
-if (!defined('MODX_MANAGER_URL')) {
+if (! defined('MODX_MANAGER_URL')) {
     define('MODX_MANAGER_URL', env('MODX_MANAGER_URL', MODX_SITE_URL . MGR_DIR . '/'));
 }
-
-
 
 if (! defined('MODX_SANITIZE_SEED')) {
     define('MODX_SANITIZE_SEED', 'sanitize_seed_' . base_convert(md5(__FILE__), 16, 36));
