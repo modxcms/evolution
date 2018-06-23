@@ -1,5 +1,5 @@
 <?php
-$data = include EVO_CORE_PATH . 'version.php';
+$data = include EVO_CORE_PATH . 'factory/version.php';
 
 $modx_version      = $data['version']; // Current version number
 $modx_release_date = $data['release_date']; // Date of release
