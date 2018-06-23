@@ -15,6 +15,13 @@ if (! defined('MGR_DIR')) {
         die('MGR_DIR is not defined');
     }
 }
+if (! defined('EVO_CORE_PATH')) {
+    if (is_dir($base_path . 'core')) {
+        define('EVO_CORE_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR);
+    } else {
+        die('EVO_CORE_PATH is not defined');
+    }
+}
 require_once 'src/lang.php';
 require_once 'src/functions.php';
 
