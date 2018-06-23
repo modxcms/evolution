@@ -175,30 +175,6 @@ if ($conn) {
         $confph['table_prefix'] = $table_prefix;
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
-
-        $configString = file_get_contents(dirname(dirname(__DIR__)) . '/stubs/config.tpl');
-        $configString = parse($configString, $confph);
-
-        $filename = dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/config.inc.php';
-        $configFileFailed = false;
-        if (@ !$handle = fopen($filename, 'w')) {
-            $configFileFailed = true;
-        }
-
-        // write $somecontent to our opened file.
-        if (@ fwrite($handle, $configString) === false) {
-            $configFileFailed = true;
-        }
-        @ fclose($handle);
-
-        // try to chmod the config file go-rwx (for suexeced php)
-        @chmod($filename, 0404);
-
-        if ($configFileFailed === true) {
-            $errors += 1;
-        } else {
-            $installLevel = 4;
-        }
     }
 
     if ($installLevel === 4) {
@@ -965,9 +941,8 @@ if ($conn) {
         $database_type = 'mysqli';
         // initiate a new document parser
         if (!defined('EVO_BOOTSTRAP_FILE')) {
-            define('EVO_BOOTSTRAP_FILE',
-                dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/bootstrap.php');
-            require_once dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/bootstrap.php';
+            define('EVO_BOOTSTRAP_FILE', EVO_CORE_PATH . 'bootstrap.php');
+            require_once EVO_CORE_PATH . 'bootstrap.php';
         }
 
         if (! defined('EVO_SERVICES_FILE')) {
