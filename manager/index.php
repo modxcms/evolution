@@ -52,6 +52,12 @@ if (! isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 }
 $mstart = memory_get_usage();
 
+// we use this to make sure files are accessed through
+// the manager instead of seperately.
+if (! defined('IN_MANAGER_MODE')) {
+    define('IN_MANAGER_MODE', true);
+}
+
 if (file_exists(__DIR__ . '/config.php')) {
     $config = require __DIR__ . '/config.php';
 } elseif (file_exists(dirname(__DIR__) . '/config.php')) {
@@ -79,12 +85,6 @@ header('Pragma: no-cache');
 header('X-UA-Compatible: IE=edge;FF=3;OtherUA=4');
 header('X-XSS-Protection: 0');
 
-// we use this to make sure files are accessed through
-// the manager instead of seperately.
-if (! defined('IN_MANAGER_MODE')) {
-    define('IN_MANAGER_MODE', true);
-}
-
 // provide english $_lang for error-messages
 $_lang = array();
 include_once EVO_CORE_PATH . "lang/english.inc.php";
@@ -102,10 +102,6 @@ if(! function_exists('iconv')) {
 	echo $_lang['iconv_not_available'];
 	exit;
 }
-
-if (! defined('ENT_COMPAT')) define('ENT_COMPAT', 2);
-if (! defined('ENT_NOQUOTES')) define('ENT_NOQUOTES', 0);
-if (! defined('ENT_QUOTES')) define('ENT_QUOTES', 3);
 
 // set the document_root :|
 if(!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
