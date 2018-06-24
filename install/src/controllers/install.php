@@ -175,6 +175,12 @@ if ($conn) {
         $confph['table_prefix'] = $table_prefix;
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
+        
+        if ($configFileFailed === true) {
+            $errors += 1;
+        } else {
+            $installLevel = 4;
+        }
     }
 
     if ($installLevel === 4) {
