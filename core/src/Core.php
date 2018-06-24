@@ -1575,7 +1575,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (empty($ph)) {
-            $ph = $this->config;
+
+            $ph = array_merge(
+                $this->config,
+                [
+                    'base_url' => MODX_BASE_URL,
+                    'base_path' => MODX_BASE_PATH,
+                    'site_url' => MODX_SITE_URL,
+                    'valid_hostnames' => MODX_SITE_HOSTNAMES,
+                    'site_manager_url' => MODX_MANAGER_URL,
+                    'site_manager_path' => MODX_MANAGER_PATH
+                ]
+            );
         }
 
         $matches = $this->getTagsFromContent($content, '[(', ')]');
