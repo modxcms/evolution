@@ -177,8 +177,9 @@ if (!function_exists('getLangs')) {
      */
     function getLangs($install_language)
     {
-        if ($install_language !== "english" && is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR,
-                $install_language))) {
+        if ($install_language !== "english" &&
+            is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR, $install_language))
+        ) {
             $manager_language = $install_language;
         } else {
             $manager_language = "english";

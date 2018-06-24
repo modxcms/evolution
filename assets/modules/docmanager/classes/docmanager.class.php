@@ -6,11 +6,11 @@ class DocManager {
 	var $ph = array();
 	var $theme = '';
 	var $fileRegister = array();
-	
+
     function __construct(&$modx) {
     	$this->modx = $modx;
     }
-    
+
     function getLang() {
     	$_lang = array();
     	$ph = array();
@@ -23,14 +23,14 @@ class DocManager {
 	   	 		$managerLanguage = $lang;
 			}
 		}
-		
-		include MODX_MANAGER_PATH.'includes/lang/english.inc.php';
+
+		include EVO_CORE_PATH . 'lang/english.inc.php';
 		if($managerLanguage != 'english') {
-			if (file_exists(MODX_MANAGER_PATH.'includes/lang/'.$managerLanguage.'.inc.php')) {
-     			include MODX_MANAGER_PATH.'includes/lang/'.$managerLanguage.'.inc.php';
+			if (file_exists(EVO_CORE_PATH . 'lang/'.$managerLanguage.'.inc.php')) {
+     			include EVO_CORE_PATH . 'lang/'.$managerLanguage.'.inc.php';
 			}
 		}
-		
+
 		include MODX_BASE_PATH.'assets/modules/docmanager/lang/english.inc.php';
 		if($managerLanguage != 'english') {
 			if (file_exists(MODX_BASE_PATH.'assets/modules/docmanager/lang/'.$managerLanguage.'.inc.php')) {
@@ -43,7 +43,7 @@ class DocManager {
 		}
 		return $ph;
     }
-    
+
     function getTheme() {
     	$theme = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), "setting_name='manager_theme'");
 		if ($theme = $this->modx->db->getValue($theme)) {
@@ -53,7 +53,7 @@ class DocManager {
 			return '';
 		}
     }
-    
+
     function getFileContents($file) {
     	if (empty($file)) {
     		return false;
@@ -68,7 +68,7 @@ class DocManager {
 	    	}
 	    }
     }
-    
+
     function loadTemplates() {
     	$this->fileGetContents('main.tpl');
     }
@@ -88,7 +88,7 @@ class DocManager {
     		if(!isset($this->modx->config['mgr_jquery_path']))  $this->modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
     		$tpl = $this->modx->mergeSettingsContent($tpl);
     		foreach ($values as $key => $value) {
-    			$tpl = str_replace('[+'.$key.'+]', $value, $tpl); 
+    			$tpl = str_replace('[+'.$key.'+]', $value, $tpl);
     		}
     		$tpl = preg_replace('/(\[\+.*?\+\])/' ,'', $tpl);
     		return $tpl;
