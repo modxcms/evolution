@@ -6,7 +6,7 @@ if (!$modx->hasPermission('bk_manager')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$dbase = trim($dbase, '`');
+$dbase = $modx->getDatabase()->getConfig('database');
 
 if (!isset($modx->config['snapshot_path'])) {
     if (is_dir(MODX_BASE_PATH . 'temp/backup/')) {
@@ -77,7 +77,7 @@ if ($mode == 'restore1') {
     if (!is_writable(rtrim($modx->config['snapshot_path'], '/'))) {
         $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->config['snapshot_path'])));
     }
-    $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->config['table_prefix']) . "%'";
+    $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
     $rs = $modx->getDatabase()->query($sql);
     $tables = $modx->getDatabase()->getColumn('Name', $rs);
     $today = date('Y-m-d_H-i-s');
@@ -223,9 +223,11 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 </thead>
                                 <tbody>
                                 <?php
-                                $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->config['table_prefix']) . "%'";
+                                $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
                                 $rs = $modx->getDatabase()->query($sql);
                                 $i = 0;
+                                $total = 0;
+                                $totaloverhead = 0;
                                 while ($db_status = $modx->getDatabase()->getRow($rs)) {
                                     if (isset($tables)) {
                                         $table_string = implode(',', $table);
@@ -240,8 +242,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 
                                     // Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
                                     $truncateable = array(
-                                        $modx->getDatabase()->config['table_prefix'] . 'event_log',
-                                        $modx->getDatabase()->config['table_prefix'] . 'manager_log',
+                                        $modx->getDatabase()->getConfig('prefix') . 'event_log',
+                                        $modx->getDatabase()->getConfig('prefix') . 'manager_log',
                                     );
                                     if ($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
                                         echo '<td class="text-xs-right"><a class="text-danger" href="index.php?a=54&mode=' . $action . '&u=' . $db_status['Name'] . '" title="' . $_lang['truncate_table'] . '">' . $modx->nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</a>' . '</td>' . "\n";
@@ -257,8 +259,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 
                                     echo '<td class="text-xs-right">' . $modx->nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
 
-                                    $total = $total + $db_status['Index_length'] + $db_status['Data_length'];
-                                    $totaloverhead = $totaloverhead + $db_status['Data_free'];
+                                    $total += $db_status['Index_length'] + $db_status['Data_length'];
+                                    $totaloverhead += $db_status['Data_free'];
                                 }
                                 ?>
                                 </tbody>
@@ -266,7 +268,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <tr>
                                     <td class="text-xs-right"><?= $_lang['database_table_totals'] ?></td>
                                     <td colspan="4">&nbsp;</td>
-                                    <td class="text-xs-right"><?= $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
+                                    <td class="text-xs-right"><?= $totaloverhead ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
                                     <td colspan="2">&nbsp;</td>
                                     <td class="text-xs-right"><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
                                 </tr>
