@@ -8,11 +8,11 @@ if (!$modx->hasPermission('bk_manager')) {
 
 $dbase = $modx->getDatabase()->getConfig('database');
 
-if (!isset($modx->config['snapshot_path'])) {
+if (!$modx->getConfig(snapshot_path)) {
     if (is_dir(MODX_BASE_PATH . 'temp/backup/')) {
-        $modx->config['snapshot_path'] = MODX_BASE_PATH . 'temp/backup/';
+        $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'temp/backup/');
     } else {
-        $modx->config['snapshot_path'] = MODX_BASE_PATH . 'assets/backup/';
+        $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'assets/backup/');
     }
 }
 
@@ -31,7 +31,7 @@ if ($mode == 'restore1') {
     header('Location: index.php?r=9&a=93');
     exit;
 } elseif ($mode == 'restore2') {
-    $path = $modx->config['snapshot_path'] . $_POST['filename'];
+    $path = $modx->getConfig('snapshot_path') . $_POST['filename'];
     if (file_exists($path)) {
         $source = file_get_contents($path);
         import_sql($source);
@@ -66,23 +66,23 @@ if ($mode == 'restore1') {
 
     // MySQLdumper class can be found below
 } elseif ($mode == 'snapshot') {
-    if (!is_dir(rtrim($modx->config['snapshot_path'], '/'))) {
-        mkdir(rtrim($modx->config['snapshot_path'], '/'));
-        @chmod(rtrim($modx->config['snapshot_path'], '/'), 0777);
+    if (!is_dir(rtrim($modx->getConfig(snapshot_path), '/'))) {
+        mkdir(rtrim($modx->getConfig(snapshot_path), '/'));
+        @chmod(rtrim($modx->getConfig(snapshot_path), '/'), 0777);
     }
-    if (!is_file("{$modx->config['snapshot_path']}.htaccess")) {
+    if (!is_file("{$modx->getConfig(snapshot_path)}.htaccess")) {
         $htaccess = "order deny,allow\ndeny from all\n";
-        file_put_contents("{$modx->config['snapshot_path']}.htaccess", $htaccess);
+        file_put_contents("{$modx->getConfig(snapshot_path)}.htaccess", $htaccess);
     }
-    if (!is_writable(rtrim($modx->config['snapshot_path'], '/'))) {
-        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->config['snapshot_path'])));
+    if (!is_writable(rtrim($modx->getConfig(snapshot_path), '/'))) {
+        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig(snapshot_path))));
     }
     $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
     $rs = $modx->getDatabase()->query($sql);
     $tables = $modx->getDatabase()->getColumn('Name', $rs);
     $today = date('Y-m-d_H-i-s');
     global $path;
-    $path = "{$modx->config['snapshot_path']}{$today}.sql";
+    $path = "{$modx->getConfig(snapshot_path)}{$today}.sql";
 
     @set_time_limit(120); // set timeout limit to 2 minutes
     $dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
@@ -90,7 +90,7 @@ if ($mode == 'restore1') {
     $dumper->setDroptables(true);
     $dumpfinished = $dumper->createDump('snapshot');
 
-    $pattern = "{$modx->config['snapshot_path']}*.sql";
+    $pattern = "{$modx->getConfig(snapshot_path)}*.sql";
     $files = glob($pattern, GLOB_NOCHECK);
     $total = ($files[0] !== $pattern) ? count($files) : 0;
     arsort($files);
@@ -372,7 +372,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
             <div class="container container-body">
                 <?= $ph['result_msg_snapshot'] ?>
                 <div class="element-edit-message-tab alert alert-warning">
-                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->config['snapshot_path']}")) ?>
+                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->getConfig(snapshot_path)}")) ?>
                 </div>
                 <form method="post" name="snapshot" action="index.php">
                     <input type="hidden" name="a" value="93" />
@@ -394,7 +394,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <input type="hidden" name="mode" value="restore2" />
                     <input type="hidden" name="filename" value="" />
                     <?php
-                    $pattern = "{$modx->config['snapshot_path']}*.sql";
+                    $pattern = "{$modx->getConfig(snapshot_path)}*.sql";
                     $files = glob($pattern, GLOB_NOCHECK);
                     $total = ($files[0] !== $pattern) ? count($files) : 0;
                     $detailFields = array(
