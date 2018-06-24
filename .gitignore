@@ -1,4 +1,5 @@
 # assets
+.htaccess
 /assets/.thumbs/*
 !/assets/.thumbs/index.html
 !/assets/.thumbs/.htaccess
