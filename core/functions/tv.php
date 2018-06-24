@@ -524,9 +524,9 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 if (is_string($widget_output)) {
                     $_ = $modx->getConfig('enable_filter');
-                    $modx->config['enable_filter'] = 1;
+                    $modx->setConfig('enable_filter', 1);
                     $widget_output = $modx->parseText($widget_output, array('value' => $value));
-                    $modx->config['enable_filter'] = $_;
+                    $modx->setConfig('enable_filter', $_);
                     $o = $modx->parseDocumentSource($widget_output);
                 } else {
                     $o = $widget_output;

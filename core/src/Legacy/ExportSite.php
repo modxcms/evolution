@@ -95,11 +95,11 @@ class ExportSite implements ExportSiteInerface
         $modx = evolutionCMS();
 
         if ($modx->getConfig('friendly_urls') == 0) {
-            $modx->config['friendly_urls'] = 1;
-            $modx->config['use_alias_path'] = 1;
+            $modx->setConfig('friendly_urls', 1);
+            $modx->setConfig('use_alias_path', 1);
             $modx->clearCache('full');
         }
-        $modx->config['make_folders'] = '1';
+        $modx->setConfig('make_folders', '1');
     }
 
     /**

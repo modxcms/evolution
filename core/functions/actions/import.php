@@ -88,7 +88,7 @@ if(!function_exists('importFiles')) {
             return;
         }
         if ($_POST['object'] === 'all') {
-            $modx->config['default_template'] = '0';
+            $modx->setConfig('default_template', '0');
             $richtext = '0';
         } else {
             $richtext = '1';

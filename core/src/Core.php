@@ -468,8 +468,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // setup default site id - new installation should generate a unique id for the site.
-        if (!isset($this->config['site_id'])) {
-            $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
+        if ($this->getConfig('site_id', '') == '') {
+            $this->setConfig('site_id', 'MzGeQ2faT4Dw06+U49x3');
         }
 
         // store base_url and base_path inside config array
@@ -477,19 +477,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         //$this->config['base_path'] = MODX_BASE_PATH;
         //$this->config['site_url'] = MODX_SITE_URL;
         $this->error_reporting = $this->getConfig('error_reporting');
-        $this->config['filemanager_path'] = str_replace(
-            '[(base_path)]',
-            MODX_BASE_PATH,
-            $this->config['filemanager_path']
+        $this->setConfig(
+            'filemanager_path',
+            str_replace(
+                '[(base_path)]',
+                MODX_BASE_PATH,
+                $this->getConfig('filemanager_path')
+            )
         );
-        $this->config['rb_base_dir'] = str_replace(
-            '[(base_path)]',
-            MODX_BASE_PATH,
-            $this->config['rb_base_dir']
+        $this->setConfig(
+            'rb_base_dir',
+            str_replace(
+                '[(base_path)]',
+                MODX_BASE_PATH,
+                $this->getConfig('rb_base_dir')
+            )
         );
 
         if (!isset($this->config['enable_at_syntax'])) {
-            $this->config['enable_at_syntax'] = 1;
+            $this->setConfig('enable_at_syntax', 1);
         } // @TODO: This line is temporary, should be remove in next version
 
         // now merge user settings into evo-configuration
@@ -536,7 +542,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
         $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_plugins'), $where);
         if ($this->getDatabase()->getRecordCount($rs)) {
-            $this->config['enable_filter'] = '0';
+            $this->setConfig('enable_filter', '0');
         }
     }
 
@@ -606,15 +612,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         // save global values before overwriting/merging array
         foreach ($usrSettings as $param => $value) {
-            if (isset($this->config[$param])) {
-                $this->configGlobal[$param] = $this->config[$param];
+            if ($this->getConfig($param) !== null) {
+                $this->configGlobal[$param] = $this->getConfig($param);
             }
         }
 
         $this->config = array_merge($this->config, $usrSettings);
-        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH,
-            $this->config['filemanager_path']);
-        $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
+        $this->setConfig(
+            'filemanager_path',
+            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('filemanager_path'))
+        );
+        $this->setConfig(
+            'rb_base_dir',
+            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('rb_base_dir'))
+        );
 
         return $usrSettings;
     }
@@ -2162,9 +2173,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     { // Get super globals
         $key = $value;
         $_ = $this->getConfig('enable_filter');
-        $this->config['enable_filter'] = 1;
+        $this->setConfig('enable_filter', 1);
         list($key, $modifiers) = $this->splitKeyAndFilter($key);
-        $this->config['enable_filter'] = $_;
+        $this->setConfig('enable_filter', $_);
         $key = str_replace(array('(', ')'), array("['", "']"), $key);
         $key = rtrim($key, ';');
         if (strpos($key, '$_SESSION') !== false) {
@@ -2679,7 +2690,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // Strip conflicting id/q from query string
         $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
 
-        if ($this->documentIdentifier == $this->config['site_start']) {
+        if ($this->documentIdentifier == $this->getConfig('site_start')) {
             if ($requestedURL != MODX_SITE_URL) {
                 // Force redirect of site start
                 // $this->sendErrorPage();
@@ -2697,7 +2708,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     }
                 }
             }
-        } elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']) {
+        } elseif ($url_path != $strictURL && $this->documentIdentifier != $this->getConfig('error_page')) {
             // Force page redirect
             //$strictURL = ltrim($strictURL,'/');
             if (!empty($qstring)) {
@@ -2754,7 +2765,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 LEFT JOIN {$tbldg} dg ON dg.document = sc.id", "sc.{$method} = '{$identifier}' AND ({$access})", "", 1);
             if ($this->getDatabase()->getRecordCount($rs) < 1) {
                 $seclimit = 0;
-                if ($this->config['unauthorized_page']) {
+                if ($this->getConfig('unauthorized_page')) {
                     // method may still be alias, while identifier is not full path alias, e.g. id not found above
                     if ($method === 'alias') {
                         $secrs = $this->getDatabase()->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc",
@@ -2844,7 +2855,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            if ($this->config['enable_at_syntax']) {
+            if ($this->getConfig('enable_at_syntax')) {
                 $source = $this->ignoreCommentedTagsContent($source);
                 $source = $this->mergeConditionalTagsContent($source);
             }
@@ -2941,7 +2952,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
                         if (!$docId) {
                             $alias = $this->q;
-                            if (!empty($this->config['friendly_url_suffix'])) {
+                            if ((int)$this->getConfig('friendly_url_suffix') !== 0) {
                                 $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
 
                                 if ($pos !== false) {
@@ -3060,7 +3071,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // we now know the method and identifier, let's check the cache
 
         if ($this->getConfig('enable_cache') == 2 && $this->isLoggedIn()) {
-            $this->config['enable_cache'] = 0;
+            $this->setConfig('enable_cache', 0);
         }
 
         if ($this->getConfig('enable_cache')) {
@@ -3079,7 +3090,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             // check if we should not hit this document
             if ($this->documentObject['donthit'] == 1) {
-                $this->config['track_visitors'] = 0;
+                $this->setConfig('track_visitors', 0);
             }
 
             if ($this->documentObject['deleted'] == 1) {
@@ -4423,6 +4434,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
+     * @param $name
+     * @param $value
+     */
+    public function setConfig($name, $value)
+    {
+        $this->make('config')
+            ->set('cms.settings.' . $name, $value);
+    }
+
+    /**
      * Returns an entry from the config
      *
      * Note: most code accesses the config array directly and we will continue to support this.
@@ -5654,7 +5675,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->evalPlugin($pluginCode, $parameter);
 
             if (class_exists('PHxParser')) {
-                $this->config['enable_filter'] = 0;
+                $this->setConfig('enable_filter', 0);
             }
 
             if ($this->dumpPlugins) {
@@ -6059,7 +6080,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $enable_filter = $this->getConfig('enable_filter');
-        $this->config['enable_filter'] = 1;
+        $this->setConfig('enable_filter', 1);
         $_ = array('[* *]', '[( )]', '{{ }}', '[[ ]]', '[+ +]');
         foreach ($_ as $brackets) {
             list($left, $right) = explode(' ', $brackets);
@@ -6082,7 +6103,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = str_replace($matches[0], '', $content);
             }
         }
-        $this->config['enable_filter'] = $enable_filter;
+        $this->setConfig('enable_filter', $enable_filter);
         return $content;
     }
 

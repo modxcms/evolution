@@ -312,12 +312,12 @@ if(!function_exists('loginV1')) {
         $user_algo = $modx->getManagerApi()->getV1UserHashAlgorithm($internalKey);
 
         if (!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) {
-            $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+            $modx->setConfig('pwd_hash_algo', 'UNCRYPT');
         }
 
         if ($user_algo !== $modx->getConfig('pwd_hash_algo')) {
             $bk_pwd_hash_algo = $modx->getConfig('pwd_hash_algo');
-            $modx->config['pwd_hash_algo'] = $user_algo;
+            $modx->setConfig('pwd_hash_algo', $user_algo);
         }
 
         if ($dbasePassword != $modx->getManagerApi()->genV1Hash($givenPassword, $internalKey)) {
