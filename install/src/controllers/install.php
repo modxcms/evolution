@@ -170,12 +170,31 @@ if ($conn) {
         $confph['user_name'] = mysqli_real_escape_string($conn, $database_user);
         $confph['password'] = mysqli_real_escape_string($conn, $database_password);
         $confph['connection_charset'] = $database_connection_charset;
+        $confph['connection_collation'] = $database_collation;
         $confph['connection_method'] = $database_connection_method;
         $confph['dbase'] = str_replace('`', '', $dbase);
         $confph['table_prefix'] = $table_prefix;
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
-        
+
+        $configString = file_get_contents($path . 'stubs/files/config/database/connections/default.tpl');
+        $configString = parse($configString, $confph);
+
+        $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
+        $configFileFailed = false;
+        if (@ !$handle = fopen($filename, 'w')) {
+            $configFileFailed = true;
+        }
+
+        // write $somecontent to our opened file.
+        if (@ fwrite($handle, $configString) === false) {
+            $configFileFailed = true;
+        }
+        @ fclose($handle);
+
+        // try to chmod the config file go-rwx (for suexeced php)
+        @chmod($filename, 0404);
+
         if ($configFileFailed === true) {
             $errors += 1;
         } else {
