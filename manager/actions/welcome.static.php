@@ -223,7 +223,9 @@ if($modx->getDatabase()->getRecordCount($rs) < 1) {
 $ph['OnlineInfo'] = $html;
 
 // include rss feeds for important forum topics
-include_once(MODX_MANAGER_PATH . 'includes/rss.inc.php');
+if ($modx->getConfig('rss_url_news') && file_exists(MODX_MANAGER_PATH . 'includes/rss.inc.php')) {
+    include_once(MODX_MANAGER_PATH . 'includes/rss.inc.php');
+}
 $ph['modx_security_notices_content'] = $feedData['modx_security_notices_content'];
 $ph['modx_news_content'] = $feedData['modx_news_content'];
 
