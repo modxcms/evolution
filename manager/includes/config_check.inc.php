@@ -123,8 +123,8 @@ if (!function_exists('checkSiteCache')) {
     function checkSiteCache() {
         $modx = evolutionCMS();
         $checked= true;
-        if (file_exists($modx->config['base_path'] . 'assets/cache/siteCache.idx.php')) {
-            $checked= @include_once ($modx->config['base_path'] . 'assets/cache/siteCache.idx.php');
+        if (file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
+            $checked= @include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
         }
         return $checked;
     }

@@ -367,8 +367,8 @@ if(!function_exists('convertLink')) {
                     $v = substr($v, 1);
                     list($href, $v) = explode('"', $v, 2);
                     $_ = $href;
-                    if (strpos($_, $modx->config['site_url']) !== false) {
-                        $_ = $modx->config['base_url'] . str_replace($modx->config['site_url'], '', $_);
+                    if (strpos($_, MODX_SITE_URL) !== false) {
+                        $_ = MODX_BASE_URL . str_replace(MODX_SITE_URL, '', $_);
                     }
                     if ($_[0] === '/') {
                         $_ = substr($_, 1);

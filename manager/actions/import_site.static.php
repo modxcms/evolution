@@ -54,7 +54,7 @@ $allowedfiles = array(
                     <tr>
                         <td nowrap="nowrap"><b><?= $_lang['import_parent_resource'] ?></b></td>
                         <td>&nbsp;</td>
-                        <td><b><span id="parentName">0 (<?= $modx->getPhpCompat()->entities($site_name) ?>)</span></b></td>
+                        <td><b><span id="parentName">0 (<?= $modx->getPhpCompat()->entities($modx->getConfig('site_name')) ?>)</span></b></td>
                     </tr>
                     <tr>
                         <td nowrap="nowrap" valign="top"><b><?= $_lang['import_site_maxtime'] ?></b></td>

@@ -31,15 +31,15 @@ class Mail extends PHPMailer
         $this->modx = $modx;
         $this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
 
-        switch ($modx->config['email_method']) {
+        switch ($modx->getConfig('email_method')) {
             case 'smtp':
                 $this->isSMTP();
-                $this->SMTPSecure = $modx->config['smtp_secure'] === 'none' ? '' : $modx->config['smtp_secure'];
-                $this->Port = $modx->config['smtp_port'];
-                $this->Host = $modx->config['smtp_host'];
-                $this->SMTPAuth = $modx->config['smtp_auth'] === '1' ? true : false;
-                $this->Username = $modx->config['smtp_username'];
-                $this->Password = $modx->config['smtppw'];
+                $this->SMTPSecure = $modx->getConfig('smtp_secure') === 'none' ? '' : $modx->getConfig('smtp_secure');
+                $this->Port = $modx->getConfig('smtp_port');
+                $this->Host = $modx->getConfig('smtp_host');
+                $this->SMTPAuth = $modx->getConfig('smtp_auth') === '1' ? true : false;
+                $this->Username = $modx->getConfig('smtp_username');
+                $this->Password = $modx->getConfig('smtppw');
                 if (10 < strlen($this->Password)) {
                     $this->Password = substr($this->Password, 0, -7);
                     $this->Password = str_replace('%', '=', $this->Password);
@@ -51,7 +51,7 @@ class Mail extends PHPMailer
                 $this->isMail();
         }
 
-        $this->From = $modx->config['emailsender'];
+        $this->From = $modx->getConfig('emailsender');
         if (isset($modx->config['email_sender_method']) && !$modx->config['email_sender_method']) {
             $this->Sender = $modx->config['emailsender'];
         }

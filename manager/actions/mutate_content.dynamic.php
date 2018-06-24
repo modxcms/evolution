@@ -187,7 +187,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				}
 			},
 			view: function() {
-				window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : $modx->config['site_url'] . 'index.php?id=' . $id ?>', 'previeWin');
+				window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
 			}
 		};
 
@@ -796,24 +796,24 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										$parentlookup = false;
 										if(isset ($_REQUEST['id'])) {
 											if($content['parent'] == 0) {
-												$parentname = $site_name;
+												$parentname = $modx->getConfig('site_name');
 											} else {
 												$parentlookup = $content['parent'];
 											}
 										} elseif(isset ($_REQUEST['pid'])) {
 											if($_REQUEST['pid'] == 0) {
-												$parentname = $site_name;
+												$parentname = $modx->getConfig('site_name');
 											} else {
 												$parentlookup = $_REQUEST['pid'];
 											}
 										} elseif(isset($_POST['parent'])) {
 											if($_POST['parent'] == 0) {
-												$parentname = $site_name;
+												$parentname = $modx->getConfig('site_name');
 											} else {
 												$parentlookup = $_POST['parent'];
 											}
 										} else {
-											$parentname = $site_name;
+											$parentname = $modx->getConfig('site_name');
 											$content['parent'] = 0;
 										}
 										if($parentlookup !== false && is_numeric($parentlookup)) {

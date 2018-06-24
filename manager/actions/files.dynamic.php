@@ -9,7 +9,7 @@ $token_check = checkToken();
 $newToken = makeToken();
 
 // settings
-$theme_image_path = $modx->config['site_manager_url'] . 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$theme_image_path = MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $excludes = array(
     '.',
     '..',
@@ -29,32 +29,32 @@ $protected_path = array();
 if($_SESSION['mgrRole']!=1)
 {
 */
-$protected_path[] = $modx->config['site_manager_path'];
-$protected_path[] = $modx->config['base_path'] . 'temp/backup';
-$protected_path[] = $modx->config['base_path'] . 'assets/backup';
+$protected_path[] = MODX_MANAGER_PATH;
+$protected_path[] = MODX_BASE_PATH . 'temp/backup';
+$protected_path[] = MODX_BASE_PATH . 'assets/backup';
 
 if (!$modx->hasPermission('save_plugin')) {
-    $protected_path[] = $modx->config['base_path'] . 'assets/plugins';
+    $protected_path[] = MODX_BASE_PATH . 'assets/plugins';
 }
 if (!$modx->hasPermission('save_snippet')) {
-    $protected_path[] = $modx->config['base_path'] . 'assets/snippets';
+    $protected_path[] = MODX_BASE_PATH . 'assets/snippets';
 }
 if (!$modx->hasPermission('save_template')) {
-    $protected_path[] = $modx->config['base_path'] . 'assets/templates';
+    $protected_path[] = MODX_BASE_PATH . 'assets/templates';
 }
 if (!$modx->hasPermission('save_module')) {
-    $protected_path[] = $modx->config['base_path'] . 'assets/modules';
+    $protected_path[] = MODX_BASE_PATH . 'assets/modules';
 }
 if (!$modx->hasPermission('empty_cache')) {
-    $protected_path[] = $modx->config['base_path'] . 'assets/cache';
+    $protected_path[] = MODX_BASE_PATH . 'assets/cache';
 }
 if (!$modx->hasPermission('import_static')) {
-    $protected_path[] = $modx->config['base_path'] . 'temp/import';
-    $protected_path[] = $modx->config['base_path'] . 'assets/import';
+    $protected_path[] = MODX_BASE_PATH . 'temp/import';
+    $protected_path[] = MODX_BASE_PATH . 'assets/import';
 }
 if (!$modx->hasPermission('export_static')) {
-    $protected_path[] = $modx->config['base_path'] . 'temp/export';
-    $protected_path[] = $modx->config['base_path'] . 'assets/export';
+    $protected_path[] = MODX_BASE_PATH . 'temp/export';
+    $protected_path[] = MODX_BASE_PATH . 'assets/export';
 }
 /*
 }

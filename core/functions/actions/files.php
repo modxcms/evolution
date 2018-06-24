@@ -403,7 +403,7 @@ if(!function_exists('fileupload')) {
             $userfile['type'] = $_FILES['userfile']['type'][$i];
 
             // this seems to be an upload action.
-            $path = $modx->config['site_url'] . substr($startpath, strlen($filemanager_path), strlen($startpath));
+            $path = MODX_SITE_URL . substr($startpath, strlen($filemanager_path), strlen($startpath));
             $path = rtrim($path, '/') . '/' . $userfile['name'];
             $msg .= $path;
             if ($userfile['error'] == 0) {

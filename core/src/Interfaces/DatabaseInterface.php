@@ -1,5 +1,7 @@
 <?php namespace EvolutionCMS\Interfaces;
 
-interface DatabaseInterface
+use AgelxNash\Modx\Evo\Database\Interfaces\DatabaseInterface as BaseDatabaseInterface;
+
+interface DatabaseInterface extends BaseDatabaseInterface
 {
 }

@@ -86,7 +86,7 @@ if (! function_exists('ProcessTVCommand')) {
 
                 case 'DIRECTORY' :
                     $files = array();
-                    $path = $modx->config['base_path'] . $param;
+                    $path = MODX_BASE_PATH . $param;
                     if (substr($path, -1, 1) != '/') {
                         $path .= '/';
                     }

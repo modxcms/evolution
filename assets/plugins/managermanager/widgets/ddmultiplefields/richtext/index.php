@@ -23,17 +23,17 @@ if ($_SESSION['mgrValidated']){
 
 	$mmDir = 'assets/plugins/managermanager/';
 	$windowDir = $mmDir.'widgets/ddmultiplefields/richtext/';
-	
+
 	//Include the ddTools library
-	require_once($modx->config['base_path'].$mmDir.'modx.ddtools.class.php');
-	
+	require_once(MODX_BASE_PATH.$mmDir.'modx.ddtools.class.php');
+
 	$temp = $modx->invokeEvent('OnRichTextEditorInit', array(
 		'editor' => $modx->config['which_editor'],
 		'elements' => array('ddMultipleFields_richtext')
 	));
-	
-	echo ddTools::parseText(file_get_contents($modx->config['base_path'].$windowDir.'template.html'), array(
-		'site_url' => $modx->config['site_url'],
+
+	echo ddTools::parseText(file_get_contents(MODX_BASE_PATH.$windowDir.'template.html'), array(
+		'site_url' => MODX_SITE_URL,
 		'mmDir' => $mmDir,
 		'windowDir' => $windowDir,
 		'charset' => '<meta charset="'.$modx->config['modx_charset'].'" />',

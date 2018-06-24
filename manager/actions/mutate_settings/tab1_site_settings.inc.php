@@ -19,7 +19,7 @@ table.sysSettings tr.noborder td {border:none;}
   </tr>
   <tr>
       <th><?php echo $modx->getPhpCompat()->htmlspecialchars($_lang['sitename_title']) ?><br><small>[(site_name)]</small></th>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($site_name); ?>" />
+      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($modx->getConfig('site_name')); ?>" />
   <div class="comment"><?php echo $_lang['sitename_message'] ?></div>
   </td>
     </tr>

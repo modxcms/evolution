@@ -44,7 +44,7 @@ class site_content_tagsDocLister extends site_contentDocLister
         if ($tag !== false && is_array($tag) && $tag['mode'] == 'get') {
             $link .= "&tag=" . urlencode($tag['tag']);
         }
-        $url = ($id == $this->modx->config['site_start']) ? $this->modx->config['site_url'] . ($link != '' ? "?{$link}" : "") : $this->modx->makeUrl(
+        $url = ($id == $this->modx->config['site_start']) ? MODX_SITE_URL . ($link != '' ? "?{$link}" : "") : $this->modx->makeUrl(
             $id,
             '',
             $link,

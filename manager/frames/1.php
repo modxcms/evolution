@@ -113,7 +113,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
 <!DOCTYPE html>
 <html <?= (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"' ?>>
 <head>
-    <title><?= $modx->getPhpCompat()->entities($site_name) ?>- (EVO CMS Manager)</title>
+    <title><?= $modx->getPhpCompat()->entities($modx->getConfig('site_name')) ?>- (EVO CMS Manager)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
@@ -354,7 +354,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 $version = 'Evolution';
                                 ?>
                                 <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($site_name), $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
                                 ?>
                             </ul>
                         </li>

@@ -440,7 +440,7 @@ class Modifiers implements ModifiersInterface
                 if (strpos($path, MODX_MANAGER_PATH) !== false) {
                     exit('Can not read core path');
                 }
-                if (strpos($path, $modx->config['base_path']) === false) {
+                if (strpos($path, MODX_BASE_PATH) === false) {
                     $path = ltrim($path, '/');
                 }
                 $this->condition[] = (int)($cmd($path) !== false);
@@ -1119,7 +1119,7 @@ class Modifiers implements ModifiersInterface
                 }
                 $filename = $value;
 
-                $site_url = $modx->config['site_url'];
+                $site_url = MODX_SITE_URL;
                 if (strpos($filename, $site_url) === 0) {
                     $filename = substr($filename, 0, strlen($site_url));
                 }

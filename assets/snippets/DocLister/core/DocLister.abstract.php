@@ -574,7 +574,7 @@ abstract class DocLister
 
         $link = $this->checkExtender('request') ? $this->extender['request']->getLink() : $this->getRequest();
         if ($id == $this->modx->config['site_start']) {
-            $url = $this->modx->config['site_url'] . ($link != '' ? "?{$link}" : "");
+            $url = MODX_SITE_URL . ($link != '' ? "?{$link}" : "");
         } else {
             $url = $this->modx->makeUrl($id, '', $link, $this->getCFGDef('urlScheme', ''));
         }

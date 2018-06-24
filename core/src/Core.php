@@ -473,16 +473,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // store base_url and base_path inside config array
-        $this->config['base_url'] = MODX_BASE_URL;
-        $this->config['base_path'] = MODX_BASE_PATH;
-        $this->config['site_url'] = MODX_SITE_URL;
-        $this->config['valid_hostnames'] = MODX_SITE_HOSTNAMES;
-        $this->config['site_manager_url'] = MODX_MANAGER_URL;
-        $this->config['site_manager_path'] = MODX_MANAGER_PATH;
+        //$this->config['base_url'] = MODX_BASE_URL;
+        //$this->config['base_path'] = MODX_BASE_PATH;
+        //$this->config['site_url'] = MODX_SITE_URL;
         $this->error_reporting = $this->config['error_reporting'];
-        $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH,
-            $this->config['filemanager_path']);
-        $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
+        $this->config['filemanager_path'] = str_replace(
+            '[(base_path)]',
+            MODX_BASE_PATH,
+            $this->config['filemanager_path']
+        );
+        $this->config['rb_base_dir'] = str_replace(
+            '[(base_path)]',
+            MODX_BASE_PATH,
+            $this->config['rb_base_dir']
+        );
 
         if (!isset($this->config['enable_at_syntax'])) {
             $this->config['enable_at_syntax'] = 1;
@@ -2532,7 +2536,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0)
     {
         if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1') {
-            $url = $this->config['base_url'];
+            $url = MODX_BASE_URL;
         } else {
             $Alias = explode('/', $alias);
             $alias = array_pop($Alias);
@@ -2644,39 +2648,38 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-        $len_base_url = strlen($this->config['base_url']);
+        $len_base_url = strlen(MODX_BASE_URL);
 
         $url_path = $q;//LANG
 
-        if (substr($url_path, 0, $len_base_url) === $this->config['base_url']) {
+        if (substr($url_path, 0, $len_base_url) === MODX_BASE_URL) {
             $url_path = substr($url_path, $len_base_url);
         }
 
         $strictURL = $this->toAlias($this->makeUrl($this->documentIdentifier));
 
-        if (substr($strictURL, 0, $len_base_url) === $this->config['base_url']) {
+        if (substr($strictURL, 0, $len_base_url) === MODX_BASE_URL) {
             $strictURL = substr($strictURL, $len_base_url);
         }
         $http_host = $_SERVER['HTTP_HOST'];
         $requestedURL = "{$scheme}://{$http_host}" . '/' . $q; //LANG
 
-        $site_url = $this->config['site_url'];
         $url_query_string = explode('?', $_SERVER['REQUEST_URI']);
         // Strip conflicting id/q from query string
         $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
 
         if ($this->documentIdentifier == $this->config['site_start']) {
-            if ($requestedURL != $this->config['site_url']) {
+            if ($requestedURL != MODX_SITE_URL) {
                 // Force redirect of site start
                 // $this->sendErrorPage();
                 if ($qstring) {
-                    $url = "{$site_url}?{$qstring}";
+                    $url = MODX_SITE_URL . "?" . $qstring;
                 } else {
-                    $url = $site_url;
+                    $url = MODX_SITE_URL;
                 }
-                if ($this->config['base_url'] != $_SERVER['REQUEST_URI']) {
+                if (MODX_BASE_URL != $_SERVER['REQUEST_URI']) {
                     if (empty($_POST)) {
-                        if (($this->config['base_url'] . '?' . $qstring) != $_SERVER['REQUEST_URI']) {
+                        if ((MODX_BASE_URL . '?' . $qstring) != $_SERVER['REQUEST_URI']) {
                             $this->sendRedirect($url, 0, 'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
                             exit(0);
                         }
@@ -2687,15 +2690,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // Force page redirect
             //$strictURL = ltrim($strictURL,'/');
             if (!empty($qstring)) {
-                $url = "{$site_url}{$strictURL}?{$qstring}";
+                $url = MODX_SITE_URL . "{$strictURL}?{$qstring}";
             } else {
-                $url = "{$site_url}{$strictURL}";
+                $url = MODX_SITE_URL . "{$strictURL}";
             }
             $this->sendRedirect($url, 0, 'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
             exit(0);
         }
-
-        return;
     }
 
     /**
@@ -3020,7 +3021,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $k = array_keys($_GET);
         unset ($_GET[$k[0]]);
         unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-        $qp = parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+        $qp = parse_url(str_replace(MODX_SITE_URL, '', substr($url, 4)));
         $_SERVER['QUERY_STRING'] = $qp['query'];
         if (!empty ($qp['query'])) {
             parse_str($qp['query'], $qv);
@@ -3028,7 +3029,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $_REQUEST[$n] = $_GET[$n] = $v;
             }
         }
-        $_SERVER['PHP_SELF'] = $this->config['base_url'] . $qp['path'];
+        $_SERVER['PHP_SELF'] = MODX_BASE_URL . $qp['path'];
         $this->q = $qp['path'];
 
         return $qp['path'];
@@ -4338,7 +4339,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $url = $args;
         }
 
-        $host = $this->config['base_url'];
+        $host = MODX_BASE_URL;
 
         // check if scheme argument has been set
         if ($scheme != '') {
@@ -4348,7 +4349,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             //TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host = $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            $host = $scheme == 'full' ? MODX_SITE_URL : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
         //fix strictUrl by Bumkaka
@@ -5993,7 +5994,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         );
 
         $nl = "\n";
-        $list = isset($parsed['logo']) ? '<img src="' . $this->config['base_url'] . ltrim($parsed['logo'], "/") . '" style="float:right;max-width:100px;height:auto;" />' . $nl : '';
+        $list = isset($parsed['logo']) ? '<img src="' . MODX_BASE_URL . ltrim($parsed['logo'], "/") . '" style="float:right;max-width:100px;height:auto;" />' . $nl : '';
         $list .= '<p>' . $nl;
         $list .= isset($parsed['name']) ? '<strong>' . $parsed['name'] . '</strong><br/>' . $nl : '';
         $list .= isset($parsed['description']) ? $parsed['description'] . $nl : '';

@@ -59,7 +59,7 @@ class ExportSite implements ExportSiteInerface
         $this->count = 0;
         $this->setUrlMode();
         $this->generate_mode = 'crawl';
-        $this->targetDir = $modx->config['base_path'] . 'temp/export';
+        $this->targetDir = MODX_BASE_PATH . 'temp/export';
         if (!isset($this->total)) {
             $this->getTotal();
         }

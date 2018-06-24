@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_plugin')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$siteURL = $modx->config['site_url'];
+$siteURL = MODX_SITE_URL;
 
 $updateMsg = '';
 

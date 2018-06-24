@@ -10,7 +10,7 @@ $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 
 $tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
-$siteURL = $modx->config['site_url'];
+$siteURL = MODX_SITE_URL;
 
 $updateMsg = '';
 

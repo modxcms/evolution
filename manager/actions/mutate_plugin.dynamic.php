@@ -37,7 +37,7 @@ if (isset($_GET['id'])) {
     $rs = $modx->getDatabase()->select('*', $tbl_site_plugins, "id='{$id}'");
     $content = $modx->getDatabase()->getRow($rs);
     if (!$content) {
-        header("Location: {$modx->config['site_url']}");
+        header('Location: ' . MODX_SITE_URL);
     }
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $modx->hasPermission('save_role') != 1) {

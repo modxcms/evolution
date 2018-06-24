@@ -40,7 +40,7 @@ if ($e->name == 'OnWebPageInit' || $e->name == 'OnPageNotFound') {
     if ($uid = $modx->getLoginUserID('web')) {
         if (isset($_REQUEST[$logoutKey])) {
             $user->logOut($cookieName, true);
-            $page = $modx->config['site_url'] . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
+            $page = MODX_SITE_URL . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
             $query = $_GET;
             unset($query[$logoutKey], $query['q']);
             if ($query) {

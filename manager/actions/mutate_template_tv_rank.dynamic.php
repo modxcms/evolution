@@ -13,7 +13,7 @@ $tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
-$siteURL = $modx->config['site_url'];
+$siteURL = MODX_SITE_URL;
 
 $updateMsg = '';
 $templatename = '';

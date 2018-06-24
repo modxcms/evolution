@@ -76,7 +76,7 @@ class ErrorHandler
             $lang_path = MODX_MANAGER_PATH . "includes/lang/{$context}/";
         }
         include_once($lang_path . 'english.inc.php');
-        $manager_language = $modx->config['manager_language'];
+        $manager_language = $modx->getConfig('manager_language');
         if (is_file("{$lang_path}{$manager_language}.inc.php")) {
             include_once("{$lang_path}{$manager_language}.inc.php");
         }

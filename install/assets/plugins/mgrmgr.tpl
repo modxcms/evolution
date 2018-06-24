@@ -26,4 +26,4 @@
  */
 
 // Run the main code
-include($modx->config['base_path'].'assets/plugins/managermanager/mm.inc.php');
+include MODX_BASE_PATH . 'assets/plugins/managermanager/mm.inc.php';

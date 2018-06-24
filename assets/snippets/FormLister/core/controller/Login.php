@@ -26,8 +26,8 @@ class Login extends Core
         $requestUri = $_SERVER['REQUEST_URI'];
         if (0 === strpos($requestUri, MODX_BASE_URL)) {
             $requestUri = substr($requestUri, strlen(MODX_BASE_URL));
-        } 
-        $this->requestUri = $this->modx->config['site_url'] . $requestUri;
+        }
+        $this->requestUri = MODX_SITE_URL . $requestUri;
         $this->context = $this->getCFGDef('context', 'web');
         $lang = $this->lexicon->loadLang('login');
         if ($lang) {

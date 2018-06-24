@@ -11,9 +11,9 @@ unset($_POST);
 
 if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===false)
 {
-	$htaccess        = $modx->config['base_path'] . '.htaccess';
-	$sample_htaccess = $modx->config['base_path'] . 'ht.access';
-	$dir = '/' . trim($modx->config['base_url'],'/');
+	$htaccess        = MODX_BASE_PATH . '.htaccess';
+	$sample_htaccess = MODX_BASE_PATH . 'ht.access';
+	$dir = '/' . trim(MODX_BASE_URL,'/');
 	if(is_file($htaccess))
 	{
 		$_ = file_get_contents($htaccess);
@@ -36,7 +36,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
         {
         	$warnings[] = $_lang["settings_friendlyurls_alert"];
 		}
-		elseif($modx->config['base_url']!=='/')
+		elseif(MODX_BASE_URL!=='/')
 		{
 			$_ = file_get_contents($htaccess);
 			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
@@ -110,15 +110,6 @@ if (isset($data) && count($data) > 0) {
 				} elseif ($v === '********************') {
 					$k = '';
 				}
-				break;
-            case 'valid_hostnames':
-				$v = str_replace(array(' ,', ', '), ',', $v);
-				if ($v !== ',') {
-					$v = ($v != 'MODX_SITE_HOSTNAMES') ? $v : '';
-					$configString = '<?php' . "\n" . 'define(\'MODX_SITE_HOSTNAMES\', \'' . $v . '\');' . "\n";
-					@file_put_contents(MODX_BASE_PATH . 'assets/cache/siteHostnames.php', $configString);
-				}
-				$k = '';
 				break;
 			case 'session_timeout':
 				$mail_check_timeperiod = $data['mail_check_timeperiod'];

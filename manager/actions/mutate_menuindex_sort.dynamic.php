@@ -69,7 +69,7 @@ if ($id !== null) {
     }
 }
 
-$pagetitle = empty($id) ? $site_name : $pagetitle;
+$pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
 ?>
 
 <script type="text/javascript">

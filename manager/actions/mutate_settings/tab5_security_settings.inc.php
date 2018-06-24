@@ -1,11 +1,3 @@
-<?php
-    $MODX_SITE_HOSTNAMES = MODX_SITE_HOSTNAMES; // Fix for PHP 5.4
-    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) {
-        $valid_hostnames = $_SERVER['HTTP_HOST'];
-    } else {
-        $valid_hostnames = $MODX_SITE_HOSTNAMES;
-    }
-?>
 <!-- Interface & editor settings -->
 <div class="tab-page" id="tabPageSecurity">
 <h2 class="tab"><?php echo $_lang['settings_security'] ?></h2>
@@ -63,14 +55,6 @@
     </tr>
     <tr>
       <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['valid_hostnames_title'] ?><br><small>[(valid_hostnames)]</small></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="valid_hostnames" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($valid_hostnames); ?>" /></td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['valid_hostnames_message'] ?></td>
     </tr>
     <tr>
       <td colspan="2"><div class="split"></div></td>

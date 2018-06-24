@@ -11,7 +11,7 @@ if($modx->getManagerApi()->action!='8' && isset($_SESSION['mgrValidated'])){
     $modx->setPlaceholder('modx_charset',$modx_manager_charset);
     $modx->setPlaceholder('theme',$manager_theme);
 
-    $modx->setPlaceholder('site_name',$modx->getPhpCompat()->entities($site_name));
+    $modx->setPlaceholder('site_name',$modx->getPhpCompat()->entities($modx->getConfig('site_name')));
     $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
     $modx->setPlaceholder('manager_lockout_message',$_lang["manager_lockout_message"]);
 

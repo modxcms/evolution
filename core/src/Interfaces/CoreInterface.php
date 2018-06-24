@@ -28,4 +28,9 @@ interface CoreInterface extends ApplicationContract
      * @param string $namespace
      */
     public function addChunk($name, $text, $namespace = '#');
+
+    /**
+     * @return DatabaseInterface
+     */
+    public function getDatabase();
 }

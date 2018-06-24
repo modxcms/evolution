@@ -97,7 +97,7 @@ class AssetsHelper
             $src = $params['src'];
             $remote = strpos($src, "http") !== false;
             if (!$remote) {
-                $src = $this->modx->config['site_url'] . $src;
+                $src = MODX_SITE_URL . $src;
                 if (!$this->fs->checkFile($params['src'])) {
                     $this->modx->logEvent(0, 3, 'Cannot load ' . $src, 'Assets helper');
 

@@ -38,7 +38,7 @@ $button_pl_config = '<a data-toggle="tooltip" href="javascript:;" title="' . $_l
 $modx->setPlaceholder('button_pl_config', $button_pl_config);
 //plugin lang
 $_oec_lang = array();
-$plugin_path = $modx->config['base_path'] . "assets/plugins/extrascheck/";
+$plugin_path = MODX_BASE_PATH . "assets/plugins/extrascheck/";
 include($plugin_path . 'lang/english.php');
 if (file_exists($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php')) {
 include($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php');

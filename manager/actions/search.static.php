@@ -98,8 +98,8 @@ if (isset($_REQUEST['submitok'])) {
     if (isset($_REQUEST['url']) && $_REQUEST['url'] !== '') {
         $url = $modx->getDatabase()->escape($_REQUEST['url']);
         $friendly_url_suffix = $modx->config['friendly_url_suffix'];
-        $base_url = $modx->config['base_url'];
-        $site_url = $modx->config['site_url'];
+        $base_url = MODX_BASE_URL;
+        $site_url = MODX_SITE_URL;
         $url = preg_replace('@' . $friendly_url_suffix . '$@', '', $url);
         if ($url[0] === '/') {
             $url = preg_replace('@^' . $base_url . '@', '', $url);

@@ -30,7 +30,7 @@ class Cache
     {
         $modx = evolutionCMS();
 
-        $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
+        $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->getConfig('server_offset_time');
     }
 
     /**
@@ -250,7 +250,7 @@ class Cache
 
     /**
      * build siteCache file
-     * @param DocumentParser $modx
+     * @param Interfaces\CoreInterface $modx
      * @return boolean success
      */
     public function buildCache($modx)
@@ -335,7 +335,7 @@ class Cache
         $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_htmlsnippets'));
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->getDatabase()->getRow($rs)) {
-            if ($modx->config['minifyphp_incache']) {
+            if ($modx->getConfig('minifyphp_incache')) {
                 $doc['snippet'] = $this->php_strip_whitespace($doc['snippet']);
             }
             $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
@@ -353,7 +353,7 @@ class Cache
                 $content .= '$s[\'' . $key . '\']=\'return false;\';';
             } else {
                 $value = trim($row['snippet']);
-                if ($modx->config['minifyphp_incache']) {
+                if ($modx->getConfig('minifyphp_incache')) {
                     $value = $this->php_strip_whitespace($value);
                 }
                 $content .= '$s[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
@@ -368,7 +368,7 @@ class Cache
 
         // WRITE plugins to cache file
         $f = 'sp.*, sm.properties as sharedproperties';
-        $from = array();
+        $from = [];
         $from[] = $modx->getDatabase()->getFullTableName('site_plugins') . ' sp';
         $from[] = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_modules') . ' sm on sm.guid=sp.moduleguid';
         $rs = $modx->getDatabase()->select($f, $from, 'sp.disabled=0');
@@ -376,7 +376,7 @@ class Cache
         while ($row = $modx->getDatabase()->getRow($rs)) {
             $key = $row['name'];
             $value = trim($row['plugincode']);
-            if ($modx->config['minifyphp_incache']) {
+            if ($modx->getConfig('minifyphp_incache')) {
                 $value = $this->php_strip_whitespace($value);
             }
             $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';

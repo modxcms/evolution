@@ -13,8 +13,6 @@ if(isset($_GET['opened'])) {
 	$_SESSION['openedArray'] = $_GET['opened'];
 }
 
-$url = $modx->config['site_url'];
-
 // Get table names (alphabetical)
 $tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
 $tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
@@ -247,7 +245,7 @@ if($numRecords > 0) {
 				}
 			},
 			view: function() {
-				window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : $modx->config['site_url'] . 'index.php?id=' . $id ?>', 'previeWin');
+				window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
 			}
 		};
 
@@ -412,7 +410,7 @@ if($numRecords > 0) {
 				<script type="text/javascript">docSettings.addTabPage(document.getElementById("tabSource"));</script>
 				<?php
 				$buffer = "";
-				$filename = $modx->config['base_path'] . "assets/cache/docid_" . $id . ".pageCache.php";
+				$filename = MODX_BASE_PATH . "assets/cache/docid_" . $id . ".pageCache.php";
 				$handle = @fopen($filename, "r");
 				if(!$handle) {
 					$buffer = '<div class="container container-body">' . $_lang['page_data_notcached'] . '</div>';

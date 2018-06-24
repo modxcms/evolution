@@ -114,7 +114,7 @@ if(!function_exists('duplicateDocument')) {
 
         // [FS#922] Should the published status be honored? - sirlancelot
 //	if ($modx->hasPermission('publish_document')) {
-//		if ($modx->config['publish_default'])
+//		if ($modx->getConfig('publish_default'))
 //			$content['pub_date'] = $content['pub_date']; // should this be changed to 1?
 //		else	$content['pub_date'] = 0;
 //	} else {
@@ -659,19 +659,18 @@ if (!function_exists('sendMailMessageForUser')) {
         $modx = evolutionCMS();
         global $_lang;
         global $emailsubject, $emailsender;
-        global $site_name;
         $message = sprintf($message, $uid, $pwd); // use old method
         // replace placeholders
         $message = str_replace("[+uid+]", $uid, $message);
         $message = str_replace("[+pwd+]", $pwd, $message);
         $message = str_replace("[+ufn+]", $ufn, $message);
-        $message = str_replace("[+sname+]", $modx->getPhpCompat()->entities($site_name), $message);
+        $message = str_replace("[+sname+]", $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $message);
         $message = str_replace("[+saddr+]", $emailsender, $message);
         $message = str_replace("[+semail+]", $emailsender, $message);
         $message = str_replace("[+surl+]", $url, $message);
 
         $param = array();
-        $param['from'] = "{$site_name}<{$emailsender}>";
+        $param['from'] = $modx->getConfig('site_name')."<{$emailsender}>";
         $param['subject'] = $emailsubject;
         $param['body'] = $message;
         $param['to'] = $email;

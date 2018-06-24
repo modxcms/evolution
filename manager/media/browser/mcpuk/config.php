@@ -28,7 +28,7 @@ $_CONFIG = array(
 
     'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
     'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
-    'siteURL' => $modx->config['site_url'],
+    'siteURL' => MODX_SITE_URL,
     'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
     'dirPerms' => intval($modx->config['new_folder_permissions'],8),
     'filePerms' => intval($modx->config['new_file_permissions'],8),

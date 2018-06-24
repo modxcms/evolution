@@ -2,6 +2,7 @@
 
 use AgelxNash\Modx\Evo\Database\Database as BaseDatabase;
 use Exception;
+use AgelxNash\Modx\Evo\Database\Exceptions;
 
 class Database extends BaseDatabase implements Interfaces\DatabaseInterface
 {

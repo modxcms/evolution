@@ -227,8 +227,8 @@ include_once(MODX_MANAGER_PATH . 'includes/rss.inc.php');
 $ph['modx_security_notices_content'] = $feedData['modx_security_notices_content'];
 $ph['modx_news_content'] = $feedData['modx_news_content'];
 
-$ph['theme'] = $modx->config['manager_theme'];
-$ph['site_name'] = $modx->getPhpCompat()->entities($modx->config['site_name']);
+$ph['theme'] = $modx->getConfig('manager_theme');
+$ph['site_name'] = $modx->getPhpCompat()->entities($modx->getConfig('site_name'));
 $ph['home'] = $_lang['home'];
 $ph['logo_slogan'] = $_lang['logo_slogan'];
 $ph['welcome_title'] = $_lang['welcome_title'];

@@ -413,7 +413,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Database
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getDatabase()
     {
@@ -422,7 +421,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Mail
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getMail()
     {
@@ -431,7 +429,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Legacy\PhpCompat
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getPhpCompat()
     {
@@ -440,7 +437,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Legacy\PasswordHash
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getPasswordHash()
     {
@@ -449,7 +445,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Support\MakeTable
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getMakeTable()
     {
@@ -458,7 +453,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return Legacy\ExportSite
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getExportSite()
     {
@@ -467,7 +461,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getDeprecatedCore()
     {
@@ -476,7 +469,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getManagerApi()
     {
@@ -485,7 +477,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @return mixed
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function getModifiers()
     {

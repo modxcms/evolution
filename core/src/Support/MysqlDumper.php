@@ -73,7 +73,7 @@ class MysqlDumper implements MysqlDumperInterface
 
         // Set line feed
         $lf = "\n";
-        $tempfile_path = $modx->config['base_path'] . 'assets/backup/temp.php';
+        $tempfile_path = MODX_BASE_PATH . 'assets/backup/temp.php';
 
         $result = $modx->getDatabase()->query('SHOW TABLES');
         $tables = $this->result2Array(0, $result);
@@ -86,7 +86,7 @@ class MysqlDumper implements MysqlDumperInterface
 
         // Set header
         $output = "#{$lf}";
-        $output .= "# " . addslashes($modx->getPhpCompat()->entities($modx->config['site_name'])) . " Database Dump{$lf}";
+        $output .= "# " . addslashes($modx->getPhpCompat()->entities($modx->getConfig('site_name'))) . " Database Dump{$lf}";
         $output .= "# MODX Version:{$version['version']}{$lf}";
         $output .= "# {$lf}";
         $output .= "# Host: {$this->database_server}{$lf}";
@@ -113,7 +113,7 @@ class MysqlDumper implements MysqlDumperInterface
                 }
             }
             if ($callBack === 'snapshot') {
-                if (!preg_match('@^' . $modx->getDatabase()->config['table_prefix'] . '@', $tblval)) {
+                if (!preg_match('@^' . $modx->getDatabase()->getConfig('table_prefix') . '@', $tblval)) {
                     continue;
                 }
             }
