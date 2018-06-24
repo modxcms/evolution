@@ -113,7 +113,7 @@ class MysqlDumper implements MysqlDumperInterface
                 }
             }
             if ($callBack === 'snapshot') {
-                if (!preg_match('@^' . $modx->getDatabase()->getConfig('table_prefix') . '@', $tblval)) {
+                if (!preg_match('@^' . $modx->getDatabase()->getConfig('prefix') . '@', $tblval)) {
                     continue;
                 }
             }
@@ -190,7 +190,6 @@ class MysqlDumper implements MysqlDumperInterface
         while ($row = $modx->getDatabase()->getRow($resource, 'num')) {
             $array[] = $row[$numinarray];
         }
-        $modx->getDatabase()->freeResult($resource);
 
         return $array;
     }
@@ -219,7 +218,6 @@ class MysqlDumper implements MysqlDumperInterface
                 $array[] = $row;
             }
         }
-        $modx->getDatabase()->freeResult($resource);
 
         return $array;
     }
