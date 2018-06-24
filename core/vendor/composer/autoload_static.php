@@ -23,6 +23,7 @@ class ComposerStaticInit9999edb95db2473988739fc8520383e6
         'a87edab90a63bc90d6ae5f2c0a677788' => __DIR__ . '/../..' . '/functions/nodes.php',
         '423153350960ba766aabcbed5eeb0d29' => __DIR__ . '/../..' . '/functions/preload.php',
         '542d9accf822f1205d7fc8b124a1746c' => __DIR__ . '/../..' . '/functions/processors.php',
+        '4813422ba2af2a17822f8811bf226e16' => __DIR__ . '/../..' . '/functions/rss.php',
         'cf6b362f5e0910524c6dc123f961705a' => __DIR__ . '/../..' . '/functions/tv.php',
     );
 
