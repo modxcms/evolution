@@ -21,8 +21,8 @@ $emptyCache = false;
 
 switch (true) {
     case ($action == 'get' && preg_match('/^[A-z0-9_-]+$/',
-            $lang) && file_exists(dirname(__FILE__) . '/lang/' . $lang . '.inc.php')): {
-        include(dirname(__FILE__) . '/lang/' . $lang . '.inc.php');
+            $lang) && file_exists(__DIR__ . '/lang/' . $lang . '.inc.php')): {
+        include(__DIR__ . '/lang/' . $lang . '.inc.php');
         $str = isset($key, $_lang, $_lang[$key]) ? $_lang[$key] : "";
         break;
     }

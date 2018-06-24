@@ -341,7 +341,7 @@
 
     <form name="install" id="install_form" action="index.php?action=options" method="post">
             <?php if ($errors === 0) : ?>
-                <?php if (is_writable(dirname(dirname(__DIR__)))) : ?>
+                <?php if (is_writable(dirname(__DIR__, 2))) : ?>
                     <span id="removeinstall" style="float:left;cursor:pointer;color:#505050;line-height:18px;"
                           onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;">
                       <input type="checkbox" name="rminstaller"

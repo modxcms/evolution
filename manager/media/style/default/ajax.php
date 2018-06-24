@@ -3,7 +3,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-$root = dirname(dirname(dirname(__DIR__)));
+$root = dirname(__DIR__, 3);
 if (file_exists( $root . '/config.php')) {
     $config = require $root . '/config.php';
 } elseif (file_exists(dirname($root) . '/config.php')) {

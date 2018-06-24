@@ -16,10 +16,10 @@ $_module_params = array(
 	'name'             => 'Categories Manager',
 	'dirname'          => $site_manager_url,
 	'url'              => 'index.php?a=120&amp;id=' . $_GET['id'],
-	'path'             => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR,
-	'inc_dir'          => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR,
-	'languages_dir'    => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR,
-	'views_dir'        => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'skin' . DIRECTORY_SEPARATOR,
+	'path'             => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR,
+	'inc_dir'          => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR,
+	'languages_dir'    => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR,
+	'views_dir'        => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'skin' . DIRECTORY_SEPARATOR,
 	'request_key'      => 'module_categories_manager',
 	'messages'         => array()
 );

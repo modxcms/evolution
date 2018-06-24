@@ -27,7 +27,7 @@ if (count($a) > 1)
     array_pop($a);
 $url = implode("install", $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", realpath(dirname(__FILE__))));
+$a = explode("install", str_replace("\\", "/", realpath(__DIR__)));
 if (count($a) > 1)
     array_pop($a);
 $pth = implode("install", $a);

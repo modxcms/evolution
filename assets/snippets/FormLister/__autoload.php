@@ -60,7 +60,7 @@ function autoloade366e6fef0b0abb40d30844d932018e7($class) {
         );
     }
     if (isset($classes[$class])) {
-        require dirname(__FILE__) . $classes[$class];
+        require __DIR__ . $classes[$class];
     }
 }
 spl_autoload_register('autoloade366e6fef0b0abb40d30844d932018e7', true);

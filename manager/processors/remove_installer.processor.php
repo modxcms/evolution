@@ -36,7 +36,7 @@ if (!function_exists('rmdirRecursive')) {
 }
 
 $msg = '';
-$pth = dirname(dirname(__DIR__)) . '/install/';
+$pth = dirname(__DIR__, 2) . '/install/';
 $pth = str_replace('\\', '/', $pth);
 
 if (isset($_GET['rminstall'])) {

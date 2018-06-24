@@ -55,7 +55,7 @@ abstract class Template
         self::$_ajax = (boolean)$ajax;
         $this->loadVars();
         if (is_null($tplFolder)) {
-            $tplFolder = dirname(dirname(__FILE__));
+            $tplFolder = dirname(__DIR__);
         }
         $FS = \Helpers\FS::getInstance();
         $tplFolder = $FS->relativePath($tplFolder);

@@ -12,7 +12,7 @@
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
-$filename = dirname(__FILE__) . '/english.inc.php';
+$filename = __DIR__ . '/english.inc.php';
 $contents = file_get_contents($filename);
 eval('?>' . $contents);
 $_lang["user_state"] = 'County';

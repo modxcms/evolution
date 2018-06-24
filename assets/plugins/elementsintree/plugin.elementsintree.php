@@ -14,7 +14,7 @@ if ( $adminRoleOnly == 'yes' && $role != 1 ) {
   return;
 }
 
-$eit_base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
+$eit_base_path = str_replace('\\','/',__DIR__) . '/';
 
 include_once($eit_base_path.'includes/functions.inc.php');
 

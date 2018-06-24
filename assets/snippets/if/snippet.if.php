@@ -29,7 +29,7 @@ $else = isset($else) ? $else : '';
 // Prepare custom conditions
 $customConditions = array();
 if(!empty($custom)) {
-    $snippetPath = realpath(dirname(__FILE__));
+    $snippetPath = realpath(__DIR__);
     $cc = explode(',', $custom);
     foreach($cc as $cCond) {
         if(function_exists($cCond)) {
@@ -80,7 +80,7 @@ for ($i=1;$i<count($opers);$i++){
     $operator = strtolower($operator);
 
     if(preg_match('/^(\[\+(.*?)\+\])$/i', $subject)) $subject = '';
-    
+
     switch ($operator) {
         case '%':
             $output = ($subject %$operand==0) ? true: false;$i++;

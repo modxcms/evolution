@@ -57,7 +57,7 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
         else $has_filebinding = '0';
     }
     else $has_filebinding = '0';
-    
+
     if(isset($_POST['post']) && !empty($_POST['post']))
     {
         if(strpos($_POST['post'],"\r")!==false)
@@ -85,7 +85,7 @@ switch ($modx->event->name)
                 if ( substr($content[$vals], -2, 2) === '?>' ) $content[$vals] = substr($content[$vals], 0, -2);
             }
             elseif($vals==='snippet') $content['file_binding'] = '';
-            
+
             $_SESSION['itemname']=$content['name'];
         }
         elseif (substr(trim($content[$vals]),0,7) === '//@FILE') // Added by Carw
@@ -108,7 +108,7 @@ switch ($modx->event->name)
     case 'OnSnipFormRender':
     case 'OnPluginFormRender':
         global $content;
-        
+
         $output = '
 <script type="text/javascript">
 mE1   = new Element("tr");
@@ -154,16 +154,16 @@ if(!function_exists('_lang') )
     {
         global $modx;
         $manager_lang = $modx->config['manager_language'];
-        $lang_file_path = dirname(__FILE__) . "/lang/{$manager_lang}.inc.php";
-        
+        $lang_file_path = __DIR__ . "/lang/{$manager_lang}.inc.php";
+
         $_lang = array();
         if($manager_lang!=='english' && is_file($lang_file_path))
         {
             include($lang_file_path);
         }
-        
+
         $msgstr = (isset($_lang[$msgid])) ? $_lang[$msgid] : $msgid;
-        
+
         return $msgstr;
     }
 }

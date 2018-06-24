@@ -127,10 +127,10 @@ class Store{
 	function __construct(){
 		global $modx;
 		$lang = $modx->config['manager_language'];
-		if (file_exists( dirname(__FILE__) .  '/lang/'.$lang.'.php')){
-			include_once(dirname(__FILE__) .  '/lang/'.$lang.'.php');
+		if (file_exists( __DIR__ .  '/lang/'.$lang.'.php')){
+			include_once(__DIR__ .  '/lang/'.$lang.'.php');
 		} else {
-			include_once(dirname(__FILE__) .  '/lang/english.php');
+			include_once(__DIR__ .  '/lang/english.php');
 		}
 		$this->lang = $_Lang;
 		$this->language = substr($lang,0,2);

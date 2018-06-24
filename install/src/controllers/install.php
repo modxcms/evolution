@@ -1,6 +1,6 @@
 <?php
-if (file_exists(dirname(dirname(dirname(__DIR__))) . "/assets/cache/siteManager.php")) {
-    include_once(dirname(dirname(dirname(__DIR__))) . "/assets/cache/siteManager.php");
+if (file_exists(dirname(__DIR__, 3) . "/assets/cache/siteManager.php")) {
+    include_once dirname(__DIR__, 3) . "/assets/cache/siteManager.php";
 } else {
     define('MGR_DIR', 'manager');
 }
@@ -177,7 +177,7 @@ if ($conn) {
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
 
-        $configString = file_get_contents(dirname(dirname(__DIR__)) . '/stubs/files/config/database/connections/default.tpl');
+        $configString = file_get_contents(dirname(__DIR__, 2) . '/stubs/files/config/database/connections/default.tpl');
         $configString = parse($configString, $confph);
 
         $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
@@ -953,8 +953,8 @@ if ($conn) {
         }
 
         // Setup the MODX API -- needed for the cache processor
-        if (file_exists(dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
-            require_once dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/config_mutator.php';
+        if (file_exists(dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
+            require_once dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php';
         }
         define('MODX_API_MODE', true);
         if (!defined('MODX_BASE_PATH')) {
@@ -970,24 +970,21 @@ if ($conn) {
             require_once EVO_CORE_PATH . 'bootstrap.php';
         }
 
-        if (! defined('EVO_SERVICES_FILE')) {
-            define('EVO_SERVICES_FILE', dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/services.php');
-        }
         if (! defined('MODX_CLASS')) {
-            define('MODX_CLASS', '\EvolutionCMS\Core');
+            define('MODX_CLASS', '\DocumentParser');
         }
 
         $modx = evolutionCMS();
         $modx->getDatabase()->connect();
         // always empty cache after install
         $sync = new EvolutionCMS\Cache();
-        $sync->setCachepath(dirname(dirname(dirname(__DIR__))) . '/assets/cache/');
+        $sync->setCachepath(dirname(__DIR__, 3) . '/assets/cache/');
         $sync->setReport(false);
         $sync->emptyCache(); // first empty the cache
 
         // try to chmod the cache go-rwx (for suexeced php)
-        @chmod(dirname(dirname(dirname(__DIR__))) . '/assets/cache/siteCache.idx.php', 0600);
-        @chmod(dirname(dirname(dirname(__DIR__))) . '/assets/cache/sitePublishing.idx.php', 0600);
+        @chmod(dirname(__DIR__, 3) . '/assets/cache/siteCache.idx.php', 0600);
+        @chmod(dirname(__DIR__, 3) . '/assets/cache/sitePublishing.idx.php', 0600);
 
         // remove any locks on the manager functions so initial manager login is not blocked
         mysqli_query($conn, "TRUNCATE TABLE `" . $table_prefix . "active_users`");
@@ -996,9 +993,9 @@ if ($conn) {
         $sqlParser->close();
 
         // andrazk 20070416 - release manager access
-        if (file_exists(dirname(dirname(dirname(__DIR__))) . '/assets/cache/installProc.inc.php')) {
-            @chmod(dirname(dirname(dirname(__DIR__))) . '/assets/cache/installProc.inc.php', 0755);
-            unlink(dirname(dirname(dirname(__DIR__))) . '/assets/cache/installProc.inc.php');
+        if (file_exists(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php')) {
+            @chmod(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php', 0755);
+            unlink(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php');
         }
     }
 }

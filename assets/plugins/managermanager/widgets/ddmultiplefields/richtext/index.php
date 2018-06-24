@@ -41,6 +41,6 @@ if ($_SESSION['mgrValidated']){
 		'tinyMCE' => $temp[0]
 	), '[+', '+]', false);
 }else{
-	echo file_get_contents(dirname(__FILE__).'/index.html');
+	echo file_get_contents(__DIR__.'/index.html');
 }
 ?>

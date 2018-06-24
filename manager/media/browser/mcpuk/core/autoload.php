@@ -19,7 +19,7 @@
   *        here, they can be accessed in config.php via $GLOBALS array.
   *        It's recommended to use constants instead.
   */
-include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
+include_once(__DIR__."/../../../../../assets/cache/siteManager.php");
 require_once('../../../includes/protect.inc.php');
 include_once('../../../includes/config.inc.php');
 include_once('../../../includes/document.parser.class.inc.php');
@@ -75,7 +75,7 @@ function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
         );
     }
     if (isset($classes[$class])) {
-        require dirname(__FILE__) . $classes[$class];
+        require __DIR__ . $classes[$class];
     }
 }
 spl_autoload_register('autoloadda9d06472ccb71b84928677ce2a6ca89', true);

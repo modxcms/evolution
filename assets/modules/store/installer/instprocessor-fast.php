@@ -6,7 +6,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPerm
 error_reporting(E_ALL & ~E_NOTICE);
 define('MGR',MODX_BASE_PATH.MGR_DIR);
 $moduleurl = 'assets/modules/store/installer/index.php';
-$modulePath = dirname(__FILE__);
+$modulePath = __DIR__;
 $self = $modulePath.'/index.php';
 require_once($modulePath."/functions.php");
 
@@ -63,7 +63,7 @@ if (count($a) > 1)
     array_pop($a);
 $url = implode("install", $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", realpath(dirname(__FILE__))));
+$a = explode("install", str_replace("\\", "/", realpath(__DIR__)));
 if (count($a) > 1)
     array_pop($a);
 $pth = implode("install", $a);

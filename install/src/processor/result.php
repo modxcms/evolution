@@ -8,7 +8,7 @@ if (!defined('MGR_DIR')) {
     define('MGR_DIR', 'manager');
 }
 
-require_once(dirname(dirname(dirname(__DIR__))) . '/' . MGR_DIR . '/includes/version.inc.php');
+require_once dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/version.inc.php';
 
 $chunkPath = $base_path . 'install/assets/chunks';
 $snippetPath = $base_path . 'install/assets/snippets';
