@@ -177,7 +177,7 @@ if ($conn) {
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
 
-        $configString = file_get_contents($path . 'stubs/files/config/database/connections/default.tpl');
+        $configString = file_get_contents(dirname(dirname(__DIR__)) . 'stubs/files/config/database/connections/default.tpl');
         $configString = parse($configString, $confph);
 
         $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
