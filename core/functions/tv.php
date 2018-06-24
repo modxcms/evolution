@@ -44,8 +44,8 @@ if (! function_exists('ProcessTVCommand')) {
                 case "SELECT" : // selects a record from the cms database
                     $rt = array();
                     $replacementVars = array(
-                        'DBASE'  => $modx->getDatabase()->config['dbase'],
-                        'PREFIX' => $modx->getDatabase()->config['table_prefix']
+                        'DBASE'  => $modx->getDatabase()->getConfig('database'),
+                        'PREFIX' => $modx->getDatabase()->getConfig('prefix')
                     );
                     foreach ($replacementVars as $rvKey => $rvValue) {
                         $modx->setPlaceholder($rvKey, $rvValue);
@@ -489,7 +489,7 @@ if (! function_exists('getTVDisplayFormat')) {
                     // remove delimiter from checkbox and listbox-multiple TVs
                     $value = str_replace('||', '', $value);
                 }
-                $o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
+                $o = htmlentities($value, ENT_NOQUOTES, $modx->getConfig('modx_charset'));
                 break;
 
             case 'custom_widget':
@@ -523,7 +523,7 @@ if (! function_exists('getTVDisplayFormat')) {
                     $widget_output = '';
                 }
                 if (is_string($widget_output)) {
-                    $_ = $modx->config['enable_filter'];
+                    $_ = $modx->getConfig('enable_filter');
                     $modx->config['enable_filter'] = 1;
                     $widget_output = $modx->parseText($widget_output, array('value' => $value));
                     $modx->config['enable_filter'] = $_;

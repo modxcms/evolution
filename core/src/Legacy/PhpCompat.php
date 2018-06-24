@@ -29,7 +29,7 @@ class PhpCompat implements PhpCompatInterface
             }
         } elseif ($str !== '') {
             if ($encode !== '') {
-                $encode = $modx->config['modx_charset'];
+                $encode = $modx->getConfig('modx_charset');
             }
             $ent_str = htmlspecialchars($str, $flags, $encode);
 

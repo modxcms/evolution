@@ -42,7 +42,7 @@ class Permissions
             return true;  // administrator - grant all document permissions
         }
 
-        if ($modx->config['use_udperms'] == 0 || $modx->config['use_udperms'] == "" || !isset($modx->config['use_udperms'])) {
+        if ($modx->getConfig('use_udperms') == 0 || $modx->getConfig('use_udperms') == "" || !isset($modx->config['use_udperms'])) {
             return true; // permissions aren't in use
         }
 

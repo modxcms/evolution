@@ -391,7 +391,7 @@ if(!function_exists('fileupload')) {
             $userfile['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
             $userfile['error'] = $_FILES['userfile']['error'][$i];
             $name = $_FILES['userfile']['name'][$i];
-            if ($modx->config['clean_uploaded_filename'] == 1) {
+            if ($modx->getConfig('clean_uploaded_filename') == 1) {
                 $nameparts = explode('.', $name);
                 $nameparts = array_map(array(
                     $modx,

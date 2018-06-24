@@ -94,7 +94,7 @@ class ExportSite implements ExportSiteInerface
     {
         $modx = evolutionCMS();
 
-        if ($modx->config['friendly_urls'] == 0) {
+        if ($modx->getConfig('friendly_urls') == 0) {
             $modx->config['friendly_urls'] = 1;
             $modx->config['use_alias_path'] = 1;
             $modx->clearCache('full');
@@ -175,7 +175,7 @@ class ExportSite implements ExportSiteInerface
     public function makeFile($docid, $filepath)
     {
         $modx = evolutionCMS(); global $_lang;
-        $file_permission = octdec($modx->config['new_file_permissions']);
+        $file_permission = octdec($modx->getConfig('new_file_permissions'));
         if ($this->generate_mode === 'direct') {
             $back_lang = $_lang;
             $src = $modx->executeParser($docid);
@@ -219,7 +219,7 @@ class ExportSite implements ExportSiteInerface
         if ($alias === '') {
             $filename = $prefix . $docid . $suffix;
         } else {
-            if ($modx->config['suffix_mode'] === '1' && strpos($alias, '.') !== false) {
+            if ($modx->getConfig('suffix_mode') == '1' && strpos($alias, '.') !== false) {
                 $suffix = '';
             }
             $filename = $prefix . $alias . $suffix;
@@ -242,8 +242,8 @@ class ExportSite implements ExportSiteInerface
         $ignore_ids = $this->ignore_ids;
         $dirpath = $this->targetDir . '/';
 
-        $prefix = $modx->config['friendly_url_prefix'];
-        $suffix = $modx->config['friendly_url_suffix'];
+        $prefix = $modx->getConfig('friendly_url_prefix');
+        $suffix = $modx->getConfig('friendly_url_suffix');
 
         $tpl = ' <span class="[+status+]">[+msg1+]</span> [+msg2+]</span>';
         $ph = array();
@@ -274,7 +274,7 @@ class ExportSite implements ExportSiteInerface
 
         $ph = array();
         $ph['total'] = $this->total;
-        $folder_permission = octdec($modx->config['new_folder_permissions']);
+        $folder_permission = octdec($modx->getConfig('new_folder_permissions'));
         while ($row = $modx->getDatabase()->getRow($rs)) {
             $this->count++;
             $filename = '';
@@ -308,7 +308,7 @@ class ExportSite implements ExportSiteInerface
                 $row['status'] = $msg_success_skip_dir;
                 $this->output[] = $this->parsePlaceholder($_lang['export_site_exporting_document'], $row);
             }
-            if ($row['isfolder'] === '1' && ($modx->config['suffix_mode'] !== '1' || strpos($row['alias'],
+            if ($row['isfolder'] === '1' && ($modx->getConfig('suffix_mode') != '1' || strpos($row['alias'],
                         '.') === false)) { // needs making a folder
                 $end_dir = ($row['alias'] !== '') ? $row['alias'] : $row['id'];
                 $dir_path = $dirpath . $end_dir;
@@ -324,8 +324,7 @@ class ExportSite implements ExportSiteInerface
 
                 }
 
-
-                if ($modx->config['make_folders'] === '1' && $row['published'] === '1') {
+                if ($modx->getConfig('make_folders') == '1' && $row['published'] === '1') {
                     if (!empty($filename) && is_file($filename)) {
                         rename($filename, $dir_path . '/index.html');
                     }

@@ -241,7 +241,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $error_type = 3;
         }
 
-        if (!isset($this->config['error_reporting']) || 1 < $this->config['error_reporting']) {
+        if (!isset($this->config['error_reporting']) || 1 < $this->getConfig('error_reporting')) {
             if ($error_type == 1) {
                 $title = 'Call deprecated method';
                 $msg = $this->getPhpCompat()->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
@@ -430,7 +430,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // invoke OnPageNotFound event
             $this->invokeEvent('OnPageNotFound');
         }
-        $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
+        $url = $this->getConfig($this->getConfig('error_page') ? 'error_page' : 'site_start');
 
         $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         exit();
@@ -447,12 +447,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (!$noEvent) {
             $this->invokeEvent('OnPageUnauthorized');
         }
-        if ($this->config['unauthorized_page']) {
-            $unauthorizedPage = $this->config['unauthorized_page'];
-        } elseif ($this->config['error_page']) {
-            $unauthorizedPage = $this->config['error_page'];
+        if ($this->getConfig('unauthorized_page')) {
+            $unauthorizedPage = $this->getConfig('unauthorized_page');
+        } elseif ($this->getConfig('error_page')) {
+            $unauthorizedPage = $this->getConfig('error_page');
         } else {
-            $unauthorizedPage = $this->config['site_start'];
+            $unauthorizedPage = $this->getConfig('site_start');
         }
         $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
         exit();
@@ -476,7 +476,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         //$this->config['base_url'] = MODX_BASE_URL;
         //$this->config['base_path'] = MODX_BASE_PATH;
         //$this->config['site_url'] = MODX_SITE_URL;
-        $this->error_reporting = $this->config['error_reporting'];
+        $this->error_reporting = $this->getConfig('error_reporting');
         $this->config['filemanager_path'] = str_replace(
             '[(base_path)]',
             MODX_BASE_PATH,
@@ -642,7 +642,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } elseif (strpos($_SERVER['REQUEST_URI'], 'index.php/') !== false) {
             $this->sendErrorPage();
         } else {
-            return $this->config['site_start'];
+            return $this->getConfig('site_start');
         }
     }
 
@@ -702,7 +702,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function checkSiteStatus()
     {
-        if ($this->config['site_status']) {
+        if ($this->getConfig('site_status')) {
             return true;
         }  // site online
         elseif ($this->isLoggedin()) {
@@ -722,12 +722,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function cleanDocumentIdentifier($qOrig)
     {
         if (!$qOrig) {
-            $qOrig = $this->config['site_start'];
+            $qOrig = $this->getConfig('site_start');
         }
         $q = $qOrig;
 
-        $pre = $this->config['friendly_url_prefix'];
-        $suf = $this->config['friendly_url_suffix'];
+        $pre = $this->getConfig('friendly_url_prefix');
+        $suf = $this->getConfig('friendly_url_suffix');
         $pre = preg_quote($pre, '/');
         $suf = preg_quote($suf, '/');
         if ($pre && preg_match('@^' . $pre . '(.*)$@', $q, $_)) {
@@ -742,7 +742,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         /* Save path if any */
         /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
-        if ($this->config['use_alias_path'] == 1) {
+        if ($this->getConfig('use_alias_path') == 1) {
             $_ = strrpos($q, '/');
             $this->virtualDir = $_ !== false ? substr($q, 0, $_) : '';
             if ($_ !== false) {
@@ -755,7 +755,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (preg_match('@^[1-9][0-9]*$@',
                 $q) && !isset($this->documentListing[$q])) { /* we got an ID returned, check to make sure it's not an alias */
             /* FS#476 and FS#308: check that id is valid in terms of virtualDir structure */
-            if ($this->config['use_alias_path'] == 1) {
+            if ($this->getConfig('use_alias_path') == 1) {
                 if (($this->virtualDir != '' && !isset($this->documentListing[$this->virtualDir . '/' . $q]) || ($this->virtualDir == '' && !isset($this->documentListing[$q]))) && (($this->virtualDir != '' && isset($this->documentListing[$this->virtualDir]) && in_array($q,
                                 $this->getChildIds($this->documentListing[$this->virtualDir],
                                     1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1))))) {
@@ -773,7 +773,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 return $q;
             }
         } else { /* we didn't get an ID back, so instead we assume it's an alias */
-            if ($this->config['friendly_alias_urls'] != 1) {
+            if ($this->getConfig('friendly_alias_urls') != 1) {
                 $q = $qOrig;
             }
             $this->documentMethod = 'alias';
@@ -845,7 +845,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObjectFromCache($id, $loading = false)
     {
-        $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($id) : $id;
+        $key = ($this->getConfig('cache_type') == 2) ? $this->makePageCacheKey($id) : $id;
         if ($loading) {
             $this->cacheKey = $key;
         }
@@ -884,7 +884,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
                 // diplay error pages if user has no access to cached doc
                 if (!$pass) {
-                    if ($this->config['unauthorized_page']) {
+                    if ($this->getConfig('unauthorized_page')) {
                         // check if file is not public
                         $rs = $this->getDatabase()->select(
                             'count(id)',
@@ -956,7 +956,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
-            $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
+            $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time');
 
             $this->documentOutput = str_replace('[!', '[[', $this->documentOutput);
             $this->documentOutput = str_replace('!]', ']]', $this->documentOutput);
@@ -986,7 +986,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
             $type = !empty ($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
-            header('Content-Type: ' . $type . '; charset=' . $this->config['modx_charset']);
+            header('Content-Type: ' . $type . '; charset=' . $this->getConfig('modx_charset'));
             //            if (($this->documentIdentifier == $this->config['error_page']) || $redirect_error)
             //                header('HTTP/1.0 404 Not Found');
             if (!$this->checkPreview() && $this->documentObject['content_dispo'] == 1) {
@@ -1149,7 +1149,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         @include(MODX_BASE_PATH . $this->getCacheFolder() . 'sitePublishing.idx.php');
         $this->recentUpdate = $recent_update;
 
-        $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
+        $timeNow = $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time');
         if ($timeNow < $cacheRefreshTime || $cacheRefreshTime == 0) {
             return;
         }
@@ -1207,7 +1207,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function postProcess()
     {
         // if the current document was generated, cache it!
-        $cacheable = ($this->config['enable_cache'] && $this->documentObject['cacheable']) ? 1 : 0;
+        $cacheable = ($this->getConfig('enable_cache') && $this->documentObject['cacheable']) ? 1 : 0;
         if ($cacheable && $this->documentGenerated && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
@@ -1372,7 +1372,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function mergeDocumentContent($content, $ph = false)
     {
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             if (stripos($content, '<@LITERAL>') !== false) {
                 $content = $this->escapeLiteralTagsContent($content);
             }
@@ -1461,13 +1461,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         switch (strtolower($context)) {
             case 'site_start':
-                $docid = $this->config['site_start'];
+                $docid = $this->getConfig('site_start');
                 break;
             case 'parent':
             case 'p':
                 $docid = $parent;
                 if ($docid == 0) {
-                    $docid = $this->config['site_start'];
+                    $docid = $this->getConfig('site_start');
                 }
                 break;
             case 'ultimateparent':
@@ -1565,7 +1565,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function mergeSettingsContent($content, $ph = false)
     {
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             if (stripos($content, '<@LITERAL>') !== false) {
                 $content = $this->escapeLiteralTagsContent($content);
             }
@@ -1626,7 +1626,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function mergeChunkContent($content, $ph = false)
     {
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             if (strpos($content, '{{ ') !== false) {
                 $content = str_replace(array('{{ ', ' }}'), array('\{\{ ', ' \}\}'), $content);
             }
@@ -1665,7 +1665,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $value = $this->parseText($value, $params); // parse local scope placeholers for ConditionalTags
             $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
-            if ($this->config['enable_at_syntax']) {
+            if ($this->getConfig('enable_at_syntax')) {
                 $value = $this->mergeConditionalTagsContent($value);
             }
             $value = $this->mergeDocumentContent($value);
@@ -1697,7 +1697,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function mergePlaceholderContent($content, $ph = false)
     {
 
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             if (stripos($content, '<@LITERAL>') !== false) {
                 $content = $this->escapeLiteralTagsContent($content);
             }
@@ -1710,7 +1710,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $ph = $this->placeholders;
         }
 
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             $content = $this->mergeConditionalTagsContent($content);
         }
 
@@ -1983,11 +1983,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function detectError($error)
     {
         $detected = false;
-        if ($this->config['error_reporting'] == 99 && $error) {
+        if ($this->getConfig('error_reporting') == 99 && $error) {
             $detected = true;
-        } elseif ($this->config['error_reporting'] == 2 && ($error & ~E_NOTICE)) {
+        } elseif ($this->getConfig('error_reporting') == 2 && ($error & ~E_NOTICE)) {
             $detected = true;
-        } elseif ($this->config['error_reporting'] == 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT)) {
+        } elseif ($this->getConfig('error_reporting') == 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT)) {
             $detected = true;
         }
 
@@ -2026,7 +2026,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // When reached here, no fatal error occured so the lock should be removed.
         /*if(is_file($lock_file_path)) unlink($lock_file_path);*/
 
-        if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
+        if ((0 < $this->getConfig('error_reporting')) && $msg && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
                 $msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
@@ -2076,7 +2076,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $echo = ob_get_contents();
         ob_end_clean();
-        if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
+        if ((0 < $this->getConfig('error_reporting')) && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
                 $echo = ($echo === false) ? 'ob_get_contents() error' : $echo;
@@ -2161,7 +2161,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function _getSGVar($value)
     { // Get super globals
         $key = $value;
-        $_ = $this->config['enable_filter'];
+        $_ = $this->getConfig('enable_filter');
         $this->config['enable_filter'] = 1;
         list($key, $modifiers) = $this->splitKeyAndFilter($key);
         $this->config['enable_filter'] = $_;
@@ -2516,7 +2516,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function toAlias($text)
     {
-        $suff = $this->config['friendly_url_suffix'];
+        $suff = $this->getConfig('friendly_url_suffix');
 
         return str_replace(array(
             '.xml' . $suff,
@@ -2546,7 +2546,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0)
     {
-        if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1') {
+        if ($id == $this->getConfig('site_start') && $this->getConfig('seostrict') === '1') {
             $url = MODX_BASE_URL;
         } else {
             $Alias = explode('/', $alias);
@@ -2554,7 +2554,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $dir = implode('/', $Alias);
             unset($Alias);
 
-            if ($this->config['make_folders'] === '1' && $isfolder == 1) {
+            if ($this->getConfig('make_folders') === '1' && $isfolder == 1) {
                 $suff = '/';
             }
 
@@ -2582,7 +2582,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function rewriteUrls($documentSource)
     {
         // rewrite the urls
-        if ($this->config['friendly_urls'] == 1) {
+        if ($this->getConfig('friendly_urls') == 1) {
             $aliases = array();
             if (is_array($this->documentListing)) {
                 foreach ($this->documentListing as $path => $docid) { // This is big Loop on large site!
@@ -2591,7 +2591,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
 
-            if ($this->config['aliaslistingfolder'] == 1) {
+            if ($this->getConfig('aliaslistingfolder') == 1) {
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
@@ -2599,7 +2599,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                         $this->getDatabase()->getFullTableName('site_content'),
                         "id IN (" . $ids . ") AND isfolder = '0'");
                     while ($row = $this->getDatabase()->getRow($res)) {
-                        if ($this->config['use_alias_path'] == '1' && $row['parent'] != 0) {
+                        if ($this->getConfig('use_alias_path') == '1' && $row['parent'] != 0) {
                             $parent = $row['parent'];
                             $path = $aliases[$parent];
 
@@ -2617,9 +2617,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
             $in = '!\[\~([0-9]+)\~\]!is';
-            $isfriendly = ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
-            $pref = $this->config['friendly_url_prefix'];
-            $suff = $this->config['friendly_url_suffix'];
+            $isfriendly = ($this->getConfig('friendly_alias_urls') == 1 ? 1 : 0);
+            $pref = $this->getConfig('friendly_url_prefix');
+            $suff = $this->getConfig('friendly_url_suffix');
             $documentSource = preg_replace_callback($in,
                 function ($m) use ($aliases, $isfolder, $isfriendly, $pref, $suff) {
                     global $modx;
@@ -2627,7 +2627,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $thefolder = $isfolder[$m[1]];
                     if ($isfriendly && isset($thealias)) {
                         //found friendly url
-                        $out = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff,
+                        $out = ($modx->getConfig('seostrict') == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff,
                             $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder,
                             $m[1]));
                     } else {
@@ -2651,10 +2651,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $q = $this->q;
         // FIX URLs
-        if (empty($this->documentIdentifier) || $this->config['seostrict'] == '0' || $this->config['friendly_urls'] == '0') {
+        if (empty($this->documentIdentifier) || $this->getConfig('seostrict') == '0' || $this->getConfig('friendly_urls') == '0') {
             return;
         }
-        if ($this->config['site_status'] == 0) {
+        if ($this->getConfig('site_status') == 0) {
             return;
         }
 
@@ -2734,7 +2734,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $identifier = $this->cleanDocumentIdentifier($identifier);
             $method = $this->documentMethod;
         }
-        if ($method == 'alias' && $this->config['use_alias_path'] && array_key_exists($identifier,
+        if ($method == 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
                 $this->documentListing)) {
             $method = 'id';
             $identifier = $this->documentListing[$identifier];
@@ -2904,13 +2904,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->systemCacheKey = 'unavailable';
             if (!$this->config['site_unavailable_page']) {
                 // display offline message
-                $this->documentContent = $this->config['site_unavailable_message'];
+                $this->documentContent = $this->getConfig('site_unavailable_message');
                 $this->outputContent();
                 exit; // stop processing here, as the site's offline
             } else {
                 // setup offline page document settings
                 $this->documentMethod = 'id';
-                $this->documentIdentifier = $this->config['site_unavailable_page'];
+                $this->documentIdentifier = $this->getConfig('site_unavailable_page');
             }
         }
 
@@ -2918,13 +2918,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentIdentifier = $this->cleanDocumentIdentifier($this->documentIdentifier);
 
             // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
-            if ($this->config['use_alias_path'] == 1) {
+            if ($this->getConfig('use_alias_path') == 1) {
                 $alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir . '/' : '') . $this->documentIdentifier;
                 if (isset($this->documentListing[$alias])) {
                     $this->documentIdentifier = $this->documentListing[$alias];
                 } else {
                     //@TODO: check new $alias;
-                    if ($this->config['aliaslistingfolder'] == 1) {
+                    if ($this->getConfig('aliaslistingfolder') == 1) {
                         $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
 
                         $parentId = $this->getIdFromAlias($this->virtualDir);
@@ -2942,7 +2942,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                         if (!$docId) {
                             $alias = $this->q;
                             if (!empty($this->config['friendly_url_suffix'])) {
-                                $pos = strrpos($alias, $this->config['friendly_url_suffix']);
+                                $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
 
                                 if ($pos !== false) {
                                     $alias = substr($alias, 0, $pos);
@@ -2992,10 +2992,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // invoke OnWebPageInit event
         $this->invokeEvent("OnWebPageInit");
         // invoke OnLogPageView event
-        if ($this->config['track_visitors'] == 1) {
+        if ($this->getConfig('track_visitors') == 1) {
             $this->invokeEvent("OnLogPageHit");
         }
-        if ($this->config['seostrict'] === '1') {
+        if ($this->getConfig('seostrict') == '1') {
             $this->sendStrictURI();
         }
         $this->prepareResponse();
@@ -3015,7 +3015,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     public function _IIS_furl_fix()
     {
-        if ($this->config['friendly_urls'] != 1) {
+        if ($this->getConfig('friendly_urls') != 1) {
             return;
         }
 
@@ -3059,11 +3059,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // we now know the method and identifier, let's check the cache
 
-        if ($this->config['enable_cache'] == 2 && $this->isLoggedIn()) {
+        if ($this->getConfig('enable_cache') == 2 && $this->isLoggedIn()) {
             $this->config['enable_cache'] = 0;
         }
 
-        if ($this->config['enable_cache']) {
+        if ($this->getConfig('enable_cache')) {
             $this->documentContent = $this->getDocumentObjectFromCache($this->documentIdentifier, true);
         } else {
             $this->documentContent = '';
@@ -3117,7 +3117,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentGenerated = 0;
         }
 
-        if ($this->config['error_page'] == $this->documentIdentifier && $this->config['error_page'] != $this->config['site_start']) {
+        if ($this->getConfig('error_page') == $this->documentIdentifier && $this->getConfig('error_page') != $this->getConfig('site_start')) {
             header('HTTP/1.0 404 Not Found');
         }
 
@@ -3191,7 +3191,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $parents = array();
         while ($id && $height--) {
             $thisid = $id;
-            if ($this->config['aliaslistingfolder'] == 1) {
+            if ($this->getConfig('aliaslistingfolder') == 1) {
                 $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
                 if (!$id || $id == '0') {
                     break;
@@ -3243,7 +3243,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if ($this->config['aliaslistingfolder'] == 1) {
+        if ($this->getConfig('aliaslistingfolder') == 1) {
 
             $res = $this->getDatabase()->select("id,alias,isfolder,parent",
                 $this->getDatabase()->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
@@ -3465,7 +3465,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function cleanupExpiredLocks()
     {
         // Clean-up active_user_sessions first
-        $timeout = (int)$this->config['session_timeout'] < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = (int)$this->getConfig('session_timeout') < 2 ? 120 : $this->getConfig('session_timeout') * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_sessions'),
             "lasthit < {$validSessionTimeLimit}");
@@ -3678,17 +3678,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getDatabase()->insert(array(
             'eventid'     => $evtid,
             'type'        => $type,
-            'createdon'   => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
+            'createdon'   => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
             'source'      => $esc_source,
             'description' => $msg,
             'user'        => $LoginUserID,
             'usertype'    => $usertype
         ), $this->getDatabase()->getFullTableName("event_log"));
 
-        if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
-            if ($this->config['send_errormail'] <= $type) {
+        if ($this->getConfig('send_errormail', '0') != '0') {
+            if ($this->getConfig('send_errormail') <= $type) {
                 $this->sendmail(array(
-                    'subject' => 'MODX System Error on ' . $this->config['site_name'],
+                    'subject' => 'MODX System Error on ' . $this->getConfig('site_name'),
                     'body'    => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
                     'type'    => 'text'
                 ));
@@ -3743,7 +3743,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $p['body'] = $msg;
         }
 
-        $sendto = (!isset($p['to'])) ? $this->config['emailsender'] : $p['to'];
+        $sendto = (!isset($p['to'])) ? $this->getConfig('emailsender') : $p['to'];
         $sendto = explode(',', $sendto);
         foreach ($sendto as $address) {
             list($name, $address) = $this->getMail()->address_split($address);
@@ -3767,10 +3767,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             list($p['fromname'], $p['from']) = $this->getMail()->address_split($p['from']);
         }
         $this->getMail()->setFrom(
-            isset($p['from']) ? $p['from'] : $this->config['emailsender'],
-            isset($p['fromname']) ? $p['fromname'] : $this->config['site_name']
+            isset($p['from']) ? $p['from'] : $this->getConfig('emailsender'),
+            isset($p['fromname']) ? $p['fromname'] : $this->getConfig('site_name')
         );
-        $this->getMail()->Subject = (!isset($p['subject'])) ? $this->config['emailsubject'] : $p['subject'];
+        $this->getMail()->Subject = (!isset($p['subject'])) ? $this->getConfig('emailsubject') : $p['subject'];
         $this->getMail()->Body = $p['body'];
         if (isset($p['type']) && $p['type'] === 'text') {
             $this->getMail()->IsHTML(false);
@@ -4252,7 +4252,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $sync->setReport($report);
             $sync->emptyCache();
         } elseif (preg_match('@^[1-9][0-9]*$@', $type)) {
-            $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($type) : $type;
+            $key = ($this->getConfig('cache_type') == 2) ? $this->makePageCacheKey($type) : $type;
             $file_name = "docid_" . $key . "_*.pageCache.php";
             $cache_path = $cache_dir . $file_name;
             $files = glob($cache_path);
@@ -4296,9 +4296,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function makeUrl($id, $alias = '', $args = '', $scheme = '')
     {
         $url = '';
-        $virtualDir = isset($this->config['virtual_dir']) ? $this->config['virtual_dir'] : '';
-        $f_url_prefix = $this->config['friendly_url_prefix'];
-        $f_url_suffix = $this->config['friendly_url_suffix'];
+        $virtualDir = $this->getConfig('virtual_dir', '');
+        $f_url_prefix = $this->getConfig('friendly_url_prefix');
+        $f_url_suffix = $this->getConfig('friendly_url_suffix');
 
         if (!is_numeric($id)) {
             $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
@@ -4309,27 +4309,27 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $args = ltrim($args, '?&');
             $_ = strpos($f_url_prefix, '?');
 
-            if ($_ === false && $this->config['friendly_urls'] == 1) {
+            if ($_ === false && $this->getConfig('friendly_urls') == 1) {
                 $args = "?{$args}";
             } else {
                 $args = "&{$args}";
             }
         }
 
-        if ($id != $this->config['site_start']) {
-            if ($this->config['friendly_urls'] == 1 && $alias == '') {
+        if ($id != $this->getConfig('site_start')) {
+            if ($this->getConfig('friendly_urls') == 1 && $alias == '') {
                 $alias = $id;
                 $alPath = '';
 
-                if ($this->config['friendly_alias_urls'] == 1) {
+                if ($this->getConfig('friendly_alias_urls') == 1) {
 
-                    if ($this->config['aliaslistingfolder'] == 1) {
+                    if ($this->getConfig('aliaslistingfolder') == 1) {
                         $al = $this->getAliasListing($id);
                     } else {
                         $al = $this->aliasListing[$id];
                     }
 
-                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1') {
+                    if ($al['isfolder'] === 1 && $this->getConfig('make_folders') == '1') {
                         $f_url_suffix = '/';
                     }
 
@@ -4364,11 +4364,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         //fix strictUrl by Bumkaka
-        if ($this->config['seostrict'] == '1') {
+        if ($this->getConfig('seostrict') == '1') {
             $url = $this->toAlias($url);
         }
 
-        if ($this->config['xhtml_urls']) {
+        if ($this->getConfig('xhtml_urls')) {
             $url = preg_replace("/&(?!amp;)/", "&amp;", $host . $virtualDir . $url);
         } else {
             $url = $host . $virtualDir . $url;
@@ -4406,7 +4406,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 );
                 if ($this->aliasListing[$id]['parent'] > 0) {
                     //fix alias_path_usage
-                    if ($this->config['use_alias_path'] == '1') {
+                    if ($this->getConfig('use_alias_path') == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
                         $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
                         $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent'] > 0 && $tmp['path'] != '') ? '/' : '') . $tmp['alias'] : '');
@@ -4456,7 +4456,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             //include for compatibility modx version < 1.0.10
             $version = include EVO_CORE_PATH . 'factory/version.php';
             $this->version = $version;
-            $this->version['new_version'] = isset($this->config['newversiontext']) ? $this->config['newversiontext'] : '';
+            $this->version['new_version'] = $this->getConfig('newversiontext', '');
         }
         return ($data !== null && \is_array($this->version) && isset($this->version[$data])) ?
             $this->version[$data] : $this->version;
@@ -4553,7 +4553,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $tpl;
         }
 
-        if ($this->config['enable_at_syntax']) {
+        if ($this->getConfig('enable_at_syntax')) {
             if (stripos($tpl, '<@LITERAL>') !== false) {
                 $tpl = $this->escapeLiteralTagsContent($tpl);
             }
@@ -4674,7 +4674,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $timestamp = (int)$timestamp;
 
-        switch ($this->config['datetime_format']) {
+        switch ($this->getConfig('datetime_format')) {
             case 'YYYY/mm/dd':
                 $dateFormat = '%Y/%m/%d';
                 break;
@@ -4714,7 +4714,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return '';
         }
 
-        switch ($this->config['datetime_format']) {
+        switch ($this->getConfig('datetime_format')) {
             case 'YYYY/mm/dd':
                 if (!preg_match('/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}[0-9 :]*$/', $str)) {
                     return '';
@@ -5177,7 +5177,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'sender' => $from,
             'recipient' => $to,
             'private' => $private,
-            'postdate' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
+            'postdate' => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
             'messageread' => 0,
         ), $this->getDatabase()->getFullTableName('user_messages'));
     }
@@ -6058,7 +6058,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $content;
         }
 
-        $enable_filter = $this->config['enable_filter'];
+        $enable_filter = $this->getConfig('enable_filter');
         $this->config['enable_filter'] = 1;
         $_ = array('[* *]', '[( )]', '{{ }}', '[[ ]]', '[+ +]');
         foreach ($_ as $brackets) {
@@ -6169,10 +6169,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function safeEval($phpcode = '', $evalmode = '', $safe_functions = '')
     {
         if ($evalmode == '') {
-            $evalmode = $this->config['allow_eval'];
+            $evalmode = $this->getConfig('allow_eval');
         }
         if ($safe_functions == '') {
-            $safe_functions = $this->config['safe_functions_at_eval'];
+            $safe_functions = $this->getConfig('safe_functions_at_eval');
         }
 
         modx_sanitize_gpc($phpcode);
@@ -6262,7 +6262,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function atBindFileContent($str = '')
     {
 
-        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'] . 'files/', '');
+        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->getConfig('rb_base_url') . 'files/', '');
 
         if (stripos($str, '@FILE') !== 0) {
             return $str;
@@ -6471,7 +6471,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
-        if ($this->config['use_alias_path'] == 1) {
+        if ($this->getConfig('use_alias_path') == 1) {
             if ($alias == '.') {
                 return 0;
             }
@@ -6582,7 +6582,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function splitKeyAndFilter($key)
     {
-        if ($this->config['enable_filter'] == 1 && strpos($key, ':') !== false && stripos($key, '@FILE') !== 0) {
+        if ($this->getConfig('enable_filter') == 1 && strpos($key, ':') !== false && stripos($key, '@FILE') !== 0) {
             list($key, $modifiers) = explode(':', $key, 2);
         } else {
             $modifiers = false;

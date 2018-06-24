@@ -141,7 +141,7 @@ class ManagerApi implements ManagerApiInterface
         $modx = evolutionCMS();
 
         if (isset($modx->config['pwd_hash_algo']) && !empty($modx->config['pwd_hash_algo'])) {
-            $algorithm = $modx->config['pwd_hash_algo'];
+            $algorithm = $modx->getConfig('pwd_hash_algo');
         } else {
             $algorithm = 'UNCRYPT';
         }
@@ -311,7 +311,7 @@ class ManagerApi implements ManagerApiInterface
             return '0';
         }
 
-        $current = $this->getSystemChecksum($modx->config['check_files_onlogin']);
+        $current = $this->getSystemChecksum($modx->getConfig('check_files_onlogin'));
         if (empty($current)) {
             return '0';
         }
@@ -321,11 +321,13 @@ class ManagerApi implements ManagerApiInterface
 
             return '0';
         }
-        if ($current === $modx->config['sys_files_checksum']) {
+        if ($current === $modx->getConfig('sys_files_checksum')) {
             $result = '0';
         } else {
-            $result = $this->getModifiedSystemFilesList($modx->config['check_files_onlogin'],
-                $modx->config['sys_files_checksum']);
+            $result = $this->getModifiedSystemFilesList(
+                $modx->getConfig('check_files_onlogin'),
+                $modx->getConfig('sys_files_checksum')
+            );
         }
 
         return $result;

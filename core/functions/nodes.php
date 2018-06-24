@@ -58,8 +58,8 @@ if(!function_exists('makeHTML')) {
         $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',',
             $_SESSION['mgrDocgroups']) : '';
         $showProtected = false;
-        if (isset ($modx->config['tree_show_protected'])) {
-            $showProtected = (boolean)$modx->config['tree_show_protected'];
+        if ($modx->getConfig('tree_show_protected') !== null) {
+            $showProtected = (boolean)$modx->getConfig('tree_show_protected');
         }
         $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
         if ($showProtected == false) {
@@ -78,7 +78,7 @@ if(!function_exists('makeHTML')) {
                 $_style['tree_deletedpage'], $_lang['empty_folder']);
         }
 
-        $nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
+        $nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->getConfig('resource_tree_node_name') : $_SESSION['tree_nodename'];
 
         while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
@@ -175,7 +175,7 @@ if(!function_exists('makeHTML')) {
                 'lockedByUser'     => $lockedByUser,
                 'treeNodeClass'    => $treeNodeClass,
                 'treeNodeSelected' => $row['id'] == $hereid ? ' treeNodeSelected' : '',
-                'tree_page_click'  => $modx->config['tree_page_click'],
+                'tree_page_click'  => $modx->getConfig('tree_page_click'),
                 'showChildren'     => 1,
                 'openFolder'       => 1,
                 'contextmenu'      => '',
@@ -197,16 +197,16 @@ if(!function_exists('makeHTML')) {
             if (!$row['isfolder']) {
                 $tpl = getTplSingleNode();
                 switch ($row['id']) {
-                    case $modx->config['site_start']            :
+                    case $modx->getConfig('site_start')            :
                         $icon = $_style['tree_page_home'];
                         break;
-                    case $modx->config['error_page']            :
+                    case $modx->getConfig('error_page')            :
                         $icon = $_style['tree_page_404'];
                         break;
-                    case $modx->config['site_unavailable_page'] :
+                    case $modx->getConfig('site_unavailable_page') :
                         $icon = $_style['tree_page_hourglass'];
                         break;
-                    case $modx->config['unauthorized_page']     :
+                    case $modx->getConfig('unauthorized_page')     :
                         $icon = $_style['tree_page_info'];
                         break;
                     default:
@@ -495,11 +495,11 @@ if(!function_exists('getNodeTitle')) {
             case 'alias':
                 $nodetitle = $row['alias'] ? $row['alias'] : $row['id'];
                 if (strpos($row['alias'], '.') === false) {
-                    if ($row['isfolder'] != 1 || $modx->config['make_folders'] != 1) {
-                        $nodetitle .= $modx->config['friendly_url_suffix'];
+                    if ($row['isfolder'] != 1 || $modx->getConfig('make_folders') != 1) {
+                        $nodetitle .= $modx->getConfig('friendly_url_suffix');
                     }
                 }
-                $nodetitle = $modx->config['friendly_url_prefix'] . $nodetitle;
+                $nodetitle = $modx->getConfig('friendly_url_prefix') . $nodetitle;
                 break;
             case 'pagetitle':
                 $nodetitle = $row['pagetitle'];
@@ -577,7 +577,7 @@ if(!function_exists('_htmlentities')) {
         $modx = evolutionCMS();
 
         $array = json_encode($array, JSON_UNESCAPED_UNICODE);
-        $array = htmlentities($array, ENT_COMPAT, $modx->config['modx_charset']);
+        $array = htmlentities($array, ENT_COMPAT, $modx->getConfig('modx_charset'));
 
         return $array;
     }

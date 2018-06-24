@@ -106,7 +106,7 @@ if(!function_exists('importFiles')) {
                 $field['parent'] = $parent;
                 $field['alias'] = $modx->stripAlias($alias);
                 $field['richtext'] = $richtext;
-                $field['template'] = $modx->config['default_template'];
+                $field['template'] = $modx->getConfig('default_template');
                 $field['searchable'] = $search_default;
                 $field['cacheable'] = $cache_default;
                 $field['createdby'] = $createdby;
@@ -187,7 +187,7 @@ if(!function_exists('importFiles')) {
                     $field['parent'] = $parent;
                     $field['content'] = $modx->getDatabase()->escape($content);
                     $field['richtext'] = $richtext;
-                    $field['template'] = $modx->config['default_template'];
+                    $field['template'] = $modx->getConfig('default_template');
                     $field['searchable'] = $search_default;
                     $field['cacheable'] = $cache_default;
                     $field['createdby'] = $createdby;
@@ -305,7 +305,7 @@ if(!function_exists('treatContent')) {
     {
         $modx = evolutionCMS();
 
-        $src = mb_convert_encoding($src, $modx->config['modx_charset'], 'UTF-8,SJIS-win,eucJP-win,SJIS,EUC-JP,ASCII');
+        $src = mb_convert_encoding($src, $modx->getConfig('modx_charset'), 'UTF-8,SJIS-win,eucJP-win,SJIS,EUC-JP,ASCII');
 
         if (preg_match("@<title>(.*)</title>@i", $src, $matches)) {
             $pagetitle = ($matches[1] !== '') ? $matches[1] : $filename;
@@ -329,7 +329,7 @@ if(!function_exists('treatContent')) {
         } else {
             $content = $src;
             $s = '/(<meta[^>]+charset\s*=)[^>"\'=]+(.+>)/i';
-            $r = '$1' . $modx->config['modx_charset'] . '$2';
+            $r = '$1' . $modx->getConfig('modx_charset') . '$2';
             $content = preg_replace($s, $r, $content);
             $content = preg_replace('@<title>.*</title>@i', "<title>[*pagetitle*]</title>", $content);
         }

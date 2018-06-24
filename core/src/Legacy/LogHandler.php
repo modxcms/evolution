@@ -96,8 +96,8 @@ class LogHandler
         if (!$insert_id) {
             $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->getDatabase()->getLastError());
         } else {
-            $limit = (isset($modx->config['manager_log_limit'])) ? (int)$modx->config['manager_log_limit'] : 3000;
-            $trim = (isset($modx->config['manager_log_trim'])) ? (int)$modx->config['manager_log_trim'] : 100;
+            $limit = (isset($modx->config['manager_log_limit'])) ? (int)$modx->getConfig('manager_log_limit') : 3000;
+            $trim = (isset($modx->config['manager_log_trim'])) ? (int)$modx->getConfig('manager_log_trim') : 100;
             if (($insert_id % $trim) === 0) {
                 $modx->rotate_log('manager_log', $limit, $trim);
             }

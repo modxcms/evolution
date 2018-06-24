@@ -38,7 +38,7 @@ Class TemplateParser
                     $output .= '<div class="tab-pane" id="pane_' . $action . '">';
                     $output .= '
 					<script type="text/javascript">
-						var pane_' . $action . ' = new WebFXTabPane(document.getElementById("pane_' . $action . '"), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
+						var pane_' . $action . ' = new WebFXTabPane(document.getElementById("pane_' . $action . '"), ' . ($modx->getConfig('remember_last_tab') == 1 ? 'true' : 'false') . ');
 					</script>';
 
                     foreach($tabs as $idTab => $tab) {

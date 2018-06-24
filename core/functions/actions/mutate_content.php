@@ -9,10 +9,10 @@ if(!function_exists('getDefaultTemplate')) {
         $modx = evolutionCMS();
 
         $default_template = '';
-        switch ($modx->config['auto_template_logic']) {
+        switch ($modx->getConfig('auto_template_logic')) {
             case 'sibling':
                 if (!isset($_GET['pid']) || empty($_GET['pid'])) {
-                    $site_start = $modx->config['site_start'];
+                    $site_start = $modx->getConfig('site_start');
                     $where = "sc.isfolder=0 AND sc.id!='{$site_start}'";
                     $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', $where, 'menuindex', 'ASC',
                         1);
@@ -45,9 +45,9 @@ if(!function_exists('getDefaultTemplate')) {
                 break;
             case 'system':
             default: // default_template is already set
-                $default_template = $modx->config['default_template'];
+                $default_template = $modx->getConfig('default_template');
         }
 
-        return empty($default_template) ? $modx->config['default_template'] : $default_template;
+        return empty($default_template) ? $modx->getConfig('default_template') : $default_template;
     }
 }

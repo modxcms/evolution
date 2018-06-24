@@ -66,7 +66,7 @@ if(!function_exists('duplicateDocument')) {
         $content = $modx->getDatabase()->getRow($rs);
 
         // Handle incremental ID
-        switch ($modx->config['docid_incrmnt_method']) {
+        switch ($modx->getConfig('docid_incrmnt_method')) {
             case '1':
                 $from = "{$tblsc} AS T0 LEFT JOIN {$tblsc} AS T1 ON T0.id + 1 = T1.id";
                 $rs = $modx->getDatabase()->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
@@ -97,7 +97,7 @@ if(!function_exists('duplicateDocument')) {
 
             $content['pagetitle'] = $_lang['duplicated_el_suffix'] . $count . ' ' . $content['pagetitle'];
             $content['alias'] = null;
-        } elseif ($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
+        } elseif ($modx->getConfig('friendly_urls') == 0 || $modx->getConfig('allow_duplicate_alias') == 0) {
             $content['alias'] = null;
         }
 
@@ -233,7 +233,7 @@ if(!function_exists('evalModule')) {
                 default:
                     $error_level = 99;
             }
-            if ($modx->config['error_reporting'] === '99' || 2 < $error_level) {
+            if ($modx->getConfig('error_reporting') === '99' || 2 < $error_level) {
                 $modx->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'],
                     $_SESSION['itemname'] . ' - Module', $error_info['message'], $error_info['line'], $msg);
                 $modx->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");
@@ -315,8 +315,8 @@ if(!function_exists('loginV1')) {
             $modx->config['pwd_hash_algo'] = 'UNCRYPT';
         }
 
-        if ($user_algo !== $modx->config['pwd_hash_algo']) {
-            $bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+        if ($user_algo !== $modx->getConfig('pwd_hash_algo')) {
+            $bk_pwd_hash_algo = $modx->getConfig('pwd_hash_algo');
             $modx->config['pwd_hash_algo'] = $user_algo;
         }
 

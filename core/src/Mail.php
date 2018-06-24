@@ -53,18 +53,18 @@ class Mail extends PHPMailer
 
         $this->From = $modx->getConfig('emailsender');
         if (isset($modx->config['email_sender_method']) && !$modx->config['email_sender_method']) {
-            $this->Sender = $modx->config['emailsender'];
+            $this->Sender = $modx->getConfig('emailsender');
         }
-        $this->FromName = $modx->getPhpCompat()->entities($modx->config['site_name']);
+        $this->FromName = $modx->getPhpCompat()->entities($modx->getConfig('site_name'));
         $this->isHTML(true);
 
         if (isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {
-            $mail_charset = $modx->config['mail_charset'];
+            $mail_charset = $modx->getConfig('mail_charset');
         } else {
-            if (substr($modx->config['manager_language'], 0, 8) === 'japanese') {
+            if (substr($modx->getConfig('manager_language'), 0, 8) === 'japanese') {
                 $mail_charset = 'jis';
             } else {
-                $mail_charset = $modx->config['modx_charset'];
+                $mail_charset = $modx->getConfig('modx_charset');
             }
         }
 
@@ -93,7 +93,7 @@ class Mail extends PHPMailer
         }
         if (extension_loaded('mbstring')) {
             mb_language($this->mb_language);
-            mb_internal_encoding($modx->config['modx_charset']);
+            mb_internal_encoding($modx->getConfig('modx_charset'));
         }
         $exconf = MODX_MANAGER_PATH . 'includes/controls/phpmailer/config.inc.php';
         if (is_file($exconf)) {
@@ -150,7 +150,7 @@ class Mail extends PHPMailer
 
         switch ($this->CharSet) {
             case 'ISO-2022-JP':
-                $body = mb_convert_encoding($body, 'JIS', $this->modx->config['modx_charset']);
+                $body = mb_convert_encoding($body, 'JIS', $this->modx->getConfig('modx_charset'));
                 if (ini_get('safe_mode')) {
                     $mode = 'normal';
                 } else {
@@ -237,7 +237,7 @@ class Mail extends PHPMailer
             $msg = $this->Lang('instantiate') . "<br />\n";
             $msg .= "{$this->Subject}<br />\n";
             $msg .= "{$this->FromName}&lt;{$this->From}&gt;<br />\n";
-            $msg .= mb_convert_encoding($body, $this->modx->config['modx_charset'], $this->CharSet);
+            $msg .= mb_convert_encoding($body, $this->modx->getConfig('modx_charset'), $this->CharSet);
             $this->SetError($msg);
 
             return false;

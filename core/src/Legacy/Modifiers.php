@@ -63,7 +63,7 @@ class Modifiers implements ModifiersInterface
     {
         $modx = evolutionCMS();
         if (function_exists('mb_internal_encoding')) {
-            mb_internal_encoding($modx->config['modx_charset']);
+            mb_internal_encoding($modx->getConfig('modx_charset'));
         }
         $this->condModifiers = '=,is,eq,equals,ne,neq,notequals,isnot,isnt,not,%,isempty,isnotempty,isntempty,>=,gte,eg,gte,greaterthan,>,gt,isgreaterthan,isgt,lowerthan,<,lt,<=,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
@@ -519,15 +519,15 @@ class Modifiers implements ModifiersInterface
             #####  Encode / Decode / Hash / Escape
             case 'htmlent':
             case 'htmlentities':
-                return htmlentities($value, ENT_QUOTES, $modx->config['modx_charset']);
+                return htmlentities($value, ENT_QUOTES, $modx->getConfig('modx_charset'));
             case 'html_entity_decode':
             case 'decode_html':
             case 'html_decode':
-                return html_entity_decode($value, ENT_QUOTES, $modx->config['modx_charset']);
+                return html_entity_decode($value, ENT_QUOTES, $modx->getConfig('modx_charset'));
             case 'esc':
             case 'escape':
                 $value = preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;',
-                    htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
+                    htmlspecialchars($value, ENT_QUOTES, $modx->getConfig('modx_charset')));
 
                 return str_replace(array('[', ']', '`'), array('&#91;', '&#93;', '&#96;'), $value);
             case 'sql_escape':
@@ -538,7 +538,7 @@ class Modifiers implements ModifiersInterface
             case 'encode_html':
             case 'html_encode':
                 return preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;',
-                    htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
+                    htmlspecialchars($value, ENT_QUOTES, $modx->getConfig('modx_charset')));
             case 'spam_protect':
                 return str_replace(array('@', '.'), array('&#64;', '&#46;'), $value);
             case 'strip':
@@ -615,13 +615,13 @@ class Modifiers implements ModifiersInterface
                     $opt = 'VKas';
                 }
 
-                return mb_convert_kana($value, $opt, $modx->config['modx_charset']);
+                return mb_convert_kana($value, $opt, $modx->getConfig('modx_charset'));
             case 'hanzen':
                 if (empty($opt)) {
                     $opt = 'VKAS';
                 }
 
-                return mb_convert_kana($value, $opt, $modx->config['modx_charset']);
+                return mb_convert_kana($value, $opt, $modx->getConfig('modx_charset'));
             case 'str_shuffle':
             case 'shuffle':
                 return $this->str_shuffle($value);
@@ -662,7 +662,7 @@ class Modifiers implements ModifiersInterface
                 }
             case 'wrap_text':
                 $width = preg_match('/^[1-9][0-9]*$/', $opt) ? $opt : 70;
-                if ($modx->config['manager_language'] === 'japanese-utf8') {
+                if ($modx->getConfig('manager_language') === 'japanese-utf8') {
                     $chunk = array();
                     $bt = '';
                     while ($bt != $value) {
@@ -816,7 +816,7 @@ class Modifiers implements ModifiersInterface
                     } else {
                         $opt = true;
                     }
-                } elseif (isset($modx->config['mce_element_format']) && $modx->config['mce_element_format'] === 'html') {
+                } elseif (isset($modx->config['mce_element_format']) && $modx->getConfig('mce_element_format') === 'html') {
                     $opt = false;
                 } else {
                     $opt = true;
@@ -1439,7 +1439,7 @@ class Modifiers implements ModifiersInterface
 
         $target = trim($target);
         if (empty($target)) {
-            $target = $modx->config['site_start'];
+            $target = $modx->getConfig('site_start');
         }
         if (preg_match('@^[1-9][0-9]*$@', $target)) {
             $method = 'id';
@@ -1499,7 +1499,7 @@ class Modifiers implements ModifiersInterface
                 $str = str_replace(array("\r\n", "\r"), "\n", $str);
             }
 
-            return mb_substr($str, $s, $l, $modx->config['modx_charset']);
+            return mb_substr($str, $s, $l, $modx->getConfig('modx_charset'));
         }
 
         return substr($str, $s, $l);
@@ -1509,7 +1509,7 @@ class Modifiers implements ModifiersInterface
     {
         $modx = evolutionCMS();
         if (function_exists('mb_strpos')) {
-            return mb_strpos($haystack, $needle, $offset, $modx->config['modx_charset']);
+            return mb_strpos($haystack, $needle, $offset, $modx->getConfig('modx_charset'));
         }
 
         return strpos($haystack, $needle, $offset);
@@ -1519,7 +1519,7 @@ class Modifiers implements ModifiersInterface
     {
         $modx = evolutionCMS();
         if (function_exists('mb_strlen')) {
-            return mb_strlen(str_replace("\r\n", "\n", $str), $modx->config['modx_charset']);
+            return mb_strlen(str_replace("\r\n", "\n", $str), $modx->getConfig('modx_charset'));
         }
 
         return strlen($str);
