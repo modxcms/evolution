@@ -95,7 +95,7 @@ $serverArr = array(
                     </thead>
                     <tbody>
                     <?php
-                    $sql = "SHOW TABLE STATUS FROM $dbase LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->config['table_prefix']) . "%';";
+                    $sql = 'SHOW TABLE STATUS FROM ' . $modx->getDatabase()->getConfig('database') . ' LIKE "' . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . '%"';
                     $rs = $modx->getDatabase()->query($sql);
                     $i = 0;
                     while ($log_status = $modx->getDatabase()->getRow($rs)) {
@@ -107,8 +107,8 @@ $serverArr = array(
 
                             <?php
                             $truncateable = array(
-                                $modx->getDatabase()->config['table_prefix'] . 'event_log',
-                                $modx->getDatabase()->config['table_prefix'] . 'manager_log',
+                                $modx->getDatabase()->getConfig('prefix') . 'event_log',
+                                $modx->getDatabase()->getConfig('prefix') . 'manager_log',
                             );
                             if ($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
                                 echo "<td class=\"text-xs-right\">";
