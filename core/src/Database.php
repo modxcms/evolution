@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS;
 
 use AgelxNash\Modx\Evo\Database\Database as BaseDatabase;
+use AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver;
 use Exception;
 use AgelxNash\Modx\Evo\Database\Exceptions;
 
@@ -79,5 +80,21 @@ class Database extends BaseDatabase implements Interfaces\DatabaseInterface
         }
 
         return parent::insertFrom($fields, $table, $fromFields, $fromTable, $where, $limit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDebug($flag)
+    {
+        parent::setDebug($flag);
+        $driver = $this->getDriver();
+        if ($driver instanceof IlluminateDriver) {
+            if ($this->isDebug()) {
+                $driver->getConnect()->enableQueryLog();
+            } else {
+                $driver->getConnect()->disableQueryLog();
+            }
+        }
     }
 }

@@ -5398,14 +5398,29 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function invokeEvent($evtName, $extParams = array())
     {
+        $results = null;
+
         if (!$evtName) {
             return false;
         }
-        if (!isset ($this->pluginEvent[$evtName])) {
+
+        $out = $this['events']->dispatch('evolution.' . $evtName, [$extParams]);
+        if ($out === false) {
             return false;
         }
 
-        $results = null;
+        if (\is_array($out)) {
+            foreach ($out as $result) {
+                if (! is_scalar($result) || $result !== '') {
+                    $results[] = $result;
+                }
+            }
+        }
+
+        if (!isset ($this->pluginEvent[$evtName])) {
+            return $results ?? false;
+        }
+
         foreach ($this->pluginEvent[$evtName] as $pluginName) { // start for loop
             if ($this->dumpPlugins) {
                 $eventtime = $this->getMicroTime();

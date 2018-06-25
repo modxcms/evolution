@@ -17,6 +17,7 @@ class DatabaseProvider extends ServiceProvider
         $this->app->singleton('DBAPI', function ($app) {
             $capsule = new Capsule($app);
             $capsule->setAsGlobal();
+            $capsule->setEventDispatcher($app['events']);
 
             return new Database(
                 $app['config']->get('database.connections.default', []),
