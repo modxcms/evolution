@@ -10,7 +10,7 @@ return [
     | based disks are available to your application. Just store away!
     |
     */
-    'default' => 'assets',
+    'default' => 'public',
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -28,11 +28,21 @@ return [
             'driver' => 'local',
             'root' => EVO_CORE_PATH,
         ],
-        'assets' => [
+        'storage' => [
+            'driver' => 'local',
+            'root' => EVO_STORAGE_PATH,
+        ],
+        'public' => [
             'driver' => 'local',
             'root' => MODX_BASE_PATH,
-            'url' => MODX_SITE_URL . 'assets',
+            'url' => MODX_SITE_URL,
             'visibility' => 'public',
-        ]
+        ],
+        'manager' => [
+            'driver' => 'local',
+            'root' => MODX_MANAGER_PATH,
+            'url' => MODX_SITE_URL,
+            'visibility' => 'public',
+        ],
     ],
 ];
