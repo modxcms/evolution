@@ -12,10 +12,10 @@ return [
         'MODIFIERS' => EvolutionCMS\Providers\ModifiersProvider::class,
         'phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
         'PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
+        'DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class
     ],
 
     'aliases' => [
-        'App' => Illuminate\Support\Facades\App::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
@@ -23,5 +23,11 @@ return [
         'File' => Illuminate\Support\Facades\File::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'View' => Illuminate\Support\Facades\View::class,
+        /**
+         * EvolutionCMS
+         * @TODO DBAPI, MakeTable and other will be added at version 2.1
+         */
+        'Evo' => Illuminate\Support\Facades\App::class,
+        'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
     ]
 ];

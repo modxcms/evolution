@@ -8,21 +8,12 @@ trait Settings
     public $config = array();
 
     /**
-     * Resolve the given type from the container.
-     *
-     * @param  string  $abstract
-     * @param  array  $parameters
-     * @return mixed
-     */
-    abstract public function make($abstract, array $parameters = []);
-
-    /**
      * @param $name
      * @param $value
      */
     public function setConfig($name, $value)
     {
-        $this->make('config')
+        $this['config']
             ->set('cms.settings.' . $name, $value);
     }
 
@@ -33,7 +24,7 @@ trait Settings
     {
         return array_merge(
             $this->config,
-            $this->make('config')->get('cms.settings', [])
+            $this['config']->get('cms.settings', [])
         );
     }
     /**
@@ -47,7 +38,7 @@ trait Settings
      */
     public function getConfig($name = '', $default = null)
     {
-        return $this->make('config')
+        return $this['config']
             ->get(
                 'cms.settings.' . $name,
                 get_by_key(

@@ -25,9 +25,11 @@ class Mail extends PHPMailer
      */
     protected $modx;
 
-    public function init()
+    public function init($modx = null)
     {
-        $modx = evolutionCMS();
+        if ($modx === null) {
+            $modx = evolutionCMS();
+        }
         $this->modx = $modx;
         $this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
 
@@ -99,6 +101,8 @@ class Mail extends PHPMailer
         if (is_file($exconf)) {
             include($exconf);
         }
+
+        return $this;
     }
 
     /**

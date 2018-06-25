@@ -2,6 +2,7 @@
 
 use AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use EvolutionCMS\Database;
 
 class DatabaseProvider extends ServiceProvider
@@ -14,6 +15,9 @@ class DatabaseProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('DBAPI', function ($app) {
+            $capsule = new Capsule($app);
+            $capsule->setAsGlobal();
+
             return new Database(
                 $app['config']->get('database.connections.default', []),
                 IlluminateDriver::class

@@ -89,6 +89,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
         //$this->register(new LogServiceProvider($this));
         //$this->register(new RoutingServiceProvider($this));
 
+        $this->register(new \Illuminate\Database\DatabaseServiceProvider($this));
         $this->register(new \Illuminate\Filesystem\FilesystemServiceProvider($this));
         $this->register(new \Illuminate\Pagination\PaginationServiceProvider($this));
         $this->register(new \Illuminate\View\ViewServiceProvider($this));

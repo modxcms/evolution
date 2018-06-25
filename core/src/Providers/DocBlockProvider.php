@@ -1,9 +1,9 @@
 <?php namespace EvolutionCMS\Providers;
 
+use EvolutionCMS\Support\DocBlock;
 use Illuminate\Support\ServiceProvider;
-use EvolutionCMS\Mail;
 
-class MailProvider extends ServiceProvider
+class DocBlockProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -12,8 +12,8 @@ class MailProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('MODxMailer', function ($modx) {
-            return (new Mail)->init($modx);
+        $this->app->singleton('DocBlock', function () {
+            return new DocBlock;
         });
     }
 }
