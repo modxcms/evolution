@@ -15,5 +15,7 @@ class ModifiersProvider extends ServiceProvider
         $this->app->singleton('MODIFIERS', function () {
             return new Modifiers;
         });
+
+        $this->app->setEvolutionProperty('MODIFIERS', 'filter');
     }
 }

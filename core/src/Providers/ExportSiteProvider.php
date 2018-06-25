@@ -15,5 +15,7 @@ class ExportSiteProvider extends ServiceProvider
         $this->app->bind('EXPORT_SITE', function () {
             return new ExportSite;
         });
+
+        $this->app->setEvolutionProperty('EXPORT_SITE', 'export');
     }
 }

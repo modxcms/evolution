@@ -15,5 +15,7 @@ class PasswordHashProvider extends ServiceProvider
         $this->app->singleton('phpass', function () {
             return new PasswordHash;
         });
+
+        $this->app->setEvolutionProperty('phpass', 'phpass');
     }
 }

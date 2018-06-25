@@ -15,5 +15,7 @@ class MailProvider extends ServiceProvider
         $this->app->bind('MODxMailer', function ($modx) {
             return (new Mail)->init($modx);
         });
+
+        $this->app->setEvolutionProperty('MODxMailer', 'mail');
     }
 }

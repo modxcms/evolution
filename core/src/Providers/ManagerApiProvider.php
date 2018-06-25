@@ -15,5 +15,7 @@ class ManagerApiProvider extends ServiceProvider
         $this->app->bind('ManagerAPI', function () {
             return new ManagerApi;
         });
+
+        $this->app->setEvolutionProperty('ManagerAPI', 'manager');
     }
 }

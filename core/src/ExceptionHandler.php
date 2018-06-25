@@ -3,6 +3,8 @@
 use Illuminate\Contracts\Container\Container;
 use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Exception;
+use Symfony\Component\Debug\Exception\FatalErrorException;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php
@@ -12,7 +14,7 @@ class ExceptionHandler
     /**
      * Create a new exception handler instance.
      *
-     * @param  Container  $container
+     * @param  Container $container
      * @return void
      */
     public function __construct(Container $container)
@@ -20,7 +22,46 @@ class ExceptionHandler
         $this->container = $container;
 
         set_error_handler([$this, 'phpError'], E_ALL);
-        set_exception_handler([$this, 'exception']);
+        set_exception_handler([$this, 'handleException']);
+
+        // register_shutdown_function([$this, 'handleShutdown']);
+    }
+
+    /**
+     * Handle the PHP shutdown event.
+     *
+     * @return void
+     */
+    public function handleShutdown()
+    {
+        if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
+            $this->handleException($this->fatalExceptionFromError($error, 0));
+        }
+    }
+
+    /**
+     * Create a new fatal exception instance from an error array.
+     *
+     * @param  array $error
+     * @param  int|null $traceOffset
+     * @return \Symfony\Component\Debug\Exception\FatalErrorException
+     */
+    protected function fatalExceptionFromError(array $error, $traceOffset = null)
+    {
+        return new FatalErrorException(
+            $error['message'], $error['type'], 0, $error['file'], $error['line'], $traceOffset
+        );
+    }
+
+    /**
+     * Determine if the error type is fatal.
+     *
+     * @param  int $type
+     * @return bool
+     */
+    protected function isFatal($type)
+    {
+        return in_array($type, [E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE]);
     }
 
     /**
@@ -89,8 +130,17 @@ class ExceptionHandler
      * @param string $output
      * @return bool
      */
-    public function messageQuit($msg = 'unspecified error', $query = '', $is_error = true, $nr = '', $file = '', $source = '', $text = '', $line = '', $output = '')
-    {
+    public function messageQuit(
+        $msg = 'unspecified error',
+        $query = '',
+        $is_error = true,
+        $nr = '',
+        $file = '',
+        $source = '',
+        $text = '',
+        $line = '',
+        $output = ''
+    ) {
         if (0 < $this->container->messageQuitCount) {
             return;
         }
@@ -106,9 +156,12 @@ class ExceptionHandler
         $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
         $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
-        $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES, $this->container->getConfig('modx_charset'));
-        $ua = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->container->getConfig('modx_charset'));
-        $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->container->getConfig('modx_charset'));
+        $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES,
+            $this->container->getConfig('modx_charset'));
+        $ua = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES,
+            $this->container->getConfig('modx_charset'));
+        $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES,
+            $this->container->getConfig('modx_charset'));
         if ($is_error) {
             $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
             if ($msg != 'PHP Parse Error') {
@@ -124,21 +177,21 @@ class ExceptionHandler
         }
 
         $errortype = array(
-            E_ERROR => "ERROR",
-            E_WARNING => "WARNING",
-            E_PARSE => "PARSING ERROR",
-            E_NOTICE => "NOTICE",
-            E_CORE_ERROR => "CORE ERROR",
-            E_CORE_WARNING => "CORE WARNING",
-            E_COMPILE_ERROR => "COMPILE ERROR",
-            E_COMPILE_WARNING => "COMPILE WARNING",
-            E_USER_ERROR => "USER ERROR",
-            E_USER_WARNING => "USER WARNING",
-            E_USER_NOTICE => "USER NOTICE",
-            E_STRICT => "STRICT NOTICE",
+            E_ERROR             => "ERROR",
+            E_WARNING           => "WARNING",
+            E_PARSE             => "PARSING ERROR",
+            E_NOTICE            => "NOTICE",
+            E_CORE_ERROR        => "CORE ERROR",
+            E_CORE_WARNING      => "CORE WARNING",
+            E_COMPILE_ERROR     => "COMPILE ERROR",
+            E_COMPILE_WARNING   => "COMPILE WARNING",
+            E_USER_ERROR        => "USER ERROR",
+            E_USER_WARNING      => "USER WARNING",
+            E_USER_NOTICE       => "USER NOTICE",
+            E_STRICT            => "STRICT NOTICE",
             E_RECOVERABLE_ERROR => "RECOVERABLE ERROR",
-            E_DEPRECATED => "DEPRECATED",
-            E_USER_DEPRECATED => "USER DEPRECATED"
+            E_DEPRECATED        => "DEPRECATED",
+            E_USER_DEPRECATED   => "USER DEPRECATED"
         );
 
         if (!empty($nr) || !empty($file)) {
@@ -189,12 +242,18 @@ class ExceptionHandler
         if (preg_match('@^[0-9]+@', $this->container->documentIdentifier)) {
             $resource = $this->container->getDocumentObject('id', $this->container->documentIdentifier);
             $url = $this->container->makeUrl($this->container->documentIdentifier, '', '', 'full');
-            $table[] = array('Resource', '[' . $this->container->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>');
+            $table[] = array(
+                'Resource',
+                '[' . $this->container->documentIdentifier . '] <a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>'
+            );
         }
         $table[] = array('Referer', $referer);
         $table[] = array('User Agent', $ua);
         $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time', date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->container->getConfig('server_offset_time')));
+        $table[] = array(
+            'Current time',
+            date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->container->getConfig('server_offset_time'))
+        );
         $str .= $MakeTable->create($table, array('Basic info', ''));
         $str .= "<br />";
 
@@ -269,7 +328,7 @@ class ExceptionHandler
         if ($this->container->error_reporting === '99' && !isset($_SESSION['mgrValidated'])) {
             return true;
         }
-        if (! headers_sent()) {
+        if (!headers_sent()) {
             // Set 500 response header
             if ($error_level !== 2) {
                 header('HTTP/1.1 500 Internal Server Error');
@@ -281,7 +340,8 @@ class ExceptionHandler
         if ($this->shouldDisplay()) {
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                 <link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . $this->container->getConfig('manager_theme', 'default') . '/style.css" />
+                 <link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . $this->container->getConfig('manager_theme',
+                    'default') . '/style.css" />
                  <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
                  </head><body>
                  ' . $str . '</body></html>';
@@ -293,7 +353,8 @@ class ExceptionHandler
         exit;
     }
 
-    protected function shouldDisplay() {
+    protected function shouldDisplay()
+    {
         return isset($_SESSION['mgrValidated']);
     }
 
@@ -336,35 +397,44 @@ class ExceptionHandler
             $args = preg_replace_callback('/\$var/', function () use ($modx, &$tmp, $val) {
                 $arg = $val['args'][$tmp - 1];
                 switch (true) {
-                    case is_null($arg): {
-                        $out = 'NULL';
-                        break;
-                    }
-                    case is_numeric($arg): {
-                        $out = $arg;
-                        break;
-                    }
-                    case is_scalar($arg): {
-                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->container->getPhpCompat()->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
-                        break;
-                    }
-                    case is_bool($arg): {
-                        $out = $arg ? 'TRUE' : 'FALSE';
-                        break;
-                    }
-                    case is_array($arg): {
-                        $out = 'array $var' . $tmp;
-                        break;
-                    }
-                    case is_object($arg): {
-                        $out = get_class($arg) . ' $var' . $tmp;
-                        break;
-                    }
-                    default: {
-                        $out = '$var' . $tmp;
-                    }
+                    case is_null($arg):
+                        {
+                            $out = 'NULL';
+                            break;
+                        }
+                    case is_numeric($arg):
+                        {
+                            $out = $arg;
+                            break;
+                        }
+                    case is_scalar($arg):
+                        {
+                            $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->container->getPhpCompat()->htmlspecialchars(str_replace("'",
+                                    "\\'", $arg)) . "'");
+                            break;
+                        }
+                    case is_bool($arg):
+                        {
+                            $out = $arg ? 'TRUE' : 'FALSE';
+                            break;
+                        }
+                    case is_array($arg):
+                        {
+                            $out = 'array $var' . $tmp;
+                            break;
+                        }
+                    case is_object($arg):
+                        {
+                            $out = get_class($arg) . ' $var' . $tmp;
+                            break;
+                        }
+                    default:
+                        {
+                            $out = '$var' . $tmp;
+                        }
                 }
                 $tmp++;
+
                 return $out;
             }, $args);
             $line = array(
@@ -373,27 +443,33 @@ class ExceptionHandler
             );
             $table[] = array(implode("<br />", $line));
         }
+
         return $MakeTable->create($table, array('Backtrace'));
     }
 
     /**
      * Determine if the exception should be reported.
      *
-     * @param  \Throwable  $e
+     * @param  \Throwable $exception
      * @return bool
      */
-    public function shouldReport(\Throwable $e)
+    public function shouldReport(\Throwable $exception)
     {
         return true;
     }
 
-    public function exception(\Throwable $exception) {
+    public function handleException(\Throwable $exception)
+    {
+        if (!$exception instanceof Exception) {
+            $exception = new FatalThrowableError($exception);
+        }
+
         if (
             $exception instanceof ConnectException ||
             ($exception instanceof \PDOException && $exception->getCode() === 1045)
         ) {
-           $this->container->getDatabase()->disconnect();
+            $this->container->getDatabase()->disconnect();
         }
-       $this->messageQuit($exception->getMessage());
+        $this->messageQuit($exception->getMessage());
     }
 }

@@ -3,7 +3,7 @@ if (! function_exists('fetchRssChannelItems')) {
     function fetchRssChannelItems($url)
     {
         $items = [];
-        $file = MODX_BASE_PATH . 'assets/cache/rss/' . md5($url);
+        $file = evolutionCMS()->getCachePath() . '/rss/' . md5($url);
         $loadPath = file_exists($file) ? $file : $url;
         $content = file_get_contents($loadPath);
 

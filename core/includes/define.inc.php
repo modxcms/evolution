@@ -32,6 +32,10 @@ if (! defined('EVO_CORE_PATH')) {
     define('EVO_CORE_PATH', env('EVO_CORE_PATH', dirname(__DIR__) . '/'));
 }
 
+if (! defined('EVO_STORAGE_PATH')) {
+    define('EVO_STORAGE_PATH', env('EVO_STORAGE_PATH', EVO_CORE_PATH . 'storage/'));
+}
+
 if (is_cli()) {
     if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
         throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');

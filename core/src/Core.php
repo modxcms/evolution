@@ -124,48 +124,22 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public $old;
 
-    protected $coreAliases = [
-        'app'            => [
-            Interfaces\CoreInterface::class,
-            \Illuminate\Contracts\Container\Container::class,
-            \Illuminate\Contracts\Foundation\Application::class,
-            \Psr\Container\ContainerInterface::class
-        ],
-        'auth.driver'    => [\Illuminate\Contracts\Auth\Guard::class],
-        'blade.compiler' => [\Illuminate\View\Compilers\BladeCompiler::class],
-        'config'         => [\Illuminate\Config\Repository::class, \Illuminate\Contracts\Config\Repository::class],
-        'db'             => [\Illuminate\Database\DatabaseManager::class],
-        'db.connection'  => [\Illuminate\Database\Connection::class, \Illuminate\Database\ConnectionInterface::class],
-        'events'         => [\Illuminate\Events\Dispatcher::class, \Illuminate\Contracts\Events\Dispatcher::class],
-        'files'          => [\Illuminate\Filesystem\Filesystem::class],
-        'filesystem'     => [
-            \Illuminate\Filesystem\FilesystemManager::class,
-            \Illuminate\Contracts\Filesystem\Factory::class
-        ],
-        'view'           => [\Illuminate\View\Factory::class, \Illuminate\Contracts\View\Factory::class]
-    ];
-
-    /**
-     * @var array
-     * $this->{$key}
-     */
-    public $providerAliases = [
-        'db'        => 'DBAPI',
-        'mail'      => 'MODxMailer',
-        'phpcompat' => 'PHPCOMPAT',
-        'phpass'    => 'phpass',
-        'table'     => 'makeTable',
-        'export'    => 'EXPORT_SITE',
-        'manager'   => 'ManagerAPI',
-        'filter'    => 'MODIFIERS'
-    ];
-
     /**
      * @param array $services
      */
     public function __construct()
     {
         $this->tstart = get_by_key($_SERVER, 'REQUEST_TIME_FLOAT', 0);
+
+        $this->instance('path', $this->path());
+        $this->instance('path.base', $this->basePath());
+        $this->instance('path.lang', $this->langPath());
+        $this->instance('path.config', $this->configPath());
+        $this->instance('path.public', $this->publicPath());
+        $this->instance('path.storage', $this->storagePath());
+        $this->instance('path.database', $this->databasePath());
+        $this->instance('path.resources', $this->resourcePath());
+        $this->instance('path.bootstrap', $this->bootstrapPath());
 
         parent::__construct();
 
@@ -208,23 +182,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @param string $name
      * @return mixed|null
-     * @throws Exceptions\ServiceNotFoundException
      */
     public function __get($name)
     {
-        if (isset($this->providerAliases[$name])) {
+        if ($this->hasEvolutionProperty($name)) {
             if ($this->getConfig('error_reporting', 0) > 1) {
                 trigger_error(
-                    'Property $' . $name . ' is deprecated and should no longer be used. ' .
-                    'Alternative ->getService(' . $this->providerAliases[$name] . '::class)',
+                    'Property $' . $name . ' is deprecated and should no longer be used. ',
                     E_USER_DEPRECATED
                 );
             }
-
-            return $this->getService($this->providerAliases[$name]);
+            return $this->getEvolutionProperty($name);
         }
 
-        return null;
+        return parent::__get($name);
     }
 
     /**
@@ -294,31 +265,26 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function loadExtension($extname, $reload = true)
     {
+        if ($this->isEvolutionProperty($extname)) {
+            return $this->getEvolutionProperty($extname);
+        }
+
         $out = false;
         $found = false;
-        foreach ($this->providerAliases as $key => $alias) {
-            if ($alias === $extname) {
-                $found = true;
-                $out = $this->getService($alias);
-                break;
+        $flag = ($reload || !in_array($extname, $this->extensions));
+        if ($this->checkSQLconnect('db') && $flag) {
+            $evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+            if (is_array($evtOut) && count($evtOut) > 0) {
+                $out = array_pop($evtOut);
             }
         }
-        if ($found === false) {
-            $flag = ($reload || !in_array($extname, $this->extensions));
-            if ($this->checkSQLconnect('db') && $flag) {
-                $evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
-                if (is_array($evtOut) && count($evtOut) > 0) {
-                    $out = array_pop($evtOut);
-                }
-            }
-            if (!$out && $flag) {
-                $extname = trim(str_replace(array('..', '/', '\\'), '', strtolower($extname)));
-                $filename = MODX_MANAGER_PATH . "includes/extenders/ex_{$extname}.inc.php";
-                $out = is_file($filename) ? include $filename : false;
-            }
-            if ($out && !in_array($extname, $this->extensions)) {
-                $this->extensions[] = $extname;
-            }
+        if (!$out && $flag) {
+            $extname = trim(str_replace(array('..', '/', '\\'), '', strtolower($extname)));
+            $filename = MODX_MANAGER_PATH . "includes/extenders/ex_{$extname}.inc.php";
+            $out = is_file($filename) ? include $filename : false;
+        }
+        if ($out && !in_array($extname, $this->extensions)) {
+            $this->extensions[] = $extname;
         }
 
         return $out;
@@ -969,7 +935,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $cacheRefreshTime = 0;
         $recent_update = 0;
-        @include(MODX_BASE_PATH . $this->getCacheFolder() . 'sitePublishing.idx.php');
+        if(file_exists($this->getSitePublishingFilePath())) {
+            @include($this->getSitePublishingFilePath());
+        }
         $this->recentUpdate = $recent_update;
 
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time');
@@ -1052,7 +1020,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
                 $docObjSerial = serialize($this->documentObject);
                 $cacheContent = $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
-                $page_cache_path = MODX_BASE_PATH . $this->getHashFile($this->cacheKey);
+                $page_cache_path = $this->getHashFile($this->cacheKey);
                 file_put_contents($page_cache_path, "<?php die('Unauthorized access.'); ?>$cacheContent");
             }
         }
@@ -4064,13 +4032,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function clearCache($type = '', $report = false)
     {
-        $cache_dir = MODX_BASE_PATH . $this->getCacheFolder();
+        $cache_dir = $this->bootstrapPath();
         if (is_array($type)) {
             foreach ($type as $_) {
                 $this->clearCache($_, $report);
             }
         } elseif ($type == 'full') {
-            $sync = new Cache();
+            $sync = new Legacy\Cache();
             $sync->setCachepath($cache_dir);
             $sync->setReport($report);
             $sync->emptyCache();
@@ -6008,8 +5976,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     private function recoverySiteCache()
     {
-        $siteCacheDir = MODX_BASE_PATH . $this->getCacheFolder();
-        $siteCachePath = $siteCacheDir . 'siteCache.idx.php';
+        $siteCacheDir = $this->bootstrapPath();
+        $siteCachePath = $this->getSiteCacheFilePath();
 
         if (is_file($siteCachePath)) {
             include $siteCachePath;
@@ -6018,7 +5986,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return;
         }
 
-        $cache = new Cache();
+        $cache = new Legacy\Cache();
         $cache->setCachepath($siteCacheDir);
         $cache->setReport(false);
         $cache->buildCache($this);

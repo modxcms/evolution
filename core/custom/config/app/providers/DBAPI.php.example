@@ -1,3 +1,0 @@
-<?php
-
-return EvolutionCMS\Custom\Providers\DatabaseProvider::class;

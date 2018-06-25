@@ -15,5 +15,7 @@ class PhpCompatProvider extends ServiceProvider
         $this->app->singleton('PHPCOMPAT', function () {
             return new PhpCompat;
         });
+
+        $this->app->setEvolutionProperty('PHPCOMPAT', 'phpcompat');
     }
 }

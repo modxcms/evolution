@@ -15,5 +15,7 @@ class MakeTableProvider extends ServiceProvider
         $this->app->bind('makeTable', function () {
             return new MakeTable;
         });
+
+        $this->app->setEvolutionProperty('makeTable', 'table');
     }
 }

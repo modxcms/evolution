@@ -26,6 +26,7 @@ class AliasLoader
      * @var AliasLoader
      */
     protected static $instance;
+
     /**
      * Create a new AliasLoader instance.
      *
@@ -40,6 +41,7 @@ class AliasLoader
      * Get or create the singleton alias loader instance.
      *
      * @param  array  $aliases
+     * @param string $cachedPath
      * @return AliasLoader
      */
     public static function getInstance(array $aliases = [])
@@ -85,7 +87,7 @@ class AliasLoader
      */
     protected function ensureFacadeExists($alias)
     {
-        if (file_exists($path = MODX_BASE_PATH . 'assets/cache/facade-'.sha1($alias).'.php')) {
+        if (file_exists($path = EVO_CORE_PATH . 'cache/facade-'.sha1($alias).'.php')) {
             return $path;
         }
         file_put_contents($path, $this->formatFacadeStub(

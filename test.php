@@ -17,6 +17,9 @@ if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
     exit;
 }
 
+Event::listen('*', function($e){
+   echo $e . '<hr />';
+});
 $modx->getDatabase()->connect();
 $modx->getSettings();
 
@@ -25,6 +28,13 @@ $modx->documentIdentifier = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 1;
 $modx->documentObject = $modx->getDocumentObject('id', $modx->documentIdentifier);
 
 $modx->invokeEvent('OnWebPageInit');
+
+//Lang::addNamespace('asd','asd');
+dd(Lang::getLoader());
+
+Lang::get('asd::zxc');
+
+dd(Log::error('WTF ASD'));
 
 dd(Evo::version());
 

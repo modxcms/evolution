@@ -24,5 +24,7 @@ class DatabaseProvider extends ServiceProvider
                 IlluminateDriver::class
             );
         });
+
+        $this->app->setEvolutionProperty('DBAPI', 'db');
     }
 }

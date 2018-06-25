@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Config\Repository;
 use Symfony\Component\Finder\Finder;
+use Illuminate\Log\LogServiceProvider;
 
 abstract class AbstractLaravel extends Container implements ApplicationContract
 {
@@ -22,7 +23,65 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     protected $booted = false;
 
-    protected $coreAliases = [];
+    protected $coreAliases = [
+        'app'            => [
+            Interfaces\CoreInterface::class,
+            \Illuminate\Contracts\Container\Container::class,
+            \Illuminate\Contracts\Foundation\Application::class,
+            \Psr\Container\ContainerInterface::class
+        ],
+        'blade.compiler' => [
+            \Illuminate\View\Compilers\BladeCompiler::class
+        ],
+        'cache'                => [
+            \Illuminate\Cache\CacheManager::class,
+            \Illuminate\Contracts\Cache\Factory::class
+        ],
+        'cache.store'          => [
+            \Illuminate\Cache\Repository::class,
+            \Illuminate\Contracts\Cache\Repository::class
+        ],
+        'config'         => [
+            \Illuminate\Config\Repository::class,
+            \Illuminate\Contracts\Config\Repository::class
+        ],
+        'db'             => [
+            \Illuminate\Database\DatabaseManager::class
+        ],
+        'db.connection'  => [
+            \Illuminate\Database\Connection::class,
+            \Illuminate\Database\ConnectionInterface::class
+        ],
+        'events'         => [
+            \Illuminate\Events\Dispatcher::class,
+            \Illuminate\Contracts\Events\Dispatcher::class
+        ],
+        'files'          => [
+            \Illuminate\Filesystem\Filesystem::class
+        ],
+        'filesystem'     => [
+            \Illuminate\Filesystem\FilesystemManager::class,
+            \Illuminate\Contracts\Filesystem\Factory::class
+        ],
+        'filesystem.disk'      => [
+            \Illuminate\Contracts\Filesystem\Filesystem::class
+        ],
+        'filesystem.cloud'     => [
+            \Illuminate\Contracts\Filesystem\Cloud::class
+        ],
+        'translator'           => [
+            \Illuminate\Translation\Translator::class,
+            \Illuminate\Contracts\Translation\Translator::class
+        ],
+        'log'                  => [
+            \Illuminate\Log\LogManager::class,
+            \Psr\Log\LoggerInterface::class
+        ],
+        'view'           => [
+            \Illuminate\View\Factory::class,
+            \Illuminate\Contracts\View\Factory::class
+        ]
+    ];
 
     /**
      * All of the registered service providers.
@@ -58,8 +117,11 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     protected $bootedCallbacks = [];
 
+    protected $evolutionProperty = [];
+
     abstract public function getVersionData($data = null);
     abstract public function getConfig($name = '', $default = null);
+    abstract public function bootstrapPath($path = '');
 
     /**
      * @param array $classes
@@ -67,12 +129,15 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     public function __construct()
     {
         static::setInstance($this);
-
         $this->instance('app', $this);
         $this->instance(Container::class, $this);
 
-        $items = [];
+        $this->register(new EventServiceProvider($this));
+        $this->register(new LogServiceProvider($this));
 
+        $this->registerCoreContainerAliases();
+
+        $items = [];
         $this->instance('config', $config = new Repository($items));
 
         $this->loadConfiguration($config, EVO_CORE_PATH . 'config');
@@ -85,23 +150,18 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
         date_default_timezone_set($config->get('app.timezone', 'UTC'));
         mb_internal_encoding('UTF-8');
 
-        $this->register(new EventServiceProvider($this));
+        Facade::clearResolvedInstances();
+        Facade::setFacadeApplication($this);
+
+
         //$this->register(new LogServiceProvider($this));
         //$this->register(new RoutingServiceProvider($this));
-
-        $this->register(new \Illuminate\Database\DatabaseServiceProvider($this));
-        $this->register(new \Illuminate\Filesystem\FilesystemServiceProvider($this));
-        $this->register(new \Illuminate\Pagination\PaginationServiceProvider($this));
-        $this->register(new \Illuminate\View\ViewServiceProvider($this));
 
         //$this->register(new \App\Providers\AppServiceProvider($this));
         //$this->register(new \App\Providers\EventServiceProvider($this));
 
-        $this->registerCoreContainerAliases();
 
-        Facade::clearResolvedInstances();
-        Facade::setFacadeApplication($this);
-        AliasLoader::getInstance($this['config']->get('app.aliases'))->register();
+        AliasLoader::getInstance($this['config']->get('app.aliases'), $this->bootstrapPath())->register();
 
         $this->registerConfiguredProviders();
 
@@ -138,14 +198,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     public function version()
     {
         return $this->getVersionData('version');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function basePath()
-    {
-        return MODX_BASE_PATH;
     }
 
     /**
@@ -219,6 +271,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * {@inheritdoc}
+     * @TODO: Загрузиь сначала Illuminate\\, потом EvolutionCMS, а потом все остальное
      */
     public function registerConfiguredProviders()
     {
@@ -283,6 +336,41 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     }
 
     /**
+     * Load and boot all of the remaining deferred providers.
+     *
+     * @return void
+     */
+    public function loadDeferredProviders()
+    {
+        // We will simply spin through each of the deferred providers and register each
+        // one and boot them if the application has booted. This should make each of
+        // the remaining services available to this application for immediate use.
+        foreach ($this->deferredServices as $service => $provider) {
+            $this->loadDeferredProvider($service);
+        }
+        $this->deferredServices = [];
+    }
+    /**
+     * Load the provider for a deferred service.
+     *
+     * @param  string  $service
+     * @return void
+     */
+    public function loadDeferredProvider($service)
+    {
+        if (! isset($this->deferredServices[$service])) {
+            return;
+        }
+        $provider = $this->deferredServices[$service];
+        // If the service provider has not already been loaded and registered we can
+        // register it with the application and remove the service from this list
+        // of deferred services, since it will already be loaded on subsequent.
+        if (! isset($this->loadedProviders[$provider])) {
+            $this->registerDeferredProvider($provider, $service);
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerDeferredProvider($provider, $service = null)
@@ -299,6 +387,77 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
                 $this->bootProvider($instance);
             });
         }
+    }
+
+    /**
+     * Get the application's deferred services.
+     *
+     * @return array
+     */
+    public function getDeferredServices()
+    {
+        return $this->deferredServices;
+    }
+    /**
+     * Set the application's deferred services.
+     *
+     * @param  array  $services
+     * @return void
+     */
+    public function setDeferredServices(array $services)
+    {
+        $this->deferredServices = $services;
+    }
+    /**
+     * Add an array of services to the application's deferred services.
+     *
+     * @param  array  $services
+     * @return void
+     */
+    public function addDeferredServices(array $services)
+    {
+        $this->deferredServices = array_merge($this->deferredServices, $services);
+    }
+    /**
+     * Determine if the given service is a deferred service.
+     *
+     * @param  string  $service
+     * @return bool
+     */
+    public function isDeferredService($service)
+    {
+        return isset($this->deferredServices[$service]);
+    }
+
+    /**
+     * Resolve the given type from the container.
+     *
+     * (Overriding Container::make)
+     *
+     * @param  string  $abstract
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function make($abstract, array $parameters = [])
+    {
+        $abstract = $this->getAlias($abstract);
+        if (isset($this->deferredServices[$abstract]) && ! isset($this->instances[$abstract])) {
+            $this->loadDeferredProvider($abstract);
+        }
+        return parent::make($abstract, $parameters);
+    }
+
+    /**
+     * Determine if the given abstract type has been bound.
+     *
+     * (Overriding Container::bound)
+     *
+     * @param  string  $abstract
+     * @return bool
+     */
+    public function bound($abstract)
+    {
+        return isset($this->deferredServices[$abstract]) || parent::bound($abstract);
     }
 
     /**
@@ -378,7 +537,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function getCachedServicesPath()
     {
-        return MODX_BASE_PATH . 'assets/cache/services.php';
+        return $this->bootstrapPath('/services.php');
     }
 
     /**
@@ -386,7 +545,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function getCachedPackagesPath()
     {
-        return MODX_BASE_PATH . 'assets/cache/packages.php';
+        return $this->bootstrapPath('/packages.php');
     }
 
     /**
@@ -483,5 +642,38 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     public function getModifiers()
     {
         return $this->getService('MODIFIERS');
+    }
+
+    public function setEvolutionProperty(?string $abstract, string $property)
+    {
+        $this->evolutionProperty[$property] = $abstract;
+    }
+
+    /**
+     * @param string $property
+     * @return bool
+     */
+    public function isEvolutionProperty(string $property)
+    {
+        return \in_array($property, $this->evolutionProperty, true);
+    }
+
+    /**
+     * @param string $property
+     * @return bool
+     */
+    public function hasEvolutionProperty(string $property)
+    {
+        return isset($this->evolutionProperty[$property]);
+    }
+
+    /**
+     * @param string $property
+     * @return mixed|null
+     */
+    public function getEvolutionProperty(string $property)
+    {
+        $abstract = Arr::get($this->evolutionProperty, $property, null);
+        return $abstract === null ? null : $this->get($abstract);
     }
 }
