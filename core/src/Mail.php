@@ -113,7 +113,7 @@ class Mail extends PHPMailer
      */
     public function EncodeHeader($str, $position = 'text')
     {
-        $str = $this->modx->removeSanitizeSeed($str);
+        $str = removeSanitizeSeed($str);
 
         if ($this->encode_header_method == 'mb_encode_mimeheader') {
             return mb_encode_mimeheader($str, $this->CharSet, 'B', "\n");
@@ -132,8 +132,8 @@ class Mail extends PHPMailer
      */
     public function Send()
     {
-        $this->Body = $this->modx->removeSanitizeSeed($this->Body);
-        $this->Subject = $this->modx->removeSanitizeSeed($this->Subject);
+        $this->Body = removeSanitizeSeed($this->Body);
+        $this->Subject = removeSanitizeSeed($this->Subject);
 
         return parent::send();
     }

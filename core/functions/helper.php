@@ -1,6 +1,6 @@
 <?php
 
-if(!function_exists('createGUID')) {
+if (! function_exists('createGUID')) {
     /**
      * create globally unique identifiers (guid)
      *
@@ -17,8 +17,13 @@ if(!function_exists('createGUID')) {
     }
 }
 
-if(!function_exists('generate_password')) {
-// Generate password
+if (! function_exists('generate_password')) {
+    /**
+     * Generate password
+     *
+     * @param int $length
+     * @return string
+     */
     function generate_password($length = 10)
     {
         $allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -33,7 +38,7 @@ if(!function_exists('generate_password')) {
     }
 }
 
-if (! function_exists('entities')) {
+if (!function_exists('entities')) {
     /**
      * @param  string $string
      * @param  string $charset
@@ -59,9 +64,10 @@ if (! function_exists('get_by_key')) {
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
             $out = $data[$key];
         }
-        if (! empty($validate) && is_callable($validate)) {
+        if (!empty($validate) && is_callable($validate)) {
             $out = (($validate($out) === true) ? $out : $default);
         }
+
         return $out;
     }
 }
@@ -70,5 +76,39 @@ if (! function_exists('is_cli')) {
     function is_cli()
     {
         return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+    }
+}
+
+if (! function_exists('nicesize')) {
+    /**
+     * @param $size
+     * @return string
+     */
+    function nicesize($size)
+    {
+        $sizes = array('Tb' => 1099511627776, 'Gb' => 1073741824, 'Mb' => 1048576, 'Kb' => 1024, 'b' => 1);
+        $precisions = count($sizes) - 1;
+        foreach ($sizes as $unit => $bytes) {
+            if ($size >= $bytes) {
+                return number_format($size / $bytes, $precisions) . ' ' . $unit;
+            }
+            $precisions--;
+        }
+
+        return '0 b';
+    }
+}
+
+if (! function_exists('data_is_json')) {
+    /**
+     * @param $string
+     * @param bool $returnData
+     * @return bool|mixed
+     */
+    function data_is_json($string, $returnData = false)
+    {
+        $data = is_scalar($string) ? json_decode($string, true) : false;
+
+        return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
     }
 }

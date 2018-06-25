@@ -21,6 +21,11 @@
  */
 class Core extends AbstractLaravel implements Interfaces\CoreInterface
 {
+    use Traits\Settings {
+        getSettings as loadConfig;
+    }
+    use Traits\Path;
+
     /**
      * This is New evolution
      * @var string
@@ -45,10 +50,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public $pluginEvent = array();
 
-    /**
-     * @var array
-     */
-    public $config = array();
     /**
      * @var array
      */
@@ -459,178 +460,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Get MODX settings including, but not limited to, the system_settings table
-     */
-    public function getSettings()
-    {
-        if (!isset($this->config['site_name'])) {
-            $this->recoverySiteCache();
-        }
-
-        // setup default site id - new installation should generate a unique id for the site.
-        if ($this->getConfig('site_id', '') == '') {
-            $this->setConfig('site_id', 'MzGeQ2faT4Dw06+U49x3');
-        }
-
-        // store base_url and base_path inside config array
-        //$this->config['base_url'] = MODX_BASE_URL;
-        //$this->config['base_path'] = MODX_BASE_PATH;
-        //$this->config['site_url'] = MODX_SITE_URL;
-        $this->error_reporting = $this->getConfig('error_reporting');
-        $this->setConfig(
-            'filemanager_path',
-            str_replace(
-                '[(base_path)]',
-                MODX_BASE_PATH,
-                $this->getConfig('filemanager_path')
-            )
-        );
-        $this->setConfig(
-            'rb_base_dir',
-            str_replace(
-                '[(base_path)]',
-                MODX_BASE_PATH,
-                $this->getConfig('rb_base_dir')
-            )
-        );
-
-        if (!isset($this->config['enable_at_syntax'])) {
-            $this->setConfig('enable_at_syntax', 1);
-        } // @TODO: This line is temporary, should be remove in next version
-
-        // now merge user settings into evo-configuration
-        $this->getUserSettings();
-    }
-
-    private function recoverySiteCache()
-    {
-        $site_cache_dir = MODX_BASE_PATH . $this->getCacheFolder();
-        $site_cache_path = $site_cache_dir . 'siteCache.idx.php';
-
-        if (is_file($site_cache_path)) {
-            include($site_cache_path);
-        }
-        if (isset($this->config['site_name'])) {
-            return;
-        }
-
-        $cache = new Cache();
-        $cache->setCachepath($site_cache_dir);
-        $cache->setReport(false);
-        $cache->buildCache($this);
-
-        clearstatcache();
-        if (is_file($site_cache_path)) {
-            include($site_cache_path);
-        }
-        if (isset($this->config['site_name'])) {
-            return;
-        }
-
-        $rs = $this->getDatabase()->select(
-            'setting_name, setting_value',
-            $this->getDatabase()->getFullTableName('system_settings')
-        );
-        while ($row = $this->getDatabase()->getRow($rs)) {
-            $this->config[$row['setting_name']] = $row['setting_value'];
-        }
-
-        if (!$this->config['enable_filter']) {
-            return;
-        }
-
-        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_plugins'), $where);
-        if ($this->getDatabase()->getRecordCount($rs)) {
-            $this->setConfig('enable_filter', '0');
-        }
-    }
-
-    /**
-     * Get user settings and merge into MODX configuration
-     * @return array
-     */
-    public function getUserSettings()
-    {
-        $tbl_web_user_settings = $this->getDatabase()->getFullTableName('web_user_settings');
-        $tbl_user_settings = $this->getDatabase()->getFullTableName('user_settings');
-
-        // load user setting if user is logged in
-        $usrSettings = array();
-        if ($id = $this->getLoginUserID()) {
-            $usrType = $this->getLoginUserType();
-            if (isset ($usrType) && $usrType == 'manager') {
-                $usrType = 'mgr';
-            }
-
-            if ($usrType == 'mgr' && $this->isBackend()) {
-                // invoke the OnBeforeManagerPageInit event, only if in backend
-                $this->invokeEvent("OnBeforeManagerPageInit");
-            }
-
-            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
-                $usrSettings = &$_SESSION[$usrType . 'UsrConfigSet'];
-            } else {
-                if ($usrType == 'web') {
-                    $from = $tbl_web_user_settings;
-                    $where = "webuser='{$id}'";
-                } else {
-                    $from = $tbl_user_settings;
-                    $where = "user='{$id}'";
-                }
-
-                $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
-
-                $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
-                while ($row = $this->getDatabase()->getRow($result)) {
-                    if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
-                        $row['setting_value'] = $which_browser_default;
-                    }
-                    $usrSettings[$row['setting_name']] = $row['setting_value'];
-                }
-                if (isset ($usrType)) {
-                    $_SESSION[$usrType . 'UsrConfigSet'] = $usrSettings;
-                } // store user settings in session
-            }
-        }
-        if ($this->isFrontend() && $mgrid = $this->getLoginUserID('mgr')) {
-            $musrSettings = array();
-            if (isset ($_SESSION['mgrUsrConfigSet'])) {
-                $musrSettings = &$_SESSION['mgrUsrConfigSet'];
-            } else {
-                if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings,
-                    "user='{$mgrid}'")) {
-                    while ($row = $this->getDatabase()->getRow($result)) {
-                        $musrSettings[$row['setting_name']] = $row['setting_value'];
-                    }
-                    $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
-                }
-            }
-            if (!empty ($musrSettings)) {
-                $usrSettings = array_merge($musrSettings, $usrSettings);
-            }
-        }
-        // save global values before overwriting/merging array
-        foreach ($usrSettings as $param => $value) {
-            if ($this->getConfig($param) !== null) {
-                $this->configGlobal[$param] = $this->getConfig($param);
-            }
-        }
-
-        $this->config = array_merge($this->config, $usrSettings);
-        $this->setConfig(
-            'filemanager_path',
-            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('filemanager_path'))
-        );
-        $this->setConfig(
-            'rb_base_dir',
-            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('rb_base_dir'))
-        );
-
-        return $usrSettings;
-    }
-
-    /**
      * Returns the document identifier of the current request
      *
      * @param string $method id and alias are allowed
@@ -791,23 +620,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             return $q;
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getCacheFolder()
-    {
-        return "assets/cache/";
-    }
-
-    /**
-     * @param $key
-     * @return string
-     */
-    public function getHashFile($key)
-    {
-        return $this->getCacheFolder() . "docid_" . $key . ".pageCache.php";
     }
 
     /**
@@ -1040,7 +852,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
+        $this->documentOutput = removeSanitizeSeed($this->documentOutput);
 
         if (strpos($this->documentOutput, '\{') !== false) {
             $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
@@ -1588,7 +1400,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (empty($ph)) {
 
             $ph = array_merge(
-                $this->config,
+                $this->allConfig(),
                 [
                     'base_url' => MODX_BASE_URL,
                     'base_path' => MODX_BASE_PATH,
@@ -4434,37 +4246,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * @param $name
-     * @param $value
-     */
-    public function setConfig($name, $value)
-    {
-        $this->make('config')
-            ->set('cms.settings.' . $name, $value);
-    }
-
-    /**
-     * Returns an entry from the config
-     *
-     * Note: most code accesses the config array directly and we will continue to support this.
-     *
-     * @param string $name
-     * @param mixed $default
-     * @return bool|string
-     */
-    public function getConfig($name = '', $default = null)
-    {
-        return $this->make('config')
-            ->get(
-                'cms.settings.' . $name,
-                get_by_key(
-                    $this->config,
-                    $name, $default
-                )
-            );
-    }
-
-    /**
      * Returns the MODX version information as version, branch, release date and full application name.
      *
      * @param null $data
@@ -5145,28 +4926,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Returns the manager relative URL/path with respect to the site root.
-     *
-     * @global string $base_url
-     * @return string The complete URL to the manager folder
-     */
-    public function getManagerPath()
-    {
-        return MODX_MANAGER_URL;
-    }
-
-    /**
-     * Returns the cache relative URL/path with respect to the site root.
-     *
-     * @global string $base_url
-     * @return string The complete URL to the cache folder
-     */
-    public function getCachePath()
-    {
-        return MODX_BASE_URL . $this->getCacheFolder();
-    }
-
-    /**
      * Sends a message to a user's message box.
      *
      * @param string $type Type of the message
@@ -5745,7 +5504,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $propertyString = str_replace('{}', '', $propertyString);
             $propertyString = str_replace('} {', ',', $propertyString);
             if (!empty($propertyString) && $propertyString != '{}') {
-                $jsonFormat = $this->isJson($propertyString, true);
+                $jsonFormat = data_is_json($propertyString, true);
                 // old format
                 if ($jsonFormat === false) {
                     $props = explode('&', $propertyString);
@@ -6059,14 +5818,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @param string $string
      * @return string
+     * @deprecated
      */
     public function removeSanitizeSeed($string = '')
     {
-        if (!$string || strpos($string, MODX_SANITIZE_SEED) === false) {
-            return $string;
-        }
-
-        return str_replace(MODX_SANITIZE_SEED, '', $string);
+        return removeSanitizeSeed($string);
     }
 
     /**
@@ -6342,6 +6098,148 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return substr($str, $pos);
         }
     }
+
+    /**
+     * Get MODX settings including, but not limited to, the system_settings table
+     */
+    public function getSettings()
+    {
+        if (!isset($this->config['site_name'])) {
+            $this->recoverySiteCache();
+        }
+
+        $this->loadConfig();
+
+        // now merge user settings into evo-configuration
+        $this->getUserSettings();
+    }
+    /**
+     * Get user settings and merge into MODX configuration
+     * @return array
+     */
+    public function getUserSettings()
+    {
+        $tbl_web_user_settings = $this->getDatabase()->getFullTableName('web_user_settings');
+        $tbl_user_settings = $this->getDatabase()->getFullTableName('user_settings');
+
+        // load user setting if user is logged in
+        $usrSettings = array();
+        if ($id = $this->getLoginUserID()) {
+            $usrType = $this->getLoginUserType();
+            if (isset ($usrType) && $usrType == 'manager') {
+                $usrType = 'mgr';
+            }
+
+            if ($usrType == 'mgr' && $this->isBackend()) {
+                // invoke the OnBeforeManagerPageInit event, only if in backend
+                $this->invokeEvent("OnBeforeManagerPageInit");
+            }
+
+            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
+                $usrSettings = &$_SESSION[$usrType . 'UsrConfigSet'];
+            } else {
+                if ($usrType == 'web') {
+                    $from = $tbl_web_user_settings;
+                    $where = "webuser='{$id}'";
+                } else {
+                    $from = $tbl_user_settings;
+                    $where = "user='{$id}'";
+                }
+
+                $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
+
+                $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
+                while ($row = $this->getDatabase()->getRow($result)) {
+                    if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
+                        $row['setting_value'] = $which_browser_default;
+                    }
+                    $usrSettings[$row['setting_name']] = $row['setting_value'];
+                }
+                if (isset ($usrType)) {
+                    $_SESSION[$usrType . 'UsrConfigSet'] = $usrSettings;
+                } // store user settings in session
+            }
+        }
+        if ($this->isFrontend() && $mgrid = $this->getLoginUserID('mgr')) {
+            $musrSettings = array();
+            if (isset ($_SESSION['mgrUsrConfigSet'])) {
+                $musrSettings = &$_SESSION['mgrUsrConfigSet'];
+            } else {
+                if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings,
+                    "user='{$mgrid}'")) {
+                    while ($row = $this->getDatabase()->getRow($result)) {
+                        $musrSettings[$row['setting_name']] = $row['setting_value'];
+                    }
+                    $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
+                }
+            }
+            if (!empty ($musrSettings)) {
+                $usrSettings = array_merge($musrSettings, $usrSettings);
+            }
+        }
+        // save global values before overwriting/merging array
+        foreach ($usrSettings as $param => $value) {
+            if ($this->getConfig($param) !== null) {
+                $this->configGlobal[$param] = $this->getConfig($param);
+            }
+        }
+
+        $this->config = array_merge($this->config, $usrSettings);
+        $this->setConfig(
+            'filemanager_path',
+            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('filemanager_path'))
+        );
+        $this->setConfig(
+            'rb_base_dir',
+            str_replace('[(base_path)]', MODX_BASE_PATH, $this->getConfig('rb_base_dir'))
+        );
+
+        return $usrSettings;
+    }
+
+    private function recoverySiteCache()
+    {
+        $siteCacheDir = MODX_BASE_PATH . $this->getCacheFolder();
+        $siteCachePath = $siteCacheDir . 'siteCache.idx.php';
+
+        if (is_file($siteCachePath)) {
+            include $siteCachePath;
+        }
+        if (isset($this->config['site_name'])) {
+            return;
+        }
+
+        $cache = new Cache();
+        $cache->setCachepath($siteCacheDir);
+        $cache->setReport(false);
+        $cache->buildCache($this);
+
+        clearstatcache();
+        if (is_file($siteCachePath)) {
+            include $siteCachePath;
+        }
+        if (isset($this->config['site_name'])) {
+            return;
+        }
+
+        $rs = $this->getDatabase()->select(
+            'setting_name, setting_value',
+            $this->getDatabase()->getFullTableName('system_settings')
+        );
+        while ($row = $this->getDatabase()->getRow($rs)) {
+            $this->config[$row['setting_name']] = $row['setting_value'];
+        }
+
+        if (!$this->config['enable_filter']) {
+            return;
+        }
+
+        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+        $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_plugins'), $where);
+        if ($this->getDatabase()->getRecordCount($rs)) {
+            $this->setConfig('enable_filter', '0');
+        }
+    }
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
@@ -6437,18 +6335,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @param $size
      * @return string
+     * @deprecated
      */
     public function nicesize($size)
     {
-        $sizes = array('Tb' => 1099511627776, 'Gb' => 1073741824, 'Mb' => 1048576, 'Kb' => 1024, 'b' => 1);
-        $precisions = count($sizes) - 1;
-        foreach ($sizes as $unit => $bytes) {
-            if ($size >= $bytes) {
-                return number_format($size / $bytes, $precisions) . ' ' . $unit;
-            }
-            $precisions--;
-        }
-        return '0 b';
+        return nicesize($size);
     }
 
     /**
@@ -6590,11 +6481,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param $string
      * @param bool $returnData
      * @return bool|mixed
+     * @deprecated
      */
     public function isJson($string, $returnData = false)
     {
-        $data = json_decode($string, true);
-        return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        return data_is_json($string, $returnData);
     }
 
     /**

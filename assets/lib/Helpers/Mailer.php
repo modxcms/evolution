@@ -136,8 +136,8 @@ class Mailer
 
         $this->mail->Body = $this->getCFGDef('isHtml', 1) ? $this->mail->msgHTML($report, MODX_BASE_PATH) : $report;
 
-        $this->Body = $this->modx->removeSanitizeSeed($this->mail->Body);
-        $this->Subject = $this->modx->removeSanitizeSeed($this->mail->Subject);
+        $this->Body = removeSanitizeSeed($this->mail->Body);
+        $this->Subject = removeSanitizeSeed($this->mail->Subject);
         try {
             $result = $this->mail->preSend() && $this->saveMessage();
         } catch (phpmailerException $e) {

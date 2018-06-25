@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS;
 
+use EvolutionCMS\Interfaces\DatabaseInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -412,7 +413,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     }
 
     /**
-     * @return Database
+     * @return DatabaseInterface
      */
     public function getDatabase()
     {

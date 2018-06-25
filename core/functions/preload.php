@@ -163,3 +163,17 @@ if (! function_exists('getSanitizedValue')) {
         return $value;
     }
 }
+if (! function_exists('removeSanitizeSeed')) {
+    /**
+     * @param string $string
+     * @return string
+     */
+    function removeSanitizeSeed($string = '')
+    {
+        if (!$string || strpos($string, MODX_SANITIZE_SEED) === false) {
+            return $string;
+        }
+
+        return str_replace(MODX_SANITIZE_SEED, '', $string);
+    }
+}

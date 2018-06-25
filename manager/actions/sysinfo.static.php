@@ -112,21 +112,21 @@ $serverArr = array(
                             );
                             if ($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
                                 echo "<td class=\"text-xs-right\">";
-                                echo "<a class=\"text-danger\" href='index.php?a=54&mode=$action&u=" . $log_status['Name'] . "' title='" . $_lang['truncate_table'] . "'>" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</a>";
+                                echo "<a class=\"text-danger\" href='index.php?a=54&mode=$action&u=" . $log_status['Name'] . "' title='" . $_lang['truncate_table'] . "'>" . nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</a>";
                                 echo "</td>";
                             } else {
-                                echo "<td class=\"text-xs-right\">" . $modx->nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</td>";
+                                echo "<td class=\"text-xs-right\">" . nicesize($log_status['Data_length'] + $log_status['Data_free']) . "</td>";
                             }
 
                             if ($modx->hasPermission('settings')) {
-                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? "<a class=\"text-danger\" href='index.php?a=54&mode=$action&t=" . $log_status['Name'] . "' title='" . $_lang['optimize_table'] . "' ><span>" . $modx->nicesize($log_status['Data_free']) . "</span></a>" : "-") . "</td>";
+                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? "<a class=\"text-danger\" href='index.php?a=54&mode=$action&t=" . $log_status['Name'] . "' title='" . $_lang['optimize_table'] . "' ><span>" . nicesize($log_status['Data_free']) . "</span></a>" : "-") . "</td>";
                             } else {
-                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? $modx->nicesize($log_status['Data_free']) : "-") . "</td>";
+                                echo "<td class=\"text-xs-right\">" . ($log_status['Data_free'] > 0 ? nicesize($log_status['Data_free']) : "-") . "</td>";
                             }
                             ?>
-                            <td class="text-xs-right"><?= $modx->nicesize($log_status['Data_length'] - $log_status['Data_free']) ?></td>
-                            <td class="text-xs-right"><?= $modx->nicesize($log_status['Index_length']) ?></td>
-                            <td class="text-xs-right"><?= $modx->nicesize($log_status['Index_length'] + $log_status['Data_length'] + $log_status['Data_free']) ?></td>
+                            <td class="text-xs-right"><?= nicesize($log_status['Data_length'] - $log_status['Data_free']) ?></td>
+                            <td class="text-xs-right"><?= nicesize($log_status['Index_length']) ?></td>
+                            <td class="text-xs-right"><?= nicesize($log_status['Index_length'] + $log_status['Data_length'] + $log_status['Data_free']) ?></td>
                         </tr>
                         <?php
                         $total = $total + $log_status['Index_length'] + $log_status['Data_length'];
@@ -136,9 +136,9 @@ $serverArr = array(
                     <tr class="unstyled">
                         <td class="text-xs-right"><?= $_lang['database_table_totals'] ?></td>
                         <td colspan="3">&nbsp;</td>
-                        <td class="text-xs-right"><?= $totaloverhead > 0 ? "<b class=\"text-danger\">" . $modx->nicesize($totaloverhead) . "</b><br />(" . number_format($totaloverhead) . " B)" : "-" ?></td>
+                        <td class="text-xs-right"><?= $totaloverhead > 0 ? "<b class=\"text-danger\">" . nicesize($totaloverhead) . "</b><br />(" . number_format($totaloverhead) . " B)" : "-" ?></td>
                         <td colspan="2">&nbsp;</td>
-                        <td class="text-xs-right"><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
+                        <td class="text-xs-right"><?= "<b>" . nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
                     </tr>
                     </tbody>
                 </table>
