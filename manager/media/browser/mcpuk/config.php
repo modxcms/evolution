@@ -18,23 +18,19 @@
 
 $modx = evolutionCMS();
 $_CONFIG = array(
-
     'disabled' => false,
     'denyZipDownload' => $modx->config['denyZipDownload'],
     'denyExtensionRename' => $modx->config['denyExtensionRename'],
     'showHiddenFiles' => $modx->config['showHiddenFiles'],
-
     'theme' => "evo",
-
-    'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
-    'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
+    'uploadURL'           => rtrim($modx->config['rb_base_url'], '/'),
+    'uploadDir'           => rtrim($modx->config['rb_base_dir'], '/'),
     'siteURL' => MODX_SITE_URL,
-    'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
-    'dirPerms' => intval($modx->config['new_folder_permissions'],8),
-    'filePerms' => intval($modx->config['new_file_permissions'],8),
-    'maxfilesize' => $settings['upload_maxsize'],
-    'denyUpdateCheck' => true,
-
+    'assetsURL'           => rtrim($modx->config['rb_base_url'], '/'),
+    'dirPerms'            => intval($modx->config['new_folder_permissions'], 8),
+    'filePerms'           => intval($modx->config['new_file_permissions'], 8),
+    'maxfilesize'         => (int)$modx->config['upload_maxsize'],
+    'noThumbnailsRecreation' => $modx->config['noThumbnailsRecreation'],
 
     'access' => array(
 
@@ -58,14 +54,14 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'   =>  str_replace(',',' ',$modx->config['upload_files']),
-        'flash'   =>  str_replace(',',' ',$modx->config['upload_flash']),
-        'images'  =>  str_replace(',',' ',$modx->config['upload_images']),
+        'files'  => str_replace(',', ' ', $modx->config['upload_files']),
+        'flash'  => str_replace(',', ' ', $modx->config['upload_flash']),
+        'images' => str_replace(',', ' ', $modx->config['upload_images']),
 
         // TinyMCE types
-        'file'    =>  str_replace(',',' ',$modx->config['upload_files']),
-        'media'   =>  str_replace(',',' ',$modx->config['upload_media']),
-        'image'   =>  str_replace(',',' ',$modx->config['upload_images']),
+        'file'   => str_replace(',', ' ', $modx->config['upload_files']),
+        'media'  => str_replace(',', ' ', $modx->config['upload_media']),
+        'image'  => str_replace(',', ' ', $modx->config['upload_images']),
     ),
     'dirnameChangeChars' => array(
         ' ' => "_",
@@ -75,10 +71,13 @@ $_CONFIG = array(
 
     'maxImageWidth' => $modx->config['maxImageWidth'],
     'maxImageHeight' => $modx->config['maxImageHeight'],
+    'clientResize'   => $modx->config['clientResize'] && $modx->config['maxImageWidth'] && $modx->config['maxImageHeight'] ? array('maxWidth'  => $modx->config['maxImageWidth'],
+                                                                                                                                   'maxHeight' => $modx->config['maxImageHeight'],
+                                                                                                                                   'quality'   => $modx->config['jpegQuality'] / 100
+    ) : array(),
 
     'thumbWidth' => $modx->config['thumbWidth'],
     'thumbHeight' => $modx->config['thumbHeight'],
-
     'thumbsDir' => $modx->config['thumbsDir'],
 
     'jpegQuality' => $modx->config['jpegQuality'],

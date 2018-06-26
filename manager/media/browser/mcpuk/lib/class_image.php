@@ -53,7 +53,7 @@ abstract class image {
   *   3. An array with two elements. First - width, second - height.
   *      Creates a blank image.
   *   4. A filename string. Get image form file.
-  * Second paramaeter is used by pass some specific image driver options
+  * Second parameter is used by pass some specific image driver options
   * @param mixed $image
   * @param array $options */
 
@@ -107,20 +107,18 @@ abstract class image {
 
     final protected function buildImage($image) {
         $class = get_class($this);
-
         if ($image instanceof $class) {
             $width = $image->width;
             $height = $image->height;
             $img = $image->image;
 
-        } elseif (is_array($image)) {
-            list($key, $width) = each($image);
-            list($key, $height) = each($image);
+        } elseif (is_array($image) && count($image) > 1) {
+            $width = $image[0];
+            $height = $image[1];
             $img = $this->getBlankImage($width, $height);
 
         } else
             $img = $this->getImage($image, $width, $height);
-
         return ($img !== false)
             ? array($img, $width, $height)
             : false;

@@ -9,7 +9,6 @@
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
   */
-
 browser.init = function() {
     if (!this.checkAgent()) return;
 
@@ -28,12 +27,11 @@ browser.init = function() {
         return false;
     });
     this.initOpeners();
-    console.log(this.opener);
     this.initSettings();
     this.initContent();
     this.initToolbar();
+    this.initUploader();
     this.initResizer();
-    this.initDropUpload();
 };
 
 browser.checkAgent = function() {

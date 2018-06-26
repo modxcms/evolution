@@ -71,6 +71,8 @@ return [
     'strip_image_paths' => 1,
     'maxImageWidth' => 2600,
     'maxImageHeight' => 2200,
+    'clientResize' => 0,
+    'noThumbnailsRecreation' => 0,
     'thumbWidth' => 150,
     'thumbHeight' => 150,
     'thumbsDir' => '.thumbs',
