@@ -196,7 +196,7 @@ abstract class Template
                 'id'     => empty($module) ? self::getParam('id', $content, 0) : (int)$module
             )
         );
-        $out = implode("?", array($this->_modx->getManagerPath(), http_build_query($data)));
+        $out = implode("?", array($this->_modx->getManagerUrl(), http_build_query($data)));
         if ($full) {
             $out = $this->_modx->getConfig('site_url') . ltrim($out, '/');
         }

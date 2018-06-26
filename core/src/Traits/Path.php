@@ -155,12 +155,20 @@ trait Path
     }
 
     /**
+     * @deprecated
+     */
+    public function getManagerPath()
+    {
+        return $this->getManagerUrl();
+    }
+
+    /**
      * Returns the manager relative URL/path with respect to the site root.
      *
      * @global string $base_url
      * @return string The complete URL to the manager folder
      */
-    public function getManagerPath()
+    public function getManagerUrl()
     {
         return MODX_MANAGER_URL;
     }

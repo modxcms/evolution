@@ -3,7 +3,7 @@ if (! function_exists('fetchRssChannelItems')) {
     function fetchRssChannelItems($url)
     {
         $items = [];
-        $file = evolutionCMS()->getCachePath() . '/rss/' . md5($url);
+        $file = evolutionCMS()->getCachePath() . 'rss/' . md5($url);
         $loadPath = file_exists($file) ? $file : $url;
         $content = file_get_contents($loadPath);
 
@@ -27,6 +27,9 @@ if (! function_exists('fetchRssChannelItems')) {
             }
 
             if (!empty($items) && $loadPath !== $file) {
+                if(! is_dir(dirname($file))) {
+                    mkdir(dirname($file));
+                }
                 file_put_contents($file, $content);
             }
         }

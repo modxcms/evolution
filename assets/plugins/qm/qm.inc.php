@@ -479,7 +479,7 @@ class Qm {
                         </ul>
     					</div>';
 
-                        $MGR_DIR = $this->modx->getManagerPath( );
+                        $MGR_DIR = $this->modx->getManagerUrl( );
                         $css = '
                         <link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/style.css" />';
 
