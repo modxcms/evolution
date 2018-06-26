@@ -111,7 +111,7 @@ div.file {
     white-space: nowrap;
 }
 
-div.file .thumb {
+div.file .thumb,  div.file .skipthumb {
     width: <?php echo $config['thumbWidth'] ?>px;
     height: <?php echo $config['thumbHeight'] ?>px;
     background: no-repeat center center;
