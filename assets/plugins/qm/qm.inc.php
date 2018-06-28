@@ -66,15 +66,15 @@ class Qm {
         if (isset($_SESSION['mgrUsrConfigSet']['manager_language'])) $manager_language = $_SESSION['mgrUsrConfigSet']['manager_language'];
 
 		// Include_once the language file
-        if(!isset($manager_language) || !file_exists(EVO_CORE_PATH . "lang/".$manager_language.".inc.php")) {
+        if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php")) {
             $manager_language = "english"; // if not set, get the english language file.
         }
         // Include default language
-        include_once EVO_CORE_PATH . "lang/english.inc.php";
+        include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
 
         // Include user language
-        if($manager_language!="english" && file_exists(EVO_CORE_PATH . "lang/".$manager_language.".inc.php")) {
-            include_once EVO_CORE_PATH . "lang/".$manager_language.".inc.php";
+        if($manager_language!="english" && file_exists(MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php")) {
+            include_once MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php";
         }
 
         // Get event

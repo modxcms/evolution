@@ -3,6 +3,7 @@
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
 use Exception;
+use View;
 
 class ManagerTheme implements ManagerThemeInterface
 {
@@ -16,7 +17,9 @@ class ManagerTheme implements ManagerThemeInterface
      */
     protected $theme;
 
-    protected $templateNamespace = 'manager';
+    protected $namespace = 'manager';
+
+    protected $lang = 'en';
 
     protected $actions = [
         /** frame management - show the requested frame */
@@ -124,10 +127,30 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         $this->theme = $theme;
+    }
 
-        $this->registerViews();
-        $this->loadSnippets();
-        $this->loadChunks();
+    public function setLang($lang)
+    {
+        $this->lang = $lang;
+    }
+
+    public function view($name, array $params = [])
+    {
+        return View::make(
+            $this->namespace . '::' . $name,
+            $this->getViewAttributes($params)
+        );
+    }
+
+    public function getViewAttributes(array $params = [])
+    {
+        $baseParams = [
+            'modx' => $this->core,
+            'modx_lang_attribute' => $this->lang,
+            'manager_theme' => $this->theme
+        ];
+
+        return array_merge($baseParams, $params);
     }
 
     public function handle ($action) {
@@ -142,52 +165,5 @@ class ManagerTheme implements ManagerThemeInterface
 
     protected function makeControllerPath($action) {
         return MODX_MANAGER_PATH . 'controllers/' . $action . '.php';
-    }
-
-    protected function registerViews()
-    {
-        $this->core->get('view')
-            ->addNamespace('manager', MODX_MANAGER_PATH . 'media/style/' . $this->theme . '/views/');
-    }
-
-    protected function loadSnippets()
-    {
-        $found = $this->core->findElements(
-            'chunk',
-            MODX_MANAGER_PATH . 'media/style/' . $this->theme . '/snippets/',
-            array('php')
-        );
-        foreach ($found as $name => $code) {
-            $this->addSnippet($name, $code);
-        }
-    }
-
-    protected function loadChunks()
-    {
-        $found = $this->core->findElements(
-            'chunk',
-            MODX_MANAGER_PATH . 'media/style/' . $this->theme . '/chunks/',
-            array('tpl', 'html')
-        );
-        foreach ($found as $name => $code) {
-            $this->addChunk($name, $code);
-        }
-    }
-
-    public function addSnippet($name, $code)
-    {
-        $this->core->addSnippet(
-            $name,
-            $code,
-            $this->templateNamespace . '#',
-            array(
-                'managerTheme' => $this
-            )
-        );
-    }
-
-    public function addChunk($name, $code)
-    {
-        $this->core->addChunk($name, $code, $this->templateNamespace . '#');
     }
 }

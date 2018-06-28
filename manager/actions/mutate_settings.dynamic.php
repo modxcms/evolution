@@ -27,7 +27,7 @@ extract($settings, EXTR_OVERWRITE);
 
 // load languages and keys
 $lang_keys = array();
-$dir = dir(EVO_CORE_PATH . 'lang');
+$dir = dir(MODX_MANAGER_PATH . 'includes/lang');
 while($file = $dir->read()) {
 	if(strpos($file, '.inc.php') > 0) {
 		$endpos = strpos($file, '.');

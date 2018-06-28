@@ -185,7 +185,7 @@ if (!function_exists('getLangs')) {
             $manager_language = "english";
         }
         $langs = array();
-        if ($handle = opendir(EVO_CORE_PATH . 'lang')) {
+        if ($handle = opendir(MODX_MANAGER_PATH . 'includes/lang')) {
             while (false !== ($file = readdir($handle))) {
                 if (strpos($file, '.inc.') !== false) {
                     $langs[] = $file;

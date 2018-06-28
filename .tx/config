@@ -10,14 +10,14 @@ type = PHP_ALT_ARRAY
 lang_map = bg: bulgarian, cs: czech, da: danish, de: german, es: spanish-utf8, fa: persian, fi: finnish-utf8, fr: francais-utf8, he: hebrew, it: italian, ja: japanese-utf8, nl: nederlands-utf8, no: norwegian, pl: polish-utf8, pt_BR: portuguese-br-utf8, pt: portuguese, ru: russian-UTF8, sv: svenska, uk: ukranian, zh: chinese
 
 [modx-evolution.countrylist]
-file_filter = core/lang/country/<lang>_country.inc.php
-source_file = core/lang/country/english_country.inc.php
+file_filter = manager/includes/lang/country/<lang>_country.inc.php
+source_file = manager/includes/country/english_country.inc.php
 source_lang = en
 type = PHP_ALT_ARRAY
 
 [modx-evolution.manager]
-file_filter = core/lang/<lang>.inc.php
-source_file = core/lang/english.inc.php
+file_filter = manager/includes/<lang>.inc.php
+source_file = manager/includes/english.inc.php
 source_lang = en
 type = PHP_ALT_ARRAY
 

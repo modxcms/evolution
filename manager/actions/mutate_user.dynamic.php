@@ -87,9 +87,9 @@ if($modx->getManagerApi()->hasFormValues()) {
 
 // include the country list language file
 $_country_lang = array();
-include_once EVO_CORE_PATH . "lang/country/english_country.inc.php";
-if($manager_language != "english" && file_exists(EVO_CORE_PATH . "lang/country/" . $manager_language . "_country.inc.php")) {
-	include_once EVO_CORE_PATH . "lang/country/" . $manager_language . "_country.inc.php";
+include_once MODX_MANAGER_PATH . "includes/lang/country/english_country.inc.php";
+if($manager_language != "english" && file_exists(MODX_MANAGER_PATH . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
+	include_once MODX_MANAGER_PATH . "includes/lang/country/" . $manager_language . "_country.inc.php";
 }
 asort($_country_lang);
 

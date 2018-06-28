@@ -57,7 +57,7 @@ $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb
 
 if (isset($data) && count($data) > 0) {
 	if(isset($data['manager_language'])) {
-		$lang_path = EVO_CORE_PATH . 'lang/' . $data['manager_language'] . '.inc.php';
+		$lang_path = MODX_MANAGER_PATH . 'includes/lang/' . $data['manager_language'] . '.inc.php';
 		if(is_file($lang_path)) {
 			include $lang_path;
             global $modx_lang_attribute;
@@ -95,8 +95,8 @@ if (isset($data) && count($data) > 0) {
 				$v = rtrim($v,'/') . '/';
 				break;
             case 'manager_language':
-                $langDir = realpath(EVO_CORE_PATH . 'lang');
-                $langFile = realpath(EVO_CORE_PATH . 'lang/' . $v . '.inc.php');
+                $langDir = realpath(MODX_MANAGER_PATH . 'includes/lang');
+                $langFile = realpath(MODX_MANAGER_PATH . 'includes/lang/' . $v . '.inc.php');
                 $langFileDir = dirname($langFile);
                 if($langDir !== $langFileDir || !file_exists($langFile)) {
                     $v = 'english';

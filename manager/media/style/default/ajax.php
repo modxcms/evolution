@@ -34,9 +34,9 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
 $modx->sid = session_id();
 
 $_lang = array();
-include_once EVO_CORE_PATH . '/lang/english.inc.php';
+include_once MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
 if ($modx->config['manager_language'] != 'english') {
-    include_once EVO_CORE_PATH . '/lang/' . $modx->config['manager_language'] . '.inc.php';
+    include_once MODX_MANAGER_PATH . 'includes/lang/' . $modx->config['manager_language'] . '.inc.php';
 }
 include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 

@@ -60,11 +60,11 @@ if (defined('EVO_INSTALL_TIME')) {
 if (!isset($_SESSION['mgrValidated'])) {
     if (isset($manager_language)) {
         // establish fallback to English default
-        include_once EVO_CORE_PATH . "lang/english.inc.php";
+        include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
         // include localized overrides
-        include_once EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php";
+        include_once MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php";
     } else {
-        include_once EVO_CORE_PATH . "lang/english.inc.php";
+        include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
     }
 
     $modx->setPlaceholder('modx_charset', $modx_manager_charset);

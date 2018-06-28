@@ -87,7 +87,7 @@ header('X-XSS-Protection: 0');
 
 // provide english $_lang for error-messages
 $_lang = array();
-include_once EVO_CORE_PATH . "lang/english.inc.php";
+include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
 
 // check PHP version. EVO is compatible with php 5 (5.6.0+)
 $php_ver_comp = version_compare(phpversion(), "7.1.3");
@@ -114,36 +114,30 @@ if (!isset($_SERVER['DOCUMENT_ROOT']) || empty($_SERVER['DOCUMENT_ROOT'])) {
 
 // initiate the content manager class
 $modx = evolutionCMS();
-
-$modx->getSettings();
 $modx->mstart = $mstart;
-
-// connect to the database
-$modx->getDatabase()->connect();
-
 $modx->sid = session_id();
 
-// Now that session is given get user settings and merge into $modx->config
-$usersettings = $modx->getUserSettings();
-
-$settings =& $modx->config;
-extract($modx->config, EXTR_OVERWRITE);
+$settings = $modx->allConfig();
+extract($settings, EXTR_OVERWRITE);
 
 // now include_once different language file as english
-if (!isset($manager_language) || !file_exists(EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php")) {
+if (!isset($manager_language) || !file_exists(MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php")) {
     $manager_language = "english"; // if not set, get the english language file.
 }
 
 // $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
-if ($manager_language != "english" && file_exists(EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php")) {
-    include_once EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php";
+if ($manager_language != "english" && file_exists(MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php")) {
+    include_once MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php";
 }
 
 // allow custom language overrides not altered by future EVO-updates
-if (file_exists(EVO_CORE_PATH . "lang/override/" . $manager_language . ".inc.php")) {
-    include_once EVO_CORE_PATH . "lang/override/" . $manager_language . ".inc.php";
+if (file_exists(MODX_MANAGER_PATH . "includes/lang/override/" . $manager_language . ".inc.php")) {
+    include_once MODX_MANAGER_PATH . "includes/lang/override/" . $manager_language . ".inc.php";
 }
+
+$modx->get('ManagerTheme')
+    ->setLang($modx_lang_attribute);
 
 $s = array('[+MGR_DIR+]');
 $r = array(MGR_DIR);

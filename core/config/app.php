@@ -47,6 +47,7 @@ return [
         'Evolution.phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
         'Evolution.PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
         'Evolution.DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class,
+        'Evolution.ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
     ],
 
     'aliases' => [

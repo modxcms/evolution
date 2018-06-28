@@ -24,10 +24,10 @@ class DocManager {
 			}
 		}
 
-		include EVO_CORE_PATH . 'lang/english.inc.php';
+		include MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
 		if($managerLanguage != 'english') {
-			if (file_exists(EVO_CORE_PATH . 'lang/'.$managerLanguage.'.inc.php')) {
-     			include EVO_CORE_PATH . 'lang/'.$managerLanguage.'.inc.php';
+			if (file_exists(MODX_MANAGER_PATH . 'includes/lang/'.$managerLanguage.'.inc.php')) {
+     			include MODX_MANAGER_PATH . 'includes/lang/'.$managerLanguage.'.inc.php';
 			}
 		}
 

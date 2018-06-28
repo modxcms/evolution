@@ -139,7 +139,8 @@ class ExceptionHandler
         $source = '',
         $text = '',
         $line = '',
-        $output = ''
+        $output = '',
+        $backtrace = array()
     ) {
         if (0 < $this->container->messageQuitCount) {
             return;
@@ -287,7 +288,7 @@ class ExceptionHandler
         if (isset($php_errormsg) && !empty($php_errormsg)) {
             $str = "<b>{$php_errormsg}</b><br />\n{$str}";
         }
-        $str .= $this->getBacktrace(debug_backtrace());
+        $str .= $this->getBacktrace(empty($backtrace) ? debug_backtrace() : $backtrace);
         // Log error
         if (!empty($this->container->currentSnippet)) {
             $source = 'Snippet - ' . $this->container->currentSnippet;
@@ -470,6 +471,17 @@ class ExceptionHandler
         ) {
             $this->container->getDatabase()->disconnect();
         }
-        $this->messageQuit($exception->getMessage());
+        $this->messageQuit(
+            $exception->getMessage(),
+            '',
+            true,
+            '',
+            $exception->getFile(),
+            '',
+            '',
+            $exception->getLine(),
+            '',
+            $exception->getTrace()
+        );
     }
 }

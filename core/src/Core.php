@@ -160,6 +160,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->q = self::_getCleanQueryString();
         $this->getService('ExceptionHandler');
+
+        $this->getSettings();
     }
 
     final public function __clone()
@@ -2674,11 +2676,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             throw new \RuntimeException('Call DocumentParser::executeParser on CLI mode');
         }
         //error_reporting(0);
-
-        // get the settings
-        if (empty ($this->config)) {
-            $this->getSettings();
-        }
 
         $this->_IIS_furl_fix(); // IIS friendly url fix
 
@@ -5912,43 +5909,35 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->invokeEvent("OnBeforeManagerPageInit");
             }
 
-            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
-                $usrSettings = &$_SESSION[$usrType . 'UsrConfigSet'];
+            if ($usrType == 'web') {
+                $from = $tbl_web_user_settings;
+                $where = "webuser='{$id}'";
             } else {
-                if ($usrType == 'web') {
-                    $from = $tbl_web_user_settings;
-                    $where = "webuser='{$id}'";
-                } else {
-                    $from = $tbl_user_settings;
-                    $where = "user='{$id}'";
-                }
-
-                $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
-
-                $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
-                while ($row = $this->getDatabase()->getRow($result)) {
-                    if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
-                        $row['setting_value'] = $which_browser_default;
-                    }
-                    $usrSettings[$row['setting_name']] = $row['setting_value'];
-                }
-                if (isset ($usrType)) {
-                    $_SESSION[$usrType . 'UsrConfigSet'] = $usrSettings;
-                } // store user settings in session
+                $from = $tbl_user_settings;
+                $where = "user='{$id}'";
             }
+
+            $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
+
+            $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
+            while ($row = $this->getDatabase()->getRow($result)) {
+                if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
+                    $row['setting_value'] = $which_browser_default;
+                }
+                $usrSettings[$row['setting_name']] = $row['setting_value'];
+            }
+            if (isset ($usrType)) {
+                $_SESSION[$usrType . 'UsrConfigSet'] = $usrSettings;
+            } // store user settings in session
         }
         if ($this->isFrontend() && $mgrid = $this->getLoginUserID('mgr')) {
             $musrSettings = array();
-            if (isset ($_SESSION['mgrUsrConfigSet'])) {
-                $musrSettings = &$_SESSION['mgrUsrConfigSet'];
-            } else {
-                if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings,
-                    "user='{$mgrid}'")) {
-                    while ($row = $this->getDatabase()->getRow($result)) {
-                        $musrSettings[$row['setting_name']] = $row['setting_value'];
-                    }
-                    $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
+            if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings,
+                "user='{$mgrid}'")) {
+                while ($row = $this->getDatabase()->getRow($result)) {
+                    $musrSettings[$row['setting_name']] = $row['setting_value'];
                 }
+                $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
             }
             if (!empty ($musrSettings)) {
                 $usrSettings = array_merge($musrSettings, $usrSettings);

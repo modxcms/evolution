@@ -71,9 +71,9 @@ class ErrorHandler
         }
 
         if ($context === 'common') {
-            $lang_path = EVO_CORE_PATH . 'lang/';
+            $lang_path = MODX_MANAGER_PATH . 'includes/lang/';
         } else {
-            $lang_path = EVO_CORE_PATH . "lang/{$context}/";
+            $lang_path = MODX_MANAGER_PATH . 'includes/lang/{$context}/';
         }
         include_once($lang_path . 'english.inc.php');
         $manager_language = $modx->getConfig('manager_language');

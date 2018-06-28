@@ -167,8 +167,8 @@ abstract class AbstractController
     public function getLanguageCode()
     {
         $manager_language = $this->modx->config['manager_language'];
-        if (file_exists(EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php")) {
-            include_once EVO_CORE_PATH . "lang/" . $manager_language . ".inc.php";
+        if (file_exists(MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php")) {
+            include_once MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php";
         }
 
         return isset($modx_lang_attribute) ? $modx_lang_attribute : null;
