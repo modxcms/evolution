@@ -21,12 +21,6 @@ if (!empty($config['root']) && file_exists($config['root'] . '/index.php')) {
     exit;
 }
 
-$modx->getDatabase()->connect();
-
-if (empty ($modx->config)) {
-    $modx->getSettings();
-}
-
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
     $modx->sendErrorPage();
 }

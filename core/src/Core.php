@@ -5557,7 +5557,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @deprecated
      */
     public function parseDocBlockFromFile($element_dir, $filename, $escapeValues = false) {
-        $data = DocBlock::parseFromFile($element_dir, $filename);
+        $data = $this->get('DocBlock')->parseFromFile($element_dir, $filename);
         if ($escapeValues) {
             $data = $this->getDatabase()->escape($data);
         }
@@ -5568,7 +5568,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @deprecated
      */
     public function parseDocBlockFromString($string, $escapeValues = false) {
-        $data = DocBlock::parseFromString($string);
+        $data = $this->get('DocBlock')->parseFromString($string);
         if ($escapeValues) {
             $data = $this->getDatabase()->escape($data);
         }
@@ -5579,14 +5579,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @deprecated
      */
     public function parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found) {
-        return DocBlock::parseLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
+        return $this->get('DocBlock')->parseLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
     }
 
     /**
      * @deprecated
      */
     public function convertDocBlockIntoList($parsed) {
-        return DocBlock::convertIntoList($parsed);
+        return $this->get('DocBlock')->convertIntoList($parsed);
     }
 
     /**

@@ -68,6 +68,7 @@ return [
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
          */
         'Evo' => Illuminate\Support\Facades\App::class,
-        'DocBlock' => EvolutionCMS\Facades\DocBlock::class
+        'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
+        'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class
     ]
 ];
