@@ -233,9 +233,10 @@ class ExceptionHandler
         $table[] = array('REQUEST_URI', $request_uri);
 
         if ($this->container->getManagerApi()->action) {
-            include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
-            global $action_list;
-            $actionName = (isset($action_list[$this->container->getManagerApi()->action])) ? " - {$action_list[$this->container->getManagerApi()->action]}" : '';
+            $actionName = Legacy\LogHandler::getAction($this->container->getManagerApi()->action);
+            if (! empty($actionName)) {
+                $actionName = ' - ' . $actionName;
+            }
 
             $table[] = array('Manager action', $this->container->getManagerApi()->action . $actionName);
         }

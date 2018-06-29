@@ -166,7 +166,6 @@ $rs = $modx->getDatabase()->select('*', $from, '', 'username ASC, au.sid ASC');
 if($modx->getDatabase()->getRecordCount($rs) < 1) {
 	$html = '<p>[%no_active_users_found%]</p>';
 } else {
-	include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
 	$now = $_SERVER['REQUEST_TIME'] + $server_offset_time;
 	$ph['now'] = strftime('%H:%M:%S', $now);
 	$timetocheck = ($now - (60 * 20)); //+$server_offset_time;
@@ -197,7 +196,7 @@ if($modx->getDatabase()->getRecordCount($rs) < 1) {
 		$idle = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
 		$webicon = $activeusers['internalKey'] < 0 ? '<img src="[&tree_globe&]" alt="Web user" />&nbsp;' : '';
 		$ip = $activeusers['ip'] === '::1' ? '127.0.0.1' : $activeusers['ip'];
-		$currentaction = getAction($activeusers['action'], $activeusers['id']);
+		$currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeusers['action'], $activeusers['id']);
 		$userList[] = array(
 			$idle,
 			'',

@@ -16,7 +16,6 @@ if (file_exists(dirname(__DIR__) . '/config.php')) {
         'root' => dirname(__DIR__, 2)
     ];
 }
-
 if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
     require_once $config['root'] . '/index.php';
 } else {
@@ -25,17 +24,16 @@ if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
     exit;
 }
 
-$modx->getDatabase()->connect();
 $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 
 $core_path = EVO_CORE_PATH;
 // include_once the language file
 $_lang = array();
-include_once("{$core_path}lang/english.inc.php");
+include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
 
-if($manager_language !== 'english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
-	include_once("{$core_path}lang/{$manager_language}.inc.php");
+if($manager_language !== 'english' && is_file(MODX_MANAGER_PATH . "includes/lang/{$manager_language}.inc.php")) {
+	include_once MODX_MANAGER_PATH . "includes/lang/{$manager_language}.inc.php";
 }
 
 // Initialize System Alert Message Queque
