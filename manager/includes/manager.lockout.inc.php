@@ -4,7 +4,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 }
 $action = isset($_REQUEST['a']) ? (int)$_REQUEST['a'] : 1;
 
-if (8 !== $action && $modx->get('ManagerTheme')->hasManagerAccess() === false) {
-    echo $modx->get('ManagerTheme')->renderAccessPage();
+if (8 !== $action && ManagerTheme::hasManagerAccess() === false) {
+    echo ManagerTheme::renderAccessPage();
     exit;
 }

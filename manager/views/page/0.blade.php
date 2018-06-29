@@ -6,8 +6,8 @@
 ?>
 @extends('manager::template.page')
 @section('content')
-    <div class='sectionHeader'>{{ $modx->get('ManagerTheme')->getLexicon('functionnotimpl') }}</div>
+    <div class='sectionHeader'>{{ ManagerTheme::getLexicon('functionnotimpl') }}</div>
     <div class='sectionBody'>
-        <p>{{ $modx->get('ManagerTheme')->getLexicon('functionnotimpl_message')  }}</p>
+        <p>{{ ManagerTheme::getLexicon('functionnotimpl_message')  }}</p>
     </div>
 @endsection

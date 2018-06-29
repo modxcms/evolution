@@ -158,7 +158,7 @@ function createCombinedView($resources) {
 function prepareElementRowPh($row, $resourceTable, $resources) {
     global $_style;
     $modx = evolutionCMS();
-    $_lang = $modx->get('ManagerTheme')->getLexicon();
+    $_lang = ManagerTheme::getLexicon();
 
     $types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
@@ -269,6 +269,6 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
         'resourceTable' => $resourceTable,
         'actionEdit' => $types['actions']['edit'][0],
         'catid' => $catid,
-        'textdir' => $modx->get('ManagerTheme')->getTextDir('&rlm;'),
+        'textdir' => ManagerTheme::getTextDir('&rlm;'),
     );
 }

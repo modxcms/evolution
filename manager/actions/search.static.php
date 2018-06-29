@@ -83,7 +83,7 @@ if (isset($_REQUEST['submitok'])) {
     $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
     $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
 
-    $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, $modx->get('ManagerTheme')->getCharset());
+    $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, ManagerTheme::getCharset());
     $searchlongtitle = $modx->getDatabase()->escape(trim($_REQUEST['searchfields']));
     $search_alias = $modx->getDatabase()->escape(trim($_REQUEST['searchfields']));
     $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? (int)$_REQUEST['templateid'] : '';
@@ -271,9 +271,9 @@ if (isset($_REQUEST['submitok'])) {
                                 if (function_exists('mb_strlen') && function_exists('mb_substr')) {
                                     ?>
                                     <td<?= $tdClass ?>>
-                                        <a href="index.php?a=27&id=<?= $row['id'] ?>"><?= mb_strlen($row['pagetitle'], $modx->get('ManagerTheme')->getCharset()) > 70 ? mb_substr($row['pagetitle'], 0, 70, $modx->get('ManagerTheme')->getCharset()) . "..." : $row['pagetitle'] ?></a>
+                                        <a href="index.php?a=27&id=<?= $row['id'] ?>"><?= mb_strlen($row['pagetitle'], ManagerTheme::getCharset()) > 70 ? mb_substr($row['pagetitle'], 0, 70, ManagerTheme::getCharset()) . "..." : $row['pagetitle'] ?></a>
                                     </td>
-                                    <td<?= $tdClass ?>><?= mb_strlen($row['description'], $modx->get('ManagerTheme')->getCharset()) > 70 ? mb_substr($row['description'], 0, 70, $modx->get('ManagerTheme')->getCharset()) . "..." : $row['description'] ?></td>
+                                    <td<?= $tdClass ?>><?= mb_strlen($row['description'], ManagerTheme::getCharset()) > 70 ? mb_substr($row['description'], 0, 70, ManagerTheme::getCharset()) . "..." : $row['description'] ?></td>
                                     <?php
                                 } else {
                                     ?>

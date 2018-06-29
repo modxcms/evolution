@@ -156,23 +156,23 @@ if (!isset($_SESSION['SystemAlertMsgQueque'])) {
 }
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-$_lang = $modx->get('ManagerTheme')->getLexicon();
+$_lang = ManagerTheme::getLexicon();
 
 // send the charset header
-header('Content-Type: text/html; charset=' . $modx->get('ManagerTheme')->getCharset());
+header('Content-Type: text/html; charset=' . ManagerTheme::getCharset());
 
 // Update last action in table active_users
-$action = $modx->get('ManagerTheme')->getActionId();
+$action = ManagerTheme::getActionId();
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-if ($modx->get('ManagerTheme')->isAuthManager() === false) {
-    echo $modx->get('ManagerTheme')->renderLoginPage();
+if (ManagerTheme::isAuthManager() === false) {
+    echo ManagerTheme::renderLoginPage();
     exit;
 }
 
 /** Ignore Logout action */
-if (8 !== $action && $modx->get('ManagerTheme')->hasManagerAccess() === false) {
-    echo $modx->get('ManagerTheme')->renderAccessPage();
+if (8 !== $action && ManagerTheme::hasManagerAccess() === false) {
+    echo ManagerTheme::renderAccessPage();
     exit;
 }
 
@@ -181,16 +181,16 @@ $modx->updateValidatedUserSession();
 
 if ($action === null) {
     // include_once the style variables file
-    if ($modx->get('ManagerTheme')->getTheme() !== '' && ! isset($_style)) {
+    if (ManagerTheme::getTheme() !== '' && ! isset($_style)) {
         $_style = array();
-        include_once __DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/style.php";
+        include_once __DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/style.php";
     }
 
     // first we check to see if this is a frameset request
     if (!isset($_POST['updateMsgCount'])) {
         // this looks to be a top-level frameset request, so let's serve up a frameset
-        if (is_file(__DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/frames/1.php")) {
-            include_once __DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/frames/1.php";
+        if (is_file(__DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/frames/1.php")) {
+            include_once __DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/frames/1.php";
         } else {
             include_once __DIR__ . "/frames/1.php";
         }
@@ -201,9 +201,9 @@ if ($action === null) {
         }
     }
 } else {
-    $modx->get('ManagerTheme')->saveAction($action);
+    ManagerTheme::saveAction($action);
 
     $modx->invokeEvent('OnManagerPageInit', compact('action'));
 
-    echo $modx->get('ManagerTheme')->handle($action);
+    echo ManagerTheme::handle($action);
 }

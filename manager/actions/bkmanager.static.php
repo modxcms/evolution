@@ -441,7 +441,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                                         $fileLabel,
                                                         ':',
                                                         '`'
-                                                    ), '', $line)), ENT_QUOTES, $modx->get('ManagerTheme')->getCharset());
+                                                    ), '', $line)), ENT_QUOTES, ManagerTheme::getCharset());
                                                 }
                                             }
                                             $count++;

@@ -26,8 +26,8 @@ include_once(__DIR__."/../../../../../index.php");
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-$manager_language = $modx->get('ManagerTheme')->getLangName();
-$_GET['langCode'] = $modx->get('ManagerTheme')->getLang();
+$manager_language = ManagerTheme::getLangName();
+$_GET['langCode'] = ManagerTheme::getLang();
 
 // MAGIC AUTOLOAD CLASSES FUNCTION
 function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {

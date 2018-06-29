@@ -58,7 +58,7 @@
                                 continue;
                             }
                             $themename = $file;
-                            $selectedtext = $themename == $modx->get('ManagerTheme')->getTheme() ? "selected='selected'" : "";
+                            $selectedtext = $themename == ManagerTheme::getTheme() ? "selected='selected'" : "";
                             echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
                         }
                     }

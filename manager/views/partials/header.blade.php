@@ -1,9 +1,9 @@
 <?php
-$mxla = $modx->get('ManagerTheme')->getLang();
+$mxla = ManagerTheme::getLang();
 // invoke OnManagerRegClientStartupHTMLBlock event
 $evtOut = evolutionCMS()->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
-$textdir = $modx->get('ManagerTheme')->getTextDir() === 'rtl' ? 'rtl' : 'ltr';
+$textdir = ManagerTheme::getTextDir() === 'rtl' ? 'rtl' : 'ltr';
 if (!isset($modx->config['mgr_jquery_path'])) {
     $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 }
@@ -21,7 +21,7 @@ if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
 
 $css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . EVO_INSTALL_TIME;
 
-if ($modx->get('ManagerTheme')->getTheme() === 'default') {
+if (ManagerTheme::getTheme() === 'default') {
     if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')
         && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
         $files = array(
@@ -70,7 +70,7 @@ if ($modx->get('ManagerTheme')->getTheme() === 'default') {
 <html lang="<?= $mxla ?>" dir="<?= $textdir ?>">
 <head>
     <title>Evolution CMS</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx->get('ManagerTheme')->getCharset() ?>"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?= ManagerTheme::getCharset() ?>"/>
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
     <meta name="theme-color" content="#1d2023"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -124,4 +124,4 @@ if ($modx->get('ManagerTheme')->getTheme() === 'default') {
         ?>
     </script>
 </head>
-<body <?= $modx->get('ManagerTheme')->getTextDir(' class="rtl"') ?> class="<?= $body_class ?>" data-evocp="color">
+<body <?= ManagerTheme::getTextDir(' class="rtl"') ?> class="<?= $body_class ?>" data-evocp="color">

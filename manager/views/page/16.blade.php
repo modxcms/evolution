@@ -132,7 +132,7 @@
                             <label class="col-md-3 col-lg-2">
                                 <?= $_lang['template_name'] ?>
                                 <?php if($id == $modx->config['default_template']) {
-                                    echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), $modx->get('ManagerTheme')->getCharset()) . '</small>';
+                                    echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), ManagerTheme::getCharset()) . '</small>';
                                 } ?>
                             </label>
                             <div class="col-md-9 col-lg-10">

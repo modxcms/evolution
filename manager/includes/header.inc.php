@@ -1,2 +1,2 @@
 <?php
-echo $modx->get('ManagerTheme')->view('partials.header')->render();
+echo ManagerTheme::view('partials.header')->render();

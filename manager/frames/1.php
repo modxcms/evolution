@@ -9,7 +9,7 @@ $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 1') !== false)
 // invoke OnManagerPreFrameLoader
 $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 
-$mxla = $modx->get('ManagerTheme')->getLang();
+$mxla = ManagerTheme::getLang();
 
 if (!isset($modx->config['manager_menu_height'])) {
     $modx->config['manager_menu_height'] = 2.2; // rem
@@ -111,10 +111,10 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
 
 ?>
 <!DOCTYPE html>
-<html <?= ($modx->get('ManagerTheme')->getTextDir() !== null ? 'dir="rtl" lang="' : 'lang="') . $modx->get('ManagerTheme')->getLang() . '" xml:lang="' . $modx->get('ManagerTheme')->getLang() . '"' ?>>
+<html <?= (ManagerTheme::getTextDir() !== null ? 'dir="rtl" lang="' : 'lang="') . ManagerTheme::getLang() . '" xml:lang="' . ManagerTheme::getLang() . '"' ?>>
 <head>
     <title><?= $modx->getPhpCompat()->entities($modx->getConfig('site_name')) ?>- (EVO CMS Manager)</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx->get('ManagerTheme')->getCharset()?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?= ManagerTheme::getCharset()?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -157,7 +157,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
-          textdir: '<?= $modx->get('ManagerTheme')->getTextDir() ?>',
+          textdir: '<?= ManagerTheme::getTextDir() ?>',
           global_tabs: <?= $modx->config['global_tabs'] ?>
 
         },
