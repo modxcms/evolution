@@ -1,10 +1,4 @@
-<!-- snippets -->
-<?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
-}
-
-if (isset($resources->items['site_snippets'])) { ?>
+@if (isset($resources->items['site_snippets']))
     <div class="tab-page" id="tabSnippets">
         <h2 class="tab"><i class="fa fa-code"></i> <?= $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabSnippets'))</script>
@@ -27,13 +21,13 @@ if (isset($resources->items['site_snippets'])) { ?>
             </form>
         </div>
 
-        <?= renderViewSwitchButtons('site_snippets') ?>
+        @include('manager::partials.switchButtons', ['cssId' => 'site_snippets'])
 
-        <?= createResourceList('site_snippets', $resources) ?>
+        @include('manager::page.resources._list', ['resourceTable' => 'site_snippets', 'items' => $resources->items['site_snippets']])
 
         <script>
             initQuicksearch('site_snippets_search', 'site_snippets')
             initViews('sn', 'snippets', 'site_snippets')
         </script>
     </div>
-<?php } ?>
+@endif

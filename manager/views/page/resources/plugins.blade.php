@@ -1,10 +1,4 @@
-<!-- plugins -->
-<?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
-}
-
-if (isset($resources->items['site_plugins'])) { ?>
+@if (isset($resources->items['site_plugins']))
     <div class="tab-page" id="tabPlugins">
         <h2 class="tab"><i class="fa fa-plug"></i> <?= $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabPlugins'))</script>
@@ -40,13 +34,13 @@ if (isset($resources->items['site_plugins'])) { ?>
             </form>
         </div>
 
-        <?= renderViewSwitchButtons('site_plugins') ?>
+        @include('manager::partials.switchButtons', ['cssId' => 'site_plugins'])
 
-        <?= createResourceList('site_plugins', $resources) ?>
+        @include('manager::page.resources._list', ['resourceTable' => 'site_plugins', 'items' => $resources->items['site_plugins']])
 
         <script>
             initQuicksearch('site_plugins_search', 'site_plugins')
             initViews('pl', 'plugins', 'site_plugins')
         </script>
     </div>
-<?php } ?>
+@endif

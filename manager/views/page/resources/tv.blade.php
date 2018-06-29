@@ -1,10 +1,4 @@
-<!-- Template variables -->
-<?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
-}
-
-if (isset($resources->items['site_tmplvars'])) { ?>
+@if (isset($resources->items['site_tmplvars']))
     <div class="tab-page" id="tabVariables">
         <h2 class="tab"><i class="fa fa-list-alt"></i> <?= $_lang["tmplvars"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabVariables'))</script>
@@ -31,13 +25,13 @@ if (isset($resources->items['site_tmplvars'])) { ?>
             </form>
         </div>
 
-        <?= renderViewSwitchButtons('site_tmplvars') ?>
+        @include('manager::partials.switchButtons', ['cssId' => 'site_tmplvars'])
 
-        <?= createResourceList('site_tmplvars', $resources) ?>
+        @include('manager::page.resources._list', ['resourceTable' => 'site_tmplvars', 'items' => $resources->items['site_tmplvars']])
 
         <script>
             initQuicksearch('site_tmplvars_search', 'site_tmplvars')
             initViews('tv', 'tv', 'site_tmplvars')
         </script>
     </div>
-<?php } ?>
+@endif
