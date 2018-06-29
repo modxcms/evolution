@@ -205,16 +205,5 @@ if ($action === null) {
 
     $modx->invokeEvent('OnManagerPageInit', compact('action'));
 
-    $modx->get('ManagerTheme')->handle($action);
-
-    /********************************************************************/
-    // log action, unless it's a frame request
-    if ($action != 1 && $action != 7 && $action != 2) {
-        $log = new EvolutionCMS\Legacy\LogHandler;
-        $log->initAndWriteLog();
-    }
-    /********************************************************************/
-    // show debug
-    unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
-    echo evolutionCMS()->get('ManagerTheme')->view('debug')->render();
+    echo $modx->get('ManagerTheme')->handle($action);
 }

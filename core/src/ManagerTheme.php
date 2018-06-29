@@ -276,10 +276,15 @@ class ManagerTheme implements ManagerThemeInterface
         $this->charset = $charset;
     }
 
+    public function getViewName($name)
+    {
+        return $this->namespace . '::' . $name;
+    }
+
     public function view($name, array $params = [])
     {
         return View::make(
-            $this->namespace . '::' . $name,
+            $this->getViewName($name),
             $this->getViewAttributes($params)
         );
     }
@@ -299,22 +304,6 @@ class ManagerTheme implements ManagerThemeInterface
         return array_merge($baseParams, $params);
     }
 
-    protected function getController($action)
-    {
-        $controller = $this->makeControllerPath($action);
-
-        if (!\in_array($action, $this->actions, true) || !file_exists($controller)) {
-            $controller = null;
-        }
-
-        return $controller;
-    }
-
-    protected function makeControllerPath($action)
-    {
-        return MODX_MANAGER_PATH . 'controllers/' . $action . '.php';
-    }
-
     public function getFileProcessor($filepath, $theme = null)
     {
         if ($theme === null) {
@@ -331,22 +320,18 @@ class ManagerTheme implements ManagerThemeInterface
     }
     public function handle($action)
     {
-        if ($controller = $this->getController($action)) {
-            include_once $controller;
-        } else {
-            /********************************************************************/
-            /* default action: show not implemented message                     */
-            /********************************************************************/
-            // say that what was requested doesn't do anything yet
-            include_once $this->getFileProcessor("includes/header.inc.php");
-            echo "
-			<div class='sectionHeader'>" . $this->getLexicon('functionnotimpl') . "</div>
-			<div class='sectionBody'>
-				<p>" . $this->getLexicon('functionnotimpl_message') . "</p>
-			</div>
-		";
-            include_once $this->getFileProcessor("includes/footer.inc.php");
+        $out = $this->view('page.' . $action)->render();
+
+        /********************************************************************/
+        // log action, unless it's a frame request
+        if ($action > 0 && \in_array($action, [1, 2, 7], true) === false) {
+            $log = new Legacy\LogHandler;
+            $log->initAndWriteLog();
         }
+        /********************************************************************/
+        unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
+
+        return $out;
     }
 
     public function getItemId()

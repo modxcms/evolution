@@ -29,6 +29,7 @@ if(in_array($modx->getManagerApi()->action, array(
     echo $modx->getManagerApi()->loadDatePicker($modx->config['mgr_date_picker_path']);
 }
 ?>
+@include('manager::partials.debug')
 </body>
 </html>
 <!-- end footer -->
