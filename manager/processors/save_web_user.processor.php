@@ -12,7 +12,7 @@ $tbl_web_groups = $modx->getDatabase()->getFullTableName('web_groups');
 
 $input = $_POST;
 foreach($input as $k => $v) {
-	if($k !== 'comment') {
+	if($k !== 'comment' && $k !=='user_groups') {
 		$v = $modx->getPhpCompat()->htmlspecialchars($v, ENT_NOQUOTES);
 	}
 	$input[$k] = $v;
