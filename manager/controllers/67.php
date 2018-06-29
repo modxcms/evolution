@@ -1,3 +1,4 @@
 <?php
 // get the lock remover
-include_once(includeFileProcessor("processors/remove_locks.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/remove_locks.processor.php");

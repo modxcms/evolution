@@ -1,3 +1,4 @@
 <?php
 // get the event log delete processor
-include_once(includeFileProcessor("processors/delete_eventlog.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/delete_eventlog.processor.php");

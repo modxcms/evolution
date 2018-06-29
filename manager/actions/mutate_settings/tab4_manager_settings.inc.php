@@ -9,7 +9,7 @@
             </td>
             <td>
                 <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options('', $manager_language) ?>
+                    <?= get_lang_options('', $manager_language, $lang_keys, $_lang) ?>
                 </select>
             </td>
         </tr>
@@ -58,7 +58,7 @@
                                 continue;
                             }
                             $themename = $file;
-                            $selectedtext = $themename == $manager_theme ? "selected='selected'" : "";
+                            $selectedtext = $themename == $modx->get('ManagerTheme')->getTheme() ? "selected='selected'" : "";
                             echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
                         }
                     }
@@ -585,7 +585,7 @@
             </td>
             <td>
                 <select name="fe_editor_lang" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options('', $fe_editor_lang) ?>
+                    <?= get_lang_options('', $fe_editor_lang, $lang_keys, $_lang) ?>
                 </select>
             </td>
         </tr>

@@ -6,7 +6,7 @@ if (!$modx->hasPermission('edit_module')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+$mxla = $modx->get('ManagerTheme')->getLang();
 
 /**
  * Resource Selector

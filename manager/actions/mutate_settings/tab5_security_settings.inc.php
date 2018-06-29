@@ -191,7 +191,7 @@ if(!$gdAvailable) $use_captcha = 0;
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_captcha_words" id="reload_captcha_words_select" onchange="confirmLangChange(this, 'captcha_words_default', 'captcha_words_input');">
-<?php echo get_lang_options('captcha_words_default');?>
+<?php echo get_lang_options('captcha_words_default', '', $lang_keys, $_lang);?>
       </select>
     </td>
     <td><input type="text" id="captcha_words_input" name="captcha_words" style="width:250px" value="<?php echo $captcha_words; ?>" />

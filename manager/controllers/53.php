@@ -1,5 +1,6 @@
 <?php
 // get the settings editor
-echo $modx->get('ManagerTheme')->view('header')->render();
-include_once(includeFileProcessor("actions/sysinfo.static.php",$manager_theme));
-echo $modx->get('ManagerTheme')->view('footer')->render();
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+echo evolutionCMS()->get('ManagerTheme')->view('header')->render();
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/sysinfo.static.php");
+echo evolutionCMS()->get('ManagerTheme')->view('footer')->render();

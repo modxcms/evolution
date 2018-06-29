@@ -1,3 +1,4 @@
 <?php
 // get the message deleter
-include_once(includeFileProcessor("processors/send_message.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/send_message.processor.php");

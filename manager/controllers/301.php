@@ -1,5 +1,6 @@
 <?php
 // get the edit document variable action
-echo $modx->get('ManagerTheme')->view('header')->render();
-include_once(includeFileProcessor("actions/mutate_tmplvars.dynamic.php",$manager_theme));
-echo $modx->get('ManagerTheme')->view('footer')->render();
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+echo evolutionCMS()->get('ManagerTheme')->view('header')->render();
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/mutate_tmplvars.dynamic.php");
+echo evolutionCMS()->get('ManagerTheme')->view('footer')->render();

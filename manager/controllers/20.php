@@ -1,3 +1,4 @@
 <?php
 // get the save processor
-include_once(includeFileProcessor("processors/save_template.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/save_template.processor.php");

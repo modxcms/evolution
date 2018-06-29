@@ -1,2 +1,3 @@
 <?php
-include_once(includeFileProcessor("actions/resource_selector.static.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/resource_selector.static.php");

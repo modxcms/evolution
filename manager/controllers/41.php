@@ -1,2 +1,3 @@
 <?php
-include_once(includeFileProcessor("processors/access_groups.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/access_groups.processor.php");

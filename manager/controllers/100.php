@@ -1,5 +1,6 @@
 <?php
 // change the plugin priority
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
 //include_once "header.inc.php"; - in action file
-include_once(includeFileProcessor("actions/mutate_plugin_priority.dynamic.php",$manager_theme));
-echo $modx->get('ManagerTheme')->view('footer')->render();
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/mutate_plugin_priority.dynamic.php");
+echo evolutionCMS()->get('ManagerTheme')->view('footer')->render();

@@ -1,4 +1,5 @@
 <?php
 // call settings ajax include
 ob_clean();
-include_once(includeFileProcessor("includes/mutate_settings.ajax.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("includes/mutate_settings.ajax.php");

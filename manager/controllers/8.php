@@ -1,3 +1,4 @@
 <?php
 // get the logout processor
-include_once(includeFileProcessor("processors/logout.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/logout.processor.php");

@@ -16,14 +16,14 @@ class DATEPICKER {
      * @return string
      */
     public function getLangCode() {
-        $modx = evolutionCMS(); global $modx_lang_attribute;
+        $lang = evolutionCMS()->get('ManagerTheme')->getLang();
 
-        if(!$modx_lang_attribute) return 'en';
+        if ($lang === 'uk') {
+            $lang = 'ru';
+        }
 
-        $lc = $modx_lang_attribute;
-        if($lc === 'uk') return 'ru';
-        $dp_path = str_replace('\\','/',__DIR__);
+        $dp_path = str_replace('\\', '/', __DIR__);
 
-        return (is_file("{$dp_path}/i18n/datepicker.{$lc}.js")) ? $modx_lang_attribute : 'en';
+        return is_file("{$dp_path}/i18n/datepicker.{$lang}.js") ? $lang : 'en';
     }
 }

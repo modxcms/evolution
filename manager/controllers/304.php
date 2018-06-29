@@ -1,3 +1,4 @@
 <?php
 // get the duplicate processor
-include_once(includeFileProcessor("processors/duplicate_tmplvars.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/duplicate_tmplvars.processor.php");

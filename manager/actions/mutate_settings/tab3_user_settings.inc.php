@@ -70,7 +70,7 @@
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_emailsubject" id="reload_emailsubject_select" onchange="confirmLangChange(this, 'emailsubject_default', 'emailsubject_field');">
-<?php echo get_lang_options('emailsubject_default');?>
+<?php echo get_lang_options('emailsubject_default', '', $lang_keys, $_lang);?>
       </select>
     </td>
     <td ><input id="emailsubject_field" name="emailsubject" onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" value="<?php echo $emailsubject; ?>" />
@@ -89,7 +89,7 @@
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_signupemail_message" id="reload_signupemail_message_select" onchange="confirmLangChange(this, 'system_email_signup', 'signupemail_message_textarea');">
-<?php echo get_lang_options('system_email_signup');?>
+<?php echo get_lang_options('system_email_signup', '', $lang_keys, $_lang);?>
       </select>
     </td>
     <td> <textarea id="signupemail_message_textarea" name="signupemail_message" style="width:100%; height: 120px;"><?php echo $signupemail_message; ?></textarea>
@@ -108,7 +108,7 @@
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_websignupemail_message" id="reload_websignupemail_message_select" onchange="confirmLangChange(this, 'system_email_websignup', 'websignupemail_message_textarea');">
-<?php echo get_lang_options('system_email_websignup');?>
+<?php echo get_lang_options('system_email_websignup', '', $lang_keys, $_lang);?>
       </select>
     </td>
     <td> <textarea id="websignupemail_message_textarea" name="websignupemail_message" style="width:100%; height: 120px;"><?php echo $websignupemail_message; ?></textarea>
@@ -127,7 +127,7 @@
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_system_email_webreminder_message" id="reload_system_email_webreminder_select" onchange="confirmLangChange(this, 'system_email_webreminder', 'system_email_webreminder_textarea');">
-<?php echo get_lang_options('system_email_webreminder');?>
+<?php echo get_lang_options('system_email_webreminder', '', $lang_keys, $_lang);?>
       </select>
     </td>
     <td> <textarea id="system_email_webreminder_textarea" name="webpwdreminder_message" style="width:100%; height: 120px;"><?php echo $webpwdreminder_message; ?></textarea>

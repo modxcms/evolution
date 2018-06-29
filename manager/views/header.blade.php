@@ -1,10 +1,9 @@
 <?php
-$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+$mxla = $modx->get('ManagerTheme')->getLang();
 // invoke OnManagerRegClientStartupHTMLBlock event
 $evtOut = evolutionCMS()->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
-$modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
-$textdir = $modx_textdir === 'rtl' ? 'rtl' : 'ltr';
+$textdir = $modx->get('ManagerTheme')->getTextDir() === 'rtl' ? 'rtl' : 'ltr';
 if (!isset($modx->config['mgr_jquery_path'])) {
     $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 }
@@ -22,7 +21,7 @@ if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
 
 $css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . EVO_INSTALL_TIME;
 
-if ($manager_theme === 'default') {
+if ($modx->get('ManagerTheme')->getTheme() === 'default') {
     if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')
         && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
         $files = array(
@@ -71,7 +70,7 @@ if ($manager_theme === 'default') {
 <html lang="<?= $mxla ?>" dir="<?= $textdir ?>">
 <head>
     <title>Evolution CMS</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx->get('ManagerTheme')->getCharset() ?>"/>
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
     <meta name="theme-color" content="#1d2023"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -114,7 +113,7 @@ if ($manager_theme === 'default') {
             actions_reply: '<?= $_style['actions_reply'] ?>',
             actions_plus: '<?= $_style['actions_plus'] ?>'
         };
-        evo.urlCheckConnectionToServer = '<?= MODX_MANAGER_URL ?>includes/version.inc.php';
+        evo.urlCheckConnectionToServer = '<?= MODX_MANAGER_URL ?>';
     </script>
     <script src="media/script/main.js"></script>
     <script>
@@ -125,4 +124,4 @@ if ($manager_theme === 'default') {
         ?>
     </script>
 </head>
-<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>" data-evocp="color">
+<body <?= $modx->get('ManagerTheme')->getTextDir(' class="rtl"') ?> class="<?= $body_class ?>" data-evocp="color">

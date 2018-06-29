@@ -519,7 +519,7 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td>
-                        <textarea dir="ltr" name="content" id="content" class="phptextarea"><?= htmlentities($buffer, ENT_COMPAT, $modx_manager_charset) ?></textarea>
+                        <textarea dir="ltr" name="content" id="content" class="phptextarea"><?= htmlentities($buffer, ENT_COMPAT, $modx->get('ManagerTheme')->getCharset()) ?></textarea>
                     </td>
                 </tr>
             </table>

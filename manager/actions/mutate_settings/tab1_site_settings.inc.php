@@ -58,7 +58,7 @@ table.sysSettings tr.noborder td {border:none;}
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_site_unavailable" id="reload_site_unavailable_select" onchange="confirmLangChange(this, 'siteunavailable_message_default', 'site_unavailable_message_textarea');">
-<?php echo get_lang_options('siteunavailable_message_default');?>
+<?php echo get_lang_options('siteunavailable_message_default', '', $lang_keys, $_lang);?>
       </select>
     </th>
     <td> <textarea name="site_unavailable_message" id="site_unavailable_message_textarea" style="width:100%; height: 120px;"><?php echo $site_unavailable_message_view; ?></textarea>

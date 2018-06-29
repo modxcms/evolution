@@ -52,6 +52,9 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 }
 $mstart = memory_get_usage();
 
+if(mb_strtoupper($_SERVER['REQUEST_METHOD']) === 'GET' && count($_GET) === 1 && !empty($_GET['time'])) {
+    die();
+}
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
 if (!defined('IN_MANAGER_MODE')) {
@@ -76,6 +79,11 @@ if (!empty($config['core']) && file_exists($config['core'] . '/bootstrap.php')) 
     exit;
 }
 
+if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    header('HTTP/1.0 404 Not Found');
+    exit;
+}
+
 // send anti caching headers
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -85,21 +93,17 @@ header('Pragma: no-cache');
 header('X-UA-Compatible: IE=edge;FF=3;OtherUA=4');
 header('X-XSS-Protection: 0');
 
-// provide english $_lang for error-messages
-$_lang = array();
-include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
-
 // check PHP version. EVO is compatible with php 5 (5.6.0+)
 $php_ver_comp = version_compare(phpversion(), "7.1.3");
 // -1 if left is less, 0 if equal, +1 if left is higher
 if ($php_ver_comp < 0) {
-    echo sprintf($_lang['php_version_check'], phpversion());
+    echo sprintf('EVO Evolution is compatible with PHP version 7.1.3 and higher. This server is using version %s%. Please upgrade your PHP installation!', phpversion());
     exit;
 }
 
 // check if iconv is installed
 if (!function_exists('iconv')) {
-    echo $_lang['iconv_not_available'];
+    echo 'It is important to install/enable extension iconv. Please speak to your host if you don´t know how to enable it.';
     exit;
 }
 
@@ -117,98 +121,8 @@ $modx = evolutionCMS();
 $modx->mstart = $mstart;
 $modx->sid = session_id();
 
-$settings = $modx->allConfig();
-extract($settings, EXTR_OVERWRITE);
-
-// now include_once different language file as english
-if (!isset($manager_language) || !file_exists(MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php")) {
-    $manager_language = "english"; // if not set, get the english language file.
-}
-
-// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer)
-
-if ($manager_language != "english" && file_exists(MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php")) {
-    include_once MODX_MANAGER_PATH . "includes/lang/" . $manager_language . ".inc.php";
-}
-
-// allow custom language overrides not altered by future EVO-updates
-if (file_exists(MODX_MANAGER_PATH . "includes/lang/override/" . $manager_language . ".inc.php")) {
-    include_once MODX_MANAGER_PATH . "includes/lang/override/" . $manager_language . ".inc.php";
-}
-
-$modx->get('ManagerTheme')
-    ->setLang($modx_lang_attribute);
-
-$s = array('[+MGR_DIR+]');
-$r = array(MGR_DIR);
-foreach ($_lang as $k => $v) {
-    if (strpos($v, '[+') !== false) {
-        $_lang[$k] = str_replace($s, $r, $v);
-    }
-}
-
-// send the charset header
-header('Content-Type: text/html; charset=' . $modx_manager_charset);
-
-/*
- * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
- */
-
-// accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-include_once __DIR__ . "/includes/accesscontrol.inc.php";
-
-// double check the session
-if (!isset($_SESSION['mgrValidated'])) {
-    echo "Not Logged In!";
-    exit;
-}
-
-// include_once the style variables file
-if (isset($manager_theme) && !isset($_style)) {
-    $_style = array();
-    include_once __DIR__ . "/media/style/" . $manager_theme . "/style.php";
-}
-
-// check if user is allowed to access manager interface
-if (isset($allow_manager_access) && $allow_manager_access == 0) {
-    include_once __DIR__ . "/includes/manager.lockout.inc.php";
-}
-
-// Initialize System Alert Message Queque
-if (!isset($_SESSION['SystemAlertMsgQueque'])) {
-    $_SESSION['SystemAlertMsgQueque'] = array();
-}
-$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
-
-// first we check to see if this is a frameset request
-if (!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
-    // this looks to be a top-level frameset request, so let's serve up a frameset
-    if (is_file(__DIR__ . "/media/style/" . $manager_theme . "/frames/1.php")) {
-        include_once __DIR__ . "/media/style/" . $manager_theme . "/frames/1.php";
-    } else {
-        include_once __DIR__ . "/frames/1.php";
-    }
-    exit;
-}
-
-// OK, let's retrieve the action directive from the request
-$option = array('min_range' => 1, 'max_range' => 2000);
-if (isset($_GET['a']) && isset($_POST['a'])) {
-    $modx->webAlertAndQuit($_lang['error_double_action']);
-} elseif (isset($_GET['a'])) {
-    $action = (int)filter_input(INPUT_GET, 'a', FILTER_VALIDATE_INT, $option);
-} elseif (isset($_POST['a'])) {
-    $action = (int)filter_input(INPUT_POST, 'a', FILTER_VALIDATE_INT, $option);
-} else {
-    $action = null;
-}
-
-if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
-    include_once __DIR__ . '/includes/messageCount.inc.php';
-}
-
-// save page to manager object
-$modx->getManagerApi()->action = $action;
+//$settings = $modx->allConfig();
+//extract($settings, EXTR_OVERWRITE);
 
 // attempt to foil some simple types of CSRF attacks
 if ((int)$modx->getConfig('validate_referer') !== 0) {
@@ -217,60 +131,90 @@ if ((int)$modx->getConfig('validate_referer') !== 0) {
 
         if (!empty($referer)) {
             if (!preg_match('/^' . preg_quote(MODX_SITE_URL, '/') . '/i', $referer)) {
-                $modx->webAlertAndQuit("A possible CSRF attempt was detected from referer: {$referer}.", "index.php");
+                $modx->webAlertAndQuit(
+                    "A possible CSRF attempt was detected from referer: {$referer}.",
+                    "index.php"
+                );
             }
         } else {
-            $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the client.",
-                "index.php");
+            $modx->webAlertAndQuit(
+                "A possible CSRF attempt was detected. No referer was provided by the client.",
+                "index.php"
+            );
         }
     } else {
-        $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the server.",
-            "index.php");
+        $modx->webAlertAndQuit(
+            "A possible CSRF attempt was detected. No referer was provided by the server.",
+            "index.php"
+        );
     }
 }
 
-// invoke OnManagerPageInit event
-$modx->invokeEvent("OnManagerPageInit", array("action" => $action));
+// Initialize System Alert Message Queque
+if (!isset($_SESSION['SystemAlertMsgQueque'])) {
+    $_SESSION['SystemAlertMsgQueque'] = array();
+}
+$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-// return element filepath
-function includeFileProcessor($filepath, $manager_theme)
-{
-    $element = "";
-    if (is_file(__DIR__ . "/media/style/" . $manager_theme . "/" . $filepath)) {
-        $element = __DIR__ . "/media/style/" . $manager_theme . "/" . $filepath;
+$_lang = $modx->get('ManagerTheme')->getLexicon();
+
+// send the charset header
+header('Content-Type: text/html; charset=' . $modx->get('ManagerTheme')->getCharset());
+
+// Update last action in table active_users
+$action = $modx->get('ManagerTheme')->getActionId();
+
+// accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
+if ($modx->get('ManagerTheme')->isAuthManager() === false) {
+    echo $modx->get('ManagerTheme')->renderLoginPage();
+    exit;
+}
+
+/** Ignore Logout action */
+if (8 !== $action && $modx->get('ManagerTheme')->hasManagerAccess() === false) {
+    echo $modx->get('ManagerTheme')->renderAccessPage();
+    exit;
+}
+
+// Update table active_user_sessions
+$modx->updateValidatedUserSession();
+
+if ($action === null) {
+    // include_once the style variables file
+    if ($modx->get('ManagerTheme')->getTheme() !== '' && ! isset($_style)) {
+        $_style = array();
+        include_once __DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/style.php";
+    }
+
+    // first we check to see if this is a frameset request
+    if (!isset($_POST['updateMsgCount'])) {
+        // this looks to be a top-level frameset request, so let's serve up a frameset
+        if (is_file(__DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/frames/1.php")) {
+            include_once __DIR__ . "/media/style/" . $modx->get('ManagerTheme')->getTheme() . "/frames/1.php";
+        } else {
+            include_once __DIR__ . "/frames/1.php";
+        }
+        exit;
     } else {
-        $element = $filepath;
+        if ($modx->hasPermission('messages')) {
+            include_once __DIR__ . '/includes/messageCount.inc.php';
+        }
     }
-
-    return $element;
-}
-
-$managerTheme = new EvolutionCMS\ManagerTheme($modx, $manager_theme);
-// Now we decide what to do according to the action request. This is a BIG list :)
-if ($controller = $managerTheme->handle($action)) {
-    include_once $controller;
 } else {
-    /********************************************************************/
-    /* default action: show not implemented message                     */
-    /********************************************************************/
-    // say that what was requested doesn't do anything yet
-    include_once(includeFileProcessor("includes/header.inc.php", $manager_theme));
-    echo "
-			<div class='sectionHeader'>" . $_lang['functionnotimpl'] . "</div>
-			<div class='sectionBody'>
-				<p>" . $_lang['functionnotimpl_message'] . "</p>
-			</div>
-		";
-    include_once(includeFileProcessor("includes/footer.inc.php", $manager_theme));
-}
+    $modx->get('ManagerTheme')->saveAction($action);
 
-/********************************************************************/
-// log action, unless it's a frame request
-if ($action != 1 && $action != 7 && $action != 2) {
-    $log = new EvolutionCMS\Legacy\LogHandler;
-    $log->initAndWriteLog();
+    $modx->invokeEvent('OnManagerPageInit', compact('action'));
+
+    $modx->get('ManagerTheme')->handle($action);
+
+    /********************************************************************/
+    // log action, unless it's a frame request
+    if ($action != 1 && $action != 7 && $action != 2) {
+        $log = new EvolutionCMS\Legacy\LogHandler;
+        $log->initAndWriteLog();
+    }
+    /********************************************************************/
+    // show debug
+    unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
+    echo evolutionCMS()->get('ManagerTheme')->view('debug')->render();
 }
-/********************************************************************/
-// show debug
-unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
-include_once __DIR__ . "/includes/debug.inc.php";

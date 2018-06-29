@@ -25,13 +25,13 @@ if(!function_exists('get_langs_by_key')) {
      * get_langs_by_key
      *
      * @param string $key
+     * @param array $langs
      * @return array of languages that define the key in their file
      */
-    function get_langs_by_key($key)
+    function get_langs_by_key($key, $langs)
     {
-        global $lang_keys;
         $lang_return = array();
-        foreach ($lang_keys as $lang => $keys) {
+        foreach ($langs as $lang => $keys) {
             if (in_array($key, $keys)) {
                 $lang_return[] = $lang;
             }
@@ -51,12 +51,11 @@ if(!function_exists('get_lang_options')) {
      * @param string $selected_lang specify language to select in option list, default none
      * @return string html option list
      */
-    function get_lang_options($key = '', $selected_lang = '')
+    function get_lang_options($key = '', $selected_lang = '', $lang_keys, $_lang)
     {
-        global $lang_keys, $_lang;
         $lang_options = '';
         if (!empty($key)) {
-            $languages = get_langs_by_key($key);
+            $languages = get_langs_by_key($key, $lang_keys);
             sort($languages);
             $lang_options .= '<option value="">' . $_lang['language_title'] . '</option>';
 

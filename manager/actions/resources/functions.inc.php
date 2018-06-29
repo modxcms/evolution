@@ -45,7 +45,8 @@ function renderViewSwitchButtons($cssId) {
  * @return string
  */
 function createResourceList($resourceTable, $resources) {
-    $modx = evolutionCMS(); global $_lang, $_style, $modx_textdir, $tpl;
+    global $tpl;
+    $_lang = evolutionCMS()->get('ManagerTheme')->getLexicon();
 
     $items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
 
@@ -98,7 +99,7 @@ function createResourceList($resourceTable, $resources) {
  * @return string
  */
 function createCombinedView($resources) {
-    $modx = evolutionCMS(); global $_lang, $_style, $modx_textdir;
+    $_lang = evolutionCMS()->get('ManagerTheme')->getLexicon();
 
     $itemsPerCategory = isset($resources->itemsPerCategory) ? $resources->itemsPerCategory : false;
     $types = isset($resources->types) ? $resources->types : false;
@@ -155,7 +156,9 @@ function createCombinedView($resources) {
  * @return array
  */
 function prepareElementRowPh($row, $resourceTable, $resources) {
-    $modx = evolutionCMS(); global $modx_textdir, $_style, $_lang;
+    global $_style;
+    $modx = evolutionCMS();
+    $_lang = $modx->get('ManagerTheme')->getLexicon();
 
     $types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
@@ -266,6 +269,6 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
         'resourceTable' => $resourceTable,
         'actionEdit' => $types['actions']['edit'][0],
         'catid' => $catid,
-        'textdir' => $modx_textdir ? '&rlm;' : '',
+        'textdir' => $modx->get('ManagerTheme')->getTextDir('&rlm;'),
     );
 }

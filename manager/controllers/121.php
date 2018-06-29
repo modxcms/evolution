@@ -1,3 +1,4 @@
 <?php
 // for ajax-requests
-include_once(includeFileProcessor("actions/mutate_categories.dynamic.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/mutate_categories.dynamic.php");

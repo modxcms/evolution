@@ -22,20 +22,12 @@
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
 include_once(__DIR__."/../../../../../index.php");
-$modx->db->connect();
-if (empty ($modx->config)) {
-    $modx->getSettings();
-}
+
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-$manager_language = $modx->config['manager_language'];
-// Pass language code from MODX to KCFinder
-if(!file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
-    $manager_language = "english"; // if not set, get the english language file.
-}
-include_once "../../../includes/lang/".$manager_language.".inc.php";
-$_GET['langCode'] = $modx_lang_attribute;
+$manager_language = $modx->get('ManagerTheme')->getLangName();
+$_GET['langCode'] = $modx->get('ManagerTheme')->getLang();
 
 // MAGIC AUTOLOAD CLASSES FUNCTION
 function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {

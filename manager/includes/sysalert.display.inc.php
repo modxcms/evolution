@@ -22,7 +22,7 @@
 ?>
 
 <?php // fetch the styles
-	echo '<link rel="stylesheet" type="text/css" href="'.MODX_MANAGER_URL.'media/style/'.$manager_theme.'/style.css'.'" />';
+	echo '<link rel="stylesheet" type="text/css" href="'.MODX_MANAGER_URL.'media/style/'.$modx->get('ManagerTheme')->getTheme().'/style.css'.'" />';
 ?>
 <script type="text/javascript">
 // <![CDATA[

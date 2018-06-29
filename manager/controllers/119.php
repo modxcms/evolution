@@ -1,3 +1,4 @@
 <?php
 // get the purge processor
-include_once(includeFileProcessor("processors/purge_plugin.processor.php",$manager_theme));
+extract(evolutionCMS()->get('ManagerTheme')->getViewAttributes(), EXTR_OVERWRITE);
+include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("processors/purge_plugin.processor.php");
