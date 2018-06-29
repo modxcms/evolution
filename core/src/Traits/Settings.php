@@ -55,7 +55,7 @@ trait Settings
     public function getSettings()
     {
         // setup default site id - new installation should generate a unique id for the site.
-        if ($this->getConfig('site_id', '') == '') {
+        if ($this->getConfig('site_id', '') === '') {
             $this->setConfig('site_id', 'MzGeQ2faT4Dw06+U49x3');
         }
 
@@ -80,9 +80,5 @@ trait Settings
                 $this->getConfig('rb_base_dir')
             )
         );
-
-        if (!isset($this->config['enable_at_syntax'])) {
-            $this->setConfig('enable_at_syntax', 1);
-        } // @TODO: This line is temporary, should be remove in next version
     }
 }

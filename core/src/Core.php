@@ -5878,7 +5878,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getSettings()
     {
-        if (!isset($this->config['site_name'])) {
+        if (empty($this->config)) {
             $this->recoverySiteCache();
         }
 
@@ -5910,35 +5910,32 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             if ($usrType == 'web') {
-                $from = $tbl_web_user_settings;
-                $where = "webuser='{$id}'";
+                $usrSettings = Models\WebUserSetting::where('user', '=', $id)->get()
+                    ->pluck('setting_value', 'setting_name')
+                    ->toArray();
             } else {
-                $from = $tbl_user_settings;
-                $where = "user='{$id}'";
+                $usrSettings = Models\UserSetting::where('user', '=', $id)->get()
+                    ->pluck('setting_value', 'setting_name')
+                    ->toArray();
             }
 
-            $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
+            $which_browser_default = $this->configGlobal['which_browser'] ?
+                $this->configGlobal['which_browser'] : $this->getConfig('which_browser');
 
-            $result = $this->getDatabase()->select('setting_name, setting_value', $from, $where);
-            while ($row = $this->getDatabase()->getRow($result)) {
-                if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
-                    $row['setting_value'] = $which_browser_default;
-                }
-                $usrSettings[$row['setting_name']] = $row['setting_value'];
+            if (get_by_key($usrSettings, 'which_browser') === 'default') {
+                $row['setting_value'] = $which_browser_default;
             }
+
             if (isset ($usrType)) {
                 $_SESSION[$usrType . 'UsrConfigSet'] = $usrSettings;
             } // store user settings in session
         }
         if ($this->isFrontend() && $mgrid = $this->getLoginUserID('mgr')) {
-            $musrSettings = array();
-            if ($result = $this->getDatabase()->select('setting_name, setting_value', $tbl_user_settings,
-                "user='{$mgrid}'")) {
-                while ($row = $this->getDatabase()->getRow($result)) {
-                    $musrSettings[$row['setting_name']] = $row['setting_value'];
-                }
-                $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
-            }
+            $musrSettings = Models\UserSetting::where('user', '=', $mgrid)->get()
+                ->pluck('setting_value', 'setting_name')
+                ->toArray();
+
+            $_SESSION['mgrUsrConfigSet'] = $musrSettings; // store user settings in session
             if (!empty ($musrSettings)) {
                 $usrSettings = array_merge($musrSettings, $usrSettings);
             }
@@ -5971,7 +5968,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_file($siteCachePath)) {
             include $siteCachePath;
         }
-        if (isset($this->config['site_name'])) {
+
+        if (! empty($this->config)) {
             return;
         }
 
@@ -5984,25 +5982,23 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_file($siteCachePath)) {
             include $siteCachePath;
         }
-        if (isset($this->config['site_name'])) {
+        if (! empty($this->config)) {
             return;
         }
 
-        $rs = $this->getDatabase()->select(
-            'setting_name, setting_value',
-            $this->getDatabase()->getFullTableName('system_settings')
-        );
-        while ($row = $this->getDatabase()->getRow($rs)) {
-            $this->config[$row['setting_name']] = $row['setting_value'];
-        }
+        $this->config = Models\SystemSetting::all()
+            ->pluck('setting_value', 'setting_name')
+            ->toArray();
 
-        if (!$this->config['enable_filter']) {
+        if ($this->getConfig('enable_filter') === null) {
             return;
         }
 
-        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_plugins'), $where);
-        if ($this->getDatabase()->getRecordCount($rs)) {
+        $phx = Models\SitePlugin::where('disabled', '!=', 1)
+            ->where('plugincode', 'LIKE', '%phx.parser.class.inc.php%OnParseDocument();%')
+            ->count();
+
+        if ($phx > 0) {
             $this->setConfig('enable_filter', '0');
         }
     }
