@@ -25,6 +25,10 @@
 
     extract($settings, EXTR_OVERWRITE);
 
+    foreach ($settings as $k => $v) {
+        $GLOBALS[$k] = $v;
+    }
+
     // load languages and keys
     $lang_keys = array();
     $dir = dir(MODX_MANAGER_PATH . 'includes/lang');
