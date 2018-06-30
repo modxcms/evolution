@@ -10,7 +10,7 @@ $rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, item
 $logs = $modx->getDatabase()->makeArray($rs);
 ?>
     <h1>
-        <?= $_style['page_manager_logs'] ?><?= $_lang['mgrlog_view'] ?>
+        <i class="fa fa-user-secret"></i><?= $_lang['mgrlog_view'] ?>
     </h1>
 
     <div class="tab-page">

@@ -61,7 +61,7 @@
     <form name="settings" action="index.php?a=30" method="post">
 
         <h1>
-            <?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>
+            <i class="fa fa-sliders fw"></i><?php echo $_lang['settings_title']; ?>
         </h1>
 
         <?= $_style['actionbuttons']['dynamic']['save'] ?>

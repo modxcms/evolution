@@ -277,7 +277,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                             <form action="index.php?a=71" method="post" target="main">
                                 <input type="hidden" value="Search" name="submitok" />
                                 <label for="searchid" class="label_searchid">
-                                    <?= $_style['menu_search'] ?>
+                                    <i class="fa fa-search"></i>
                                 </label>
                                 <input type="text" id="searchid" name="searchid" size="25" />
                                 <div class="mask"></div>
@@ -286,7 +286,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                         <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
                             <?php if ($modx->hasPermission('new_document')) { ?>
                                 <li id="newresource" class="dropdown newresource">
-                                    <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
+                                    <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
                                     <ul class="dropdown-menu">
                                         <?php if ($modx->hasPermission('new_document')) { ?>
                                             <li>
@@ -320,7 +320,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                         <?php } ?>
                         <li id="preview">
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
-                                <?= $_style['menu_preview_site'] ?>
+                                <i class="fa fa-desktop"></i>
                             </a>
                         </li>
                         <li id="account" class="dropdown account">
@@ -329,7 +329,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 <?php if ($user['photo']) { ?>
                                     <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
                                 <?php } else { ?>
-                                    <span class="icon"><?= $_style['menu_user'] ?></span>
+                                    <span class="icon"><i class="fa fa-user-circle"></i></span>
                                 <?php } ?>
                                 <i id="msgCounter"></i>
                             </a>
@@ -360,33 +360,33 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
                             <li id="system" class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
+                                <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><i class="fa fa-cogs"></i></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
                                         <li>
                                             <a href="index.php?a=17" target="main">
-                                                <?= $_style['page_settings'] ?><?= $_lang['edit_settings'] ?>
+                                                <i class="fa fa-sliders fw"></i><?= $_lang['edit_settings'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=70" target="main">
-                                                <?= $_style['page_shedule'] ?><?= $_lang['site_schedule'] ?>
+                                                <i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=114" target="main">
-                                                <?= $_style['page_eventlog'] ?></i><?= $_lang['eventlog_viewer'] ?>
+                                                <i class="fa fa-exclamation-triangle"></i><?= $_lang['eventlog_viewer'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('logs')) { ?>
                                         <li>
                                             <a href="index.php?a=13" target="main">
-                                                <?= $_style['page_manager_logs'] ?><?= $_lang['view_logging'] ?>
+                                                <i class="fa fa-user-secret"></i><?= $_lang['view_logging'] ?>
                                             </a>
                                         </li>
                                         <li>
@@ -408,7 +408,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                         <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
                             <li id="fullscreen">
                                 <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
-                                    <i class="fa <?= $_style['menu_expand'] ?>"></i>
+                                    <i class="fa fa-expand"></i>
                                 </a>
                             </li>
                         <?php } ?>
@@ -640,7 +640,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
 
           $('#toggleFullScreen').click(function() {
             var icon = $(this).find('i');
-            icon.toggleClass('<?= $_style['menu_expand'] ?> <?= $_style['menu_compress'] ?>');
+            icon.toggleClass('fa-expand fa-compress');
           });
         </script>
     <?php } ?>
