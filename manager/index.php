@@ -180,12 +180,7 @@ if (8 !== $action && ManagerTheme::hasManagerAccess() === false) {
 $modx->updateValidatedUserSession();
 
 if ($action === null) {
-    // include_once the style variables file
-    if (ManagerTheme::getTheme() !== '' && ! isset($_style)) {
-        $_style = array();
-        include_once __DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/style.php";
-    }
-
+    $_style = ManagerTheme::getStyle();
     // first we check to see if this is a frameset request
     if (!isset($_POST['updateMsgCount'])) {
         // this looks to be a top-level frameset request, so let's serve up a frameset

@@ -19,6 +19,7 @@ class ManagerTheme implements ManagerThemeInterface
     protected $textDir;
     protected $lexicon = [];
     protected $charset = 'UTF-8';
+    protected $style = [];
 
     protected $actions = [
         /** frame management - show the requested frame */
@@ -192,6 +193,8 @@ class ManagerTheme implements ManagerThemeInterface
         $this->loadLang(
             $this->core->getConfig('manager_language')
         );
+
+        $this->loadStyle();
     }
 
     protected function loadLang($lang = 'english')
@@ -281,6 +284,25 @@ class ManagerTheme implements ManagerThemeInterface
         return $this->namespace . '::' . $name;
     }
 
+    /**
+     * @deprecated
+     */
+    protected function loadStyle()
+    {
+        $_style = [];
+        $modx = $this->core;
+        $_lang = $this->getLexicon();
+        include_once MODX_MANAGER_PATH . "media/style/" . $this->getTheme() . "/style.php";
+        $this->style = $_style;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getStyle($key = null)
+    {
+        return $key === null ? $this->style : get_by_key($this->style, $key, '');
+    }
     public function view($name, array $params = [])
     {
         return View::make(
@@ -298,7 +320,8 @@ class ManagerTheme implements ManagerThemeInterface
             'manager_theme'        => $this->getTheme(),
             'modx_textdir'         => $this->getTextDir(),
             'manager_language'     => $this->getLangName(),
-            '_lang'                => $this->getLexicon()
+            '_lang'                => $this->getLexicon(),
+            '_style'               => $this->getStyle()
         ];
 
         return array_merge($baseParams, $params);
