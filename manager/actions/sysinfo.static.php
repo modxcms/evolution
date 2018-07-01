@@ -35,7 +35,7 @@ $serverArr = array(
 ?>
 
 <h1>
-    <?= $_style['page_sys_info'] ?><?= $_lang['view_sysinfo'] ?>
+    <i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
 </h1>
 
 <script type="text/javascript">

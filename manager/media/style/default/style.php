@@ -18,12 +18,6 @@ if(!empty($_GET['a']) && $_GET['a'] == 2) {
 // Favicon
 $_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
 
-//pages
-$_style['page_sys_info']            = '<i class="fa fa-info-circle"></i>';
-$_style['page_help']                = '<i class="fa fa-question-circle"></i>';
-$_style['page_change_password']     = '<i class="fa fa-lock"></i>';
-$_style['page_logout']              = '<i class="fa fa-sign-out"></i>';
-
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
 $_style['add_weblink_tree']         = '<i class="fa fa-link"></i>';

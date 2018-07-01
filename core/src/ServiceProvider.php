@@ -7,6 +7,26 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
  */
 class ServiceProvider extends BaseServiceProvider
 {
+    /**
+     * Register a view file namespace.
+     *
+     * @param  string|array  $path
+     * @param  string  $namespace
+     * @return void
+     */
+    protected function loadViewsFrom($path, $namespace)
+    {
+        if (\is_array($this->app['config']->get('view.paths'))) {
+            foreach ($this->app['config']->get('view.paths') as $viewPath) {
+                if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
+                    $this->app['view']->addNamespace($namespace, $appPath);
+                }
+            }
+        }
+
+        $this->app['view']->addNamespace($namespace, $path);
+    }
+
     protected function loadSnippetsFrom($path, $namespace)
     {
         $found = $this->app->findElements('snippet', $path, array('php'));

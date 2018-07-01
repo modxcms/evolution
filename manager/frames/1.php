@@ -340,13 +340,13 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                 <?php if ($modx->hasPermission('change_password')) { ?>
                                     <li>
                                         <a onclick="" href="index.php?a=28" target="main">
-                                            <?= $_style['page_change_password'] ?><?= $_lang['change_password'] ?>
+                                            <i class="fa fa-lock"></i><?= $_lang['change_password'] ?>
                                         </a>
                                     </li>
                                 <?php } ?>
                                 <li>
                                     <a href="index.php?a=8">
-                                        <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
+                                        <i class="fa fa-sign-out"></i><?= $_lang['logout'] ?>
                                     </a>
                                 </li>
                                 <?php
@@ -391,14 +391,14 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         </li>
                                         <li>
                                             <a href="index.php?a=53" target="main">
-                                                <?= $_style['page_sys_info'] ?><?= $_lang['view_sysinfo'] ?>
+                                                <i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('help')) { ?>
                                         <li>
                                             <a href="index.php?a=9" target="main">
-                                                <?= $_style['page_help'] ?><?= $_lang['help'] ?>
+                                                <i class="fa fa-question-circle"></i><?= $_lang['help'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
