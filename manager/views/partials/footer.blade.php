@@ -5,6 +5,7 @@ if(count($SystemAlertMsgQueque) > 0) {
     include "sysalert.display.inc.php";
 }
 ?>
+@stack('scripts.bot')
 <script type='text/javascript'>
     document.body.addEventListener('keydown', function(e) {
         if((e.which === 115 || e.which === 83 ) && (e.ctrlKey || e.metaKey) && !e.altKey) {
