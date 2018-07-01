@@ -966,6 +966,7 @@ $_lang["settings_templvars"] = 'Template Variables';
 $_lang["settings_title"] = 'System configuration';
 $_lang["settings_ui"] = 'Interface &amp; Features';
 $_lang["settings_users"] = 'User';
+$_lang["settings_email_templates"] = 'Email and Templates';
 $_lang["show_meta"] = 'Show META Keywords tab';
 $_lang["show_meta_message"] = 'Show the deprecated META Keywords tab when editing Resources in the Manager.';
 $_lang["show_tree"] = 'Show Site Tree';
