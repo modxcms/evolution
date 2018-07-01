@@ -116,12 +116,11 @@ if (ManagerTheme::getTheme() === 'default') {
         evo.urlCheckConnectionToServer = '<?= MODX_MANAGER_URL ?>';
     </script>
     <script src="media/script/main.js"></script>
-    <script>
-        <?php
-        if (isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
-            echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
-        }
-        ?>
-    </script>
+    <?php
+    if (isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
+        echo '<script>doRefresh(' . $_REQUEST['r'] . ");</script>";
+    }
+    ?>
+    @stack('scripts.top')
 </head>
 <body <?= ManagerTheme::getTextDir(' class="rtl"') ?> class="<?= $body_class ?>" data-evocp="color">

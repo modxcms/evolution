@@ -951,6 +951,7 @@ $_lang["settings_templvars"] = 'Параметры (TV)';
 $_lang["settings_title"] = 'Системная конфигурация';
 $_lang["settings_ui"] = 'Интерфейс и представление';
 $_lang["settings_users"] = 'Пользователи';
+$_lang["settings_email_templates"] = 'Почта и шаблоны';
 $_lang["show_meta"] = 'Показывать вкладку с META-тегами и ключевыми словами';
 $_lang["show_meta_message"] = 'Показывать нерекомендуемую вкладку с META-тегами и ключевыми словами при редактировании ресурсов.';
 $_lang["show_tree"] = 'Показать дерево';
