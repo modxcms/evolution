@@ -133,16 +133,12 @@ table.sysSettings tr.noborder td {border:none;}
       <th><?php echo $_lang['enable_filter_title'] ?><br><small>[(enable_filter)]</small></th>
       <td >
         <?php
-            // Check if PHX is enabled
-            $count = $modx->getDatabase()->getRecordCount(
-              $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_plugins'),
-              "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
-            );
-            if($count) {
+            if (EvolutionCMS\Models\SitePlugin::activePhx()->count()) {
                 $disabledFilters = 1;
                 echo '<b>'.$_lang['enable_filter_phx_warning'].'</b><br/>';
+            } else {
+                $disabledFilters = false;
             }
-            else $disabledFilters = false;
         ?>
         <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>

@@ -19,11 +19,6 @@ if(!empty($_GET['a']) && $_GET['a'] == 2) {
 $_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
 
 // Tree Menu Toolbar
-$_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
-$_style['add_weblink_tree']         = '<i class="fa fa-link"></i>';
-$_style['collapse_tree']            = '<i class="fa fa-arrow-circle-up"></i>';
-$_style['empty_recycle_bin']        = '<i class="fa fa-trash"></i>';
-$_style['empty_recycle_bin_empty']  = '<i class="fa fa-trash-o"></i>';
 $_style['expand_tree']              = '<i class="fa fa-arrow-circle-down"></i>';
 $_style['hide_tree']                = '<i class="fa fa-caret-square-o-left"></i>';
 $_style['refresh_tree']             = '<i class="fa fa-refresh"></i>';

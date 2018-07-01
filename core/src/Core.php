@@ -5994,14 +5994,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return;
         }
 
-        $phx = Models\SitePlugin::where('disabled', '!=', 1)
-            ->where('plugincode', 'LIKE', '%phx.parser.class.inc.php%OnParseDocument();%')
-            ->count();
-
-        if ($phx > 0) {
+        if (Models\SitePlugin::activePhx()->count() === 0) {
             $this->setConfig('enable_filter', '0');
         }
     }
+
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/

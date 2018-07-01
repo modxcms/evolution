@@ -116,7 +116,7 @@ class ManagerTheme implements ManagerThemeInterface
         41,
         92,
         /** settings editor */
-        17,
+        17 => Controllers\SystemSettings::class,
         118,
         /** save settings */
         30,
@@ -341,9 +341,28 @@ class ManagerTheme implements ManagerThemeInterface
 
         return $element;
     }
-    public function handle($action)
+    public function handle ($action)
     {
-        $out = $this->view('page.' . $action)->render();
+        $this->saveAction($action);
+
+        $this->core->invokeEvent('OnManagerPageInit', compact('action'));
+
+        $controllerName = get_by_key($this->actions, $action, $action);
+        if (\is_int($controllerName)) {
+            $out = $this->view('page.' . $action)->render();
+        } elseif (class_exists($controllerName)) {
+            $controller = new $controllerName($this);
+            if (! $controller->canView()) {
+                $this->core->webAlertAndQuit($this->getLexicon('error_no_privileges'));
+            } elseif (($out = $controller->checkLocked()) !== null) {
+                evolutionCMS()->webAlertAndQuit($out);
+            }else {
+                $out = $controller->render();
+            }
+        } else {
+            $action = 0;
+            $out = $this->view('page.' . $action)->render();
+        }
 
         /********************************************************************/
         // log action, unless it's a frame request
@@ -352,6 +371,7 @@ class ManagerTheme implements ManagerThemeInterface
             $log->initAndWriteLog();
         }
         /********************************************************************/
+
         unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
         return $out;

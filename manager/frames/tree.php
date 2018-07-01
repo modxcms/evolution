@@ -15,11 +15,11 @@ if(is_array($evtOut)) {
 
 		<a class="treeButton" id="treeMenu_expandtree" onclick="modx.tree.expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a>
 
-		<a class="treeButton" id="treeMenu_collapsetree" onclick="modx.tree.collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a>
+		<a class="treeButton" id="treeMenu_collapsetree" onclick="modx.tree.collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><i class="fa fa-arrow-circle-up"></i></a>
 
 		<?php if($modx->hasPermission('new_document')) { ?>
-			<a class="treeButton" id="treeMenu_addresource" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=4', title: '<?php echo $_lang['add_resource']; ?>'});" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a>
-			<a class="treeButton" id="treeMenu_addweblink" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=72', title: '<?php echo $_lang['add_weblink']; ?>'});" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a>
+			<a class="treeButton" id="treeMenu_addresource" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=4', title: '<?php echo $_lang['add_resource']; ?>'});" title="<?php echo $_lang['add_resource']; ?>"><i class="fa fa-file"></i></a>
+			<a class="treeButton" id="treeMenu_addweblink" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=72', title: '<?php echo $_lang['add_weblink']; ?>'});" title="<?php echo $_lang['add_weblink']; ?>"><i class="fa fa-link"></i></a>
 		<?php } ?>
 
 		<a class="treeButton" id="treeMenu_refreshtree" onclick="modx.tree.restoreTree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a>
@@ -43,7 +43,7 @@ if(is_array($evtOut)) {
 		<?php } ?>
 
 		<?php if($modx->hasPermission('empty_trash')) { ?>
-			<a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="<?php echo $_lang['empty_recycle_bin_empty']; ?>"><?php echo $_style['empty_recycle_bin_empty']; ?></a>
+			<a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="<?php echo $_lang['empty_recycle_bin_empty']; ?>"><i class="fa fa-trash-o"></i></a>
 		<?php } ?>
 
 		<a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>

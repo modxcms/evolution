@@ -190,10 +190,10 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           actions_pencil: '<?= addslashes($_style['actions_pencil']) ?>',
           actions_plus: '<?= addslashes($_style['actions_plus']) ?>',
           actions_reply: '<?= addslashes($_style['actions_reply']) ?>',
-          collapse_tree: '<?= addslashes($_style['collapse_tree']) ?>',
+          collapse_tree: '<?= addslashes('<i class="fa fa-arrow-circle-up"></i>') ?>',
           email: '<?= addslashes($_style['email']) ?>',
-          empty_recycle_bin: '<?= addslashes($_style['empty_recycle_bin']) ?>',
-          empty_recycle_bin_empty: '<?= addslashes($_style['empty_recycle_bin_empty']) ?>',
+          empty_recycle_bin: '<?= addslashes('<i class="fa fa-trash"></i>') ?>',
+          empty_recycle_bin_empty: '<?= addslashes('<i class="fa fa-trash-o"></i>') ?>',
           expand_tree: '<?= addslashes($_style['expand_tree']) ?>',
           icons_external_link: '<?= addslashes($_style['icons_external_link']) ?>',
           icons_working: '<?= addslashes($_style['tree_working']) ?>',
@@ -291,12 +291,12 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         <?php if ($modx->hasPermission('new_document')) { ?>
                                             <li>
                                                 <a onclick="" href="index.php?a=4" target="main">
-                                                    <?= $_style['add_doc_tree'] ?><?= $_lang['add_resource'] ?>
+                                                    <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a onclick="" href="index.php?a=72" target="main">
-                                                    <?= $_style['add_weblink_tree'] ?><?= $_lang['add_weblink'] ?>
+                                                    <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
                                                 </a>
                                             </li>
                                         <?php } ?>

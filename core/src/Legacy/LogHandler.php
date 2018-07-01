@@ -109,7 +109,10 @@ class LogHandler
 
         $insert_id = $modx->getDatabase()->insert($fields, $tbl_manager_log);
         if (!$insert_id) {
-            $modx->messageQuit("Logging error: couldn't save log to table! Error code: " . $modx->getDatabase()->getLastError());
+            $modx->getService('ExceptionHandler')
+                ->messageQuit(
+                    "Logging error: couldn't save log to table! Error code: " . $modx->getDatabase()->getLastError()
+                );
         } else {
             $limit = (isset($modx->config['manager_log_limit'])) ? (int)$modx->getConfig('manager_log_limit') : 3000;
             $trim = (isset($modx->config['manager_log_trim'])) ? (int)$modx->getConfig('manager_log_trim') : 100;
@@ -119,7 +122,8 @@ class LogHandler
         }
     }
 
-    private function getUserIP() {
+    private function getUserIP()
+    {
         if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
             if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
                 $addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);

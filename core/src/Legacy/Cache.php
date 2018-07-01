@@ -1,6 +1,6 @@
 <?php namespace EvolutionCMS\Legacy;
 
-use Evo;
+use EvolutionCMS\Models;
 
 /**
  * @class: synccache
@@ -270,11 +270,7 @@ class Cache
         }
 
         if ($config['enable_filter']) {
-            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-            $count = $modx->getDatabase()->getRecordCount(
-                $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_plugins'), $where)
-            );
-            if ($count) {
+            if (Models\SitePlugin::activePhx()->count()) {
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
         }

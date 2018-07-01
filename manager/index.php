@@ -196,9 +196,5 @@ if ($action === null) {
         }
     }
 } else {
-    ManagerTheme::saveAction($action);
-
-    $modx->invokeEvent('OnManagerPageInit', compact('action'));
-
     echo ManagerTheme::handle($action);
 }

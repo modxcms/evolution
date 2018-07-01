@@ -45,4 +45,10 @@ class SitePlugin extends Eloquent\Model
 		'disabled',
 		'moduleguid'
 	];
+
+	public function scopeActivePhx(Eloquent\Builder $builder)
+    {
+        return $builder->where('disabled', '!=', 1)
+            ->whereRaw('plugincode LIKE "%phx.parser.class.inc.php%OnParseDocument();%"');
+    }
 }
