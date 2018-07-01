@@ -9,50 +9,55 @@
         @endif
     </label>
     <div class="col-7 col-md-9 col-lg-10">
-        @if(!empty($options))
+        @if(!empty($options) || !empty($first))
             <div class="clearfix">
                 <select class="form-control" name="{{ $name }}" id="{{ $id or $name }}"
                         {!! $attributes or '' !!}
                 >
-                    @foreach ($options as $key => $option)
-                        @if(isset($option['optgroup']) && !empty($option['optgroup']['options']))
-                            <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
-                                @foreach($option['optgroup']['options'] as $opt)
-                                    <option value="{{ $opt['value'] }}"
-                                            @if($value == $opt['value'])
+                    @if(!empty($first))
+                        <option value="{{ $first['value'] or '' }}">{{ $first['text'] or '' }}</option>
+                    @endif
+                    @if(!empty($options))
+                        @foreach ($options as $key => $option)
+                            @if(isset($option['optgroup']) && !empty($option['optgroup']['options']))
+                                <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
+                                    @foreach($option['optgroup']['options'] as $opt)
+                                        <option value="{{ $opt['value'] }}"
+                                                @if($value == $opt['value'])
+                                                selected="selected"
+                                                @endif
+                                        >{{ $opt['text'] or $opt['value'] }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @elseif(is_string($option))
+                                @if($as == 'keys')
+                                    <option value="{{ $key }}"
+                                            @if($value == $key)
                                             selected="selected"
                                             @endif
-                                    >{{ $opt['text'] or $opt['value'] }}</option>
-                                @endforeach
-                            </optgroup>
-                        @elseif(is_string($option))
-                            @if($as == 'keys')
-                                <option value="{{ $key }}"
-                                        @if($value == $key)
-                                        selected="selected"
-                                        @endif
-                                >{{ $key }}</option>
-                            @elseif($as == 'values')
-                                <option value="{{ $option }}"
-                                        @if($value == $option)
-                                        selected="selected"
-                                        @endif
-                                >{{ ucwords(str_replace("_", " ", $option)) }}</option>
+                                    >{{ $key }}</option>
+                                @elseif($as == 'values')
+                                    <option value="{{ $option }}"
+                                            @if($value == $option)
+                                            selected="selected"
+                                            @endif
+                                    >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                @else
+                                    <option value="{{ $key }}"
+                                            @if($value == $key)
+                                            selected="selected"
+                                            @endif
+                                    >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                @endif
                             @else
-                                <option value="{{ $key }}"
-                                        @if($value == $key)
+                                <option value="{{ $option['value'] }}"
+                                        @if($value == $option['value'])
                                         selected="selected"
                                         @endif
-                                >{{ ucwords(str_replace("_", " ", $option)) }}</option>
+                                >{{ $option['text'] or $option['value'] }}</option>
                             @endif
-                        @else
-                            <option value="{{ $option['value'] }}"
-                                    @if($value == $option['value'])
-                                    selected="selected"
-                                    @endif
-                            >{{ $option['text'] or $option['value'] }}</option>
-                        @endif
-                    @endforeach
+                        @endforeach
+                    @endif
                 </select>
             </div>
         @endif
