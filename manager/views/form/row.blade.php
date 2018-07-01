@@ -1,5 +1,5 @@
 <div class="row form-row @if(isset($type))form-element-{{ $type }}@endif">
-    <label for="{{ $name }}" class="control-label col-5 col-md-3 col-lg-2">
+    <label for="{{ $for or $name }}" class="control-label col-5 col-md-3 col-lg-2">
         {!! $label !!}
         @if($required)
             <span class="form-element-required">*</span>
