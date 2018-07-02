@@ -174,7 +174,7 @@ class SystemSettings extends AbstractController
             get_by_key($out, 'rb_base_dir')
         );
 
-        if (!$this->checkGD()) {
+        if (!$this->parameterCheckGD()) {
             $out['use_captcha'] = 0;
         }
 
