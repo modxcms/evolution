@@ -1,20 +1,10 @@
 <?php namespace EvolutionCMS\Controllers;
 
-use EvolutionCMS\Interfaces\ManagerController;
-use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Models;
 
-class SystemSettings implements ManagerController
+class SystemSettings extends AbstractController
 {
-    /**
-     * @var ManagerThemeInterface
-     */
-    protected $managerTheme;
-
-    public function __construct(ManagerThemeInterface $managerTheme)
-    {
-        $this->managerTheme = $managerTheme;
-    }
+    protected $view = 'page.systemSettings';
 
     public function canView(): bool
     {
@@ -36,30 +26,23 @@ class SystemSettings implements ManagerController
         return $out;
     }
 
-    public function render() : string
+    public function getParameters() : array
     {
-        /**
-         * @var Models\ActiveUser $activeUser
-         */
-
-        // end check for lock
-
-        return $this->managerTheme
-            ->view('page.systemSettings', [
-                'pwd_hash' => $this->getPasswordHash(),
-                'gdAvailable' => $this->checkGD(),
-                'settings' => $this->getSettings(),
-                'displayStyle' => ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block',
-                'file_browsers' => $this->getFileBrowsers(),
-                'themes' => $this->getThemes(),
-                'serverTimes' => $this->getServerTimes(),
-                'phxEnabled' => Models\SitePlugin::activePhx()->count(),
-                'lang_keys_select' => $this->getLang(),
-                'templates' => $this->getTemplates()
-            ])->render();
+        return [
+            'pwd_hash' => $this->parameterPasswordHash(),
+            'gdAvailable' => $this->parameterCheckGD(),
+            'settings' => $this->parameterSettings(),
+            'displayStyle' => ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block',
+            'file_browsers' => $this->parameterFileBrowsers(),
+            'themes' => $this->parameterThemes(),
+            'serverTimes' => $this->parameterServerTimes(),
+            'phxEnabled' => Models\SitePlugin::activePhx()->count(),
+            'lang_keys_select' => $this->parameterLang(),
+            'templates' => $this->parameterTemplates()
+        ];
     }
 
-    public function getTemplates()
+    protected function parameterTemplates()
     {
         $database = evolutionCMS()->getDatabase();
         // load templates
@@ -109,7 +92,7 @@ class SystemSettings implements ManagerController
      *
      * @return array
      */
-    public function getLang()
+    protected function parameterLang()
     {
         $lang_keys_select = [];
         $dir = dir(MODX_MANAGER_PATH . 'includes/lang');
@@ -124,7 +107,8 @@ class SystemSettings implements ManagerController
 
         return $lang_keys_select;
     }
-    public function getServerTimes()
+
+    protected function parameterServerTimes()
     {
         $serverTimes = [];
         for ($i = -24; $i < 25; $i++) {
@@ -138,7 +122,7 @@ class SystemSettings implements ManagerController
         return $serverTimes;
     }
 
-    public function getThemes()
+    protected function parameterThemes()
     {
         $themes = [];
         $dir = dir("media/style/");
@@ -155,7 +139,7 @@ class SystemSettings implements ManagerController
         return $themes;
     }
 
-    public function getFileBrowsers()
+    protected function parameterFileBrowsers()
     {
         $out = [];
         foreach (glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
@@ -166,7 +150,7 @@ class SystemSettings implements ManagerController
         return $out;
     }
 
-    public function getSettings()
+    protected function parameterSettings()
     {
         // reload system settings from the database.
         // this will prevent user-defined settings from being saved as system setting
@@ -197,12 +181,12 @@ class SystemSettings implements ManagerController
         return $out;
     }
 
-    protected function checkGD()
+    protected function parameterCheckGD()
     {
         return extension_loaded('gd');
     }
 
-    public function getPasswordHash() : array
+    protected function parameterPasswordHash() : array
     {
         $managerApi = evolutionCMS()->getManagerApi();
         return [

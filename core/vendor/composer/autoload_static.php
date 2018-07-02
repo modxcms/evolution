@@ -228,6 +228,7 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
         'Doctrine\\Common\\Inflector\\Inflector' => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector/Inflector.php',
         'EvolutionCMS\\AbstractLaravel' => __DIR__ . '/../..' . '/src/AbstractLaravel.php',
         'EvolutionCMS\\AliasLoader' => __DIR__ . '/../..' . '/src/AliasLoader.php',
+        'EvolutionCMS\\Controllers\\AbstractController' => __DIR__ . '/../..' . '/src/Controllers/AbstractController.php',
         'EvolutionCMS\\Controllers\\SystemSettings' => __DIR__ . '/../..' . '/src/Controllers/SystemSettings.php',
         'EvolutionCMS\\Core' => __DIR__ . '/../..' . '/src/Core.php',
         'EvolutionCMS\\Database' => __DIR__ . '/../..' . '/src/Database.php',

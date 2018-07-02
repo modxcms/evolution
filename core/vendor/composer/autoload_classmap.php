@@ -39,6 +39,7 @@ return array(
     'Doctrine\\Common\\Inflector\\Inflector' => $vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector/Inflector.php',
     'EvolutionCMS\\AbstractLaravel' => $baseDir . '/src/AbstractLaravel.php',
     'EvolutionCMS\\AliasLoader' => $baseDir . '/src/AliasLoader.php',
+    'EvolutionCMS\\Controllers\\AbstractController' => $baseDir . '/src/Controllers/AbstractController.php',
     'EvolutionCMS\\Controllers\\SystemSettings' => $baseDir . '/src/Controllers/SystemSettings.php',
     'EvolutionCMS\\Core' => $baseDir . '/src/Core.php',
     'EvolutionCMS\\Database' => $baseDir . '/src/Database.php',
