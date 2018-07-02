@@ -11,12 +11,10 @@
             'value' => $settings['friendly_urls'],
             'options' => [
                 1 => [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'attributes' => 'id="furlRowOn"'
                 ],
                 0 => [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'attributes' => 'id="furlRowOff"'
                 ],
@@ -33,12 +31,10 @@
             'value' => $settings['xhtml_urls'],
             'options' => [
                 1 => [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'attributes' => 'id="furlRowOn"'
                 ],
                 0 => [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'attributes' => 'id="furlRowOff"'
                 ],

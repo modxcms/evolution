@@ -400,12 +400,10 @@
                 'value' => $settings['use_editor'],
                 'options' => [
                     1 => [
-                        'value' => 1,
                         'text' => ManagerTheme::getLexicon('yes'),
                         'attributes' => 'id="editorRowOn"'
                     ],
                     0 => [
-                        'value' => 0,
                         'text' => ManagerTheme::getLexicon('no'),
                         'attributes' => 'id="editorRowOff"'
                     ]

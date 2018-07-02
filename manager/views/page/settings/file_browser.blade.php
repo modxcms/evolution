@@ -11,12 +11,10 @@
             'value' => $settings['use_browser'],
             'options' => [
                 1 => [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'attributes' => 'id="rbRowOn"'
                 ],
                 0 => [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'attributes' => 'id="rbRowOff"'
                 ]

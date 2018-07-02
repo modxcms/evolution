@@ -36,12 +36,10 @@
             'value' => $settings['email_method'],
             'options' => [
                 'mail' => [
-                    'value' => 'mail',
                     'text' => ManagerTheme::getLexicon('email_method_mail'),
                     'attributes' => 'id="useMail"'
                 ],
                 'smtp' => [
-                    'value' => 'smtp',
                     'text' => ManagerTheme::getLexicon('email_method_smtp'),
                     'attributes' => 'id="useSmtp"'
                 ]

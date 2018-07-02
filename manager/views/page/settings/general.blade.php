@@ -156,12 +156,10 @@
             'value' => $settings['enable_filter'],
             'options' => [
                 1 => [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'disabled' => $phxEnabled
                 ],
                 0 => [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'disabled' => $phxEnabled
                 ]

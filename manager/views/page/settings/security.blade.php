@@ -11,12 +11,10 @@
             'value' => $settings['use_udperms'],
             'options' => [
                 1 => [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'attributes' => 'id="udPermsOn"'
                 ],
                 0 => [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'attributes' => 'id="udPermsOff"'
                 ]
@@ -190,12 +188,10 @@
             'disabled' => !$gdAvailable,
             'options' => [
                 1 =>  [
-                    'value' => 1,
                     'text' => ManagerTheme::getLexicon('yes'),
                     'attributes' => 'id="captchaOn"',
                 ],
                 0 =>  [
-                    'value' => 0,
                     'text' => ManagerTheme::getLexicon('no'),
                     'attributes' => 'id="captchaOff"'
                 ]
