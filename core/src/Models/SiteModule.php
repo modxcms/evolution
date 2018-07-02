@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent;
  */
 class SiteModule extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
     protected $dateFormat = 'U';
@@ -58,6 +61,19 @@ class SiteModule extends Eloquent\Model
 		'properties',
 		'modulecode'
 	];
+
+	protected $managerActionsMap = [
+        'actions.cancel' => 106,
+        'actions.new' => 107,
+        'id' => [
+            'actions.edit' => 108,
+            'actions.save' => 109,
+            'actions.delete' => 110,
+            'actions.duplicate' => 111,
+            'actions.run' => 112,
+            'actions.dependency' => 113
+        ]
+    ];
 
     public function categories() : Eloquent\Relations\BelongsTo
     {

@@ -158,6 +158,7 @@ return array(
     'EvolutionCMS\\Support\\Menu' => $baseDir . '/src/Support/Menu.php',
     'EvolutionCMS\\Support\\MysqlDumper' => $baseDir . '/src/Support/MysqlDumper.php',
     'EvolutionCMS\\Support\\Paginate' => $baseDir . '/src/Support/Paginate.php',
+    'EvolutionCMS\\Traits\\Models\\ManagerActions' => $baseDir . '/src/Traits/Models/ManagerActions.php',
     'EvolutionCMS\\Traits\\Models\\SoftDeletes' => $baseDir . '/src/Traits/Models/SoftDeletes.php',
     'EvolutionCMS\\Traits\\Path' => $baseDir . '/src/Traits/Path.php',
     'EvolutionCMS\\Traits\\Settings' => $baseDir . '/src/Traits/Settings.php',

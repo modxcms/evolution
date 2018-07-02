@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent;
  */
 class SitePlugin extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
     protected $dateFormat = 'U';

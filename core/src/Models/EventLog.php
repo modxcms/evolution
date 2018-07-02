@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent;
  */
 class EventLog extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	protected $table = 'event_log';
 	public $timestamps = false;
 

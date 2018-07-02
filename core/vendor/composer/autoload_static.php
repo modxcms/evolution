@@ -347,6 +347,7 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
         'EvolutionCMS\\Support\\Menu' => __DIR__ . '/../..' . '/src/Support/Menu.php',
         'EvolutionCMS\\Support\\MysqlDumper' => __DIR__ . '/../..' . '/src/Support/MysqlDumper.php',
         'EvolutionCMS\\Support\\Paginate' => __DIR__ . '/../..' . '/src/Support/Paginate.php',
+        'EvolutionCMS\\Traits\\Models\\ManagerActions' => __DIR__ . '/../..' . '/src/Traits/Models/ManagerActions.php',
         'EvolutionCMS\\Traits\\Models\\SoftDeletes' => __DIR__ . '/../..' . '/src/Traits/Models/SoftDeletes.php',
         'EvolutionCMS\\Traits\\Path' => __DIR__ . '/../..' . '/src/Traits/Path.php',
         'EvolutionCMS\\Traits\\Settings' => __DIR__ . '/../..' . '/src/Traits/Settings.php',

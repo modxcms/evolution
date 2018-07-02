@@ -1,7 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
-use EvolutionCMS\Traits\Models\SoftDeletes;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -43,7 +43,8 @@ use EvolutionCMS\Traits\Models\SoftDeletes;
  */
 class SiteContent extends Eloquent\Model
 {
-    use SoftDeletes;
+    use Traits\Models\SoftDeletes,
+        Traits\Models\ManagerActions;
 
     protected $table = 'site_content';
 

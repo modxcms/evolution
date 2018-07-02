@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent;
  */
 class WebUser extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	public $timestamps = false;
 
 	protected $hidden = [

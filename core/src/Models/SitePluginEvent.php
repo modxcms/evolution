@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $pluginid
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent;
  */
 class SitePluginEvent extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	public $incrementing = false;
 	public $timestamps = false;
 

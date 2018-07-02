@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent;
  */
 class UserMessage extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	public $timestamps = false;
 
 	protected $casts = [
