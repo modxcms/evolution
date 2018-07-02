@@ -3145,7 +3145,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $state = 0;
         $pms = $_SESSION['mgrPermissions'];
         if ($pms) {
-            $state = ((bool)$pms[$pm] === true);
+            $state = (isset($pms[$pm]) && (bool)$pms[$pm] === true);
         }
 
         return (int)$state;
