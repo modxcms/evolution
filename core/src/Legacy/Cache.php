@@ -122,7 +122,7 @@ class Cache
             $modx = $GLOBALS['modx'];
         }
         if (!isset($this->cachePath)) {
-            $modx->messageQuit("Cache path not set.");
+            $modx->getService('ExceptionHandler')->messageQuit("Cache path not set.");
         }
 
         $files = glob(realpath($this->cachePath) . '/*.pageCache.php');

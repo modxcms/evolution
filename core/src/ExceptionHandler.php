@@ -115,7 +115,7 @@ class ExceptionHandler
             $source = "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
 
-        $this->container->messageQuit($msg, '', $isError, $nr, $file, $source, $text, $line);
+        $this->messageQuit($msg, '', $isError, $nr, $file, $source, $text, $line);
     }
 
     /**
@@ -286,8 +286,9 @@ class ExceptionHandler
         $str = str_replace('[^t^]', $totalTime, $str);
         $str = str_replace('[^m^]', $total_mem, $str);
 
-        if (isset($php_errormsg) && !empty($php_errormsg)) {
-            $str = "<b>{$php_errormsg}</b><br />\n{$str}";
+        $php_errormsg = error_get_last();
+        if (!empty($php_errormsg) && isset($php_errormsg['message'])) {
+            $str = '<b>' . $php_errormsg['message'] . '</b><br />' . PHP_EOL . $str;
         }
         $str .= $this->getBacktrace(empty($backtrace) ? debug_backtrace() : $backtrace);
         // Log error

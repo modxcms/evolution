@@ -154,8 +154,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // events
         $this->event = new Event();
         $this->Event = &$this->event; //alias for backward compatibility
-        // set track_errors ini variable
-        @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
@@ -325,7 +323,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // append the redirect count string to the url
             $currentNumberOfRedirects = isset ($_REQUEST['err']) ? $_REQUEST['err'] : 0;
             if ($currentNumberOfRedirects > 3) {
-                $this->messageQuit('Redirection attempt failed - please ensure the document you\'re trying to redirect to exists. <p>Redirection URL: <i>' . $url . '</i></p>');
+                $this->getService('ExceptionHandler')->messageQuit(
+                    'Redirection attempt failed - please ensure the document you\'re trying to redirect to exists.' .
+                    '<p>Redirection URL: <i>' . $url . '</i></p>'
+                );
             } else {
                 $currentNumberOfRedirects += 1;
                 if (strpos($url, "?") > 0) {
@@ -350,7 +351,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (strpos($url, "\n") === false) {
                 $header = 'Location: ' . $url;
             } else {
-                $this->messageQuit('No newline allowed in redirect url.');
+                $this->getService('ExceptionHandler')->messageQuit('No newline allowed in redirect url.');
             }
         }
         if ($responseCode && (strpos($responseCode, '30') !== false)) {
@@ -382,7 +383,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->prepareResponse();
             exit();
         } else {
-            $this->messageQuit("Internal Server Error id={$id}");
+            $this->getService('ExceptionHandler')->messageQuit("Internal Server Error id={$id}");
             header('HTTP/1.0 500 Internal Server Error');
             die('<h1>ERROR: Too many forward attempts!</h1><p>The request could not be completed due to too many unsuccessful forward attempts.</p>');
         }
@@ -1818,16 +1819,26 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         ob_end_clean();
         // When reached here, no fatal error occured so the lock should be removed.
         /*if(is_file($lock_file_path)) unlink($lock_file_path);*/
+        $error_info = error_get_last();
 
-        if ((0 < $this->getConfig('error_reporting')) && $msg && isset($php_errormsg)) {
-            $error_info = error_get_last();
-            if ($this->detectError($error_info['type'])) {
-                $msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin',
-                    $error_info['message'], $error_info['line'], $msg);
-                if ($this->isBackend()) {
-                    $this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
-                }
+        if ((0 < $this->getConfig('error_reporting')) && $msg && $error_info !== null && $this->detectError($error_info['type'])) {
+            $msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
+            $this->getService('ExceptionHandler')->messageQuit(
+                'PHP Parse Error',
+                '',
+                true,
+                $error_info['type'],
+                $error_info['file'],
+                'Plugin',
+                $error_info['message'],
+                $error_info['line'],
+                $msg
+            );
+            if ($this->isBackend()) {
+                $this->event->alert(
+                    'An error occurred while loading. Please see the event log for more information.' .
+                    '<p>' . $msg . '</p>'
+                );
             }
         } else {
             echo $msg;
@@ -1869,15 +1880,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $echo = ob_get_contents();
         ob_end_clean();
-        if ((0 < $this->getConfig('error_reporting')) && isset($php_errormsg)) {
-            $error_info = error_get_last();
-            if ($this->detectError($error_info['type'])) {
-                $echo = ($echo === false) ? 'ob_get_contents() error' : $echo;
-                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet',
-                    $error_info['message'], $error_info['line'], $echo);
-                if ($this->isBackend()) {
-                    $this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $echo . $return . '</p>');
-                }
+        $error_info = error_get_last();
+        if ((0 < $this->getConfig('error_reporting')) && $error_info !== null && $this->detectError($error_info['type'])) {
+            $echo = ($echo === false) ? 'ob_get_contents() error' : $echo;
+            $this->getService('ExceptionHandler')->messageQuit(
+                'PHP Parse Error',
+                '',
+                true,
+                $error_info['type'],
+                $error_info['file'],
+                'Snippet',
+                $error_info['message'],
+                $error_info['line'],
+                $echo
+            );
+            if ($this->isBackend()) {
+                $this->event->alert(
+                    'An error occurred while loading. Please see the event log for more information' .
+                    '<p>' . $echo . $return . '</p>'
+                );
             }
         }
         unset($modx->event->params);
@@ -2963,7 +2984,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->getDatabase()->getRecordCount($rs) == 1) {
             return $this->getDatabase()->getValue($rs);
         } else {
-            $this->messageQuit('Incorrect number of templates returned from database');
+            $this->getService('ExceptionHandler')->messageQuit('Incorrect number of templates returned from database');
         }
     }
 
@@ -4089,7 +4110,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $f_url_suffix = $this->getConfig('friendly_url_suffix');
 
         if (!is_numeric($id)) {
-            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
+            $this->getService('ExceptionHandler')
+                ->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
 
         if ($args !== '') {
@@ -5746,7 +5768,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (!$isSafe) {
             $msg = $phpcode . "\n" . $this->currentSnippet . "\n" . print_r($_SERVER, true);
             $title = sprintf('Unknown eval was executed (%s)', $this->getPhpCompat()->htmlspecialchars(substr(trim($phpcode), 0, 50)));
-            $this->messageQuit($title, '', true, '', '', 'Parser', $msg);
+            $this->getService('ExceptionHandler')
+                ->messageQuit($title, '', true, '', '', 'Parser', $msg);
             return;
         }
 

@@ -53,8 +53,7 @@ class Database extends BaseDatabase implements Interfaces\DatabaseInterface
 
             return $out;
         } catch (Exception $exception) {
-            $core = evolutionCMS();
-            $core->messageQuit($exception->getMessage());
+            evolutionCMS()->getService('ExceptionHandler')->messageQuit($exception->getMessage());
         }
     }
 
