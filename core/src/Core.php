@@ -3173,6 +3173,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAnyPermissions(array $permissions) {
+        foreach ($permissions as $p) {
+            if ($this->hasPermission($p)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Returns true if element is locked
      *
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role

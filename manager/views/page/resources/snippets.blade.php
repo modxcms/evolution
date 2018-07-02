@@ -1,33 +1,26 @@
-@if (isset($resources->items['site_snippets']))
-    <div class="tab-page" id="tabSnippets">
-        <h2 class="tab"><i class="fa fa-code"></i> <?= $_lang["manage_snippets"] ?></h2>
-        <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabSnippets'))</script>
+@extends('manager::template.page')
+@section('content')
+    <script>var trans = '{{ json_encode($unlockTranslations) }}';</script>
+    <script>var mraTrans = '{{ json_encode($mraTranslations) }}';</script>
 
-        <div id="snippets-info" class="msg-container" style="display:none">
-            <div class="element-edit-message-tab"><?= $_lang['snippet_management_msg'] ?></div>
-            <p class="viewoptions-message"><?= $_lang['view_options_msg'] ?></p>
+    <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+    <script type="text/javascript" src="media/script/jquery.nucontextmenu.js"></script>
+    <script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="actions/resources/functions.js"></script>
+
+    <h1>
+        <i class="fa fa-th"></i>{{ ManagerTheme::getLexicon('element_management') }}
+    </h1>
+
+    <div class="sectionBody">
+        <div class="tab-pane" id="resourcesPane">
+            <script type="text/javascript">
+                tpResources = new WebFXTabPane(document.getElementById("resourcesPane"), true);
+            </script>
+            @include('manager::page.resources.tab.snippets')
+            @if(is_numeric(get_by_key($_GET, 'tab')))
+                <script type="text/javascript"> tpResources.setSelectedIndex({{ $_GET['tab'] }});</script>
+            @endif
         </div>
-
-        <div id="_actions">
-            <form class="btn-group form-group form-inline">
-                <div class="input-group input-group-sm">
-                    <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_snippets_search" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-success" href="index.php?a=23"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_snippet'] ?></span></a>
-                        <a class="btn btn-secondary" href="javascript:;" id="snippets-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>
-                        <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_snippets"><i class="fa fa-bars"></i> <span><?= $_lang['btn_view_options'] ?></span></a>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        @include('manager::partials.switchButtons', ['cssId' => 'site_snippets'])
-
-        @include('manager::page.resources._list', ['resourceTable' => 'site_snippets', 'items' => $resources->items['site_snippets']])
-
-        <script>
-            initQuicksearch('site_snippets_search', 'site_snippets')
-            initViews('sn', 'snippets', 'site_snippets')
-        </script>
     </div>
-@endif
+@endsection

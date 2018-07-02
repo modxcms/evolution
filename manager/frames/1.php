@@ -191,11 +191,11 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           actions_plus: '<?= addslashes($_style['actions_plus']) ?>',
           actions_reply: '<?= addslashes($_style['actions_reply']) ?>',
           collapse_tree: '<?= addslashes('<i class="fa fa-arrow-circle-up"></i>') ?>',
-          email: '<?= addslashes($_style['email']) ?>',
+          email: '<?= addslashes('<i class="fa fa-envelope"></i>') ?>',
           empty_recycle_bin: '<?= addslashes('<i class="fa fa-trash"></i>') ?>',
           empty_recycle_bin_empty: '<?= addslashes('<i class="fa fa-trash-o"></i>') ?>',
-          expand_tree: '<?= addslashes($_style['expand_tree']) ?>',
-          icons_external_link: '<?= addslashes($_style['icons_external_link']) ?>',
+          expand_tree: '<?= addslashes('<i class="fa fa-arrow-circle-down"></i>') ?>',
+          icons_external_link: '<?= addslashes('<i class="fa fa-external-link"></i>') ?>',
           icons_working: '<?= addslashes($_style['tree_working']) ?>',
           tree_info: '<?= addslashes($_style['tree_info']) ?>',
           tree_folder: '<?= addslashes($_style['tree_folder_new']) ?>',
@@ -303,14 +303,14 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         <?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
                                             <li>
                                                 <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=images" target="main">
-                                                    <?= $_style['images_management'] ?><?= $_lang['images_management'] ?>
+                                                    <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
                                                 </a>
                                             </li>
                                         <?php } ?>
                                         <?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
                                             <li>
                                                 <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=files" target="main">
-                                                    <?= $_style['files_management'] ?><?= $_lang['files_management'] ?>
+                                                    <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
                                                 </a>
                                             </li>
                                         <?php } ?>
@@ -528,27 +528,27 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
     <div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
         <div id="nameHolder">&nbsp;</div>
         <?php
-        constructLink(3, $_style["ctx_new_document"], $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
-        constructLink(2, $_style["ctx_edit_document"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
-        constructLink(5, $_style["ctx_move_document"], $_lang["move_resource"], $modx->hasPermission('save_document')); // move
-        constructLink(7, $_style["ctx_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
-        constructLink(11, $_style["ctx_sort_menuindex"], $_lang["sort_menuindex"], !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
+        constructLink(3, 'fa fa-file-o', $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
+        constructLink(2, 'fa fa-pencil-square-o', $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
+        constructLink(5, 'fa fa-arrows', $_lang["move_resource"], $modx->hasPermission('save_document')); // move
+        constructLink(7, 'fa fa-clone', $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
+        constructLink(11, 'fa fa-sort-numeric-asc', $_lang["sort_menuindex"], !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(9, $_style["ctx_publish_document"], $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
-        constructLink(10, $_style["ctx_unpublish_resource"], $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
-        constructLink(4, $_style["ctx_delete"], $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
-        constructLink(8, $_style["ctx_undelete_resource"], $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
+        constructLink(9, 'fa fa-arrow-up', $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
+        constructLink(10, 'fa fa-arrow-down', $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
+        constructLink(4, 'fa fa-trash', $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
+        constructLink(8, 'fa fa-arrow-circle-o-up', $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(6, $_style["ctx_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
+        constructLink(6, 'fa fa-link', $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(1, $_style["ctx_resource_overview"], $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
-        constructLink(12, $_style["ctx_preview_resource"], $_lang["preview_resource"], 1); // preview
+        constructLink(1, 'fa fa-info', $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
+        constructLink(12, 'fa fa-eye', $_lang["preview_resource"], 1); // preview
         ?>
 
     </div>

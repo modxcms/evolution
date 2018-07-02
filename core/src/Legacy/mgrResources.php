@@ -1,5 +1,10 @@
 <?php namespace EvolutionCMS\Legacy;
 
+use ManagerTheme;
+
+/**
+ * @deprecated
+ */
 class mgrResources {
     /**
      * @var array
@@ -31,35 +36,34 @@ class mgrResources {
      * @return void
      */
     public function setTypes() {
-        global $_lang;
         $this->types['site_templates']    = array(
-            'title'=>$_lang["manage_templates"],
+            'title' => ManagerTheme::getLexicon('manage_templates'),
             'actions'=>array( 'edit'=>array(16,'edit_template'), 'duplicate'=>array(96,'new_template'), 'remove'=>array(21,'delete_template') ),
             'permissions'=>array('new_template','edit_template'),
             'name'=>'templatename'
         );
         $this->types['site_tmplvars']     = array(
-            'title'=>$_lang["tmplvars"],
+            'title'=> ManagerTheme::getLexicon('tmplvars'),
             'actions'=>array('edit'=>array(301,'edit_template'), 'duplicate'=>array(304,'edit_template'), 'remove'=>array(303,'edit_template')),
             'permissions'=>array('new_template','edit_template'),
         );
         $this->types['site_htmlsnippets'] = array(
-            'title'=>$_lang["manage_htmlsnippets"],
+            'title'=> ManagerTheme::getLexicon('manage_htmlsnippets'),
             'actions'=>array('edit'=>array(78,'edit_chunk'), 'duplicate'=>array(97,'new_chunk'), 'remove'=>array(80,'delete_chunk')),
             'permissions'=>array('new_chunk','edit_chunk'),
         );
         $this->types['site_snippets']     = array(
-            'title'=>$_lang["manage_snippets"],
+            'title'=> ManagerTheme::getLexicon('manage_snippets'),
             'actions'=>array('edit'=>array(22,'edit_snippet'), 'duplicate'=>array(98,'new_snippet'), 'remove'=>array(25,'delete_snippet')),
             'permissions'=>array('new_snippet','edit_snippet'),
         );
         $this->types['site_plugins']      = array(
-            'title'=>$_lang["manage_plugins"],
+            'title'=> ManagerTheme::getLexicon('manage_plugins'),
             'actions'=>array('edit'=>array(102,'edit_plugin'), 'duplicate'=>array(105,'new_plugin'), 'remove'=>array(104,'delete_plugin')),
             'permissions'=>array('new_plugin','edit_plugin'),
         );
         $this->types['site_modules']      = array(
-            'title'=>$_lang["manage_modules"],
+            'title'=> ManagerTheme::getLexicon('manage_modules'),
             'actions'=>array('edit'=>array(108,'edit_module'), 'duplicate'=>array(111,'new_module'), 'remove'=>array(110,'delete_module')),
             'permissions'=>array('new_module','edit_module'),
         );
@@ -70,24 +74,11 @@ class mgrResources {
      */
     public function queryItemsFromDB() {
         foreach($this->types as $resourceTable=>$type) {
-            if($this->hasAnyPermissions($type['permissions'])) {
+            if(evolutionCMS()->hasAnyPermissions($type['permissions'])) {
                 $nameField = isset($type['name']) ? $type['name'] : 'name';
                 $this->items[$resourceTable] = $this->queryResources($resourceTable, $nameField);
             }
         }
-    }
-
-    /**
-     * @param array $permissions
-     * @return bool
-     */
-    public function hasAnyPermissions($permissions) {
-        $modx = evolutionCMS();
-
-        foreach($permissions as $p)
-            if($modx->hasPermission($p)) return true;
-
-        return false;
     }
 
     /**

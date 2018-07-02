@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent;
  * @property string $default_text
  * @property int $createdon
  * @property int $editedon
+ *
+ * BelongsTo
+ * @property null|Category $categories
  */
 class SiteTmplvar extends Eloquent\Model
 {
@@ -48,4 +51,33 @@ class SiteTmplvar extends Eloquent\Model
 		'display_params',
 		'default_text'
 	];
+
+    public function categories() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category', 'id');
+    }
+
+    public function categoryName($default = '')
+    {
+        return $this->categories === null ? $default : $this->categories->category;
+    }
+
+    public function categoryId()
+    {
+        return $this->categories === null ? null : $this->categories->getKey();
+    }
+
+    /**
+     * @return Eloquent\Relations\BelongsToMany
+     */
+    public function templates() : Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            SiteTemplate::class,
+            (new SiteTmplvarTemplate())->getTable(),
+            'tmplvarid',
+            'templateid'
+        )->withPivot('rank')
+            ->orderBy('pivot_rank', 'ASC');
+    }
 }

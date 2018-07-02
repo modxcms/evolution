@@ -102,7 +102,7 @@ $serverArr = array(
                         ?>
                         <tr>
                             <td class="text-primary"><b><?= $log_status['Name'] ?></b></td>
-                            <td class="text-xs-center"><?= (!empty($log_status['Comment']) ? '<i class="' . $_style['actions_help'] . '" data-tooltip="' . $log_status['Comment'] . '"></i>' : '') ?></td>
+                            <td class="text-xs-center"><?= (!empty($log_status['Comment']) ? '<i class="fa fa-question-circle" data-tooltip="' . $log_status['Comment'] . '"></i>' : '') ?></td>
                             <td class="text-xs-right"><?= $log_status['Rows'] ?></td>
 
                             <?php

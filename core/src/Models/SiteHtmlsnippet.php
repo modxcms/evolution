@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent;
  * @property int $createdon
  * @property int $editedon
  * @property int $disabled
+ *
+ * BelongsTo
+ * @property null|Category $categories
  */
 class SiteHtmlsnippet extends Eloquent\Model
 {
@@ -43,4 +46,19 @@ class SiteHtmlsnippet extends Eloquent\Model
 		'locked',
 		'disabled'
 	];
+
+    public function categories() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category', 'id');
+    }
+
+    public function categoryName($default = '')
+    {
+        return $this->categories === null ? $default : $this->categories->category;
+    }
+
+    public function categoryId()
+    {
+        return $this->categories === null ? null : $this->categories->getKey();
+    }
 }

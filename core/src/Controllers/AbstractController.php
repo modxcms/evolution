@@ -1,10 +1,13 @@
 <?php namespace EvolutionCMS\Controllers;
 
-use EvolutionCMS\Interfaces\ManagerController;
+use EvolutionCMS\Interfaces\ManagerTheme\ControllerInterface;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 
-abstract class AbstractController implements ManagerController
+abstract class AbstractController implements ControllerInterface
 {
+    /**
+     * @var string
+     */
     protected $view;
 
     /**
@@ -12,27 +15,48 @@ abstract class AbstractController implements ManagerController
      */
     protected $managerTheme;
 
+    /**
+     * @inheritdoc
+     */
     public function __construct(ManagerThemeInterface $managerTheme)
     {
         $this->managerTheme = $managerTheme;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getView(): string
     {
         return $this->view;
     }
 
+    /**
+     * @inheritdoc
+     */
     abstract public function canView(): bool;
 
+    /**
+     * @inheritdoc
+     */
     abstract public function checkLocked() : ?string;
 
-    abstract public function getParameters() : array;
+    /**
+     * @inheritdoc
+     */
+    public function getParameters(array $params = []) : array
+    {
+        return $params;
+    }
 
-    public function render() : string
+    /**
+     * @inheritdoc
+     */
+    public function render(array $params = []) : string
     {
         return $this->managerTheme->view(
             $this->getView(),
-            $this->getParameters()
+            $this->getParameters($params)
         )->render();
     }
 }

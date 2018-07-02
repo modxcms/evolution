@@ -153,7 +153,7 @@ class ManagerTheme implements ManagerThemeInterface
         99,
         86,
         /** template/ snippet management */
-        76,
+        76 => Controllers\Resources::class,
         /** Export to file */
         83,
         /** Resource Selector  */
@@ -341,6 +341,7 @@ class ManagerTheme implements ManagerThemeInterface
 
         return $element;
     }
+
     public function handle ($action)
     {
         $this->saveAction($action);
@@ -350,7 +351,9 @@ class ManagerTheme implements ManagerThemeInterface
         $controllerName = get_by_key($this->actions, $action, $action);
         if (\is_int($controllerName)) {
             $out = $this->view('page.' . $action)->render();
-        } elseif (class_exists($controllerName)) {
+        } elseif (class_exists($controllerName) &&
+            \in_array(Interfaces\ManagerTheme\PageControllerInterface::class, class_implements($controllerName), true)
+        ) {
             $controller = new $controllerName($this);
             if (! $controller->canView()) {
                 $this->core->webAlertAndQuit($this->getLexicon('error_no_privileges'));

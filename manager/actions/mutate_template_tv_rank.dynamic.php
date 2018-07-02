@@ -141,7 +141,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
         <b><?= $_lang['template_tv_edit'] ?></b>
         <p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
         <p>
-            <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['actions_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+            <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="fa fa-sort"></i> <?= $_lang['sort_alphabetically'] ?></a>
             <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
         </p>
         <?= $updateMsg ?>

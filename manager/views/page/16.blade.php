@@ -69,13 +69,13 @@
                 //saveWait('mutate');
             },
             duplicate: function() {
-                if(confirm("<?= $_lang['confirm_duplicate_record'] ?>") === true) {
+                if(confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
                     documentDirty = false;
                     document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=96";
                 }
             },
             delete: function() {
-                if(confirm("<?= $_lang['confirm_delete_template'] ?>") === true) {
+                if(confirm("{{ ManagerTheme::getLexicon('confirm_delete_template') }}") === true) {
                     documentDirty = false;
                     document.location.href = "index.php?id=" + document.mutate.id.value + "&a=21";
                 }
@@ -114,7 +114,7 @@
         <?= $_style['actionbuttons']['dynamic']['element'] ?>
 
         <div class="container element-edit-message">
-            <div class="alert alert-info"><?= $_lang['template_msg'] ?></div>
+            <div class="alert alert-info">{{ ManagerTheme::getLexicon('template_msg') }}</div>
         </div>
 
 
@@ -124,13 +124,13 @@
             </script>
 
             <div class="tab-page" id="tabTemplate">
-                <h2 class="tab"><?= $_lang["template_edit_tab"] ?></h2>
+                <h2 class="tab">{{ ManagerTheme::getLexicon('template_edit_tab') }}</h2>
                 <script type="text/javascript">tp.addTabPage(document.getElementById("tabTemplate"));</script>
                 <div class="container container-body">
                     <div class="form-group">
                         <div class="row form-row">
                             <label class="col-md-3 col-lg-2">
-                                <?= $_lang['template_name'] ?>
+                                {{ ManagerTheme::getLexicon('template_name') }}
                                 <?php if($id == $modx->config['default_template']) {
                                     echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), ManagerTheme::getCharset()) . '</small>';
                                 } ?>
@@ -139,7 +139,7 @@
                                 <div class="form-control-name clearfix">
                                     <input name="templatename" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
                                     <?php if($modx->hasPermission('save_role')): ?>
-                                    <label class="custom-control" title="<?= $_lang['lock_template'] . "\n" . $_lang['lock_template_msg'] ?>" tooltip>
+                                    <label class="custom-control" title="{{ ManagerTheme::getLexicon('lock_template'] . "\n" . $_lang['lock_template_msg') }}" tooltip>
                                         <input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
                                         <i class="fa fa-lock"></i>
                                     </label>
@@ -150,13 +150,13 @@
                             </div>
                         </div>
                         <div class="row form-row">
-                            <label class="col-md-3 col-lg-2"><?= $_lang['template_desc'] ?></label>
+                            <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('template_desc') }}</label>
                             <div class="col-md-9 col-lg-10">
                                 <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;">
                             </div>
                         </div>
                         <div class="row form-row">
-                            <label class="col-md-3 col-lg-2"><?= $_lang['existing_category'] ?></label>
+                            <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('existing_category') }}</label>
                             <div class="col-md-9 col-lg-10">
                                 <select name="categoryid" class="form-control" onchange="documentDirty=true;">
                                     <option>&nbsp;</option>
@@ -170,7 +170,7 @@
                             </div>
                         </div>
                         <div class="row form-row">
-                            <label class="col-md-3 col-lg-2"><?= $_lang['new_category'] ?></label>
+                            <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('new_category') }}</label>
                             <div class="col-md-9 col-lg-10">
                                 <input name="newcategory" type="text" maxlength="45" value="<?= isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="form-control" onchange="documentDirty=true;">
                             </div>
@@ -179,14 +179,14 @@
                     <?php if($modx->hasPermission('save_role')): ?>
                     <div class="form-group">
                         <label>
-                            <input name="selectable" type="checkbox"<?= ($selectable == 1 ? ' checked="checked"' : '') ?> /> <?= $_lang['template_selectable'] ?></label>
+                            <input name="selectable" type="checkbox"<?= ($selectable == 1 ? ' checked="checked"' : '') ?> /> {{ ManagerTheme::getLexicon('template_selectable') }}</label>
                     </div>
                     <?php endif; ?>
                 </div>
 
                 <!-- HTML text editor start -->
                 <div class="navbar navbar-editor">
-                    <span><?= $_lang['template_code'] ?></span>
+                    <span>{{ ManagerTheme::getLexicon('template_code') }}</span>
                 </div>
                 <div class="section-editor clearfix">
                     <textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= (isset($content['post']) ? $modx->getPhpCompat()->htmlspecialchars($content['post']) : $modx->getPhpCompat()->htmlspecialchars($content['content'])) ?></textarea>
@@ -231,7 +231,7 @@
             </div>
 
             <div class="tab-page" id="tabAssignedTVs">
-                <h2 class="tab"><?= $_lang["template_assignedtv_tab"] ?></h2>
+                <h2 class="tab">{{ ManagerTheme::getLexicon('template_assignedtv_tab') }}</h2>
                 <script type="text/javascript">tp.addTabPage(document.getElementById("tabAssignedTVs"));</script>
                 <input type="hidden" name="tvsDirty" id="tvsDirty" value="0">
 

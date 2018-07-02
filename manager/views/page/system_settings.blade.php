@@ -25,7 +25,7 @@
             <i class="fa fa-sliders fw"></i>{{ ManagerTheme::getLexicon('settings_title') }}
         </h1>
         @include('manager::partials.actionButtons', ['save' => '', 'cancel' => ''])
-        @if(!get_by_key($modx->config, 'settings_version') || get_by_key($modx->config, 'settings_version') != $modx->getVersionData('version'))
+        @if(!get_by_key($modx->config, 'settings_version') || get_by_key($modx->config, 'settings_version') !== $modx->getVersionData('version'))
             <div class="container">
                 <p class="alert alert-warning">{!! ManagerTheme::getLexicon('settings_after_install') !!}</p>
             </div>
@@ -34,13 +34,13 @@
             <script type="text/javascript">
               tpSettings = new WebFXTabPane(document.getElementById('settingsPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
-            @include('manager::page.settings.general')
-            @include('manager::page.settings.friendly_urls')
-            @include('manager::page.settings.interface')
-            @include('manager::page.settings.security')
-            @include('manager::page.settings.file_manager')
-            @include('manager::page.settings.file_browser')
-            @include('manager::page.settings.mail_templates')
+            @include('manager::page.system_settings.general')
+            @include('manager::page.system_settings.friendly_urls')
+            @include('manager::page.system_settings.interface')
+            @include('manager::page.system_settings.security')
+            @include('manager::page.system_settings.file_manager')
+            @include('manager::page.system_settings.file_browser')
+            @include('manager::page.system_settings.mail_templates')
         </div>
     </form>
     @push('scripts.bot')
@@ -154,7 +154,7 @@
             }
           }
         </script>
-        @if(isset($_GET['tab']) && is_numeric($_GET['tab']))
+        @if(is_numeric(get_by_key($_GET, 'tab')))
             <script type="text/javascript">tpSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
         @endif
     @endpush

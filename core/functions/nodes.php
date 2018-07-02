@@ -75,7 +75,7 @@ if(!function_exists('makeHTML')) {
         $result = $modx->getDatabase()->select($field, $from, $where, $orderby);
         if ($modx->getDatabase()->getRecordCount($result) == 0) {
             $output .= sprintf('<div><a class="empty">%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer,
-                $_style['tree_deletedpage'], $_lang['empty_folder']);
+                '<i class="fa fa-ban"></i>', $_lang['empty_folder']);
         }
 
         $nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->getConfig('resource_tree_node_name') : $_SESSION['tree_nodename'];

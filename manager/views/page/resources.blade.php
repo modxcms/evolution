@@ -17,10 +17,13 @@
             <script type="text/javascript">
                 tpResources = new WebFXTabPane(document.getElementById("resourcesPane"), true);
             </script>
-            @include('manager::page.resources.tab.chunks')
-            @if(is_numeric(get_by_key($_GET, 'tab')))
-                <script type="text/javascript"> tpResources.setSelectedIndex({{ $_GET['tab'] }});</script>
-            @endif
+
+            @foreach($tabs as $tab)
+                {!! $tab !!}
+            @endforeach
+
+            <?php $tab = (is_numeric(get_by_key($_GET, 'tab')) && count($tabs) <= $_GET['tab']) ? $_GET['tab'] : 0; ?>
+            <script type="text/javascript"> tpResources.setSelectedIndex({{ $tab }});</script>
         </div>
     </div>
 @endsection

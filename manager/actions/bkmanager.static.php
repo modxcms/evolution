@@ -455,7 +455,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         ?>
                                         <tr>
                                             <td><?= $filename ?></td>
-                                            <td><i class="<?= $_style['actions_help'] ?>" data-tooltip="<?= $tooltip ?>"></i></td>
+                                            <td><i class="fa fa-question-circle" data-tooltip="<?= $tooltip ?>"></i></td>
                                             <td><?= $filesize ?></td>
                                             <td><?= $details['Description'] ?></td>
                                             <td><?= $details['MODX Version'] ?></td>

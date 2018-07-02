@@ -228,7 +228,7 @@
                 document.mutate.save.click();
             },
             delete: function() {
-                if(confirm("<?= $_lang['confirm_delete_resource'] ?>") === true) {
+                if(confirm("{{ ManagerTheme::getLexicon('confirm_delete_resource') }}") === true) {
                     document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=6";
                 }
             },
@@ -240,7 +240,7 @@
                 document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=51";
             },
             duplicate: function() {
-                if(confirm("<?= $_lang['confirm_resource_duplicate'] ?>") === true) {
+                if(confirm("{{ ManagerTheme::getLexicon('confirm_resource_duplicate') }}") === true) {
                     document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94";
                 }
             },
@@ -266,53 +266,53 @@
 
         <!-- General -->
         <div class="tab-page" id="tabdocGeneral">
-            <h2 class="tab"><?= $_lang['settings_general'] ?></h2>
+            <h2 class="tab">{{ ManagerTheme::getLexicon('settings_general') }}</h2>
             <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabdocGeneral"));</script>
             <div class="container container-body">
                 <table>
                     <tr>
-                        <td colspan="2"><b><?= $_lang['page_data_general'] ?></b></td>
+                        <td colspan="2"><b>{{ ManagerTheme::getLexicon('page_data_general') }}</b></td>
                     </tr>
                     <tr>
-                        <td width="200" valign="top"><?= $_lang['resource_title'] ?>:</td>
+                        <td width="200" valign="top">{{ ManagerTheme::getLexicon('resource_title') }}:</td>
                         <td><b><?= $content['pagetitle'] ?></b></td>
                     </tr>
                     <tr>
-                        <td width="200" valign="top"><?= $_lang['long_title'] ?>:</td>
+                        <td width="200" valign="top">{{ ManagerTheme::getLexicon('long_title') }}:</td>
                         <td>
                             <small><?= $content['longtitle'] != '' ? $content['longtitle'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
                         </td>
                     </tr>
                     <tr>
-                        <td valign="top"><?= $_lang['resource_description'] ?>:</td>
+                        <td valign="top">{{ ManagerTheme::getLexicon('resource_description') }}:</td>
                         <td><?= $content['description'] != '' ? $content['description'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
-                        <td valign="top"><?= $_lang['resource_summary'] ?>:</td>
+                        <td valign="top">{{ ManagerTheme::getLexicon('resource_summary') }}:</td>
                         <td><?= $content['introtext'] != '' ? $content['introtext'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
-                        <td valign="top"><?= $_lang['type'] ?>:</td>
+                        <td valign="top">{{ ManagerTheme::getLexicon('type') }}:</td>
                         <td><?= $content['type'] == 'reference' ? $_lang['weblink'] : $_lang['resource'] ?></td>
                     </tr>
                     <tr>
-                        <td valign="top"><?= $_lang['resource_alias'] ?>:</td>
+                        <td valign="top">{{ ManagerTheme::getLexicon('resource_alias') }}:</td>
                         <td><?= $content['alias'] != '' ? $content['alias'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><b><?= $_lang['page_data_changes'] ?></b></td>
+                        <td colspan="2"><b>{{ ManagerTheme::getLexicon('page_data_changes') }}</b></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_created'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_created') }}:</td>
                         <td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= $createdbyname ?></b>)
                         </td>
                     </tr>
                     <?php if($editedbyname != '') { ?>
                     <tr>
-                        <td><?= $_lang['page_data_edited'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_edited') }}:</td>
                         <td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= $editedbyname ?></b>)
                         </td>
                     </tr>
@@ -321,60 +321,60 @@
                         <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><b><?= $_lang['page_data_status'] ?></b></td>
+                        <td colspan="2"><b>{{ ManagerTheme::getLexicon('page_data_status') }}</b></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_status'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_status') }}:</td>
                         <td><?= $content['published'] == 0 ? '<span class="unpublishedDoc">' . $_lang['page_data_unpublished'] . '</span>' : '<span class="publisheddoc">' . $_lang['page_data_published'] . '</span>' ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_publishdate'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_publishdate') }}:</td>
                         <td><?= $content['pub_date'] == 0 ? "(<i>" . $_lang['not_set'] . "</i>)" : $modx->toDateFormat($content['pub_date']) ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_unpublishdate'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_unpublishdate') }}:</td>
                         <td><?= $content['unpub_date'] == 0 ? "(<i>" . $_lang['not_set'] . "</i>)" : $modx->toDateFormat($content['unpub_date']) ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_cacheable'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_cacheable') }}:</td>
                         <td><?= $content['cacheable'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_searchable'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_searchable') }}:</td>
                         <td><?= $content['searchable'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['resource_opt_menu_index'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('resource_opt_menu_index') }}:</td>
                         <td><?= $content['menuindex'] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['resource_opt_show_menu'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('resource_opt_show_menu') }}:</td>
                         <td><?= $content['hidemenu'] == 1 ? $_lang['no'] : $_lang['yes'] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_web_access'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_web_access') }}:</td>
                         <td><?= $content['privateweb'] == 0 ? $_lang['public'] : '<b style="color: #821517">' . $_lang['private'] . '</b> ' . $_style["icons_secured"] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_mgr_access'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_mgr_access') }}:</td>
                         <td><?= $content['privatemgr'] == 0 ? $_lang['public'] : '<b style="color: #821517">' . $_lang['private'] . '</b> ' . $_style["icons_secured"] ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><b><?= $_lang['page_data_markup'] ?></b></td>
+                        <td colspan="2"><b>{{ ManagerTheme::getLexicon('page_data_markup') }}</b></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_template'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_template') }}:</td>
                         <td><?= $templatename ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_editor'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_editor') }}:</td>
                         <td><?= $content['richtext'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
                     </tr>
                     <tr>
-                        <td><?= $_lang['page_data_folder'] ?>:</td>
+                        <td>{{ ManagerTheme::getLexicon('page_data_folder') }}:</td>
                         <td><?= $content['isfolder'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
                     </tr>
                 </table>
@@ -383,7 +383,7 @@
 
         <!-- View Children -->
         <div class="tab-page" id="tabChildren">
-            <h2 class="tab"><?= $_lang['view_child_resources_in_container'] ?></h2>
+            <h2 class="tab">{{ ManagerTheme::getLexicon('view_child_resources_in_container') }}</h2>
             <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabChildren"));</script>
             <div class="container container-body">
                 <div class="form-group clearfix">
@@ -403,10 +403,10 @@
             </div>
         </div><!-- end tab-page -->
 
-    <?php if($modx->config['cache_type'] != 2) { ?>
-    <!-- Page Source -->
+    @if($modx->config['cache_type'] != 2)
+        <!-- Page Source -->
         <div class="tab-page" id="tabSource">
-            <h2 class="tab"><?= $_lang['page_data_source'] ?></h2>
+            <h2 class="tab">{{ ManagerTheme::getLexicon('page_data_source') }}</h2>
             <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabSource"));</script>
             <?php
             $buffer = "";
@@ -424,20 +424,18 @@
             echo $buffer;
             ?>
         </div><!-- end tab-page -->
-        <?php } ?>
+    @endif
 
     </div><!-- end documentPane -->
 
-    <?php
-    if(isset($_GET['tab']) && is_numeric($_GET['tab'])) {
-        echo '<script type="text/javascript"> docSettings.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';
-    }
-    ?>
+    @if(is_numeric(get_by_key($_GET, 'tab')))
+        <script type="text/javascript"> docSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
+    @endif
 
-    <?php if($show_preview == 1) { ?>
-    <div class="sectionHeader"><?= $_lang['preview'] ?></div>
-    <div class="sectionBody" id="lyr2">
-        <iframe src="<?= MODX_SITE_URL ?>index.php?id=<?= $id ?>&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
-    </div>
-    <?php } ?>
+    @if($show_preview == 1)
+        <div class="sectionHeader">{{ ManagerTheme::getLexicon('preview') }}</div>
+        <div class="sectionBody" id="lyr2">
+            <iframe src="{{ MODX_SITE_URL }}index.php?id={{ $id }}&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
+        </div>
+    @endif
 @endsection

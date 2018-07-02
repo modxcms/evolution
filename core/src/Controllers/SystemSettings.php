@@ -1,10 +1,11 @@
 <?php namespace EvolutionCMS\Controllers;
 
 use EvolutionCMS\Models;
+use EvolutionCMS\Interfaces\ManagerTheme;
 
-class SystemSettings extends AbstractController
+class SystemSettings extends AbstractController implements ManagerTheme\PageControllerInterface
 {
-    protected $view = 'page.systemSettings';
+    protected $view = 'page.system_settings';
 
     protected $tabEvents = [
         'OnMiscSettingsRender',
@@ -16,14 +17,16 @@ class SystemSettings extends AbstractController
         'OnFileManagerSettingsRender',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public function canView(): bool
     {
         return evolutionCMS()->hasPermission('settings');
     }
 
     /**
-     * check to see the edit settings page isn't locked
-     * @return null|string
+     * @inheritdoc
      */
     public function checkLocked() : ?string
     {
@@ -36,7 +39,10 @@ class SystemSettings extends AbstractController
         return $out;
     }
 
-    public function getParameters() : array
+    /**
+     * @inheritdoc
+     */
+    public function getParameters(array $params = []) : array
     {
         return [
             'pwd_hash' => $this->parameterPasswordHash(),
@@ -52,6 +58,7 @@ class SystemSettings extends AbstractController
             'tabEvents' => $this->parameterTabEvents()
         ];
     }
+
 
     protected function parameterTemplates()
     {

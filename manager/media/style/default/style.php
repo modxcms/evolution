@@ -12,40 +12,41 @@ $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
 
 if(!empty($_GET['a']) && $_GET['a'] == 2) {
-	include_once('welcome.php');
+    $modx->config['enable_filter'] = 1;
+
+    $modx->addSnippet('hasPermission','return $modx->hasPermission($key);');
+
+    if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags'))
+        $hasAnyPermission = 1;
+    else $hasAnyPermission = 0;
+    $modx->addSnippet('hasAnyPermission','global $hasAnyPermission; return $hasAnyPermission;');
+    $modx->addSnippet('getLoginUserName','return $modx->getLoginUserName();');
+    $code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"];';
+    $modx->addSnippet('getMessageCount',$code);
+
+// Large Icons
+    $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
+    $_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
+    $_style['icons_modules_large']      = 'fa fa-cubes fa-fw fa-2x';
+    $_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
+    $_style['icons_security_large']     = 'fa fa-user fa-fw fa-2x';
+    $_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
+    $_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';
+    $_style['icons_resource_large']     = 'fa fa-file fa-fw fa-2x';
+    $_style['icons_weblink_large']      = 'fa fa-link fa-fw fa-2x';
+    $_style['icons_images_large']       = 'fa fa-camera fa-fw fa-2x';
+    $_style['icons_files_large']        = 'fa fa-files-o fa-fw fa-2x';
+    $_style['icons_password_large']     = 'fa fa-lock fa-fw fa-2x';
+    $_style['icons_logout_large']       = 'fa fa-sign-out fa-fw fa-2x';
 }
 
 // Favicon
 $_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
 
 // Tree Menu Toolbar
-$_style['expand_tree']              = '<i class="fa fa-arrow-circle-down"></i>';
-$_style['hide_tree']                = '<i class="fa fa-caret-square-o-left"></i>';
-$_style['refresh_tree']             = '<i class="fa fa-refresh"></i>';
 $_style['show_tree']                = $style_path.'tree/expand.png';
-$_style['sort_tree']                = '<i class="fa fa-sort"></i>';
-$_style['sort_menuindex']           = '<i class="fa fa-sort-numeric-asc"></i>';
-$_style['element_management']       = '<i class="fa fa-th"></i>';
-$_style['images_management']        = '<i class="fa fa-camera"></i>';
-$_style['files_management']         = '<i class="fa fa-files-o"></i>';
-$_style['email']                    = '<i class="fa fa-envelope"></i>';
-
-//Tree Contextual Menu Popup
-$_style['ctx_new_document']         = 'fa fa-file-o';
-$_style['ctx_edit_document']        = 'fa fa-pencil-square-o';
-$_style['ctx_move_document']        = 'fa fa-arrows';
-$_style['ctx_resource_duplicate']   = 'fa fa-clone';
-$_style['ctx_sort_menuindex']       = 'fa fa-sort-numeric-asc';
-$_style['ctx_publish_document']     = 'fa fa-arrow-up';
-$_style['ctx_unpublish_resource']   = 'fa fa-arrow-down';
-$_style['ctx_delete']               = 'fa fa-trash';
-$_style['ctx_undelete_resource']    = 'fa fa-arrow-circle-o-up';
-$_style['ctx_weblink']              = 'fa fa-link';
-$_style['ctx_resource_overview']    = 'fa fa-info';
-$_style['ctx_preview_resource']     = 'fa fa-eye';
 
 // Tree Icons
-$_style['tree_deletedpage']         = "<i class='fa fa-ban'></i>";
 $_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
 $_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
 $_style['tree_globe']               = $style_path.'tree/globe.png';
@@ -88,9 +89,6 @@ $_style['tree_page_rss_secure']     = "<i class='fa fa-file-code-o'></i>";
 $_style['tree_page_pdf_secure']     = "<i class='fa fa-file-pdf-o'><i class='fa fa-lock'></i></i>";
 $_style['tree_page_word_secure']    = "<i class='fa fa-file-word-o'><i class='fa fa-lock'></i></i>";
 $_style['tree_page_excel_secure']   = "<i class='fa fa-file-excel-o'><i class='fa fa-lock'></i></i>";
-
-//search
-$_style['icons_external_link']      = '<i class="fa fa-external-link"></i>';
 
 //View Resource data
 $_style['icons_new_document']       = 'fa fa-file-o';
@@ -139,11 +137,7 @@ $_style['actions_add']              = 'fa fa-plus-circle';
 $_style['actions_preview']          = 'fa fa-eye';
 $_style['actions_run']              = 'fa fa-play';
 $_style['actions_stop']             = 'fa fa-stop';
-$_style['actions_new']              = 'fa fa-plus-circle';
-$_style['actions_help']             = 'fa fa-question-circle';
-$_style['actions_sort']             = 'fa fa-sort';
 $_style['actions_options']          = 'fa fa-check-square';
-$_style['actions_categories']       = 'fa fa-folder-open';
 $_style['actions_search']           = 'fa fa-search';
 $_style['actions_file']             = 'fa fa-file-o';
 $_style['actions_folder']           = 'fa fa-folder-o';
@@ -393,7 +387,7 @@ $_style['actionbuttons'] = array(
 		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
+					<i class="fa fa-plus-circle"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
 			</div>
 		</div>' : ''),

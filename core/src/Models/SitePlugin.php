@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent;
  * @property string $moduleguid
  * @property int $createdon
  * @property int $editedon
+ *
+ * BelongsTo
+ * @property null|Category $categories
  */
 class SitePlugin extends Eloquent\Model
 {
@@ -50,5 +53,20 @@ class SitePlugin extends Eloquent\Model
     {
         return $builder->where('disabled', '!=', 1)
             ->whereRaw('plugincode LIKE "%phx.parser.class.inc.php%OnParseDocument();%"');
+    }
+
+    public function categories() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category', 'id');
+    }
+
+    public function categoryName($default = '')
+    {
+        return $this->categories === null ? $default : $this->categories->category;
+    }
+
+    public function categoryId()
+    {
+        return $this->categories === null ? null : $this->categories->getKey();
     }
 }

@@ -641,14 +641,14 @@
                     } else {
                     ?>
                     <div class="tab-page" id="tabGeneral">
-                        <h2 class="tab"><?= $_lang['settings_general'] ?></h2>
+                        <h2 class="tab">{{ ManagerTheme::getLexicon('settings_general') }}</h2>
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabGeneral"));</script>
 
                         <table>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_title'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_title_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_title') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_title_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="pagetitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -657,8 +657,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['long_title'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_long_title_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('long_title') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_long_title_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="longtitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -666,8 +666,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_description'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_description_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_description') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_description_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -675,8 +675,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_alias'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_alias_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_alias') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_alias_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="alias" type="text" maxlength="100" value="<?= stripslashes($content['alias']) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -684,8 +684,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['link_attributes'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['link_attributes_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('link_attributes') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('link_attributes_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -695,12 +695,12 @@
                             <?php if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 
                             <tr>
-                                <td><span class="warning"><?= $_lang['weblink'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_weblink_help'] ?>"></i>
+                                <td><span class="warning">{{ ManagerTheme::getLexicon('weblink') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_weblink_help') }}"></i>
                                 </td>
                                 <td>
                                     <i id="llock" class="<?= $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
-                                    <input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? stripslashes($content['content']) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?= $_lang['insert'] ?>" onclick="BrowseFileServer('ta')" />
+                                    <input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? stripslashes($content['content']) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="{{ ManagerTheme::getLexicon('insert') }}" onclick="BrowseFileServer('ta')" />
                                 </td>
                             </tr>
 
@@ -708,8 +708,8 @@
 
                             <tr>
                                 <td valign="top">
-                                    <span class="warning"><?= $_lang['resource_summary'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_summary') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_summary_help') }}" spellcheck="true"></i>
                                 </td>
                                 <td valign="top">
                                     <textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
@@ -717,8 +717,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_template'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_template_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_template') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_template_help') }}"></i>
                                 </td>
                                 <td>
                                     <select id="template" name="template" class="inputBox" onchange="templateWarning();">
@@ -759,8 +759,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_menu_title'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_menu_title_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_menu_title') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_menu_title_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="menutitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -768,8 +768,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_menu_index'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_menu_index_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_menu_index') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_menu_index_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="menuindex" type="text" maxlength="6" value="<?= $content['menuindex'] ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -779,8 +779,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_show_menu'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_show_menu_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_show_menu') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_show_menu_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="hidemenucheck" type="checkbox" class="checkbox" <?= ($content['hidemenu'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?= ($content['hidemenu'] == 1 ? 1 : 0) ?>" />
@@ -788,8 +788,8 @@
                             </tr>
                             <tr>
                                 <td valign="top">
-                                    <span class="warning"><?= $_lang['resource_parent'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_parent_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_parent') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_parent_help') }}"></i>
                                 </td>
                                 <td valign="top">
                                     <?php
@@ -841,7 +841,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="warning"><?= $_lang['which_editor_title'] ?></span></td>
+                                        <span class="warning">{{ ManagerTheme::getLexicon('which_editor_title') }}</span></td>
                                     <td>
                                         <select id="which_editor" name="which_editor" onchange="changeRTE();">
                                             <?php
@@ -867,10 +867,10 @@
                                     <hr>
                                     <!-- Content -->
                                     <div class="clearfix">
-                                        <span id="content_header"><?= $_lang['resource_content'] ?></span>
-                                        <label class="float-xs-right"><?= $_lang['which_editor_title'] ?>
+                                        <span id="content_header">{{ ManagerTheme::getLexicon('resource_content') }}</span>
+                                        <label class="float-xs-right">{{ ManagerTheme::getLexicon('which_editor_title') }}
                                             <select id="which_editor" class="form-control form-control-sm" size="1" name="which_editor" onchange="changeRTE();">
-                                                <option value="none"><?= $_lang['none'] ?></option>
+                                                <option value="none">{{ ManagerTheme::getLexicon('none') }}</option>
                                                 <?php
                                                 // invoke OnRichTextEditorRegister event
                                                 $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
@@ -1152,15 +1152,15 @@
 
                     <!-- Settings -->
                     <div class="tab-page" id="tabSettings">
-                        <h2 class="tab"><?= $_lang['settings_page_settings'] ?></h2>
+                        <h2 class="tab">{{ ManagerTheme::getLexicon('settings_page_settings') }}</h2>
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabSettings"));</script>
 
                         <table>
                             <?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" ' ?>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_published'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_published_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_published') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_published_help') }}"></i>
                                 </td>
                                 <td>
                                     <input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
@@ -1169,13 +1169,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_publishdate'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_publishdate_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_publishdate') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_publishdate_help') }}"></i>
                                 </td>
                                 <td>
                                     <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ($content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
-                                    <a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-                                        <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
+                                    <a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='{{ ManagerTheme::getLexicon('remove_date') }}'; return true;" onmouseout="window.status=''; return true;">
+                                        <i class="<?= $_style["actions_calendar_delete"] ?>" title="{{ ManagerTheme::getLexicon('remove_date') }}"></i></a>
                                 </td>
                             </tr>
                             <tr>
@@ -1185,13 +1185,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_unpublishdate'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_unpublishdate_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_unpublishdate') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_unpublishdate_help') }}"></i>
                                 </td>
                                 <td>
                                     <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ($content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
-                                    <a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-                                        <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
+                                    <a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='{{ ManagerTheme::getLexicon('remove_date') }}'; return true;" onmouseout="window.status=''; return true;">
+                                        <i class="<?= $_style["actions_calendar_delete"] ?>" title="{{ ManagerTheme::getLexicon('remove_date') }}"></i></a>
                                 </td>
                             </tr>
                             <tr>
@@ -1212,21 +1212,21 @@
                             ?>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_type'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_type_message'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_type') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_type_message') }}"></i>
                                 </td>
                                 <td>
                                     <select name="type" class="inputBox" onchange="documentDirty=true;">
-                                        <option value="document"<?= (($content['type'] == "document" || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_webpage"] ?></option>
-                                        <option value="reference"<?= (($content['type'] == "reference" || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : "") ?> ><?= $_lang["resource_type_weblink"] ?></option>
+                                        <option value="document"<?= (($content['type'] == "document" || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : "") ?> >{{ ManagerTheme::getLexicon('resource_type_webpage') }}</option>
+                                        <option value="reference"<?= (($content['type'] == "reference" || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : "") ?> >{{ ManagerTheme::getLexicon('resource_type_weblink') }}</option>
                                     </select>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_contentType'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_contentType_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_contentType') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_contentType_help') }}"></i>
                                 </td>
                                 <td>
                                     <select name="contentType" class="inputBox" onchange="documentDirty=true;">
@@ -1245,13 +1245,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_contentdispo'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_contentdispo_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_contentdispo') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_contentdispo_help') }}"></i>
                                 </td>
                                 <td>
                                     <select name="content_dispo" class="inputBox" size="1" onchange="documentDirty=true;">
-                                        <option value="0"<?= (!$content['content_dispo'] ? ' selected="selected"' : '') ?>><?= $_lang['inline'] ?></option>
-                                        <option value="1"<?= ($content['content_dispo'] == 1 ? ' selected="selected"' : '') ?>><?= $_lang['attachment'] ?></option>
+                                        <option value="0"<?= (!$content['content_dispo'] ? ' selected="selected"' : '') ?>>{{ ManagerTheme::getLexicon('inline') }}</option>
+                                        <option value="1"<?= ($content['content_dispo'] == 1 ? ' selected="selected"' : '') ?>>{{ ManagerTheme::getLexicon('attachment') }}</option>
                                     </select>
                                 </td>
                             </tr>
@@ -1282,8 +1282,8 @@
 
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_folder'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_folder_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_folder') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_folder_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
@@ -1293,8 +1293,8 @@
 
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_alvisibled'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_alvisibled_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_alvisibled') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_alvisibled_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="alias_visible_check" type="checkbox" class="checkbox" <?= ((!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? "checked" : '') ?> onclick="changestate(document.mutate.alias_visible);" /><input type="hidden" name="alias_visible" value="<?= ((!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? 1 : 0) ?>" />
@@ -1303,8 +1303,8 @@
 
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_richtext'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_richtext_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_richtext') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_richtext_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
@@ -1313,8 +1313,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['track_visitors_title'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_trackvisit_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('track_visitors_title') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_trackvisit_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="donthitcheck" type="checkbox" class="checkbox" <?= ($content['donthit'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= ($content['donthit'] == 1 ? 1 : 0) ?>" onchange="documentDirty=true;" />
@@ -1322,8 +1322,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_searchable'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_searchable_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_searchable') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_searchable_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? 1 : 0) ?>" onchange="documentDirty=true;" />
@@ -1331,8 +1331,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['page_data_cacheable'] ?></span>
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['page_data_cacheable_help'] ?>"></i>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('page_data_cacheable') }}</span>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('page_data_cacheable_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
@@ -1341,9 +1341,9 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="warning"><?= $_lang['resource_opt_emptycache'] ?></span>
+                                    <span class="warning">{{ ManagerTheme::getLexicon('resource_opt_emptycache') }}</span>
                                     <input type="hidden" name="syncsite" value="1" />
-                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?= $_lang['resource_opt_emptycache_help'] ?>"></i>
+                                    <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="{{ ManagerTheme::getLexicon('resource_opt_emptycache_help') }}"></i>
                                 </td>
                                 <td>
                                     <input name="syncsitecheck" type="checkbox" class="checkbox" checked="checked" onclick="changestate(document.mutate.syncsite);" />
@@ -1469,7 +1469,7 @@
                     ?>
                 <!-- Access Permissions -->
                     <div class="tab-page" id="tabAccess">
-                        <h2 class="tab" id="tab_access_header"><?= $_lang['access_permissions'] ?></h2>
+                        <h2 class="tab" id="tab_access_header">{{ ManagerTheme::getLexicon('access_permissions') }}</h2>
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabAccess"));</script>
                         <script type="text/javascript">
                             /* <![CDATA[ */
@@ -1494,7 +1494,7 @@
 
                             /* ]]> */
                         </script>
-                        <p><?= $_lang['access_permissions_docs_message'] ?></p>
+                        <p>{{ ManagerTheme::getLexicon('access_permissions_docs_message') }}</p>
                         <ul>
                             <?= implode("\n", $permissions) . "\n" ?>
                         </ul>
@@ -1503,7 +1503,7 @@
                     } // !empty($permissions)
                     elseif($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0) && ($_SESSION['mgrPermissions']['access_permissions'] == 1 || $_SESSION['mgrPermissions']['web_access_permissions'] == 1)) {
                     ?>
-                    <p><?= $_lang["access_permissions_docs_collision"] ?></p>
+                    <p>{{ ManagerTheme::getLexicon('access_permissions_docs_collision') }}</p>
                     <?php
 
                     }

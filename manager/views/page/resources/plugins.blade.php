@@ -1,46 +1,26 @@
-@if (isset($resources->items['site_plugins']))
-    <div class="tab-page" id="tabPlugins">
-        <h2 class="tab"><i class="fa fa-plug"></i> <?= $_lang["manage_plugins"] ?></h2>
-        <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabPlugins'))</script>
+@extends('manager::template.page')
+@section('content')
+    <script>var trans = '{{ json_encode($unlockTranslations) }}';</script>
+    <script>var mraTrans = '{{ json_encode($mraTranslations) }}';</script>
 
-        <div id="plugins-info" class="msg-container" style="display:none">
-            <div class="element-edit-message-tab"><?= $_lang['plugin_management_msg'] ?></div>
-            <p class="viewoptions-message"><?= $_lang['view_options_msg'] ?></p>
+    <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+    <script type="text/javascript" src="media/script/jquery.nucontextmenu.js"></script>
+    <script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="actions/resources/functions.js"></script>
+
+    <h1>
+        <i class="fa fa-th"></i>{{ ManagerTheme::getLexicon('element_management') }}
+    </h1>
+
+    <div class="sectionBody">
+        <div class="tab-pane" id="resourcesPane">
+            <script type="text/javascript">
+                tpResources = new WebFXTabPane(document.getElementById("resourcesPane"), true);
+            </script>
+            @include('manager::page.resources.tab.plugins')
+            @if(is_numeric(get_by_key($_GET, 'tab')))
+                <script type="text/javascript"> tpResources.setSelectedIndex({{ $_GET['tab'] }});</script>
+            @endif
         </div>
-
-        <div id="_actions">
-            <form class="btn-group form-group form-inline">
-                <div class="input-group input-group-sm">
-                    <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
-                    <div class="input-group-btn">
-                        <?php if ($modx->hasPermission('new_plugin')) { ?>
-                            <a class="btn btn-success" href="index.php?a=101"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_plugin'] ?></span></a>
-                        <?php } ?>
-                        <?php if ($modx->hasPermission('save_plugin')) { ?>
-                            <a class="btn btn-secondary" href="index.php?a=100"><i class="<?= $_style["actions_sort"] ?>"></i> <span><?= $_lang['plugin_priority'] ?></span></a>
-                        <?php } ?>
-                        <?php
-                        if ($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
-                            $tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
-                            if ($modx->getDatabase()->getRecordCount($modx->getDatabase()->query("SELECT id FROM {$tbl_site_plugins} t1 WHERE disabled = 1 AND name IN (SELECT name FROM {$tbl_site_plugins} t2 WHERE t1.name = t2.name AND t1.id != t2.id)"))) { ?>
-                                <a onclick="return confirm('<?php echo $_lang['purge_plugin_confirm'] ?>')" class="btn btn-danger" href="index.php?a=119"><?= $_lang['purge_plugin'] ?></a>
-                                <?php
-                            }
-                        } ?>
-                        <a class="btn btn-secondary" href="javascript:;" id="plugins-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>
-                        <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_plugins"><i class="fa fa-bars"></i> <span><?= $_lang['btn_view_options'] ?></span></a>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        @include('manager::partials.switchButtons', ['cssId' => 'site_plugins'])
-
-        @include('manager::page.resources._list', ['resourceTable' => 'site_plugins', 'items' => $resources->items['site_plugins']])
-
-        <script>
-            initQuicksearch('site_plugins_search', 'site_plugins')
-            initViews('pl', 'plugins', 'site_plugins')
-        </script>
     </div>
-@endif
+@endsection
