@@ -174,7 +174,7 @@
             'label' => ManagerTheme::getLexicon('pwd_hash_algo_title'),
             'small' => '[(pwd_hash_algo)]',
             'value' => $settings['pwd_hash_algo'],
-            'options' => $pwd_hash,
+            'options' => $passwordsHash,
             'comment' => ManagerTheme::getLexicon('pwd_hash_algo_message')
         ])
 
@@ -214,7 +214,7 @@
                         'first' => [
                             'text' => ManagerTheme::getLexicon('language_title')
                         ],
-                        'options' => $lang_keys_select,
+                        'options' => $langKeys,
                         'as' => 'values',
                         'ucwords' => true
                     ]),

@@ -133,7 +133,7 @@
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
-                    'options' => $lang_keys_select,
+                    'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true
                 ]) .
@@ -166,7 +166,7 @@
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
-                    'options' => $lang_keys_select,
+                    'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true
                 ]) .
@@ -200,7 +200,7 @@
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
-                    'options' => $lang_keys_select,
+                    'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true
                 ]) .

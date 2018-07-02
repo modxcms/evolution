@@ -9,7 +9,7 @@
             'label' => ManagerTheme::getLexicon('language_title'),
             'small' => '[(manager_language)]',
             'value' => $settings['manager_language'],
-            'options' => $lang_keys_select,
+            'options' => $langKeys,
             'as' => 'values',
             'ucwords' => true,
             'attributes' => 'onChange="documentDirty=true;" size="1"',
@@ -440,7 +440,7 @@
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
-                    'options' => $lang_keys_select,
+                    'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true,
                     'comment' => ManagerTheme::getLexicon('fe_editor_lang_message')

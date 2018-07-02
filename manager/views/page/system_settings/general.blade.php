@@ -86,7 +86,7 @@
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
-                    'options' => $lang_keys_select,
+                    'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true
                 ]) .
@@ -113,7 +113,7 @@
             'element' => ManagerTheme::view('form.selectElement', [
                 'name' => 'default_template',
                 'value' => $settings['default_template'],
-                'options' => $templates,
+                'options' => $templates['items'],
                 'attributes' => 'size="1" onchange="documentDirty=true;wrap=document.getElementById(\'template_reset_options_wrapper\');if(this.options[this.selectedIndex].value!=' . $settings['default_template'] . '){wrap.style.display=\'block\';}else{wrap.style.display=\'none\';}"'
                 ]) .
                 '<div id="template_reset_options_wrapper" style="display:none;">' .
@@ -121,14 +121,14 @@
                         'name' => 'reset_template',
                         'options' => [
                             1 => ManagerTheme::getLexicon('template_reset_all'),
-                            2 => sprintf(ManagerTheme::getLexicon('template_reset_specific'), $oldTmpName)
+                            2 => sprintf(ManagerTheme::getLexicon('template_reset_specific'), $templates['oldTmpName'])
                         ]
                     ]) .
                 '</div>' .
                 ManagerTheme::view('form.inputElement', [
                     'type' => 'hidden',
                     'name' => 'old_template',
-                    'value' => $oldTmpId
+                    'value' => $templates['oldTmpId']
                 ]),
             'comment' => ManagerTheme::getLexicon('defaulttemplate_message')
         ])

@@ -31,7 +31,7 @@
                 'small' => '[(which_browser)]',
                 'value' => $settings['which_browser'],
                 'attributes' => 'size="1" onChange="documentDirty=true;"',
-                'options' => $file_browsers,
+                'options' => $fileBrowsers,
                 'as' => 'values',
                 'comment' => ManagerTheme::getLexicon('which_browser_default_msg')
             ])

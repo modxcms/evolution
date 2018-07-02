@@ -45,15 +45,15 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     public function getParameters(array $params = []) : array
     {
         return [
-            'pwd_hash' => $this->parameterPasswordHash(),
+            'passwordsHash' => $this->parameterPasswordHash(),
             'gdAvailable' => $this->parameterCheckGD(),
             'settings' => $this->parameterSettings(),
             'displayStyle' => ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block',
-            'file_browsers' => $this->parameterFileBrowsers(),
+            'fileBrowsers' => $this->parameterFileBrowsers(),
             'themes' => $this->parameterThemes(),
             'serverTimes' => $this->parameterServerTimes(),
             'phxEnabled' => Models\SitePlugin::activePhx()->count(),
-            'lang_keys_select' => $this->parameterLang(),
+            'langKeys' => $this->parameterLang(),
             'templates' => $this->parameterTemplates(),
             'tabEvents' => $this->parameterTabEvents()
         ];
@@ -64,38 +64,37 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     {
         $database = evolutionCMS()->getDatabase();
         // load templates
-        $rs = $database->select(
-            't.templatename, t.id, c.category',
-            $database->getFullTableName('site_templates') . " AS t LEFT JOIN " .
-            $database->getFullTableName('categories') . " AS c ON t.category = c.id", "",
-            'c.category, t.templatename ASC'
-        );
+        $rs = $database->query('
+            SELECT t.templatename, t.id, c.category
+            FROM ' . $database->getFullTableName('site_templates') . ' AS t
+            LEFT JOIN ' . $database->getFullTableName('categories') . ' AS c ON t.category=c.id
+            ORDER BY c.category, t.templatename ASC
+        ');
 
         $templates = [];
         $currentCategory = '';
-        $oldTmpId = 0;
-        $oldTmpName = '';
+        $templates['oldTmpId'] = 0;
+        $templates['oldTmpName'] = '';
         $i = 0;
         while ($row = $database->getRow($rs)) {
             $thisCategory = $row['category'];
-            if ($thisCategory == null) {
+            if ($row['category'] == null) {
                 $thisCategory = $this->managerTheme->getLexicon('no_category');
             }
             if ($thisCategory != $currentCategory) {
-                $templates[$i] = [
+                $i++;
+                $templates['items'][$i] = [
                     'optgroup' => [
                         'name' => $thisCategory,
                         'options' => []
                     ]
                 ];
-            } else {
-                $i++;
             }
             if ($row['id'] == get_by_key(evolutionCMS()->config, 'default_template')) {
-                $oldTmpId = $row['id'];
-                $oldTmpName = $row['templatename'];
+                $templates['oldTmpId'] = $row['id'];
+                $templates['oldTmpName'] = $row['templatename'];
             }
-            $templates[$i]['optgroup']['options'][] = [
+            $templates['items'][$i]['optgroup']['options'][] = [
                 'text' => $row['templatename'],
                 'value' => $row['id']
             ];
@@ -131,7 +130,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         $serverTimes = [];
         for ($i = -24; $i < 25; $i++) {
             $seconds = $i * 60 * 60;
-            $serverTimes[] = [
+            $serverTimes[$seconds] = [
                 'value' => $seconds,
                 'text' => $i
             ];
@@ -143,9 +142,9 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     protected function parameterThemes()
     {
         $themes = [];
-        $dir = dir("media/style/");
+        $dir = dir(MODX_MANAGER_PATH . 'media/style/');
         while ($file = $dir->read()) {
-            if ($file !== "." && $file !== ".." && is_dir("media/style/$file") && substr($file, 0, 1) != '.') {
+            if ($file !== "." && $file !== ".." && is_dir(MODX_MANAGER_PATH . 'media/style/' . $file) && substr($file, 0, 1) != '.') {
                 if ($file === 'common') {
                     continue;
                 }
@@ -160,7 +159,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     protected function parameterFileBrowsers()
     {
         $out = [];
-        foreach (glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
+        foreach (glob(MODX_MANAGER_PATH . 'media/browser/*', GLOB_ONLYDIR) as $dir) {
             $dir = str_replace('\\', '/', $dir);
             $out[] = substr($dir, strrpos($dir, '/') + 1);
         }
