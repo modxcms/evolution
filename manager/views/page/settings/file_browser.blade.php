@@ -252,10 +252,6 @@
             <div class="split my-1"></div>
         </div>
 
-        <?php
-        // invoke OnMiscSettingsRender event
-        $evtOut = $modx->invokeEvent('OnMiscSettingsRender');
-        if (is_array($evtOut)) echo implode("", $evtOut);
-        ?>
+        {!! get_by_key($tabEvents, 'OnMiscSettingsRender') !!}
     </div>
 </div>

@@ -107,11 +107,7 @@
 
         <div class="split my-1"></div>
 
-        <?php
-        // invoke OnMiscSettingsRender event
-        $evtOut = $modx->invokeEvent('OnFileManagerSettingsRender');
-        if (is_array($evtOut)) echo implode("", $evtOut);
-        ?>
+        {!! get_by_key($tabEvents, 'OnFileManagerSettingsRender') !!}
     </div>
 </div>
 
