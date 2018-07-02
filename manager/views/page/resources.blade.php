@@ -22,7 +22,7 @@
                 {!! $tab !!}
             @endforeach
 
-            <?php $tab = (is_numeric(get_by_key($_GET, 'tab')) && count($tabs) <= $_GET['tab']) ? $_GET['tab'] : 0; ?>
+            <?php $tab = (is_numeric(get_by_key($_GET, 'tab')) && count($tabs) >= $_GET['tab']) ? $_GET['tab'] : 0; ?>
             <script type="text/javascript"> tpResources.setSelectedIndex({{ $tab }});</script>
         </div>
     </div>
