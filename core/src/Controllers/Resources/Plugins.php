@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 //'actions'=>array('edit'=>array(102,'edit_plugin'), 'duplicate'=>array(105,'new_plugin'), 'remove'=>array(104,'delete_plugin')),
 class Plugins extends AbstractResources implements TabControllerInterface
 {
-    protected $view = 'page.resources.tab.plugins';
+    protected $view = 'page.resources.plugins';
 
     /**
      * @inheritdoc

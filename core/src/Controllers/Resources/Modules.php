@@ -6,10 +6,6 @@ use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
 use Illuminate\Support\Collection;
 
 //'actions'=>array('edit'=>array(108,'edit_module'), 'duplicate'=>array(111,'new_module'), 'remove'=>array(110,'delete_module')),
-
-/**
- * @TODO
- */
 class Modules extends AbstractResources implements TabControllerInterface
 {
     protected $view = 'page.resources.modules';
@@ -64,7 +60,7 @@ class Modules extends AbstractResources implements TabControllerInterface
     {
         $out = [];
 
-        $elements = Models\SiteModule::with('modules')
+        $elements = Models\SiteModule::with('categories')
             ->orderBy('name', 'ASC')->get();
         /**
          * @var Models\SiteModule $element

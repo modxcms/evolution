@@ -11,7 +11,8 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         Resources\Tv::class,
         Resources\Chunks::class,
         Resources\Snippets::class,
-        Resources\Plugins::class
+        Resources\Plugins::class,
+        Resources\Modules::class
     ];
 
     /**

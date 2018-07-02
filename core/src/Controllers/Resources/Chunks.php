@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 //'actions'=>array('edit'=>array(78,'edit_chunk'), 'duplicate'=>array(97,'new_chunk'), 'remove'=>array(80,'delete_chunk')),
 class Chunks extends AbstractResources implements TabControllerInterface
 {
-    protected $view = 'page.resources.tab.chunks';
+    protected $view = 'page.resources.chunks';
 
     /**
      * @inheritdoc

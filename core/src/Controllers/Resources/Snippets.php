@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 //'actions'=>array('edit'=>array(22,'edit_snippet'), 'duplicate'=>array(98,'new_snippet'), 'remove'=>array(25,'delete_snippet')),
 class Snippets extends AbstractResources implements TabControllerInterface
 {
-    protected $view = 'page.resources.tab.snippets';
+    protected $view = 'page.resources.snippets';
 
     /**
      * @inheritdoc
