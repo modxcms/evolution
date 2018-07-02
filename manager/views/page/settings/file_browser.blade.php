@@ -57,7 +57,7 @@
                 'small' => '[(rb_base_dir)]',
                 'for' => 'rb_base_dir',
                 'element' => ManagerTheme::getLexicon('default') . '
-                    <span id="default_filemanager_path">[(base_path)]assets/</span><br>
+                    <span id="default_rb_base_dir">[(base_path)]assets/</span><br>
                     <div class="input-group">' .
                         ManagerTheme::view('form.inputElement', [
                             'name' => 'rb_base_dir',
