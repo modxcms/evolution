@@ -1,10 +1,10 @@
 <div class="row form-row form-element-select">
     <label for="{{ $for or $name }}" class="control-label col-5 col-md-3 col-lg-2">
-        {!! $label !!}
-        @if($required)
+        {!! $label or '' !!}
+        @if(!empty($required))
             <span class="form-element-required">*</span>
         @endif
-        @if($small)
+        @if(!empty($small))
             <small class="form-text text-muted">{!! $small !!}</small>
         @endif
     </label>
@@ -12,7 +12,7 @@
         @if(!empty($options) || !empty($first))
             <div class="clearfix">
                 <select class="form-control" name="{{ $name }}" id="{{ $id or $name }}"
-                        {!! $attributes or '' !!}
+                    {!! $attributes or '' !!}
                 >
                     @if(!empty($first))
                         <option value="{{ $first['value'] or '' }}">{{ $first['text'] or '' }}</option>
@@ -23,37 +23,39 @@
                                 <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
                                     @foreach($option['optgroup']['options'] as $opt)
                                         <option value="{{ $opt['value'] }}"
-                                                @if($value == $opt['value'])
-                                                selected="selected"
-                                                @endif
+                                            @if(isset($value) && $value == $opt['value'])
+                                            selected="selected"
+                                            @endif
                                         >{{ $opt['text'] or $opt['value'] }}</option>
                                     @endforeach
                                 </optgroup>
                             @elseif(is_string($option))
-                                @if($as == 'keys')
-                                    <option value="{{ $key }}"
-                                            @if($value == $key)
+                                @if(!empty($as))
+                                    @if($as == 'keys')
+                                        <option value="{{ $key }}"
+                                            @if(isset($value) && $value == $key)
                                             selected="selected"
                                             @endif
-                                    >{{ $key }}</option>
-                                @elseif($as == 'values')
-                                    <option value="{{ $option }}"
-                                            @if($value == $option)
+                                        >{{ $key }}</option>
+                                    @elseif($as == 'values')
+                                        <option value="{{ $option }}"
+                                            @if(isset($value) && $value == $option)
                                             selected="selected"
                                             @endif
-                                    >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                        >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                    @endif
                                 @else
                                     <option value="{{ $key }}"
-                                            @if($value == $key)
-                                            selected="selected"
-                                            @endif
-                                    >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                        @if(isset($value) && $value == $key)
+                                        selected="selected"
+                                        @endif
+                                    >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
                                 @endif
                             @else
                                 <option value="{{ $option['value'] }}"
-                                        @if($value == $option['value'])
-                                        selected="selected"
-                                        @endif
+                                    @if(isset($value) && $value == $option['value'])
+                                    selected="selected"
+                                    @endif
                                 >{{ $option['text'] or $option['value'] }}</option>
                             @endif
                         @endforeach
@@ -61,7 +63,7 @@
                 </select>
             </div>
         @endif
-        @if($comment)
+        @if(!empty($comment))
             <small class="form-text text-muted">{!! $comment !!}</small>
         @endif
     </div>

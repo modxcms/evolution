@@ -1,4 +1,8 @@
-<input class="form-control {{ $class or '' }}" type="{{ $type or 'text' }}" id="{{ $id or $name }}" name="{{ $name }}" value="{{ $value }}" placeholder="{{ $placeholder }}"
-        {!! $attributes or '' !!}
-        @if($readonly) readonly @endif
+<input class="form-control {{ $class or '' }}" type="{{ $type or 'text' }}"
+    @if(!empty($id)) id="{{ $id }}" @elseif(!empty($name)) id="{{ $name }}" @endif
+@if(!empty($name)) name="{{ $name }}" @endif
+@if(isset($value)) value="{{ $value }}" @endif
+@if(isset($placeholder)) placeholder="{{ $placeholder }}" @endif
+{!! $attributes or '' !!}
+@if(!empty($readonly)) readonly @endif
 />

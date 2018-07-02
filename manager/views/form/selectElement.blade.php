@@ -1,6 +1,6 @@
 @if(!empty($options) || !empty($first))
     <select class="form-control {{ $class or '' }}" name="{{ $name }}" id="{{ $id or $name }}"
-            {!! $attributes or '' !!}
+        {!! $attributes or '' !!}
     >
         @if(!empty($first))
             <option value="{{ $first['value'] or '' }}">{{ $first['text'] or '' }}</option>
@@ -14,30 +14,32 @@
                         @endforeach
                     </optgroup>
                 @elseif(is_string($option))
-                    @if($as == 'keys')
-                        <option value="{{ $key }}"
-                                @if($value == $key)
+                    @if(!empty($as))
+                        @if($as == 'keys')
+                            <option value="{{ $key }}"
+                                @if(isset($value) && $value == $key)
                                 selected="selected"
                                 @endif
-                        >{{ $key }}</option>
-                    @elseif($as == 'values')
-                        <option value="{{ $option }}"
-                                @if($value == $option)
+                            >{{ $key }}</option>
+                        @elseif($as == 'values')
+                            <option value="{{ $option }}"
+                                @if(isset($value) && $value == $option)
                                 selected="selected"
                                 @endif
-                        >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                            >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                        @endif
                     @else
                         <option value="{{ $key }}"
-                                @if($value == $key)
-                                selected="selected"
-                                @endif
-                        >@if($ucwords){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                            @if(isset($value) && $value == $key)
+                            selected="selected"
+                            @endif
+                        >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
                     @endif
                 @else
                     <option value="{{ $option['value'] or ''}}"
-                            @if(isset($value) && $value == $option['value'])
-                            selected="selected"
-                            @endif
+                        @if(isset($value) && $value == $option['value'])
+                        selected="selected"
+                        @endif
                     >{{ $option['text'] or $option['value'] }}</option>
                 @endif
             @endforeach

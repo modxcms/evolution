@@ -1,10 +1,10 @@
 <div class="row form-row form-element-checkbox">
     <label for="{{ $for or $name }}" class="control-label col-5 col-md-3 col-lg-2">
-        {!! $label !!}
-        @if($required)
+        {!! $label or '' !!}
+        @if(!empty($required))
             <span class="form-element-required">*</span>
         @endif
-        @if($small)
+        @if(!empty($small))
             <small class="form-text text-muted">{!! $small !!}</small>
         @endif
     </label>
@@ -14,23 +14,23 @@
                 <div class="checkbox">
                     <label>
                         @if(is_string($option))
-                            <input type="checkbox" name="{{ $name }}" value="{{ $key }}"
-                                    @if($value == $key) checked="checked" @endif
+                            <input type="checkbox" name="{{ $name }}" value="{{ $key or '' }}"
+                                @if(isset($value) && $value == $key) checked="checked" @endif
                             />
-                            {!! $option !!}
+                            {!! $option or '' !!}
                         @else
-                            <input type="checkbox" name="{{ $name }}[]" value="{{ $option['value'] }}"
-                                    {!! $option['attributes'] or '' !!}
-                                    @if($value == $option['value']) checked="checked" @endif
-                            @if($disabled || $option['disabled']) disabled @endif
+                            <input type="checkbox" name="{{ $name }}[]" value="{{ $option['value'] or $key }}"
+                                {!! $option['attributes'] or '' !!}
+                                @if(isset($value) && ((isset($option['value']) && $value == $option['value']) || ($value == $key))) checked="checked" @endif
+                            @if(!empty($disabled) || !empty($option['disabled'])) disabled @endif
                             />
-                            {!! $option['text'] !!}
+                            {!! $option['text'] or '' !!}
                         @endif
                     </label>
                 </div>
             @endforeach
         @endif
-        @if($comment)
+        @if(!empty($comment))
             <small class="form-text text-muted">{!! $comment !!}</small>
         @endif
     </div>
