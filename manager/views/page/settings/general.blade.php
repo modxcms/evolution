@@ -394,10 +394,6 @@
 
         <div class="split my-1"></div>
 
-        <?php
-        // invoke OnSiteSettingsRender event
-        $evtOut = $modx->invokeEvent('OnSiteSettingsRender');
-        if (is_array($evtOut)) echo implode("", $evtOut);
-        ?>
+        {!! get_by_key($tabEvents, 'OnSiteSettingsRender') !!}
     </div>
 </div>

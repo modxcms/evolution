@@ -236,10 +236,6 @@
 
         <div class="split my-1"></div>
 
-        <?php
-        // invoke OnUserSettingsRender event
-        $evtOut = $modx->invokeEvent('OnUserSettingsRender');
-        if (is_array($evtOut)) echo implode("", $evtOut);
-        ?>
+        {!! get_by_key($tabEvents, 'OnUserSettingsRender') !!}
     </div>
 </div>

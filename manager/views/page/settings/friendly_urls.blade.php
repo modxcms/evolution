@@ -170,11 +170,7 @@
 
             <div class="split my-1"></div>
 
-            <?php
-            // invoke OnFriendlyURLSettingsRender event
-            $evtOut = $modx->invokeEvent('OnFriendlyURLSettingsRender');
-            if (is_array($evtOut)) echo implode('', $evtOut);
-            ?>
+            {!! get_by_key($tabEvents, 'OnFriendlyURLSettingsRender') !!}
         </div>
     </div>
 </div>

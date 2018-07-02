@@ -463,12 +463,6 @@
             </div>
         </div>
 
-        <?php
-        // invoke OnInterfaceSettingsRender event
-        $evtOut = $modx->invokeEvent('OnInterfaceSettingsRender');
-        if (is_array($evtOut)) {
-            echo implode("", $evtOut);
-        }
-        ?>
+        {!! get_by_key($tabEvents, 'OnInterfaceSettingsRender') !!}
     </div>
 </div>

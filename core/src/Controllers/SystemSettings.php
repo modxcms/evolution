@@ -6,6 +6,16 @@ class SystemSettings extends AbstractController
 {
     protected $view = 'page.systemSettings';
 
+    protected $tabEvents = [
+        'OnMiscSettingsRender',
+        'OnFriendlyURLSettingsRender',
+        'OnSiteSettingsRender',
+        'OnInterfaceSettingsRender',
+        'OnUserSettingsRender',
+        'OnSecuritySettingsRender',
+        'OnFileManagerSettingsRender',
+    ];
+
     public function canView(): bool
     {
         return evolutionCMS()->hasPermission('settings');
@@ -38,7 +48,8 @@ class SystemSettings extends AbstractController
             'serverTimes' => $this->parameterServerTimes(),
             'phxEnabled' => Models\SitePlugin::activePhx()->count(),
             'lang_keys_select' => $this->parameterLang(),
-            'templates' => $this->parameterTemplates()
+            'templates' => $this->parameterTemplates(),
+            'tabEvents' => $this->parameterTabEvents()
         ];
     }
 
@@ -221,5 +232,26 @@ class SystemSettings extends AbstractController
                 'disabled' => $managerApi->checkHashAlgorithm('UNCRYPT') ? 0 : 1
             ],
         ];
+    }
+
+    protected function parameterTabEvents()
+    {
+        $out = [];
+
+        foreach ($this->tabEvents as $event) {
+            $out[$event] = $this->callEvent($event);
+        }
+
+        return $out;
+    }
+
+    private function callEvent($name)
+    {
+        $out = evolutionCMS()->invokeEvent($name);
+        if (\is_array($out)) {
+            $out = implode('', $out);
+        }
+
+        return $out;
     }
 }
