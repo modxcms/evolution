@@ -141,7 +141,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** Remove locks */
         67,
         /** Site schedule */
-        70,
+        70 => Controllers\SiteSchedule::class,
         /** Search */
         71,
         /** About */
