@@ -26,8 +26,10 @@
         <hr />
 
         @foreach($categories as $cat)
-            {{ $item->rank }}
-            @foreach($cat as $item)
+            <?php /** @var EvolutionCMS\Models\Category $cat */?>
+            {{ $cat->rank }}
+            @foreach($cat->modules as $item)
+                <?php /** @var EvolutionCMS\Models\SiteModule $item */?>
                 {{ $item->name }} <a href="{{ $item->makeUrl('actions.edit') }}">Edit</a><br />
             @endforeach
         @endforeach
@@ -35,6 +37,7 @@
         <hr />
 
         @foreach($outCategory as $item)
+            <?php /** @var EvolutionCMS\Models\SiteModule $item */?>
             {{ $item->name }} <a href="{{ $item->makeUrl('actions.edit') }}">Edit</a><br />
         @endforeach
 
