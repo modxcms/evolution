@@ -10,10 +10,9 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
     /**
      * @inheritdoc
      */
-    public function checkLocked() : ?string
+    public function checkLocked(): ?string
     {
-        $out = Models\ActiveUser::locked(70)
-            ->first();
+        $out = Models\ActiveUser::locked(70)->first();
         if ($out !== null) {
             $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
         }
@@ -29,10 +28,16 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
         return evolutionCMS()->hasPermission('view_eventlog');
     }
 
-    public function getParameters(array $params = []) : array
+    /**
+     * @inheritdoc
+     */
+    public function getParameters(array $params = []): array
     {
         return [
-            'test' => 1
+            'publishedDocs' => Models\SiteContent::where('pub_date', '>', time())->orderBy('pub_date', 'asc')->get(),
+            'unpublishedDocs' => Models\SiteContent::where('pub_date', '>', time())->orderBy('unpub_date', 'asc')->get(),
+            'allDocs' => Models\SiteContent::whereRaw('pub_date > 0 OR unpub_date > 0')->orderBy('pub_date', 'desc')->get(),
+            'server_offset_time' => get_by_key(evolutionCMS()->config, 'server_offset_time')
         ];
     }
 }
