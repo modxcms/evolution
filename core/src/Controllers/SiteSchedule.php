@@ -26,7 +26,7 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('site_schedule');
+        return evolutionCMS()->hasPermission('view_eventlog');
     }
 
     public function getParameters(array $params = []) : array
