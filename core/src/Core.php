@@ -24,7 +24,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     use Traits\Settings {
         getSettings as loadConfig;
     }
-    use Traits\Path;
+    use Traits\Path, Traits\Helpers;
 
     /**
      * This is New evolution
