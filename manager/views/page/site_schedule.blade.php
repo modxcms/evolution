@@ -27,9 +27,9 @@
                                 <tbody>
                                 @foreach($publishedDocs as $row)
                                     <tr>
-                                        <td class="text-right">{{ $row['id'] }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row['id'] }}">{{ $row['pagetitle'] }}</a></td>
-                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row['pub_date'] + $server_offset_time) }}</td>
+                                        <td class="text-right">{{ $row->id }}</td>
+                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
+                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row->pub_date + $server_offset_time) }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -55,9 +55,9 @@
                                 <tbody>
                                 @foreach($unpublishedDocs as $row)
                                     <tr>
-                                        <td class="text-right">{{ $row['id'] }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row['id'] }}">{{ $row['pagetitle'] }}</a></td>
-                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row['unpub_date'] + $server_offset_time) }}</td>
+                                        <td class="text-right">{{ $row->id }}</td>
+                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
+                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row->unpub_date + $server_offset_time) }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -84,10 +84,10 @@
                                 <tbody>
                                 @foreach($allDocs as $row)
                                     <tr>
-                                        <td class="text-right">{{ $row['id'] }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row['id'] }}">{{ $row['pagetitle'] }}</a></td>
-                                        <td class="text-nowrap text-right">@if(!empty($row['pub_date'])){{ $modx->toDateFormat($row['pub_date'] + $server_offset_time) }}@endif</td>
-                                        <td class="text-nowrap text-right">@if(!empty($row['unpub_date'])){{ $modx->toDateFormat($row['unpub_date'] + $server_offset_time) }}@endif</td>
+                                        <td class="text-right">{{ $row->id }}</td>
+                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
+                                        <td class="text-nowrap text-right">@if(!empty($row->pub_date)){{ $modx->toDateFormat($row->pub_date + $server_offset_time) }}@endif</td>
+                                        <td class="text-nowrap text-right">@if(!empty($row->unpub_date)){{ $modx->toDateFormat($row->unpub_date + $server_offset_time) }}@endif</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
