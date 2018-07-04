@@ -2,8 +2,8 @@
 @section('content')
     @push('scripts.top')
     <script>
-      var trans = '{!! json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) !!}',
-          mraTrans = '{!! json_encode($mraTranslations, JSON_UNESCAPED_UNICODE) !!}';
+      var trans = {!! json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) !!},
+          mraTrans = {!! json_encode($mraTranslations, JSON_UNESCAPED_UNICODE) !!};
     </script>
     <script src="media/script/jquery.quicksearch.js"></script>
     <script src="media/script/jquery.nucontextmenu.js"></script>
