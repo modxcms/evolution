@@ -1,4 +1,4 @@
-@if (!empty($items))
+@if($outCategory->count() > 0 || $categories->count() > 0)
     <div class="tab-page" id="tabModules">
         <h2 class="tab"><i class="fa fa-cubes"></i> {{ ManagerTheme::getLexicon('modules') }}</h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabModules'))</script>
@@ -21,29 +21,41 @@
             </form>
         </div>
 
-        @include('manager::partials.switchButtons', ['cssId' => 'site_modules'])
+        @include('manager::page.resources.helper.switchButtons', [
+            'tabName' => $tabName
+        ])
 
-        <hr />
+        <div class="clearfix"></div>
+        <div class="panel-group no-transition">
+            <div id="{{ $tabName }}" class="resourceTable panel panel-default">
+                @if($outCategory->count() > 0)
+                    @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
+                        <ul class="elements">
+                            @foreach($outCategory as $item)
+                                @include('manager::page.resources.elements.module', ['item' => $item])
+                            @endforeach
+                        </ul>
+                    @endcomponent
+                @endif
 
-        @foreach($categories as $cat)
-            <?php /** @var EvolutionCMS\Models\Category $cat */?>
-            {{ $cat->rank }}
-            @foreach($cat->modules as $item)
-                <?php /** @var EvolutionCMS\Models\SiteModule $item */?>
-                {{ $item->name }} <a href="{{ $item->makeUrl('actions.edit') }}">Edit</a><br />
-            @endforeach
-        @endforeach
+                @foreach($categories as $cat)
+                    @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->category])
+                        <ul class="elements">
+                            @foreach($cat->modules as $item)
+                                @include('manager::page.resources.elements.module', ['item' => $item])
+                            @endforeach
+                        </ul>
+                    @endcomponent
+                @endforeach
+            </div>
+        </div>
+        <div class="clearfix"></div>
 
-        <hr />
-
-        @foreach($outCategory as $item)
-            <?php /** @var EvolutionCMS\Models\SiteModule $item */?>
-            {{ $item->name }} <a href="{{ $item->makeUrl('actions.edit') }}">Edit</a><br />
-        @endforeach
-
-        <script>
-            initQuicksearch('site_htmlsnippets_search', 'site_htmlsnippets');
-            initViews('ch', 'chunks', 'site_htmlsnippets')
-        </script>
+        @push('scripts.bot')
+            <script>
+                initQuicksearch('site_htmlsnippets_search', 'site_htmlsnippets');
+                initViews('ch', 'chunks', 'site_htmlsnippets')
+            </script>
+        @endpush
     </div>
 @endif

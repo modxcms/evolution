@@ -1,4 +1,4 @@
-@if (!empty($items))
+@if($outCategory->count() > 0 || $categories->count() > 0)
     <div class="tab-page" id="tabTemplates">
         <h2 class="tab"><i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}</h2>
         <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabTemplates'))</script>
@@ -20,28 +20,41 @@
             </form>
         </div>
 
-        @include('manager::partials.switchButtons', ['cssId' => 'site_templates'])
+        @include('manager::page.resources.helper.switchButtons', [
+            'tabName' => $tabName
+        ])
 
-        @include('manager::page.resources._list', ['resourceTable' => 'site_templates', 'items' => $items])
+        <div class="clearfix"></div>
+        <div class="panel-group no-transition">
+            <div id="{{ $tabName }}" class="resourceTable panel panel-default">
+                @if($outCategory->count() > 0)
+                    @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
+                        <ul class="elements">
+                            @foreach($outCategory as $item)
+                                @include('manager::page.resources.elements.template', ['item' => $item])
+                            @endforeach
+                        </ul>
+                    @endcomponent
+                @endif
 
-        <hr />
+                @foreach($categories as $cat)
+                    @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->category])
+                        <ul class="elements">
+                            @foreach($cat->templates as $item)
+                                @include('manager::page.resources.elements.template', ['item' => $item])
+                            @endforeach
+                        </ul>
+                    @endcomponent
+                @endforeach
+            </div>
+        </div>
+        <div class="clearfix"></div>
 
-        @foreach($categories as $cat)
-            {{ $item->rank }}
-            @foreach($cat as $item)
-                {{ $item->name }} <br />
-            @endforeach
-        @endforeach
-
-        <hr />
-
-        @foreach($outCategory as $item)
-            {{ $item->name }} <br />
-        @endforeach
-
-        <script>
-            initQuicksearch('site_templates_search', 'site_templates');
-            initViews('tmp', 'template', 'site_templates')
-        </script>
+        @push('scripts.bot')
+            <script>
+                initQuicksearch('site_templates_search', 'site_templates');
+                initViews('tmp', 'template', 'site_templates')
+            </script>
+        @endpush
     </div>
 @endif
