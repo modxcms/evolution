@@ -30,23 +30,24 @@ class Tv extends AbstractResources implements TabControllerInterface
         ]);
     }
 
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         return array_merge(parent::getParameters($params), [
+            'tabName' => 'site_tmplvars',
             'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ]);
     }
 
-    protected function parameterOutCategory() : Collection
+    protected function parameterOutCategory(): Collection
     {
         return Models\SiteTmplvar::where('category', '=', 0)
             ->orderBy('name', 'ASC')
             ->get();
     }
 
-    protected function parameterCategories() : Collection
+    protected function parameterCategories(): Collection
     {
         return Models\Category::with('tvs')
             ->whereHas('tvs')
@@ -54,7 +55,7 @@ class Tv extends AbstractResources implements TabControllerInterface
             ->get();
     }
 
-    protected function parameterItems() : array
+    protected function parameterItems(): array
     {
         $out = [];
 

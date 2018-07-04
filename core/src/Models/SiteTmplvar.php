@@ -63,6 +63,7 @@ class SiteTmplvar extends Eloquent\Model
     protected $managerActionsMap = [
         'actions.cancel' => 76,
         'actions.new' => 300,
+        'actions.sort' => 305,
         'id' => [
             'actions.edit' => 301,
             'actions.save' => 302,
