@@ -1,12 +1,15 @@
 <?php namespace EvolutionCMS\Traits\Models;
 
+use Illuminate\Support\Carbon;
+
 trait TimeMutator
 {
-    protected function convertTimestamp($value)
+    protected function convertTimestamp($value) :? Carbon
     {
         if (empty($value)) {
             return null;
         }
+
         $out = $this->asDateTime($value)
             ->addSeconds(evolutionCMS()->getConfig('server_offset_time', 0));
 

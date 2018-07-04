@@ -60,13 +60,13 @@ class Tv extends AbstractResources implements TabControllerInterface
 
         $elements = Models\SiteTmplvar::with('categories')
             ->orderBy('name', 'ASC')
-            ->get(['id', 'name', 'caption', 'description', 'category']);
+            ->get();
         /**
          * @var Models\SiteTmplvar $element
          */
         foreach ($elements as $element) {
             $out[] = [
-                'reltpl' => $element->templates()->count(),
+                'reltpl' => $element->templates->count(),
                 'caption' => $element->caption,
                 'name' => $element->name,
                 'id' => $element->getKey(),

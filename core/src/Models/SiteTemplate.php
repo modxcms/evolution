@@ -24,6 +24,9 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|Category $categories
+ *
+ * BelongsToMany
+ * @property Eloquent\Collection $tvs
  */
 class SiteTemplate extends Eloquent\Model
 {

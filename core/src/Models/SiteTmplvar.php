@@ -23,6 +23,9 @@ use EvolutionCMS\Traits;
  * BelongsTo
  * @property null|Category $categories
  *
+ * BelongsToMany
+ * @property Eloquent\Collection $templates
+ *
  * Virtual
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
