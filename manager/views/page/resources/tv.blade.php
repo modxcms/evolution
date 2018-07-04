@@ -50,8 +50,8 @@
 
     @push('scripts.bot')
         <script>
-          initQuicksearch('site_tmplvars_search', {{ $tabName }});
-          initViews('tv', 'tv', {{ $tabName }});
+          initQuicksearch('{{ $tabName }}_search', '{{ $tabName }}');
+          initViews('tv', 'tv', '{{ $tabName }}');
         </script>
     @endpush
 </div>
