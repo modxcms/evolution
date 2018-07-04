@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * @property int $id
@@ -30,9 +31,17 @@ use Illuminate\Database\Eloquent;
  * @property string $comment
  * @property int $createdon
  * @property int $editedon
+ *
+ * Virtual
+ * @property-read \Carbon\Carbon $created_at
+ * @property-read \Carbon\Carbon $updated_at
+ * @TODO: @property-read \Carbon\Carbon blockeduntil
+ * @TODO: @property-read \Carbon\Carbon blockedafter
  */
 class WebUserAttribute extends Eloquent\Model
 {
+    use Traits\Models\TimeMutator;
+
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
     protected $dateFormat = 'U';
@@ -79,4 +88,14 @@ class WebUserAttribute extends Eloquent\Model
 		'photo',
 		'comment'
 	];
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->createdon);
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->editedon);
+    }
 }

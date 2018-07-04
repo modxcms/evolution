@@ -11,7 +11,7 @@
         <div class="container container-body">
             <div class="form-group">
                 <b>{{ ManagerTheme::getLexicon('publish_events') }}</b>
-                @if(empty($publishedDocs->count()))
+                @if($publishedDocs->count() === 0)
                     <p>{{ ManagerTheme::getLexicon('no_docs_pending_publishing') }}</p>
                 @else
                     <div class="row">
@@ -26,10 +26,11 @@
                                 </thead>
                                 <tbody>
                                 @foreach($publishedDocs as $row)
+                                    <?php /** @var EvolutionCMS\Models\SiteContent $row */ ?>
                                     <tr>
-                                        <td class="text-right">{{ $row->id }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
-                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row->pub_date + $server_offset_time) }}</td>
+                                        <td class="text-right">{{ $row->getKey() }}</td>
+                                        <td><a href="{{ $row->makeUrl('actions.info') }}">{{ $row->nodeName }}</a></td>
+                                        <td class="text-nowrap text-right">{{ $row->pub_at }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -39,7 +40,7 @@
                 @endif
 
                 <b>{{ ManagerTheme::getLexicon('unpublish_events') }}</b>
-                @if(empty($unpublishedDocs->count()))
+                @if($unpublishedDocs->count() === 0)
                     <p>{{ ManagerTheme::getLexicon('no_docs_pending_unpublishing') }}</p>
                 @else
                     <div class="row">
@@ -54,10 +55,11 @@
                                 </thead>
                                 <tbody>
                                 @foreach($unpublishedDocs as $row)
+                                    <?php /** @var EvolutionCMS\Models\SiteContent $row */ ?>
                                     <tr>
-                                        <td class="text-right">{{ $row->id }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
-                                        <td class="text-nowrap text-right">{{ $modx->toDateFormat($row->unpub_date + $server_offset_time) }}</td>
+                                        <td class="text-right">{{ $row->getKey() }}</td>
+                                        <td><a href="{{ $row->makeUrl('actions.info') }}">{{ $row->nodeName }}</a></td>
+                                        <td class="text-nowrap text-right">{{ $row->unPub_at }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -67,7 +69,7 @@
                 @endif
 
                 <b>{{ ManagerTheme::getLexicon('all_events') }}</b>
-                @if(empty($allDocs->count()))
+                @if($allDocs->count() === 0)
                     <p>{{ ManagerTheme::getLexicon('no_docs_pending_pubunpub') }}</p>
                 @else
                     <div class="row">
@@ -83,11 +85,12 @@
                                 </thead>
                                 <tbody>
                                 @foreach($allDocs as $row)
+                                    <?php /** @var EvolutionCMS\Models\SiteContent $row */ ?>
                                     <tr>
-                                        <td class="text-right">{{ $row->id }}</td>
-                                        <td><a href="index.php?a=3&id={{ $row->id }}">{{ $row->pagetitle }}</a></td>
-                                        <td class="text-nowrap text-right">@if(!empty($row->pub_date)){{ $modx->toDateFormat($row->pub_date + $server_offset_time) }}@endif</td>
-                                        <td class="text-nowrap text-right">@if(!empty($row->unpub_date)){{ $modx->toDateFormat($row->unpub_date + $server_offset_time) }}@endif</td>
+                                        <td class="text-right">{{ $row->getKey() }}</td>
+                                        <td><a href="{{ $row->makeUrl('actions.info') }}">{{ $row->nodeName }}</a></td>
+                                        <td class="text-nowrap text-right">{{ $row->pub_at ?? '-' }}</td>
+                                        <td class="text-nowrap text-right">{{ $row->unPub_at ?? '-'}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

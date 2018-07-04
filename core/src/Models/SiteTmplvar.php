@@ -22,10 +22,15 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|Category $categories
+ *
+ * Virtual
+ * @property-read \Carbon\Carbon $created_at
+ * @property-read \Carbon\Carbon $updated_at
  */
 class SiteTmplvar extends Eloquent\Model
 {
-    use Traits\Models\ManagerActions;
+    use Traits\Models\ManagerActions,
+        Traits\Models\TimeMutator;
 
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
@@ -82,5 +87,15 @@ class SiteTmplvar extends Eloquent\Model
             'templateid'
         )->withPivot('rank')
             ->orderBy('pivot_rank', 'ASC');
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->createdon);
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->editedon);
     }
 }

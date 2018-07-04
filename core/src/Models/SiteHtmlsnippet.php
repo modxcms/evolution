@@ -19,10 +19,15 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|Category $categories
+ *
+ * Virtual
+ * @property-read \Carbon\Carbon $created_at
+ * @property-read \Carbon\Carbon $updated_at
  */
 class SiteHtmlsnippet extends Eloquent\Model
 {
-    use Traits\Models\ManagerActions;
+    use Traits\Models\ManagerActions,
+        Traits\Models\TimeMutator;
 
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
@@ -63,5 +68,15 @@ class SiteHtmlsnippet extends Eloquent\Model
     public function categoryId()
     {
         return $this->categories === null ? null : $this->categories->getKey();
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->createdon);
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->editedon);
     }
 }

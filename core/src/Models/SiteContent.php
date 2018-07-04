@@ -40,11 +40,19 @@ use EvolutionCMS\Traits;
  * @property bool $content_dispo
  * @property bool $hidemenu
  * @property int $alias_visible
+ *
+ * Virtual
+ * @property-read \Carbon\Carbon $pub_at
+ * @property-read \Carbon\Carbon $unPub_at
+ * @property-read \Carbon\Carbon $created_at
+ * @property-read \Carbon\Carbon $updated_at
+ * @property-read \Carbon\Carbon $deleted_at
  */
 class SiteContent extends Eloquent\Model
 {
     use Traits\Models\SoftDeletes,
-        Traits\Models\ManagerActions;
+        Traits\Models\ManagerActions,
+        Traits\Models\TimeMutator;
 
     protected $table = 'site_content';
 
@@ -114,4 +122,46 @@ class SiteContent extends Eloquent\Model
 		'hidemenu',
 		'alias_visible'
 	];
+
+    protected $managerActionsMap = [
+        'id' => [
+            'actions.info'  => 3
+        ]
+    ];
+
+    public function getNodeNameAttribute()
+    {
+        $key = evolutionCMS()->getConfig('resource_tree_node_name', 'pagetitle');
+        if (mb_strtolower($key) === 'nodename') {
+            $key = 'pagetitle';
+        }
+
+        return  $this->getAttributeValue($key);
+    }
+
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->createdon);
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->convertTimestamp($this->editedon);
+    }
+
+    public function getDeletedAtAttribute()
+    {
+        return $this->convertTimestamp($this->deletedon);
+    }
+
+    public function getPubAtAttribute()
+    {
+        return $this->convertTimestamp($this->pub_date);
+    }
+
+    public function getUnPubAtAttribute()
+    {
+        return $this->convertTimestamp($this->unpub_date);
+    }
 }
