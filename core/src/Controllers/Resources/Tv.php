@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS\Controllers\Resources;
 
+use EvolutionCMS\ManagerTheme;
 use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
@@ -58,7 +59,8 @@ class Tv extends AbstractResources implements TabControllerInterface
         $out = [];
 
         $elements = Models\SiteTmplvar::with('categories')
-            ->orderBy('name', 'ASC')->get();
+            ->orderBy('name', 'ASC')
+            ->get(['id', 'name', 'caption', 'description', 'category']);
         /**
          * @var Models\SiteTmplvar $element
          */
@@ -71,7 +73,8 @@ class Tv extends AbstractResources implements TabControllerInterface
                 'description' => $element->description,
                 'locked' => $element->locked,
                 'category' => $element->categoryName($this->managerTheme->getLexicon('no_category')),
-                'catid' => $element->categoryId()
+                'catid' => $element->categoryId(),
+                'rowLock' => evolutionCMS()->elementIsLocked(2, $element->id, true)
             ];
         }
         return $out;

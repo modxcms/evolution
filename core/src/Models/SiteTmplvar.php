@@ -55,6 +55,17 @@ class SiteTmplvar extends Eloquent\Model
 		'default_text'
 	];
 
+    protected $managerActionsMap = [
+        'actions.cancel' => 76,
+        'actions.new' => 300,
+        'id' => [
+            'actions.edit' => 301,
+            'actions.save' => 302,
+            'actions.delete' => 303,
+            'actions.duplicate' => 304
+        ]
+    ];
+
     public function categories() : Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');

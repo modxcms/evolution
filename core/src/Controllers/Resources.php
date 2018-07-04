@@ -37,6 +37,12 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
             }
         }
 
-        return array_merge(compact('tabs'), parent::getParameters($params));
+        $activeTab = '';
+        $_ = array_values($tabs);
+        if (isset($_GET['tab']) && is_numeric($_GET['tab']) && isset($_[$_GET['tab']])) {
+            $activeTab = $_GET['tab'];
+        }
+
+        return array_merge(compact('tabs'), parent::getParameters($params), ['activeTab' => $activeTab]);
     }
 }
