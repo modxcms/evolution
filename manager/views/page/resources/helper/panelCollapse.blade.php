@@ -12,12 +12,4 @@
         </a>
     </span>
 </div>
-<div id="collapse{{ $name }}{{ $id }}" class="panel-collapse collapse in" aria-expanded="true">
-    <ul class="elements">
-        @foreach($data as $item)
-            @include('manager::page.resources.helper.element', [
-                'item' => $item
-            ])
-        @endforeach
-    </ul>
-</div>
+<div id="collapse{{ $name }}{{ $id }}" class="panel-collapse collapse in" aria-expanded="true">{{ $slot }}</div>
