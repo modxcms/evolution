@@ -32,7 +32,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
             ) {
                 $tabController = new $tabClass($this->managerTheme);
                 if ($tabController->canView()) {
-                    $tabs[$tabController->getTabName()] = $tabController->render();
+                    $tabs[$tabController->getTabName()] = $tabController;
                 }
             }
         }

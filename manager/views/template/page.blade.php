@@ -1,6 +1,10 @@
-@include('manager::partials.header')
+@section('head')
+    @include('manager::partials.header')
+@show
 
 @section('content')
 @show
 
-@include('manager::partials.footer')
+@section('footer')
+    @include('manager::partials.footer')
+@show
