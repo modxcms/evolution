@@ -38,15 +38,27 @@
         'tabName' => $tabName
     ])
 
-    @include('manager::page.resources.helper.panelGroup', [
-        'tabName' => $tabName,
-        'categories' => $outCategory
-    ])
+    <div class="clearfix"></div>
+    <div class="panel-group no-transition">
+        <div id="{{ $tabName }}" class="resourceTable panel panel-default">
+            @include('manager::page.resources.helper.panelCollapse', [
+                'name' => $tabName,
+                'id' => 0,
+                'data' => $outCategory,
+                'title' => ManagerTheme::getLexicon('no_category')
+            ])
 
-    @include('manager::page.resources.helper.panelGroup', [
-        'tabName' => $tabName,
-        'categories' => $categories
-    ])
+            @foreach($categories as $cat)
+                @include('manager::page.resources.helper.panelCollapse', [
+                    'name' => $tabName,
+                    'id' => $cat->id,
+                    'data' => $cat->tvs,
+                    'title' => $cat->category
+                ])
+            @endforeach
+        </div>
+    </div>
+    <div class="clearfix"></div>
 
     @push('scripts.bot')
         <script>
