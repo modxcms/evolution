@@ -15,6 +15,9 @@ use EvolutionCMS\Traits;
  * @property Eloquent\Collection $plugins
  * @property Eloquent\Collection $modules
  * @property Eloquent\Collection $tvs
+ *
+ * Virtual
+ * @property string $name Alias for templatename
  */
 class Category extends Eloquent\Model
 {
@@ -59,5 +62,15 @@ class Category extends Eloquent\Model
     public function tvs() : Eloquent\Relations\HasMany
     {
         return $this->hasMany(SiteTmplvar::class, 'category', 'id');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->category;
+    }
+
+    public function setNameAttribute($val)
+    {
+        $this->category = $val;
     }
 }

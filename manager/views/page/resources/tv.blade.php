@@ -52,7 +52,7 @@
             @endif
 
             @foreach($categories as $cat)
-                @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->category])
+                @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
                     <ul class="elements">
                         @foreach($cat->tvs as $item)
                             @include('manager::page.resources.elements.tv', ['item' => $item])

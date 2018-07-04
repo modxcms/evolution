@@ -37,7 +37,7 @@
             @endif
 
             @foreach($categories as $cat)
-                @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->category])
+                @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
                     <ul class="elements">
                         @foreach($cat->templates as $item)
                             @include('manager::page.resources.elements.template', ['item' => $item])
