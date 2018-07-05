@@ -152,7 +152,7 @@
     $ph['UserInfo'] = $modx->parseText($tpl, array(
         'username' => $modx->getLoginUserName(),
         'role' => $_SESSION['mgrPermissions']['name'],
-        'lastlogin' => $modx->toDateFormat($_SESSION['mgrLastlogin'] + $server_offset_time),
+        'lastlogin' => $modx->toDateFormat($_SESSION['mgrLastlogin'] + $modx->config['server_offset_time']),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
         'msginfo' => sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages)
     ));
@@ -165,7 +165,7 @@
     if($modx->getDatabase()->getRecordCount($rs) < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
-        $now = $_SERVER['REQUEST_TIME'] + $server_offset_time;
+        $now = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
         $ph['now'] = strftime('%H:%M:%S', $now);
         $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
         $html = '
@@ -203,7 +203,7 @@
                 $webicon,
                 abs($activeusers['internalKey']),
                 $ip,
-                strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),
+                strftime('%H:%M:%S', $activeusers['lasthit'] + $modx->config['server_offset_time']),
                 $currentaction
             );
         }

@@ -30,11 +30,11 @@ if(is_array($evtOut)) {
 			<a class="treeButton" id="treeMenu_sortingindex" onclick="modx.tabs({url: '<?= MODX_MANAGER_URL ?>?a=56&id=0', title: '<?php echo $_lang['sort_menuindex']; ?>'});" title="<?php echo $_lang['sort_menuindex']; ?>"><i class="fa fa-sort-numeric-asc"></i></a>
 		<?php } ?>
 
-		<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+		<?php if($modx->config['use_browser'] && $modx->hasPermission('assets_images')) { ?>
 			<a class="treeButton" id="treeMenu_openimages" title="<?php echo $_lang["images_management"] . "\n" . $_lang['em_button_shift'] ?>"><i class="fa fa-camera"></i></a>
 		<?php } ?>
 
-		<?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+		<?php if($modx->config['use_browser'] && $modx->hasPermission('assets_files')) { ?>
 			<a class="treeButton" id="treeMenu_openfiles" title="<?php echo $_lang["files_management"] . "\n" . $_lang['em_button_shift'] ?>"><i class="fa fa-files-o"></i></a>
 		<?php } ?>
 

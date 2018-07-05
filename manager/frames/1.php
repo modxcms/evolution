@@ -78,7 +78,7 @@ foreach ($unlockTranslations as $key => $value) {
 }
 
 $user = $modx->getUserInfo($modx->getLoginUserID());
-if ($user['which_browser'] == 'default') {
+if ((isset($user['which_browser']) && $user['which_browser'] == 'default') || (!isset($user['which_browser']))) {
     $user['which_browser'] = $modx->config['which_browser'];
 }
 
@@ -108,7 +108,6 @@ if ($modx->config['manager_theme'] == 'default') {
 }
 
 $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['role'] == 1 || $modx->hasPermission('edit_template') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_plugin')));
-
 ?>
 <!DOCTYPE html>
 <html <?= (ManagerTheme::getTextDir() !== null ? 'dir="rtl" lang="' : 'lang="') . ManagerTheme::getLang() . '" xml:lang="' . ManagerTheme::getLang() . '"' ?>>
@@ -156,7 +155,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           theme: '<?= $modx->config['manager_theme'] ?>',
           theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
           which_browser: '<?= $user['which_browser'] ?>',
-          layout: <?= (int)$manager_layout ?>,
+          layout: <?= (int)$modx->config['manager_layout'] ?>,
           textdir: '<?= ManagerTheme::getTextDir() ?>',
           global_tabs: <?= $modx->config['global_tabs'] ?>
 
@@ -300,14 +299,16 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                                 </a>
                                             </li>
                                         <?php } ?>
-                                        <?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+                                        <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_images'))
+                                        { ?>
                                             <li>
                                                 <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=images" target="main">
                                                     <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
                                                 </a>
                                             </li>
                                         <?php } ?>
-                                        <?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+                                        <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_files'))
+                                        { ?>
                                             <li>
                                                 <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=files" target="main">
                                                     <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
@@ -574,7 +575,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           }
         };
           <?php } ?>
-          <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+          <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_images')) { ?>
 
         document.getElementById('treeMenu_openimages').onclick = function(e) {
           e.preventDefault();
@@ -592,7 +593,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           }
         };
           <?php } ?>
-          <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+          <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_files')) { ?>
 
         document.getElementById('treeMenu_openfiles').onclick = function(e) {
           e.preventDefault();

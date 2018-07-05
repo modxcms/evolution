@@ -5,7 +5,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 
 // PROCESSOR FIRST
 if($_SESSION['mgrRole'] == 1) {
-	if($_REQUEST['b'] == 'resetSysfilesChecksum' && $modx->hasPermission('settings')) {
+	if(!empty($_REQUEST['b']) && $_REQUEST['b'] == 'resetSysfilesChecksum' && $modx->hasPermission('settings')) {
 		$current = $modx->getManagerApi()->getSystemChecksum($modx->config['check_files_onlogin']);
 		if(!empty($current)) {
 			$modx->getManagerApi()->setSystemChecksum($current);
@@ -96,22 +96,22 @@ JS;
     }
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 0) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['unauthorized_page']}'")) == 0) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$error_page}'")) == 0) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['error_page']}'")) == 0) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_errorpage_unpublished']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$unauthorized_page}'")) == 1) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['unauthorized_page']}'")) == 1) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_unauthorizedpage_unavailable']);
 }
 
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$error_page}'")) == 1) {
+if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['error_page']}'")) == 1) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
 }
