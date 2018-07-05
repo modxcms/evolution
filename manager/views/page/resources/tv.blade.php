@@ -46,7 +46,7 @@
                 @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                     <ul class="elements">
                         @foreach($outCategory as $item)
-                            @include('manager::page.resources.elements.tv', ['item' => $item])
+                            @include('manager::page.resources.elements.tv', compact('item', 'tabName'))
                         @endforeach
                     </ul>
                 @endcomponent
@@ -56,7 +56,7 @@
                 @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
                     <ul class="elements">
                         @foreach($cat->tvs as $item)
-                            @include('manager::page.resources.elements.tv', ['item' => $item])
+                            @include('manager::page.resources.elements.tv', compact('item', 'tabName'))
                         @endforeach
                     </ul>
                 @endcomponent
