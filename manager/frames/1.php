@@ -302,7 +302,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_images'))
                                         { ?>
                                             <li>
-                                                <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=images" target="main">
+                                                <a onclick="" href="media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=images" target="main">
                                                     <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
                                                 </a>
                                             </li>
@@ -310,7 +310,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_files'))
                                         { ?>
                                             <li>
-                                                <a onclick="" href="media/browser/<?= $which_browser ?>/browse.php?&type=files" target="main">
+                                                <a onclick="" href="media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=files" target="main">
                                                     <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
                                                 </a>
                                             </li>
@@ -463,7 +463,8 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         ?>
         <form name="sortFrm" id="sortFrm">
             <div class="form-group">
-                <input type="hidden" name="dt" value="<?= htmlspecialchars($_REQUEST['dt']) ?>" />
+                <input type="hidden" name="dt" value="<?= (isset($_REQUEST['dt']) ? htmlspecialchars($_REQUEST['dt'])
+                    : '') ?>" />
                 <label><?= $_lang["sort_tree"] ?></label>
                 <select name="sortby" class="form-control">
                     <option value="isfolder" <?= $_SESSION['tree_sortby'] == 'isfolder' ? "selected='selected'" : "" ?>><?= $_lang['folder'] ?></option>
@@ -580,14 +581,14 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         document.getElementById('treeMenu_openimages').onclick = function(e) {
           e.preventDefault();
           if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=images' ?>', title: '<?= $_lang["images_management"] ?>'});
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browse.php?filemanager=media/browser/' . $modx->config['which_browser'] . '/browse.php&type=images' ?>', title: '<?= $_lang["images_management"] ?>'});
           } else {
             var randomNum = '<?= $_lang["files_files"] ?>';
             if (e.shiftKey) {
               randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
             }
             modx.openWindow({
-              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
+              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=images',
               title: randomNum
             });
           }
@@ -598,14 +599,14 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         document.getElementById('treeMenu_openfiles').onclick = function(e) {
           e.preventDefault();
           if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=files' ?>', title: '<?= $_lang["files_files"] ?>'});
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browse.php?filemanager=media/browser/' . $modx->config['which_browser'] . '/browse.php&type=files' ?>', title: '<?= $_lang["files_files"] ?>'});
           } else {
             var randomNum = '<?= $_lang["files_files"] ?>';
             if (e.shiftKey) {
               randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
             }
             modx.openWindow({
-              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
+              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=files',
               title: randomNum
             });
           }
