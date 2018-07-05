@@ -16,9 +16,7 @@
                         <small>({{ $item->id }})</small>
                         <span class="elements_descr">
                             {{ $item->caption }}
-                            @if($item->description)
-                                <small>({!! $item->description !!})</small>
-                            @endif
+                            {!! $item->description !!}
                         </span>
                     </a>
                     {{ ManagerTheme::getTextDir('&rlm;') }}
