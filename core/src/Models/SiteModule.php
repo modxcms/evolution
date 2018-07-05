@@ -68,7 +68,7 @@ class SiteModule extends Eloquent\Model
 	];
 
 	protected $managerActionsMap = [
-        'actions.cancel' => 106,
+        'actions.cancel' => 76,
         'actions.new' => 107,
         'id' => [
             'actions.edit' => 108,

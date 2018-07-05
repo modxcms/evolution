@@ -29,23 +29,25 @@ class Plugins extends AbstractResources implements TabControllerInterface
         ]);
     }
 
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         return array_merge(parent::getParameters($params), [
+            'tabName' => 'site_plugins',
             'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
-            'outCategory' => $this->parameterOutCategory()
+            'outCategory' => $this->parameterOutCategory(),
+            'checkOldPlugins' => $this->checkOldPlugins()
         ]);
     }
 
-    protected function parameterOutCategory() : Collection
+    protected function parameterOutCategory(): Collection
     {
         return Models\SitePlugin::where('category', '=', 0)
             ->orderBy('name', 'ASC')
             ->get();
     }
 
-    protected function parameterCategories() : Collection
+    protected function parameterCategories(): Collection
     {
         return Models\Category::with('plugins')
             ->whereHas('plugins')
@@ -53,12 +55,13 @@ class Plugins extends AbstractResources implements TabControllerInterface
             ->get();
     }
 
-    protected function parameterItems() : array
+    protected function parameterItems(): array
     {
         $out = [];
 
         $elements = Models\SitePlugin::with('categories')
-            ->orderBy('name', 'ASC')->get();
+            ->orderBy('name', 'ASC')
+            ->get();
         /**
          * @var Models\SitePlugin $element
          */
@@ -74,5 +77,11 @@ class Plugins extends AbstractResources implements TabControllerInterface
             ];
         }
         return $out;
+    }
+
+    // :TODO check old plugins
+    protected function checkOldPlugins(): bool
+    {
+        return true;
     }
 }

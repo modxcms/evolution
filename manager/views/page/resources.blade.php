@@ -1,6 +1,6 @@
 @extends('manager::template.page')
 
-@push('scripts.top')
+@push('scripts.bot')
     <script>
         var trans = {!! json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) !!},
             mraTrans = {!! json_encode($mraTranslations, JSON_UNESCAPED_UNICODE) !!};

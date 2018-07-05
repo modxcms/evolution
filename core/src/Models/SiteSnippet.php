@@ -57,6 +57,17 @@ class SiteSnippet extends Eloquent\Model
 		'disabled'
 	];
 
+    protected $managerActionsMap = [
+        'actions.cancel' => 76,
+        'actions.new' => 23,
+        'id' => [
+            'actions.edit' => 22,
+            'actions.save' => 24,
+            'actions.delete' => 25,
+            'actions.duplicate' => 98
+        ]
+    ];
+
     public function categories() : Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');

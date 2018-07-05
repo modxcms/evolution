@@ -25,6 +25,11 @@
             <div class="btnCell">
                 <ul class="elements_buttonbar">
                     <li>
+                        <a href="{{ $item->makeUrl('actions.run') }}" title="{{ ManagerTheme::getLexicon('run_module') }}">
+                            <i class="fa fa-play fa-fw"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                             <i class="fa fa-edit fa-fw"></i>
                         </a>

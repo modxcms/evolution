@@ -59,6 +59,17 @@ class SiteTemplate extends Eloquent\Model
 		'selectable'
 	];
 
+    protected $managerActionsMap = [
+        'actions.cancel' => 76,
+        'actions.new' => 19,
+        'id' => [
+            'actions.edit' => 16,
+            'actions.save' => 20,
+            'actions.delete' => 21,
+            'actions.duplicate' => 96
+        ]
+    ];
+
 	public function getNameAttribute()
     {
         return $this->templatename;

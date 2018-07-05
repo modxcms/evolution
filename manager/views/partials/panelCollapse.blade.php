@@ -12,4 +12,6 @@
         </a>
     </span>
 </div>
-<div id="collapse{{ $name }}{{ $id }}" class="panel-collapse collapse in" aria-expanded="true">{{ $slot }}</div>
+<div id="collapse{{ $name }}{{ $id }}" class="panel-collapse collapse in" aria-expanded="true">
+    {{ $slot }}
+</div>

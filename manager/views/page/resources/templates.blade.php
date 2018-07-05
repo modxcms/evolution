@@ -1,6 +1,9 @@
 <div class="tab-page" id="tabTemplates">
-    <h2 class="tab"><i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}</h2>
-    <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabTemplates'))</script>
+    <h2 class="tab">
+        <i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}
+    </h2>
+    <script>tpResources.addTabPage(document.getElementById('tabTemplates'));</script>
+
     <div id="template-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('template_management_msg') }}</div>
         <p class="viewoptions-message">{{ ManagerTheme::getLexicon('view_options_msg') }}</p>
@@ -9,11 +12,20 @@
     <div id="_actions">
         <form class="btn-group form-group form-inline">
             <div class="input-group input-group-sm">
-                <input class="form-control filterElements-form" type="text" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" id="site_templates_search" />
+                <input class="form-control filterElements-form" type="text" id="{{ $tabName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
-                    <a class="btn btn-success" href="index.php?a=19"><i class="fa fa-plus-circle"></i> <span>{{ ManagerTheme::getLexicon('new_template') }}</span></a>
-                    <a class="btn btn-secondary" href="javascript:;" id="template-help"><i class="fa fa-question-circle"></i> <span>{{ ManagerTheme::getLexicon('help') }}</span></a>
-                    <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_templates"><i class="fa fa-bars"></i> <span>{{ ManagerTheme::getLexicon('btn_view_options') }}</span></a>
+                    <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteTemplate)->makeUrl('actions.new') }}">
+                        <i class="fa fa-plus-circle"></i>
+                        <span>{{ ManagerTheme::getLexicon('new_template') }}</span>
+                    </a>
+                    <a class="btn btn-secondary" href="javascript:;" id="template-help">
+                        <i class="fa fa-question-circle"></i>
+                        <span>{{ ManagerTheme::getLexicon('help') }}</span>
+                    </a>
+                    <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_{{ $tabName }}">
+                        <i class="fa fa-bars"></i>
+                        <span>{{ ManagerTheme::getLexicon('btn_view_options') }}</span>
+                    </a>
                 </div>
             </div>
         </form>
@@ -52,7 +64,7 @@
 
 @push('scripts.bot')
     <script>
-        initQuicksearch('site_templates_search', 'site_templates');
-        initViews('tmp', 'template', 'site_templates')
+      initQuicksearch('{{ $tabName }}_search', '{{ $tabName }}');
+      initViews('tmp', 'template', '{{ $tabName }}');
     </script>
 @endpush

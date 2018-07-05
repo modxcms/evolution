@@ -57,6 +57,19 @@ class SitePlugin extends Eloquent\Model
 		'moduleguid'
 	];
 
+    protected $managerActionsMap = [
+        'actions.cancel' => 76,
+        'actions.new' => 101,
+        'actions.sort' => 100,
+        'actions.purge' => 119,
+        'id' => [
+            'actions.edit' => 102,
+            'actions.save' => 103,
+            'actions.delete' => 104,
+            'actions.duplicate' => 105
+        ]
+    ];
+
 	public function scopeActivePhx(Eloquent\Builder $builder)
     {
         return $builder->where('disabled', '!=', 1)
