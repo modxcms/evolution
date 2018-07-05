@@ -1,4 +1,4 @@
-<div class="tab-page" id="tabVariables">
+<div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
         <i class="fa fa-list-alt"></i> {{ ManagerTheme::getLexicon('tmplvars') }}
     </h2>

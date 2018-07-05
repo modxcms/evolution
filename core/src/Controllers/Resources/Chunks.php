@@ -35,8 +35,8 @@ class Chunks extends AbstractResources implements TabControllerInterface
     public function getParameters(array $params = []) : array
     {
         return array_merge(parent::getParameters($params), [
+            'tabPageName' => $this->getTabName(),
             'tabName' => 'site_chunks',
-            'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ]);
@@ -55,28 +55,5 @@ class Chunks extends AbstractResources implements TabControllerInterface
             ->whereHas('chunks')
             ->orderBy('rank', 'ASC')
             ->get();
-    }
-
-    protected function parameterItems() : array
-    {
-        $out = [];
-
-        $elements = Models\SiteHtmlsnippet::with('categories')
-            ->orderBy('name', 'ASC')->get();
-        /**
-         * @var Models\SiteHtmlsnippet $element
-         */
-        foreach ($elements as $element) {
-            $out[] = [
-                'disabled' => $element->disabled,
-                'name' => $element->name,
-                'id' => $element->getKey(),
-                'description' => $element->description,
-                'locked' => $element->locked,
-                'category' => $element->categoryName($this->managerTheme->getLexicon('no_category')),
-                'catid' => $element->categoryId()
-            ];
-        }
-        return $out;
     }
 }

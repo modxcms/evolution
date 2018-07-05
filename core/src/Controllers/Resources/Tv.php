@@ -33,8 +33,8 @@ class Tv extends AbstractResources implements TabControllerInterface
     public function getParameters(array $params = []): array
     {
         return array_merge(parent::getParameters($params), [
+            'tabPageName' => $this->getTabName(),
             'tabName' => 'site_tmplvars',
-            'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ]);
@@ -53,31 +53,5 @@ class Tv extends AbstractResources implements TabControllerInterface
             ->whereHas('tvs')
             ->orderBy('rank', 'ASC')
             ->get();
-    }
-
-    protected function parameterItems(): array
-    {
-        $out = [];
-
-        $elements = Models\SiteTmplvar::with('categories')
-            ->orderBy('name', 'ASC')
-            ->get();
-        /**
-         * @var Models\SiteTmplvar $element
-         */
-        foreach ($elements as $element) {
-            $out[] = [
-                'reltpl' => $element->templates->count(),
-                'caption' => $element->caption,
-                'name' => $element->name,
-                'id' => $element->getKey(),
-                'description' => $element->description,
-                'locked' => $element->locked,
-                'category' => $element->categoryName($this->managerTheme->getLexicon('no_category')),
-                'catid' => $element->categoryId(),
-                'rowLock' => evolutionCMS()->elementIsLocked(2, $element->id, true)
-            ];
-        }
-        return $out;
     }
 }

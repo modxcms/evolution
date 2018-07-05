@@ -1,4 +1,4 @@
-<div class="tab-page" id="tabSnippets">
+<div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
         <i class="fa fa-code"></i> {{ ManagerTheme::getLexicon('manage_snippets') }}
     </h2>

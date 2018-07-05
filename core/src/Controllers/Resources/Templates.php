@@ -32,8 +32,8 @@ class Templates extends AbstractResources implements TabControllerInterface
     public function getParameters(array $params = []) : array
     {
         return array_merge(parent::getParameters($params), [
+            'tabPageName' => $this->getTabName(),
             'tabName' => 'site_templates',
-            'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ]);
@@ -52,28 +52,5 @@ class Templates extends AbstractResources implements TabControllerInterface
             ->whereHas('templates')
             ->orderBy('rank', 'ASC')
             ->get();
-    }
-
-    protected function parameterItems() : array
-    {
-        $out = [];
-
-        $elements = Models\SiteTemplate::with('categories')
-            ->orderBy('templatename', 'ASC')->get();
-        /**
-         * @var Models\SiteTemplate $element
-         */
-        foreach ($elements as $element) {
-            $out[] = [
-                'name' => $element->name,
-                'id' => $element->getKey(),
-                'description' => $element->description,
-                'locked' => $element->locked,
-                'selectable' => $element->selectable,
-                'category' => $element->categoryName($this->managerTheme->getLexicon('no_category')),
-                'catid' => $element->categoryId()
-            ];
-        }
-        return $out;
     }
 }

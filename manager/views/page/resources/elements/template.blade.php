@@ -10,7 +10,7 @@
             @endif
             <div class="mainCell elements_description">
                 <span>
-                    <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl('actions.edit') }}">
+                    <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
                         <i class="fa fa-newspaper-o"></i>
                         {{ $item->name }}
                         <small>({{ $item->id }})</small>

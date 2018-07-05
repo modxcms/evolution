@@ -1,4 +1,4 @@
-<div class="tab-page" id="tabModules">
+<div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
         <i class="fa fa-cubes"></i> {{ ManagerTheme::getLexicon('modules') }}
     </h2>

@@ -38,6 +38,7 @@ class Modules extends AbstractResources implements TabControllerInterface
     public function getParameters(array $params = []) : array
     {
         return array_merge(parent::getParameters($params), [
+            'tabPageName' => $this->getTabName(),
             'tabName' => 'site_modules',
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory(),

@@ -1,4 +1,4 @@
-<div class="tab-page" id="tabPlugins">
+<div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
         <i class="fa fa-plug"></i> {{ ManagerTheme::getLexicon('manage_plugins') }}
     </h2>

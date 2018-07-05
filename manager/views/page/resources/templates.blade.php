@@ -1,4 +1,4 @@
-<div class="tab-page" id="tabTemplates">
+<div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
         <i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}
     </h2>
