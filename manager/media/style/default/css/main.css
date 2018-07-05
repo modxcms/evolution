@@ -129,13 +129,6 @@ padding: 0 1px 0 3px; }
 #site_templates li strong:before, #site_tmplvars li strong:before, #site_htmlsnippets li strong:before, #site_snippets li strong:before, #site_snippets li strong:before, #site_plugins li strong:before, #categories_list li strong:before { font-family: "FontAwesome"; font-style: normal; font-weight: normal; color: #5b6f7a; padding: 0 5px 0 5px; content: '\f105'; }
 .tab-pane ul li ul li strong:before { content: ''; }
 /* elements icons in manage elements */
-a.man_el_name:before { font-family: "FontAwesome"; font-style: normal; font-weight: normal; font-size: 0.875rem; color: #5b6f7a; }
-a.man_el_name.site_templates:before { content: '\f1ea'; }
-a.man_el_name.site_tmplvars:before { content: '\f022'; }
-a.man_el_name.site_htmlsnippets:before { content: '\f009'; }
-a.man_el_name.site_snippets:before { content: '\f121'; }
-a.man_el_name.site_plugins:before { content: '\f1e6'; }
-a.man_el_name.site_modules:before { content: '\f085'; }
 div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
 /*Fake tables for providing dynamic amount of cells per row*/
 .rTable { display: table; width: 100%; padding: 0; }

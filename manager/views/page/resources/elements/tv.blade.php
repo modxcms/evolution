@@ -9,17 +9,19 @@
                 </div>
             @endif
             <div class="mainCell elements_description">
-                <span @if(!$item->reltpl)class="disabledPlugin" @endif>
-                <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl('actions.edit') }}">
-                    {{ $item->name }}
-                    <small>({{ $item->id }})</small>
-                    <span class="elements_descr">
-                        {{ $item->caption }}
-                        @if($item->description)
-                            <small>({!! $item->description !!})</small>
-                        @endif
-                    </span>
-                </a>{{ ManagerTheme::getTextDir('&rlm;') }}
+                <span @if($item->templates()->count() == 0)class="disabledPlugin" @endif>
+                    <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl('actions.edit') }}">
+                        <i class="fa fa-list-alt"></i>
+                        {{ $item->name }}
+                        <small>({{ $item->id }})</small>
+                        <span class="elements_descr">
+                            {{ $item->caption }}
+                            @if($item->description)
+                                <small>({!! $item->description !!})</small>
+                            @endif
+                        </span>
+                    </a>
+                    {{ ManagerTheme::getTextDir('&rlm;') }}
                 </span>
             </div>
             <div class="btnCell">

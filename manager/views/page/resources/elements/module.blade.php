@@ -9,12 +9,13 @@
                 </div>
             @endif
             <div class="mainCell elements_description">
-                <span @if(!$item->reltpl)class="disabledPlugin" @endif>
+                <span @if($item->disabled)class="disabledPlugin" @endif>
                     @if($action !== '')
                         <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl($action) }}">
                     @else
                         <span class="man_el_name">
                     @endif
+                        <i class="fa fa-cube"></i>
                         {{ $item->name }}
                         <small>({{ $item->id }})</small>
                         <span class="elements_descr">
