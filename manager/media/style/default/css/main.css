@@ -161,7 +161,7 @@ ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2e
 ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width: 22px; }
 ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 /* Checkbox "Icons" */
-.noicons.tab-page ul li ul li a:before, .noicons .elements_description a:before { display: none !important; }
+.noicons.tab-page ul li ul li a:before, .noicons .elements_description a > i.fa:first-child { display: none !important; }
 /* View-dependent styles */
 /* List-view */
 .resourceTable.list li { }

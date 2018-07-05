@@ -33,6 +33,7 @@ function getViewOpts(form) {
     viewOpts.cb_buttons     = form.find("input:checkbox[name=cb_buttons]").is(':checked');
     viewOpts.cb_description = form.find("input:checkbox[name=cb_description]").is(':checked');
     viewOpts.cb_icons       = form.find("input:checkbox[name=cb_icons]").is(':checked');
+    viewOpts.cb_all         = form.find("input:checkbox[name=cb_all]").is(':checked');
 
     // Views
     viewOpts.view = form.find("input[name=view]:checked").val();
@@ -107,7 +108,8 @@ function setViewOptions(form, viewOpts) {
     form.find("input:checkbox[name=cb_icons]")      .attr('checked', viewOpts.cb_icons).prop("checked", viewOpts.cb_icons);
     form.find("input:radio[name=view][value="+viewOpts.view+"]").attr('checked', true).prop("checked", true);
     form.find("input[name=columns]").val(viewOpts.columns);
-    form.find("input[name=fontsize]").val(viewOpts.fontsize);    
+    form.find("input[name=fontsize]").val(viewOpts.fontsize);
+    form.find("input:checkbox[name=cb_all]").attr('checked', viewOpts.cb_all).prop("checked", viewOpts.cb_all);
 }
 
 function setViewDefaultOptions(form) {
@@ -118,6 +120,7 @@ function setViewDefaultOptions(form) {
     viewOpts.view = 'list';
     viewOpts.columns = 3;
     viewOpts.fontsize = 10;
+    viewOpts.cb_all = true;
     setViewOptions(form, viewOpts);
 }
 
