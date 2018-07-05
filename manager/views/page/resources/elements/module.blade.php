@@ -10,40 +10,57 @@
             @endif
             <div class="mainCell elements_description">
                 <span @if(!$item->reltpl)class="disabledPlugin" @endif>
-                <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl('actions.edit') }}">
-                    {{ $item->name }}
-                    <small>({{ $item->id }})</small>
-                    <span class="elements_descr">
-                        {{ $item->caption }}
-                        @if($item->description)
-                            <small>({!! $item->description !!})</small>
-                        @endif
-                    </span>
-                </a>{{ ManagerTheme::getTextDir('&rlm;') }}
+                    @if($action !== '')
+                        <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl($action) }}">
+                    @else
+                        <span class="man_el_name">
+                    @endif
+                        {{ $item->name }}
+                        <small>({{ $item->id }})</small>
+                        <span class="elements_descr">
+                            {{ $item->caption }}
+                            @if($item->description)
+                                <small>({!! $item->description !!})</small>
+                            @endif
+                        </span>
+                    @if($action !== '')
+                        </a>
+                    @else
+                        </span>
+                    @endif
+                    {{ ManagerTheme::getTextDir('&rlm;') }}
                 </span>
             </div>
             <div class="btnCell">
                 <ul class="elements_buttonbar">
-                    <li>
-                        <a href="{{ $item->makeUrl('actions.run') }}" title="{{ ManagerTheme::getLexicon('run_module') }}">
-                            <i class="fa fa-play fa-fw"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
-                            <i class="fa fa-edit fa-fw"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ $item->makeUrl('actions.duplicate') }}" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
-                            <i class="fa fa-clone fa-fw"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ $item->makeUrl('actions.delete') }}" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete') }}')">
-                            <i class="fa fa-trash fa-fw"></i>
-                        </a>
-                    </li>
+                    @if(evolutionCMS()->hasPermission('exec_module'))
+                        <li>
+                            <a href="{{ $item->makeUrl('actions.run') }}" title="{{ ManagerTheme::getLexicon('run_module') }}">
+                                <i class="fa fa-play fa-fw"></i>
+                            </a>
+                        </li>
+                    @endif
+                    @if(evolutionCMS()->hasPermission('edit_module'))
+                        <li>
+                            <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                        </li>
+                    @endif
+                    @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
+                        <li>
+                            <a href="{{ $item->makeUrl('actions.duplicate') }}" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
+                                <i class="fa fa-clone fa-fw"></i>
+                            </a>
+                        </li>
+                    @endif
+                    @if(evolutionCMS()->hasPermission('delete_module'))
+                        <li>
+                            <a href="{{ $item->makeUrl('actions.delete') }}" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete') }}')">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

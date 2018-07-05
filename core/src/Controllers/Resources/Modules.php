@@ -24,8 +24,11 @@ class Modules extends AbstractResources implements TabControllerInterface
     public function canView(): bool
     {
         return evolutionCMS()->hasAnyPermissions([
+            'exec_module',
             'new_module',
-            'edit_module'
+            'edit_module',
+            'save_module',
+            'delete_module'
         ]);
     }
 
@@ -36,9 +39,9 @@ class Modules extends AbstractResources implements TabControllerInterface
     {
         return array_merge(parent::getParameters($params), [
             'tabName' => 'site_modules',
-            'items' => $this->parameterItems(),
             'categories' => $this->parameterCategories(),
-            'outCategory' => $this->parameterOutCategory()
+            'outCategory' => $this->parameterOutCategory(),
+            'action'    => $this->parameterActionName()
         ]);
     }
 
@@ -57,26 +60,18 @@ class Modules extends AbstractResources implements TabControllerInterface
             ->get();
     }
 
-    protected function parameterItems() : array
+    protected function parameterActionName() : string
     {
-        $out = [];
-
-        $elements = Models\SiteModule::with('categories')
-            ->orderBy('name', 'ASC')->get();
-        /**
-         * @var Models\SiteModule $element
-         */
-        foreach ($elements as $element) {
-            $out[] = [
-                'disabled' => $element->disabled,
-                'name' => $element->name,
-                'id' => $element->getKey(),
-                'description' => $element->description,
-                'locked' => $element->locked,
-                'category' => $element->categoryName($this->managerTheme->getLexicon('no_category')),
-                'catid' => $element->categoryId()
-            ];
+        switch(true) {
+            case evolutionCMS()->hasPermission('edit_module'):
+                $action = 'actions.edit';
+                break;
+            case evolutionCMS()->hasPermission('exec_module'):
+                $action = 'actions.run';
+                break;
+            default:
+                $action = '';
         }
-        return $out;
+        return $action;
     }
 }

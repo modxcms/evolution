@@ -14,10 +14,12 @@
             <div class="input-group input-group-sm">
                 <input class="form-control filterElements-form" type="text" id="{{ $tabName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
-                    <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteModule)->makeUrl('actions.new') }}">
-                        <i class="fa fa-plus-circle"></i>
-                        <span>{{ ManagerTheme::getLexicon('new_module') }}</span>
-                    </a>
+                    @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
+                        <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteModule)->makeUrl('actions.new') }}">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>{{ ManagerTheme::getLexicon('new_module') }}</span>
+                        </a>
+                    @endif
                     <a class="btn btn-secondary" href="javascript:;" id="chunks-help">
                         <i class="fa fa-question-circle"></i>
                         <span>{{ ManagerTheme::getLexicon('help') }}</span>
@@ -42,7 +44,7 @@
                 @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                     <ul class="elements">
                         @foreach($outCategory as $item)
-                            @include('manager::page.resources.elements.module', compact('item', 'tabName'))
+                            @include('manager::page.resources.elements.module', compact('item', 'tabName', 'action'))
                         @endforeach
                     </ul>
                 @endcomponent
@@ -52,7 +54,7 @@
                 @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
                     <ul class="elements">
                         @foreach($cat->modules as $item)
-                            @include('manager::page.resources.elements.module', compact('item', 'tabName'))
+                            @include('manager::page.resources.elements.module', compact('item', 'tabName', 'action'))
                         @endforeach
                     </ul>
                 @endcomponent
