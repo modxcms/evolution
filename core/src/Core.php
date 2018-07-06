@@ -816,7 +816,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // invoke OnWebPagePrerender event
         if (!$noEvent) {
             $evtOut = $this->invokeEvent('OnWebPagePrerender', array('documentOutput' => $this->documentOutput));
-            if (is_array($evtOut) && count($evtOut) > 0) {
+            if (is_array($evtOut) && count($evtOut) > 0 && !empty($evtOut['0'])) {
                 $this->documentOutput = $evtOut['0'];
             }
         }

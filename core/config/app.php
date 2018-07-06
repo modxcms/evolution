@@ -1,6 +1,7 @@
 <?php
 return [
     'timezone' => 'UTC',
+    'debug' => false,
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

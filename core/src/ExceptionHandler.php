@@ -5,6 +5,8 @@ use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Exception;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Tracy\Debugger;
+use EvolutionCMS\Interfaces\TracyPanel;
 
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php
@@ -21,15 +23,34 @@ class ExceptionHandler
     {
         $this->container = $container;
 
-        set_error_handler([$this, 'phpError'], E_ALL);
-        set_exception_handler([$this, 'handleException']);
+        Debugger::enable(
+            $this->container['config']->get('tracy.active'),
+            evolutionCMS()->storagePath() . '/logs'
+        );
+        Debugger::$strictMode = false;
+        Debugger::$showLocation = true;
+        //Debugger::$logSeverity = E_NOTICE | E_WARNING;
 
-        // register_shutdown_function([$this, 'handleShutdown']);
+        $this->injectTracyPanels();
+
+        Debugger::barDump('classic request');
+    }
+
+    protected function injectTracyPanels() : void
+    {
+        foreach ($this->container['config']->get('tracy.panels') as $panel) {
+            $panel = new $panel;
+            if(is_a($panel, TracyPanel::class)) {
+                $panel->setEvolutionCMS($this->container);
+            }
+            Debugger::getBar()->addPanel($panel);
+        }
     }
 
     /**
      * Handle the PHP shutdown event.
      *
+     * @deprecated
      * @return void
      */
     public function handleShutdown()
@@ -65,6 +86,7 @@ class ExceptionHandler
     }
 
     /**
+     * @deprecated
      * PHP error handler set by http://www.php.net/manual/en/function.set-error-handler.php
      *
      * Checks the PHP error and calls messageQuit() unless:
@@ -461,6 +483,10 @@ class ExceptionHandler
         return true;
     }
 
+    /**
+     * @deprecated
+     * @param \Throwable $exception
+     */
     public function handleException(\Throwable $exception)
     {
         if (!$exception instanceof Exception) {
@@ -473,6 +499,7 @@ class ExceptionHandler
         ) {
             $this->container->getDatabase()->disconnect();
         }
+
         $this->messageQuit(
             $exception->getMessage(),
             '',

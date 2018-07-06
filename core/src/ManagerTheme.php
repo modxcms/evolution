@@ -342,13 +342,19 @@ class ManagerTheme implements ManagerThemeInterface
         return $element;
     }
 
+    public function findController($action)
+    {
+        return $action === null ? null : get_by_key($this->actions, $action, $action);
+    }
+
     public function handle ($action)
     {
         $this->saveAction($action);
 
         $this->core->invokeEvent('OnManagerPageInit', compact('action'));
 
-        $controllerName = get_by_key($this->actions, $action, $action);
+        $controllerName = $this->findController($action);
+
         if (\is_int($controllerName)) {
             $out = $this->view('page.' . $action)->render();
         } elseif (class_exists($controllerName) &&

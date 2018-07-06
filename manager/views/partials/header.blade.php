@@ -74,6 +74,9 @@ if (ManagerTheme::getTheme() === 'default') {
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
     <meta name="theme-color" content="#1d2023"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    @if(class_exists(Tracy\Debugger::class) && evolutionCMS()->get('config')->get('tracy.active'))
+        <?php Tracy\Debugger::renderLoader() ?>
+    @endif
     <link rel="stylesheet" type="text/css" href="<?= $css ?>"/>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
