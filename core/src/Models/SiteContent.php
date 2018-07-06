@@ -47,6 +47,8 @@ use EvolutionCMS\Traits;
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
  * @property-read \Carbon\Carbon $deleted_at
+ * @property-read bool $isAlreadyEdit
+ * @property-read null|array $alreadyEditInfo
  */
 class SiteContent extends Eloquent\Model
 {
@@ -163,5 +165,20 @@ class SiteContent extends Eloquent\Model
     public function getUnPubAtAttribute()
     {
         return $this->convertTimestamp($this->unpub_date);
+    }
+
+    public static function getLockedElements()
+    {
+        return evolutionCMS()->getLockedElements(7);
+    }
+
+    public function getIsAlreadyEditAttribute()
+    {
+        return array_key_exists($this->getKey(), self::getLockedElements());
+    }
+
+    public function getAlreadyEditInfoAttribute() :? array
+    {
+        return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
 }

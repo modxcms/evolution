@@ -1,9 +1,11 @@
+<?php /** @var EvolutionCMS\Models\SiteTmplvar $item */ ?>
 <li>
     <div class="rTable">
         <div class="rTableRow">
-            @if(!empty($item->rowLock))
+            @if(!empty($item->isAlreadyEdit))
                 <div class="lockCell">
-                    <span title="{{ str_replace(['[+lasthit_df+]', '[+element_type+]'], [$item->rowLock['lasthit_df'], ManagerTheme::getLexicon('lock_element_type_2')], ManagerTheme::getLexicon('lock_element_editing')) }}" class="editResource" style="cursor:context-menu;">
+                    <?php $rowLock = $item->alreadyEditInfo; ?>
+                    <span title="{{ str_replace(['[+lasthit_df+]', '[+element_type+]'], [$rowLock['lasthit_df'], ManagerTheme::getLexicon('lock_element_type_2')], ManagerTheme::getLexicon('lock_element_editing')) }}" class="editResource" style="cursor:context-menu;">
                         <i class="fa fa-eye"></i>
                     </span>&nbsp;
                 </div>

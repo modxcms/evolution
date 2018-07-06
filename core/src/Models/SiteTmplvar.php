@@ -29,6 +29,8 @@ use EvolutionCMS\Traits;
  * Virtual
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
+ * @property-read bool $isAlreadyEdit
+ * @property-read null|array $alreadyEditInfo
  */
 class SiteTmplvar extends Eloquent\Model
 {
@@ -118,5 +120,20 @@ class SiteTmplvar extends Eloquent\Model
     {
         return evolutionCMS()->getLoginUserID('mgr') !== 1 ?
             $builder->where('locked', '=', 0) : $builder;
+    }
+
+    public static function getLockedElements()
+    {
+        return evolutionCMS()->getLockedElements(2);
+    }
+
+    public function getIsAlreadyEditAttribute()
+    {
+        return array_key_exists($this->getKey(), self::getLockedElements());
+    }
+
+    public function getAlreadyEditInfoAttribute() :? array
+    {
+        return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
 }

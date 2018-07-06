@@ -21,6 +21,8 @@ use EvolutionCMS\Traits;
  * @property string $name Alias for templatename
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
+ * @property-read bool $isAlreadyEdit
+ * @property-read null|array $alreadyEditInfo
  *
  * BelongsTo
  * @property null|Category $categories
@@ -124,5 +126,20 @@ class SiteTemplate extends Eloquent\Model
     {
         return evolutionCMS()->getLoginUserID('mgr') !== 1 ?
             $builder->where('locked', '=', 0) : $builder;
+    }
+
+    public static function getLockedElements()
+    {
+        return evolutionCMS()->getLockedElements(1);
+    }
+
+    public function getIsAlreadyEditAttribute()
+    {
+        return array_key_exists($this->getKey(), self::getLockedElements());
+    }
+
+    public function getAlreadyEditInfoAttribute() :? array
+    {
+        return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
 }

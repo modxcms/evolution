@@ -77,6 +77,10 @@ use Illuminate\Database\Eloquent;
  * @property int $remove_locks
  * @property int $display_locks
  * @property int $change_resourcetype
+ *
+ * Virtual
+ * @property-read bool $isAlreadyEdit
+ * @property-read null|array $alreadyEditInfo
  */
 class UserRole extends Eloquent\Model
 {
@@ -236,4 +240,19 @@ class UserRole extends Eloquent\Model
 		'display_locks',
 		'change_resourcetype'
 	];
+
+    public static function getLockedElements()
+    {
+        return evolutionCMS()->getLockedElements(8);
+    }
+
+    public function getIsAlreadyEditAttribute()
+    {
+        return array_key_exists($this->getKey(), self::getLockedElements());
+    }
+
+    public function getAlreadyEditInfoAttribute() :? array
+    {
+        return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
+    }
 }
