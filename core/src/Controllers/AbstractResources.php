@@ -16,8 +16,7 @@ abstract class AbstractResources extends AbstractController
     {
         return [
             'mraTranslations' => $this->parameterMraTranslations(),
-            'unlockTranslations' => $this->parameterUnLockTranslations(),
-            'resources' => new mgrResources()
+            'unlockTranslations' => $this->parameterUnLockTranslations()
         ];
     }
 
