@@ -4,6 +4,7 @@ use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent;
 
 //'actions'=>array( 'edit'=>array(16,'edit_template'), 'duplicate'=>array(96,'new_template'), 'remove'=>array(21,'delete_template') ),
 class Templates extends AbstractResources implements TabControllerInterface
@@ -43,14 +44,16 @@ class Templates extends AbstractResources implements TabControllerInterface
     {
         return Models\SiteTemplate::where('category', '=', 0)
             ->orderBy('templatename', 'ASC')
+            ->lockedView()
             ->get();
     }
 
     protected function parameterCategories() : Collection
     {
         return Models\Category::with('templates')
-            ->whereHas('templates')
-            ->orderBy('rank', 'ASC')
+            ->whereHas('templates', function (Eloquent\Builder $builder) {
+                return $builder->lockedView();
+            })->orderBy('rank', 'ASC')
             ->get();
     }
 }

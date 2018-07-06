@@ -16,6 +16,9 @@
                         <span class="man_el_name">
                     @endif
                         <i class="fa fa-cube"></i>
+                        @if($item->locked)
+                            <i class="fa fa-lock"></i>
+                        @endif
                         {{ $item->name }}
                         <small>({{ $item->id }})</small>
                         <span class="elements_descr">

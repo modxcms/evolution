@@ -4,6 +4,7 @@ use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent;
 
 //'actions'=>array('edit'=>array(108,'edit_module'), 'duplicate'=>array(111,'new_module'), 'remove'=>array(110,'delete_module')),
 class Modules extends AbstractResources implements TabControllerInterface
@@ -50,20 +51,22 @@ class Modules extends AbstractResources implements TabControllerInterface
     {
         return Models\SiteModule::where('category', '=', 0)
             ->orderBy('name', 'ASC')
+            ->lockedView()
             ->get();
     }
 
     protected function parameterCategories() : Collection
     {
         return Models\Category::with('modules')
-            ->whereHas('modules')
-            ->orderBy('rank', 'ASC')
+            ->whereHas('modules', function (Eloquent\Builder $builder) {
+                return $builder->lockedView();
+            })->orderBy('rank', 'ASC')
             ->get();
     }
 
     protected function parameterActionName() : string
     {
-        switch(true) {
+        switch (true) {
             case evolutionCMS()->hasPermission('edit_module'):
                 $action = 'actions.edit';
                 break;

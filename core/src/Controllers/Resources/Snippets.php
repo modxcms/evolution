@@ -4,6 +4,7 @@ use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent;
 
 //'actions'=>array('edit'=>array(22,'edit_snippet'), 'duplicate'=>array(98,'new_snippet'), 'remove'=>array(25,'delete_snippet')),
 class Snippets extends AbstractResources implements TabControllerInterface
@@ -43,14 +44,16 @@ class Snippets extends AbstractResources implements TabControllerInterface
     {
         return Models\SiteSnippet::where('category', '=', 0)
             ->orderBy('name', 'ASC')
+            ->lockedView()
             ->get();
     }
 
     protected function parameterCategories() : Collection
     {
         return Models\Category::with('snippets')
-            ->whereHas('snippets')
-            ->orderBy('rank', 'ASC')
+            ->whereHas('snippets', function (Eloquent\Builder $builder) {
+                return $builder->lockedView();
+            })->orderBy('rank', 'ASC')
             ->get();
     }
 }

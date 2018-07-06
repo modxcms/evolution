@@ -4,6 +4,7 @@ use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent;
 
 //'actions'=>array('edit'=>array(78,'edit_chunk'), 'duplicate'=>array(97,'new_chunk'), 'remove'=>array(80,'delete_chunk')),
 class Chunks extends AbstractResources implements TabControllerInterface
@@ -46,14 +47,16 @@ class Chunks extends AbstractResources implements TabControllerInterface
     {
         return Models\SiteHtmlsnippet::where('category', '=', 0)
             ->orderBy('name', 'ASC')
+            ->lockedView()
             ->get();
     }
 
     protected function parameterCategories() : Collection
     {
         return Models\Category::with('chunks')
-            ->whereHas('chunks')
-            ->orderBy('rank', 'ASC')
+            ->whereHas('chunks', function (Eloquent\Builder $builder) {
+                return $builder->lockedView();
+            })->orderBy('rank', 'ASC')
             ->get();
     }
 }

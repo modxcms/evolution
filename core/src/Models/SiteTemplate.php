@@ -119,4 +119,10 @@ class SiteTemplate extends Eloquent\Model
     {
         return $this->convertTimestamp($this->editedon);
     }
+
+    public function scopeLockedView(Eloquent\Builder $builder)
+    {
+        return evolutionCMS()->getLoginUserID('mgr') !== 1 ?
+            $builder->where('locked', '=', 0) : $builder;
+    }
 }

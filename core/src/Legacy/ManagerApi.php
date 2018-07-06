@@ -281,7 +281,7 @@ class ManagerApi implements ManagerApiInterface
             if (!is_file($filePath)) {
                 continue;
             }
-            if (md5_file($filePath) != $checksum[$filePath]) {
+            if (!array_key_exists($filePath, $checksum) || md5_file($filePath) !== $checksum[$filePath]) {
                 $_[] = $file;
             }
         }
