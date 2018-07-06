@@ -3454,10 +3454,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $_SESSION['ip'] = $ip;
 
-        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
-            VALUES (%d, %d, \'%s\', \'%s\')', $this->getDatabase()->getFullTableName('active_user_sessions'), $userId,
-            $this->time, $ip, $this->sid);
-        $this->getDatabase()->query($sql);
+        Models\ActiveUserSession::updateOrCreate([
+            'internalKey' => $userId,
+            'sid' => $this->sid,
+        ], [
+            'lasthit' => $this->time,
+            'ip' => $ip,
+        ]);
     }
 
     /**

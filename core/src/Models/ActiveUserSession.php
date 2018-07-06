@@ -10,18 +10,19 @@ use Illuminate\Database\Eloquent;
  */
 class ActiveUserSession extends Eloquent\Model
 {
-	protected $primaryKey = 'sid';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $primaryKey = 'sid';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'internalKey' => 'int',
-		'lasthit' => 'int'
-	];
+    protected $casts = [
+        'internalKey' => 'int',
+        'lasthit'     => 'int'
+    ];
 
-	protected $fillable = [
-		'internalKey',
-		'lasthit',
-		'ip'
-	];
+    protected $fillable = [
+        'sid',
+        'internalKey',
+        'lasthit',
+        'ip'
+    ];
 }
