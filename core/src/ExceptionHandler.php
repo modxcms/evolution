@@ -24,7 +24,7 @@ class ExceptionHandler
         $this->container = $container;
 
         Debugger::enable(
-            $this->container['config']->get('tracy.active'),
+            ! $this->container['config']->get('tracy.active'),
             evolutionCMS()->storagePath() . '/logs'
         );
         Debugger::$strictMode = false;
@@ -40,7 +40,7 @@ class ExceptionHandler
     {
         foreach ($this->container['config']->get('tracy.panels') as $panel) {
             $panel = new $panel;
-            if(is_a($panel, TracyPanel::class)) {
+            if (is_a($panel, TracyPanel::class)) {
                 $panel->setEvolutionCMS($this->container);
             }
             Debugger::getBar()->addPanel($panel);
