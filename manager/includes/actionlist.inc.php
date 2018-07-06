@@ -6,12 +6,12 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 // action list
 $GLOBALS['action_list'] = array(
 	'1'	=> 'Loading a frame(set)',
-	'2'	=> 'Viewing home page/ online users',
+	'2'	=> 'Viewing dashboard',
 	'3'	=> 'Viewing data for resource',
 	'4'	=> 'Creating a resource',
 	'5'	=> 'Saving resource',
 	'6'	=> 'Deleting resource',
-	'7'	=> 'Waiting while MODX cleans up',
+	'7'	=> 'Waiting while EVO cleans up',
 	'8'	=> 'Logged out',
 	'9'	=> 'Viewing help',
 	'10'	=> 'Viewing/ composing messages',
@@ -62,7 +62,7 @@ $GLOBALS['action_list'] = array(
 	'56'	=> 'Refresh resource tree',
 	'57'	=> 'Refresh menu',
 	'58'	=> 'Logged in',
-	'59'    => 'About MODX',
+	'59'    => 'About EVO',
 	'60'	=> 'Emptying Recycle Bin',
 	'61'	=> 'Publishing a resource',
 	'62'	=> 'Un-publishing a resource',
