@@ -32,8 +32,6 @@ class ExceptionHandler
         //Debugger::$logSeverity = E_NOTICE | E_WARNING;
 
         $this->injectTracyPanels();
-
-        Debugger::barDump('classic request');
     }
 
     protected function injectTracyPanels() : void
