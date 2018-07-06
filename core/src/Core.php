@@ -5412,7 +5412,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (\is_array($out)) {
             foreach ($out as $result) {
-                if (! is_scalar($result) || $result !== '') {
+                if ($result !== null) {
                     $results[] = $result;
                 }
             }
