@@ -139,7 +139,7 @@
                                 <div class="form-control-name clearfix">
                                     <input name="templatename" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
                                     <?php if($modx->hasPermission('save_role')): ?>
-                                    <label class="custom-control" title="{{ ManagerTheme::getLexicon('lock_template'] . "\n" . $_lang['lock_template_msg') }}" tooltip>
+                                    <label class="custom-control" title="{{ ManagerTheme::getLexicon('lock_template') . "\n" . ManagerTheme::getLexicon('lock_template_msg') }}" tooltip>
                                         <input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
                                         <i class="fa fa-lock"></i>
                                     </label>
