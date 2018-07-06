@@ -243,7 +243,15 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         lockedElementsTranslation: <?= json_encode($unlockTranslations, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE) . "\n" ?>
       };
       <?php
-      $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
+        $opened = array_filter(
+            array_map(
+                'intval',
+                explode(
+                    '|',
+                    isset($_SESSION['openedArray']) && is_scalar($_SESSION['openedArray']) ? $_SESSION['openedArray'] : ''
+                )
+            )
+        );
       echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
       ?>
     </script>

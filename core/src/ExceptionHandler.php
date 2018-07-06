@@ -5,7 +5,7 @@ use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Exception;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use Tracy\Debugger;
+use EvolutionCMS\Tracy\Debugger;
 use EvolutionCMS\Interfaces\TracyPanel;
 
 /**
