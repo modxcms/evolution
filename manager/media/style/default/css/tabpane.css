@@ -2,7 +2,7 @@
 .tab-row { position: relative; z-index: 1; white-space: nowrap; padding: 0 1.5rem }
 .tab-row::after, .tab-row-container::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 1px; background-color: #ddd }
 .tab-row .tab, .tab-pane > .tab-page > .tab { position: relative; display: inline-block; margin: 0; padding: 0 0.875rem; line-height: 2.7rem; height: 2.5rem; text-transform: uppercase; border: 1px solid rgba(0, 0, 0, 0); border-bottom: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
-.tab-row .tab, .tab-row .tab a, .tab-pane > .tab-page > .tab { color: rgba(0, 0, 0, 0.6); font-size: 0.75rem }
+.tab-row .tab, .tab-row .tab a, .tab-pane > .tab-page > .tab { color: rgba(0, 0, 0, 0.6); font-size: 0.75rem; text-decoration: none; }
 .tab-row .tab.selected { z-index: 2; border-color: #ddd; background-color: #fff; color: #444; font-weight: 700 }
 .tab-row .tab .fa { margin-right: 0.1em; font-size: 0.875rem }
 /* tabs-container */

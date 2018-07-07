@@ -201,7 +201,6 @@ function WebFXTabPage(el, tabPane, nIndex, callBackFnc)
 
   var a = document.createElement('SPAN');
   this.aElement = a;
-  a.href = '#';
   a.onclick = function() { return false; };
   while (this.tab.hasChildNodes()) {
     a.appendChild(this.tab.firstChild);
@@ -211,7 +210,13 @@ function WebFXTabPage(el, tabPane, nIndex, callBackFnc)
 
   // hook up events, using DOM0
   var oThis = this;
-  this.tab.onclick = function() { return oThis.select(); };
+  this.tab.onclick = function() {
+    if (oThis.aElement.firstElementChild && oThis.aElement.firstElementChild.tagName === 'A') {
+      document.location.href = oThis.aElement.firstElementChild.href
+    } else {
+      return oThis.select();
+    }
+  };
   this.tab.onmouseover = function() { oThis.tabOver(oThis); };
   this.tab.onmouseout = function() { oThis.tabOut(oThis); };
 }
