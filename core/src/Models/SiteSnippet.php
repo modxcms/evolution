@@ -20,8 +20,12 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|Category $categories
+ * @property null|SiteModule $module
+ * @property null|SiteModule $activeModule
  *
  * Virtual
+ * @property string $guid
+ * @property-read bool $hasModule
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
  * @property-read bool $isAlreadyEdit
@@ -114,5 +118,31 @@ class SiteSnippet extends Eloquent\Model
     public function getAlreadyEditInfoAttribute() :? array
     {
         return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
+    }
+
+    public function getGuidAttribute() : string
+    {
+        return trim($this->moduleguid);
+    }
+
+    public function setGuidAttribute($value)
+    {
+        $this->moduleguid = (string)$value;
+    }
+
+    public function getHasModuleAttribute() : bool
+    {
+        return !empty($this->guid);
+    }
+
+    public function module() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(SiteModule::class, 'moduleguid', 'guid');
+    }
+
+    public function activeModule() : Eloquent\Relations\BelongsTo
+    {
+        return $this->module()
+            ->where('disabled', '=', 0);
     }
 }

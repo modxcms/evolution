@@ -2281,7 +2281,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     private function _getSnippetObject($snip_name)
     {
-        if (isset($this->snippetCache[$snip_name])) {
+        if (array_key_exists($snip_name, $this->snippetCache)) {
             $snippetObject['name'] = $snip_name;
             $snippetObject['content'] = $this->snippetCache[$snip_name];
             if (isset($this->snippetCache["{$snip_name}Props"])) {
@@ -2290,40 +2290,54 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
-        } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[trim($snip_name, '@')])) {
-            $snippetObject['name'] = trim($snip_name, '@');
-            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));',
-                trim($snip_name, '@'));
+        } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[substr($snip_name, 1)])) {
+            $snippetObject['name'] = substr($snip_name, 1);
+            $snippetObject['content'] = sprintf(
+                '$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));',
+                $snippetObject['name']
+            );
             $snippetObject['properties'] = '';
         } else {
-            $where = sprintf("name='%s' AND disabled=0", $this->getDatabase()->escape($snip_name));
-            $rs = $this->getDatabase()->select(
-                '`name`, `snippet`, `properties`',
-                $this->getDatabase()->getFullTableName('site_snippets'),
-                $where
-            );
-            $count = $this->getDatabase()->getRecordCount($rs);
-            if (1 < $count) {
-                exit('Error $modx->_getSnippetObject()' . $snip_name);
-            }
-            if ($count) {
-                $row = $this->getDatabase()->getRow($rs);
-                $snip_content = $row['snippet'];
-                $snip_prop = $row['properties'];
-            } else {
-                $snip_content = null;
-                $snip_prop = '';
-            }
-            $snippetObject['name'] = $snip_name;
-            $snippetObject['content'] = $snip_content;
-            $snippetObject['properties'] = $snip_prop;
-            $this->snippetCache[$snip_name] = $snip_content;
-            $this->snippetCache["{$snip_name}Props"] = $snip_prop;
+            $snippetObject = $this->_getSnippetFromDatabase($snip_name);
+
+            $this->snippetCache[$snip_name] = $snippetObject['content'];
+            $this->snippetCache["{$snip_name}Props"] = $snippetObject['properties'];
         }
 
         return $snippetObject;
     }
 
+    private function _getSnippetFromDatabase($snip_name) : array
+    {
+        $snippetObject = [];
+
+        /** @var \Illuminate\Database\Eloquent\Collection $snippetModelCollection */
+        $snippetModelCollection = Models\SiteSnippet::where('name', '=', $snip_name)
+            ->where('disabled', '=', 0)
+            ->get();
+        if ($snippetModelCollection->count() > 1) {
+            exit('Error $modx->_getSnippetObject()' . $snip_name);
+        } elseif ($snippetModelCollection->count() === 1) {
+            /** @var Models\SiteSnippet $snippetModel */
+            $snippetModel = $snippetModelCollection->first();
+            $snip_content = $snippetModel->snippet;
+            $snip_prop = $snippetModel->properties;
+            $snip_prop = array_merge(
+                $this->parseProperties($snip_prop),
+                $this->parseProperties($snippetModel->activeModule->properties)
+            );
+            $snip_prop = empty($snip_prop) ? '{}' : json_encode($snip_prop);
+
+        } else {
+            $snip_content = null;
+            $snip_prop = '';
+        }
+        $snippetObject['name'] = $snip_name;
+        $snippetObject['content'] = $snip_content;
+        $snippetObject['properties'] = $snip_prop;
+
+        return $snippetObject;
+    }
     /**
      * @param $text
      * @return mixed
@@ -4281,17 +4295,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getDatabase()->getFullTableName("site_snippets") . " as ss LEFT JOIN " . $this->getDatabase()->getFullTableName('site_modules') . " as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->getDatabase()->escape($snippetName) . "'  AND ss.disabled=0;";
-            $result = $this->getDatabase()->query($sql);
-            if ($this->getDatabase()->getRecordCount($result) == 1) {
-                $row = $this->getDatabase()->getRow($result);
-                $snippet = $this->snippetCache[$snippetName] = $row['snippet'];
-                $mergedProperties = array_merge($this->parseProperties($row['properties']), $this->parseProperties($row['sharedproperties']));
-                $properties = $this->snippetCache[$snippetName . "Props"] = json_encode($mergedProperties);
-            } else {
-                $snippet = $this->snippetCache[$snippetName] = "return false;";
-                $properties = $this->snippetCache[$snippetName . "Props"] = '';
-            }
+            $snippetObject = $this->_getSnippetFromDatabase($snippetName);
+
+            $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'] === null ?? "return false;";
+            $properties = $this->snippetCache[$snippetName . "Props"] = $snippetObject['properties'];
         }
         // load default params/properties
         $parameters = $this->parseProperties($properties, $snippetName, 'snippet');

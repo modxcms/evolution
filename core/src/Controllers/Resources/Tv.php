@@ -1,6 +1,5 @@
 <?php namespace EvolutionCMS\Controllers\Resources;
 
-use EvolutionCMS\ManagerTheme;
 use EvolutionCMS\Models;
 use EvolutionCMS\Controllers\AbstractResources;
 use EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface;
