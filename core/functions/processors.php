@@ -580,14 +580,9 @@ if(!function_exists('saveTemplateVarAccess')) {
     /**
      * @return void
      */
-    function saveTemplateVarAccess()
+    function saveTemplateVarAccess($id)
     {
-        global $id, $newid;
         $modx = evolutionCMS();
-
-        if ($newid) {
-            $id = $newid;
-        }
         $templates = $_POST['template']; // get muli-templates based on S.BRENNAN mod
 
         // update template selections
@@ -616,17 +611,13 @@ if(!function_exists('saveTemplateVarAccess')) {
 }
 
 if(!function_exists('saveDocumentAccessPermissons')) {
-    function saveDocumentAccessPermissons()
+    function saveDocumentAccessPermissons($id)
     {
-        global $id, $newid;
         $modx = evolutionCMS();
         global $use_udperms;
 
         $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
 
-        if ($newid) {
-            $id = $newid;
-        }
         $docgroups = $_POST['docgroups'];
 
         // check for permission update access

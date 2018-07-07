@@ -81,8 +81,8 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars);
 
         // save access permissions
-        saveTemplateVarAccess();
-        saveDocumentAccessPermissons();
+        saveTemplateVarAccess($newid);
+        saveDocumentAccessPermissons($newid);
 
         // invoke OnTVFormSave event
         $modx->invokeEvent("OnTVFormSave", array(
@@ -142,8 +142,8 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars, "id='{$id}'");
 
         // save access permissions
-        saveTemplateVarAccess();
-        saveDocumentAccessPermissons();
+        saveTemplateVarAccess($id);
+        saveDocumentAccessPermissons($id);
 
         // invoke OnTVFormSave event
         $modx->invokeEvent("OnTVFormSave", array(
