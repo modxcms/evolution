@@ -1494,6 +1494,7 @@
         this.saveAndCloseActions = [3, 75, 76, 86, 99, 106];
         this.reload = typeof a.reload !== 'undefined' ? a.reload : 1;
         this.action = modx.getActionFromUrl(a.url);
+        this.getTab = modx.main.getQueryVariable('tab', a.url);
         this.uid = modx.getActionFromUrl(a.url, 2) ? 'home' : modx.urlToUid(a.url);
         this.page = d.getElementById('evo-tab-page-' + this.uid);
         this.row = d.getElementsByClassName('evo-tab-row')[0].firstElementChild;
@@ -1640,7 +1641,6 @@
           }
         },
         show: function() {
-          var s = this;
           modx.tabs.selected = this.row.querySelector('.selected');
           if (modx.tabs.selected && modx.tabs.selected !== this.tab) {
             d.getElementById(modx.tabs.selected.id.replace('tab', 'tab-page')).classList.remove('show');
@@ -1650,9 +1650,13 @@
           this.tab.classList.add('selected');
           modx.tabs.selected = this.tab;
           w.main = this.page.firstElementChild.contentWindow;
-          w.history.replaceState(null, w.main.document.title, modx.getActionFromUrl(w.main.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
-          modx.tree.setItemToChange();
-          modx.main.tabRow.scroll(this.row, this.tab, 350);
+          if (this.getTab && this.action === 76 && !~w.main.frameElement.contentDocument.location.href.indexOf(this.url)) {
+            w.main.frameElement.src = this.url;
+          } else {
+            w.history.replaceState(null, w.main.document.title, modx.getActionFromUrl(w.main.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
+            modx.tree.setItemToChange();
+            modx.main.tabRow.scroll(this.row, this.tab, 350);
+          }
         },
         close: function(e) {
           var documentDirty = this.page.firstElementChild.contentWindow.documentDirty;
