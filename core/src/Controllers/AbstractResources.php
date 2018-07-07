@@ -1,9 +1,20 @@
 <?php namespace EvolutionCMS\Controllers;
 
-use EvolutionCMS\Legacy\mgrResources;
-
 abstract class AbstractResources extends AbstractController
 {
+    protected $noData = false;
+
+    public function setNoData() : self
+    {
+        $this->noData = true;
+        return $this;
+    }
+
+    public function isNoData() : bool
+    {
+        return $this->noData;
+    }
+
     /**
      * @inheritdoc
      */
@@ -14,10 +25,10 @@ abstract class AbstractResources extends AbstractController
 
     public function getParameters(array $params = []) : array
     {
-        return [
+        return array_merge([
             'mraTranslations' => $this->parameterMraTranslations(),
             'unlockTranslations' => $this->parameterUnLockTranslations()
-        ];
+        ], $params);
     }
 
     protected function parameterMraTranslations() : array

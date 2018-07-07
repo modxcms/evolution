@@ -30,14 +30,28 @@ class Snippets extends AbstractResources implements TabControllerInterface
         ]);
     }
 
+    protected function getBaseParams()
+    {
+        return array_merge(
+            parent::getParameters(),
+            [
+                'tabPageName' => $this->getTabName(),
+                'tabName' => 'site_snippets',
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getParameters(array $params = []) : array
     {
-        return array_merge(parent::getParameters($params), [
-            'tabPageName' => $this->getTabName(),
-            'tabName' => 'site_snippets',
+        $params = array_merge($this->getBaseParams(), $params);
+
+        return $this->isNoData() ? $params : array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
-        ]);
+        ], $params);
     }
 
     protected function parameterOutCategory() : Collection

@@ -31,14 +31,28 @@ class Tv extends AbstractResources implements TabControllerInterface
         ]);
     }
 
-    public function getParameters(array $params = []): array
+    protected function getBaseParams()
     {
-        return array_merge(parent::getParameters($params), [
-            'tabPageName' => $this->getTabName(),
-            'tabName' => 'site_tmplvars',
+        return array_merge(
+            parent::getParameters(),
+            [
+                'tabPageName' => $this->getTabName(),
+                'tabName' => 'site_tmplvars',
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getParameters(array $params = []) : array
+    {
+        $params = array_merge($this->getBaseParams(), $params);
+
+        return $this->isNoData() ? $params : array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
-        ]);
+        ], $params);
     }
 
     protected function parameterOutCategory(): Collection

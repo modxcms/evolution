@@ -30,15 +30,29 @@ class Plugins extends AbstractResources implements TabControllerInterface
         ]);
     }
 
-    public function getParameters(array $params = []): array
+    protected function getBaseParams()
     {
-        return array_merge(parent::getParameters($params), [
-            'tabPageName' => $this->getTabName(),
-            'tabName' => 'site_plugins',
+        return array_merge(
+            parent::getParameters(),
+            [
+                'tabPageName' => $this->getTabName(),
+                'tabName' => 'site_plugins'
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getParameters(array $params = []) : array
+    {
+        $params = array_merge($this->getBaseParams(), $params);
+
+        return $this->isNoData() ? $params : array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory(),
             'checkOldPlugins' => $this->checkOldPlugins()
-        ]);
+        ], $params);
     }
 
     protected function parameterOutCategory(): Collection

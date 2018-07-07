@@ -40,7 +40,7 @@
     <div class="clearfix"></div>
     <div class="panel-group no-transition">
         <div id="{{ $tabName }}" class="resourceTable panel panel-default">
-            @if($outCategory->count() > 0)
+            @if(isset($outCategory) && $outCategory->count() > 0)
                 @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                     <ul class="elements">
                         @foreach($outCategory as $item)
@@ -50,15 +50,17 @@
                 @endcomponent
             @endif
 
-            @foreach($categories as $cat)
-                @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
-                    <ul class="elements">
-                        @foreach($cat->modules as $item)
-                            @include('manager::page.resources.elements.module', compact('item', 'tabName', 'action'))
-                        @endforeach
-                    </ul>
-                @endcomponent
-            @endforeach
+            @if(isset($categories))
+                @foreach($categories as $cat)
+                    @component('manager::partials.panelCollapse', ['name' => $tabName, 'id' => $cat->id, 'title' => $cat->name])
+                        <ul class="elements">
+                            @foreach($cat->modules as $item)
+                                @include('manager::page.resources.elements.module', compact('item', 'tabName', 'action'))
+                            @endforeach
+                        </ul>
+                    @endcomponent
+                @endforeach
+            @endif
         </div>
     </div>
     <div class="clearfix"></div>

@@ -112,3 +112,13 @@ if (! function_exists('data_is_json')) {
         return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
     }
 }
+
+if (! function_exists('is_ajax')) {
+    /**
+     * @return bool
+     */
+    function is_ajax()
+    {
+        return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH', null)) === 'xmlhttprequest');
+    }
+}

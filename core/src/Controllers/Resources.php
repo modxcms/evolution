@@ -26,23 +26,52 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     public function getParameters(array $params = []) : array
     {
         $tabs = [];
-        foreach ($this->tabs as $tabClass) {
-            if (class_exists($tabClass) &&
-                \in_array(ManagerTheme\TabControllerInterface::class, class_implements($tabClass), true)
-            ) {
-                $tabController = new $tabClass($this->managerTheme);
-                if ($tabController->canView()) {
-                    $tabs[$tabController->getTabName()] = $tabController;
+        $activeTab = $this->needTab();
+        foreach ($this->tabs as $tabN => $tabClass) {
+            if (($tabController = $this->makeTab($tabClass)) !== null) {
+                if ($activeTab !== (string)$tabN) {
+                    $tabController->setNoData();
                 }
+                $tabs[$tabController->getTabName()] = $tabController;
             }
         }
 
-        $activeTab = '';
-        $_ = array_values($tabs);
-        if (isset($_GET['tab']) && is_numeric($_GET['tab']) && isset($_[$_GET['tab']])) {
-            $activeTab = $_GET['tab'];
+        return array_merge(compact('tabs'), parent::getParameters($params), ['activeTab' => (string)$activeTab]);
+    }
+
+    protected function makeTab($tabClass) :? ManagerTheme\TabControllerInterface
+    {
+        $tabController = null;
+        if (class_exists($tabClass) &&
+            is_a($tabClass, ManagerTheme\TabControllerInterface::class, true)
+        ) {
+            $tabController = new $tabClass($this->managerTheme);
+            if (! $tabController->canView()) {
+                $tabController = null;
+            }
         }
 
-        return array_merge(compact('tabs'), parent::getParameters($params), ['activeTab' => $activeTab]);
+        return $tabController;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function render(array $params = []) : string
+    {
+        if (is_ajax() && ($tab = $this->needTab()) !== null) {
+            return (isset($this->tabs[$tab]) && ($tabController = $this->makeTab($this->tabs[$tab])) !== null) ?
+                $tabController->render(
+                    $tabController->getParameters()
+                ) : '';
+        }
+        return parent::render($params);
+    }
+
+    protected function needTab()
+    {
+        return get_by_key($_GET, 'tab', null, function ($val) {
+            return is_numeric($val) && array_key_exists($val, $this->tabs);
+        });
     }
 }
