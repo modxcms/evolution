@@ -1,6 +1,6 @@
 <?php
 /**
- * Filename:       media/style/$modx->config['manager_theme']/style.php
+ * Filename:       media/style/ManagerTheme::getTheme()/style.php
  * Function:       Manager style variables for images and icons.
  * Encoding:       UTF-8
  * Credit:         icons by Mark James of FamFamFam http://www.famfamfam.com/lab/icons/
@@ -8,7 +8,7 @@
  * Version:        1.1
  * MODX version:   1.0.3
  */
-$style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$style_path = 'media/style/' . ManagerTheme::getTheme() . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
 
 if(!empty($_GET['a']) && $_GET['a'] == 2) {
@@ -41,7 +41,7 @@ if(!empty($_GET['a']) && $_GET['a'] == 2) {
 }
 
 // Favicon
-$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
+$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . ManagerTheme::getTheme() . '/images/favicon.ico');
 
 // Tree Menu Toolbar
 $_style['show_tree']                = $style_path.'tree/expand.png';
@@ -218,7 +218,7 @@ $_style['icons_information']        = $style_path.'icons/info-sign.png';
 
 
 // Miscellaneous
-$_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><i class="fa fa-spinner fa-spin"></i></p>';
+$_style['ajax_loader']              = '<p>'.ManagerTheme::getLexicon('loading_page').'</p><p><i class="fa fa-spinner fa-spin"></i></p>';
 $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
@@ -301,30 +301,30 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["actions_save"] . '"></i><span>' . ManagerTheme::getLexicon('save') . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
 						' . ($addnew ? '
-							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay_new') . '</option>
 						' : '') . '
-						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
-						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay') . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('close') . '</option>
 					</select>
 				</div>' .
 					($addnew ? '
 					<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
-						<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+						<i class="' . $_style["actions_duplicate"] . '"></i><span>' . ManagerTheme::getLexicon('duplicate') . '</span>
 					</a>
 					' : '') . '
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
-					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+					<i class="' . $_style["actions_preview"] . '"></i><span>' . ManagerTheme::getLexicon('preview') . '</span>
 				</a>
 			</div>
 		</div>',
@@ -332,22 +332,22 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["actions_save"] . '"></i><span>' . ManagerTheme::getLexicon('save') . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
 						' . ($addnew ? '
-							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay_new') . '</option>
 						' : '') . '
-						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
-						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay') . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('close') . '</option>
 					</select>
 				</div>
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',
@@ -355,31 +355,31 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["actions_save"] . '"></i><span>' . ManagerTheme::getLexicon('save') . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
 						' . ($addnew ? '
-							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay_new') . '</option>
 						' : '') . '
-						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
-						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('stay') . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . ManagerTheme::getLexicon('close') . '</option>
 					</select>
 				</div>
 				' . ($addnew ? '
 				<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
-					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . ManagerTheme::getLexicon('duplicate') . '</span>
 				</a>
 				' : '') . '
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 				' . ($run ? '
 				<a id="Button4" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.run();">
-					<i class="' . $_style["actions_run"] . '"></i><span>' . $_lang['run_module'] . '</span>
+					<i class="' . $_style["actions_run"] . '"></i><span>' . ManagerTheme::getLexicon('run_module') . '</span>
 				</a>
 				' : '') . '
 			</div>
@@ -387,54 +387,54 @@ $_style['actionbuttons'] = array(
 		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-					<i class="fa fa-plus-circle"></i><span>' . $_lang['new_module'] . '</span>
+					<i class="fa fa-plus-circle"></i><span>' . ManagerTheme::getLexicon('new_module') . '</span>
 				</a>
 			</div>
 		</div>' : ''),
 		'close' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">
-					<i class="' . $_style["actions_close"] . '"></i><span>' . $_lang['close'] . '</span>
+					<i class="' . $_style["actions_close"] . '"></i><span>' . ManagerTheme::getLexicon('close') . '</span>
 				</a>
 			</div>
 		</div>',
 		'save' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					<i class="' . $_style["actions_save"] . '"></i><span>' . ManagerTheme::getLexicon('save') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',
 		'savedelete' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					<i class="' . $_style["actions_save"] . '"></i><span>' . ManagerTheme::getLexicon('save') . '</span>
 				</a>
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',
 		'cancel' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',
 		'canceldelete' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',
@@ -444,33 +444,33 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">' .
 				($addnew ? '
 					<a class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-						<i class="' . $_style["icons_new_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
+						<i class="' . $_style["icons_new_document"] . '"></i><span>' . ManagerTheme::getLexicon('create_resource_here') . '</span>
 					</a>
 					<a class="btn btn-secondary" href="javascript:;" onclick="actions.newlink();">
-						<i class="' . $_style["icons_new_weblink"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
+						<i class="' . $_style["icons_new_weblink"] . '"></i><span>' . ManagerTheme::getLexicon('create_weblink_here') . '</span>
 					</a>
 				' : '') . '
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.edit();">
-					<i class="' . $_style["actions_edit"] . '"></i><span>' . $_lang['edit'] . '</span>
+					<i class="' . $_style["actions_edit"] . '"></i><span>' . ManagerTheme::getLexicon('edit') . '</span>
 				</a>
 				<a id="Button2" class="btn btn-secondary" href="javascript:;" onclick="actions.move();">
-					<i class="' . $_style["actions_move"] . '"></i><span>' . $_lang['move'] . '</span>
+					<i class="' . $_style["actions_move"] . '"></i><span>' . ManagerTheme::getLexicon('move') . '</span>
 				</a>
 				<a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
-					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . ManagerTheme::getLexicon('duplicate') . '</span>
 				</a>
 				<a id="Button3" class="btn btn-secondary" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . ManagerTheme::getLexicon('delete') . '</span>
 				</a>
 				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
-					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+					<i class="' . $_style["actions_preview"] . '"></i><span>' . ManagerTheme::getLexicon('preview') . '</span>
 				</a>
 			</div>
 		</div>',
 		'cancel' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . ManagerTheme::getLexicon('cancel') . '</span>
 				</a>
 			</div>
 		</div>',

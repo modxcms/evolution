@@ -28,13 +28,8 @@ $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 
 $core_path = EVO_CORE_PATH;
-// include_once the language file
-$_lang = array();
-include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
 
-if($manager_language !== 'english' && is_file(MODX_MANAGER_PATH . "includes/lang/{$manager_language}.inc.php")) {
-	include_once MODX_MANAGER_PATH . "includes/lang/{$manager_language}.inc.php";
-}
+$_lang = ManagerTheme::getLexicon();
 
 // Initialize System Alert Message Queque
 if(!isset($_SESSION['SystemAlertMsgQueque'])) {
@@ -45,10 +40,13 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // initiate the content manager class
 // for backward compatibility
 
-$username = $modx->getDatabase()->escape($modx->getPhpCompat()->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
-$givenPassword = $modx->getPhpCompat()->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
-$captcha_code = $_REQUEST['captcha_code'];
-$rememberme = $_REQUEST['rememberme'];
+$username = get_by_key($_REQUEST, 'username', '', 'is_scalar');
+$username = $modx->getDatabase()->escape($modx->getPhpCompat()->htmlspecialchars($username, ENT_NOQUOTES));
+
+$requestPassword = get_by_key($_REQUEST, 'password', '', 'is_scalar');
+$givenPassword = $modx->getPhpCompat()->htmlspecialchars($requestPassword, ENT_NOQUOTES);
+$captcha_code = get_by_key($_REQUEST, 'captcha_code', null, 'is_scalar');
+$rememberme = get_by_key($_REQUEST, 'rememberme', 0, 'is_scalar');
 $failed_allowed = $modx->config['failed_login_attempts'];
 
 // invoke OnBeforeManagerLogin event
@@ -150,7 +148,7 @@ if($blockedafterdate > 0 && $blockedafterdate < time()) {
 }
 
 // allowed ip
-if($allowed_ip) {
+if(!empty($allowed_ip)) {
 	if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
 		if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
 			jsAlert($_lang['login_processor_remotehost_ip']);
@@ -164,7 +162,7 @@ if($allowed_ip) {
 }
 
 // allowed days
-if($allowed_days) {
+if(!empty($allowed_days)) {
 	$date = getdate();
 	$day = $date['wday'] + 1;
 	if(!in_array($day,explode(',',$allowed_days))) {
@@ -188,11 +186,11 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 	// check user password - local authentication
 	$hashType = $modx->getManagerApi()->getHashType($dbasePassword);
 	if($hashType == 'phpass') {
-		$matchPassword = login($username, $_REQUEST['password'], $dbasePassword);
+		$matchPassword = login($username, $requestPassword, $dbasePassword);
 	} elseif($hashType == 'md5') {
-		$matchPassword = loginMD5($internalKey, $_REQUEST['password'], $dbasePassword, $username);
+		$matchPassword = loginMD5($internalKey, $requestPassword, $dbasePassword, $username);
 	} elseif($hashType == 'v1') {
-		$matchPassword = loginV1($internalKey, $_REQUEST['password'], $dbasePassword, $username);
+		$matchPassword = loginV1($internalKey, $requestPassword, $dbasePassword, $username);
 	} else {
 		$matchPassword = false;
 	}
@@ -202,7 +200,7 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 
 if(!$matchPassword) {
 	jsAlert($_lang['login_processor_wrong_password']);
-	incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes);
+	incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes ?? 10);
 	return;
 }
 
@@ -212,7 +210,7 @@ if($modx->config['use_captcha'] == 1) {
 		return;
 	} elseif($_SESSION['veriword'] != $captcha_code) {
 		jsAlert($_lang['login_processor_bad_code']);
-		incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes);
+		incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes ?? 10);
 		return;
 	}
 }

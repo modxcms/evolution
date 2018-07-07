@@ -166,19 +166,19 @@ for ($i=0;$i<count($warnings);$i++) {
     switch ($warnings[$i][0]) {
         case $_lang['configcheck_configinc'];
             $warnings[$i][1] = $_lang['configcheck_configinc_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_configinc']);
+            if(empty($_SESSION["mgrConfigCheck"])) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_configinc']);
             break;
         case $_lang['configcheck_installer'] :
             $warnings[$i][1] = $_lang['configcheck_installer_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_installer']);
+            if(empty($_SESSION["mgrConfigCheck"])) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_installer']);
             break;
         case $_lang['configcheck_cache'] :
             $warnings[$i][1] = $_lang['configcheck_cache_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_cache']);
+            if(empty($_SESSION["mgrConfigCheck"])) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_cache']);
             break;
         case $_lang['configcheck_images'] :
             $warnings[$i][1] = $_lang['configcheck_images_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_images']);
+            if(empty($_SESSION["mgrConfigCheck"])) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_images']);
             break;
         case $_lang['configcheck_sysfiles_mod']:
             $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
@@ -186,7 +186,7 @@ for ($i=0;$i<count($warnings);$i++) {
 			if($modx->hasPermission('settings')) {
 				$warnings[$i][2] .= '<ul class="actionButtons" style="float:right"><li><a href="index.php?a=2&b=resetSysfilesChecksum" onclick="return confirm(\'' . $_lang["reset_sysfiles_checksum_alert"] . '\')">' . $_lang["reset_sysfiles_checksum_button"] . '</a></li></ul>';
 			}
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".implode(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
+            if(empty($_SESSION["mgrConfigCheck"])) $modx->logEvent(0,3,$warnings[$i][1]." ".implode(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];

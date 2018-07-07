@@ -22,7 +22,7 @@
                         <i class="fa fa-sort"></i>
                         <span>{{ ManagerTheme::getLexicon('plugin_priority') }}</span>
                     </a>
-                    @if($checkOldPlugins)
+                    @if(!empty($checkOldPlugins))
                         <a onclick="return confirm('{{ ManagerTheme::getLexicon('purge_plugin_confirm') }}')" class="btn btn-danger" href="{{ (new EvolutionCMS\Models\SitePlugin)->makeUrl('actions.purge') }}">
                             {{ ManagerTheme::getLexicon('purge_plugin') }}
                         </a>

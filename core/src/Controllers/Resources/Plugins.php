@@ -36,7 +36,8 @@ class Plugins extends AbstractResources implements TabControllerInterface
             parent::getParameters(),
             [
                 'tabPageName' => $this->getTabName(),
-                'tabName' => 'site_plugins'
+                'tabName' => 'site_plugins',
+                'checkOldPlugins' => $this->checkOldPlugins()
             ]
         );
     }
@@ -50,8 +51,7 @@ class Plugins extends AbstractResources implements TabControllerInterface
 
         return $this->isNoData() ? $params : array_merge([
             'categories' => $this->parameterCategories(),
-            'outCategory' => $this->parameterOutCategory(),
-            'checkOldPlugins' => $this->checkOldPlugins()
+            'outCategory' => $this->parameterOutCategory()
         ], $params);
     }
 

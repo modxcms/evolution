@@ -3478,7 +3478,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return;
         }
         $msg = $this->getDatabase()->escape($msg);
-        if (strpos($GLOBALS['database_connection_charset'], 'utf8') === 0 && extension_loaded('mbstring')) {
+        if (strpos($this['config']->get('database.connections.default.charset'), 'utf8') === 0 && extension_loaded('mbstring')) {
             $esc_source = mb_substr($source, 0, 50, "UTF-8");
         } else {
             $esc_source = substr($source, 0, 50);
