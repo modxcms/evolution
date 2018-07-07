@@ -53,7 +53,8 @@ class Modules extends AbstractResources implements TabControllerInterface
 
         return $this->isNoData() ? $params : array_merge([
             'categories' => $this->parameterCategories(),
-            'outCategory' => $this->parameterOutCategory()
+            'outCategory' => $this->parameterOutCategory(),
+            'action' => $this->parameterActionName()
         ], $params);
     }
 

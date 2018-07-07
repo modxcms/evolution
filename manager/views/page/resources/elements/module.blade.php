@@ -12,12 +12,16 @@
             @endif
             <div class="mainCell elements_description">
                 <span @if($item->disabled)class="disabledPlugin" @endif>
-                    @if($action !== '')
-                        <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl($action) }}">
-                    @else
+                    @if(empty($action))
                         <span class="man_el_name">
+                    @else
+                        <a class="man_el_name {{ $tabName }}" data-type="{{ $tabName }}" data-id="{{ $item->id }}" data-catid="{{ $cat->id }}" href="{{ $item->makeUrl($action) }}">
                     @endif
-                        <i class="fa fa-cube"></i>
+                        @if(empty($item->icon))
+                            <i class="fa fa-cube"></i>
+                        @else
+                            <i class="{{ $item->icon }}"></i>
+                        @endif
                         @if($item->locked)
                             <i class="fa fa-lock"></i>
                         @endif
@@ -27,10 +31,10 @@
                             {{ $item->caption }}
                             {!! $item->description !!}
                         </span>
-                    @if($action !== '')
-                        </a>
-                    @else
+                    @if(empty($action))
                         </span>
+                    @else
+                        </a>
                     @endif
                     {{ ManagerTheme::getTextDir('&rlm;') }}
                 </span>
