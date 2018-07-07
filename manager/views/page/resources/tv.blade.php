@@ -1,6 +1,6 @@
 <div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
-        <i class="fa fa-list-alt"></i> {{ ManagerTheme::getLexicon('tmplvars') }}
+        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-list-alt"></i> {{ ManagerTheme::getLexicon('tmplvars') }}</a>
     </h2>
     <script>tpResources.addTabPage(document.getElementById('tabVariables'));</script>
 

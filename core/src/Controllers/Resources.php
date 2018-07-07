@@ -70,7 +70,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
 
     protected function needTab()
     {
-        return get_by_key($_GET, 'tab', null, function ($val) {
+        return get_by_key($_GET, 'tab', 0, function ($val) {
             return is_numeric($val) && array_key_exists($val, $this->tabs);
         });
     }

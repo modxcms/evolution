@@ -1,6 +1,6 @@
 <div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
-        <i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}
+        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}</a>
     </h2>
     <script>tpResources.addTabPage(document.getElementById('tabTemplates'));</script>
 

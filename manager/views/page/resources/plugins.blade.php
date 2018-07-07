@@ -1,6 +1,6 @@
 <div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
-        <i class="fa fa-plug"></i> {{ ManagerTheme::getLexicon('manage_plugins') }}
+        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-plug"></i> {{ ManagerTheme::getLexicon('manage_plugins') }}</a>
     </h2>
     <script>tpResources.addTabPage(document.getElementById('tabPlugins'));</script>
 

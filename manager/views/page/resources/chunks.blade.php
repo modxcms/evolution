@@ -1,6 +1,6 @@
 <div class="tab-page" id="{{ $tabPageName }}">
     <h2 class="tab">
-        <i class="fa fa-th-large"></i> {{ ManagerTheme::getLexicon('manage_htmlsnippets') }}
+        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-th-large"></i> {{ ManagerTheme::getLexicon('manage_htmlsnippets') }}</a>
     </h2>
     <script>tpResources.addTabPage(document.getElementById('tabChunks'));</script>
 

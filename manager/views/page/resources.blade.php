@@ -19,12 +19,12 @@
     <div class="sectionBody">
         <div class="tab-pane" id="resourcesPane">
             <script type="text/javascript">
-              tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), true);
+              tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), false);
             </script>
 
-            @foreach($tabs as $tab)
+            @foreach($tabs as $key => $tab)
                 @if($tab instanceof EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface)
-                    @include(ManagerTheme::getViewName($tab->getView()), $tab->getParameters())
+                    @include(ManagerTheme::getViewName($tab->getView()), array_merge($tab->getParameters(), ['tabId' => $loop->index]))
                 @else
                     {!! $tab !!}
                 @endif
