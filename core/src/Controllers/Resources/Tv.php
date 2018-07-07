@@ -57,7 +57,8 @@ class Tv extends AbstractResources implements TabControllerInterface
 
     protected function parameterOutCategory(): Collection
     {
-        return Models\SiteTmplvar::where('category', '=', 0)
+        return Models\SiteTmplvar::with('templates')
+            ->where('category', '=', 0)
             ->orderBy('name', 'ASC')
             ->lockedView()
             ->get();
@@ -65,7 +66,7 @@ class Tv extends AbstractResources implements TabControllerInterface
 
     protected function parameterCategories(): Collection
     {
-        return Models\Category::with('tvs')
+        return Models\Category::with('tvs.templates')
             ->whereHas('tvs', function (Eloquent\Builder $builder) {
                 return $builder->lockedView();
             })->orderBy('rank', 'ASC')
