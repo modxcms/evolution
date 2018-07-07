@@ -21,6 +21,9 @@ use EvolutionCMS\Traits;
  * BelongsTo
  * @property null|Category $categories
  *
+ * HasMeny
+ * @property Eloquent\Collection $alternative
+ *
  * Virtual
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
@@ -107,6 +110,20 @@ class SitePlugin extends Eloquent\Model
     {
         return evolutionCMS()->getLoginUserID('mgr') !== 1 ?
             $builder->where('locked', '=', 0) : $builder;
+    }
+
+    public function alternative() : Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(__CLASS__, 'name', 'name')
+            ->where('id', '!=', $this->getKey());
+    }
+
+    public function scopeDisabledAlternative(Eloquent\Builder $builder)
+    {
+        return $builder->lockedView()->where('disabled', '=', '0')
+            ->whereHas('alternative', function (Eloquent\Builder $builder) {
+                return $builder->lockedView()->where('disabled', '=', '1');
+            });
     }
 
     public static function getLockedElements()

@@ -72,9 +72,11 @@ class Plugins extends AbstractResources implements TabControllerInterface
             ->get();
     }
 
-    // :TODO check old plugins
     protected function checkOldPlugins(): bool
     {
-        return true;
+        $p = Models\SitePlugin::disabledAlternative()->get();
+        return (bool)$p->count(function($alternative){
+            return (int)($alternative->count() > 0);
+        });
     }
 }
