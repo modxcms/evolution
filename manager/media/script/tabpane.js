@@ -102,6 +102,19 @@ function WebFXTabPane(el, bUseCookie)
 
 WebFXTabPane.prototype = {
   classNameTag: 'dynamic-tab-pane-control',
+  setSelectedTab: function(id) {
+    var found = null;
+    for (const [index, page] of this.pages.entries()) {
+      if(page.element.id === id) {
+        found = index;
+        break;
+      }
+    }
+    if(found !== null) {
+      this.setSelectedIndex(found);
+    } else {
+    }
+  },
   setSelectedIndex: function(n) {
     if (this.selectedIndex !== n) {
       if (this.selectedIndex != null && this.pages[this.selectedIndex] != null) {

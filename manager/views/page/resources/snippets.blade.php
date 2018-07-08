@@ -2,7 +2,7 @@
     <h2 class="tab">
         <a href="?a=76&tab={{ $index }}"><i class="fa fa-code"></i> {{ ManagerTheme::getLexicon('manage_snippets') }}</a>
     </h2>
-    <script>tpResources.addTabPage(document.getElementById({{ $tabPageName }}));</script>
+    <script>tpResources.addTabPage(document.getElementById('{{ $tabPageName }}-{{ $index }}'));</script>
 
     <div id="snippets-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('snippet_management_msg') }}</div>

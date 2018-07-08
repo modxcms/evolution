@@ -31,7 +31,7 @@
             @endforeach
 
             @if($activeTab !== '')
-                <script> tpResources.setSelectedIndex({{ $activeTab }});</script>
+                <script> tpResources.setSelectedTab('{{ $activeTab }}');</script>
             @endif
         </div>
     </div>

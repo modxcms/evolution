@@ -14,7 +14,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         1 => Resources\Tv::class,
         2 => Resources\Chunks::class,
         3 => Resources\Snippets::class,
-        4 => Resources\Plugins::class,
+        //4 => Resources\Plugins::class,
         5 => Resources\Modules::class
     ];
 
@@ -29,17 +29,19 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     public function getParameters(array $params = []) : array
     {
         $tabs = [];
-        $activeTab = $this->needTab();
+        $tab = $this->needTab();
         foreach ($this->tabs as $tabN => $tabClass) {
             if (($tabController = $this->makeTab($tabClass, $tabN)) !== null) {
-                if ($activeTab !== (string)$tabN) {
+                if ($tab !== (string)$tabN) {
                     $tabController->setNoData();
+                } else {
+                    $activeTab = $tabController->getTabName() . '-' . $tabController->getIndex();
                 }
                 $tabs[$tabController->getTabName()] = $tabController;
             }
         }
 
-        return array_merge(compact('tabs'), parent::getParameters($params), ['activeTab' => (string)$activeTab]);
+        return array_merge(compact('tabs'), parent::getParameters($params), compact('activeTab'));
     }
 
     protected function makeTab($tabClass, int $index = 0) :? ManagerTheme\TabControllerInterface

@@ -2,7 +2,7 @@
     <h2 class="tab">
         <a href="?a=76&tab={{ $index }}"><i class="fa fa-th-large"></i> {{ ManagerTheme::getLexicon('manage_htmlsnippets') }}</a>
     </h2>
-    <script>tpResources.addTabPage(document.getElementById({{ $tabPageName }}));</script>
+    <script>tpResources.addTabPage(document.getElementById('{{ $tabPageName }}-{{ $index }}'));</script>
 
     <div id="chunks-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('htmlsnippet_management_msg') }}</div>
