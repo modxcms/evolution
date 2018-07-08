@@ -15,6 +15,9 @@ abstract class AbstractController implements ControllerInterface
      */
     protected $managerTheme;
 
+    /** @var int */
+    protected $index;
+
     /**
      * @inheritdoc
      */
@@ -58,5 +61,21 @@ abstract class AbstractController implements ControllerInterface
             $this->getView(),
             $this->getParameters($params)
         )->render();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setIndex($index) : void
+    {
+        $this->index = $index;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 }

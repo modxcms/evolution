@@ -362,12 +362,14 @@ class ManagerTheme implements ManagerThemeInterface
         } elseif (class_exists($controllerName) &&
             \in_array(Interfaces\ManagerTheme\PageControllerInterface::class, class_implements($controllerName), true)
         ) {
+            /** @var Interfaces\ManagerTheme\PageControllerInterface $controller */
             $controller = new $controllerName($this);
+            $controller->setIndex($action);
             if (! $controller->canView()) {
                 $this->core->webAlertAndQuit($this->getLexicon('error_no_privileges'));
             } elseif (($out = $controller->checkLocked()) !== null) {
                 evolutionCMS()->webAlertAndQuit($out);
-            }else {
+            } else {
                 $out = $controller->render();
             }
         } else {

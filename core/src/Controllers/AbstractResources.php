@@ -26,6 +26,7 @@ abstract class AbstractResources extends AbstractController
     public function getParameters(array $params = []) : array
     {
         return array_merge([
+            'index' => $this->getIndex(),
             'mraTranslations' => $this->parameterMraTranslations(),
             'unlockTranslations' => $this->parameterUnLockTranslations()
         ], $params);

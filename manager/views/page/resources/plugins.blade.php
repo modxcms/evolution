@@ -1,8 +1,8 @@
-<div class="tab-page" id="{{ $tabPageName }}">
+<div class="tab-page {{ $tabPageName }}" id="{{ $tabPageName }}-{{ $index }}" data-id="{{ $index }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-plug"></i> {{ ManagerTheme::getLexicon('manage_plugins') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="fa fa-plug"></i> {{ ManagerTheme::getLexicon('manage_plugins') }}</a>
     </h2>
-    <script>tpResources.addTabPage(document.getElementById('tabPlugins'));</script>
+    <script>tpResources.addTabPage(document.getElementById({{ $tabPageName }}));</script>
 
     <div id="plugins-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('plugin_management_msg') }}</div>

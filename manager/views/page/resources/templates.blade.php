@@ -1,8 +1,8 @@
-<div class="tab-page" id="{{ $tabPageName }}">
+<div class="tab-page {{ $tabPageName }}" id="{{ $tabPageName }}{{ $index }}" data-id="{{ $index }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="fa fa-newspaper-o"></i> {{ ManagerTheme::getLexicon('manage_templates') }}</a>
     </h2>
-    <script>tpResources.addTabPage(document.getElementById('tabTemplates'));</script>
+    <script>tpResources.addTabPage(document.getElementById({{ $tabPageName }}));</script>
 
     <div id="template-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('template_management_msg') }}</div>

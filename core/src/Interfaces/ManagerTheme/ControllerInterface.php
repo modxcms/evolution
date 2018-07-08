@@ -19,4 +19,11 @@ interface ControllerInterface
     public function getParameters(array $params = []) : array;
 
     public function render(array $params = []) : string;
+
+    public function setIndex($index) : void;
+
+    /**
+     * @return null|int|string
+     */
+    public function getIndex();
 }

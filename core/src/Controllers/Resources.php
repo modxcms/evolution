@@ -6,13 +6,16 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
 {
     protected $view = 'page.resources';
 
+    /**
+     * Don't change tab index !!!
+     */
     protected $tabs = [
-        Resources\Templates::class,
-        Resources\Tv::class,
-        Resources\Chunks::class,
-        Resources\Snippets::class,
-        Resources\Plugins::class,
-        Resources\Modules::class
+        0 => Resources\Templates::class,
+        1 => Resources\Tv::class,
+        2 => Resources\Chunks::class,
+        3 => Resources\Snippets::class,
+        4 => Resources\Plugins::class,
+        5 => Resources\Modules::class
     ];
 
     /**
@@ -28,7 +31,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         $tabs = [];
         $activeTab = $this->needTab();
         foreach ($this->tabs as $tabN => $tabClass) {
-            if (($tabController = $this->makeTab($tabClass)) !== null) {
+            if (($tabController = $this->makeTab($tabClass, $tabN)) !== null) {
                 if ($activeTab !== (string)$tabN) {
                     $tabController->setNoData();
                 }
@@ -39,13 +42,15 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         return array_merge(compact('tabs'), parent::getParameters($params), ['activeTab' => (string)$activeTab]);
     }
 
-    protected function makeTab($tabClass) :? ManagerTheme\TabControllerInterface
+    protected function makeTab($tabClass, int $index = 0) :? ManagerTheme\TabControllerInterface
     {
         $tabController = null;
         if (class_exists($tabClass) &&
             is_a($tabClass, ManagerTheme\TabControllerInterface::class, true)
         ) {
+            /** @var ManagerTheme\TabControllerInterface $tabController */
             $tabController = new $tabClass($this->managerTheme);
+            $tabController->setIndex($index);
             if (! $tabController->canView()) {
                 $tabController = null;
             }
@@ -60,7 +65,8 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     public function render(array $params = []) : string
     {
         if (is_ajax() && ($tab = $this->needTab()) !== null) {
-            return (isset($this->tabs[$tab]) && ($tabController = $this->makeTab($this->tabs[$tab])) !== null) ?
+            $index = array_search($tab, $this->tabs, true);
+            return ($index !== false && ($tabController = $this->makeTab($this->tabs[$tab], $index)) !== null) ?
                 $tabController->render(
                     $tabController->getParameters()
                 ) : '';

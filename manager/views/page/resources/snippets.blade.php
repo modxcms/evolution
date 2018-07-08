@@ -1,8 +1,8 @@
-<div class="tab-page" id="{{ $tabPageName }}">
+<div class="tab-page {{ $tabPageName }}" id="{{ $tabPageName }}-{{ $index }}" data-id="{{ $index }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $tabId }}"><i class="fa fa-code"></i> {{ ManagerTheme::getLexicon('manage_snippets') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="fa fa-code"></i> {{ ManagerTheme::getLexicon('manage_snippets') }}</a>
     </h2>
-    <script>tpResources.addTabPage(document.getElementById('tabSnippets'));</script>
+    <script>tpResources.addTabPage(document.getElementById({{ $tabPageName }}));</script>
 
     <div id="snippets-info" class="msg-container" style="display:none">
         <div class="element-edit-message-tab">{{ ManagerTheme::getLexicon('snippet_management_msg') }}</div>
