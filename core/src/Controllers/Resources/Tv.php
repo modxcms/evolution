@@ -14,9 +14,9 @@ class Tv extends AbstractResources implements TabControllerInterface
     /**
      * @inheritdoc
      */
-    public function getTabName(): string
+    public function getTabName($withIndex = true): string
     {
-        return 'tabVariables';
+        return 'tabVariables' . ($withIndex ? '-' . $this->getIndex() : '');
     }
 
     /**
@@ -35,8 +35,8 @@ class Tv extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName' => $this->getTabName(),
-                'tabName' => 'site_tmplvars',
+                'tabPageName' => $this->getTabName(false),
+                'tabIndexPageName' => $this->getTabName()
             ]
         );
     }

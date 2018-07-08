@@ -22,7 +22,7 @@
               tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), false);
             </script>
 
-            @foreach($tabs as $key => $tab)
+            @foreach($tabs as $tab)
                 @if($tab instanceof EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface)
                     @include(ManagerTheme::getViewName($tab->getView()), $tab->getParameters())
                 @else

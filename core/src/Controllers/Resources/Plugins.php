@@ -14,9 +14,9 @@ class Plugins extends AbstractResources implements TabControllerInterface
     /**
      * @inheritdoc
      */
-    public function getTabName(): string
+    public function getTabName($withIndex = true): string
     {
-        return 'tabPlugins';
+        return 'tabPlugins' . ($withIndex ? '-' . $this->getIndex() : '');
     }
 
     /**
@@ -35,8 +35,8 @@ class Plugins extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName' => $this->getTabName(),
-                'tabName' => 'site_plugins',
+                'tabPageName' => $this->getTabName(false),
+                'tabIndexPageName' => $this->getTabName(),
                 'checkOldPlugins' => $this->checkOldPlugins()
             ]
         );

@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Controllers;
 
 use EvolutionCMS\Interfaces\ManagerTheme;
+use Illuminate\Support\Arr;
 
 class Resources extends AbstractResources implements ManagerTheme\PageControllerInterface
 {
@@ -14,7 +15,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         1 => Resources\Tv::class,
         2 => Resources\Chunks::class,
         3 => Resources\Snippets::class,
-        //4 => Resources\Plugins::class,
+        4 => Resources\Plugins::class,
         5 => Resources\Modules::class
     ];
 
@@ -30,12 +31,15 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     {
         $tabs = [];
         $tab = $this->needTab();
+        if ($tab === 0) {
+            $tab = key($this->tabs);
+        }
         foreach ($this->tabs as $tabN => $tabClass) {
             if (($tabController = $this->makeTab($tabClass, $tabN)) !== null) {
-                if ($tab !== (string)$tabN) {
+                if ((string)$tab !== (string)$tabN) {
                     $tabController->setNoData();
                 } else {
-                    $activeTab = $tabController->getTabName() . '-' . $tabController->getIndex();
+                    $activeTab = $tabController->getTabName();
                 }
                 $tabs[$tabController->getTabName()] = $tabController;
             }

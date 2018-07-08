@@ -2,5 +2,5 @@
 
 interface TabControllerInterface extends ControllerInterface
 {
-    public function getTabName() : string;
+    public function getTabName($withIndex = true) : string;
 }

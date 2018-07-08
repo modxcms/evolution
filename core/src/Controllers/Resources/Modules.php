@@ -14,9 +14,9 @@ class Modules extends AbstractResources implements TabControllerInterface
     /**
      * @inheritdoc
      */
-    public function getTabName(): string
+    public function getTabName($withIndex = true): string
     {
-        return 'tabModules';
+        return 'tabModules' . ($withIndex ? '-' . $this->getIndex() : '');
     }
 
     /**
@@ -38,8 +38,8 @@ class Modules extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName' => $this->getTabName(),
-                'tabName' => 'site_modules'
+                'tabPageName' => $this->getTabName(false),
+                'tabIndexPageName' => $this->getTabName()
             ]
         );
     }
