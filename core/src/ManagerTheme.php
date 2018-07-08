@@ -52,7 +52,7 @@ class ManagerTheme implements ManagerThemeInterface
         11,
         12,
         32,
-        28,
+        28 => Controllers\Password::class,
         34,
         33,
         /** role management */
