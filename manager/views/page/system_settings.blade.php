@@ -1,7 +1,7 @@
 @extends('manager::template.page')
 @section('content')
     @push('scripts.top')
-        <script type="text/javascript">
+        <script>
           var displayStyle = '{{ $displayStyle }}';
           var lang_chg = '{{ ManagerTheme::getLexicon('confirm_setting_language_change') }}';
           var actions = {
@@ -15,7 +15,7 @@
             }
           };
         </script>
-        <script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
+        <script src="actions/mutate_settings/functions.js"></script>
     @endpush
     <form name="settings" action="index.php?a=30" method="post">
         <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
@@ -31,7 +31,7 @@
             </div>
         @endif
         <div class="tab-pane" id="settingsPane">
-            <script type="text/javascript">
+            <script>
               tpSettings = new WebFXTabPane(document.getElementById('settingsPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
             @include('manager::page.system_settings.general')
@@ -88,7 +88,7 @@
           })(jQuery);
         </script>
 
-        <script type="text/javascript">
+        <script>
           var lastImageCtrl;
           var lastFileCtrl;
 
@@ -155,7 +155,7 @@
           }
         </script>
         @if(is_numeric(get_by_key($_GET, 'tab')))
-            <script type="text/javascript">tpSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
+            <script>tpSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
         @endif
     @endpush
 @endsection
