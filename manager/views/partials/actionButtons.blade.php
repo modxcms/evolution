@@ -21,7 +21,7 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
                 </a>
                 <span class="btn btn-success plus dropdown-toggle"></span>
                 <select id="stay" name="stay">
-                    @if(!empty($addnew))
+                    @if(!empty($new))
                         <option id="stay1" value="1" @if($stay == 1)selected="selected"@endif>{{ ManagerTheme::getLexicon('stay_new') }}</option>
                     @endif
                     <option id="stay2" value="2" @if($stay == 2)selected="selected"@endif>{{ ManagerTheme::getLexicon('stay') }}</option>
@@ -34,7 +34,7 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
                 <span>{{ ManagerTheme::getLexicon('save') }}</span>
             </a>
         @endif
-        @if(isset($dublicate))
+        @if(isset($duplicate))
             <a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
                 <i class="fa fa-clone"></i>
                 <span>{{ ManagerTheme::getLexicon('duplicate') }}</span>
