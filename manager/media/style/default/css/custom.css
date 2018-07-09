@@ -14,7 +14,7 @@
 .form-control-name { position: relative; }
 .form-control-name .form-control { padding-right: 2em }
 .form-control-name .custom-control { display: block; overflow: hidden; position: absolute; z-index: 3; top: 0; right: 0; width: 2em; height: 100%; margin: 0; padding: 0; cursor: pointer }
-.form-control-name .custom-control input { position: absolute; left: -100% }
+.form-control-name .custom-control input { position: absolute; left: -100%; opacity: 0; }
 .form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
 .form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
 .form-control-name .custom-control input:checked ~ .fa-lock::before { content: "\f023"; color: #d9534f }
