@@ -3,6 +3,8 @@
 @if(!empty($name)) name="{{ $name }}" @endif
 @if(isset($value)) value="{{ $value }}" @endif
 @if(isset($placeholder)) placeholder="{{ $placeholder }}" @endif
-{!! $attributes or '' !!}
+@if(!empty($checked)) checked @endif
 @if(!empty($readonly)) readonly @endif
+@if(!empty($disabled)) disabled @endif
+    {!! $attributes or '' !!}
 />
