@@ -177,6 +177,7 @@
                         @include('manager::form.select', [
                             'name' => 'categoryid',
                             'id' => 'categoryid',
+                            'label' => ManagerTheme::getLexicon('existing_category'),
                             'value' => $content["category"],
                             'first' => [
                                 'text' => ''
