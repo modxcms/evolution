@@ -64,7 +64,7 @@ class ManagerTheme implements ManagerThemeInterface
         120,
         121,
         /** template management */
-        16,
+        16 => Controllers\TemplateEdit::class,
         19,
         20,
         21,
