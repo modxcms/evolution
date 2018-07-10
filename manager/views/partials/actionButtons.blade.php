@@ -13,7 +13,7 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
 ?>
 <div id="actions">
     <div class="btn-group">
-        @if(isset($select) && isset($save))
+        @if(!empty($select) && !empty($save))
             <div class="btn-group">
                 <a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
                     <i class="fa fa-floppy-o"></i>
@@ -28,31 +28,31 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
                     <option id="stay3" value="" @if($stay == '')selected="selected"@endif>{{ ManagerTheme::getLexicon('close') }}</option>
                 </select>
             </div>
-        @elseif(isset($save))
+        @elseif(!empty($save))
             <a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
                 <i class="fa fa-floppy-o"></i>
                 <span>{{ ManagerTheme::getLexicon('save') }}</span>
             </a>
         @endif
-        @if(isset($duplicate))
+        @if(!empty($duplicate))
             <a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
                 <i class="fa fa-clone"></i>
                 <span>{{ ManagerTheme::getLexicon('duplicate') }}</span>
             </a>
         @endif
-        @if(isset($delete))
+        @if(!empty($delete))
             <a id="Button3" class="btn btn-secondary" href="javascript:;" onclick="actions.delete();">
                 <i class="fa fa-trash"></i>
                 <span>{{ ManagerTheme::getLexicon('delete') }}</span>
             </a>
         @endif
-        @if(isset($cancel))
+        @if(!empty($cancel))
             <a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
                 <i class="fa fa-times-circle"></i>
                 <span>{{ ManagerTheme::getLexicon('cancel') }}</span>
             </a>
         @endif
-        @if(isset($preview))
+        @if(!empty($preview))
             <a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
                 <i class="fa fa-eye"></i>
                 <span>{{ ManagerTheme::getLexicon('preview') }}</span>

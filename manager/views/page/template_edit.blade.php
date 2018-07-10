@@ -52,7 +52,7 @@
             <i class="fa fa-question-circle help"></i>
         </h1>
 
-        @include('manager::partials.actionButtons', ['select' => '', 'save' => '', 'new' => '1', 'duplicate' => '', 'delete' => '', 'cancel' => ''])
+        @include('manager::partials.actionButtons', ['select' => 1, 'save' => 1, 'new' => 1, 'duplicate' => !empty($data->id), 'delete' => 1, 'cancel' => 1])
 
         <div class="container element-edit-message">
             <div class="alert alert-info">{{ ManagerTheme::getLexicon('template_msg') }}</div>
