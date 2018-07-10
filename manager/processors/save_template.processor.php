@@ -10,7 +10,7 @@ $id = (int)$_POST['id'];
 $template = $modx->getDatabase()->escape($_POST['post']);
 $templatename = $modx->getDatabase()->escape(trim($_POST['templatename']));
 $description = $modx->getDatabase()->escape($_POST['description']);
-$locked = $_POST['locked'] == 'on' ? 1 : 0;
+$locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $selectable = $id == $modx->config['default_template'] ? 1 :    // Force selectable
     $_POST['selectable'] == 'on' ? 1 : 0;
 $currentdate = time() + $modx->config['server_offset_time'];

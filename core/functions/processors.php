@@ -545,7 +545,7 @@ if(!function_exists('saveTemplateAccess')) {
     {
         $modx = evolutionCMS();
         if ($_POST['tvsDirty'] == 1) {
-            $newAssignedTvs = $_POST['assignedTv'];
+            $newAssignedTvs = isset($_POST['assignedTv']) ? $_POST['assignedTv'] : '';
 
             // Preserve rankings of already assigned TVs
             $rs = $modx->getDatabase()->select("tmplvarid, rank", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'),
