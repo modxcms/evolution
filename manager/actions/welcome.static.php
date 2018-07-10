@@ -296,6 +296,22 @@ $widgets['welcome'] = array(
 						</a>
 					</span> 
 					<!--@ENDIF-->
+					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
+					<span class="wm_button">
+						<a target="main" href="index.php?a=76">
+							<i class="[&icons_resources_large&]" title="[%element_management%]"></i>
+							<span>[%elements%]</span>
+						</a>
+					</span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
+					<span class="wm_button">
+						<a target="main" href="index.php?a=93">
+							<i class="[&icons_backup_large&]" title="[%bk_manager%]"></i>
+							<span>[%backup%]</span>
+						</a>
+					</span> 
+					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=change_password]]--> 
 					<span class="wm_button">
 						<a target="main" href="index.php?a=28">
