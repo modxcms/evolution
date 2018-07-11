@@ -182,7 +182,7 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 
 if(!$matchPassword) {
 	jsAlert($_lang['login_processor_wrong_password']);
-	incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes);
+	incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $modx->config['blocked_minutes']);
 	return;
 }
 
@@ -192,7 +192,7 @@ if($modx->config['use_captcha'] == 1) {
 		return;
 	} elseif($_SESSION['veriword'] != $captcha_code) {
 		jsAlert($_lang['login_processor_bad_code']);
-		incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes);
+		incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $modx->config['blocked_minutes']);
 		return;
 	}
 }
