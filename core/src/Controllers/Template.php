@@ -69,8 +69,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $id = $this->getElementId();
 
         /** @var Models\SiteTemplate $data */
-        $data = Models\SiteTemplate::where('id', '=', $id)
-            ->firstOrNew(
+        $data = Models\SiteTemplate::firstOrNew(
                 ['id' => $id],
                 [
                     'category' => (int)get_by_key($_REQUEST, 'catid', 0),
