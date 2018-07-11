@@ -43,16 +43,20 @@
 
         <input type="hidden" name="a" value="20">
         <input type="hidden" name="id" value="{{ $data->id }}">
-        <input type="hidden" name="mode" value="16">
+        <input type="hidden" name="mode" value="{{ $action }}">
 
         <h1>
             <i class="fa fa-newspaper-o"></i>
-            {{ $data->templatename }}
-            <small>({{ $data->id }})</small>
+            @if($data->templatename)
+                {{ $data->templatename }}
+                <small>({{ $data->id }})</small>
+            @else
+                {{ ManagerTheme::getLexicon('new_template') }}
+            @endif
             <i class="fa fa-question-circle help"></i>
         </h1>
 
-        @include('manager::partials.actionButtons', ['select' => 1, 'save' => 1, 'new' => 1, 'duplicate' => !empty($data->id), 'delete' => 1, 'cancel' => 1])
+        @include('manager::partials.actionButtons', ['select' => 1, 'save' => 1, 'new' => 1, 'duplicate' => !empty($data->id), 'delete' => !empty($data->id), 'cancel' => 1])
 
         <div class="container element-edit-message">
             <div class="alert alert-info">{{ ManagerTheme::getLexicon('template_msg') }}</div>
@@ -89,10 +93,10 @@
                                  ]) .
                                  '<i class="fa fa-lock"></i>
                                  </label>
-                                 </div>
                                  <small class="form-text text-danger hide" id="savingMessage"></small>
                                  <script>if (!document.getElementsByName(\'templatename\')[0].value) document.getElementsByName(\'templatename\')[0].focus();</script>'
-                                : '')
+                                : '') .
+                                '</div>'
                         ])
 
                         @include('manager::form.input', [
@@ -197,7 +201,7 @@
                                     @if(!empty($row['tvlocked']))
                                         <em>({{ ManagerTheme::getLexicon('locked') }})</em>
                                     @endif
-                                    <a href="?id={{ $row['tvid'] }}&a=301&or=16&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
+                                    <a href="?id={{ $row['tvid'] }}&a=301&or={{ $action }}&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -244,7 +248,7 @@
                                             @if(!empty($row['tvlocked']))
                                                 <em>({{ ManagerTheme::getLexicon('locked') }})</em>
                                             @endif
-                                            <a href="?id={{ $row['tvid'] }}&a=301&or=16&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
+                                            <a href="?id={{ $row['tvid'] }}&a=301&or={{ $action }}&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
                                         </li>
                                     </li>
                                 @php($preCat = $row['category'])

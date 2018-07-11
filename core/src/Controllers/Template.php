@@ -1,11 +1,12 @@
 <?php namespace EvolutionCMS\Controllers;
 
+use EvolutionCMS\Legacy\ManagerApi;
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
 
-class TemplateEdit extends AbstractController implements ManagerTheme\PageControllerInterface
+class Template extends AbstractController implements ManagerTheme\PageControllerInterface
 {
-    protected $view = 'page.template_edit';
+    protected $view = 'page.template';
 
     protected $Events = [
         'OnTempFormPrerender',
@@ -17,7 +18,7 @@ class TemplateEdit extends AbstractController implements ManagerTheme\PageContro
      */
     public function checkLocked(): ?string
     {
-        $out = Models\ActiveUser::locked(16)
+        $out = Models\ActiveUser::locked((int)(new ManagerApi)->action)
             ->first();
         if ($out !== null) {
             $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
@@ -31,7 +32,20 @@ class TemplateEdit extends AbstractController implements ManagerTheme\PageContro
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('edit_template');
+        switch ((new ManagerApi)->action) {
+            case 16:
+                $out = evolutionCMS()->hasPermission('edit_template');
+                break;
+
+            case 19:
+                $out = evolutionCMS()->hasPermission('new_template');
+                break;
+
+            default:
+                $out = false;
+        }
+
+        return $out;
     }
 
     /**
@@ -43,6 +57,7 @@ class TemplateEdit extends AbstractController implements ManagerTheme\PageContro
             'data' => $this->parameterData(),
             'categories' => $this->parameterCategories(),
             'tvs' => $this->parameterTvs(),
+            'action' => (new ManagerApi)->action,
             'Events' => $this->parameterEvents()
         ];
     }
@@ -50,7 +65,7 @@ class TemplateEdit extends AbstractController implements ManagerTheme\PageContro
     private function parameterData()
     {
         $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-        $data = [];
+        $data = (object)[];
         if (!empty($id)) {
             $data = Models\SiteTemplate::where('id', '=', $id)
                 ->get();
@@ -62,11 +77,17 @@ class TemplateEdit extends AbstractController implements ManagerTheme\PageContro
             $data = $data[0];
             $_SESSION['itemname'] = $data->templatename;
             if ($data->locked == 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit(ManagerTheme::getLexicon("error_no_privileges"));
+                evolutionCMS()->webAlertAndQuit(\ManagerTheme::getLexicon("error_no_privileges"));
             }
         } else {
-            $_SESSION['itemname'] = ManagerTheme::getLexicon("new_template");
-            $data->category = (int)$_REQUEST['catid'];
+            $_SESSION['itemname'] = \ManagerTheme::getLexicon("new_template");
+            $data->id = 0;
+            $data->templatename = '';
+            $data->description = '';
+            $data->selectable = 1;
+            $data->content = '';
+            $data->locked = '';
+            $data->category = isset($_REQUEST['catid']) ? (int)$_REQUEST['catid'] : '';
         }
 
         if (evolutionCMS()
