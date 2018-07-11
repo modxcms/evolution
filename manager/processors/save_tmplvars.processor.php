@@ -16,7 +16,7 @@ $default_text = $modx->getDatabase()->escape($_POST['default_text']);
 $rank = isset ($_POST['rank']) ? $modx->getDatabase()->escape($_POST['rank']) : 0;
 $display = $modx->getDatabase()->escape($_POST['display']);
 $params = $modx->getDatabase()->escape($_POST['params']);
-$locked = $_POST['locked'] == 'on' ? 1 : 0;
+$locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
 $originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
 $currentdate = time() + $modx->config['server_offset_time'];

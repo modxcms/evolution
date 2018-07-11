@@ -599,7 +599,7 @@ if(!function_exists('saveTemplateVarAccess')) {
         $modx->getDatabase()->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
         if (!empty($templates)) {
             for ($i = 0; $i < count($templates); $i++) {
-                $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
+                $setRank = isset($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
                 $modx->getDatabase()->insert(array(
                     'tmplvarid'  => $id,
                     'templateid' => $templates[$i],
@@ -618,7 +618,7 @@ if(!function_exists('saveDocumentAccessPermissons')) {
 
         $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
 
-        $docgroups = $_POST['docgroups'];
+        $docgroups = isset($_POST['docgroups']) ? $_POST['docgroups'] : '';
 
         // check for permission update access
         if ($use_udperms == 1) {
