@@ -192,30 +192,30 @@
                     @else
                         {{ ManagerTheme::getLexicon('template_no_tv') }}
                     @endif
-                        <hr>
-                        <p>{{ ManagerTheme::getLexicon('template_notassigned_tv') }}</p>
+                    <hr>
+                    <p>{{ ManagerTheme::getLexicon('template_notassigned_tv') }}</p>
 
-                        @if(isset($tvOutCategory) && $tvOutCategory->count() > 0)
-                            @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
+                    @if(isset($tvOutCategory) && $tvOutCategory->count() > 0)
+                        @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
+                            <ul>
+                                @foreach($tvOutCategory as $item)
+                                    @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                @endforeach
+                            </ul>
+                        @endcomponent
+                    @endif
+
+                    @if(isset($categoriesWithTv))
+                        @foreach($categoriesWithTv as $cat)
+                            @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
                                 <ul>
-                                    @foreach($tvOutCategory as $item)
+                                    @foreach($cat->tvs as $item)
                                         @include('manager::page.template.tv', compact('item', 'tvSelected'))
                                     @endforeach
                                 </ul>
                             @endcomponent
-                        @endif
-
-                        @if(isset($categoriesWithTv))
-                            @foreach($categoriesWithTv as $cat)
-                                @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
-                                    <ul>
-                                        @foreach($cat->tvs as $item)
-                                            @include('manager::page.template.tv', compact('item', 'tvSelected'))
-                                        @endforeach
-                                    </ul>
-                                @endcomponent
-                            @endforeach
-                        @endif
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
