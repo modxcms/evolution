@@ -320,6 +320,15 @@ class browser extends uploader
         if (!dir::isWritable($dir)) {
             $this->errorMsg("Cannot delete the folder.");
         }
+
+        $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserDelete', array(
+            'element'  => 'dir',
+            'filepath' => realpath($dir)
+        ));
+        if (is_array($evtOut) && !empty($evtOut)) {
+            die(json_encode(array('error' => $evtOut)));
+        }
+
         $result = !dir::prune($dir, false);
         if (is_array($result) && count($result)) {
             $this->errorMsg("Failed to delete {count} files/folders.",
@@ -329,6 +338,10 @@ class browser extends uploader
         if (is_dir($thumbDir)) {
             dir::prune($thumbDir);
         }
+        $this->modx->invokeEvent('OnFileBrowserDelete', array(
+            'element'  => 'dir',
+            'filepath' => realpath($dir)
+        ));
 
         return true;
     }
@@ -466,7 +479,7 @@ class browser extends uploader
         if (is_array($evtOut) && !empty($evtOut)) {
             die(json_encode(array('error' => $evtOut)));
         }
-        
+
         @unlink($file);
 
         $thumb = "{$this->thumbsTypeDir}/{$this->post['dir']}/{$this->post['file']}";
