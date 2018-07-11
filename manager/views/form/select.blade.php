@@ -21,12 +21,20 @@
                         @foreach ($options as $key => $option)
                             @if(isset($option['optgroup']) && !empty($option['optgroup']['options']))
                                 <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
-                                    @foreach($option['optgroup']['options'] as $opt)
-                                        <option value="{{ $opt['value'] }}"
-                                            @if(isset($value) && $value == $opt['value'])
-                                            selected="selected"
-                                            @endif
-                                        >{{ $opt['text'] or $opt['value'] }}</option>
+                                    @foreach($option['optgroup']['options'] as $k => $opt)
+                                        @if(is_string($opt))
+                                            <option value="{{ $k }}"
+                                                @if(isset($value) && $value == $k)
+                                                selected="selected"
+                                                @endif
+                                            >{{ $opt }}</option>
+                                        @else
+                                            <option value="{{ $opt['value'] or $k }}"
+                                                @if(isset($value) && $value == $opt['value'])
+                                                selected="selected"
+                                                @endif
+                                            >{{ $opt['text'] or $opt['value'] }}</option>
+                                        @endif
                                     @endforeach
                                 </optgroup>
                             @elseif(is_string($option))
