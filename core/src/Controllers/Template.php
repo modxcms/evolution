@@ -18,7 +18,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function checkLocked(): ?string
     {
-        $out = Models\ActiveUser::locked((int)(new ManagerApi)->action)
+        $out = Models\ActiveUser::locked(16)
             ->first();
         if ($out !== null) {
             $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
