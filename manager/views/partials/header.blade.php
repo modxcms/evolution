@@ -85,7 +85,7 @@ if (ManagerTheme::getTheme() === 'default') {
             type="text/javascript"></script>
     <?php } ?>
     <?php
-    $aArr = array('2');
+    $aArr = array(2, 16, 19, 300, 301);
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
