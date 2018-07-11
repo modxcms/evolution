@@ -42,12 +42,12 @@ abstract class AbstractController implements ControllerInterface
     /**
      * @inheritdoc
      */
-    abstract public function checkLocked() : ?string;
+    abstract public function checkLocked(): ?string;
 
     /**
      * @inheritdoc
      */
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         return $params;
     }
@@ -55,7 +55,7 @@ abstract class AbstractController implements ControllerInterface
     /**
      * @inheritdoc
      */
-    public function render(array $params = []) : string
+    public function render(array $params = []): string
     {
         return $this->managerTheme->view(
             $this->getView(),
@@ -66,7 +66,7 @@ abstract class AbstractController implements ControllerInterface
     /**
      * @inheritdoc
      */
-    public function setIndex($index) : void
+    public function setIndex($index): void
     {
         $this->index = $index;
     }
@@ -77,5 +77,13 @@ abstract class AbstractController implements ControllerInterface
     public function getIndex()
     {
         return $this->index;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getElementId(): int
+    {
+        return (int)get_by_key($_REQUEST, 'id', 0, 'is_scalar');
     }
 }

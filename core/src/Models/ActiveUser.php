@@ -12,32 +12,38 @@ use Illuminate\Database\Eloquent;
  */
 class ActiveUser extends Eloquent\Model
 {
-	protected $primaryKey = 'sid';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $primaryKey = 'sid';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'internalKey' => 'int',
-		'lasthit' => 'int',
-		'id' => 'int'
-	];
+    protected $casts = [
+        'internalKey' => 'int',
+        'lasthit'     => 'int',
+        'id'          => 'int'
+    ];
 
-	protected $fillable = [
-		'internalKey',
-		'username',
-		'lasthit',
-		'action',
-		'id'
-	];
+    protected $fillable = [
+        'internalKey',
+        'username',
+        'lasthit',
+        'action',
+        'id'
+    ];
 
-	public function scopeLocked(Eloquent\Builder $builder, $id, $userId = null)
+    public function scopeLocked(Eloquent\Builder $builder, $action, $id = null, $userId = null)
     {
         if ($userId === null) {
             $userId = evolutionCMS()->getLoginUserID();
         }
 
-        return $builder->where('action', '=', (int)$id)
+        $builder = $builder->where('action', '=', (int)$action)
             ->where('internalKey', '!=', $userId)
             ->orderBy('lasthit', 'DESC');
+
+        if ($id !== null) {
+            $builder = $builder->where('id', '=', $id);
+        }
+
+        return $builder;
     }
 }

@@ -1,6 +1,5 @@
 <?php namespace EvolutionCMS\Controllers;
 
-use EvolutionCMS\Legacy\ManagerApi;
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
 
@@ -8,7 +7,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
 {
     protected $view = 'page.template';
 
-    protected $Events = [
+    private $events = [
         'OnTempFormPrerender',
         'OnTempFormRender'
     ];
@@ -18,7 +17,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function checkLocked(): ?string
     {
-        $out = Models\ActiveUser::locked(16)
+        $out = Models\ActiveUser::locked(16, $this->getElementId())
             ->first();
         if ($out !== null) {
             $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
@@ -32,7 +31,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function canView(): bool
     {
-        switch ((new ManagerApi)->action) {
+        switch ($this->getIndex()) {
             case 16:
                 $out = evolutionCMS()->hasPermission('edit_template');
                 break;
@@ -57,82 +56,66 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'data' => $this->parameterData(),
             'categories' => $this->parameterCategories(),
             'tvs' => $this->parameterTvs(),
-            'action' => (new ManagerApi)->action,
+            'action' => $this->getIndex(),
             'Events' => $this->parameterEvents()
         ];
     }
 
-    private function parameterData()
+    /**
+     * @return Models\SiteTemplate
+     */
+    protected function parameterData()
     {
-        $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-        $data = (object)[];
-        if (!empty($id)) {
-            $data = Models\SiteTemplate::where('id', '=', $id)
-                ->get();
+        $id = $this->getElementId();
 
-            if (empty($data[0])) {
+        /** @var Models\SiteTemplate $data */
+        $data = Models\SiteTemplate::where('id', '=', $id)
+            ->firstOrNew(
+                ['id' => $id],
+                [
+                    'category' => (int)get_by_key($_REQUEST, 'catid', 0),
+                    'selectable' => 1
+                ]
+            );
+
+        if ($id > 0) {
+            if (! $data->exists) {
                 evolutionCMS()->webAlertAndQuit("No database record has been found for this template.");
             }
 
-            $data = $data[0];
             $_SESSION['itemname'] = $data->templatename;
             if ($data->locked == 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit(\ManagerTheme::getLexicon("error_no_privileges"));
+                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } else {
-            $_SESSION['itemname'] = \ManagerTheme::getLexicon("new_template");
-            $data->id = 0;
-            $data->templatename = '';
-            $data->description = '';
-            $data->selectable = 1;
-            $data->content = '';
-            $data->locked = '';
-            $data->category = isset($_REQUEST['catid']) ? (int)$_REQUEST['catid'] : '';
+            $_SESSION['itemname'] = $this->managerTheme->getLexicon("new_template");
         }
 
-        if (evolutionCMS()
-            ->getManagerApi()
-            ->hasFormValues()) {
-            evolutionCMS()
-                ->getManagerApi()
-                ->loadFormValues();
-        }
+        $values = $this->managerTheme->loadValuesFromSession($_POST);
 
-        if (!empty($_POST)) {
-            foreach ($_POST as $k => $v) {
-                if (isset($data->{$k})) {
-                    $data->{$k} = $v;
-                }
-            }
+        if (!empty($values)) {
+            $data->fill($values);
         }
 
         return $data;
     }
 
-    private function parameterCategories()
+    protected function parameterCategories() : array
     {
-        $data = [];
-        $res = Models\Category::get();
-        if (!empty($res)) {
-            foreach ($res as $k => $v) {
-                $data[$v['id']] = $v['category'];
-            }
-        }
-
-        return $data;
+        return Models\Category::orderBy('rank', 'ASC')->orderBy('category', 'ASC')->pluck('category', 'id');
     }
 
-    private function parameterTvs()
+    protected function parameterTvs()
     {
         $out = [];
-        $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
+        $id = $this->getElementId();
 
         $selectedTvs = array();
         if (!isset($_POST['assignedTv'])) {
             $rs = evolutionCMS()
                 ->getDatabase()
                 ->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category",
-                    \ManagerTheme::getLexicon('no_category')), sprintf("%s tv
+                    $this->managerTheme->getLexicon('no_category')), sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
                 LEFT JOIN %s cat ON tv.category=cat.id", evolutionCMS()
                     ->getDatabase()
@@ -155,7 +138,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $rs = evolutionCMS()
             ->getDatabase()
             ->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid",
-                \ManagerTheme::getLexicon('no_category')), sprintf("%s tv
+                $this->managerTheme->getLexicon('no_category')), sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id", evolutionCMS()
                 ->getDatabase()
@@ -189,24 +172,27 @@ class Template extends AbstractController implements ManagerTheme\PageController
         return $out;
     }
 
-    private function parameterEvents()
+    protected function parameterEvents() : array
     {
         $out = [];
 
-        foreach ($this->Events as $event) {
+        foreach ($this->events as $event) {
             $out[$event] = $this->callEvent($event);
         }
 
         return $out;
     }
 
-    private function callEvent($name)
+    private function callEvent($name) : string
     {
-        $out = evolutionCMS()->invokeEvent($name);
+        $out = evolutionCMS()->invokeEvent($name, [
+            'id' => $this->getElementId(),
+            'controller' => $this
+        ]);
         if (\is_array($out)) {
             $out = implode('', $out);
         }
 
-        return $out;
+        return (string)$out;
     }
 }

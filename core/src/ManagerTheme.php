@@ -739,4 +739,13 @@ class ManagerTheme implements ManagerThemeInterface
 
         return $flag;
     }
+
+    public function loadValuesFromSession($data)
+    {
+        if ($this->core->getManagerApi()->loadFormValues() === true) {
+            $data = $_POST;
+        }
+
+        return $data;
+    }
 }

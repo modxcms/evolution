@@ -22,6 +22,8 @@ interface ControllerInterface
 
     public function setIndex($index) : void;
 
+    public function getElementId() : int;
+
     /**
      * @return null|int|string
      */
