@@ -167,8 +167,8 @@ class ManagerTheme implements ManagerThemeInterface
         /** Help */
         9,
         /** Template Variables - Based on Apodigm's Docvars */
-        300,
-        301,
+        300 => Controllers\Tmplvar::class,
+        301 => Controllers\Tmplvar::class,
         302,
         303,
         304,
