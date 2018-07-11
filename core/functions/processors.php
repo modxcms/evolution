@@ -583,7 +583,7 @@ if(!function_exists('saveTemplateVarAccess')) {
     function saveTemplateVarAccess($id)
     {
         $modx = evolutionCMS();
-        $templates = $_POST['template']; // get muli-templates based on S.BRENNAN mod
+        $templates = isset($_POST['template']) ? $_POST['template'] : []; // get muli-templates based on S.BRENNAN mod
 
         // update template selections
         $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
