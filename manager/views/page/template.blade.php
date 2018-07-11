@@ -1,6 +1,7 @@
 @extends('manager::template.page')
 @section('content')
     @push('scripts.top')
+        <?php /** @var EvolutionCMS\Models\SiteTemplate $data */ ?>
         <script>
 
           var actions = {
@@ -13,13 +14,13 @@
             duplicate: function() {
               if (confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
                 documentDirty = false;
-                document.location.href = "index.php?id={{ $data->id }}&a=96";
+                document.location.href = "index.php?id={{ $data->getKey() }}&a=96";
               }
             },
             delete: function() {
               if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_template') }}") === true) {
                 documentDirty = false;
-                document.location.href = 'index.php?id={{ $data->id }}&a=21';
+                document.location.href = 'index.php?id={{ $data->getKey() }}&a=21';
               }
             },
             cancel: function() {
@@ -39,24 +40,24 @@
     @endpush
 
     <form name="mutate" method="post" action="index.php">
-        {!! get_by_key($Events, 'OnTempFormPrerender') !!}
+        {!! get_by_key($events, 'OnTempFormPrerender') !!}
 
         <input type="hidden" name="a" value="20">
-        <input type="hidden" name="id" value="{{ $data->id }}">
+        <input type="hidden" name="id" value="{{ $data->getKey() }}">
         <input type="hidden" name="mode" value="{{ $action }}">
 
         <h1>
             <i class="fa fa-newspaper-o"></i>
             @if($data->templatename)
                 {{ $data->templatename }}
-                <small>({{ $data->id }})</small>
+                <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_template') }}
             @endif
             <i class="fa fa-question-circle help"></i>
         </h1>
 
-        @include('manager::partials.actionButtons', ['select' => 1, 'save' => 1, 'new' => 1, 'duplicate' => !empty($data->id), 'delete' => !empty($data->id), 'cancel' => 1])
+        @include('manager::partials.actionButtons', ['select' => 1, 'save' => 1, 'new' => 1, 'duplicate' => !empty($data->getKey()), 'delete' => !empty($data->getKey()), 'cancel' => 1])
 
         <div class="container element-edit-message">
             <div class="alert alert-info">{{ ManagerTheme::getLexicon('template_msg') }}</div>
@@ -76,7 +77,7 @@
                         @include('manager::form.row', [
                             'for' => 'templatename',
                             'label' => ManagerTheme::getLexicon('template_name'),
-                            'small' => ($data->id == get_by_key($modx->config, 'default_template') ? '<b class="text-danger">' . mb_strtolower(rtrim(ManagerTheme::getLexicon('defaulttemplate_title'), ':'), ManagerTheme::getCharset()) . '</b>' : ''),
+                            'small' => ($data->getKey() == get_by_key($modx->config, 'default_template') ? '<b class="text-danger">' . mb_strtolower(rtrim(ManagerTheme::getLexicon('defaulttemplate_title'), ':'), ManagerTheme::getCharset()) . '</b>' : ''),
                             'element' => '<div class="form-control-name clearfix">' .
                                 ManagerTheme::view('form.inputElement', [
                                     'name' => 'templatename',
@@ -115,7 +116,7 @@
                             'first' => [
                                 'text' => ''
                             ],
-                            'options' => $categories,
+                            'options' => $categories->pluck('category', 'id'),
                             'attributes' => 'onchange="documentDirty=true;"'
                         ])
 
@@ -169,99 +170,56 @@
                 <input type="hidden" name="tvsDirty" id="tvsDirty" value="0">
 
                 <div class="container container-body">
-                    @if($tvs['total_selected'])
+                    @if($data->tvs->count() > 0)
                         <p>{{ ManagerTheme::getLexicon('template_tv_msg') }}</p>
                     @endif
 
-                    @if($modx->hasPermission('save_template') && $tvs['total_selected'] > 1 && $data->id)
+                    @if($modx->hasPermission('save_template') && $data->tvs->count() > 1 && $data->getKey())
                         <div class="form-group">
-                            <a class="btn btn-primary" href="?a=117&id={{ $data->id }}">{{ ManagerTheme::getLexicon('template_tv_edit') }}</a>
+                            <a class="btn btn-primary" href="?a=117&id={{ $data->getKey() }}">{{ ManagerTheme::getLexicon('template_tv_edit') }}</a>
                         </div>
                     @endif
 
-                    @if($tvs['total_selected'])
+                    @if($data->tvs->count() > 0)
                         <ul>
-                            @foreach($tvs['selectedTvs'] as $row)
-                                <li>
-                                    <label>
-                                        @include('manager::form.inputElement', [
-                                            'type' => 'checkbox',
-                                            'name' => 'assignedTv[]',
-                                            'value' => $row['tvid'],
-                                            'checked' => 1,
-                                            'attributes' => 'onchange="documentDirty=true; document.getElementById(\'tvsDirty\').value = 1;"'
-                                        ])
-                                        {!! $row['tvname'] !!}
-                                        <small>({{ $row['tvid'] }})</small>
-                                        - {!! $row['tvcaption'] !!}
-                                        @if(!empty($row['tvdescription']))
-                                            <small>({!! $row['tvdescription'] !!})</small>
-                                        @endif
-                                    </label>
-                                    @if(!empty($row['tvlocked']))
-                                        <em>({{ ManagerTheme::getLexicon('locked') }})</em>
-                                    @endif
-                                    <a href="?id={{ $row['tvid'] }}&a=301&or={{ $action }}&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
-                                </li>
+                            @foreach($data->tvs as $item)
+                                @include('manager::page.template.tv', [
+                                    'item' => $item,
+                                    'tvSelected' => [$item->getKey()]
+                                ])
                             @endforeach
                         </ul>
                     @else
                         {{ ManagerTheme::getLexicon('template_no_tv') }}
                     @endif
-
-                    @if($tvs['total_unselected'])
                         <hr>
                         <p>{{ ManagerTheme::getLexicon('template_notassigned_tv') }}</p>
-                        <ul>
-                            @php($preCat = '')
-                            @php($insideUl = 0)
-                            @foreach($tvs['unselectedTvs'] as $row)
-                                @if(isset($tvs['selectedTvs'][$row['tvid']]))
-                                    @continue
-                                @endif
-                                @php($row['category'] = stripslashes($row['category']))
-                                @if($preCat !== $row['category'])
-                                    @if($insideUl)
-                                        </ul>
-                                    @endif
-                                    <li>
-                                        <strong>{{ $row['category'] }}
-                                            @if($row['catid'] != '')
-                                                <small>{{ $row['catid'] }}</small>
-                                            @endif
-                                        </strong>
-                                        <ul>
-                                @php($insideUl = 1)
-                                @endif
-                                        <li>
-                                            <label>
-                                                @include('manager::form.inputElement', [
-                                                    'type' => 'checkbox',
-                                                    'name' => 'assignedTv[]',
-                                                    'value' => $row['tvid'],
-                                                    'attributes' => 'onchange="documentDirty=true; document.getElementById(\'tvsDirty\').value = 1;"'
-                                                ])
-                                                {!! $row['tvname'] !!}
-                                                <small>({{ $row['tvid'] }})</small>
-                                                - {!! $row['tvcaption'] !!}
-                                            </label>
-                                            @if(!empty($row['tvlocked']))
-                                                <em>({{ ManagerTheme::getLexicon('locked') }})</em>
-                                            @endif
-                                            <a href="?id={{ $row['tvid'] }}&a=301&or={{ $action }}&oid={{ $data->id }}">{{ ManagerTheme::getLexicon('edit') }}</a>
-                                        </li>
-                                    </li>
-                                @php($preCat = $row['category'])
-                            @endforeach
-                            @if($insideUl)
+
+                        @if(isset($tvOutCategory) && $tvOutCategory->count() > 0)
+                            @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
+                                <ul>
+                                    @foreach($tvOutCategory as $item)
+                                        @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                    @endforeach
                                 </ul>
-                            @endif
-                        </ul>
-                    @endif
+                            @endcomponent
+                        @endif
+
+                        @if(isset($categoriesWithTv))
+                            @foreach($categoriesWithTv as $cat)
+                                @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
+                                    <ul>
+                                        @foreach($cat->tvs as $item)
+                                            @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                        @endforeach
+                                    </ul>
+                                @endcomponent
+                            @endforeach
+                        @endif
                 </div>
             </div>
 
-            {!! get_by_key($Events, 'OnTempFormRender') !!}
+            {!! get_by_key($events, 'OnTempFormRender') !!}
         </div>
     </form>
 @endsection

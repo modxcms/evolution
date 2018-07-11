@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
+use Illuminate\Support\Collection;
 
 class Template extends AbstractController implements ManagerTheme\PageControllerInterface
 {
@@ -52,12 +53,15 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function getParameters(array $params = []): array
     {
+        $template = $this->parameterData();
         return [
-            'data' => $this->parameterData(),
+            'data' => $template,
             'categories' => $this->parameterCategories(),
-            'tvs' => $this->parameterTvs(),
+            'tvSelected' => $this->parameterTvSelected(),
+            'categoriesWithTv' => $this->parameterCategoriesWithTv(),
+            'tvOutCategory' => $this->parameterTvOutCategory(),
             'action' => $this->getIndex(),
-            'Events' => $this->parameterEvents()
+            'events' => $this->parameterEvents()
         ];
     }
 
@@ -69,13 +73,13 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $id = $this->getElementId();
 
         /** @var Models\SiteTemplate $data */
-        $data = Models\SiteTemplate::firstOrNew(
-                ['id' => $id],
-                [
-                    'category' => (int)get_by_key($_REQUEST, 'catid', 0),
-                    'selectable' => 1
-                ]
-            );
+        $data = Models\SiteTemplate::with('tvs')->firstOrNew(
+            ['id' => $id],
+            [
+                'category' => (int)get_by_key($_REQUEST, 'catid', 0),
+                'selectable' => 1
+            ]
+        );
 
         if ($id > 0) {
             if (! $data->exists) {
@@ -99,76 +103,35 @@ class Template extends AbstractController implements ManagerTheme\PageController
         return $data;
     }
 
-    protected function parameterCategories() : array
+    protected function parameterCategories() : Collection
     {
-        return Models\Category::orderBy('rank', 'ASC')->orderBy('category', 'ASC')->pluck('category', 'id');
+        return Models\Category::orderBy('rank', 'ASC')->orderBy('category', 'ASC')->get();
     }
 
-    protected function parameterTvs()
+    protected function parameterTvSelected()
     {
-        $out = [];
-        $id = $this->getElementId();
+        return array_unique(
+            array_map(
+                'intval',
+                get_by_key($_POST, 'assignedTv', [], 'is_array')
+            )
+        );
+    }
 
-        $selectedTvs = array();
-        if (!isset($_POST['assignedTv'])) {
-            $rs = evolutionCMS()
-                ->getDatabase()
-                ->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category",
-                    $this->managerTheme->getLexicon('no_category')), sprintf("%s tv
-                LEFT JOIN %s tr ON tv.id=tr.tmplvarid
-                LEFT JOIN %s cat ON tv.category=cat.id", evolutionCMS()
-                    ->getDatabase()
-                    ->getFullTableName('site_tmplvars'), evolutionCMS()
-                    ->getDatabase()
-                    ->getFullTableName('site_tmplvar_templates'), evolutionCMS()
-                    ->getDatabase()
-                    ->getFullTableName('categories')), "templateid='{$id}'",
-                    "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
-                );
-            while ($row = evolutionCMS()
-                ->getDatabase()
-                ->getRow($rs)) {
-                $selectedTvs[$row['tvid']] = $row;
-            }
-            $selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
-        }
+    protected function parameterTvOutCategory(): Collection
+    {
+        return Models\SiteTmplvar::with('templates')
+            ->where('category', '=', 0)
+            ->orderBy('name', 'ASC')
+            ->get();
+    }
 
-        $unselectedTvs = array();
-        $rs = evolutionCMS()
-            ->getDatabase()
-            ->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid",
-                $this->managerTheme->getLexicon('no_category')), sprintf("%s tv
-	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
-	    LEFT JOIN %s cat ON tv.category=cat.id", evolutionCMS()
-                ->getDatabase()
-                ->getFullTableName('site_tmplvars'), evolutionCMS()
-                ->getDatabase()
-                ->getFullTableName('site_tmplvar_templates'), evolutionCMS()
-                ->getDatabase()
-                ->getFullTableName('categories')), "", "category, tvcaption");
-
-        while ($row = evolutionCMS()
-            ->getDatabase()
-            ->getRow($rs)) {
-            $unselectedTvs[$row['tvid']] = $row;
-        }
-
-        // Catch checkboxes if form not validated
-        if (isset($_POST['assignedTv'])) {
-            $selectedTvs = array();
-            foreach ($_POST['assignedTv'] as $tvid) {
-                if (isset($unselectedTvs[$tvid])) {
-                    $selectedTvs[$tvid] = $unselectedTvs[$tvid];
-                }
-            };
-        }
-
-        $out['selectedTvs'] = $selectedTvs;
-        $out['unselectedTvs'] = $unselectedTvs;
-        $out['total_selected'] = count($selectedTvs);
-        $out['total_unselected'] = count(array_diff_key($unselectedTvs, $selectedTvs));
-
-        return $out;
+    protected function parameterCategoriesWithTv(): Collection
+    {
+        return Models\Category::with('tvs.templates')
+            ->whereHas('tvs')
+            ->orderBy('rank', 'ASC')
+            ->get();
     }
 
     protected function parameterEvents() : array
