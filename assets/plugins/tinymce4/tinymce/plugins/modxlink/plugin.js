@@ -11,7 +11,7 @@
  */
 
 // Handles selection from Modx-Ressource-Tree
-if (parent.modx.tree) {
+if (typeof parent.modx !== 'undefined' && typeof parent.modx.tree !== 'undefined') {
   var modxOldRessourceId = parent.modx.tree.itemToChange;
   var modxLinkTitle = '';
   var checkModxTreeUpdateInterval = undefined;
