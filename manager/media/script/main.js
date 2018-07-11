@@ -239,20 +239,17 @@ evo.collapse = function(a, b) {
   } else {
     a = 'string' === typeof a ? document.querySelectorAll(a) : a;
   }
-  var h = {
-    containerClass: b && b.containerClass || 'tab-body'
-  };
-
+  b = b || 'tab-body'
   for (var i = 0; i < a.length; i++) {
-    if (a[i].nextElementSibling && a[i].nextElementSibling.classList.contains(h.containerClass)) {
+    if (a[i].nextElementSibling && a[i].nextElementSibling.classList.contains(b)) {
       a[i].nextElementSibling.classList.add('collapse', 'in');
       a[i].onclick = function() {
-        if (a[i].nextElementSibling.classList.contains('in')) {
-          a[i].nextElementSibling.classList.remove('in');
-          a[i].classList.add('collapsed');
+        if (this.nextElementSibling.classList.contains('in')) {
+          this.nextElementSibling.classList.remove('in');
+          this.classList.add('collapsed');
         } else {
-          a[i].nextElementSibling.classList.add('in');
-          a[i].classList.remove('collapsed');
+          this.nextElementSibling.classList.add('in');
+          this.classList.remove('collapsed');
         }
       };
     }
@@ -310,6 +307,7 @@ function document_onload() {
     };
   }
   evo.tooltips('[data-tooltip]');
+  //evo.collapse('.panel-heading', 'panel-collapse');
 
   if (document.forms.length && document.forms.mutate && window.frameElement.parentNode.parentNode.classList.contains('evo-popup')) {
     window.focus();
