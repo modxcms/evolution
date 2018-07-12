@@ -4,37 +4,37 @@
         <?php /** @var EvolutionCMS\Models\SiteTemplate $data */ ?>
         <script>
 
-          var actions = {
-            save: function() {
-              documentDirty = false;
-              form_save = true;
-              document.mutate.save.click();
-              //saveWait('mutate');
-            },
-            duplicate: function() {
-              if (confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
-                documentDirty = false;
-                document.location.href = "index.php?id={{ $data->getKey() }}&a=96";
-              }
-            },
-            delete: function() {
-              if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_template') }}") === true) {
-                documentDirty = false;
-                document.location.href = 'index.php?id={{ $data->getKey() }}&a=21';
-              }
-            },
-            cancel: function() {
-              documentDirty = false;
-              document.location.href = 'index.php?a=76';
-            }
-          };
-
-          document.addEventListener('DOMContentLoaded', function() {
-            var h1help = document.querySelector('h1 > .help');
-            h1help.onclick = function() {
-              document.querySelector('.element-edit-message').classList.toggle('show');
+            var actions = {
+                save: function () {
+                    documentDirty = false;
+                    form_save = true;
+                    document.mutate.save.click();
+                    //saveWait('mutate');
+                },
+                duplicate: function () {
+                    if (confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
+                        documentDirty = false;
+                        document.location.href = "index.php?id={{ $data->getKey() }}&a=96";
+                    }
+                },
+                delete: function () {
+                    if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_template') }}") === true) {
+                        documentDirty = false;
+                        document.location.href = 'index.php?id={{ $data->getKey() }}&a=21';
+                    }
+                },
+                cancel: function () {
+                    documentDirty = false;
+                    document.location.href = 'index.php?a=76';
+                }
             };
-          });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var h1help = document.querySelector('h1 > .help');
+                h1help.onclick = function () {
+                    document.querySelector('.element-edit-message').classList.toggle('show');
+                };
+            });
 
         </script>
     @endpush
@@ -65,7 +65,7 @@
 
         <div class="tab-pane" id="templatesPane">
             <script>
-              var tp = new WebFXTabPane(document.getElementById('templatesPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+                var tp = new WebFXTabPane(document.getElementById('templatesPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <div class="tab-page" id="tabTemplate">
@@ -176,7 +176,8 @@
 
                     @if($modx->hasPermission('save_template') && $data->tvs->count() > 1 && $data->getKey())
                         <div class="form-group">
-                            <a class="btn btn-primary" href="?a=117&id={{ $data->getKey() }}">{{ ManagerTheme::getLexicon('template_tv_edit') }}</a>
+                            <a class="btn btn-primary"
+                               href="?a=117&id={{ $data->getKey() }}">{{ ManagerTheme::getLexicon('template_tv_edit') }}</a>
                         </div>
                     @endif
 
@@ -192,10 +193,13 @@
                     @else
                         {{ ManagerTheme::getLexicon('template_no_tv') }}
                     @endif
-                    <hr>
-                    <p>{{ ManagerTheme::getLexicon('template_notassigned_tv') }}</p>
 
-                    @if(isset($tvOutCategory) && $tvOutCategory->count() > 0)
+                    @if($tvOutCategory->count() || $categoriesWithTv->count())
+                        <hr>
+                        <p>{{ ManagerTheme::getLexicon('template_notassigned_tv') }}</p>
+                    @endif
+
+                    @if($tvOutCategory->count() > 0)
                         @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                             <ul>
                                 @foreach($tvOutCategory as $item)
@@ -205,19 +209,17 @@
                         @endcomponent
                     @endif
 
-                    @if(isset($categoriesWithTv))
-                        @foreach($categoriesWithTv as $cat)
-                            @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
-                                <ul>
-                                    @foreach($cat->tvs as $item)
-                                        @if(! $data->tvs->contains('id', $item->getKey()))
-                                            @include('manager::page.template.tv', compact('item', 'tvSelected'))
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            @endcomponent
-                        @endforeach
-                    @endif
+                    @foreach($categoriesWithTv as $cat)
+                        @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
+                            <ul>
+                                @foreach($cat->tvs as $item)
+                                    @if(! $data->tvs->contains('id', $item->getKey()))
+                                        @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                    @endif
+                                @endforeach
+                            </ul>
+                        @endcomponent
+                    @endforeach
                 </div>
             </div>
 
