@@ -196,6 +196,7 @@
                     ])
                 </div>
                 <!-- HTML text editor end -->
+
             </div>
 
             {!! get_by_key($events, 'OnChunkFormRender') !!}
