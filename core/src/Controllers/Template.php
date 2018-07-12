@@ -14,6 +14,9 @@ class Template extends AbstractController implements ManagerTheme\PageController
         'OnTempFormRender'
     ];
 
+    /** @var Models\SiteTemplate|null */
+    private $data;
+
     /**
      * @inheritdoc
      */
@@ -54,23 +57,24 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function getParameters(array $params = []): array
     {
-        $template = $this->parameterData();
+        $this->data = $this->parameterData();
         return [
-            'data' => $template,
+            'data' => $this->data,
             'categories' => $this->parameterCategories(),
             'tvSelected' => $this->parameterTvSelected(),
             'categoriesWithTv' => $this->parameterCategoriesWithTv(
-                $template->tvs->reject(function (Models\SiteTmplvar $item) {
+                $this->data->tvs->reject(function (Models\SiteTmplvar $item) {
                     return $item->category === 0;
                 })->pluck('id')->toArray()
             ),
             'tvOutCategory' => $this->parameterTvOutCategory(
-                $template->tvs->reject(function (Models\SiteTmplvar $item) {
+                $this->data->tvs->reject(function (Models\SiteTmplvar $item) {
                     return $item->category !== 0;
                 })->pluck('id')->toArray()
             ),
             'action' => $this->getIndex(),
-            'events' => $this->parameterEvents()
+            'events' => $this->parameterEvents(),
+            'actionButtons' => $this->parameterActionButtons()
         ];
     }
 
@@ -165,6 +169,18 @@ class Template extends AbstractController implements ManagerTheme\PageController
         }
 
         return $out;
+    }
+
+    protected function parameterActionButtons()
+    {
+        return [
+            'select' => 1,
+            'save' => evolutionCMS()->hasPermission('save_template'),
+            'new' => evolutionCMS()->hasPermission('new_template'),
+            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_template'),
+            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_template'),
+            'cancel' => 1
+        ];
     }
 
     private function callEvent($name) : string
