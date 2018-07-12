@@ -72,10 +72,10 @@
 
         @include('manager::partials.actionButtons', [
             'select' => 1,
-            'save' => 1,
-            'new' => 1,
-            'duplicate' => !empty($data->getKey()),
-            'delete' => !empty($data->getKey()),
+            'save' => evolutionCMS()->hasPermission('save_chunk'),
+            'new' => evolutionCMS()->hasPermission('new_chunk'),
+            'duplicate' => !empty($data->getKey()) && evolutionCMS()->hasPermission('new_chunk'),
+            'delete' => !empty($data->getKey()) && evolutionCMS()->hasPermission('delete_chunk'),
             'cancel' => 1
         ])
 
@@ -170,7 +170,7 @@
                     <span>{{ ManagerTheme::getLexicon('chunk_code') }}</span>
                     @if(get_by_key($modx->config, 'use_editor') == 1)
                         <span class="float-xs-right">
-                        {{ ManagerTheme::getLexicon('which_editor_title') }}
+                            {{ ManagerTheme::getLexicon('which_editor_title') }}
                             @include('manager::form.selectElement', [
                                 'name' => 'which_editor',
                                 'value' => $which_editor,
@@ -183,7 +183,7 @@
                                 'class' => 'form-control-sm',
                                 'attributes' => 'onchange="changeRTE();"'
                             ])
-                    </span>
+                        </span>
                     @endif
                 </div>
                 <div class="section-editor clearfix">
