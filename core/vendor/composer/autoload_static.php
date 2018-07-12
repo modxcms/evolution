@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
+class ComposerStaticInitd43aace344060c6a6793fd4c266a8fce
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -40,6 +40,7 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Debug\\' => 24,
+            'Symfony\\Component\\Console\\' => 26,
         ),
         'P' => 
         array (
@@ -68,6 +69,7 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
             'Illuminate\\Database\\' => 20,
             'Illuminate\\Contracts\\' => 21,
             'Illuminate\\Container\\' => 21,
+            'Illuminate\\Console\\' => 19,
             'Illuminate\\Config\\' => 18,
             'Illuminate\\Cache\\' => 17,
         ),
@@ -105,6 +107,10 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
         'Symfony\\Component\\Debug\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/debug',
+        ),
+        'Symfony\\Component\\Console\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/console',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -170,6 +176,10 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
         array (
             0 => __DIR__ . '/..' . '/illuminate/container',
         ),
+        'Illuminate\\Console\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/console',
+        ),
         'Illuminate\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/config',
@@ -216,10 +226,10 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb::$fallbackDirsPsr4;
-            $loader->classMap = ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd43aace344060c6a6793fd4c266a8fce::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd43aace344060c6a6793fd4c266a8fce::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitd43aace344060c6a6793fd4c266a8fce::$fallbackDirsPsr4;
+            $loader->classMap = ComposerStaticInitd43aace344060c6a6793fd4c266a8fce::$classMap;
 
         }, null, ClassLoader::class);
     }

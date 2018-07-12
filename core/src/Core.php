@@ -144,6 +144,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         parent::__construct();
 
         $this->initialize();
+
+        $this->config['view']['paths'] = $this['config']->get('view.paths');
     }
 
     public function initialize()

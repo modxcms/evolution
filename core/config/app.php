@@ -29,26 +29,26 @@ return [
          * Keys are needed only for the convenience of replace ServiceProvider class
          * via custom/config/app/providers/*.php
          */
-        'Laravel.View' => Illuminate\View\ViewServiceProvider::class,
-        'Laravel.Database' => Illuminate\Database\DatabaseServiceProvider::class,
-        'Laravel.Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
-        'Laravel.Pagination' => Illuminate\Pagination\PaginationServiceProvider::class,
-        'Laravel.Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
-        'Laravel.Lang' => Illuminate\Translation\TranslationServiceProvider::class,
+        'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
+        'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
+        'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
+        'Laravel_Pagination' => Illuminate\Pagination\PaginationServiceProvider::class,
+        'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
+        'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
-        'Bootstrap.ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerProvider::class,
-        'Evolution.Events' => EvolutionCMS\Providers\EventServiceProvider::class,
-        'Evolution.DBAPI' => EvolutionCMS\Providers\DatabaseProvider::class,
-        'Evolution.DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreProvider::class,
-        'Evolution.EXPORT_SITE' => EvolutionCMS\Providers\ExportSiteProvider::class,
-        'Evolution.MODxMailer' => EvolutionCMS\Providers\MailProvider::class,
-        'Evolution.makeTable' => EvolutionCMS\Providers\MakeTableProvider::class,
-        'Evolution.ManagerAPI' => EvolutionCMS\Providers\ManagerApiProvider::class,
-        'Evolution.MODIFIERS' => EvolutionCMS\Providers\ModifiersProvider::class,
-        'Evolution.phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
-        'Evolution.PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
-        'Evolution.DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class,
-        'Evolution.ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class
+        'Bootstrap_ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerProvider::class,
+        'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
+        'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseProvider::class,
+        'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreProvider::class,
+        'Evolution_EXPORT_SITE' => EvolutionCMS\Providers\ExportSiteProvider::class,
+        'Evolution_MODxMailer' => EvolutionCMS\Providers\MailProvider::class,
+        'Evolution_makeTable' => EvolutionCMS\Providers\MakeTableProvider::class,
+        'Evolution_ManagerAPI' => EvolutionCMS\Providers\ManagerApiProvider::class,
+        'Evolution_MODIFIERS' => EvolutionCMS\Providers\ModifiersProvider::class,
+        'Evolution_phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
+        'Evolution_PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
+        'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class,
+        'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class
     ],
 
     'aliases' => [
