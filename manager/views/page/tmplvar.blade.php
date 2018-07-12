@@ -259,7 +259,7 @@
         ])
 
         <div class="container element-edit-message">
-            <div class="alert alert-info">{{ ManagerTheme::getLexicon('tmplvars_msg') }}</div>
+            <div class="alert alert-info">{!! ManagerTheme::getLexicon('tmplvars_msg') !!}</div>
         </div>
 
         <div class="tab-pane" id="tmplvarsPane">
