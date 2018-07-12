@@ -11,9 +11,9 @@ class ModxCaptcha
     protected $modx = null;
 
     /* path to font directory*/
-    protected $dir_font = "ttf/";
+    protected $dir_font = "/ttf/";
     /* path to background image directory*/
-    protected $dir_noise = "noises/";
+    protected $dir_noise = "/noises/";
     public $word = "";
     protected $im = null;
     protected $im_width = 0;
@@ -28,8 +28,8 @@ class ModxCaptcha
     public function __construct(DocumentParser $modx, $width = 200, $height = 160)
     {
         $this->modx = $modx;
-        $this->dir_font = MODX_MANAGER_PATH . 'includes/' . $this->dir_font;
-        $this->dir_noise = MODX_MANAGER_PATH . 'includes/' . $this->dir_noise;
+        $this->dir_font = __DIR__ . $this->dir_font;
+        $this->dir_noise = __DIR__ . $this->dir_noise;
         $this->im_width = $width;
         $this->im_height = $height;
         $this->word = $this->pickWord();
