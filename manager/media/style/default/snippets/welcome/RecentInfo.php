@@ -5,7 +5,7 @@ if ($modx->getDatabase()->getRecordCount($rs) < 1) {
     return '<tr><td>[%no_activity_message%]</td></tr>';
 }
 $tpl = '<tr>
-    <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
+    <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap text-right"><span class="label label-info">[+id+]</span></td>
     <td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
     <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat=`'.$modx->toDateFormat(0,'formatOnly').' %H:%M:%S`+]</td>
     <td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>

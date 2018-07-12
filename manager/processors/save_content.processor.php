@@ -1,5 +1,5 @@
 <?php
-if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_document')) {
@@ -28,18 +28,18 @@ $unpub_date = $_POST['unpub_date'];
 $document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? array() : $_POST['docgroups'];
 $type = $_POST['type'];
 $contentType = $modx->getDatabase()->escape($_POST['contentType']);
-$contentdispo = (int) $_POST['content_dispo'];
+$contentdispo = (int)$_POST['content_dispo'];
 $longtitle = $modx->getDatabase()->escape($_POST['longtitle']);
-$donthit = (int) $_POST['donthit'];
+$donthit = (int)$_POST['donthit'];
 $menutitle = $modx->getDatabase()->escape($_POST['menutitle']);
-$hidemenu = (int) $_POST['hidemenu'];
+$hidemenu = (int)$_POST['hidemenu'];
 $aliasvisible = $_POST['alias_visible'];
 
 /************* webber ********/
-$sd = isset($_POST['dir']) ? '&dir='.$_POST['dir'] : '&dir=DESC';
-$sb = isset($_POST['sort']) ? '&sort='.$_POST['sort'] : '&sort=pub_date';
-$pg = isset($_POST['page']) ? '&page='.(int) $_POST['page'] : '';
-$add_path = $sd.$sb.$pg;
+$sd=isset($_POST['dir'])?'&dir='.$_POST['dir']:'&dir=DESC';
+$sb=isset($_POST['sort'])?'&sort='.$_POST['sort']:'&sort=pub_date';
+$pg=isset($_POST['page'])?'&page='.(int)$_POST['page']:'';
+$add_path=$sd.$sb.$pg;
 
 
 
@@ -73,7 +73,7 @@ if ($friendly_urls) {
     // auto assign alias
     if (!$alias && $automatic_alias) {
         $alias = strtolower($modx->stripAlias(trim($pagetitle)));
-        if (!$allow_duplicate_alias) {
+        if(!$allow_duplicate_alias) {
             if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$alias'")) != 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
@@ -84,7 +84,7 @@ if ($friendly_urls) {
                 }
                 $alias = $tempAlias;
             }
-        } else {
+        }else{
             if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
@@ -165,19 +165,19 @@ if (empty ($unpub_date)) {
 }
 
 // get document groups for current user
-$tmplvars = array();
+$tmplvars = array ();
 if ($_SESSION['mgrDocgroups']) {
     $docgrp = implode(",", $_SESSION['mgrDocgroups']);
 }
 
 // ensure that user has not made this document inaccessible to themselves
-if ($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
+if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
     $document_group_list = implode(',', $document_groups);
-    $document_group_list = implode(',', array_filter(explode(',', $document_group_list), 'is_numeric'));
-    if (!empty($document_group_list)) {
+    $document_group_list = implode(',', array_filter(explode(',',$document_group_list), 'is_numeric'));
+    if(!empty($document_group_list)) {
         $rs = $modx->getDatabase()->select('COUNT(mg.id)', "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg", "mga.membergroup = mg.user_group AND mga.documentgroup IN({$document_group_list}) AND mg.member = {$_SESSION['mgrInternalKey']}");
         $count = $modx->getDatabase()->getValue($rs);
-        if ($count == 0) {
+        if($count == 0) {
             if ($actionToTake == 'edit') {
                 $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
@@ -195,45 +195,45 @@ $rs = $modx->getDatabase()->select(
         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
         LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
-    "tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)".((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)").")",
+    "tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ")",
     "tv.rank"
     );
 while ($row = $modx->getDatabase()->getRow($rs)) {
     $tmplvar = '';
     switch ($row['type']) {
         case 'url':
-            $tmplvar = $_POST["tv".$row['id']];
-            if ($_POST["tv".$row['id'].'_prefix'] != '--') {
-                $tmplvar = str_replace(array(
+            $tmplvar = $_POST["tv" . $row['id']];
+            if ($_POST["tv" . $row['id'] . '_prefix'] != '--') {
+                $tmplvar = str_replace(array (
                     "feed://",
                     "ftp://",
                     "http://",
                     "https://",
                     "mailto:"
                 ), "", $tmplvar);
-                $tmplvar = $_POST["tv".$row['id'].'_prefix'].$tmplvar;
+                $tmplvar = $_POST["tv" . $row['id'] . '_prefix'] . $tmplvar;
             }
         break;
         case 'file':
-            $tmplvar = $_POST["tv".$row['id']];
+            $tmplvar = $_POST["tv" . $row['id']];
         break;
         default:
-            if (is_array($_POST["tv".$row['id']])) {
+            if (is_array($_POST["tv" . $row['id']])) {
                 // handles checkboxes & multiple selects elements
-                $feature_insert = array();
-                $lst = $_POST["tv".$row['id']];
+                $feature_insert = array ();
+                $lst = $_POST["tv" . $row['id']];
                 while (list ($featureValue, $feature_item) = each($lst)) {
                     $feature_insert[count($feature_insert)] = $feature_item;
                 }
                 $tmplvar = implode("||", $feature_insert);
             } else {
-                $tmplvar = $_POST["tv".$row['id']];
+                $tmplvar = $_POST["tv" . $row['id']];
             }
         break;
     }
     // save value if it was modified
     if (strlen($tmplvar) > 0 && $tmplvar != $row['default_text']) {
-        $tmplvars[$row['id']] = array(
+        $tmplvars[$row['id']] = array (
             $row['id'],
             $tmplvar
         );
@@ -294,7 +294,7 @@ switch ($actionToTake) {
                 $id = '';
             }
 
-        $modx->invokeEvent("OnBeforeDocFormSave", array(
+        $modx->invokeEvent("OnBeforeDocFormSave", array (
             "mode" => "new",
             "id" => $id
         ));
@@ -309,40 +309,41 @@ switch ($actionToTake) {
         $publishedon = ($published ? $currentdate : 0);
         $publishedby = ($published ? $modx->getLoginUserID() : 0);
 
-        if ((!empty($pub_date)) && ($published)) {
-            $publishedon = $pub_date;
+        if ((!empty($pub_date))&&($published)){
+            $publishedon=$pub_date;
         }
 
-        $dbInsert = array(
-            "introtext"        => $introtext,
-            "content"          => $content,
-            "pagetitle"        => $pagetitle,
-            "longtitle"        => $longtitle,
-            "type"             => $type,
-            "description"      => $description,
-            "alias"            => $alias,
-            "link_attributes"  => $link_attributes,
-            "isfolder"         => $isfolder,
-            "richtext"         => $richtext,
-            "published"        => $published,
-            "parent"           => $parent,
-            "template"         => $template,
-            "menuindex"        => $menuindex,
-            "searchable"       => $searchable,
-            "cacheable"        => $cacheable,
-            "createdby"        => $modx->getLoginUserID(),
-            "createdon"        => $currentdate,
-            "editedby"         => $modx->getLoginUserID(),
-            "editedon"         => $currentdate,
-            "publishedby"      => $publishedby,
-            "publishedon"      => $publishedon,
-            "pub_date"         => $pub_date,
-            "unpub_date"       => $unpub_date,
-            "contentType"      => $contentType,
-            "content_dispo"    => $contentdispo,
-            "donthit"          => $donthit,
-            "menutitle"        => $menutitle,
-            "hidemenu"         => $hidemenu,
+        $dbInsert = array
+        (
+            "introtext"        => $introtext ,
+            "content"          => $content ,
+            "pagetitle"        => $pagetitle ,
+            "longtitle"        => $longtitle ,
+            "type"             => $type ,
+            "description"      => $description ,
+            "alias"            => $alias ,
+            "link_attributes"  => $link_attributes ,
+            "isfolder"         => $isfolder ,
+            "richtext"         => $richtext ,
+            "published"        => $published ,
+            "parent"           => $parent ,
+            "template"         => $template ,
+            "menuindex"        => $menuindex ,
+            "searchable"       => $searchable ,
+            "cacheable"        => $cacheable ,
+            "createdby"        => $modx->getLoginUserID() ,
+            "createdon"        => $currentdate ,
+            "editedby"         => $modx->getLoginUserID() ,
+            "editedon"         => $currentdate ,
+            "publishedby"      => $publishedby ,
+            "publishedon"      => $publishedon ,
+            "pub_date"         => $pub_date ,
+            "unpub_date"       => $unpub_date ,
+            "contentType"      => $contentType ,
+            "content_dispo"    => $contentdispo ,
+            "donthit"          => $donthit ,
+            "menutitle"        => $menutitle ,
+            "hidemenu"         => $hidemenu ,
             "alias_visible"    => $aliasvisible
         );
 
@@ -371,7 +372,7 @@ switch ($actionToTake) {
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
                 list($group) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
-                $new_groups[] = '('.(int) $group.','.$key.')';
+                $new_groups[] = '('.(int)$group.','.$key.')';
             }
             $saved = true;
             if (!empty($new_groups)) {
@@ -380,7 +381,7 @@ switch ($actionToTake) {
         } else {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
-            if ($use_udperms && !($isManager || $isWeb) && $parent != 0) {
+            if($use_udperms && !($isManager || $isWeb) && $parent != 0) {
                 // inherit document access permissions
                 $modx->getDatabase()->insert(
                     array(
@@ -399,17 +400,17 @@ switch ($actionToTake) {
         }
 
         // invoke OnDocFormSave event
-        $modx->invokeEvent("OnDocFormSave", array(
+        $modx->invokeEvent("OnDocFormSave", array (
             "mode" => "new",
             "id" => $key
         ));
 
         // secure web documents - flag as private
-        include MODX_MANAGER_PATH."includes/secure_web_documents.inc.php";
+        include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
         secureWebDocument($key);
 
         // secure manager documents - flag as private
-        include MODX_MANAGER_PATH."includes/secure_mgr_documents.inc.php";
+        include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
         secureMgrDocument($key);
 
         // Set the item name for logger
@@ -428,13 +429,13 @@ switch ($actionToTake) {
             // document
             if ($_POST['mode'] == "4")
                 $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
-            $header = "Location: index.php?a=".$a."&r=1&stay=".$_POST['stay'];
+            $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
         } else {
             $header = "Location: index.php?a=3&id=$key&r=1";
         }
 
         if (headers_sent()) {
-            $header = str_replace('Location: ', '', $header);
+            $header = str_replace('Location: ','',$header);
             echo "<script>document.location.href='$header';</script>\n";
         } else {
             header($header);

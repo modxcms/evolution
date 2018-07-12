@@ -9,7 +9,7 @@
             </td>
             <td>
                 <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options('', $manager_language, $lang_keys, $_lang) ?>
+                    <?= get_lang_options('', $manager_language) ?>
                 </select>
             </td>
         </tr>
@@ -28,10 +28,7 @@
             </td>
             <td>
                 <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onChange="documentDirty=true;">
-                    <?php $charsets = include EVO_CORE_PATH . '/factory/charsets.php'; ?>
-                    <?php foreach ($charsets as $value => $label) : ?>
-                        <?=sprintf('<option value="%s" %s>%s</option>', $value, $value===$modx_charset ? 'selected' : '', $label); ?>
-                    <?php endforeach; ?>
+                    <?php include "charsets.php" ?>
                 </select>
             </td>
         </tr>
@@ -58,7 +55,7 @@
                                 continue;
                             }
                             $themename = $file;
-                            $selectedtext = $themename == ManagerTheme::getTheme() ? "selected='selected'" : "";
+                            $selectedtext = $themename == $manager_theme ? "selected='selected'" : "";
                             echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
                         }
                     }
@@ -73,7 +70,7 @@
                 <div class="split"></div>
             </td>
         </tr>
-
+        
         <tr>
             <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
                 <small>[(manager_theme_mode)]</small>
@@ -585,7 +582,7 @@
             </td>
             <td>
                 <select name="fe_editor_lang" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options('', $fe_editor_lang, $lang_keys, $_lang) ?>
+                    <?= get_lang_options('', $fe_editor_lang) ?>
                 </select>
             </td>
         </tr>

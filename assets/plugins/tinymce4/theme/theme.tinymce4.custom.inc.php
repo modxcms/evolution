@@ -24,6 +24,7 @@ $this->appendSet('plugins', 'template', ' '); // Assure plugin is loaded / in pl
 $this->set('menubar', false, 'bool' ); // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
 
 // Take over global values for each of the 4 rows
+/*
 if(!empty($this->modxParams['custom_buttons_useglobal'])) {
     $i=1;
     while($i<=4) {
@@ -31,6 +32,7 @@ if(!empty($this->modxParams['custom_buttons_useglobal'])) {
         $i++;
     }
 }
+*/
 
 $this->set('toolbar1', $this->modxParams['custom_buttons1'], 'string', false );
 $this->set('toolbar2', $this->modxParams['custom_buttons2'], 'string', true );

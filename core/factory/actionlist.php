@@ -1,20 +1,20 @@
 <?php
 return [
     '1'   => 'Loading a frame(set)', //ok
-    '2'   => 'Viewing home page/ online users', //ok
+    '2'   => 'Viewing dashboard', //ok
     '3'   => 'Viewing data for resource',  //ok
     '4'   => 'Creating a resource', //ok == 27, 72, 85, 4
     '5'   => 'Saving resource', //ok
     '6'   => 'Deleting resource', //ok
-    '7'   => 'Waiting while MODX cleans up', //ok
+    '7'   => 'Waiting while EVO cleans up', //ok
     '8'   => 'Logged out', //ok
     '9'   => 'Viewing help', //ok
     '10'  => 'Viewing/ composing messages', //ok
     '11'  => 'Creating a user', //ok. == 12
     '12'  => 'Editing user', //ok. == 11
     '13'  => 'Viewing logging', //ok
-    '14'  => 'Editing a parser', //not found 
-    '15'  => 'Saving a parser', //not found 
+    '14'  => 'Editing a parser', //not found
+    '15'  => 'Saving a parser', //not found
     '16'  => 'Editing template', //ok
     '17'  => 'Editing settings', //ok
     '18'  => 'Viewing Credits :)', //ok
@@ -28,7 +28,7 @@ return [
     '26'  => 'Refreshing site', //ok
     '27'  => 'Editing resource', //ok = 27, 72, 85, 4
     '28'  => 'Changing password', //ok
-    '29'  => 'Error', //ok 
+    '29'  => 'Error', //ok
     '30'  => 'Saving settings', //ok
     '31'  => 'Using file manager', //ok
     '32'  => 'Saving user', //ok
@@ -39,16 +39,16 @@ return [
     '37'  => 'Deleting role', //ok
     '38'  => 'Creating new role', //ok == 35
     '40'  => 'Editing Access Permissions', //ok
-    '41'  => 'Editing Access Permissions', //ok access groups processor 
-    '42'  => 'Editing Access Permissions', //not found 
-    '43'  => 'Editing Access Permissions', //not found 
-    '44'  => 'Editing Access Permissions', //not found 
-    '45'  => 'Idle', //not found 
-    '46'  => 'Editing Access Permissions', //not found 
-    '47'  => 'Editing Access Permissions', //not found 
-    '48'  => 'Editing Access Permissions', //not found 
-    '49'  => 'Editing Access Permissions', //not found 
-    '50'  => 'Editing Access Permissions', //not found 
+    '41'  => 'Editing Access Permissions', //ok access groups processor
+    '42'  => 'Editing Access Permissions', //not found
+    '43'  => 'Editing Access Permissions', //not found
+    '44'  => 'Editing Access Permissions', //not found
+    '45'  => 'Idle', //not found
+    '46'  => 'Editing Access Permissions', //not found
+    '47'  => 'Editing Access Permissions', //not found
+    '48'  => 'Editing Access Permissions', //not found
+    '49'  => 'Editing Access Permissions', //not found
+    '50'  => 'Editing Access Permissions', //not found
     '51'  => 'Moving resource', //ok
     '52'  => 'Moved resource', //ok
     '53'  => 'Viewing system info', //ok
@@ -56,8 +56,8 @@ return [
     '55'  => 'Empty logs', //55
     '56'  => 'Refresh resource tree', //ok
     '57'  => 'Refresh menu', //not found
-    '58'  => 'Logged in', //not found 
-    '59'  => 'About MODX', //ok
+    '58'  => 'Logged in', //not found
+    '59'  => 'About EVO', //ok
     '60'  => 'Emptying Recycle Bin', //not found
     '61'  => 'Publishing a resource', //ok
     '62'  => 'Un-publishing a resource', //ok
@@ -88,7 +88,7 @@ return [
     '89'  => 'Saving web user', //ok
     '90'  => 'Deleting web user', //ok
     '91'  => 'Editing Web Access Permissions', //ok
-    '92'  => 'Editing Access Permissions',  // ok access groups processor      
+    '92'  => 'Editing Access Permissions',  // ok access groups processor
     '93'  => 'Backup Manager', //ok
     '94'  => 'Duplicate resource', //ok
     '95'  => 'Importing resources from HTML', //ok
@@ -130,5 +130,5 @@ return [
 ];
 
 //120  get the edit category page
-//121  for ajax-requests 
+//121  for ajax-requests
 //305  get the tv-rank action

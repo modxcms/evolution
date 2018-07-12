@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-right">
-                    <img name="login_logo" style="max-height: 48px" src="' .
+                    <img name="login_bg" style="max-height: 48px" src="' .
                     ($settings['login_bg'] ? MODX_SITE_URL . $settings['login_bg'] : '') . '" />
                 </div>',
             'comment' => ManagerTheme::getLexicon('login_bg_message')

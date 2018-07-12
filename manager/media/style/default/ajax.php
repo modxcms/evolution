@@ -3,22 +3,12 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-$root = dirname(__DIR__, 3);
-if (file_exists( $root . '/config.php')) {
-    $config = require $root . '/config.php';
-} elseif (file_exists(dirname($root) . '/config.php')) {
-    $config = require dirname($root) . '/config.php';
-} else {
-    $config = [
-        'root' => dirname($root)
-    ];
-}
-if (!empty($config['root']) && file_exists($config['root'] . '/index.php')) {
-    require_once $config['root'] . '/index.php';
-} else {
-    echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the EVO <a href='../install'>install utility</a>";
-    exit;
+include_once("./../../../../index.php");
+
+$modx->getDatabase()->connect();
+
+if (empty ($modx->config)) {
+    $modx->getSettings();
 }
 
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
@@ -26,11 +16,12 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
 }
 
 $modx->sid = session_id();
+$modx->loadExtension("ManagerAPI");
 
 $_lang = array();
-include_once MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
+include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
 if ($modx->config['manager_language'] != 'english') {
-    include_once MODX_MANAGER_PATH . 'includes/lang/' . $modx->config['manager_language'] . '.inc.php';
+    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
 }
 include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 
@@ -75,7 +66,7 @@ if (isset($action)) {
                         $a = 16;
                         $sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
                         $sql = $modx->getDatabase()->query('SELECT t1.id, t1.templatename AS name, t1.locked, 0 AS disabled
-                        FROM ' . $modx->getDatabase()->getFullTableName('site_templates') . ' AS t1
+                        FROM ' . $modx->getFullTableName('site_templates') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.templatename ASC
                         ' . $sqlLimit);
@@ -89,8 +80,8 @@ if (isset($action)) {
                     case 'element_tplvars':
                         $a = 301;
                         $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, IF(MIN(t2.tmplvarid),0,1) AS disabled
-                        FROM ' . $modx->getDatabase()->getFullTableName('site_tmplvars') . ' AS t1
-                        LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
+                        FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
+                        LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
                         ' . $sqlLike . '
                         GROUP BY t1.id
                         ORDER BY t1.name ASC
@@ -105,7 +96,7 @@ if (isset($action)) {
                     case 'element_htmlsnippets':
                         $a = 78;
                         $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getDatabase()->getFullTableName('site_htmlsnippets') . ' AS t1
+                        FROM ' . $modx->getFullTableName('site_htmlsnippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
@@ -119,7 +110,7 @@ if (isset($action)) {
                     case 'element_snippets':
                         $a = 22;
                         $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getDatabase()->getFullTableName('site_snippets') . ' AS t1
+                        FROM ' . $modx->getFullTableName('site_snippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
@@ -133,7 +124,7 @@ if (isset($action)) {
                     case 'element_plugins':
                         $a = 102;
                         $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getDatabase()->getFullTableName('site_plugins') . ' AS t1
+                        FROM ' . $modx->getFullTableName('site_plugins') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
@@ -184,8 +175,8 @@ if (isset($action)) {
             }
 
             $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
-				FROM ' . $modx->getDatabase()->getFullTableName('manager_users') . ' AS t1
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
+				FROM ' . $modx->getFullTableName('manager_users') . ' AS t1
+				LEFT JOIN ' . $modx->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
 				' . $sqlLike . '
 				ORDER BY t1.username ASC
 				' . $sqlLimit);
@@ -223,8 +214,8 @@ if (isset($action)) {
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
             $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
-				FROM ' . $modx->getDatabase()->getFullTableName('web_users') . ' AS t1
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('web_user_attributes') . ' AS t2 ON t1.id=t2.internalKey
+				FROM ' . $modx->getFullTableName('web_users') . ' AS t1
+				LEFT JOIN ' . $modx->getFullTableName('web_user_attributes') . ' AS t2 ON t1.id=t2.internalKey
 				' . $sqlLike . '
 				ORDER BY t1.username ASC
 				' . $sqlLimit);
@@ -264,7 +255,7 @@ if (isset($action)) {
                     case 'SnippetNoCache': {
 
                         $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getDatabase()->getFullTableName('site_snippets') . '
+						FROM ' . $modx->getFullTableName('site_snippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
@@ -302,7 +293,7 @@ if (isset($action)) {
                     case 'Chunk' : {
 
                         $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getDatabase()->getFullTableName('site_htmlsnippets') . '
+						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
@@ -339,7 +330,7 @@ if (isset($action)) {
                     }
                     case 'AttributeValue': {
                         $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getDatabase()->getFullTableName('site_htmlsnippets') . '
+						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
@@ -363,7 +354,7 @@ if (isset($action)) {
                         } else {
 
                             $sql = $modx->getDatabase()->query('SELECT *
-							FROM ' . $modx->getDatabase()->getFullTableName('site_snippets') . '
+							FROM ' . $modx->getFullTableName('site_snippets') . '
 							WHERE name="' . $name . '"
 							LIMIT 1');
 
@@ -451,7 +442,7 @@ if (isset($action)) {
                         }
 
                         $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getDatabase()->getFullTableName('site_tmplvars') . '
+						FROM ' . $modx->getFullTableName('site_tmplvars') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
@@ -506,7 +497,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $modx->getDatabase()->getFullTableName('site_content'), 'id=' . $id));
+                    $parentOld = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
@@ -527,7 +518,7 @@ if (isset($action)) {
                     if (empty($json['errors'])) {
                         // check privileges user for move docs
                         if (!empty($modx->config['tree_show_protected']) && $role != 1) {
-                            $sql = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
+                            $sql = $modx->getDatabase()->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
                             if ($modx->getDatabase()->getRecordCount($sql)) {
                                 $document_groups = array();
                                 while ($row = $modx->getDatabase()->getRow($sql)) {
@@ -552,22 +543,22 @@ if (isset($action)) {
                             // set new parent
                             $modx->getDatabase()->update(array(
                                 'parent' => $parent
-                            ), $modx->getDatabase()->getFullTableName('site_content'), 'id=' . $id);
+                            ), $modx->getFullTableName('site_content'), 'id=' . $id);
                             // set parent isfolder = 1
                             $modx->getDatabase()->update(array(
                                 'isfolder' => 1
-                            ), $modx->getDatabase()->getFullTableName('site_content'), 'id=' . $parent);
+                            ), $modx->getFullTableName('site_content'), 'id=' . $parent);
 
                             if ($parent != $parentOld) {
                                 // check children docs and set parent isfolder
-                                if ($modx->getDatabase()->getRecordCount($modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_content'), 'parent=' . $parentOld))) {
+                                if ($modx->getDatabase()->getRecordCount($modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
                                     $modx->getDatabase()->update(array(
                                         'isfolder' => 1
-                                    ), $modx->getDatabase()->getFullTableName('site_content'), 'id=' . $parentOld);
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
                                 } else {
                                     $modx->getDatabase()->update(array(
                                         'isfolder' => 0
-                                    ), $modx->getDatabase()->getFullTableName('site_content'), 'id=' . $parentOld);
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
                                 }
                             }
 
@@ -575,7 +566,7 @@ if (isset($action)) {
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    $modx->getDatabase()->query('UPDATE ' . $modx->getDatabase()->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
+                                    $modx->getDatabase()->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
                                 }
                             } else {
                                 // TODO: max(*) menuindex
@@ -614,8 +605,8 @@ if (isset($action)) {
                 $docgrp_cond = $docgrp ? ' OR dg.document_group IN (' . $docgrp . ')' : '';
                 $sql = '
                     SELECT MAX(IF(1=' . $role . ' OR sc.privatemgr=0' . $docgrp_cond . ', 0, 1)) AS locked
-                    FROM ' . $modx->getDatabase()->getFullTableName('site_content') . ' AS sc 
-                    LEFT JOIN ' . $modx->getDatabase()->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
+                    FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
+                    LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
                     WHERE sc.id=' . $id . ' GROUP BY sc.id';
                 $sql = $modx->getDatabase()->query($sql);
                 if ($modx->getDatabase()->getRecordCount($sql)) {
