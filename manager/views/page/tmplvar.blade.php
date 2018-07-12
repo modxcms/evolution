@@ -4,217 +4,226 @@
     @push('scripts.top')
         <script>
 
-            function check_toggle() {
-                var el = document.getElementsByName('template[]');
-                var count = el.length;
-                for (var i = 0; i < count; i++) {
-                    el[i].checked = !el[i].checked;
-                }
-            };
+          function check_toggle()
+          {
+            var el = document.getElementsByName('template[]');
+            var count = el.length;
+            for (var i = 0; i < count; i++) {
+              el[i].checked = !el[i].checked;
+            }
+          };
 
-            function check_none() {
-                var el = document.getElementsByName('template[]');
-                var count = el.length;
-                for (var i = 0; i < count; i++) {
-                    el[i].checked = false;
-                }
-            };
+          function check_none()
+          {
+            var el = document.getElementsByName('template[]');
+            var count = el.length;
+            for (var i = 0; i < count; i++) {
+              el[i].checked = false;
+            }
+          };
 
-            function check_all() {
-                var el = document.getElementsByName('template[]');
-                var count = el.length;
-                for (var i = 0; i < count; i++) {
-                    el[i].checked = true;
-                }
-            };
+          function check_all()
+          {
+            var el = document.getElementsByName('template[]');
+            var count = el.length;
+            for (var i = 0; i < count; i++) {
+              el[i].checked = true;
+            }
+          };
 
-            var actions = {
-                save: function () {
-                    documentDirty = false;
-                    form_save = true;
-                    document.mutate.save.click();
-                    saveWait('mutate');
-                },
-                duplicate: function () {
-                    if (confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
-                        documentDirty = false;
-                        document.location.href = "index.php?id={{ $data->getKey() }}&a=304";
-                    }
-                },
-                delete: function () {
-                    if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_tmplvars') }}") === true) {
-                        documentDirty = false;
-                        document.location.href = 'index.php?id=' + document.mutate.id.value + '&a=303';
-                    }
-                },
-                cancel: function () {
-                    documentDirty = false;
-                    document.location.href = 'index.php?a={{ $origin }}@if(!empty($originId))&id={{ $originId}}@endif';
-                }
-            };
+          var actions = {
+            save: function() {
+              documentDirty = false;
+              form_save = true;
+              document.mutate.save.click();
+              saveWait('mutate');
+            },
+            duplicate: function() {
+              if (confirm("{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}") === true) {
+                documentDirty = false;
+                document.location.href = "index.php?id={{ $data->getKey() }}&a=304";
+              }
+            },
+            delete: function() {
+              if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_tmplvars') }}") === true) {
+                documentDirty = false;
+                document.location.href = 'index.php?id=' + document.mutate.id.value + '&a=303';
+              }
+            },
+            cancel: function() {
+              documentDirty = false;
+              document.location.href = 'index.php?a={{ $origin }}@if(!empty($originId))&id={{ $originId}}@endif';
+            }
+          };
 
-            // Widget Parameters
-            var widgetParams = {};          // name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
-            widgetParams['date'] = '&format=Date Format;string;%A %d, %B %Y &default=If no value, use current date;list;Yes,No;No';
-            widgetParams['string'] = '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
-            widgetParams['delim'] = '&format=Delimiter;string;,';
-            widgetParams['hyperlink'] = '&text=Display Text;string; &title=Title;string; &class=Class;string &style=Style;string &target=Target;string &attrib=Attributes;string';
-            widgetParams['htmltag'] = '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
-            widgetParams['viewport'] = '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
-            widgetParams['datagrid'] = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
-            widgetParams['richtext'] = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;{!! get_by_key($events, 'OnRichTextEditorRegister') !!}';
-            widgetParams['image'] = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
-            widgetParams['custom_widget'] = '&output=Output;textarea;[+value+]';
+          // Widget Parameters
+          var widgetParams = {};          // name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
+          widgetParams['date'] = '&format=Date Format;string;%A %d, %B %Y &default=If no value, use current date;list;Yes,No;No';
+          widgetParams['string'] = '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
+          widgetParams['delim'] = '&format=Delimiter;string;,';
+          widgetParams['hyperlink'] = '&text=Display Text;string; &title=Title;string; &class=Class;string &style=Style;string &target=Target;string &attrib=Attributes;string';
+          widgetParams['htmltag'] = '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
+          widgetParams['viewport'] = '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
+          widgetParams['datagrid'] = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
+          widgetParams['richtext'] = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;{!! get_by_key($events, 'OnRichTextEditorRegister') !!}';
+          widgetParams['image'] = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
+          widgetParams['custom_widget'] = '&output=Output;textarea;[+value+]';
 
-            // Current Params
-            var currentParams = {};
-            var lastdf, lastmod = {};
+          // Current Params
+          var currentParams = {};
+          var lastdf, lastmod = {};
 
-            function showParameters(ctrl) {
-                var c, p, df, cp;
-                var ar, desc, value, key, dt;
+          function showParameters(ctrl)
+          {
+            var c, p, df, cp;
+            var ar, desc, value, key, dt;
 
-                currentParams = {}; // reset;
+            currentParams = {}; // reset;
 
-                if (ctrl && ctrl.form) {
-                    f = ctrl.form;
-                } else {
-                    f = document.forms['mutate'];
-                    if (!f) return;
-                    ctrl = f.display;
-                }
-                cp = f.params.value.split('&'); // load current setting once
+            if (ctrl && ctrl.form) {
+              f = ctrl.form;
+            } else {
+              f = document.forms['mutate'];
+              if (!f) return;
+              ctrl = f.display;
+            }
+            cp = f.params.value.split('&'); // load current setting once
 
-                // get display format
-                df = lastdf = ctrl.options[ctrl.selectedIndex].value;
+            // get display format
+            df = lastdf = ctrl.options[ctrl.selectedIndex].value;
 
-                // load last modified param values
-                if (lastmod[df]) cp = lastmod[df].split('&');
-                for (p = 0; p < cp.length; p++) {
-                    cp[p] = (cp[p] + '').replace(/^\s|\s$/, ''); // trim
-                    ar = cp[p].split('=');
-                    currentParams[ar[0]] = ar[1];
-                }
-
-                // setup parameters
-                var tr = document.getElementById('displayparamrow'), t, td,
-                    dp = (widgetParams[df]) ? widgetParams[df].split('&') : '';
-                if (!dp) {
-                    tr.style.display = 'none';
-                } else {
-                    t = '<table class="displayparams"><thead><tr><td width="50%">{{ ManagerTheme::getLexicon('parameter') }}</td><td width="50%">{{ ManagerTheme::getLexicon('value') }}</td></tr></thead>';
-                    for (p = 0; p < dp.length; p++) {
-                        dp[p] = (dp[p] + '').replace(/^\s|\s$/, ''); // trim
-                        ar = dp[p].split('=');
-                        key = ar[0];     // param
-                        ar = (ar[1] + '').split(';');
-                        desc = ar[0];   // description
-                        dt = ar[1];     // data type
-                        value = decode((currentParams[key]) ? currentParams[key] : (dt === 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
-                        if (value !== currentParams[key]) currentParams[key] = value;
-                        value = (value + '').replace(/^\s|\s$/, ''); // trim
-                        value = value.replace(/\"/g, '&quot;'); // replace double quotes with &quot;
-                        if (dt) {
-                            switch (dt) {
-                                case 'int':
-                                case 'float':
-                                    c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" />';
-                                    break;
-                                case 'list':
-                                    c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
-                                    var ls = (ar[2] + '').split(',');
-                                    if (!currentParams[key] || currentParams[key] === 'undefined') {
-                                        currentParams[key] = ls[0]; // use first list item as default
-                                    }
-                                    for (var i = 0; i < ls.length; i++) {
-                                        c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
-                                    }
-                                    c += '</select>';
-                                    break;
-                                case 'textarea':
-                                    c = '<textarea class="inputBox phptextarea" name="prop_' + key + '" cols="25" style="width:220px;" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" >' + value + '</textarea>';
-                                    break;
-                                default:  // string
-                                    c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" />';
-                                    break;
-                            }
-                            t += '<tr><td bgcolor="#FFFFFF" width="50%">' + desc + '</td><td bgcolor="#FFFFFF" width="50%">' + c + '</td></tr>';
-                        }
-                        ;
-                    }
-                    t += '</table>';
-                    td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
-                    td.innerHTML = t;
-                    tr.style.display = '';
-                }
-                implodeParameters();
+            // load last modified param values
+            if (lastmod[df]) cp = lastmod[df].split('&');
+            for (p = 0; p < cp.length; p++) {
+              cp[p] = (cp[p] + '').replace(/^\s|\s$/, ''); // trim
+              ar = cp[p].split('=');
+              currentParams[ar[0]] = ar[1];
             }
 
-            function setParameter(key, dt, ctrl) {
-                var v;
-                if (!ctrl) return null;
-                switch (dt) {
+            // setup parameters
+            var tr = document.getElementById('displayparamrow'), t, td,
+                dp = (widgetParams[df]) ? widgetParams[df].split('&') : '';
+            if (!dp) {
+              tr.style.display = 'none';
+            } else {
+              t = '<table class="displayparams"><thead><tr><td width="50%">{{ ManagerTheme::getLexicon('parameter') }}</td><td width="50%">{{ ManagerTheme::getLexicon('value') }}</td></tr></thead>';
+              for (p = 0; p < dp.length; p++) {
+                dp[p] = (dp[p] + '').replace(/^\s|\s$/, ''); // trim
+                ar = dp[p].split('=');
+                key = ar[0];     // param
+                ar = (ar[1] + '').split(';');
+                desc = ar[0];   // description
+                dt = ar[1];     // data type
+                value = decode((currentParams[key]) ? currentParams[key] : (dt === 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
+                if (value !== currentParams[key]) currentParams[key] = value;
+                value = (value + '').replace(/^\s|\s$/, ''); // trim
+                value = value.replace(/\"/g, '&quot;'); // replace double quotes with &quot;
+                if (dt) {
+                  switch (dt) {
                     case 'int':
-                        ctrl.value = parseInt(ctrl.value);
-                        if (isNaN(ctrl.value)) ctrl.value = 0;
-                        v = ctrl.value;
-                        break;
                     case 'float':
-                        ctrl.value = parseFloat(ctrl.value);
-                        if (isNaN(ctrl.value)) ctrl.value = 0;
-                        v = ctrl.value;
-                        break;
+                      c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" />';
+                      break;
                     case 'list':
-                        v = ctrl.options[ctrl.selectedIndex].value;
-                        break;
+                      c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
+                      var ls = (ar[2] + '').split(',');
+                      if (!currentParams[key] || currentParams[key] === 'undefined') {
+                        currentParams[key] = ls[0]; // use first list item as default
+                      }
+                      for (var i = 0; i < ls.length; i++) {
+                        c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
+                      }
+                      c += '</select>';
+                      break;
                     case 'textarea':
-                        v = ctrl.value + '';
-                        break;
-                    default:
-                        v = ctrl.value + '';
-                        break;
+                      c = '<textarea class="inputBox phptextarea" name="prop_' + key + '" cols="25" style="width:220px;" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" >' + value + '</textarea>';
+                      break;
+                    default:  // string
+                      c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" />';
+                      break;
+                  }
+                  t += '<tr><td bgcolor="#FFFFFF" width="50%">' + desc + '</td><td bgcolor="#FFFFFF" width="50%">' + c + '</td></tr>';
                 }
-                currentParams[key] = v;
-                implodeParameters();
+                ;
+              }
+              t += '</table>';
+              td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
+              td.innerHTML = t;
+              tr.style.display = '';
             }
+            implodeParameters();
+          }
 
-            function resetParameters() {
-                document.mutate.params.value = '';
-                lastmod[lastdf] = '';
-                showParameters();
+          function setParameter(key, dt, ctrl)
+          {
+            var v;
+            if (!ctrl) return null;
+            switch (dt) {
+              case 'int':
+                ctrl.value = parseInt(ctrl.value);
+                if (isNaN(ctrl.value)) ctrl.value = 0;
+                v = ctrl.value;
+                break;
+              case 'float':
+                ctrl.value = parseFloat(ctrl.value);
+                if (isNaN(ctrl.value)) ctrl.value = 0;
+                v = ctrl.value;
+                break;
+              case 'list':
+                v = ctrl.options[ctrl.selectedIndex].value;
+                break;
+              case 'textarea':
+                v = ctrl.value + '';
+                break;
+              default:
+                v = ctrl.value + '';
+                break;
             }
+            currentParams[key] = v;
+            implodeParameters();
+          }
 
-            // implode parameters
-            function implodeParameters() {
-                var v, p, s = '';
-                for (p in currentParams) {
-                    v = currentParams[p];
-                    if (v) s += '&' + p + '=' + encode(v);
-                }
-                document.forms['mutate'].params.value = s;
-                if (lastdf) lastmod[lastdf] = s;
+          function resetParameters()
+          {
+            document.mutate.params.value = '';
+            lastmod[lastdf] = '';
+            showParameters();
+          }
+
+          // implode parameters
+          function implodeParameters()
+          {
+            var v, p, s = '';
+            for (p in currentParams) {
+              v = currentParams[p];
+              if (v) s += '&' + p + '=' + encode(v);
             }
+            document.forms['mutate'].params.value = s;
+            if (lastdf) lastmod[lastdf] = s;
+          }
 
-            function encode(s) {
-                s = s + '';
-                s = s.replace(/\=/g, '%3D'); // =
-                s = s.replace(/\&/g, '%26'); // &
-                return s;
-            }
+          function encode(s)
+          {
+            s = s + '';
+            s = s.replace(/\=/g, '%3D'); // =
+            s = s.replace(/\&/g, '%26'); // &
+            return s;
+          }
 
-            function decode(s) {
-                s = s + '';
-                s = s.replace(/\%3D/g, '='); // =
-                s = s.replace(/\%26/g, '&'); // &
-                return s;
-            }
+          function decode(s)
+          {
+            s = s + '';
+            s = s.replace(/\%3D/g, '='); // =
+            s = s.replace(/\%26/g, '&'); // &
+            return s;
+          }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                var h1help = document.querySelector('h1 > .help');
-                h1help.onclick = function () {
-                    document.querySelector('.element-edit-message').classList.toggle('show');
-                };
-            });
+          document.addEventListener('DOMContentLoaded', function() {
+            var h1help = document.querySelector('h1 > .help');
+            h1help.onclick = function() {
+              document.querySelector('.element-edit-message').classList.toggle('show');
+            };
+          });
 
         </script>
     @endpush
@@ -255,7 +264,7 @@
 
         <div class="tab-pane" id="tmplvarsPane">
             <script>
-                var tpTmplvars = new WebFXTabPane(document.getElementById('tmplvarsPane'), false);
+              var tpTmplvars = new WebFXTabPane(document.getElementById('tmplvarsPane'), false);
             </script>
 
             <div class="tab-page" id="tabGeneral">
@@ -364,10 +373,10 @@
                     ])
 
                     <div class="row form-row" id="displayparamrow">
-                        <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('tmplvars_widget_prop') }}<br/>
+                        <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('tmplvars_widget_prop') }}<br />
                             <a href="javascript:;" onclick="resetParameters(); return false">
                                 <i class="<?= $_style['actions_refresh'] ?>"
-                                   data-tooltip="{{ ManagerTheme::getLexicon('tmplvars_reset_params') }}"></i>
+                                    data-tooltip="{{ ManagerTheme::getLexicon('tmplvars_reset_params') }}"></i>
                             </a>
                         </label>
                         <div id="displayparams" class="col-md-9 col-lg-10"></div>
@@ -394,11 +403,11 @@
                     <p>{{ ManagerTheme::getLexicon('tmplvar_tmpl_access_msg') }}</p>
                     <div class="form-group">
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                           onClick="check_all();return false;">{{ ManagerTheme::getLexicon('check_all') }}</a>
+                            onclick="check_all();return false;">{{ ManagerTheme::getLexicon('check_all') }}</a>
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                           onClick="check_none();return false;">{{ ManagerTheme::getLexicon('check_none') }}</a>
+                            onclick="check_none();return false;">{{ ManagerTheme::getLexicon('check_none') }}</a>
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                           onClick="check_toggle(); return false;">{{ ManagerTheme::getLexicon('check_toggle') }}</a>
+                            onclick="check_toggle(); return false;">{{ ManagerTheme::getLexicon('check_toggle') }}</a>
                     </div>
 
                     @if(isset($tplOutCategory) && $tplOutCategory->count() > 0)
@@ -441,39 +450,39 @@
                             ->getColumn('documentgroup', $rs);
                         ?>
                         <script>
-                            function makePublic(b) {
-                                var notPublic = false;
-                                var f = document.forms['mutate'];
-                                var chkpub = f['chkalldocs'];
-                                var chks = f['docgroups[]'];
-                                if (!chks && chkpub) {
-                                    chkpub.checked = true;
-                                    return false;
-                                }
-                                else if (!b && chkpub) {
-                                    if (!chks.length) {
-                                        notPublic = chks.checked;
-                                    } else {
-                                        for (var i = 0; i < chks.length; i++) {
-                                            if (chks[i].checked) notPublic = true;
-                                        }
-                                    }
-                                    chkpub.checked = !notPublic;
-                                }
-                                else {
-                                    if (!chks.length) {
-                                        chks.checked = (b) ? false : chks.checked;
-                                    } else {
-                                        for (var i = 0; i < chks.length; i++) {
-                                            if (b) chks[i].checked = false;
-                                        }
-                                    }
-                                    chkpub.checked = true;
-                                }
+                          function makePublic(b)
+                          {
+                            var notPublic = false;
+                            var f = document.forms['mutate'];
+                            var chkpub = f['chkalldocs'];
+                            var chks = f['docgroups[]'];
+                            if (!chks && chkpub) {
+                              chkpub.checked = true;
+                              return false;
                             }
+                            else if (!b && chkpub) {
+                              if (!chks.length) {
+                                notPublic = chks.checked;
+                              } else {
+                                for (var i = 0; i < chks.length; i++) {
+                                  if (chks[i].checked) notPublic = true;
+                                }
+                              }
+                              chkpub.checked = !notPublic;
+                            }
+                            else {
+                              if (!chks.length) {
+                                chks.checked = (b) ? false : chks.checked;
+                              } else {
+                                for (var i = 0; i < chks.length; i++) {
+                                  if (b) chks[i].checked = false;
+                                }
+                              }
+                              chkpub.checked = true;
+                            }
+                          }
                         </script>
 
-                        <hr>
                         <p>{{ ManagerTheme::getLexicon('tmplvar_access_msg') }}</p>
 
                         <?php
