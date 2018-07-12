@@ -71,7 +71,7 @@ $_CONFIG = array(
 
     'maxImageWidth'  => $modx->config['maxImageWidth'],
     'maxImageHeight' => $modx->config['maxImageHeight'],
-    'clientResize'   => $modx->config['clientResize'] && $modx->config['maxImageWidth'] && $modx->config['maxImageHeight'] ? array('maxWidth'  => $modx->config['maxImageWidth'],
+    'clientResize'   => $modx->config['clientResize'] && ($modx->config['maxImageWidth'] || $modx->config['maxImageHeight']) ? array('maxWidth'  => $modx->config['maxImageWidth'],
                                                                                                                                    'maxHeight' => $modx->config['maxImageHeight'],
                                                                                                                                    'quality'   => $modx->config['jpegQuality'] / 100
     ) : array(),
@@ -97,3 +97,4 @@ $_CONFIG = array(
     //'_sessionDomain' => ".mysite.com",
     //'_sessionPath' => "/my/path",
 );
+$modx->invokeEvent('OnFileBrowserInit', array('config' => &$_CONFIG));

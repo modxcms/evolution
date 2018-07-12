@@ -1108,7 +1108,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('1001','OnFileBrowserUpload','1','File Browser Events'),
 ('1002','OnBeforeFileBrowserUpload','1','File Browser Events'),
 ('1003','OnFileBrowserDelete','1','File Browser Events'),
-('1004','OnBeforeFileBrowserDelete','1','File Browser Events');
+('1004','OnBeforeFileBrowserDelete','1','File Browser Events'),
+('1005','OnFileBrowserInit','1','File Browser Events');
 
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
