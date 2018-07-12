@@ -599,6 +599,7 @@ function getRecentInfoList() {
 }
 
 function getRecentInfoRowTpl() {
+	$modx = EvolutionCMS();
 	$tpl = '
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
