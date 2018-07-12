@@ -88,7 +88,6 @@ class ManagerApi implements ManagerApiInterface
      */
     public function loadFormValues()
     {
-
         if (!$this->hasFormValues()) {
             return false;
         }
@@ -98,7 +97,6 @@ class ManagerApi implements ManagerApiInterface
         foreach ($p as $k => $v) {
             $_POST[$k] = $v;
         }
-
         return true;
     }
 

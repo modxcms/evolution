@@ -26,6 +26,7 @@ class ComposerStaticInit5bcabe1031f0a11ccacc5b681f3435bb
         '542d9accf822f1205d7fc8b124a1746c' => __DIR__ . '/../..' . '/functions/processors.php',
         '4813422ba2af2a17822f8811bf226e16' => __DIR__ . '/../..' . '/functions/rss.php',
         'cf6b362f5e0910524c6dc123f961705a' => __DIR__ . '/../..' . '/functions/tv.php',
+        '5548221ed1aa935a96157f0ae718bef5' => __DIR__ . '/../..' . '/functions/utils.php',
     );
 
     public static $prefixLengthsPsr4 = array (

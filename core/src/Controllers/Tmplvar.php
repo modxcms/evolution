@@ -3,16 +3,58 @@
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
 use Illuminate\Support\Collection;
+use Symfony\Component\Finder;
 
 class Tmplvar extends AbstractController implements ManagerTheme\PageControllerInterface
 {
     protected $view = 'page.tmplvar';
 
-    private $events = [
+    protected $standartTypes = [
+        'text' => 'Text',
+        'rawtext' => 'Raw Text (deprecated)',
+        'textarea' => 'Textarea',
+        'rawtextarea' => 'Raw Textarea (deprecated)',
+        'textareamini' => 'Textarea (Mini)',
+        'richtext' => 'RichText',
+        'dropdown' => 'DropDown List Menu',
+        'listbox' => 'Listbox (Single-Select)',
+        'listbox-multiple' => 'Listbox (Multi-Select)',
+        'option' => 'Radio Options',
+        'checkbox' => 'Check Box',
+        'image' => 'Image',
+        'file' => 'File',
+        'url' => 'URL',
+        'email' => 'Email',
+        'number' => 'Number',
+        'date' => 'Date'
+    ];
+
+    protected $displayWidgets = [
+        'datagrid' => 'Data Grid',
+        'richtext' => 'RichText',
+        'viewport' => 'View Port',
+        'custom_widget' => 'Custom Widget'
+    ];
+
+    protected $displayFormats = [
+        'htmlentities' => 'HTML Entities',
+        'date' => 'Date Formatter',
+        'unixtime' => 'Unixtime',
+        'delim' => 'Delimited List',
+        'htmltag' => 'HTML Generic Tag',
+        'hyperlink' => 'Hyperlink',
+        'image' => 'Image',
+        'string' => 'String Formatter'
+    ];
+
+    protected $events = [
         'OnRichTextEditorRegister',
         'OnTVFormPrerender',
         'OnTVFormRender',
     ];
+
+    /** @var Models\SiteTmplvar|null */
+    private $data;
 
     /**
      * @inheritdoc
@@ -54,12 +96,12 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
      */
     public function getParameters(array $params = []): array
     {
+        $this->data = $this->parameterData();
         return [
-            'data' => $this->parameterData(),
+            'data' => $this->data,
             'categories' => $this->parameterCategories(),
             'types' => $this->parameterTypes(),
             'display' => $this->parameterDisplay(),
-            'tplSelected' => $this->parameterTplSelected(),
             'categoriesWithTpl' => $this->parameterCategoriesWithTpl(),
             'tplOutCategory' => $this->parameterTplOutCategory(),
             'action' => $this->getIndex(),
@@ -85,7 +127,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
 
         if ($id > 0) {
             $_SESSION['itemname'] = $data->caption;
-            if ($data->locked == 1 && $_SESSION['mgrRole'] != 1) {
+            if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
                 evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } elseif (isset($_REQUEST['itemname'])) {
@@ -96,7 +138,6 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         }
 
         $values = $this->managerTheme->loadValuesFromSession($_POST);
-
         if (!empty($values)) {
             $data->fill($values);
         }
@@ -111,88 +152,68 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             ->get();
     }
 
-    protected function parameterTypes()
+    protected function parameterTypes() : array
     {
+        return [
+            0 => ['optgroup' => $this->parameterStandartTypes()],
+            1 => ['optgroup' => $this->parameterCustomTypes()]
+        ];
+    }
 
-        $custom_tvs = [
+    protected function parameterStandartTypes() : array
+    {
+        return [
+            'name' => 'Standard Type',
+            'options' => $this->standartTypes
+        ];
+    }
+
+    protected function parameterCustomTypes() : array
+    {
+        $customTvs = [
             'custom_tv' => 'Custom Input'
         ];
 
-        foreach (scandir(MODX_BASE_PATH . 'assets/tvs') as $ctv) {
-            if (strpos($ctv, '.') !== 0 && $ctv != 'index.html') {
-                $custom_tvs['custom_tv:' . $ctv] = $ctv;
-            }
+        $finder = Finder\Finder::create()
+            ->in(MODX_BASE_PATH . 'assets/tvs')
+            ->depth(0)
+            ->notName('/^index\.html$/')
+            ->sortByName();
+
+        /** @var Finder\SplFileInfo $ctv */
+        foreach ($finder as $ctv) {
+            $filename = $ctv->getFilename();
+            $customTvs['custom_tv:' . $filename] = $filename;
         }
 
         return [
-            0 => [
-                'optgroup' => [
-                    'name' => 'Standard Type',
-                    'options' => [
-                        'text' => 'Text',
-                        'rawtext' => 'Raw Text (deprecated)',
-                        'textarea' => 'Textarea',
-                        'rawtextarea' => 'Raw Textarea (deprecated)',
-                        'textareamini' => 'Textarea (Mini)',
-                        'richtext' => 'RichText',
-                        'dropdown' => 'DropDown List Menu',
-                        'listbox' => 'Listbox (Single-Select)',
-                        'listbox-multiple' => 'Listbox (Multi-Select)',
-                        'option' => 'Radio Options',
-                        'checkbox' => 'Check Box',
-                        'image' => 'Image',
-                        'file' => 'File',
-                        'url' => 'URL',
-                        'email' => 'Email',
-                        'number' => 'Number',
-                        'date' => 'Date'
-                    ]
-                ]
-            ],
-            1 => [
-                'optgroup' => [
-                    'name' => 'Custom Type',
-                    'options' => $custom_tvs
-                ]
-            ]
+            'name' => 'Custom Type',
+            'options' => $customTvs
         ];
     }
 
-    protected function parameterDisplay()
+    protected function parameterDisplay() : array
     {
         return [
-            0 => [
-                'optgroup' => [
-                    'name' => 'Widgets',
-                    'options' => [
-                        'datagrid' => 'Data Grid',
-                        'richtext' => 'RichText',
-                        'viewport' => 'View Port',
-                        'custom_widget' => 'Custom Widget'
-                    ]
-                ]
-            ],
-            1 => [
-                'optgroup' => [
-                    'name' => 'Formats',
-                    'options' => [
-                        'htmlentities' => 'HTML Entities',
-                        'date' => 'Date Formatter',
-                        'unixtime' => 'Unixtime',
-                        'delim' => 'Delimited List',
-                        'htmltag' => 'HTML Generic Tag',
-                        'hyperlink' => 'Hyperlink',
-                        'image' => 'Image',
-                        'string' => 'String Formatter'
-                    ]
-                ]
-            ]
+            0 => ['optgroup' => $this->parameterDisplayWidgets()],
+            1 => ['optgroup' => $this->parameterDisplayFormats()]
         ];
     }
 
-    protected function parameterTplSelected()
+    protected function parameterDisplayWidgets() : array
     {
-        return array_unique(array_map('intval', get_by_key($_POST, 'template', [], 'is_array')));
+        return [
+            'name' => 'Widgets',
+            'options' => $this->displayWidgets
+        ];
+    }
+
+    protected function parameterDisplayFormats() : array
+    {
+        return [
+            'name' => 'Formats',
+            'options' => $this->displayFormats
+        ];
     }
 
     protected function parameterTplOutCategory(): Collection
@@ -234,5 +255,23 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         }
 
         return (string)$out;
+    }
+
+    private function getSelectedTplFromRequest() : array
+    {
+        return array_unique(
+            array_map(
+                'intval',
+                get_by_key($_POST, 'template', [], 'is_array')
+            )
+        );
+    }
+
+    public function isSelectedTemplate(Models\SiteTemplate $item)
+    {
+        return (
+            $this->data->templates->contains('id', $item->getKey()) ||
+            \in_array($item->getKey(), $this->getSelectedTplFromRequest(), true)
+        );
     }
 }

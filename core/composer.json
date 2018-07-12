@@ -89,7 +89,8 @@
       "functions/preload.php",
       "functions/processors.php",
       "functions/rss.php",
-      "functions/tv.php"
+      "functions/tv.php",
+      "functions/utils.php"
     ]
   },
   "scripts": {

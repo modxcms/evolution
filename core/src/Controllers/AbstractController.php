@@ -60,7 +60,7 @@ abstract class AbstractController implements ControllerInterface
         return $this->managerTheme->view(
             $this->getView(),
             $this->getParameters($params)
-        )->render();
+        )->with('controller', $this)->render();
     }
 
     /**

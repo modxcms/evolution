@@ -9,7 +9,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
 {
     protected $view = 'page.template';
 
-    private $events = [
+    protected $events = [
         'OnTempFormPrerender',
         'OnTempFormRender'
     ];

@@ -399,8 +399,9 @@
                     @if(isset($tplOutCategory) && $tplOutCategory->count() > 0)
                         @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                             <ul>
+                                <?php /** @var EvolutionCMS\Models\SiteTemplate $item */ ?>
                                 @foreach($tplOutCategory as $item)
-                                    @include('manager::page.tmplvar.template', compact('item', 'tvSelected'))
+                                    @include('manager::page.tmplvar.template', ['item' => $item, 'selected' => $controller->isSelectedTemplate($item)])
                                 @endforeach
                             </ul>
                         @endcomponent
@@ -411,7 +412,7 @@
                             @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
                                 <ul>
                                     @foreach($cat->templates as $item)
-                                        @include('manager::page.tmplvar.template', compact('item', 'tvSelected'))
+                                        @include('manager::page.tmplvar.template', ['item' => $item, 'selected' => $controller->isSelectedTemplate($item)])
                                     @endforeach
                                 </ul>
                             @endcomponent

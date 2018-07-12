@@ -4,7 +4,7 @@
         @include('manager::form.inputElement', [
             'type' => 'checkbox',
             'name' => 'template[]',
-            'checked' => is_array($tplSelected) && in_array($item->getKey(), $tplSelected, true),
+            'checked' => !empty($selected),
             'value' => $item->getKey(),
             'attributes' => 'onchange="documentDirty=true;"'
         ])
