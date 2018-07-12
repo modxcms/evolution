@@ -1,19 +1,5 @@
 @extends('manager::template.page')
 @section('content')
-    <?php
-    // Get table names (alphabetical)
-    $tbl_site_htmlsnippets = $modx->getDatabase()
-        ->getFullTableName('site_htmlsnippets');
-
-    if (isset($_POST['which_editor'])) {
-        $which_editor = $_POST['which_editor'];
-    } else {
-        $which_editor = $data->editor_name != 'none' ? $data->editor_name : 'none';
-    }
-
-    // Print RTE Javascript function
-    ?>
-
     @push('scripts.top')
         <script>
           // Added for RTE selection
