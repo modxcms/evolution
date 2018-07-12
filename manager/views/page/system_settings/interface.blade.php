@@ -391,7 +391,7 @@
         }
         ?>
 
-        <div @if(0 < count($evtOut)) style="display: none;" @endif>
+        <div @if(empty($evtOut)) style="display: none;" @endif>
 
             @include('manager::form.radio', [
                 'name' => 'use_editor',
