@@ -77,8 +77,8 @@ class ManagerTheme implements ManagerThemeInterface
         25,
         98,
         /** htmlsnippet management */
-        78,
-        77,
+        78 => Controllers\Chunk::class,
+        77 => Controllers\Chunk::class,
         79,
         80,
         97,
