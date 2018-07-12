@@ -1109,7 +1109,7 @@ class DocumentParser
         $this->db->update($field, '[+prefix+]site_content', $where);
         if ($this->db->getRecordCount($result_pub) >= 1) { //Event unPublished doc
             while ($row_pub = $this->db->getRow($result_pub)) {
-                $this->invokeEvent("OnDocUnPublished", array(
+                $this->invokeEvent("OnDocPublished", array(
                     "docid" => $row_pub['id']
                 ));
             }
