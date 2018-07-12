@@ -3,6 +3,7 @@
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent;
 
 class Template extends AbstractController implements ManagerTheme\PageControllerInterface
 {
@@ -58,8 +59,16 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'data' => $template,
             'categories' => $this->parameterCategories(),
             'tvSelected' => $this->parameterTvSelected(),
-            'categoriesWithTv' => $this->parameterCategoriesWithTv(),
-            'tvOutCategory' => $this->parameterTvOutCategory(),
+            'categoriesWithTv' => $this->parameterCategoriesWithTv(
+                $template->tvs->reject(function (Models\SiteTmplvar $item) {
+                    return $item->category === 0;
+                })->pluck('id')->toArray()
+            ),
+            'tvOutCategory' => $this->parameterTvOutCategory(
+                $template->tvs->reject(function (Models\SiteTmplvar $item) {
+                    return $item->category !== 0;
+                })->pluck('id')->toArray()
+            ),
             'action' => $this->getIndex(),
             'events' => $this->parameterEvents()
         ];
@@ -118,20 +127,33 @@ class Template extends AbstractController implements ManagerTheme\PageController
         );
     }
 
-    protected function parameterTvOutCategory(): Collection
+    protected function parameterTvOutCategory(array $ignore = []): Collection
     {
-        return Models\SiteTmplvar::with('templates')
+        $query = Models\SiteTmplvar::with('templates')
             ->where('category', '=', 0)
-            ->orderBy('name', 'ASC')
-            ->get();
+            ->orderBy('name', 'ASC');
+
+        if (! empty($ignore)) {
+            $query = $query->whereNotIn('id', $ignore);
+        }
+
+        return $query->get();
     }
 
-    protected function parameterCategoriesWithTv(): Collection
+    protected function parameterCategoriesWithTv(array $ignore = []): Collection
     {
-        return Models\Category::with('tvs.templates')
-            ->whereHas('tvs')
-            ->orderBy('rank', 'ASC')
-            ->get();
+        $query = Models\Category::with('tvs.templates')
+            ->whereHas('tvs', function(Eloquent\Builder $builder) use($ignore) {
+                if (! empty($ignore)) {
+                    $builder = $builder->whereNotIn(
+                        (new Models\SiteTmplvar)->getTable() . '.id',
+                        $ignore
+                    );
+                }
+                return $builder;
+            })->orderBy('rank', 'ASC');
+
+        return $query->get();
     }
 
     protected function parameterEvents() : array

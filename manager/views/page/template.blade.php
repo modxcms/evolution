@@ -210,7 +210,9 @@
                             @component('manager::partials.panelCollapse', ['name' => 'tv_in_template', 'id' => $cat->id, 'title' => $cat->name])
                                 <ul>
                                     @foreach($cat->tvs as $item)
-                                        @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                        @if(! $data->tvs->contains('id', $item->getKey()))
+                                            @include('manager::page.template.tv', compact('item', 'tvSelected'))
+                                        @endif
                                     @endforeach
                                 </ul>
                             @endcomponent
