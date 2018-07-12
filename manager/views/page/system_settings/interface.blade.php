@@ -413,12 +413,13 @@
 
             <div class="split my-1"></div>
 
-            <div class="editorRow">
+            <div class="editorRow" @if(empty($settings['use_editor'])) style="display: none;" @endif>
 
                 @include('manager::form.select', [
                     'name' => 'which_editor',
                     'label' => ManagerTheme::getLexicon('which_editor_title'),
                     'small' => '[(which_editor)]',
+                    'value' => $settings['which_editor'],
                     'attributes' => 'onChange="documentDirty=true;" size="1"',
                     'first' => [
                         'value' => 'none',
