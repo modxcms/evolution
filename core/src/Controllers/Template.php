@@ -86,16 +86,14 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $id = $this->getElementId();
 
         /** @var Models\SiteTemplate $data */
-        $data = Models\SiteTemplate::with('tvs')->firstOrNew(
-            ['id' => $id],
-            [
-                'category' => (int)get_by_key($_REQUEST, 'catid', 0),
-                'selectable' => 1
-            ]
-        );
+        $data = Models\SiteTemplate::with('tvs')
+            ->firstOrNew(['id' => $id], [
+                    'category' => (int)get_by_key($_REQUEST, 'catid', 0),
+                    'selectable' => 1
+                ]);
 
         if ($id > 0) {
-            if (! $data->exists) {
+            if (!$data->exists) {
                 evolutionCMS()->webAlertAndQuit("No database record has been found for this template.");
             }
 
@@ -116,19 +114,16 @@ class Template extends AbstractController implements ManagerTheme\PageController
         return $data;
     }
 
-    protected function parameterCategories() : Collection
+    protected function parameterCategories(): Collection
     {
-        return Models\Category::orderBy('rank', 'ASC')->orderBy('category', 'ASC')->get();
+        return Models\Category::orderBy('rank', 'ASC')
+            ->orderBy('category', 'ASC')
+            ->get();
     }
 
     protected function parameterTvSelected()
     {
-        return array_unique(
-            array_map(
-                'intval',
-                get_by_key($_POST, 'assignedTv', [], 'is_array')
-            )
-        );
+        return array_unique(array_map('intval', get_by_key($_POST, 'assignedTv', [], 'is_array')));
     }
 
     protected function parameterTvOutCategory(array $ignore = []): Collection
@@ -137,7 +132,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
             ->where('category', '=', 0)
             ->orderBy('name', 'ASC');
 
-        if (! empty($ignore)) {
+        if (!empty($ignore)) {
             $query = $query->whereNotIn('id', $ignore);
         }
 
@@ -147,20 +142,21 @@ class Template extends AbstractController implements ManagerTheme\PageController
     protected function parameterCategoriesWithTv(array $ignore = []): Collection
     {
         $query = Models\Category::with('tvs.templates')
-            ->whereHas('tvs', function(Eloquent\Builder $builder) use($ignore) {
-                if (! empty($ignore)) {
-                    $builder = $builder->whereNotIn(
-                        (new Models\SiteTmplvar)->getTable() . '.id',
-                        $ignore
-                    );
+            ->whereHas('tvs', function(Eloquent\Builder $builder) use
+            (
+                $ignore
+            ) {
+                if (!empty($ignore)) {
+                    $builder = $builder->whereNotIn((new Models\SiteTmplvar)->getTable() . '.id', $ignore);
                 }
                 return $builder;
-            })->orderBy('rank', 'ASC');
+            })
+            ->orderBy('rank', 'ASC');
 
         return $query->get();
     }
 
-    protected function parameterEvents() : array
+    protected function parameterEvents(): array
     {
         $out = [];
 
@@ -169,6 +165,19 @@ class Template extends AbstractController implements ManagerTheme\PageController
         }
 
         return $out;
+    }
+
+    private function callEvent($name): string
+    {
+        $out = evolutionCMS()->invokeEvent($name, [
+            'id' => $this->getElementId(),
+            'controller' => $this
+        ]);
+        if (\is_array($out)) {
+            $out = implode('', $out);
+        }
+
+        return (string)$out;
     }
 
     protected function parameterActionButtons()
@@ -181,18 +190,5 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_template'),
             'cancel' => 1
         ];
-    }
-
-    private function callEvent($name) : string
-    {
-        $out = evolutionCMS()->invokeEvent($name, [
-            'id' => $this->getElementId(),
-            'controller' => $this
-        ]);
-        if (\is_array($out)) {
-            $out = implode('', $out);
-        }
-
-        return (string)$out;
     }
 }

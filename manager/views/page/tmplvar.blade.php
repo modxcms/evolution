@@ -249,14 +249,7 @@
             <i class="fa fa-question-circle help"></i>
         </h1>
 
-        @include('manager::partials.actionButtons', [
-            'select' => 1,
-            'save' => 1,
-            'new' => 1,
-            'duplicate' => !empty($data->getKey()),
-            'delete' => !empty($data->getKey()),
-            'cancel' => 1
-        ])
+        @include('manager::partials.actionButtons', $actionButtons)
 
         <div class="container element-edit-message">
             <div class="alert alert-info">{!! ManagerTheme::getLexicon('tmplvars_msg') !!}</div>

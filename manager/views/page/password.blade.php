@@ -19,7 +19,7 @@
         <i class="fa fa-lock"></i>{{ ManagerTheme::getLexicon('change_password') }}
     </h1>
 
-    @include('manager::partials.actionButtons', ['save' => 1, 'cancel' => 1])
+    @include('manager::partials.actionButtons', $actionButtons)
 
     <div class="tab-page">
         <div class="contaier container-body">

@@ -28,7 +28,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     /**
      * @inheritdoc
      */
-    public function checkLocked() : ?string
+    public function checkLocked(): ?string
     {
         $out = Models\ActiveUser::locked(17)
             ->first();
@@ -42,7 +42,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     /**
      * @inheritdoc
      */
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         return [
             'passwordsHash' => $this->parameterPasswordHash(),
@@ -52,13 +52,14 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             'fileBrowsers' => $this->parameterFileBrowsers(),
             'themes' => $this->parameterThemes(),
             'serverTimes' => $this->parameterServerTimes(),
-            'phxEnabled' => Models\SitePlugin::activePhx()->count(),
+            'phxEnabled' => Models\SitePlugin::activePhx()
+                ->count(),
             'langKeys' => $this->parameterLang(),
             'templates' => $this->parameterTemplates(),
-            'tabEvents' => $this->parameterTabEvents()
+            'tabEvents' => $this->parameterTabEvents(),
+            'actionButtons' => $this->parameterActionButtons()
         ];
     }
-
 
     protected function parameterTemplates()
     {
@@ -144,7 +145,8 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         $themes = [];
         $dir = dir(MODX_MANAGER_PATH . 'media/style/');
         while ($file = $dir->read()) {
-            if ($file !== "." && $file !== ".." && is_dir(MODX_MANAGER_PATH . 'media/style/' . $file) && substr($file, 0, 1) != '.') {
+            if ($file !== "." && $file !== ".." && is_dir(MODX_MANAGER_PATH . 'media/style/' . $file) && substr($file,
+                    0, 1) != '.') {
                 if ($file === 'common') {
                     continue;
                 }
@@ -172,24 +174,14 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         // reload system settings from the database.
         // this will prevent user-defined settings from being saved as system setting
         $out = include EVO_CORE_PATH . 'factory/settings.php';
-        $out = array_merge(
-            \is_array($out) ? $out : [],
-            Models\SystemSetting::all()
-                ->pluck('setting_value', 'setting_name')
-                ->toArray(),
-            evolutionCMS()->config
-        );
+        $out = array_merge(\is_array($out) ? $out : [], Models\SystemSetting::all()
+            ->pluck('setting_value', 'setting_name')
+            ->toArray(), evolutionCMS()->config);
 
-        $out['filemanager_path'] = preg_replace(
-            '@^' . preg_quote(MODX_BASE_PATH) . '@',
-            '[(base_path)]',
-            get_by_key($out, 'filemanager_path')
-        );
-        $out['rb_base_dir'] = preg_replace(
-            '@^' . preg_quote(MODX_BASE_PATH) . '@',
-            '[(base_path)]',
-            get_by_key($out, 'rb_base_dir')
-        );
+        $out['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]',
+            get_by_key($out, 'filemanager_path'));
+        $out['rb_base_dir'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]',
+            get_by_key($out, 'rb_base_dir'));
 
         if (!$this->parameterCheckGD()) {
             $out['use_captcha'] = 0;
@@ -203,7 +195,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return extension_loaded('gd');
     }
 
-    protected function parameterPasswordHash() : array
+    protected function parameterPasswordHash(): array
     {
         $managerApi = evolutionCMS()->getManagerApi();
         return [
@@ -259,5 +251,13 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         }
 
         return $out;
+    }
+
+    protected function parameterActionButtons()
+    {
+        return [
+            'save' => 1,
+            'cancel' => 1
+        ];
     }
 }

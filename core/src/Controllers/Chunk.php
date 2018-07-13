@@ -66,7 +66,8 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
             'categories' => $this->parameterCategories(),
             'which_editor' => $this->which_editor,
             'action' => $this->getIndex(),
-            'events' => $this->parameterEvents()
+            'events' => $this->parameterEvents(),
+            'actionButtons' => $this->parameterActionButtons()
         ];
     }
 
@@ -184,5 +185,17 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
         }
 
         return (string)$out;
+    }
+
+    protected function parameterActionButtons()
+    {
+        return [
+            'select' => 1,
+            'save' => evolutionCMS()->hasPermission('save_chunk'),
+            'new' => evolutionCMS()->hasPermission('new_chunk'),
+            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_chunk'),
+            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_chunk'),
+            'cancel' => 1
+        ];
     }
 }

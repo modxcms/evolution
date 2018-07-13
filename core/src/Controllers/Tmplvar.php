@@ -106,9 +106,10 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'tplOutCategory' => $this->parameterTplOutCategory(),
             'action' => $this->getIndex(),
             'events' => $this->parameterEvents(),
+            'actionButtons' => $this->parameterActionButtons(),
             // :TODO delete
             'origin' => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
-            'originId' => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : NULL
+            'originId' => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
         ];
     }
 
@@ -152,7 +153,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             ->get();
     }
 
-    protected function parameterTypes() : array
+    protected function parameterTypes(): array
     {
         return [
             0 => ['optgroup' => $this->parameterStandartTypes()],
@@ -160,7 +161,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         ];
     }
 
-    protected function parameterStandartTypes() : array
+    protected function parameterStandartTypes(): array
     {
         return [
             'name' => 'Standard Type',
@@ -168,7 +169,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         ];
     }
 
-    protected function parameterCustomTypes() : array
+    protected function parameterCustomTypes(): array
     {
         $customTvs = [
             'custom_tv' => 'Custom Input'
@@ -192,7 +193,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         ];
     }
 
-    protected function parameterDisplay() : array
+    protected function parameterDisplay(): array
     {
         return [
             0 => ['optgroup' => $this->parameterDisplayWidgets()],
@@ -200,7 +201,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         ];
     }
 
-    protected function parameterDisplayWidgets() : array
+    protected function parameterDisplayWidgets(): array
     {
         return [
             'name' => 'Widgets',
@@ -208,7 +209,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         ];
     }
 
-    protected function parameterDisplayFormats() : array
+    protected function parameterDisplayFormats(): array
     {
         return [
             'name' => 'Formats',
@@ -257,21 +258,26 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         return (string)$out;
     }
 
-    private function getSelectedTplFromRequest() : array
+    protected function parameterActionButtons()
     {
-        return array_unique(
-            array_map(
-                'intval',
-                get_by_key($_POST, 'template', [], 'is_array')
-            )
-        );
+        return [
+            'select' => 1,
+            'save' => evolutionCMS()->hasPermission('save_template'),
+            'new' => evolutionCMS()->hasPermission('new_template'),
+            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_template'),
+            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_template'),
+            'cancel' => 1
+        ];
+    }
+
+    private function getSelectedTplFromRequest(): array
+    {
+        return array_unique(array_map('intval', get_by_key($_POST, 'template', [], 'is_array')));
     }
 
     public function isSelectedTemplate(Models\SiteTemplate $item)
     {
-        return (
-            $this->data->templates->contains('id', $item->getKey()) ||
-            \in_array($item->getKey(), $this->getSelectedTplFromRequest(), true)
-        );
+        return ($this->data->templates->contains('id', $item->getKey()) || \in_array($item->getKey(),
+                $this->getSelectedTplFromRequest(), true));
     }
 }

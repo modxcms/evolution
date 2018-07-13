@@ -70,14 +70,7 @@
             <i class="fa fa-question-circle help"></i>
         </h1>
 
-        @include('manager::partials.actionButtons', [
-            'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_chunk'),
-            'new' => evolutionCMS()->hasPermission('new_chunk'),
-            'duplicate' => !empty($data->getKey()) && evolutionCMS()->hasPermission('new_chunk'),
-            'delete' => !empty($data->getKey()) && evolutionCMS()->hasPermission('delete_chunk'),
-            'cancel' => 1
-        ])
+        @include('manager::partials.actionButtons', $actionButtons)
 
         <div class="container element-edit-message">
             <div class="alert alert-info">{!! ManagerTheme::getLexicon('htmlsnippet_msg') !!}</div>
