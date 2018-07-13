@@ -144,6 +144,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         parent::__construct();
 
         $this->initialize();
+
+        $this->config['view']['paths'] = $this['config']->get('view.paths');
     }
 
     public function initialize()
@@ -167,13 +169,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * @param array $services
      * @return self
      */
-    public static function getInstance(array $services = array())
+    public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new static($services);
+            self::$instance = new static();
         }
 
         return self::$instance;

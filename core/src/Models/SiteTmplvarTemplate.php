@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\SiteTmplvarTemplate
+ *
  * @property int $tmplvarid
  * @property int $templateid
  * @property int $rank
+ *
+ * @mixin \Eloquent
  */
 class SiteTmplvarTemplate extends Eloquent\Model
 {

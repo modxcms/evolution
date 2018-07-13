@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SiteTmplvar
+ *
  * @property int $id
  * @property string $type
  * @property string $name
@@ -31,6 +33,12 @@ use EvolutionCMS\Traits;
  * @property-read \Carbon\Carbon $updated_at
  * @property-read bool $isAlreadyEdit
  * @property-read null|array $alreadyEditInfo
+ * @property-read mixed $already_edit_info
+ * @property-read mixed $is_already_edit
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\EvolutionCMS\Models\SiteTmplvar lockedView()
+ *
+ * @mixin \Eloquent
  */
 class SiteTmplvar extends Eloquent\Model
 {

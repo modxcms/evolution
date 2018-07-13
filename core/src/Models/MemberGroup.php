@@ -4,9 +4,13 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\MemberGroup
+ *
  * @property int $id
  * @property int $user_group
  * @property int $member
+ *
+ * @mixin \Eloquent
  */
 class MemberGroup extends Eloquent\Model
 {

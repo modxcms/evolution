@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\MembergroupAccess
+ *
  * @property int $id
  * @property int $membergroup
  * @property int $documentgroup
+ *
+ * @mixin \Eloquent
  */
 class MembergroupAccess extends Eloquent\Model
 {

@@ -52,6 +52,7 @@
     "agelxnash/modx-evo-database": "~1.4",
     "illuminate/cache": "~5.6",
     "illuminate/config": "~5.6",
+    "illuminate/console": "~5.6",
     "illuminate/database": "~5.6",
     "illuminate/events": "~5.6",
     "illuminate/filesystem": "~5.6",
@@ -64,7 +65,8 @@
     "phpmailer/phpmailer": "~6.0",
     "illuminate/container": "~5.6",
     "wikimedia/composer-merge-plugin": "dev-master",
-    "tracy/tracy": "~2.5"
+    "tracy/tracy": "~2.5",
+    "doctrine/dbal": "~2.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
@@ -85,6 +87,7 @@
       "functions/actions/search.php",
       "functions/actions/settings.php",
       "functions/helper.php",
+      "functions/laravel.php",
       "functions/nodes.php",
       "functions/preload.php",
       "functions/processors.php",

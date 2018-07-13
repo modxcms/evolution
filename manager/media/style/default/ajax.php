@@ -1,32 +1,38 @@
 <?php
-
+define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
-define('IN_MANAGER_MODE', true);
 
-include_once("./../../../../index.php");
-
-$modx->getDatabase()->connect();
-
-if (empty ($modx->config)) {
-    $modx->getSettings();
+if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
+    $config = require dirname(__DIR__) . '/config.php';
+} elseif (file_exists(dirname(__DIR__, 4) . '/config.php')) {
+    $config = require dirname(__DIR__, 4) . '/config.php';
+} else {
+    $config = [
+        'root' => dirname(__DIR__, 4)
+    ];
 }
+
+if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+    require_once $config['root'] . '/index.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the EVO <a href='../install'>install utility</a>";
+    exit;
+}
+
+$modx->getSettings();
 
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
     $modx->sendErrorPage();
 }
 
 $modx->sid = session_id();
-$modx->loadExtension("ManagerAPI");
 
-$_lang = array();
-include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
-if ($modx->config['manager_language'] != 'english') {
-    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
-}
-include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
+$_lang = ManagerTheme::getLexicon();
+$_style = ManagerTheme::getStyle();
 
-$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
-$frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
+$action = get_by_key($_REQUEST, 'a', '', 'is_scalar');
+$frame = get_by_key($_REQUEST, 'f', '', 'is_scalar');
 $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
@@ -37,11 +43,9 @@ if (isset($action)) {
     switch ($action) {
 
         case '1': {
-
             switch ($frame) {
                 case 'nodes':
                     include_once MODX_MANAGER_PATH . '/frames/nodes.php';
-
                     break;
             }
 

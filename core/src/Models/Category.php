@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\Category
+ *
  * @property int $id
  * @property string $category
  * @property int $rank
@@ -18,6 +20,8 @@ use EvolutionCMS\Traits;
  *
  * Virtual
  * @property string $name Alias for templatename
+ *
+ * @mixin \Eloquent
  */
 class Category extends Eloquent\Model
 {

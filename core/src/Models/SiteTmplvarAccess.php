@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\SiteTmplvarAccess
+ *
  * @property int $id
  * @property int $tmplvarid
  * @property int $documentgroup
+ *
+ * @mixin \Eloquent
  */
 class SiteTmplvarAccess extends Eloquent\Model
 {

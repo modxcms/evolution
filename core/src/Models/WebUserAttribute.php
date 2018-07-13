@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\WebUserAttribute
+ *
  * @property int $id
  * @property int $internalKey
  * @property string $fullname
@@ -35,8 +37,10 @@ use EvolutionCMS\Traits;
  * Virtual
  * @property-read \Carbon\Carbon $created_at
  * @property-read \Carbon\Carbon $updated_at
- * @TODO: @property-read \Carbon\Carbon blockeduntil
- * @TODO: @property-read \Carbon\Carbon blockedafter
+ * @TODO : @property-read \Carbon\Carbon blockeduntil
+ * @TODO : @property-read \Carbon\Carbon blockedafter
+ *
+ * @mixin \Eloquent
  */
 class WebUserAttribute extends Eloquent\Model
 {

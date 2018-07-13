@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\WebGroup
+ *
  * @property int $id
  * @property int $webgroup
  * @property int $webuser
+ *
+ * @mixin \Eloquent
  */
 class WebGroup extends Eloquent\Model
 {

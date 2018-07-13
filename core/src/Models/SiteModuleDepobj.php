@@ -3,10 +3,14 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\SiteModuleDepobj
+ *
  * @property int $id
  * @property int $module
  * @property int $resource
  * @property int $type
+ *
+ * @mixin \Eloquent
  */
 class SiteModuleDepobj extends Eloquent\Model
 {

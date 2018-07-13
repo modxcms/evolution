@@ -3,10 +3,14 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\SiteTmplvarContentvalue
+ *
  * @property int $id
  * @property int $tmplvarid
  * @property int $contentid
  * @property string $value
+ *
+ * @mixin \Eloquent
  */
 class SiteTmplvarContentvalue extends Eloquent\Model
 {
