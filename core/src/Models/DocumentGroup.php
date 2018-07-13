@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\DocumentGroup
+ *
  * @property int $id
  * @property int $document_group
  * @property int $document
+ *
+ * @mixin \Eloquent
  */
 class DocumentGroup extends Eloquent\Model
 {

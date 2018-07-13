@@ -3,10 +3,14 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\DocumentgroupName
+ *
  * @property int $id
  * @property string $name
  * @property int $private_memgroup
  * @property int $private_webgroup
+ *
+ * @mixin \Eloquent
  */
 class DocumentgroupName extends Eloquent\Model
 {

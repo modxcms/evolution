@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SiteTemplate
+ *
  * @property int $id
  * @property string $templatename
  * @property string $description
@@ -29,6 +31,12 @@ use EvolutionCMS\Traits;
  *
  * BelongsToMany
  * @property Eloquent\Collection $tvs
+ * @property-read mixed $already_edit_info
+ * @property-read mixed $is_already_edit
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\EvolutionCMS\Models\SiteTemplate lockedView()
+ *
+ * @mixin \Eloquent
  */
 class SiteTemplate extends Eloquent\Model
 {

@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\UserRole
+ *
  * @property int $id
  * @property string $name
  * @property string $description
@@ -81,6 +83,10 @@ use Illuminate\Database\Eloquent;
  * Virtual
  * @property-read bool $isAlreadyEdit
  * @property-read null|array $alreadyEditInfo
+ * @property-read mixed $already_edit_info
+ * @property-read mixed $is_already_edit
+ *
+ * @mixin \Eloquent
  */
 class UserRole extends Eloquent\Model
 {

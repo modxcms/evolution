@@ -22,6 +22,16 @@ class Console extends Artisan
 
         $this->events->dispatch(new Events\ArtisanStarting($this));
 
-        $this->bootstrap();
+        $laravel->loadDeferredProviders();
+
+        parent::bootstrap();
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    protected function getDefaultInputDefinition()
+    {
+        return SymfonyApplication::getDefaultInputDefinition();
     }
 }

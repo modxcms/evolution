@@ -20,6 +20,7 @@ return array(
     'fed89643fc359d0354040dd78b25d0ce' => $baseDir . '/functions/actions/search.php',
     '376f0aaba4a82256accaa61b7a25de82' => $baseDir . '/functions/actions/settings.php',
     '8714227116b25ef570999a362f526ab3' => $baseDir . '/functions/helper.php',
+    'e582acf487e2f86fac24c8019cd1778e' => $baseDir . '/functions/laravel.php',
     'a87edab90a63bc90d6ae5f2c0a677788' => $baseDir . '/functions/nodes.php',
     '423153350960ba766aabcbed5eeb0d29' => $baseDir . '/functions/preload.php',
     '542d9accf822f1205d7fc8b124a1746c' => $baseDir . '/functions/processors.php',

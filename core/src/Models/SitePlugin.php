@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SitePlugin
+ *
  * @property int $id
  * @property string $name
  * @property string $description
@@ -29,6 +31,14 @@ use EvolutionCMS\Traits;
  * @property-read \Carbon\Carbon $updated_at
  * @property-read bool $isAlreadyEdit
  * @property-read null|array $alreadyEditInfo
+ * @property-read mixed $already_edit_info
+ * @property-read mixed $is_already_edit
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\EvolutionCMS\Models\SitePlugin activePhx()
+ * @method static \Illuminate\Database\Eloquent\Builder|\EvolutionCMS\Models\SitePlugin disabledAlternative()
+ * @method static \Illuminate\Database\Eloquent\Builder|\EvolutionCMS\Models\SitePlugin lockedView()
+ *
+ * @mixin \Eloquent
  */
 class SitePlugin extends Eloquent\Model
 {

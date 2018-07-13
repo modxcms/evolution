@@ -4,8 +4,12 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SystemSetting
+ *
  * @property string $setting_name
  * @property string $setting_value
+ *
+ * @mixin \Eloquent
  */
 class SystemSetting extends Eloquent\Model
 {

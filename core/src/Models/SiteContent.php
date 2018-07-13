@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SiteContent
+ *
  * @property int $id
  * @property string $type
  * @property string $contentType
@@ -49,6 +51,12 @@ use EvolutionCMS\Traits;
  * @property-read \Carbon\Carbon $deleted_at
  * @property-read bool $isAlreadyEdit
  * @property-read null|array $alreadyEditInfo
+ * @property-read mixed $already_edit_info
+ * @property-read mixed $is_already_edit
+ * @property-read mixed $node_name
+ * @property-read mixed $un_pub_at
+ *
+ * @mixin \Eloquent
  */
 class SiteContent extends Eloquent\Model
 {

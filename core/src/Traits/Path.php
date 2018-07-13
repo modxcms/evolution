@@ -32,7 +32,7 @@ trait Path
      */
     public function basePath()
     {
-        return MODX_BASE_PATH;
+        return EVO_CORE_PATH;
     }
 
     /**

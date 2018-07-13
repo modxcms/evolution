@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\ManagerLog
+ *
  * @property int $id
  * @property int $timestamp
  * @property int $internalKey
@@ -13,6 +15,8 @@ use Illuminate\Database\Eloquent;
  * @property string $message
  * @property string $ip
  * @property string $useragent
+ *
+ * @mixin \Eloquent
  */
 class ManagerLog extends Eloquent\Model
 {

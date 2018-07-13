@@ -18,13 +18,10 @@ require __DIR__ . '/bootstrap.php';
 
 $modx = evolutionCMS();
 
-$input = new Symfony\Component\Console\Input\ArgvInput;
 $artisan = new EvolutionCMS\Console($modx, $modx['events'], $modx->version());
 
-$artisan->resolveCommands([]);
-
 $status = $artisan->run(
-    $input,
+    $input = new Symfony\Component\Console\Input\ArgvInput,
     new Symfony\Component\Console\Output\ConsoleOutput
 );
 

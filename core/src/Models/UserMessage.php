@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\UserMessage
+ *
  * @property int $id
  * @property string $type
  * @property string $subject
@@ -13,6 +15,8 @@ use EvolutionCMS\Traits;
  * @property int $private
  * @property int $postdate
  * @property bool $messageread
+ *
+ * @mixin \Eloquent
  */
 class UserMessage extends Eloquent\Model
 {

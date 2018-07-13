@@ -29,7 +29,7 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
 $modx->sid = session_id();
 
 $_lang = ManagerTheme::getLexicon();
-include_once MODX_MANAGER_PATH . '/media/style/' . ManagerTheme::getTheme() . '/style.php';
+$_style = ManagerTheme::getStyle();
 
 $action = get_by_key($_REQUEST, 'a', '', 'is_scalar');
 $frame = get_by_key($_REQUEST, 'f', '', 'is_scalar');

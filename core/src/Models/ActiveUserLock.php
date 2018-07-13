@@ -3,12 +3,16 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\ActiveUserLock
+ *
  * @property int $id
  * @property string $sid
  * @property int $internalKey
  * @property int $elementType
  * @property int $elementId
  * @property int $lasthit
+ *
+ * @mixin \Eloquent
  */
 class ActiveUserLock extends Eloquent\Model
 {

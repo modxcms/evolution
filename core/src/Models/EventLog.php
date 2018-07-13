@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\EventLog
+ *
  * @property int $id
  * @property int $eventid
  * @property int $createdon
@@ -12,6 +14,8 @@ use EvolutionCMS\Traits;
  * @property int $usertype
  * @property string $source
  * @property string $description
+ *
+ * @mixin \Eloquent
  */
 class EventLog extends Eloquent\Model
 {

@@ -4,9 +4,13 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\SitePluginEvent
+ *
  * @property int $pluginid
  * @property int $evtid
  * @property int $priority
+ *
+ * @mixin \Eloquent
  */
 class SitePluginEvent extends Eloquent\Model
 {

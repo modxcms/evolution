@@ -29,6 +29,11 @@ return [
          * Keys are needed only for the convenience of replace ServiceProvider class
          * via custom/config/app/providers/*.php
          */
+        'Bootstrap_ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerProvider::class,
+
+        'Console_Artisan' => EvolutionCMS\Providers\ArtisanServiceProvider::class,
+        'Console_Migration' => Illuminate\Database\MigrationServiceProvider::class,
+
         'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
         'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
@@ -36,7 +41,6 @@ return [
         'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
-        'Bootstrap_ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
         'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseProvider::class,
         'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreProvider::class,
@@ -48,7 +52,7 @@ return [
         'Evolution_phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
         'Evolution_PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
         'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class,
-        'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class
+        'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
     ],
 
     'aliases' => [

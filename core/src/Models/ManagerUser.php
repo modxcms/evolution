@@ -4,9 +4,13 @@ use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 
 /**
+ * EvolutionCMS\Models\ManagerUser
+ *
  * @property int $id
  * @property string $username
  * @property string $password
+ *
+ * @mixin \Eloquent
  */
 class ManagerUser extends Eloquent\Model
 {

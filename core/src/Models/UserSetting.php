@@ -3,9 +3,13 @@
 use Illuminate\Database\Eloquent;
 
 /**
+ * EvolutionCMS\Models\UserSetting
+ *
  * @property int $user
  * @property string $setting_name
  * @property string $setting_value
+ *
+ * @mixin \Eloquent
  */
 class UserSetting extends Eloquent\Model
 {
