@@ -836,7 +836,7 @@ abstract class MODxAPI extends MODxAPIhelpers
         if (version_compare($tmp, $version, '>=')) {
             $flag = true;
             if ($dmi3yy) {
-                $flag = (boolean)preg_match('/^' . $tmp . '(.*)\-d/', $currentVer);
+                $flag = $flag || (boolean)preg_match('/^' . $tmp . '(.*)\-d/', $currentVer);
             }
         }
 
