@@ -313,9 +313,6 @@ class synccache
         $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->db->getRow($rs)) {
-            if ($modx->config['minifyphp_incache']) {
-                $doc['snippet'] = $this->php_strip_whitespace($doc['snippet']);
-            }
             $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
 
