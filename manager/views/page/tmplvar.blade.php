@@ -52,7 +52,7 @@
             },
             cancel: function() {
               documentDirty = false;
-              document.location.href = 'index.php?a={{ $origin }}@if(!empty($originId))&id={{ $originId}}@endif';
+              document.location.href = 'index.php?a={{ $origin }}@if(!empty($originId))&id={{ $originId}}@endif&tab=1';
             }
           };
 
