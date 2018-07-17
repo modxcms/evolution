@@ -377,8 +377,7 @@ padding: .25rem .5rem; background: none; border: none !important; color: inherit
 .darkness .resourceTable ul.elements > li { border-left: 3px solid transparent; border-bottom: 1px solid #303338; }
 .darkness .resourceTable ul.elements > li:hover { background-color: #202329; }
 .darkness .elements_descr { color: #aaa; }
-.darkness ul.elements_buttonbar li a { color: inherit; }
-.darkness .msg-container { color: inherit }
+.darkness ul.elements_buttonbar li a, .darkness .msg-container { color: inherit; }
 .darkness .evo-tooltip, .darkness .custom-tip { background-color: #343942; color: #eee; box-shadow: 0 0.5rem 3rem rgba(0, 0, 0, 0.4); }
 .darkness div#section-body-categories div.uncategorized_elements, .darkness div#section-body-categories div.drop { border: 1px solid #414449; background-color: #202329; }
 .darkness div#section-body-categories div.uncategorized_elements h2, .darkness div#section-body-categories div.drop h2 { color: #1976d2; border-bottom: 1px solid #1976d2; }
@@ -387,7 +386,7 @@ padding: .25rem .5rem; background: none; border: none !important; color: inherit
 .darkness #helpPane ul + h1 { margin-top: 1rem; }
 .darkness #helpPane ul { margin: 0; }
 .darkness #helpPane .tab-page > img:first-of-type { content: url("../images/misc/logo-navbar-white.png"); }
-.darkness #helpPane pre { border: 1px solid #414449; padding: 1em; color: #aaa; }
+.darkness pre, .darkness #helpPane pre { border: 1px solid #414449; padding: 1em; color: #aaa; }
 .darkness code { background-color: #202329; border: 1px solid #414449; }
 .darkness .h, .darkness .e, .darkness .v { background-color: #202329; border-color: #414449; color: #eee; }
 .darkness .v { background-color: #282c34; }
