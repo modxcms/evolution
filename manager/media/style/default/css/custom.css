@@ -367,7 +367,6 @@ padding: .25rem .5rem; background: none; border: none !important; color: inherit
 .darkness .alert-warning { background-color: #6c591d; border-color: #6c591d; color: #c7bd9e; }
 .darkness .alert-success { background-color: #3d7544; border-color: #3d7544; color: #c4efc5; }
 .darkness .loginbox, .darkness .loginbox form { background-color: #202329 }
-.darkness .loginbox .logo img { content: url("../images/misc/logo-navbar-white.png"); }
 .darkness #mainloader { background-color: transparent !important; }
 .darkness #FilesTable { border-bottom: 1px solid #202329 }
 .darkness #mce-modal-block { background-color: #000; }
