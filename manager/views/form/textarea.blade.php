@@ -13,7 +13,7 @@
             @if(!empty($placeholder)) placeholder="{{ $placeholder }}" @endif
         {!! $attributes or '' !!}
         @if(!empty($readonly)) readonly @endif
-        >{!! $value !!}</textarea>
+        >{{ $value }}</textarea>
         @if(!empty($comment))
             <small class="form-text text-muted">{!! $comment !!}</small>
         @endif

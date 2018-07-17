@@ -2,4 +2,4 @@
     @if(!empty($placeholder)) placeholder="{{ $placeholder }}" @endif
 {!! $attributes or '' !!}
 @if(!empty($readonly)) readonly @endif
->{!! $value !!}</textarea>
+>{{ $value }}</textarea>
