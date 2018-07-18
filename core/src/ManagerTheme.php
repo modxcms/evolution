@@ -71,8 +71,8 @@ class ManagerTheme implements ManagerThemeInterface
         96,
         117,
         /** snippet management */
-        22,
-        23,
+        22 => Controllers\Snippet::class,
+        23 => Controllers\Snippet::class,
         24,
         25,
         98,
