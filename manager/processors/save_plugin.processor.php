@@ -9,13 +9,13 @@ if (!$modx->hasPermission('save_plugin')) {
 $id = (int)$_POST['id'];
 $name = $modx->getDatabase()->escape(trim($_POST['name']));
 $description = $modx->getDatabase()->escape($_POST['description']);
-$locked = $_POST['locked'] == 'on' ? '1' : '0';
+$locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? '1' : '0';
 $plugincode = $modx->getDatabase()->escape($_POST['post']);
 $properties = $modx->getDatabase()->escape($_POST['properties']);
-$disabled = $_POST['disabled'] == 'on' ? '1' : '0';
+$disabled = isset($_POST['disabled']) && $_POST['disabled'] == 'on' ? '1' : '0';
 $moduleguid = $modx->getDatabase()->escape($_POST['moduleguid']);
 $sysevents = !empty($_POST['sysevents']) ? $_POST['sysevents'] : array();
-$parse_docblock = $_POST['parse_docblock'] == '1' ? '1' : '0';
+$parse_docblock = isset($_POST['parse_docblock']) && $_POST['parse_docblock'] == '1' ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support

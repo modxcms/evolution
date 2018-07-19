@@ -97,8 +97,8 @@ class ManagerTheme implements ManagerThemeInterface
         113,
         /** plugin management */
         100,
-        101,
-        102,
+        101 => Controllers\Plugin::class,
+        102 => Controllers\Plugin::class,
         103,
         104,
         105,
