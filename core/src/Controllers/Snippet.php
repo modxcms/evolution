@@ -13,7 +13,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
         'OnSnipFormRender'
     ];
 
-    /** @var Models\SiteHtmlsnippet|null */
+    /** @var Models\SiteSnippet|null */
     private $data;
 
     /**
@@ -69,13 +69,13 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @return Models\SiteHtmlsnippet
+     * @return Models\SiteSnippet
      */
     protected function parameterData()
     {
         $id = $this->getElementId();
 
-        /** @var Models\SiteHtmlsnippet $data */
+        /** @var Models\SiteSnippet $data */
         $data = Models\SiteSnippet::firstOrNew(['id' => $id]);
 
         if ($data->exists) {
@@ -144,7 +144,9 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     {
         $out = '';
         if (isset($this->data->snippet)) {
-            $snippetcode = evolutionCMS()->getDatabase()->escape($this->data->snippet);
+            $snippetcode = evolutionCMS()
+                ->getDatabase()
+                ->escape($this->data->snippet);
             $parsed = evolutionCMS()->parseDocBlockFromString($snippetcode);
             $out = evolutionCMS()->convertDocBlockIntoList($parsed);
         }
