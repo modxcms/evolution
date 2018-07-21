@@ -926,7 +926,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                 }
 
-                                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                                $field = "DISTINCT tv.*, cat.id,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                                 $vs = array(
                                     $tbl_site_tmplvars,
                                     $tbl_site_tmplvar_templates,
@@ -948,7 +948,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $field .= ', IFNULL(tv.category,0) as category_id, IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
                                     $from .= '
                                     LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
-                                    $sort = 'cat.rank,cat.id,' . $sort;
+                                    $sort = 'category_rank,cat.id,' . $sort;
                                 }
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
                                 $rs = $modx->db->select($field, $from, $where, $sort);
@@ -1384,8 +1384,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								$tbl_document_groups,
 								$documentId
 							);
-							$from = vsprintf("%s AS dgn LEFT JOIN %s AS groups ON groups.document_group=dgn.id AND groups.document='%s'", $vs);
-							$rs = $modx->db->select('dgn.*, groups.id AS link_id', $from, '', 'name');
+							$from = vsprintf("%s AS dgn LEFT JOIN %s AS groups_resource ON groups_resource.document_group=dgn.id AND groups_resource.document='%s'", $vs);
+							$rs = $modx->db->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
 						} else {
 							// Just load up the names, we're starting clean
 							$rs = $modx->db->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
