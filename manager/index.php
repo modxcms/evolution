@@ -210,7 +210,7 @@ if(isset($manager_theme) && !isset($_style)) {
 }
 
 // check if user is allowed to access manager interface
-if(isset($allow_manager_access) && $allow_manager_access==0) {
+if(isset($allow_manager_access) && $allow_manager_access==0 && !(isset($_GET['a']) && $_GET['a'] == 8)) {
 	include_once "manager.lockout.inc.php";
 }
 

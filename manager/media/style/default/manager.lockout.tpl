@@ -50,7 +50,7 @@
 			<h1>[(site_name)]</h1>
 			<div class="loginMessage">[+manager_lockout_message+]</div>
 			<fieldset class="buttonset">
-				<input type="button" class="login" id="submitButton" value="[%home%]" onClick="return gotoHome();" />
+				<input type="button" class="login" id="submitButton" value="[+home+]" onClick="return gotoHome();" />
 				&nbsp;
 				<input type="button" class="login" id="submitButton" value="[+logout+]" onClick="return doLogout();" />
 			</fieldset>
