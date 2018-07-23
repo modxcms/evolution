@@ -1101,6 +1101,9 @@ abstract class Core
     {
         if (!$this->getCFGDef('api', 0)) {
             $header = $header ? $header : 'HTTP/1.1 307 Temporary Redirect';
+            if (!is_null($this->debug)) {
+                $this->debug->saveLog();
+            }
             $this->modx->sendRedirect($url, 0, 'REDIRECT_HEADER', $header);
         }
     }

@@ -113,7 +113,6 @@ class Validator
      */
     public static function numeric($value)
     {
-        //var_dump($value);
         return (bool) is_scalar($value) && preg_match('#^[0-9]*$#',$value);
     }
 
