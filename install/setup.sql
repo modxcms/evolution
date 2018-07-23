@@ -13,7 +13,7 @@ CREATE TABLE `{PREFIX}active_users` (
   `lasthit` int(20) NOT NULL default '0',
   `action` varchar(10) NOT NULL default '',
   `id` int(10) default NULL,
-  PRIMARY KEY (`sid`)
+  PRIMARY KEY (`sid`, `username`)
 ) ENGINE=MyISAM COMMENT='Contains data about last user action.';
 
 DROP TABLE IF EXISTS `{PREFIX}active_user_locks`;
