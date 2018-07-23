@@ -559,8 +559,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
                     }
                     if($insert === true) {
-                        $properties = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
-                        if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
+                         if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0',$category);")) {
                             echo "<p>".mysqli_error($sqlParser->conn)."</p>";
                             return;
                         }

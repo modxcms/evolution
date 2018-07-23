@@ -379,8 +379,7 @@ if (count($modulePlugins )>0) {
                         }
                     }
                     if($insert === true) {
-                        $properties = $modx->db->escape(parseProperties($properties, true));
-                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0','$category');",$sqlParser->conn)) {
+                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0','$category');",$sqlParser->conn)) {
                             echo "<p>".mysql_error()."</p>";
                             return;
                         }
