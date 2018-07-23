@@ -401,10 +401,11 @@ if (count($modulePlugins )>0) {
                     if ($ds) {
                         $row = $modx->db->getRow($ds,'assoc');
                         $id = $row["id"];
-                        // remove existing events
-                        $modx->db->query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_plugin_events` WHERE pluginid = \'' . $id . '\'');
+                        $_events = implode("','", $events);
                         // add new events
-                        $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM `" . $table_prefix . "system_eventnames` se WHERE name IN ('" . implode("','", $events) . "')");
+                        $modx->db->query("INSERT IGNORE INTO `" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM `" . $table_prefix . "system_eventnames` se WHERE name IN ('" . $_events . "')");
+                        // remove existing events
+                        $modx->db->query("DELETE `pe` FROM `{$table_prefix}site_plugin_events` `pe` LEFT JOIN `{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
                     }
                 }
             }
