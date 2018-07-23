@@ -38,6 +38,12 @@ if ($e->name == 'OnWebLogin') {
 if ($e->name == 'OnWebPageInit' || $e->name == 'OnPageNotFound') {
     $user = new \modUsers($modx);
     if ($uid = $modx->getLoginUserID('web')) {
+        if ($trackWebUserActivity == 'Yes') {
+            $sid = $modx->sid = session_id();
+            $pageId = (int)$modx->documentIdentifier;
+            $q = $modx->db->query("REPLACE INTO {$modx->getFullTableName('active_users')} (`sid`, `internalKey`, `username`, `lasthit`, `action`, `id`) values('{$sid}',-{$uid}, '{$_SESSION['webShortname']}', '{$modx->time}', 998, {$pageId})");
+            $modx->updateValidatedUserSession();
+        }
         if (isset($_REQUEST[$logoutKey])) {
             $user->logOut($cookieName, true);
             $page = $modx->config['site_url'] . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
