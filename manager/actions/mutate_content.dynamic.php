@@ -926,7 +926,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                 }
 
-                                $field = "DISTINCT tv.*, cat.id,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                                $field = "DISTINCT tv.*, cat.id AS category_id,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                                 $vs = array(
                                     $tbl_site_tmplvars,
                                     $tbl_site_tmplvar_templates,
