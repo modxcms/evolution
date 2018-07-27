@@ -190,7 +190,7 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 }
 
 $rs = $modx->db->select(
-    "DISTINCT tv.*, cat.id, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+    "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value",
     "{$tbl_site_tmplvars} AS tv
         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
