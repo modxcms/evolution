@@ -190,7 +190,7 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 }
 
 $rs = $modx->db->select(
-    "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+    "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value",
     "{$tbl_site_tmplvars} AS tv
         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
@@ -591,10 +591,10 @@ switch ($actionToTake) {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
             $rs = $modx->db->select(
-                'groups.id, groups.document_group',
-                "{$tbl_document_groups} AS groups
-                    LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups.document_group",
-                "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups.document = '{$id}'"
+                'groups_document.id, groups.document_group',
+                "{$tbl_document_groups} AS groups_document
+                    LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups_document.document_group",
+                "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups_document.document = '{$id}'"
                 );
             $old_groups = array();
             while ($row = $modx->db->getRow($rs)) $old_groups[$row['document_group']] = $row['id'];

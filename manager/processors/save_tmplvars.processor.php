@@ -191,7 +191,7 @@ function saveTemplateVarAccess()
 
     $getRankArray = array();
 
-    $getRank = $modx->db->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+    $getRank = $modx->db->select("`templateid`, `rank`", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 
     while ($row = $modx->db->getRow($getRank)) {
         $getRankArray[$row['templateid']] = $row['rank'];
