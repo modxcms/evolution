@@ -926,7 +926,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                 }
 
-                                $field = "DISTINCT tv.*, cat.id AS category_id,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                                $field = "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                                 $vs = array(
                                     $tbl_site_tmplvars,
                                     $tbl_site_tmplvar_templates,
@@ -945,10 +945,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 );
                                 $sort = 'tvtpl.rank,tv.rank, tv.id';
                                 if ($group_tvs) {
-                                    $field .= ', IFNULL(tv.category,0) as category_id, IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
+                                    $field .= ', IFNULL(cat.id,0) AS category_id,  IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
                                     $from .= '
                                     LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
-                                    $sort = 'category_rank,cat.id,' . $sort;
+                                    $sort = 'category_rank,category_id,' . $sort;
                                 }
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
                                 $rs = $modx->db->select($field, $from, $where, $sort);
