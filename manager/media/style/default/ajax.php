@@ -33,6 +33,8 @@ $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroup
 // set limit sql query
 $limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
 
+header('Content-Type: text/html; charset='.$modx->config['modx_charset'], true);
+
 if (isset($action)) {
     switch ($action) {
 
