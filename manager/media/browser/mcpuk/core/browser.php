@@ -283,6 +283,11 @@ class browser extends uploader
 
         $dir = $this->postDir();
         $newName = $this->normalizeDirname(trim($this->post['newName']));
+        $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserRename', array(
+            'element' => 'dir',
+            'filepath' => realpath($dir),
+            'newname' => &$newName
+        ));
         if (!strlen($newName)) {
             $this->errorMsg("Please enter new folder name.");
         }
@@ -292,6 +297,9 @@ class browser extends uploader
         if (substr($newName, 0, 1) == ".") {
             $this->errorMsg("Folder name shouldn't begins with '.'");
         }
+        if (is_array($evtOut) && !empty($evtOut)) {
+            $this->errorMsg(implode('\n', $evtOut));
+        }
         if (!@rename($dir, dirname($dir) . "/$newName")) {
             $this->errorMsg("Cannot rename the folder.");
         }
@@ -299,6 +307,11 @@ class browser extends uploader
         if (is_dir($thumbDir)) {
             @rename($thumbDir, dirname($thumbDir) . "/$newName");
         }
+        $this->modx->invokeEvent('OnFileBrowserRename', array(
+            'element' => 'dir',
+            'filepath' => realpath($dir),
+            'newname' => $newName
+        ));
 
         return json_encode(array('name' => $newName));
     }
@@ -422,6 +435,12 @@ class browser extends uploader
         }
 
         $newName = $this->normalizeFilename(trim($this->post['newName']));
+        $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserRename', array(
+            'element' => 'file',
+            'filepath' => $dir,
+            'filename' => $this->post['file'],
+            'newname' => &$newName
+        ));
         if (!strlen($newName)) {
             $this->errorMsg("Please enter new file name.");
         }
@@ -431,6 +450,7 @@ class browser extends uploader
         if (substr($newName, 0, 1) == ".") {
             $this->errorMsg("File name shouldn't begins with '.'");
         }
+        $_newName = $newName;
         $newName = "$dir/$newName";
         if (file_exists($newName)) {
             $this->errorMsg("A file or folder with that name already exists.");
@@ -439,10 +459,18 @@ class browser extends uploader
         if (!$this->validateExtension($ext, $this->type)) {
             $this->errorMsg("Denied file extension.");
         }
+        if (is_array($evtOut) && !empty($evtOut)) {
+            $this->errorMsg(implode('\n', $evtOut));
+        }
         if (!@rename($file, $newName)) {
             $this->errorMsg("Unknown error.");
         }
-
+        $this->modx->invokeEvent('OnFileBrowserRename', array(
+            'element' => 'file',
+            'filepath' => $dir,
+            'filename' => $this->post['file'],
+            'newname' => $_newName
+        ));
         $thumbDir = "{$this->thumbsTypeDir}/{$this->post['dir']}";
         $thumbFile = "$thumbDir/{$this->post['file']}";
 
@@ -526,7 +554,14 @@ class browser extends uploader
             $base = basename($file);
             $replace = array('file' => $base);
             $ext = file::getExtension($base);
-            if (!file_exists($path)) {
+            $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserCopy', array(
+                'oldpath'  => $path,
+                'filename' => $base,
+                'newpath' => realpath($dir)
+            ));
+            if (is_array($evtOut) && !empty($evtOut)) {
+                $error[] = implode("\n", $evtOut);
+            } elseif (!file_exists($path)) {
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             } elseif (substr($base, 0, 1) == ".") {
                 $error[] = "$base: " . $this->label("File name shouldn't begins with '.'");
@@ -542,6 +577,11 @@ class browser extends uploader
                 if (function_exists("chmod")) {
                     @chmod("$dir/$base", $this->config['filePerms']);
                 }
+                $this->modx->invokeEvent('OnFileBrowserCopy', array(
+                    'oldpath'  => $path,
+                    'filename' => $base,
+                    'newpath' => realpath($dir)
+                ));
                 $fromThumb = "{$this->thumbsDir}/$file";
                 if (is_file($fromThumb) && is_readable($fromThumb)) {
                     $toThumb = "{$this->thumbsTypeDir}/{$this->post['dir']}";
@@ -590,7 +630,14 @@ class browser extends uploader
             $base = basename($file);
             $replace = array('file' => $base);
             $ext = file::getExtension($base);
-            if (!file_exists($path)) {
+            $evtOut = $this->modx->invokeEvent('OnBeforeFileBrowserMove', array(
+                'oldpath'  => $path,
+                'filename' => $base,
+                'newpath' => realpath($dir)
+            ));
+            if (is_array($evtOut) && !empty($evtOut)) {
+                $error[] = implode("\n", $evtOut);
+            } elseif (!file_exists($path)) {
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             } elseif (substr($base, 0, 1) == ".") {
                 $error[] = "$base: " . $this->label("File name shouldn't begins with '.'");
@@ -615,6 +662,11 @@ class browser extends uploader
                     $toThumb .= "/$base";
                     @rename($fromThumb, $toThumb);
                 }
+                $this->modx->invokeEvent('OnFileBrowserMove', array(
+                    'oldpath'  => $path,
+                    'filename' => $base,
+                    'newpath' => realpath($dir)
+                ));
             }
         }
         if (count($error)) {
