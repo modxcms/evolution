@@ -948,7 +948,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $field .= ', IFNULL(cat.id,0) AS category_id,  IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
                                     $from .= '
                                     LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
-                                    $sort = 'category_rank,cat.id,' . $sort;
+                                    $sort = 'category_rank,category_id,' . $sort;
                                 }
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
                                 $rs = $modx->db->select($field, $from, $where, $sort);
