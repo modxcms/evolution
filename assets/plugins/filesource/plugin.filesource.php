@@ -72,9 +72,6 @@ switch ($modx->event->name)
     case 'OnPluginFormPrerender':
     case 'OnSnipFormPrerender':
         global $content, $_lang;
-        if (preg_match('/\s' . $_lang['duplicated_el_suffix'] . '\s?\d*$/', $content['name'])) {
-            $content['file_binding'] = '';
-        }
         if(substr(trim($content[$vals]),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
         {
             $content['file_binding'] = str_replace(array(';','\''),'',trim(substr(trim($content[$vals]),$count,250)));
@@ -105,6 +102,9 @@ switch ($modx->event->name)
             }
             else $content['file_binding'] = '';
             $_SESSION['itemname']=$content['name'];
+        }
+        if (preg_match('/\s' . $_lang['duplicated_el_suffix'] . '\s?\d*$/', $content['name'])) {
+            $content['file_binding'] = '';
         }
         //else $_SESSION['itemname']="New snippet";
         break;
