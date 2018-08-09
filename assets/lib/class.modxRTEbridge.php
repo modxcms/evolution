@@ -966,7 +966,7 @@ class modxRTEbridge
 
         $templatesArr = array();
 
-        if ($modx->getLoginUserType() === 'manager') {
+        if (IN_MANAGER_MODE) {
 
             $modx->getSettings();
             $ids    = $modx->config[$this->editorKey.'_template_docs'];
