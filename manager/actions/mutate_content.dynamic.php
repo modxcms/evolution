@@ -568,15 +568,15 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
 		<input type="hidden" name="refresh_preview" value="0" />
 		<input type="hidden" name="newtemplate" value="" />
-		<input type="hidden" name="dir" value="<?= $dir ?>" />
-		<input type="hidden" name="sort" value="<?= $sort ?>" />
+		<input type="hidden" name="dir" value="<?= html_escape($dir, $modx->config['modx_charset']) ?>" />
+		<input type="hidden" name="sort" value="<?= html_escape($sort, $modx->config['modx_charset']) ?>" />
 		<input type="hidden" name="page" value="<?= $page ?>" />
 
 		<fieldset id="create_edit">
 
 			<h1>
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
-					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
+					echo html_escape(iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']), $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . (int)$_REQUEST['id'] . ')</small>';
 				} else {
 				    if ($modx->manager->action == '4') {
                         echo $_lang['add_resource'];
@@ -702,7 +702,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										</td>
 										<td>
 											<i id="llock" class="<?= $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
-											<input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? stripslashes($content['content']) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?= $_lang['insert'] ?>" onclick="BrowseFileServer('ta')" />
+											<input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? html_escape(stripslashes($content['content']), $modx->config['modx_charset']) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?= $_lang['insert'] ?>" onclick="BrowseFileServer('ta')" />
 										</td>
 									</tr>
 
