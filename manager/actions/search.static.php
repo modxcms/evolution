@@ -31,7 +31,7 @@ if (isset($_REQUEST['searchid'])) {
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_top'] ?></div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="searchfields" type="text" value="<?= (isset($_REQUEST['searchfields']) ? $_REQUEST['searchfields'] : '') ?>" />
+                        <input name="searchfields" type="text" value="<?= (isset($_REQUEST['searchfields']) ? html_escape($_REQUEST['searchfields'], $modx->config['modx_charset']) : '') ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_top_msg'] ?></small>
                     </div>
                 </div>
@@ -58,14 +58,14 @@ if (isset($_REQUEST['searchid'])) {
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2">URL</div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="url" type="text" value="<?= (isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ?>" />
+                        <input name="url" type="text" value="<?= (isset($_REQUEST['url']) ? html_escape($_REQUEST['url'], $modx->config['modx_charset'])  : '') ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_url_msg'] ?></small>
                     </div>
                 </div>
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_content'] ?></div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="content" type="text" value="<?= (isset($_REQUEST['content']) ? $_REQUEST['content'] : '') ?>" />
+                        <input name="content" type="text" value="<?= (isset($_REQUEST['content']) ? html_escape($_REQUEST['content'], $modx->config['modx_charset']) : '') ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_content_msg'] ?></small>
                     </div>
                 </div>
@@ -422,14 +422,15 @@ if (isset($_REQUEST['submitok'])) {
  */
 function highlightingCoincidence($text, $search)
 {
+    global $modx;
     $regexp = '!(' . str_replace(array(
             '(',
             ')'
         ), array(
             '\(',
             '\)'
-        ), trim($search)) . ')!isu';
-    return preg_replace($regexp, '<span class="text-danger">$1</span>', $text);
+        ), html_escape(trim($search), $modx->config['modx_charset'])) . ')!isu';
+    return preg_replace($regexp, '<span class="text-danger">$1</span>', html_escape($text, $modx->config['modx_charset']));
 }
 
 /**
