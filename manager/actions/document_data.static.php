@@ -311,13 +311,13 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td><?= $_lang['page_data_created'] ?>:</td>
-						<td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= $createdbyname ?></b>)
+						<td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= html_escape($createdbyname, $modx->config['modx_charset']) ?></b>)
 						</td>
 					</tr>
 					<?php if($editedbyname != '') { ?>
 						<tr>
 							<td><?= $_lang['page_data_edited'] ?>:</td>
-							<td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= $editedbyname ?></b>)
+							<td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= html_escape($editedbyname, $modx->config['modx_charset']) ?></b>)
 							</td>
 						</tr>
 					<?php } ?>

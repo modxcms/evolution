@@ -147,7 +147,7 @@ if (isset($action)) {
                             continue;
                         }
 
-                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
+                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . html_escape($row['name'], $modx->config['modx_charset']) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
                     }
                 }
 
@@ -192,7 +192,7 @@ if (isset($action)) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->db->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . html_escape($row['name'], $modx->config['modx_charset']) . ' <small>(' . $row['id'] . ')</small></a></li>';
                 }
             }
 
@@ -265,7 +265,7 @@ if (isset($action)) {
                             $row = $modx->db->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -275,17 +275,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($name, $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'url' => "index.php?a=23&itemname=" . $name
+                                    'url' => "index.php?a=23&itemname=" . html_escape($name, $modx->config['modx_charset'])
                                 )
                             );
                         }
@@ -303,7 +303,7 @@ if (isset($action)) {
                             $row = $modx->db->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -313,17 +313,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . html_escape($name, $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'url' => "index.php?a=77&itemname=" . $name
+                                    'url' => "index.php?a=77&itemname=" . html_escape($name, $modx->config['modx_charset'])
                                 )
                             );
                         }
@@ -340,7 +340,7 @@ if (isset($action)) {
                             $row = $modx->db->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerText' => $row['name']
+                                    'innerText' => html_escape($row['name'], $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -350,7 +350,7 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
                                 );
                             }
                         } else {
@@ -364,7 +364,7 @@ if (isset($action)) {
                                 $row = $modx->db->getRow($sql);
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
+                                        'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -374,21 +374,21 @@ if (isset($action)) {
                                 if (!empty($row['description'])) {
                                     $contextmenu['seperator'] = '';
                                     $contextmenu['description'] = array(
-                                        'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                        'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
                                     );
                                 }
                             } else {
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . $name
+                                        'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($name, $modx->config['modx_charset'])
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'url' => "index.php?a=77&itemname=" . $name
+                                        'url' => "index.php?a=77&itemname=" . html_escape($name, $modx->config['modx_charset'])
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'url' => "index.php?a=23&itemname=" . $name
+                                        'url' => "index.php?a=23&itemname=" . html_escape($name, $modx->config['modx_charset'])
                                     )
                                 );
                             }
@@ -452,7 +452,7 @@ if (isset($action)) {
                             $row = $modx->db->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -462,17 +462,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . html_escape($name, $modx->config['modx_charset'])
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'url' => "index.php?a=300&itemname=" . $name
+                                    'url' => "index.php?a=300&itemname=" . html_escape($name, $modx->config['modx_charset'])
                                 )
                             );
                         }
@@ -616,7 +616,7 @@ if (isset($action)) {
                     $output = !!$row['locked'];
                 }
             }
-            
+
             echo $output;
 
             break;

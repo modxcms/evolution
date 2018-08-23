@@ -603,23 +603,23 @@ function getRecentInfoRowTpl() {
 	$tpl = '
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle:htmlentities+]</a></td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat=`'.$modx->toDateFormat(0,'formatOnly').' %H:%M:%S`+]</td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap">[+username+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap">[+username:htmlentities+]</td>
 							<td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 						</tr>
 						<tr class="resource-overview-accordian collapse collapse[+id+]">
 							<td colspan="6">
 								<div class="overview-body text-small">
 									<ul>
-										<li><b>[%long_title%]</b>: [+longtitle+]</li>
-										<li><b>[%description%]</b>: [+description+]</li>
-										<li><b>[%resource_summary%]</b>: [+introtext+]</li>
+										<li><b>[%long_title%]</b>: [+longtitle:htmlentities+]</li>
+										<li><b>[%description%]</b>: [+description:htmlentities+]</li>
+										<li><b>[%resource_summary%]</b>: [+introtext:htmlentities+]</li>
 										<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
-										<li><b>[%resource_alias%]</b>: [+alias+]</li>
+										<li><b>[%resource_alias%]</b>: [+alias:htmlentities+]</li>
 										<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
 										<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-										<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
+										<li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
 									</ul>
 								</div>
 							</td>
