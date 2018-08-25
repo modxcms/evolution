@@ -1491,7 +1491,7 @@
         this.timer = null;
         this.olduid = '';
         this.closeactions = [6, 61, 62, 63, 94];
-        this.saveAndCloseActions = [3, 75, 76, 86, 99, 106];
+        this.saveAndCloseActions = [75, 76, 86, 99, 106];
         this.reload = typeof a.reload !== 'undefined' ? a.reload : 1;
         this.action = modx.getActionFromUrl(a.url);
         this.getTab = modx.main.getQueryVariable('tab', a.url);
