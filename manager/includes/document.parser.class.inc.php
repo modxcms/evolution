@@ -5862,7 +5862,7 @@ class DocumentParser
             list($left, $right) = explode(' ', $brackets);
             if (strpos($content, $left) !== false) {
                 $matches = $this->getTagsFromContent($content, $left, $right);
-                $content = str_replace($matches[0], '', $content);
+                $content = isset($matches[0]) ? str_replace($matches[0], '', $content) : $content;
             }
         }
         $this->config['enable_filter'] = $enable_filter;
