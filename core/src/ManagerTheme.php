@@ -165,7 +165,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** Import Document from file */
         95,
         /** Help */
-        9,
+        9 => Controllers\Help::class,
         /** Template Variables - Based on Apodigm's Docvars */
         300 => Controllers\Tmplvar::class,
         301 => Controllers\Tmplvar::class,
