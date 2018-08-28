@@ -130,7 +130,6 @@ table.actionButtons .searchtext { padding: 5px; height: 24px; width: 150px; }
 }
 /* [ TABLES ] */
 /* table */
-table { font-size: 0.8125rem }
 .table th, .table td { padding: 0.15rem 0.25rem; }
 /* table-data */
 .table.data { width: 100%; max-width: 100%; margin-bottom: 0; border-bottom: 1px solid #eceeef }
