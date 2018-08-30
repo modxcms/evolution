@@ -6,9 +6,9 @@ if ($modx->getDatabase()->getRecordCount($rs) < 1) {
 }
 $tpl = '<tr>
     <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap text-right"><span class="label label-info">[+id+]</span></td>
-    <td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
+    <td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle:htmlentities+]</a></td>
     <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat=`'.$modx->toDateFormat(0,'formatOnly').' %H:%M:%S`+]</td>
-    <td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
+    <td data-toggle="collapse" data-target=".collapse[+id+]">[+username:htmlentities+]</td>
     <td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 </tr>
 <tr class="resource-overview-accordian collapse collapse[+id+]">
@@ -22,7 +22,7 @@ $tpl = '<tr>
                 <li><b>[%resource_alias%]</b>: [+alias+]</li>
                 <li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
                 <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-                <li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
+                <li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
             </ul>
         </div>
     </td>
@@ -84,18 +84,10 @@ while ($ph = $modx->getDatabase()->getRow($rs)) {
 
     $ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
-    if ($ph['longtitle'] == '') {
-        $ph['longtitle'] = '(<i>[%not_set%]</i>)';
-    }
-    if ($ph['description'] == '') {
-        $ph['description'] = '(<i>[%not_set%]</i>)';
-    }
-    if ($ph['introtext'] == '') {
-        $ph['introtext'] = '(<i>[%not_set%]</i>)';
-    }
-    if ($ph['alias'] == '') {
-        $ph['alias'] = '(<i>[%not_set%]</i>)';
-    }
+    $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['longtitle']);
+    $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['description']);
+    $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['introtext']);
+    $ph['alias'] = $ph['alias'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['alias']);
 
     $output[] = $modx->parseText($tpl, $ph);
 }

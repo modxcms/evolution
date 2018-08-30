@@ -37,8 +37,8 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
-header('Content-Type: text/html; charset='.$modx->config['modx_charset'], true);
+$limit = $modx->getConfig('number_of_results', 100);
+header('Content-Type: text/html; charset='.$modx->getConfig('modx_charset'), true);
 
 if (isset($action)) {
     switch ($action) {
@@ -201,7 +201,7 @@ if (isset($action)) {
                             continue;
                         }
 
-                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
+                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
                     }
                 }
 
@@ -246,7 +246,7 @@ if (isset($action)) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->getDatabase()->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
                 }
             }
 
@@ -285,7 +285,7 @@ if (isset($action)) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->getDatabase()->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
                 }
             }
 
@@ -319,7 +319,7 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-code"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -329,17 +329,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-code"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'url' => "index.php?a=23&itemname=" . $name
+                                    'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -357,7 +357,7 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -367,17 +367,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'url' => "index.php?a=77&itemname=" . $name
+                                    'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -394,7 +394,7 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerText' => $row['name']
+                                    'innerText' => entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -404,7 +404,7 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
@@ -418,7 +418,7 @@ if (isset($action)) {
                                 $row = $modx->getDatabase()->getRow($sql);
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
+                                        'innerHTML' => '<i class="fa fa-code"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -428,21 +428,21 @@ if (isset($action)) {
                                 if (!empty($row['description'])) {
                                     $contextmenu['seperator'] = '';
                                     $contextmenu['description'] = array(
-                                        'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                        'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                     );
                                 }
                             } else {
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . $name
+                                        'innerHTML' => '<i class="fa fa-code"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'url' => "index.php?a=77&itemname=" . $name
+                                        'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'url' => "index.php?a=23&itemname=" . $name
+                                        'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     )
                                 );
                             }
@@ -506,7 +506,7 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $row['name']
+                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -516,17 +516,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $name
+                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'url' => "index.php?a=300&itemname=" . $name
+                                    'url' => "index.php?a=300&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }

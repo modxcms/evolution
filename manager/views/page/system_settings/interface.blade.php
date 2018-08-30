@@ -135,6 +135,19 @@
         <div class="split my-1"></div>
 
         @include('manager::form.radio', [
+            'name' => 'login_form_style',
+            'label' => ManagerTheme::getLexicon('login_form_style'),
+            'small' => '[(login_form_style)]',
+            'value' => $settings['login_form_style'],
+            'options' => [
+                'dark' => 'Dark',
+                'light' => 'Light'
+            ]
+        ])
+
+        <div class="split my-1"></div>
+
+        @include('manager::form.radio', [
             'name' => 'manager_menu_position',
             'label' => ManagerTheme::getLexicon('manager_menu_position_title'),
             'small' => '[(manager_menu_position)]',

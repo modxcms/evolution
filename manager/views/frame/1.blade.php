@@ -31,22 +31,22 @@
             MODX_MANAGER_URL: '{{ MODX_MANAGER_URL }}',
             user: {
                 role: {{ (int)$user['role'] }},
-                username: '{{  $user['username'] }}'
+                username: '{{ $user['username'] }}'
             },
             config: {
                 mail_check_timeperiod: {{ $modx->getConfig('mail_check_timeperiod') }},
                 menu_height: {{ (int)$modx->getConfig('manager_menu_height') }},
                 tree_width: {{ (int)$MODX_widthSideBar }},
                 tree_min_width: <?= (int)$tree_min_width ?>,
-                session_timeout: <?= (int)$modx->config['session_timeout'] ?>,
-                site_start: <?= (int)$modx->config['site_start'] ?>,
+                session_timeout: <?= (int)$modx->getConfig('session_timeout') ?>,
+                site_start: <?= (int)$modx->getConfig('site_start') ?>,
                 tree_page_click: <?=(!empty($modx->config['tree_page_click']) ? (int)$modx->config['tree_page_click'] : 27) ?>,
-                theme: '<?= $modx->config['manager_theme'] ?>',
-                theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
+                theme: '<?= entities($modx->getConfig('manager_theme'), $modx->getConfig('modx_charset')) ?>',
+                theme_mode: '<?= entities($modx->getConfig('manager_theme_mode'), $modx->getConfig('modx_charset')) ?>',
                 which_browser: '<?= $user['which_browser'] ?>',
-                layout: <?= (int)$modx->config['manager_layout'] ?>,
+                layout: <?= (int)$modx->getConfig('manager_layout') ?>,
                 textdir: '<?= ManagerTheme::getTextDir() ?>',
-                global_tabs: <?= $modx->config['global_tabs'] ?>
+                global_tabs: <?= $modx->getConfig('global_tabs') ?>
 
             },
             lang: {
@@ -223,9 +223,9 @@
                         </li>
                         <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
-                                <span class="username"><?= $user['username'] ?></span>
+                                <span class="username"><?= entities($user['username'], $modx->getConfig('modx_charset')) ?></span>
                                 <?php if ($user['photo']) { ?>
-                                <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
+                                <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . entities($user['photo'], $modx->getConfig('modx_charset')) ?>);"></span>
                                 <?php } else { ?>
                                 <span class="icon"><i class="fa fa-user-circle"></i></span>
                                 <?php } ?>
@@ -360,7 +360,7 @@
                 <a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="<?php echo $_lang['empty_recycle_bin_empty']; ?>"><i class="fa fa-trash-o"></i></a>
                 <?php } ?>
 
-                <a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>
+                <a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)" title="<?php echo $_lang['manager_theme_mode_title']; ?>><i class="fa fa-adjust"></i></a>
 
             </div>
 

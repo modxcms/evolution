@@ -31,7 +31,9 @@ trait Settings
         'manager_tree_width' => 'float',
         'show_picker' => 'bool',
         'show_fullscreen_btn' => 'bool',
-        'export_includenoncache' => 'bool'
+        'export_includenoncache' => 'bool',
+        'allow_manager_access' => 'bool',
+        'number_of_results' => 'int',
     ];
 
     /**
@@ -78,7 +80,7 @@ trait Settings
     }
 
     /**
-     * Get MODX settings including, but not limited to, the system_settings table
+     * Get Evolution CMS settings including, but not limited to, the system_settings table
      */
     public function getSettings()
     {

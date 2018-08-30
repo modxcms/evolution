@@ -378,7 +378,7 @@ class ExceptionHandler
 
     protected function shouldDisplay()
     {
-        return isset($_SESSION['mgrValidated']);
+        return isset($_SESSION['mgrValidated']) || $this->container['config']->get('app.debug');
     }
 
     /**

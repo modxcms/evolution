@@ -97,8 +97,8 @@ if($modx->getDatabase()->getRecordCount($rs) < 1) {
 			</div>
 			<?php
 			$rs = $modx->getDatabase()->select('groupnames.*, users.id AS user_id, users.username user_name', $tbl_membergroup_names . ' AS groupnames
-			LEFT JOIN ' . $tbl_member_groups . ' AS groups ON groups.user_group = groupnames.id
-			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups.member', '', 'groupnames.name, user_name');
+			LEFT JOIN ' . $tbl_member_groups . ' AS groups_member ON groups_member.user_group = groupnames.id
+			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups_member.member', '', 'groupnames.name, user_name');
 			if($modx->getDatabase()->getRecordCount($rs) < 1) {
 				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>

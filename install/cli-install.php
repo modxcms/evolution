@@ -307,7 +307,8 @@ if ($installMode == 1) {
     $table_prefix = $tableprefix;
 }
 echo $_lang['creating_database_connection'];
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     $errors++;
     echo $_lang['database_connection_failed'] . PHP_EOL;
 } else {
@@ -475,7 +476,8 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 // connect to the database
 echo $_lang['setup_database_create_connection'] . ': ';
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     echo $_lang["setup_database_create_connection_failed"] . " " . $_lang['setup_database_create_connection_failed_note'] . PHP_EOL;
 
     return;
@@ -1285,9 +1287,7 @@ if (is_array($modulePlugins) || $installData) {
                         }
                     }
                     if ($insert === true) {
-                        $properties = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
-                        if (!mysqli_query($sqlParser->conn,
-                            "INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
+                        if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0',$category);")) {
                             echo mysqli_error($sqlParser->conn) . PHP_EOL;
 
                             return;
@@ -1313,13 +1313,13 @@ if (is_array($modulePlugins) || $installData) {
                     if ($ds) {
                         $row = mysqli_fetch_assoc($ds);
                         $id = $row["id"];
-                        // remove existing events
-                        mysqli_query($sqlParser->conn,
-                            'DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_plugin_events` WHERE pluginid = \'' . $id . '\'');
+                        $_events = implode("','", $events);
                         // add new events
-                        mysqli_query($sqlParser->conn,
-                            "INSERT INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`" . $table_prefix . "system_eventnames` se WHERE name IN ('" . implode("','",
-                                $events) . "')");
+                        $sql = "INSERT IGNORE INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`" . $table_prefix . "system_eventnames` se WHERE name IN ('{$_events}')";
+                        mysqli_query($sqlParser->conn, $sql);
+                        // remove absent events
+                        $sql = "DELETE `pe` FROM {$dbase}.`{$table_prefix}site_plugin_events` `pe` LEFT JOIN {$dbase}.`{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}";
+                        mysqli_query($sqlParser->conn, $sql);
                     }
                 }
             }

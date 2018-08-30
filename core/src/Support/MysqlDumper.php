@@ -87,7 +87,7 @@ class MysqlDumper implements MysqlDumperInterface
         // Set header
         $output = "#{$lf}";
         $output .= "# " . addslashes($modx->getPhpCompat()->entities($modx->getConfig('site_name'))) . " Database Dump{$lf}";
-        $output .= "# MODX Version:{$version['version']}{$lf}";
+        $output .= "# Evolution CMS Version:{$version['version']}{$lf}";
         $output .= "# {$lf}";
         $output .= "# Host: {$this->database_server}{$lf}";
         $output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;

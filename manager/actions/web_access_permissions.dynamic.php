@@ -89,8 +89,8 @@ if($modx->getDatabase()->getRecordCount($rs) < 1) {
 			</div>
 			<?php
 			$rs = $modx->getDatabase()->select('groupnames.*, users.id AS user_id, users.username user_name ', $modx->getDatabase()->getFullTableName('webgroup_names') . " AS groupnames
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName('web_groups') . " AS groups ON groups.webgroup = groupnames.id
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName('web_users') . " AS users ON users.id = groups.webuser", '', 'groupnames.name, user_name');
+			LEFT JOIN " . $modx->getDatabase()->getFullTableName('web_groups') . " AS groups_resource ON groups_resource.webgroup = groupnames.id
+			LEFT JOIN " . $modx->getDatabase()->getFullTableName('web_users') . " AS users ON users.id = groups_resource.webuser", '', 'groupnames.name, user_name');
 			if($modx->getDatabase()->getRecordCount($rs) < 1) {
 				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>

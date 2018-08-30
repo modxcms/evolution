@@ -448,28 +448,30 @@ class UrlProcessor
      */
     public function getHiddenIdFromAlias(int $parentid, string $alias) : ?int
     {
-        $table = $this->core->getDatabase()->getFullTableName('site_content');
-        $query = "SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
-            FROM {$table} sc
-            JOIN {$table} children ON children.parent = sc.id
-            LEFT JOIN {$table} children2 ON children2.parent = children.id
-            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id";
-        $query = $this->core->getDatabase()->query($query);
-
-        while ($child = $this->core->getDatabase()->getRow($query)) {
-            if ($child['alias'] === $alias || (string)$child['child_id'] === $alias) {
-                return $child['child_id'] !== null ? (int)$child['child_id'] : null;
-            }
-
-            if ($child['children_count'] > 0) {
-                $id = $this->getHiddenIdFromAlias($child['id'], $alias);
-                if ($id !== null) {
-                    return (int)$id;
+        $out = false;
+        if ($alias !== '') {
+            $table = $this->getFullTableName('site_content');
+            $query = $this->db->query("SELECT 
+                `sc`.`id` AS `hidden_id`,
+                `children`.`id` AS `child_id`,
+                children.alias AS `child_alias`,
+                COUNT(`grandsons`.`id`) AS `grandsons_count`
+              FROM " . $table ." AS `sc`
+              JOIN " . $table . " AS `children` ON `children`.`parent` = `sc`.`id`
+              LEFT JOIN " . $table . " AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
+              WHERE `sc`.`parent` = '" . (int)$parentid . "' AND `sc`.`alias_visible` = '0'
+              GROUP BY `children`.`id`");
+            while ($child = $this->db->getRow($query)) {
+                if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
+                    $out = $child['child_id'];
+                    break;
+                } else if ($child['grandsons_count'] > 0 && ($id = $this->getHiddenIdFromAlias($child['child_id'], $alias))) {
+                    $out = $id;
+                    break;
                 }
             }
         }
-
-        return null;
+        return $out;
     }
 
     /**

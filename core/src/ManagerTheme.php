@@ -495,7 +495,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function hasManagerAccess()
     {
         // check if user is allowed to access manager interface
-        return (bool)$this->getCore()->getConfig('allow_manager_access', 1) === true;
+        return $this->getCore()->getConfig('allow_manager_access', true) === true;
     }
 
     public function getManagerStartupPageId()
@@ -515,6 +515,10 @@ class ManagerTheme implements ManagerThemeInterface
 
         $this->getCore()->setPlaceholder('modx_charset',$this->getCore()->get('ManagerTheme')->getCharset());
         $this->getCore()->setPlaceholder('theme',$this->getCore()->get('ManagerTheme')->getTheme());
+        $this->getCore()->setPlaceholder(
+            'favicon',
+            (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : 'media/style/' . $this->getTheme() . '/images/') . 'favicon.ico'
+        );
 
         $this->getCore()->setPlaceholder('site_name',$this->getCore()->getPhpCompat()->entities($this->getCore()->getConfig('site_name')));
         $this->getCore()->setPlaceholder('logo_slogan',$this->getLexicon("logo_slogan"));
@@ -526,6 +530,41 @@ class ManagerTheme implements ManagerThemeInterface
         $this->getCore()->setPlaceholder('logouturl',$logouturl);
         $this->getCore()->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/');
         $this->getCore()->setPlaceholder('year',date('Y'));
+
+        // set login logo image
+        $logo = $this->getCore()->getConfig('login_logo', '');
+        if ($logo !== '') {
+            $logo = MODX_SITE_URL . $logo;
+        } else {
+            $logo = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-logo.png';
+        }
+        $this->getCore()->setPlaceholder('login_logo', $logo);
+
+        // set login background image
+        $bg = $this->getCore()->getConfig('login_bg', '');
+        if ($bg !== '') {
+            $bg = MODX_SITE_URL . $bg;
+        } else {
+            $bg = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-background.jpg';
+        }
+        $this->getCore()->setPlaceholder('login_bg', $bg);
+
+        // set form position css class
+        $this->getCore()->setPlaceholder('login_form_position_class', 'loginbox-' . $this->getCore()->getConfig('login_form_position'));
+        switch ((int)$this->getCore()->getConfig('manager_theme_mode')) {
+            case 1:
+                $this->getCore()->setPlaceholder('manager_theme_style', 'lightness');
+                break;
+            case 2:
+                $this->getCore()->setPlaceholder('manager_theme_style', 'light');
+                break;
+            case 3:
+                $this->getCore()->setPlaceholder('manager_theme_style', 'dark');
+                break;
+            case 4:
+                $this->getCore()->setPlaceholder('manager_theme_style', 'darkness');
+                break;
+        }
 
         // load template
         if(!isset($this->getCore()->config['manager_lockout_tpl']) || empty($this->getCore()->config['manager_lockout_tpl'])) {
@@ -641,6 +680,9 @@ class ManagerTheme implements ManagerThemeInterface
                 $this->getCore()->setPlaceholder('manager_theme_style', 'darkness');
                 break;
         }
+
+        // set form style css class
+        $this->getCore()->setPlaceholder('login_form_style_class', 'loginbox-' . $this->getCore()->getConfig('login_form_style'));
 
         // andrazk 20070416 - notify user of install/update
         if (isset($_GET['installGoingOn'])) {

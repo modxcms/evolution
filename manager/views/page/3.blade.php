@@ -184,9 +184,9 @@
             //$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
             //$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
             if($modx->hasPermission('edit_document')) {
-                $title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a></span>';
+                $title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></a></span>';
             } else {
-                $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
+                $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></span>';
             }
 
             $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["publish_resource"] . '"><i class="' . $_style["icons_publish_document"] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["unpublish_resource"] . '"><i class="' . $_style["icons_unpublish_resource"] . '" ></i></a>';
@@ -253,7 +253,7 @@
     <script type="text/javascript" src="media/script/tablesort.js"></script>
 
     <h1>
-        <i class="fa fa-info"></i><?= iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
+        <i class="fa fa-info"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
     </h1>
 
     <?= $_style['actionbuttons']['static']['document'] ?>
@@ -275,21 +275,21 @@
                     </tr>
                     <tr>
                         <td width="200" valign="top">{{ ManagerTheme::getLexicon('resource_title') }}:</td>
-                        <td><b><?= $content['pagetitle'] ?></b></td>
+                        <td><b><?= entities($content['pagetitle']) ?></b></td>
                     </tr>
                     <tr>
                         <td width="200" valign="top">{{ ManagerTheme::getLexicon('long_title') }}:</td>
                         <td>
-                            <small><?= $content['longtitle'] != '' ? $content['longtitle'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
+                            <small><?= $content['longtitle'] != '' ? entities($content['longtitle'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
                         </td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_description') }}:</td>
-                        <td><?= $content['description'] != '' ? $content['description'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['description'] != '' ? entities($content['description'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_summary') }}:</td>
-                        <td><?= $content['introtext'] != '' ? $content['introtext'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['introtext'] != '' ? entities($content['introtext'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('type') }}:</td>
@@ -297,7 +297,7 @@
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_alias') }}:</td>
-                        <td><?= $content['alias'] != '' ? $content['alias'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['alias'] != '' ? entities($content['alias'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
@@ -307,13 +307,13 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_created') }}:</td>
-                        <td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= $createdbyname ?></b>)
+                        <td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php if($editedbyname != '') { ?>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_edited') }}:</td>
-                        <td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= $editedbyname ?></b>)
+                        <td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php } ?>
@@ -345,7 +345,7 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_menu_index') }}:</td>
-                        <td><?= $content['menuindex'] ?></td>
+                        <td><?= entities($content['menuindex'], $modx->getConfig('modx_charset')) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_show_menu') }}:</td>
@@ -367,7 +367,7 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_template') }}:</td>
-                        <td><?= $templatename ?></td>
+                        <td><?= entities($templatename, $modx->getConfig('modx_charset')) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_editor') }}:</td>
@@ -389,7 +389,7 @@
                 <div class="form-group clearfix">
                     <?php if($numRecords > 0) : ?>
                     <div class="float-xs-left">
-                        <span class="publishedDoc"><?= $numRecords . ' ' . $_lang['resources_in_container'] ?> (<strong><?= $content['pagetitle'] ?></strong>)</span>
+                        <span class="publishedDoc"><?= $numRecords . ' ' . $_lang['resources_in_container'] ?> (<strong><?= entities($content['pagetitle'], $modx->getConfig('modx_charset')) ?></strong>)</span>
                     </div>
                     <?php endif; ?>
                     <div class="float-xs-right">

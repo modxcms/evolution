@@ -113,7 +113,7 @@ class ErrorHandler
         ?>
         <html>
         <head>
-            <title>MODX :: Error</title>
+            <title>Evolution CMS :: Error</title>
             <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>">
             <script>
                 function showError() {

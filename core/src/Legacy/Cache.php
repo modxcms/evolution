@@ -265,7 +265,7 @@ class Cache
         $config = array();
         $content .= '$c=&$this->config;';
         while (list($key, $value) = $modx->getDatabase()->getRow($rs, 'num')) {
-            $content .= '$c[\'' . $key . '\']="' . $this->escapeDoubleQuotes($value) . '";';
+            $content .= '$c[\'' . $modx->getDatabase()->escape($key) . '\']="' . $this->escapeDoubleQuotes($value) . '";';
             $config[$key] = $value;
         }
 
@@ -332,10 +332,7 @@ class Cache
         $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_htmlsnippets'));
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->getDatabase()->getRow($rs)) {
-            if ($modx->getConfig('minifyphp_incache')) {
-                $doc['snippet'] = $this->php_strip_whitespace($doc['snippet']);
-            }
-            $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+            $content .= '$c[\'' . $modx->getDatabase()->escape($doc['name']) . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
 
         // WRITE snippets to cache file
@@ -345,7 +342,7 @@ class Cache
         $rs = $modx->getDatabase()->select($f, $from);
         $content .= '$s=&$this->snippetCache;';
         while ($row = $modx->getDatabase()->getRow($rs)) {
-            $key = $row['name'];
+            $key = $modx->getDatabase()->escape($row['name']);
             if ($row['disabled']) {
                 $content .= '$s[\'' . $key . '\']=\'return false;\';';
             } else {
@@ -371,7 +368,7 @@ class Cache
         $rs = $modx->getDatabase()->select($f, $from, 'sp.disabled=0');
         $content .= '$p=&$this->pluginCache;';
         while ($row = $modx->getDatabase()->getRow($rs)) {
-            $key = $row['name'];
+            $key = $modx->getDatabase()->escape($row['name']);
             $value = trim($row['plugincode']);
             if ($modx->getConfig('minifyphp_incache')) {
                 $value = $this->php_strip_whitespace($value);
@@ -418,7 +415,7 @@ class Cache
         $modx->invokeEvent('OnBeforeCacheUpdate');
 
         if (@file_put_contents($filename, $content) === false) {
-            exit("Cannot write main MODX cache file! Make sure the assets/cache directory is writable!");
+            exit("Cannot write main Evolution CMS cache file! Make sure the assets/cache directory is writable!");
         }
 
         if (!is_file($this->cachePath . '/.htaccess')) {

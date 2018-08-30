@@ -47,6 +47,7 @@
     "ext-iconv": "*",
     "ext-libxml": "*",
     "ext-mbstring": "*",
+    "ext-json": "*",
     "lib-iconv": "*",
     "lib-libxml": "*",
     "agelxnash/modx-evo-database": "~1.4",

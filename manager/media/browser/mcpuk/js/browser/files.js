@@ -78,7 +78,7 @@ browser.showFiles = function(callBack, selected) {
             } else {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
-                else if (file.smallThumb) {
+                else if (file.smallThumb || _.getFileExtension(file.name) === 'svg') {
                     var icon = browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
@@ -174,7 +174,7 @@ browser.returnFile = function(file) {
     } else if (this.opener.FCKeditor) {
         window.opener.SetUrl(fileURL) ;
         window.close() ;
-        
+
     } else if (this.opener.TinyMCE) {
         var win = tinyMCEPopup.getWindowArg('window');
         win.document.getElementById(tinyMCEPopup.getWindowArg('input')).value = fileURL;

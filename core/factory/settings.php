@@ -109,6 +109,7 @@ return [
     'global_tabs' => 1,
     'manager_theme_mode' => '3',
     'login_form_position' => 'left',
+    'login_form_style' => 'dark',
     'manager_menu_position' => 'top',
     'tinymce4_skin' => 'lightgray'
 ];

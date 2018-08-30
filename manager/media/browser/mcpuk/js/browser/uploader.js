@@ -89,6 +89,11 @@ browser.uploadFiles = function(files) {
                 dir: browser.dir
             },
             imageAutoOrientation: false,
+            prepare: function (file/**Object*/, options/**Object*/){
+                if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                    options.imageTransform = false;
+                }
+            },
             upload: function() {
                 $('#loading').html(browser.label("Uploading file {number} of {count}... {progress}", {
                     number: uploaded++,

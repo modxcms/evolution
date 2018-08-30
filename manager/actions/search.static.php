@@ -31,7 +31,7 @@ if (isset($_REQUEST['searchid'])) {
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_top'] ?></div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="searchfields" type="text" value="<?= (isset($_REQUEST['searchfields']) ? $_REQUEST['searchfields'] : '') ?>" />
+                        <input name="searchfields" type="text" value="<?= entities(get_by_key($_REQUEST, 'searchfields', '', 'is_scalar'), $modx->getConfig('modx_charset')) ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_top_msg'] ?></small>
                     </div>
                 </div>
@@ -40,7 +40,7 @@ if (isset($_REQUEST['searchid'])) {
                     <div class="col-md-9 col-lg-10">
                         <?php
                         $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_templates'));
-                        $option[] = '<option value="">No selected</option>';
+                        $option[] = '<option value="">' . $_lang['none'] . '</option>';
                         $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? (int)$_REQUEST['templateid'] : '';
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
                         $option[] = '<option value="0"' . $selected . '>(blank)</option>';
@@ -58,14 +58,14 @@ if (isset($_REQUEST['searchid'])) {
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2">URL</div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="url" type="text" value="<?= (isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ?>" />
+                        <input name="url" type="text" value="<?= entities(get_by_key($_REQUEST,'url', '', 'is_scalar'), $modx->getConfig('modx_charset')) ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_url_msg'] ?></small>
                     </div>
                 </div>
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_content'] ?></div>
                     <div class="col-md-9 col-lg-10">
-                        <input name="content" type="text" value="<?= (isset($_REQUEST['content']) ? $_REQUEST['content'] : '') ?>" />
+                        <input name="content" type="text" value="<?= entities(get_by_key($_REQUEST, 'content', '', 'is_scalar'), $modx->getConfig('modx_charset')) ?>" />
                         <small class="form-text"><?= $_lang['search_criteria_content_msg'] ?></small>
                     </div>
                 </div>
@@ -160,7 +160,7 @@ if (isset($_REQUEST['submitok'])) {
             $sqladd .= $articul_id_query;//search by TV
             $sqladd .= ")";
         }
-    } else if ($idFromAlias) {
+    } elseif ($idFromAlias) {
         $sqladd .= " sc.id='{$idFromAlias}'";
     }
 
@@ -300,7 +300,11 @@ if (isset($_REQUEST['submitok'])) {
                     if ($docscounts > 0) {
                         $output .= '<li><b><i class="fa fa-sitemap"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList('', !$row['published'], $row['deleted']) . '><a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['pagetitle'] . ' <small>(' . $row['id'] . ')</small>', $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList('', !$row['published'], $row['deleted']) . '>
+                                <a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' .
+                                    highlightingCoincidence($row['pagetitle'], $_REQUEST['searchfields']) . ' <small>(' . highlightingCoincidence($row['id'], $_REQUEST['searchfields']) . ')</small>' . '<i class="fa fa-external-link"></i>
+                                </a>
+                            </li>';
                         }
                     }
                 }
@@ -322,7 +326,10 @@ if (isset($_REQUEST['submitok'])) {
 
                 //tvs
                 if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked", $modx->getDatabase()->getFullTableName('site_tmplvars'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select(
+                            "id,name,locked",
+                            $modx->getDatabase()->getFullTableName('site_tmplvars'),
+                            "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `type` like '%" . $searchfields . "%' 
@@ -341,7 +348,10 @@ if (isset($_REQUEST['submitok'])) {
 
                 //Chunks
                 if ($modx->hasPermission('edit_chunk')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select(
+                            "id,name,locked,disabled",
+                            $modx->getDatabase()->getFullTableName('site_htmlsnippets'),
+                            "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%'     
 					OR `snippet` like '%" . $searchfields . "%'");
@@ -356,7 +366,10 @@ if (isset($_REQUEST['submitok'])) {
 
                 //Snippets
                 if ($modx->hasPermission('edit_snippet')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_snippets'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select(
+                            "id,name,locked,disabled",
+                            $modx->getDatabase()->getFullTableName('site_snippets'),
+                            "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `snippet` like '%" . $searchfields . "%'  
@@ -373,7 +386,10 @@ if (isset($_REQUEST['submitok'])) {
 
                 //plugins
                 if ($modx->hasPermission('edit_plugin')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_plugins'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select(
+                            "id,name,locked,disabled",
+                            $modx->getDatabase()->getFullTableName('site_plugins'),
+                            "`id` like '%" . $searchfields . "%' 
 					OR `name` like '%" . $searchfields . "%' 
 					OR `description` like '%" . $searchfields . "%' 
 					OR `plugincode` like '%" . $searchfields . "%'  
@@ -390,7 +406,10 @@ if (isset($_REQUEST['submitok'])) {
 
                 //modules
                 if ($modx->hasPermission('edit_module')) {
-                    $rs = $modx->getDatabase()->select("id,name,locked,disabled", $modx->getDatabase()->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
+                    $rs = $modx->getDatabase()->select(
+                            "id,name,locked,disabled",
+                            $modx->getDatabase()->getFullTableName('site_modules'),
+                            "`id` like '%" . $searchfields . "%' 
                     OR `name` like '%" . $searchfields . "%' 
                     OR `description` like '%" . $searchfields . "%' 
                     OR `modulecode` like '%" . $searchfields . "%'  

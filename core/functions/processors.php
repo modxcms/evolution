@@ -475,6 +475,7 @@ if(!function_exists('saveEventListeners')) {
             } else {
                 $priority = isset($prevPriority) ? $prevPriority : 1;
             }
+            $priority = (int)$priority;
             $formEventList[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
         }
 
@@ -552,8 +553,7 @@ if(!function_exists('saveTemplateAccess')) {
             $newAssignedTvs = isset($_POST['assignedTv']) ? $_POST['assignedTv'] : '';
 
             // Preserve rankings of already assigned TVs
-            $rs = $modx->getDatabase()->select("tmplvarid, rank", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'),
-                "templateid='{$id}'", "");
+            $rs = $modx->getDatabase()->select("`tmplvarid`, `rank`", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "");
 
             $ranksArr = array();
             $highest = 0;

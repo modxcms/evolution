@@ -60,9 +60,9 @@ if (ManagerTheme::getTheme() === 'default') {
             $css
         );
     }
-    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+    /*if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
         $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . EVO_INSTALL_TIME;
-    }
+    }*/
 }
 
 ?>

@@ -42,11 +42,24 @@ if (!function_exists('entities')) {
     /**
      * @param  string $string
      * @param  string $charset
-     * @return mixed
+     * @return string
      */
     function entities($string, $charset = 'UTF-8')
     {
         return htmlentities($string, ENT_COMPAT | ENT_SUBSTITUTE, $charset, false);
+    }
+}
+
+if (! function_exists('html_escape')) {
+    /**
+     * @param $str
+     * @param string $charset
+     * @return string
+     * @deprecated use entities()
+     */
+    function html_escape($str, $charset = 'UTF-8')
+    {
+        return entities($str, $charset);
     }
 }
 

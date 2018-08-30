@@ -96,7 +96,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $dumpSQL = false;
     public $queryCode;
     /**
-     * @deprecated use UrlProcessor::virtualDir
+     * @deprecated use UrlProcessor::getFacadeRoot()->virtualDir
      */
     public $virtualDir;
     public $placeholders;
@@ -1226,7 +1226,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             case 'alias':
                 $str = substr($str, strpos($str, '('));
                 $str = trim($str, '()"\'');
-                $docid = $this->getIdFromAlias($str);
+                $docid = UrlProcessor::getIdFromAlias($str);
                 break;
             case 'prev':
                 if (!$option) {
@@ -1715,7 +1715,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Detect PHP error according to MODX error level
+     * Detect PHP error according to Evolution CMS error level
      *
      * @param integer $error PHP error level
      * @return boolean Error detected
@@ -2425,7 +2425,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * Parse a source string.
      *
-     * Handles most MODX tags. Exceptions include:
+     * Handles most Evolution CMS tags. Exceptions include:
      *   - uncached snippet tags [!...!]
      *   - URL tags [~...~]
      *
@@ -2522,7 +2522,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
             if ($this->getConfig('use_alias_path') == 1) {
-                $alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir . '/' : '') . $this->documentIdentifier;
+                $virtualDir = UrlProcessor::getFacadeRoot()->virtualDir;
+                $alias = (strlen($virtualDir) > 0 ? $virtualDir . '/' : '') . $this->documentIdentifier;
                 if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
                     $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
                 } else {
@@ -2530,7 +2531,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     if ($this->getConfig('aliaslistingfolder') == 1) {
                         $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
 
-                        $parentId = $this->getIdFromAlias($this->virtualDir);
+                        $parentId = empty($virtualDir) ? 0 : UrlProcessor::getIdFromAlias($virtualDir);
                         $parentId = ($parentId > 0) ? $parentId : '0';
 
                         $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
@@ -2551,7 +2552,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                                     $alias = substr($alias, 0, $pos);
                                 }
                             }
-                            $docId = $this->getIdFromAlias($alias);
+                            $docId = UrlProcessor::getIdFromAlias($alias);
                         }
 
                         if ($docId > 0) {
@@ -2916,7 +2917,21 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function webAlertAndQuit($msg, $url = '')
     {
-        global $modx_manager_charset;
+        global $modx_manager_charset, $modx_lang_attribute, $modx_textdir, $lastInstallTime;
+
+        if(empty($modx_manager_charset)) {
+            $modx_manager_charset = $this->getConfig('modx_charset');
+        }
+
+        if(empty($modx_lang_attribute)) {
+            $modx_lang_attribute = $this->getConfig('lang_code');
+        }
+
+        if(empty($modx_textdir)) {
+            $modx_textdir = $this->getConfig('manager_direction');
+        }
+        $textdir = $modx_textdir === 'rtl' ? 'rtl' : 'ltr';
+
         switch (true) {
             case (0 === stripos($url, 'javascript:')):
                 $fnc = substr($url, 11);
@@ -2931,21 +2946,38 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $fnc = "window.location.href='" . addslashes($url) . "';";
         }
 
-        echo "<html><head>
-            <title>MODX :: Alert</title>
-            <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
-            <script>
-                function __alertQuit() {
-                    var el = document.querySelector('p');
-                    alert(el.innerHTML);
-                    el.remove();
-                    {$fnc}
-                }
-                window.setTimeout('__alertQuit();',100);
-            </script>
-            </head><body>
-            <p>{$msg}</p>
-            </body></html>";
+        $style = '';
+        if (IN_MANAGER_MODE) {
+            if (empty($lastInstallTime)) {
+                $lastInstallTime = time();
+            }
+
+            $path =  'media/style/' . $this->getConfig('manager_theme') . '/';
+            $css = file_exists(MODX_MANAGER_PATH .  $path . '/css/styles.min.css') ? '/css/styles.min.css' : 'style.css';
+            $style = '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . $path . $css . '?v=' . $lastInstallTime . '"/>';
+        }
+
+        ob_get_clean();
+        echo "<!DOCTYPE html>
+            <html lang=\"{$modx_lang_attribute}\" dir=\"{$textdir}\">
+                <head>
+                <title>MODX :: Alert</title>
+                <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
+                {$style}
+                <script>
+                    function __alertQuit() {
+                        var el = document.querySelector('p');
+                        alert(el.innerHTML);
+                        el.remove();
+                        {$fnc}
+                    }
+                    window.setTimeout('__alertQuit();',100);
+                </script>
+            </head>
+            <body>
+                <p>{$msg}</p>
+            </body>
+        </html>";
         exit;
     }
 
@@ -3308,8 +3340,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->getConfig('send_errormail', '0') != '0') {
             if ($this->getConfig('send_errormail') <= $type) {
                 $this->sendmail(array(
-                    'subject' => 'MODX System Error on ' . $this->getConfig('site_name'),
-                    'body'    => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
+                    'subject' => 'Evolution CMS System Error on ' . $this->getConfig('site_name'),
+                    'body'    => 'Source: ' . $source . ' - The details of the error could be seen in the Evolution CMS system events log.',
                     'type'    => 'text'
                 ));
             }
@@ -3722,7 +3754,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (empty($docid) && isset($this->documentIdentifier)) {
             $docid = $this->documentIdentifier;
         } elseif (!preg_match('@^\d+$@', $docid)) {
-            $docid = $this->getIdFromAlias($docid);
+            $docid = UrlProcessor::getIdFromAlias($docid);
         }
 
         if (empty($docid)) {
@@ -3915,7 +3947,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Returns the MODX version information as version, branch, release date and full application name.
+     * Returns the Evolution CMS version information as version, branch, release date and full application name.
      *
      * @param null $data
      * @return array
@@ -5327,7 +5359,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             list($left, $right) = explode(' ', $brackets);
             if (strpos($content, $left) !== false) {
                 $matches = $this->getTagsFromContent($content, $left, $right);
-                $content = str_replace($matches[0], '', $content);
+                $content = isset($matches[0]) ? str_replace($matches[0], '', $content) : $content;
             }
         }
         $this->setConfig('enable_filter', $enable_filter);
@@ -5572,7 +5604,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Get MODX settings including, but not limited to, the system_settings table
+     * Get Evolution CMS settings including, but not limited to, the system_settings table
      */
     public function getSettings()
     {
@@ -5586,7 +5618,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getUserSettings();
     }
     /**
-     * Get user settings and merge into MODX configuration
+     * Get user settings and merge into Evolution CMS configuration
      * @return array
      */
     public function getUserSettings()

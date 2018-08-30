@@ -5,7 +5,8 @@ $uid = $_POST['uid'];
 $pwd = $_POST['pwd'];
 
 if (function_exists('mysqli_connect')) {
-    $conn = mysqli_connect($host, $uid, $pwd);
+    $h = explode(':', $host, 2);
+    $conn = mysqli_connect($h[0], $uid, $pwd,'', isset($h[1]) ? $h[1] : null);
     if (!$conn) {
         exit('can not connect');
     }

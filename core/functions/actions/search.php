@@ -14,9 +14,9 @@ if(!function_exists('highlightingCoincidence')) {
             ), array(
                 '\(',
                 '\)'
-            ), trim($search)) . ')!isu';
+            ), entities(trim($search), evolutionCMS()->getConfig('modx_charset'))) . ')!isu';
 
-        return preg_replace($regexp, '<span class="text-danger">$1</span>', $text);
+        return preg_replace($regexp, '<span class="text-danger">$1</span>', entities($text, evolutionCMS()->getConfig('modx_charset')));
     }
 }
 

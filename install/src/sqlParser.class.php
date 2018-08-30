@@ -45,7 +45,8 @@ class SqlParser {
 	}
 
 	public function connect() {
-		$this->conn = mysqli_connect($this->host, $this->user, $this->password);
+        $host = explode(':', $this->host, 2);
+        $this->conn = mysqli_connect($host[0], $this->user, $this->password,'', isset($host[1]) ? $host[1] : null);
 		mysqli_select_db($this->conn, $this->dbname);
 		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
 

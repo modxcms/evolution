@@ -14,19 +14,43 @@ if(!function_exists('getDefaultTemplate')) {
                 if (!isset($_GET['pid']) || empty($_GET['pid'])) {
                     $site_start = $modx->getConfig('site_start');
                     $where = "sc.isfolder=0 AND sc.id!='{$site_start}'";
-                    $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', $where, 'menuindex', 'ASC',
-                        1);
+                    $sibl = $modx->getDocumentChildren(
+                        $_REQUEST['pid'],
+                        1,
+                        0,
+                        'template,menuindex',
+                        $where,
+                        'menuindex',
+                        'ASC',
+                        1
+                    );
                     if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
                         $default_template = $sibl[0]['template'];
                     }
                 } else {
-                    $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', 'isfolder=0', 'menuindex',
-                        'ASC', 1);
+                    $sibl = $modx->getDocumentChildren(
+                        $_REQUEST['pid'],
+                        1,
+                        0,
+                        'template,menuindex',
+                        'isfolder=0',
+                        'menuindex',
+                        'ASC',
+                        1
+                    );
                     if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
                         $default_template = $sibl[0]['template'];
                     } else {
-                        $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', 'isfolder=0',
-                            'menuindex', 'ASC', 1);
+                        $sibl = $modx->getDocumentChildren(
+                            $_REQUEST['pid'],
+                            0,
+                            0,
+                            'template,menuindex',
+                            'isfolder=0',
+                            'menuindex',
+                            'ASC',
+                            1
+                        );
                         if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
                             $default_template = $sibl[0]['template'];
                         }

@@ -168,7 +168,7 @@ if (! function_exists('ParseCommand')) {
 
 if (! function_exists('parseTvValues')) {
     /**
-     * Parse MODX Template-Variables
+     * Parse Evolution CMS Template-Variables
      *
      * @param string $param
      * @param array $tvsArray

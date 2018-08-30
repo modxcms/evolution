@@ -2,7 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerApiInterface;
 /*
- * MODX Manager API Class
+ * Evolution CMS Manager API Class
  * Written by Raymond Irving 2005
  *
  */

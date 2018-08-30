@@ -508,6 +508,8 @@ $_lang["manager_theme_mode1"] = 'всё светлое';
 $_lang["manager_theme_mode2"] = 'шапка тёмная';
 $_lang["manager_theme_mode3"] = 'шапка и дерево темные';
 $_lang["manager_theme_mode4"] = 'все темное';
+$_lang['manager_theme_mode_message'] = 'Этот параметр используется «по умолчанию» и может быть переопределен менеджером при использовании кнопки переключения режима цвета темы в Дереве ресурсов: <i class="fa fa-lg fa-adjust"></i>';
+$_lang['manager_theme_mode_title'] = 'Переключатель режима цвета темы';
 $_lang["messages"] = 'Сообщения';
 $_lang["messages_all"] = 'Всем';
 $_lang["messages_compose"] = 'Написать сообщение';

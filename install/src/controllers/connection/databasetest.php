@@ -6,7 +6,8 @@ $pwd = $_POST['pwd'];
 $installMode = $_POST['installMode'];
 
 $output = $_lang["status_checking_database"];
-if (!$conn = mysqli_connect($host, $uid, $pwd)) {
+$h = explode(':', $host, 2);
+if (!$conn = mysqli_connect($h[0], $uid, $pwd,'', isset($h[1]) ? $h[1] : null)) {
     $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed'] . '</span>';
 } else {
     $database_name = mysqli_real_escape_string($conn, $_POST['database_name']);

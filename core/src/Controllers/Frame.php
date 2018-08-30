@@ -181,8 +181,8 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             if (!file_exists($themeDir . 'css/styles.min.css') && is_writable($themeDir . 'css')) {
                 require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
                 $minifier = new \Formatter\CSSMinify();
-                $minifier->addFile($themeDir . 'common/bootstrap/css/bootstrap.min.css');
-                $minifier->addFile($themeDir . 'common/font-awesome/css/font-awesome.min.css');
+                $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
+                $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
                 $minifier->addFile($themeDir . 'css/fonts.css');
                 $minifier->addFile($themeDir . 'css/forms.css');
                 $minifier->addFile($themeDir . 'css/mainmenu.css');
