@@ -15,6 +15,9 @@ if (! defined('MGR_DIR')) {
         die('MGR_DIR is not defined');
     }
 }
+if (!defined('MODX_MANAGER_PATH')) {
+    define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
+}
 if (! defined('EVO_CORE_PATH')) {
     if (is_dir($base_path . 'core')) {
         define('EVO_CORE_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR);

@@ -977,10 +977,11 @@ if ($conn) {
         $modx = evolutionCMS();
         $modx->getDatabase()->connect();
         // always empty cache after install
-        $sync = new EvolutionCMS\Cache();
-        $sync->setCachepath(dirname(__DIR__, 3) . '/assets/cache/');
-        $sync->setReport(false);
-        $sync->emptyCache(); // first empty the cache
+        $modx->clearCache();
+//        $sync = new \EvolutionCMS\Legacy\Cache();
+//        $sync->setCachepath(dirname(__DIR__, 3) . '/assets/cache/');
+//        $sync->setReport(false);
+//        $sync->emptyCache(); // first empty the cache
 
         // try to chmod the cache go-rwx (for suexeced php)
         @chmod(dirname(__DIR__, 3) . '/assets/cache/siteCache.idx.php', 0600);
@@ -990,7 +991,7 @@ if ($conn) {
         mysqli_query($conn, "TRUNCATE TABLE `" . $table_prefix . "active_users`");
 
         // close db connection
-        $sqlParser->close();
+//        $sqlParser->close();
 
         // andrazk 20070416 - release manager access
         if (file_exists(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php')) {

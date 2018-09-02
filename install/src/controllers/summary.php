@@ -75,13 +75,13 @@ if ($_SESSION['test'] != 1) {
 
 // check directories
 // cache exists?
-echo '<p>' . $_lang['checking_if_cache_exist'];
-if (!file_exists("../assets/cache") || !file_exists("../assets/cache/rss")) {
-    echo '<span class="notok">' . $_lang['failed'] . '</span></p>';
-    $errors++;
-} else {
-    echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
-}
+//echo '<p>' . $_lang['checking_if_cache_exist'];
+//if (!file_exists("../assets/cache") || !file_exists("../assets/cache/rss")) {
+//    echo '<span class="notok">' . $_lang['failed'] . '</span></p>';
+//    $errors++;
+//} else {
+//    echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+//}
 
 
 // cache writable?
@@ -108,13 +108,13 @@ if ( ! is_writable($tmp)) {
 }
 
 
-echo '<p>'.$_lang['checking_if_cache_file2_writable'];
-if ( ! is_writable("../assets/cache/sitePublishing.idx.php")) {
-    $errors++;
-    echo '<span class="notok">'.$_lang['failed'].'</span></p>';
-} else {
-    echo '<span class="ok">'.$_lang['ok'].'</span></p>';
-}
+//echo '<p>'.$_lang['checking_if_cache_file2_writable'];
+//if ( ! is_writable("../assets/cache/sitePublishing.idx.php")) {
+//    $errors++;
+//    echo '<span class="notok">'.$_lang['failed'].'</span></p>';
+//} else {
+//    echo '<span class="ok">'.$_lang['ok'].'</span></p>';
+//}
 
 
 // File Browser directories exists?
