@@ -78,7 +78,7 @@ browser.showFiles = function(callBack, selected) {
             } else {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
-                else if (file.smallThumb) {
+                else if (file.smallThumb || _.getFileExtension(file.name) === 'svg') {
                     var icon = browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
