@@ -580,18 +580,10 @@ function getRecentInfoList() {
 
 		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
-		if($ph['longtitle'] == '') {
-			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['description'] == '') {
-			$ph['description'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['introtext'] == '') {
-			$ph['introtext'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['alias'] == '') {
-			$ph['alias'] = '(<i>[%not_set%]</i>)';
-		}
+        $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['longtitle']);
+        $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['description']);
+        $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['introtext']);
+        $ph['alias'] = $ph['alias'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['alias']);
 
 		$output[] = $modx->parseText($tpl, $ph);
 	}
@@ -612,11 +604,11 @@ function getRecentInfoRowTpl() {
 							<td colspan="6">
 								<div class="overview-body text-small">
 									<ul>
-										<li><b>[%long_title%]</b>: [+longtitle:htmlentities+]</li>
-										<li><b>[%description%]</b>: [+description:htmlentities+]</li>
-										<li><b>[%resource_summary%]</b>: [+introtext:htmlentities+]</li>
+										<li><b>[%long_title%]</b>: [+longtitle+]</li>
+										<li><b>[%description%]</b>: [+description+]</li>
+										<li><b>[%resource_summary%]</b>: [+introtext+]</li>
 										<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
-										<li><b>[%resource_alias%]</b>: [+alias:htmlentities+]</li>
+										<li><b>[%resource_alias%]</b>: [+alias+]</li>
 										<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
 										<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
 										<li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
