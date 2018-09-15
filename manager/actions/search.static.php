@@ -41,7 +41,7 @@ if (isset($_REQUEST['searchid'])) {
                     <div class="col-md-9 col-lg-10">
                         <?php
                         $rs = $modx->db->select('*', $modx->getFullTableName('site_templates'));
-                        $option[] = '<option value="">No selected</option>';
+                        $option[] = '<option value="">' . $_lang['none'] . '</option>';
                         $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? (int)$_REQUEST['templateid'] : '';
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
                         $option[] = '<option value="0"' . $selected . '>(blank)</option>';

@@ -13,7 +13,7 @@ $_module_params = array(
 	'module_id'        => $_GET['id'],
 	'package_name'     => 'Module_Categories_Manager',
 	'native_language'  => 'de',
-	'name'             => 'Categories Manager',
+	'name'             => $_lang['manage_categories'],
 	'dirname'          => $site_manager_url,
 	'url'              => 'index.php?a=120&amp;id=' . $_GET['id'],
 	'path'             => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR,
