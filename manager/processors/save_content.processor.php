@@ -591,7 +591,7 @@ switch ($actionToTake) {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
             $rs = $modx->db->select(
-                'groups_document.id, groups.document_group',
+                'groups_document.id, groups_document.document_group',
                 "{$tbl_document_groups} AS groups_document
                     LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups_document.document_group",
                 "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups_document.document = '{$id}'"
