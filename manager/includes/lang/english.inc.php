@@ -517,6 +517,7 @@ $_lang["manager_theme_mode1"] = 'everything is light';
 $_lang["manager_theme_mode2"] = 'the header is dark';
 $_lang["manager_theme_mode3"] = 'header and sidebar are dark';
 $_lang["manager_theme_mode4"] = 'everything is dark';
+$_lang['manager_theme_mode_message'] = 'This setting is used as the "default" and can be overridden by the manager when using the theme color mode switch button in the Resource Tree: <i class="fa fa-lg fa-adjust"></i>';
 $_lang["messages"] = 'Messages';
 $_lang["messages_all"] = 'Everyone';
 $_lang["messages_compose"] = 'Compose a message';
