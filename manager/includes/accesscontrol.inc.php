@@ -115,6 +115,8 @@ if (!isset($_SESSION['mgrValidated'])) {
         $modx->setPlaceholder('manager_theme_style', 'darkness');
         break;
 	}
+    // set form style css class
+    $modx->setPlaceholder('login_form_style_class', 'loginbox-' . $modx->config['login_form_style']);
 
     // andrazk 20070416 - notify user of install/update
     if (isset($_GET['installGoingOn'])) {

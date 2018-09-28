@@ -11,13 +11,13 @@
       html {
         font-size: 16px;
       }
-      
+
       html,
       body {
         min-height: 100%;
         height: 100%;
       }
-      
+
       body.loginbox-center {
         min-height: 1px;
         height: auto;
@@ -44,7 +44,7 @@
           background-image: none !important;
         }
       }
-      
+
       /* page div */
 
       .page {
@@ -68,11 +68,11 @@
           margin-bottom: 20vh;
         }
       }
-      
+
       .darkness .page {
         background-color: transparent;
       }
-      
+
       /* loginbox */
 
       .loginbox {
@@ -117,12 +117,18 @@
           min-height: 1px;
         }
       }
-      
+
       .loginbox,
       .dark .loginbox,
       .darkness .loginbox {
         background-color: rgba(0,0,0,0.85);
         transition: background ease-in-out .3s;
+      }
+      .loginbox.loginbox-light {
+		    background-color: rgba(255,255,255,0.85);
+      }
+	    .loginbox.loginbox-dark {
+		    background-color: rgba(0,0,0,0.85);
       }
       @media (max-width: 479px) {
         .loginbox,
@@ -131,17 +137,17 @@
           background-color: transparent;
         }
       }
-      
+
       /* form */
 
       .loginbox form a {
         color: #818a91;
       }
-      
+
       .darkness .loginbox form {
         background-color: transparent;
       }
-      
+
       /* container */
 
       .container-body {
@@ -225,7 +231,7 @@
       .copyrights a {
         color: #fff
       }
-      
+
       /* buttons */
 
       .btn,
@@ -259,14 +265,14 @@
       #submitButton{
         float: right;
       }
-      
+
       /* onManagerLoginFormRender */
 
       #onManagerLoginFormRender {
         margin-top: 3rem;
         color: #fff;
       }
-      
+
       /* FMP - forgot password */
 
       @media (min-width: 768px) {
@@ -289,7 +295,7 @@
       #FMP-email_button {
         float: right;
       }
-      
+
       /* form controls */
 
       .form-control,
@@ -323,7 +329,7 @@
         outline: 0 none !important;
         background-color: rgba(255,255,255,.3) !important;
       }
-      
+
       /* form groups */
 
       .form-group--logo {
@@ -403,7 +409,7 @@
       }
 
       /* loginbox keyframes */
-      
+
       @-webkit-keyframes anim-loginbox {
         from {
           opacity: 0;
@@ -425,7 +431,7 @@
           transform: translate3d(0,0,0);
         }
       }
-      
+
       @-webkit-keyframes anim-loginbox-right {
         from {
           opacity: 0;
@@ -443,7 +449,7 @@
           opacity: 1;
         }
       }
-      
+
       @-webkit-keyframes anim-loginbox-center {
         from {
           opacity: 0;
@@ -469,7 +475,7 @@
   </head>
   <body class="[+manager_theme_style+] [+login_form_position_class+]">
     <div class="page">
-      <div class="tab-page loginbox">
+      <div class="tab-page loginbox [+login_form_style_class+]">
         <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
 
           <!-- OnManagerLoginFormPrerender -->
@@ -481,7 +487,7 @@
               <img src="[+login_logo+]" alt="[(site_name)]" id="logo">
             </a>
           </div>
-          
+
           <!-- username -->
           <div class="form-group">
             <label for="username" class="text-muted">[+username+]</label>
@@ -510,7 +516,7 @@
 
           <!-- OnManagerLoginFormRender -->
           [+OnManagerLoginFormRender+]
-          
+
         </form>
       </div>
 

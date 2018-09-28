@@ -70,7 +70,7 @@
                 <div class="split"></div>
             </td>
         </tr>
-        
+
         <tr>
             <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
                 <small>[(manager_theme_mode)]</small>
@@ -140,7 +140,18 @@
                 <div class="split"></div>
             </td>
         </tr>
-
+        <tr>
+          <th><?php echo $_lang['login_form_style'] ?><br><small>[(login_form_style)]</small></th>
+          <td>
+        		<?php echo wrap_label($_lang['login_form_style_dark'],form_radio('login_form_style', 'dark'));?><br />
+            <?php echo wrap_label($_lang['login_form_style_light'], form_radio('login_form_style', 'light'));?><br />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="split"></div>
+          </td>
+        </tr>
       <tr>
         <th><?php echo $_lang['manager_menu_position_title'] ?><br><small>[(manager_menu_position)]</small></th>
         <td>
