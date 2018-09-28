@@ -143,7 +143,18 @@
       .loginbox form a {
         color: #818a91;
       }
-
+      .loginbox.loginbox-light form a {
+              color: #000;
+            }
+      .loginbox.loginbox-light label.text-muted {
+              color: #444!important;
+            }
+      .loginbox.loginbox-light label#FMP-email_label{
+              color: #000!important;
+            }
+      .loginbox.loginbox-light input#FMP-email{
+              background-color: #fafafa!important;
+            }
       .darkness .loginbox form {
         background-color: transparent;
       }
