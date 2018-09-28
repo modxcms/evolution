@@ -1,15 +1,15 @@
 /**
  * OutdatedExtrasCheck
  *
- * Check for Outdated critical extras not compatible with EVO 1.4.0
+ * Check for Outdated critical extras not compatible with EVO 1.4.5
  *
  * @category	plugin
- * @version     1.4.0
+ * @version     1.4.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     evo
  * @author      Author: Nicola Lambathakis
  * @internal    @events OnManagerWelcomeHome
- * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;All &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &EformVersion=Min eForm version:;string;1.4.9 &AjaxSearchVersion=Min AjaxSearch version:;string;1.11.0 &WayfinderVersion=Min Wayfinder version:;string;2.0.5 &WebLoginVersion=Min WebLogin version:;string;1.2 &WebSignupVersion=Min WebSignup version:;string;1.1.2 &WebChangePwdVersion=Min WebChangePwd version:;string;1.1.2 &BreadcrumbsVersion=Min Breadcrumbs version:;string;1.0.5 &ReflectVersion=Min Reflect version:;string;2.2 &JotVersion=Min Jot version:;string;1.1.5 &MtvVersion=Min multiTV version:;string;2.0.13 &badthemes=Outdated Manager Themes:;string;MODxRE2_DropdownMenu,MODxRE2,MODxRE,MODxCarbon,D3X,MODxFLAT,wMOD,ScienceStyle
+ * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;AdminOnly &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &EformVersion=Min eForm version:;string;1.4.9 &AjaxSearchVersion=Min AjaxSearch version:;string;1.11.0 &WayfinderVersion=Min Wayfinder version:;string;2.0.5 &WebLoginVersion=Min WebLogin version:;string;1.2 &WebSignupVersion=Min WebSignup version:;string;1.1.2 &WebChangePwdVersion=Min WebChangePwd version:;string;1.1.2 &BreadcrumbsVersion=Min Breadcrumbs version:;string;1.0.5 &ReflectVersion=Min Reflect version:;string;2.2 &JotVersion=Min Jot version:;string;1.1.5 &MtvVersion=Min multiTV version:;string;2.0.13 &badthemes=Outdated Manager Themes:;string;MODxRE2_DropdownMenu,MODxRE2,MODxRE,MODxCarbon,D3X,MODxFLAT,wMOD,ScienceStyle
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @internal    @disabled 0
@@ -74,8 +74,17 @@ if (file_exists($indexajax)){
 $oldthemes = explode(",","$badthemes");
 foreach ($oldthemes as $oldtheme){
 	if (file_exists('media/style/'.$oldtheme)){
-    $output .= '<div class="widget-wrapper alert alert-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>'.$oldtheme.'</b> '.$_lang["manager_theme"].',  '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>.   '.$_oec_lang['please_delete'].' '.$_oec_lang['from_folder'].' ' . MODX_MANAGER_PATH . 'media/style/.</div>';
+    $output .= '<div class="widget-wrapper alert alert-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>'.$oldtheme.'</b> '.$_lang["manager_theme"].',  '.$_oec_lang['isoutdated'].' '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>.   '.$_oec_lang['please_delete'].' '.$_oec_lang['from_folder'].' ' . MODX_MANAGER_PATH . 'media/style/.</div>';
 }
+}
+//check outdated modx rss news feed
+$url_security = $modx->config['rss_url_security'];
+if($url_security == 'http://feeds.feedburner.com/modxsecurity'){
+$output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>'.$_lang["settings_config"].' > '.$_lang["rss_url_security_title"].'</b> (http://feeds.feedburner.com/modxsecurity) '.$_oec_lang['outdated'].'. '.$_oec_lang['please_download_and_install'].' <b>UpdateEvoRss</b>  '.$_oec_lang['from'].' <a target="main" href="index.php?a=112&id='.$ExtrasID.'">'.$_oec_lang['extras_module'].'</a> </div>';
+}
+$url_news = $modx->config['rss_url_news'];
+if($url_news == 'http://feeds.feedburner.com/modx-announce'){
+$output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>'.$_lang["settings_config"].' > '.$_lang["rss_url_news_title"].' </b>(http://feeds.feedburner.com/modx-announce) '.$_oec_lang['outdated'].'. '.$_oec_lang['please_download_and_install'].' <b>UpdateEvoRss</b>  '.$_oec_lang['from'].' <a target="main" href="index.php?a=112&id='.$ExtrasID.'">'.$_oec_lang['extras_module'].'</a> </div>';
 }
 //get site snippets table
 $table = $modx->getDatabase()->getFullTableName('site_snippets');
@@ -274,7 +283,7 @@ $widgets['xtraCheck'] = array(
 				'menuindex' =>'0',
 				'id' => 'xtraCheck'.$pluginid.'',
 				'cols' => 'col-12',
-                'headAttr' => 'style="background-color:#B60205; color:#FFFFFF;"',
+                'headAttr' => 'style="color:#E84B39;"',
 				'bodyAttr' => '',
 				'icon' => 'fa-warning',
 				'title' => ''.$wdgTitle.' '.$button_pl_config.'',
