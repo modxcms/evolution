@@ -13,9 +13,11 @@
 //
 
 $_oec_lang['title'] = 'Controllo Compatibilità Extras';
+$_oec_lang['outdated'] = 'è <b>obsoleto</b>';
 $_oec_lang['isoutdated'] = 'è <b>obsoleto</b> e non compatibile con';
 $_oec_lang['please_update'] = 'Aggiorna';
 $_oec_lang['please_delete'] = 'Per favore cancellalo';
+$_oec_lang['please_download_and_install'] = 'Per favore scarica e installa';
 $_oec_lang["to_latest"] = 'all\'ultima versione';
 $_oec_lang['min _required'] = 'minima richiesta ';
 $_oec_lang['from'] = 'dal';
