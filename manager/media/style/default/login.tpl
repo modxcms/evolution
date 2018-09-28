@@ -144,16 +144,28 @@
         color: #818a91;
       }
       .loginbox.loginbox-light form a {
-              color: #000;
+              color: #666;
             }
       .loginbox.loginbox-light label.text-muted {
               color: #444!important;
             }
-      .loginbox.loginbox-light label#FMP-email_label{
-              color: #000!important;
+      .loginbox.loginbox-light label#FMP-email_label,
+      .loginbox.loginbox-light .form-control:active,
+      .loginbox.loginbox-light .captcha input:focus,
+      .loginbox.loginbox-light .captcha input:active,
+      .loginbox.loginbox-light .form-control:focus,
+      .loginbox.loginbox-light input#username,
+      .loginbox.loginbox-light input#password,
+      .loginbox.loginbox-light input#FMP-email,
+      .loginbox.loginbox-light #FMP-email:active,
+      .loginbox.loginbox-light #FMP-email:focus{
+              color: #444!important;
             }
+
+      .loginbox.loginbox-light input#username,
+      .loginbox.loginbox-light input#password,
       .loginbox.loginbox-light input#FMP-email{
-              background-color: #fafafa!important;
+              background-color: rgba(255, 255, 255, 0.5)!important;
             }
       .darkness .loginbox form {
         background-color: transparent;
