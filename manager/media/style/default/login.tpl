@@ -159,17 +159,27 @@
       .loginbox.loginbox-light input#FMP-email,
       .loginbox.loginbox-light #FMP-email:active,
       .loginbox.loginbox-light #FMP-email:focus{
-              color: #444!important;
+              color: #555!important;
             }
-
       .loginbox.loginbox-light input#username,
       .loginbox.loginbox-light input#password,
       .loginbox.loginbox-light input#FMP-email{
-              background-color: rgba(255, 255, 255, 0.5)!important;
+          background-color: rgba(250,255,255,0.4)!important;
+		  border: 1px solid rgb(113,116,117,0.1)!important;
             }
       .darkness .loginbox form {
         background-color: transparent;
-      }
+        }
+		input[type=checkbox] { width: 0.9125rem !important; height: 0.9125rem !important; margin-right: 0.25em; vertical-align: -0.15em; border-radius: .1rem; border: 1px solid #9ba9bf; background: rgba(250,255,255,0.8) no-repeat 50% -1em; outline: none; transition: border-color .2s, background-position .1s; }		
+		input[type=checkbox] { background-image: url("data:image/svg+xml;utf8,%3Csvg%20viewBox%3D%270%200%201792%201792%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M1671%20566q0%2040-28%2068l-724%20724-136%20136q-28%2028-68%2028t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28%2068-28t68%2028l294%20295%20656-657q28-28%2068-28t68%2028l136%20136q28%2028%2028%2068z%27%20fill%3D%27%23444%27/%3E%3C/svg%3E"); background-size: .875em;  }
+		input[type=checkbox]:hover { border-color: #bcbcbc }
+		input[type=checkbox]:active { background-color: #fafafa; }
+		input[type=checkbox]:focus { border-color: #4d8ef9 !important; box-shadow: 0 0 0 1px rgba(77, 142, 249, 0.5) }
+		input[type=checkbox]:checked {  background-color: #fff; background-position: 50% 50% }
+		.loginbox.loginbox-dark input[type=checkbox] {  background-color: #FFC107;}
+		.loginbox.loginbox-dark input[type=checkbox]:hover { border-color: #FFC107 }
+		.loginbox.loginbox-dark input[type=checkbox]:checked {  background-color: #FFC107;}
+		
 
       /* container */
 
@@ -333,10 +343,7 @@
       .form-control:focus,
       .captcha input,
       .captcha input:active,
-      .captcha input:focus,
-      #FMP-email,
-      #FMP-email:active,
-      #FMP-email:focus {
+      .captcha input:focus {
         font-size: 1rem !important;
         color: #fff !important;
         background-color: rgba(255,255,255,.2) !important;
@@ -346,9 +353,7 @@
       .form-control:active,
       .captcha input:focus,
       .captcha input:active,
-      .form-control:focus,
-      #FMP-email:active,
-      #FMP-email:focus {
+      .form-control:focus {
         outline: 0 none !important;
         background-color: rgba(255,255,255,.3) !important;
       }
