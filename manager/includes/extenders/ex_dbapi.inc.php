@@ -7,7 +7,7 @@
 
 global $database_type;
 
-if (empty($database_type)) $database_type = 'mysql';
+if (empty($database_type)) $database_type = 'mysqli';
 
 $out = false;
 $class = 'DBAPI';
