@@ -65,7 +65,7 @@ if (empty($args)) {
     $database_name = readline($_lang['connection_screen_database_name'] . ' ');
     $tableprefix = readline($_lang['connection_screen_table_prefix'] . ' [' . $tableprefixauto . '] ');
     $database_connection_method = readline($_lang['connection_screen_connection_method'] . ' [SET CHARACTER SET] ');
-    $database_collation = readline($_lang['connection_screen_collation'] . ' [utf8_general_ci] ');
+    $database_collation = readline($_lang['connection_screen_collation'] . ' [utf8mb4_general_ci] ');
     $cmsadmin = readline($_lang['connection_screen_default_admin_login'] . ' [admin] ');
     $cmsadminemail = readline($_lang['connection_screen_default_admin_email'] . ' ');
     $cmspassword = readline($_lang['connection_screen_default_admin_password'] . ' ');
@@ -113,7 +113,7 @@ if ($database_connection_method == '') {
     $database_connection_method = 'SET CHARACTER SET';
 }
 if ($database_collation == '') {
-    $database_collation = 'utf8_general_ci';
+    $database_collation = 'utf8mb4_general_ci';
 }
 if ($cmsadmin == '') {
     $cmsadmin = 'admin';

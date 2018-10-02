@@ -4,7 +4,7 @@ $installMode = isset($_POST['installmode']) ? (int)$_POST['installmode'] : 0;
 switch($installMode){
     case 0:
     case 2:
-        $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
+        $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8mb4_general_ci';
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
         $_POST['database_connection_charset'] = $database_charset;
         if(empty($_SESSION['databaseloginpassword']))
@@ -24,7 +24,7 @@ switch($installMode){
                 }
             }
         }
-        if (empty ($database_collation)) $database_collation = 'utf8_general_ci';
+        if (empty ($database_collation)) $database_collation = 'utf8mb4_general_ci';
 
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
         if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {

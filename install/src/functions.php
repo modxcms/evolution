@@ -142,7 +142,7 @@ if (!function_exists('get_installmode')) {
                 if ($rs) {
                     $_SESSION['dbase'] = $dbase;
                     $_SESSION['table_prefix'] = $table_prefix;
-                    $_SESSION['database_collation'] = 'utf8_general_ci';
+                    $_SESSION['database_collation'] = 'utf8mb4_general_ci';
                     $_SESSION['database_connection_method'] = 'SET CHARACTER SET';
 
                     $tbl_system_settings = "`{$dbase}`.`{$table_prefix}system_settings`";

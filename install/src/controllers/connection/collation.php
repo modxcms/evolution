@@ -29,8 +29,8 @@ if (mysqli_num_rows($rs) > 0) {
         $_[$recommend_collation] = ' selected';
     } elseif (isset($_['utf8mb4_general_ci'])) {
         $_['utf8mb4_general_ci'] = ' selected';
-    } elseif (isset($_['utf8_general_ci'])) {
-        $_['utf8_general_ci'] = ' selected';
+    } elseif (isset($_['utf8mb4_general_ci'])) {
+        $_['utf8mb4_general_ci'] = ' selected';
     } elseif (!empty($database_collation) && isset($_[$database_collation])) {
         $_[$database_collation] = ' selected';
     }
