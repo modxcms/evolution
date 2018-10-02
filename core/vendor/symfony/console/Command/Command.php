@@ -11,16 +11,16 @@
 
 namespace Symfony\Component\Console\Command;
 
-use Symfony\Component\Console\Exception\ExceptionInterface;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\LogicException;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Base class for all commands.
@@ -55,7 +55,7 @@ class Command
      */
     public static function getDefaultName()
     {
-        $class = get_called_class();
+        $class = \get_called_class();
         $r = new \ReflectionProperty($class, 'defaultName');
 
         return $class === $r->class ? static::$defaultName : null;
@@ -173,10 +173,14 @@ class Command
     }
 
     /**
-     * Initializes the command just after the input has been validated.
+     * Initializes the command after the input has been bound and before the input
+     * is validated.
      *
      * This is mainly useful when a lot of commands extends one main command
      * where some things need to be initialized based on the input arguments and options.
+     *
+     * @see InputInterface::bind()
+     * @see InputInterface::validate()
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
@@ -217,15 +221,15 @@ class Command
         $this->initialize($input, $output);
 
         if (null !== $this->processTitle) {
-            if (function_exists('cli_set_process_title')) {
+            if (\function_exists('cli_set_process_title')) {
                 if (!@cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
-                        $output->writeln('<comment>Running "cli_get_process_title" as an unprivileged user is not supported on MacOS.</comment>');
+                        $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
                         cli_set_process_title($this->processTitle);
                     }
                 }
-            } elseif (function_exists('setproctitle')) {
+            } elseif (\function_exists('setproctitle')) {
                 setproctitle($this->processTitle);
             } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity()) {
                 $output->writeln('<comment>Install the proctitle PECL to be able to change the process title.</comment>');
@@ -246,7 +250,7 @@ class Command
         $input->validate();
 
         if ($this->code) {
-            $statusCode = call_user_func($this->code, $input, $output);
+            $statusCode = \call_user_func($this->code, $input, $output);
         } else {
             $statusCode = $this->execute($input, $output);
         }
@@ -542,7 +546,7 @@ class Command
      */
     public function setAliases($aliases)
     {
-        if (!is_array($aliases) && !$aliases instanceof \Traversable) {
+        if (!\is_array($aliases) && !$aliases instanceof \Traversable) {
             throw new InvalidArgumentException('$aliases must be an array or an instance of \Traversable');
         }
 

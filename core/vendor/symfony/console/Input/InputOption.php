@@ -56,7 +56,7 @@ class InputOption
         }
 
         if (null !== $shortcut) {
-            if (is_array($shortcut)) {
+            if (\is_array($shortcut)) {
                 $shortcut = implode('|', $shortcut);
             }
             $shortcuts = preg_split('{(\|)-?}', ltrim($shortcut, '-'));
@@ -149,7 +149,7 @@ class InputOption
     /**
      * Sets the default value.
      *
-     * @param mixed $default The default value
+     * @param string|string[]|bool $default The default value
      *
      * @throws LogicException When incorrect default value is given
      */
@@ -162,7 +162,7 @@ class InputOption
         if ($this->isArray()) {
             if (null === $default) {
                 $default = array();
-            } elseif (!is_array($default)) {
+            } elseif (!\is_array($default)) {
                 throw new LogicException('A default value for an array option must be an array.');
             }
         }
@@ -173,7 +173,7 @@ class InputOption
     /**
      * Returns the default value.
      *
-     * @return mixed The default value
+     * @return string|string[]|bool The default value
      */
     public function getDefault()
     {

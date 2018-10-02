@@ -30,6 +30,7 @@
 						this.toFloat();
 					}
 					this.focus();
+					this.peekPosition = false;
 				}
 			});
 
@@ -82,9 +83,13 @@
 			var elem = this.elem;
 			if (this.is(Panel.WINDOW)) {
 				elem.Tracy.window.focus();
-			} else {
+
+			} else if (!this.is(Panel.FOCUSED)) {
 				clearTimeout(elem.Tracy.displayTimeout);
 				elem.Tracy.displayTimeout = setTimeout(() => {
+					for (var id in Debug.panels) {
+						Debug.panels[id].elem.classList.remove(Panel.FOCUSED);
+					}
 					elem.classList.add(Panel.FOCUSED);
 					elem.style.zIndex = Tracy.panelZIndex + Panel.zIndexCounter++;
 					if (callback) {
@@ -270,7 +275,10 @@
 
 						} else {
 							panel.toFloat();
-							panel.reposition(-Math.round(Math.random() * 100) - 20, (Math.round(Math.random() * 100) + 20) * (this.isAtTop() ? 1 : -1));
+							if (panel.peekPosition) {
+								panel.reposition(-Math.round(Math.random() * 100) - 20, (Math.round(Math.random() * 100) + 20) * (this.isAtTop() ? 1 : -1));
+								panel.peekPosition = false;
+							}
 						}
 					}
 					e.preventDefault();
@@ -290,6 +298,7 @@
 										? getOffset(this.elem).top + getPosition(this.elem).height + 4
 										: getOffset(this.elem).top - pos.height - 4
 								});
+								panel.peekPosition = true;
 							}
 						});
 					}
@@ -440,7 +449,7 @@
 
 			XMLHttpRequest.prototype.open = function() {
 				oldOpen.apply(this, arguments);
-				if (window.TracyAutoRefresh !== false && arguments[1].indexOf('//') <= 0 || arguments[1].indexOf(location.origin + '/') === 0) {
+				if (window.TracyAutoRefresh !== false && new URL(arguments[1], location.origin).host === location.host) {
 					this.setRequestHeader('X-Tracy-Ajax', header);
 					this.addEventListener('load', function() {
 						if (this.getAllResponseHeaders().match(/^X-Tracy-Ajax: 1/mi)) {
@@ -457,7 +466,7 @@
 					options.headers = new Headers(options.headers || {});
 					var url = request instanceof Request ? request.url : request;
 
-					if (window.TracyAutoRefresh !== false && url.indexOf('//') <= 0 || url.indexOf(location.origin + '/') === 0) {
+					if (window.TracyAutoRefresh !== false && new URL(url, location.origin).host === location.host) {
 						options.headers.set('X-Tracy-Ajax', header);
 						options.credentials = (request instanceof Request && request.credentials) || options.credentials || 'same-origin';
 
