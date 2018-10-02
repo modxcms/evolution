@@ -2790,7 +2790,7 @@ class DocumentParser
                     if ($this->config['aliaslistingfolder'] == 1) {
                         $tbl_site_content = $this->getFullTableName('site_content');
 
-                        $parentId = $this->getIdFromAlias($this->virtualDir);
+                        $parentId = empty($this->virtualDir) ? 0 : $this->getIdFromAlias($this->virtualDir);
                         $parentId = ($parentId > 0) ? $parentId : '0';
 
                         $docAlias = $this->db->escape($this->documentIdentifier);
@@ -6493,7 +6493,7 @@ class DocumentParser
             }
 
             if ($child['children_count'] > 0) {
-                $id = $this->getHiddenIdFromAlias($child['id'], $alias);
+                $id = $this->getHiddenIdFromAlias($child['child_id'], $alias);
                 if ($id) {
                     return $id;
                 }
