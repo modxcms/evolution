@@ -73,7 +73,8 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 // connect to the database
 echo "<p>". $_lang['setup_database_create_connection'];
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     echo '<span class="notok">'.$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
     return;
 } else {
