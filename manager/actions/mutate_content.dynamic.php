@@ -827,8 +827,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										}
 										?>
 										<i id="plock" class="<?= $_style["actions_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
-										<b><span id="parentName"><?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?> (<?= $parentname ?>)</span></b>
-										<input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?>" onchange="documentDirty=true;" />
+										<b><span id="parentName"><?= (isset($_REQUEST['pid']) ? html_escape($_REQUEST['pid']) : $content['parent']) ?> (<?= html_escape($parentname) ?>)</span></b>
+										<input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? html_escape($_REQUEST['pid']) : $content['parent']) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
 								<tr></tr>
