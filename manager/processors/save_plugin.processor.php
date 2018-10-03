@@ -189,6 +189,7 @@ function saveEventListeners($id, $sysevents, $mode)
         } else {
             $priority = isset($prevPriority) ? $prevPriority : 1;
         }
+        $priority = (int)$priority;
         $formEventList[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
     }
 
