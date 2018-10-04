@@ -104,7 +104,7 @@ class ManagerTheme implements ManagerThemeInterface
         105,
         119,
         /** view phpinfo */
-        200,
+        200 => Controllers\Phpinfo::class,
         /** errorpage */
         29,
         /** file manager */

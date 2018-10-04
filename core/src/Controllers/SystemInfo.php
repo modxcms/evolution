@@ -8,8 +8,6 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
 {
     protected $view = 'page.sysinfo';
 
-    protected $helpBasePath = 'actions/help/';
-
     /**
      * @var \EvolutionCMS\Interfaces\DatabaseInterface
      */
