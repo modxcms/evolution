@@ -121,7 +121,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** save settings */
         30,
         /** system information */
-        53,
+        53 => Controllers\SystemInfo::class,
         /** optimise table */
         54,
         /** view logging */
