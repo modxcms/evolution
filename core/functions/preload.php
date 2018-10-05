@@ -54,6 +54,7 @@ if (!function_exists('startCMSSession')) {
 
         session_name(SESSION_COOKIE_NAME);
         removeInvalidCmsSessionIds(SESSION_COOKIE_NAME);
+        session_cache_limiter('');
         $cookieExpiration = 0;
         $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == HTTPS_PORT);
         $cookiePath = !empty($session_cookie_path) ? $session_cookie_path : MODX_BASE_URL;
