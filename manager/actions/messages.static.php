@@ -104,7 +104,7 @@ if (!$modx->hasPermission('messages')) {
         }
 
         // Number of result to display on the page, will be in the LIMIT of the sql query also
-        $int_num_result = $number_of_messages;
+        $int_num_result = isset($number_of_messages) ? (int)$number_of_messages : 10;
 
         $extargv = "&a=10"; // extra argv here (could be anything depending on your page)
 
