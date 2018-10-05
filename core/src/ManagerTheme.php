@@ -82,8 +82,8 @@ class ManagerTheme implements ManagerThemeInterface
         79,
         80,
         97,
-        /** show the credits page */
-        18,
+        /** @deprecated show the credits page */
+        18 => Controllers\Help::class,
         /** empty cache & synchronisation */
         26,
         /** Module management */
@@ -105,8 +105,8 @@ class ManagerTheme implements ManagerThemeInterface
         119,
         /** view phpinfo */
         200 => Controllers\Phpinfo::class,
-        /** errorpage */
-        29,
+        /** @deprecated errorpage */
+        29 => Controllers\EventLog::class,
         /** file manager */
         31,
         /** access permissions */
