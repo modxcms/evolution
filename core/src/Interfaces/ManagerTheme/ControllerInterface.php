@@ -18,6 +18,8 @@ interface ControllerInterface
 
     public function getParameters(array $params = []) : array;
 
+    public function process() : bool;
+
     public function render(array $params = []) : string;
 
     public function setIndex($index) : void;

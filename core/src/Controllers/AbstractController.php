@@ -18,6 +18,8 @@ abstract class AbstractController implements ControllerInterface
     /** @var int */
     protected $index;
 
+    protected $parameters = [];
+
     /**
      * @inheritdoc
      */
@@ -49,7 +51,15 @@ abstract class AbstractController implements ControllerInterface
      */
     public function getParameters(array $params = []): array
     {
-        return $params;
+        return array_merge($this->parameters, $params);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function process() : bool
+    {
+        return true;
     }
 
     /**

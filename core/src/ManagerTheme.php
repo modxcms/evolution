@@ -85,7 +85,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** @deprecated show the credits page */
         18 => Controllers\Help::class,
         /** empty cache & synchronisation */
-        26,
+        26 => Controllers\RefreshSite::class,
         /** Module management */
         106,
         107,
@@ -349,7 +349,7 @@ class ManagerTheme implements ManagerThemeInterface
         return $action === null ? null : get_by_key($this->actions, $action, $action);
     }
 
-    public function handle ($action)
+    public function handle($action)
     {
         $this->saveAction($action);
 
@@ -369,7 +369,7 @@ class ManagerTheme implements ManagerThemeInterface
                 $this->core->webAlertAndQuit($this->getLexicon('error_no_privileges'));
             } elseif (($out = $controller->checkLocked()) !== null) {
                 evolutionCMS()->webAlertAndQuit($out);
-            } else {
+            } elseif ($controller->process()) {
                 $out = $controller->render();
             }
         } else {
