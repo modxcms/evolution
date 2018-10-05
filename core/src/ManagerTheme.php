@@ -144,8 +144,8 @@ class ManagerTheme implements ManagerThemeInterface
         70 => Controllers\SiteSchedule::class,
         /** Search */
         71,
-        /** About */
-        59,
+        /** @deprecated About */
+        59 => Controllers\Help::class,
         /** Add weblink */
         72,
         /** User management */
