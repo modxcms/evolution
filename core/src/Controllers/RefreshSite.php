@@ -2,8 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerTheme;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
-use EvolutionCMS\Models\SiteContent;
-use Illuminate\Database\Eloquent\Builder;
+use EvolutionCMS\Models;
 
 class RefreshSite extends AbstractController implements ManagerTheme\PageControllerInterface
 {
@@ -40,7 +39,7 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
     {
         // (un)publishing of documents, version 2!
         // first, publish document waiting to be published
-        $time = (int)$_SERVER['REQUEST_TIME'];
+        $time = evolutionCMS()->timestamp();
 
         $this->parameters = [
             'num_rows_pub' => $this->publishDocuments($time),
@@ -60,7 +59,7 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
 
     protected function publishDocuments(int $time) : int
     {
-        $query = SiteContent::publishDocuments($time);
+        $query = Models\SiteContent::publishDocuments($time);
 
         $count = $query->count();
 
@@ -71,7 +70,7 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
 
     protected function unPublishDocuments(int $time) : int
     {
-        $query = SiteContent::unPublishDocuments($time);
+        $query = Models\SiteContent::unPublishDocuments($time);
 
         $count = $query->count();
 

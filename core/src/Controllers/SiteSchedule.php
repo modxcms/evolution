@@ -33,20 +33,33 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
      */
     public function getParameters(array $params = []): array
     {
-        /** @var \Illuminate\Database\Eloquent\Collection $pub */
-        $pub = Models\SiteContent::where('pub_date', '>', evolutionCMS()->timestamp())
-            ->orderBy('pub_date', 'asc')
-            ->get();
-
-        /** @var \Illuminate\Database\Eloquent\Collection $unPub */
-        $unPub = Models\SiteContent::where('unpub_date', '>', evolutionCMS()->timestamp())
-            ->orderBy('unpub_date', 'asc')
-            ->get();
+        $pub = $this->publishDocuments();
+        $unPub = $this->unPublishDocuments();
 
         return [
             'publishedDocs' => $pub,
             'unpublishedDocs' => $unPub,
             'allDocs' => $pub->merge($unPub)
         ];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function publishDocuments()
+    {
+        return Models\SiteContent::publishDocuments(evolutionCMS()->timestamp())
+            ->orderBy('pub_date', 'asc')
+            ->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function unPublishDocuments()
+    {
+        return Models\SiteContent::unPublishDocuments(evolutionCMS()->timestamp())
+            ->orderBy('unpub_date', 'asc')
+            ->get();
     }
 }
