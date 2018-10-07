@@ -5,7 +5,28 @@ trait Settings
     /**
      * @var array
      */
-    public $config = array();
+    public $config = [];
+
+    protected $casts = [
+        'error_reporting' => 'int',
+        'site_start' => 'int',
+        'error_page' => 'int',
+        'cache_type' => 'int',
+        'unauthorized_page' => 'int',
+        'server_offset_time' => 'int',
+        'site_unavailable_page' => 'int',
+        'site_status' => 'bool',
+        'use_alias_path' => 'bool',
+        'seostrict' => 'bool',
+        'make_folders' => 'bool',
+        'friendly_urls' => 'bool',
+        'xhtml_urls' => 'bool',
+        'aliaslistingfolder' => 'bool',
+        'friendly_alias_urls' => 'bool',
+        'enable_cache' => 'bool',
+        'enable_at_syntax' => 'bool',
+        'enable_filter' => 'bool',
+    ];
 
     /**
      * @param $name
@@ -32,15 +53,16 @@ trait Settings
      */
     public function getConfig($name = '', $default = null)
     {
-        return $this['config']
-            ->get(
-                'cms.settings.' . $name,
-                get_by_key(
-                    $this->config,
-                    $name,
-                    $default
-                )
-            );
+        $value = $this['config']->get(
+            'cms.settings.' . $name,
+            get_by_key(
+                $this->config,
+                $name,
+                $default
+            )
+        );
+
+        return $this->castAttribute($name, $value);
     }
 
     /**
@@ -74,5 +96,42 @@ trait Settings
                 $this->getConfig('rb_base_dir')
             )
         );
+    }
+
+    /**
+     * Cast an attribute to a native PHP type.
+     *
+     * @see \Illuminate\Database\Eloquent\Concerns\HasAttributes::castAttribute
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function castAttribute($key, $value)
+    {
+        if ($value === null) {
+            return $value;
+        }
+
+        switch ($this->getCastType($key)) {
+            case 'int':
+            case 'integer':
+                return (int) $value;
+            case 'real':
+            case 'float':
+            case 'double':
+                return (float) $value;
+            case 'string':
+                return (string) $value;
+            case 'bool':
+            case 'boolean':
+                return (bool) $value;
+            default:
+                return $value;
+        }
+    }
+
+    protected function getCastType($key)
+    {
+        return isset($this->casts[$key]) ? trim(strtolower($this->casts[$key])) : null;
     }
 }

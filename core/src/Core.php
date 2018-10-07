@@ -80,7 +80,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $visitor;
     public $entrypage;
     /**
-     * @deprecated use UrlProcessor::documentListing
+     * @deprecated use UrlProcessor::getFacadeRoot()->documentListing
      */
     public $documentListing;
     /**
@@ -2343,9 +2343,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $method = $this->documentMethod;
         }
         if ($method == 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
-                UrlProcessor::documentListing)) {
+                UrlProcessor::getFacadeRoot()->documentListing)) {
             $method = 'id';
-            $identifier = UrlProcessor::documentListing[$identifier];
+            $identifier = UrlProcessor::getFacadeRoot()->documentListing[$identifier];
         }
 
         $out = $this->invokeEvent('OnBeforeLoadDocumentObject', compact('method', 'identifier'));
@@ -2523,8 +2523,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
             if ($this->getConfig('use_alias_path') == 1) {
                 $alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir . '/' : '') . $this->documentIdentifier;
-                if (isset(UrlProcessor::documentListing[$alias])) {
-                    $this->documentIdentifier = UrlProcessor::documentListing[$alias];
+                if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
+                    $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
                 } else {
                     //@TODO: check new $alias;
                     if ($this->getConfig('aliaslistingfolder') == 1) {
@@ -2579,8 +2579,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     }
                 }
             } else {
-                if (isset(UrlProcessor::documentListing[$this->documentIdentifier])) {
-                    $this->documentIdentifier = UrlProcessor::documentListing[$this->documentIdentifier];
+                if (isset(UrlProcessor::getFacadeRoot()->documentListing[$this->documentIdentifier])) {
+                    $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$this->documentIdentifier];
                 } else {
                     $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
                     $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_content'),

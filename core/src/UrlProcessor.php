@@ -61,7 +61,7 @@ class UrlProcessor
      */
     public function makeFriendlyURL($pre, $suff, $alias, bool $isfolder = false, int $id = 0) : string
     {
-        if ($id === (int)$this->core->getConfig('site_start') && (bool)$this->core->getConfig('seostrict')) {
+        if ($id === $this->core->getConfig('site_start') && $this->core->getConfig('seostrict')) {
             $url = $this->core->getConfig('base_url');
         } else {
             $tmp = explode('/', $alias);
@@ -69,7 +69,7 @@ class UrlProcessor
             $dir = implode('/', $tmp);
             unset($tmp);
 
-            if ((bool)$this->core->getConfig('make_folders') && $isfolder) {
+            if ($this->core->getConfig('make_folders') && $isfolder) {
                 $suff = '/';
             }
 
@@ -97,11 +97,11 @@ class UrlProcessor
     public function rewriteUrls($input)
     {
         // rewrite the urls
-        if ((bool)$this->core->getConfig('friendly_urls')) {
+        if ($this->core->getConfig('friendly_urls')) {
             $aliases = $this->getAliases();
             $isFolder = $this->getIsFolders();
 
-            if ((bool)$this->core->getConfig('aliaslistingfolder')) {
+            if ($this->core->getConfig('aliaslistingfolder')) {
                 preg_match_all($this->tagPattern, $input, $match);
                 $this->generateAliasListingFolder($match['1'], $aliases, $isFolder);
             }
@@ -117,10 +117,10 @@ class UrlProcessor
 
     protected function replaceUrl(string $input, array $aliases, array $isFolder) : string
     {
-        $isFriendly = (bool)$this->core->getConfig('friendly_alias_urls');
+        $isFriendly = $this->core->getConfig('friendly_alias_urls');
         $pref = $this->core->getConfig('friendly_url_prefix');
         $suffix = $this->core->getConfig('friendly_url_suffix');
-        $seoStrict = (bool)$this->core->getConfig('seostrict');
+        $seoStrict = $this->core->getConfig('seostrict');
 
         return preg_replace_callback(
             $this->tagPattern,
@@ -216,7 +216,7 @@ class UrlProcessor
 
     public function getNotFoundPageId() : int
     {
-        return (int)$this->core->getConfig(
+        return $this->core->getConfig(
             $this->core->getConfig('error_page') ? 'error_page' : 'site_start',
             1
         );
@@ -232,7 +232,7 @@ class UrlProcessor
             $unauthorizedPage = $this->core->getConfig('site_start');
         }
 
-        return (int)$unauthorizedPage;
+        return $unauthorizedPage;
     }
 
     /**
@@ -267,7 +267,7 @@ class UrlProcessor
          * Save path if any
          * FS#476 and FS#308: only return virtualDir if friendly paths are enabled
          */
-        if ((bool)$this->core->getConfig('use_alias_path')) {
+        if ($this->core->getConfig('use_alias_path')) {
             $matches = strrpos($query, '/');
             $this->virtualDir = $matches !== false ? substr($query, 0, $matches) : '';
             if ($matches !== false) {
@@ -283,7 +283,7 @@ class UrlProcessor
              * we got an ID returned, check to make sure it's not an alias
              * FS#476 and FS#308: check that id is valid in terms of virtualDir structure
              */
-            if ((bool)$this->core->getConfig('use_alias_path')) {
+            if ($this->core->getConfig('use_alias_path')) {
                 if (//(
                         (
                             $this->virtualDir !== '' &&
@@ -398,7 +398,7 @@ class UrlProcessor
             return $this->documentListing[$alias];
         }
 
-        if ($this->core->getConfig('use_alias_path') == 1) {
+        if ($this->core->getConfig('use_alias_path')) {
             if ($alias === '.') {
                 return 0;
             }
@@ -493,28 +493,28 @@ class UrlProcessor
             $args = ltrim($args, '?&');
             $_ = strpos($f_url_prefix, '?');
 
-            if ($_ === false && $this->core->getConfig('friendly_urls') == 1) {
+            if ($_ === false && $this->core->getConfig('friendly_urls')) {
                 $args = "?{$args}";
             } else {
                 $args = "&{$args}";
             }
         }
 
-        if ($id != $this->core->getConfig('site_start')) {
-            if ($this->core->getConfig('friendly_urls') == 1 && $alias == '') {
-                $alias = $id;
+        if ($id !== $this->core->getConfig('site_start')) {
+            if ($this->core->getConfig('friendly_urls') && $alias == '') {
+                $alias = (string)$id;
                 $alPath = '';
 
-                if ($this->core->getConfig('friendly_alias_urls') == 1) {
+                if ($this->core->getConfig('friendly_alias_urls')) {
 
-                    if ($this->core->getConfig('aliaslistingfolder') == 1) {
+                    if ($this->core->getConfig('aliaslistingfolder')) {
                         $al = $this->getAliasListing($id);
                     } else {
                         $al = $this->aliasListing[$id] ?? null;
                     }
 
                     if(\is_array($al)) {
-                        if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders') == '1') {
+                        if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
                         $alPath = !empty($al['path']) ? $al['path'] . '/' : '';
@@ -548,7 +548,7 @@ class UrlProcessor
         }
 
         //fix strictUrl by Bumkaka
-        if ($this->core->getConfig('seostrict') == '1') {
+        if ($this->core->getConfig('seostrict')) {
             $url = $this->toAlias($url);
         }
 
@@ -575,9 +575,9 @@ class UrlProcessor
         $out = null;
         // FIX URLs
         if (empty($id) ||
-            (bool)$this->core->getConfig('seostrict') === false ||
-            (bool)$this->core->getConfig('friendly_urls') === false ||
-            (bool)$this->core->getConfig('site_status') === false
+            $this->core->getConfig('seostrict') === false ||
+            $this->core->getConfig('friendly_urls') === false ||
+            $this->core->getConfig('site_status') === false
         ) {
             return $out;
         }
