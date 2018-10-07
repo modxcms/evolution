@@ -553,7 +553,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      *
      * @return void
      */
-    public function registerCoreContainerAliases()
+    public function registerCoreContainerAliases() : void
     {
         foreach ($this->coreAliases as $key => $aliases) {
             foreach ($aliases as $alias) {
@@ -575,7 +575,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return DatabaseInterface
      */
-    public function getDatabase()
+    public function getDatabase() : DatabaseInterface
     {
         return $this->getService('DBAPI');
     }
@@ -583,7 +583,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return Mail
      */
-    public function getMail()
+    public function getMail() : Mail
     {
         return $this->getService('MODxMailer');
     }
@@ -591,7 +591,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return Legacy\PhpCompat
      */
-    public function getPhpCompat()
+    public function getPhpCompat() : Legacy\PhpCompat
     {
         return $this->getService('PHPCOMPAT');
     }
@@ -599,7 +599,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return Legacy\PasswordHash
      */
-    public function getPasswordHash()
+    public function getPasswordHash() : Legacy\PasswordHash
     {
         return $this->getService('phpass');
     }
@@ -607,7 +607,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return Support\MakeTable
      */
-    public function getMakeTable()
+    public function getMakeTable() : Support\MakeTable
     {
         return $this->getService('makeTable');
     }
@@ -615,7 +615,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * @return Legacy\ExportSite
      */
-    public function getExportSite()
+    public function getExportSite() : Legacy\ExportSite
     {
         return $this->getService('EXPORT_SITE');
     }

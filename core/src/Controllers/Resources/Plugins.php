@@ -12,7 +12,7 @@ class Plugins extends AbstractResources implements TabControllerInterface
     protected $view = 'page.resources.plugins';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTabName($withIndex = true): string
     {
@@ -20,11 +20,11 @@ class Plugins extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasAnyPermissions([
+        return $this->managerTheme->getCore()->hasAnyPermissions([
             'new_plugin',
             'edit_plugin'
         ]);
@@ -43,7 +43,7 @@ class Plugins extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []) : array
     {

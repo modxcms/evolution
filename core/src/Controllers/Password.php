@@ -8,7 +8,7 @@ class Password extends AbstractController implements ManagerTheme\PageController
     protected $view = 'page.password';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -22,11 +22,11 @@ class Password extends AbstractController implements ManagerTheme\PageController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('change_password');
+        return $this->managerTheme->getCore()->hasPermission('change_password');
     }
 
     public function getParameters(array $params = []): array

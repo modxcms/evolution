@@ -32,5 +32,16 @@ interface CoreInterface extends ApplicationContract
     /**
      * @return DatabaseInterface
      */
-    public function getDatabase();
+    public function getDatabase() : DatabaseInterface;
+
+    /**
+     * Returns an entry from the config
+     *
+     * Note: most code accesses the config array directly and we will continue to support this.
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getConfig($name = '', $default = null);
 }

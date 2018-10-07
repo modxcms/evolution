@@ -10,7 +10,7 @@ class Help extends AbstractController implements ManagerTheme\PageControllerInte
     protected $helpBasePath = 'actions/help/';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -18,15 +18,15 @@ class Help extends AbstractController implements ManagerTheme\PageControllerInte
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return $_SESSION['mgrRole'] != 1 ? evolutionCMS()->hasPermission('help') : true;
+        return $_SESSION['mgrRole'] != 1 ? $this->managerTheme->getCore()->hasPermission('help') : true;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {

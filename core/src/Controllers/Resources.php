@@ -20,7 +20,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
@@ -66,7 +66,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function render(array $params = []) : string
     {

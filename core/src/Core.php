@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS;
 
+use UrlProcessor;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
  * @property Mail $mail
@@ -78,6 +79,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $aliases;
     public $visitor;
     public $entrypage;
+    /**
+     * @deprecated use UrlProcessor::documentListing
+     */
     public $documentListing;
     /**
      * feed the parser the execution start time
@@ -91,6 +95,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $contentTypes;
     public $dumpSQL = false;
     public $queryCode;
+    /**
+     * @deprecated use UrlProcessor::virtualDir
+     */
     public $virtualDir;
     public $placeholders;
     public $sjscripts = array();
@@ -103,6 +110,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $pluginsCode;
     public $pluginsTime = array();
     public $pluginCache = array();
+    /**
+     * @deprecated use UrlProcessor::aliasListing
+     */
     public $aliasListing;
     public $lockedElements = null;
     public $tmpCache = array();
@@ -123,6 +133,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @deprecated use ->getDeprecatedCore()
      */
     public $old;
+
+    /** @var UrlProcessor|null */
+    public $urlProcessor;
 
     /**
      * @param array $services
@@ -158,10 +171,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->Event = &$this->event; //alias for backward compatibility
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
-        $this->q = self::_getCleanQueryString();
         $this->getService('ExceptionHandler');
-
         $this->getSettings();
+        $this->getService('UrlProcessor');
+        $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
 
     final public function __clone()
@@ -363,7 +376,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             header($header);
         }
 
-        exit();
+        exit(0);
     }
 
     /**
@@ -401,7 +414,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // invoke OnPageNotFound event
             $this->invokeEvent('OnPageNotFound');
         }
-        $url = $this->getConfig($this->getConfig('error_page') ? 'error_page' : 'site_start');
+        $url = UrlProcessor::getNotFoundPageId();
 
         $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         exit();
@@ -418,14 +431,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (!$noEvent) {
             $this->invokeEvent('OnPageUnauthorized');
         }
-        if ($this->getConfig('unauthorized_page')) {
-            $unauthorizedPage = $this->getConfig('unauthorized_page');
-        } elseif ($this->getConfig('error_page')) {
-            $unauthorizedPage = $this->getConfig('error_page');
-        } else {
-            $unauthorizedPage = $this->getConfig('site_start');
-        }
-        $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
+
+        $this->sendForward(UrlProcessor::getUnAuthorizedPageId(), 'HTTP/1.1 401 Unauthorized');
         exit();
     }
 
@@ -444,7 +451,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $id_ = filter_input(INPUT_GET, 'id');
         if ($id_) {
-            if (preg_match('@^[1-9][0-9]*$@', $id_)) {
+            if (preg_match('@^[1-9]\d*$@', $id_)) {
                 return $id_;
             } else {
                 $this->sendErrorPage();
@@ -524,72 +531,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Create a 'clean' document identifier with path information, friendly URL suffix and prefix.
-     *
-     * @param string $qOrig
-     * @return string
+     * @deprecated use UrlProcessor::cleanDocumentIdentifier()
      */
-    public function cleanDocumentIdentifier($qOrig)
+    public function cleanDocumentIdentifier($qOrig) : string
     {
-        if (!$qOrig) {
-            $qOrig = $this->getConfig('site_start');
-        }
-        $q = $qOrig;
-
-        $pre = $this->getConfig('friendly_url_prefix');
-        $suf = $this->getConfig('friendly_url_suffix');
-        $pre = preg_quote($pre, '/');
-        $suf = preg_quote($suf, '/');
-        if ($pre && preg_match('@^' . $pre . '(.*)$@', $q, $_)) {
-            $q = $_[1];
-        }
-        if ($suf && preg_match('@(.*)' . $suf . '$@', $q, $_)) {
-            $q = $_[1];
-        }
-
-        /* First remove any / before or after */
-        $q = trim($q, '/');
-
-        /* Save path if any */
-        /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
-        if ($this->getConfig('use_alias_path') == 1) {
-            $_ = strrpos($q, '/');
-            $this->virtualDir = $_ !== false ? substr($q, 0, $_) : '';
-            if ($_ !== false) {
-                $q = preg_replace('@.*/@', '', $q);
-            }
-        } else {
-            $this->virtualDir = '';
-        }
-
-        if (preg_match('@^[1-9][0-9]*$@',
-                $q) && !isset($this->documentListing[$q])) { /* we got an ID returned, check to make sure it's not an alias */
-            /* FS#476 and FS#308: check that id is valid in terms of virtualDir structure */
-            if ($this->getConfig('use_alias_path') == 1) {
-                if (($this->virtualDir != '' && !isset($this->documentListing[$this->virtualDir . '/' . $q]) || ($this->virtualDir == '' && !isset($this->documentListing[$q]))) && (($this->virtualDir != '' && isset($this->documentListing[$this->virtualDir]) && in_array($q,
-                                $this->getChildIds($this->documentListing[$this->virtualDir],
-                                    1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1))))) {
-                    $this->documentMethod = 'id';
-
-                    return $q;
-                } else { /* not a valid id in terms of virtualDir, treat as alias */
-                    $this->documentMethod = 'alias';
-
-                    return $q;
-                }
-            } else {
-                $this->documentMethod = 'id';
-
-                return $q;
-            }
-        } else { /* we didn't get an ID back, so instead we assume it's an alias */
-            if ($this->getConfig('friendly_alias_urls') != 1) {
-                $q = $qOrig;
-            }
-            $this->documentMethod = 'alias';
-
-            return $q;
-        }
+        return UrlProcessor::cleanDocumentIdentifier($qOrig, $this->documentMethod);
     }
 
     /**
@@ -1341,7 +1287,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             default:
                 $docid = $str;
         }
-        if (preg_match('@^[1-9][0-9]*$@', $docid)) {
+        if (preg_match('@^[1-9]\d*$@', $docid)) {
             $value = $this->getField($key, $docid);
         } else {
             $value = '';
@@ -1685,7 +1631,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $cmd = rtrim($cmd, '-');
         $cmd = str_ireplace(array(' and ', ' or '), array('&&', '||'), $cmd);
 
-        if (!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd)) {
+        if (!preg_match('@^\d*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd)) {
             $cmd = eval("return {$cmd};");
         } else {
             $_ = explode(',', '[*,[(,{{,[[,[!,[+');
@@ -1697,7 +1643,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         $cmd = trim($cmd);
-        if (!preg_match('@^[0-9]+$@', $cmd)) {
+        if (!preg_match('@^\d+$@', $cmd)) {
             $cmd = empty($cmd) ? 0 : 1;
         } elseif ($cmd <= 0) {
             $cmd = 0;
@@ -2339,203 +2285,36 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         return $snippetObject;
     }
+
     /**
-     * @param $text
-     * @return mixed
+     * @deprecated use UrlProcessor::toAlias()
      */
     public function toAlias($text)
     {
-        $suff = $this->getConfig('friendly_url_suffix');
-
-        return str_replace(array(
-            '.xml' . $suff,
-            '.rss' . $suff,
-            '.js' . $suff,
-            '.css' . $suff,
-            '.txt' . $suff,
-            '.json' . $suff,
-            '.pdf' . $suff
-        ), array('.xml', '.rss', '.js', '.css', '.txt', '.json', '.pdf'), $text);
+        return UrlProcessor::toAlias($text);
     }
 
     /**
-     * makeFriendlyURL
-     *
-     * @desc Create an URL.
-     *
-     * @param $pre {string} - Friendly URL Prefix. @required
-     * @param $suff {string} - Friendly URL Suffix. @required
-     * @param $alias {string} - Full document path. @required
-     * @param int $isfolder {0; 1}
-     * - Is it a folder? Default: 0.
-     * @param int $id {integer}
-     * - Document id. Default: 0.
-     * @return mixed|string {string} - Result URL.
-     * - Result URL.
+     * @deprecated use UrlProcessor::makeFriendlyURL()
      */
     public function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0)
     {
-        if ($id == $this->getConfig('site_start') && $this->getConfig('seostrict') === '1') {
-            $url = MODX_BASE_URL;
-        } else {
-            $Alias = explode('/', $alias);
-            $alias = array_pop($Alias);
-            $dir = implode('/', $Alias);
-            unset($Alias);
-
-            if ($this->getConfig('make_folders') === '1' && $isfolder == 1) {
-                $suff = '/';
-            }
-
-            $url = ($dir != '' ? $dir . '/' : '') . $pre . $alias . $suff;
-        }
-
-        $evtOut = $this->invokeEvent('OnMakeDocUrl', array(
-            'id'  => $id,
-            'url' => $url
-        ));
-
-        if (is_array($evtOut) && count($evtOut) > 0) {
-            $url = array_pop($evtOut);
-        }
-
-        return $url;
+        return UrlProcessor::makeFriendlyURL($pre, $suff, $alias, (bool)$isfolder, (int)$id);
     }
 
     /**
-     * Convert URL tags [~...~] to URLs
-     *
-     * @param string $documentSource
-     * @return string
+     * @deprecated use UrlProcessor::rewriteUrls()
      */
     public function rewriteUrls($documentSource)
     {
-        // rewrite the urls
-        if ($this->getConfig('friendly_urls') == 1) {
-            $aliases = array();
-            if (is_array($this->documentListing)) {
-                foreach ($this->documentListing as $path => $docid) { // This is big Loop on large site!
-                    $aliases[$docid] = $path;
-                    $isfolder[$docid] = $this->aliasListing[$docid]['isfolder'];
-                }
-            }
-
-            if ($this->getConfig('aliaslistingfolder') == 1) {
-                preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
-                $ids = implode(',', array_unique($match['1']));
-                if ($ids) {
-                    $res = $this->getDatabase()->select("id,alias,isfolder,parent,alias_visible",
-                        $this->getDatabase()->getFullTableName('site_content'),
-                        "id IN (" . $ids . ") AND isfolder = '0'");
-                    while ($row = $this->getDatabase()->getRow($res)) {
-                        if ($this->getConfig('use_alias_path') == '1' && $row['parent'] != 0) {
-                            $parent = $row['parent'];
-                            $path = $aliases[$parent];
-
-                            while (isset($this->aliasListing[$parent]) && $this->aliasListing[$parent]['alias_visible'] == 0) {
-                                $path = $this->aliasListing[$parent]['path'];
-                                $parent = $this->aliasListing[$parent]['parent'];
-                            }
-
-                            $aliases[$row['id']] = $path . '/' . $row['alias'];
-                        } else {
-                            $aliases[$row['id']] = $row['alias'];
-                        }
-                        $isfolder[$row['id']] = '0';
-                    }
-                }
-            }
-            $in = '!\[\~([0-9]+)\~\]!is';
-            $isfriendly = ($this->getConfig('friendly_alias_urls') == 1 ? 1 : 0);
-            $pref = $this->getConfig('friendly_url_prefix');
-            $suff = $this->getConfig('friendly_url_suffix');
-            $documentSource = preg_replace_callback($in,
-                function ($m) use ($aliases, $isfolder, $isfriendly, $pref, $suff) {
-                    global $modx;
-                    $thealias = $aliases[$m[1]];
-                    $thefolder = $isfolder[$m[1]];
-                    if ($isfriendly && isset($thealias)) {
-                        //found friendly url
-                        $out = ($modx->getConfig('seostrict') == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff,
-                            $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder,
-                            $m[1]));
-                    } else {
-                        //not found friendly url
-                        $out = $modx->makeFriendlyURL($pref, $suff, $m[1]);
-                    }
-
-                    return $out;
-                }, $documentSource);
-
-        } else {
-            $in = '!\[\~([0-9]+)\~\]!is';
-            $out = "index.php?id=" . '\1';
-            $documentSource = preg_replace($in, $out, $documentSource);
-        }
-
-        return $documentSource;
+        return UrlProcessor::rewriteUrls($documentSource);
     }
 
     public function sendStrictURI()
     {
-        $q = $this->q;
-        // FIX URLs
-        if (empty($this->documentIdentifier) || $this->getConfig('seostrict') == '0' || $this->getConfig('friendly_urls') == '0') {
-            return;
-        }
-        if ($this->getConfig('site_status') == 0) {
-            return;
-        }
-
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-        $len_base_url = strlen(MODX_BASE_URL);
-
-        $url_path = $q;//LANG
-
-        if (substr($url_path, 0, $len_base_url) === MODX_BASE_URL) {
-            $url_path = substr($url_path, $len_base_url);
-        }
-
-        $strictURL = $this->toAlias($this->makeUrl($this->documentIdentifier));
-
-        if (substr($strictURL, 0, $len_base_url) === MODX_BASE_URL) {
-            $strictURL = substr($strictURL, $len_base_url);
-        }
-        $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . '/' . $q; //LANG
-
-        $url_query_string = explode('?', $_SERVER['REQUEST_URI']);
-        // Strip conflicting id/q from query string
-        $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
-
-        if ($this->documentIdentifier == $this->getConfig('site_start')) {
-            if ($requestedURL != MODX_SITE_URL) {
-                // Force redirect of site start
-                // $this->sendErrorPage();
-                if ($qstring) {
-                    $url = MODX_SITE_URL . "?" . $qstring;
-                } else {
-                    $url = MODX_SITE_URL;
-                }
-                if (MODX_BASE_URL != $_SERVER['REQUEST_URI']) {
-                    if (empty($_POST)) {
-                        if ((MODX_BASE_URL . '?' . $qstring) != $_SERVER['REQUEST_URI']) {
-                            $this->sendRedirect($url, 0, 'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
-                            exit(0);
-                        }
-                    }
-                }
-            }
-        } elseif ($url_path != $strictURL && $this->documentIdentifier != $this->getConfig('error_page')) {
-            // Force page redirect
-            //$strictURL = ltrim($strictURL,'/');
-            if (!empty($qstring)) {
-                $url = MODX_SITE_URL . "{$strictURL}?{$qstring}";
-            } else {
-                $url = MODX_SITE_URL . "{$strictURL}";
-            }
+        $url = UrlProcessor::strictURI((string)$this->q, (int)$this->documentIdentifier);
+        if ($url !== null) {
             $this->sendRedirect($url, 0, 'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
-            exit(0);
         }
     }
 
@@ -2564,9 +2343,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $method = $this->documentMethod;
         }
         if ($method == 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
-                $this->documentListing)) {
+                UrlProcessor::documentListing)) {
             $method = 'id';
-            $identifier = $this->documentListing[$identifier];
+            $identifier = UrlProcessor::documentListing[$identifier];
         }
 
         $out = $this->invokeEvent('OnBeforeLoadDocumentObject', compact('method', 'identifier'));
@@ -2744,8 +2523,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
             if ($this->getConfig('use_alias_path') == 1) {
                 $alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir . '/' : '') . $this->documentIdentifier;
-                if (isset($this->documentListing[$alias])) {
-                    $this->documentIdentifier = $this->documentListing[$alias];
+                if (isset(UrlProcessor::documentListing[$alias])) {
+                    $this->documentIdentifier = UrlProcessor::documentListing[$alias];
                 } else {
                     //@TODO: check new $alias;
                     if ($this->getConfig('aliaslistingfolder') == 1) {
@@ -2800,8 +2579,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     }
                 }
             } else {
-                if (isset($this->documentListing[$this->documentIdentifier])) {
-                    $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
+                if (isset(UrlProcessor::documentListing[$this->documentIdentifier])) {
+                    $this->documentIdentifier = UrlProcessor::documentListing[$this->documentIdentifier];
                 } else {
                     $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
                     $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_content'),
@@ -2976,7 +2755,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function _sendRedirectForRefPage($url)
     {
         // check whether it's a reference
-        if (preg_match('@^[1-9][0-9]*$@', $url)) {
+        if (preg_match('@^[1-9]\d*$@', $url)) {
             $url = $this->makeUrl($url); // if it's a bare document id
         } elseif (strpos($url, '[~') !== false) {
             $url = $this->rewriteUrls($url); // if it's an internal docid tag, process it
@@ -3016,12 +2795,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         while ($id && $height--) {
             $thisid = $id;
             if ($this->getConfig('aliaslistingfolder') == 1) {
-                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                $id = isset(UrlProcessor::aliasListing[$id]['parent']) ? UrlProcessor::aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
                 if (!$id || $id == '0') {
                     break;
                 }
             } else {
-                $id = $this->aliasListing[$id]['parent'];
+                $id = UrlProcessor::aliasListing[$id]['parent'];
                 if (!$id) {
                     break;
                 }
@@ -3041,10 +2820,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $i = 0;
         while ($id && $i < 20) {
-            if ($top == $this->aliasListing[$id]['parent']) {
+            if ($top == UrlProcessor::aliasListing[$id]['parent']) {
                 break;
             }
-            $id = $this->aliasListing[$id]['parent'];
+            $id = UrlProcessor::aliasListing[$id]['parent'];
             $i++;
         }
 
@@ -3074,9 +2853,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $idx = array();
             while ($row = $this->getDatabase()->getRow($res)) {
                 $pAlias = '';
-                if (isset($this->aliasListing[$row['parent']])) {
-                    $pAlias .= !empty($this->aliasListing[$row['parent']]['path']) ? $this->aliasListing[$row['parent']]['path'] . '/' : '';
-                    $pAlias .= !empty($this->aliasListing[$row['parent']]['alias']) ? $this->aliasListing[$row['parent']]['alias'] . '/' : '';
+                if (isset(UrlProcessor::aliasListing[$row['parent']])) {
+                    $pAlias .= !empty(UrlProcessor::aliasListing[$row['parent']]['path']) ? UrlProcessor::aliasListing[$row['parent']]['path'] . '/' : '';
+                    $pAlias .= !empty(UrlProcessor::aliasListing[$row['parent']]['alias']) ? UrlProcessor::aliasListing[$row['parent']]['alias'] . '/' : '';
                 };
                 $children[$pAlias . $row['alias']] = $row['id'];
                 if ($row['isfolder'] == 1) {
@@ -3111,7 +2890,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $depth--;
 
                 foreach ($documentMap_cache[$id] as $childId) {
-                    $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                    $pkey = (strlen(UrlProcessor::aliasListing[$childId]['path']) ? "{UrlProcessor::aliasListing[$childId]['path']}/" : '') . UrlProcessor::aliasListing[$childId]['alias'];
                     if (!strlen($pkey)) {
                         $pkey = "{$childId}";
                     }
@@ -3569,11 +3348,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $p['to'] = $p['sendto'];
         }
 
-        if (isset($p['to']) && preg_match('@^[0-9]+$@', $p['to'])) {
+        if (isset($p['to']) && preg_match('@^\d+$@', $p['to'])) {
             $userinfo = $this->getUserInfo($p['to']);
             $p['to'] = $userinfo['email'];
         }
-        if (isset($p['from']) && preg_match('@^[0-9]+$@', $p['from'])) {
+        if (isset($p['from']) && preg_match('@^\d+$@', $p['from'])) {
             $userinfo = $this->getUserInfo($p['from']);
             $p['from'] = $userinfo['email'];
             $p['fromname'] = $userinfo['username'];
@@ -3942,7 +3721,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         if (empty($docid) && isset($this->documentIdentifier)) {
             $docid = $this->documentIdentifier;
-        } elseif (!preg_match('@^[0-9]+$@', $docid)) {
+        } elseif (!preg_match('@^\d+$@', $docid)) {
             $docid = $this->getIdFromAlias($docid);
         }
 
@@ -4092,7 +3871,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $sync->setCachepath($cache_dir);
             $sync->setReport($report);
             $sync->emptyCache();
-        } elseif (preg_match('@^[1-9][0-9]*$@', $type)) {
+        } elseif (preg_match('@^[1-9]\d*$@', $type)) {
             $key = ($this->getConfig('cache_type') == 2) ? $this->makePageCacheKey($type) : $type;
             $file_name = "docid_" . $key . "_*.pageCache.php";
             $cache_path = $cache_dir . $file_name;
@@ -4120,148 +3899,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * makeUrl
-     *
-     * @desc Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
-     *
-     * @param $id {integer} - The document identifier. @required
-     * @param string $alias {string}
-     * - The alias name for the document. Default: ''.
-     * @param string $args {string}
-     * - The paramaters to add to the URL. Default: ''.
-     * @param string $scheme {string}
-     * - With full as valus, the site url configuration is used. Default: ''.
-     * @return mixed|string {string} - Result URL.
-     * - Result URL.
+     * @deprecated use UrlProcessor::makeUrl()
      */
     public function makeUrl($id, $alias = '', $args = '', $scheme = '')
     {
-        $url = '';
-        $virtualDir = $this->getConfig('virtual_dir', '');
-        $f_url_prefix = $this->getConfig('friendly_url_prefix');
-        $f_url_suffix = $this->getConfig('friendly_url_suffix');
-
-        if (!is_numeric($id)) {
-            $this->getService('ExceptionHandler')
-                ->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
-        }
-
-        if ($args !== '') {
-            // add ? or & to $args if missing
-            $args = ltrim($args, '?&');
-            $_ = strpos($f_url_prefix, '?');
-
-            if ($_ === false && $this->getConfig('friendly_urls') == 1) {
-                $args = "?{$args}";
-            } else {
-                $args = "&{$args}";
-            }
-        }
-
-        if ($id != $this->getConfig('site_start')) {
-            if ($this->getConfig('friendly_urls') == 1 && $alias == '') {
-                $alias = $id;
-                $alPath = '';
-
-                if ($this->getConfig('friendly_alias_urls') == 1) {
-
-                    if ($this->getConfig('aliaslistingfolder') == 1) {
-                        $al = $this->getAliasListing($id);
-                    } else {
-                        $al = $this->aliasListing[$id];
-                    }
-
-                    if ($al['isfolder'] === 1 && $this->getConfig('make_folders') == '1') {
-                        $f_url_suffix = '/';
-                    }
-
-                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
-
-                    if ($al && $al['alias']) {
-                        $alias = $al['alias'];
-                    }
-
-                }
-
-                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = "{$alias}{$args}";
-            } else {
-                $url = "index.php?id={$id}{$args}";
-            }
-        } else {
-            $url = $args;
-        }
-
-        $host = MODX_BASE_URL;
-
-        // check if scheme argument has been set
-        if ($scheme != '') {
-            // for backward compatibility - check if the desired scheme is different than the current scheme
-            if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']) {
-                $scheme = ($_SERVER['HTTPS'] ? 'http' : 'https');
-            }
-
-            //TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host = $scheme == 'full' ? MODX_SITE_URL : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
-        }
-
-        //fix strictUrl by Bumkaka
-        if ($this->getConfig('seostrict') == '1') {
-            $url = $this->toAlias($url);
-        }
-
-        if ($this->getConfig('xhtml_urls')) {
-            $url = preg_replace("/&(?!amp;)/", "&amp;", $host . $virtualDir . $url);
-        } else {
-            $url = $host . $virtualDir . $url;
-        }
-
-        $evtOut = $this->invokeEvent('OnMakeDocUrl', array(
-            'id'  => $id,
-            'url' => $url
-        ));
-
-        if (is_array($evtOut) && count($evtOut) > 0) {
-            $url = array_pop($evtOut);
-        }
-
-        return $url;
+        return UrlProcessor::makeUrl((int)$id, $alias, $args, $scheme);
     }
 
     /**
-     * @param $id
-     * @return mixed
+     * @deprecated use UrlProcessor::getAliasListing()
      */
     public function getAliasListing($id)
     {
-        if (isset($this->aliasListing[$id])) {
-            $out = $this->aliasListing[$id];
-        } else {
-            $q = $this->getDatabase()->query("SELECT id,alias,isfolder,parent FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE id=" . (int)$id);
-            if ($this->getDatabase()->getRecordCount($q) == '1') {
-                $q = $this->getDatabase()->getRow($q);
-                $this->aliasListing[$id] = array(
-                    'id'       => (int)$q['id'],
-                    'alias'    => $q['alias'] == '' ? $q['id'] : $q['alias'],
-                    'parent'   => (int)$q['parent'],
-                    'isfolder' => (int)$q['isfolder'],
-                );
-                if ($this->aliasListing[$id]['parent'] > 0) {
-                    //fix alias_path_usage
-                    if ($this->getConfig('use_alias_path') == '1') {
-                        //&& $tmp['path'] != '' - fix error slash with epty path
-                        $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent'] > 0 && $tmp['path'] != '') ? '/' : '') . $tmp['alias'] : '');
-                    } else {
-                        $this->aliasListing[$id]['path'] = '';
-                    }
-                }
-
-                $out = $this->aliasListing[$id];
-            }
-        }
-
-        return $out;
+        return UrlProcessor::getAliasListing($id);
     }
 
     /**
@@ -4530,19 +4180,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         switch ($this->getConfig('datetime_format')) {
             case 'YYYY/mm/dd':
-                if (!preg_match('/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}[0-9 :]*$/', $str)) {
+                if (!preg_match('/^\d{4}\/\d{2}\/\d{2}[\d :]*$/', $str)) {
                     return '';
                 }
                 list ($Y, $m, $d, $H, $M, $S) = sscanf($str, '%4d/%2d/%2d %2d:%2d:%2d');
                 break;
             case 'dd-mm-YYYY':
-                if (!preg_match('/^[0-9]{2}-[0-9]{2}-[0-9]{4}[0-9 :]*$/', $str)) {
+                if (!preg_match('/^\d{2}-\d{2}-\d{4}[\d :]*$/', $str)) {
                     return '';
                 }
                 list ($d, $m, $Y, $H, $M, $S) = sscanf($str, '%2d-%2d-%4d %2d:%2d:%2d');
                 break;
             case 'mm/dd/YYYY':
-                if (!preg_match('/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}[0-9 :]*$/', $str)) {
+                if (!preg_match('/^\d{2}\/\d{2}\/\d{4}[\d :]*$/', $str)) {
                     return '';
                 }
                 list ($m, $d, $Y, $H, $M, $S) = sscanf($str, '%2d/%2d/%4d %2d:%2d:%2d');
@@ -6047,6 +5697,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
     }
 
+
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
@@ -6150,78 +5801,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * @param $parentid
-     * @param $alias
-     * @return bool
+     * @deprecated use UrlProcessor::getHiddenIdFromAlias()
      */
     public function getHiddenIdFromAlias($parentid, $alias)
     {
-        $table = $this->getDatabase()->getFullTableName('site_content');
-        $query = $this->getDatabase()->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
-            FROM {$table} sc
-            JOIN {$table} children ON children.parent = sc.id
-            LEFT JOIN {$table} children2 ON children2.parent = children.id
-            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;");
-
-        while ($child = $this->getDatabase()->getRow($query)) {
-            if ($child['alias'] == $alias || $child['child_id'] == $alias) {
-                return $child['child_id'];
-            }
-
-            if ($child['children_count'] > 0) {
-                $id = $this->getHiddenIdFromAlias($child['id'], $alias);
-                if ($id) {
-                    return $id;
-                }
-            }
-        }
-
-        return false;
+        return UrlProcessor::getHiddenIdFromAlias($parentid, $alias);
     }
 
     /**
-     * @param $alias
-     * @return bool|int
+     * @deprecated use UrlProcessor::getIdFromAlias()
      */
     public function getIdFromAlias($alias)
     {
-        if (isset($this->documentListing[$alias])) {
-            return $this->documentListing[$alias];
-        }
-
-        $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
-        if ($this->getConfig('use_alias_path') == 1) {
-            if ($alias == '.') {
-                return 0;
-            }
-
-            if (strpos($alias, '/') !== false) {
-                $_a = explode('/', $alias);
-            } else {
-                $_a[] = $alias;
-            }
-            $id = 0;
-
-            foreach ($_a as $alias) {
-                if ($id === false) {
-                    break;
-                }
-                $alias = $this->getDatabase()->escape($alias);
-                $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
-                if ($this->getDatabase()->getRecordCount($rs) == 0) {
-                    $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-                }
-                $next = $this->getDatabase()->getValue($rs);
-                $id = !$next ? $this->getHiddenIdFromAlias($id, $alias) : $next;
-            }
-        } else {
-            $rs = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and alias='{$alias}'", 'parent, menuindex');
-            $id = $this->getDatabase()->getValue($rs);
-            if (!$id) {
-                $id = false;
-            }
-        }
-        return $id;
+        return UrlProcessor::getIdFromAlias($alias);
     }
 
     /**
@@ -6334,33 +5926,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     // End of class.
-
-
-    /**
-     * Get Clean Query String
-     *
-     * Fixes the issue where passing an array into the q get variable causes errors
-     *
-     */
-    private static function _getCleanQueryString()
-    {
-        $q = is_cli() ? null : $_GET['q'];
-
-        //Return null if the query doesn't exist
-        if (empty($q)) {
-            return null;
-        }
-
-        //If we have a string, return it
-        if (is_string($q)) {
-            return $q;
-        }
-
-        //If we have an array, return the first element
-        if (is_array($q)) {
-            return $q[0];
-        }
-    }
 
     /**
      * @param string $title

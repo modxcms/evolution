@@ -8,7 +8,7 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
     protected $view = 'page.site_schedule';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -21,15 +21,15 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('view_eventlog');
+        return $this->managerTheme->getCore()->hasPermission('view_eventlog');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -48,7 +48,7 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
      */
     protected function publishDocuments()
     {
-        return Models\SiteContent::publishDocuments(evolutionCMS()->timestamp())
+        return Models\SiteContent::publishDocuments($this->managerTheme->getCore()->timestamp())
             ->orderBy('pub_date', 'asc')
             ->get();
     }
@@ -58,7 +58,7 @@ class SiteSchedule extends AbstractController implements ManagerTheme\PageContro
      */
     protected function unPublishDocuments()
     {
-        return Models\SiteContent::unPublishDocuments(evolutionCMS()->timestamp())
+        return Models\SiteContent::unPublishDocuments($this->managerTheme->getCore()->timestamp())
             ->orderBy('unpub_date', 'asc')
             ->get();
     }

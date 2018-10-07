@@ -18,15 +18,15 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('settings');
+        return $this->managerTheme->getCore()->hasPermission('settings');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -40,7 +40,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -63,7 +63,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
     protected function parameterTemplates()
     {
-        $database = evolutionCMS()->getDatabase();
+        $database = $this->managerTheme->getCore()->getDatabase();
         // load templates
         $rs = $database->query('
             SELECT t.templatename, t.id, c.category
@@ -91,7 +91,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
                     ]
                 ];
             }
-            if ($row['id'] == get_by_key(evolutionCMS()->config, 'default_template')) {
+            if ($row['id'] == get_by_key($this->managerTheme->getCore()->config, 'default_template')) {
                 $templates['oldTmpId'] = $row['id'];
                 $templates['oldTmpName'] = $row['templatename'];
             }
@@ -176,7 +176,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         $out = include EVO_CORE_PATH . 'factory/settings.php';
         $out = array_merge(\is_array($out) ? $out : [], Models\SystemSetting::all()
             ->pluck('setting_value', 'setting_name')
-            ->toArray(), evolutionCMS()->config);
+            ->toArray(), $this->managerTheme->getCore()->config);
 
         $out['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]',
             get_by_key($out, 'filemanager_path'));
@@ -197,7 +197,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
     protected function parameterPasswordHash(): array
     {
-        $managerApi = evolutionCMS()->getManagerApi();
+        $managerApi = $this->managerTheme->getCore()->getManagerApi();
         return [
             'BLOWFISH_Y' => [
                 'value' => 'BLOWFISH_Y',
@@ -245,7 +245,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
     private function callEvent($name)
     {
-        $out = evolutionCMS()->invokeEvent($name);
+        $out = $this->managerTheme->getCore()->invokeEvent($name);
         if (\is_array($out)) {
             $out = implode('', $out);
         }

@@ -16,11 +16,11 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
     public function __construct(ManagerThemeInterface $managerTheme)
     {
         parent::__construct($managerTheme);
-        $this->database = evolutionCMS()->getDatabase();
+        $this->database = $this->managerTheme->getCore()->getDatabase();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -28,7 +28,7 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
@@ -39,7 +39,7 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
     {
         // (un)publishing of documents, version 2!
         // first, publish document waiting to be published
-        $time = evolutionCMS()->timestamp();
+        $time = $this->managerTheme->getCore()->timestamp();
 
         $this->parameters = [
             'num_rows_pub' => $this->publishDocuments($time),
@@ -47,12 +47,12 @@ class RefreshSite extends AbstractController implements ManagerTheme\PageControl
         ];
 
         ob_start();
-            evolutionCMS()->clearCache('full', true);
+            $this->managerTheme->getCore()->clearCache('full', true);
             $this->parameters['cache_log'] = ob_get_contents();
         ob_end_clean();
 
         // invoke OnSiteRefresh event
-        evolutionCMS()->invokeEvent("OnSiteRefresh");
+        $this->managerTheme->getCore()->invokeEvent("OnSiteRefresh");
 
         return true;
     }

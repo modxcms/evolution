@@ -21,7 +21,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     protected $which_editor;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -35,17 +35,17 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
         switch ($this->getIndex()) {
             case 77:
-                $out = evolutionCMS()->hasPermission('new_chunk');
+                $out = $this->managerTheme->getCore()->hasPermission('new_chunk');
                 break;
 
             case 78:
-                $out = evolutionCMS()->hasPermission('edit_chunk');
+                $out = $this->managerTheme->getCore()->hasPermission('edit_chunk');
                 break;
 
             default:
@@ -56,7 +56,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -83,12 +83,12 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
         if ($data->exists) {
             if (empty($data->count())) {
-                evolutionCMS()->webAlertAndQuit('Chunk not found for id ' . $id . '.');
+                $this->managerTheme->getCore()->webAlertAndQuit('Chunk not found for id ' . $id . '.');
             }
 
             $_SESSION['itemname'] = $data->name;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
@@ -145,7 +145,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function callEventOnRichTextEditorRegister()
     {
-        $out = evolutionCMS()->invokeEvent('OnRichTextEditorRegister', [
+        $out = $this->managerTheme->getCore()->invokeEvent('OnRichTextEditorRegister', [
             'controller' => $this
         ]);
         if (empty($out) && !is_array($out)) {
@@ -162,7 +162,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
         } else {
             $which_editor = $this->data->editor_name != 'none' ? $this->data->editor_name : 'none';
         }
-        $out = evolutionCMS()->invokeEvent('OnRichTextEditorInit', [
+        $out = $this->managerTheme->getCore()->invokeEvent('OnRichTextEditorInit', [
             'editor' => $which_editor,
             'elements' => ['post'],
             'controller' => $this
@@ -176,7 +176,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function callEventDefault($name)
     {
-        $out = evolutionCMS()->invokeEvent($name, [
+        $out = $this->managerTheme->getCore()->invokeEvent($name, [
             'id' => $this->getElementId(),
             'controller' => $this
         ]);
@@ -191,10 +191,10 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     {
         return [
             'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_chunk'),
-            'new' => evolutionCMS()->hasPermission('new_chunk'),
-            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_chunk'),
-            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_chunk'),
+            'save' => $this->managerTheme->getCore()->hasPermission('save_chunk'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_chunk'),
+            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_chunk'),
+            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_chunk'),
             'cancel' => 1
         ];
     }

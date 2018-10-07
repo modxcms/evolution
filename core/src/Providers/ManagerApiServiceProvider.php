@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Legacy\ManagerApi;
 
-class ManagerApiProvider extends ServiceProvider
+class ManagerApiServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

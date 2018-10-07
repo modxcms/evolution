@@ -29,7 +29,7 @@ return [
          * Keys are needed only for the convenience of replace ServiceProvider class
          * via custom/config/app/providers/*.php
          */
-        'Bootstrap_ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerProvider::class,
+        'Bootstrap_ExceptionHandler' => EvolutionCMS\Providers\ExceptionHandlerServiceProvider::class,
 
         'Console_Artisan' => EvolutionCMS\Providers\ArtisanServiceProvider::class,
         'Console_Migration' => Illuminate\Database\MigrationServiceProvider::class,
@@ -42,17 +42,18 @@ return [
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
-        'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseProvider::class,
-        'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreProvider::class,
-        'Evolution_EXPORT_SITE' => EvolutionCMS\Providers\ExportSiteProvider::class,
-        'Evolution_MODxMailer' => EvolutionCMS\Providers\MailProvider::class,
-        'Evolution_makeTable' => EvolutionCMS\Providers\MakeTableProvider::class,
-        'Evolution_ManagerAPI' => EvolutionCMS\Providers\ManagerApiProvider::class,
-        'Evolution_MODIFIERS' => EvolutionCMS\Providers\ModifiersProvider::class,
-        'Evolution_phpass' => EvolutionCMS\Providers\PasswordHashProvider::class,
-        'Evolution_PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatProvider::class,
-        'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockProvider::class,
+        'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseServiceProvider::class,
+        'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreServiceProvider::class,
+        'Evolution_EXPORT_SITE' => EvolutionCMS\Providers\ExportSiteServiceProvider::class,
+        'Evolution_MODxMailer' => EvolutionCMS\Providers\MailServiceProvider::class,
+        'Evolution_makeTable' => EvolutionCMS\Providers\MakeTableServiceProvider::class,
+        'Evolution_ManagerAPI' => EvolutionCMS\Providers\ManagerApiServiceProvider::class,
+        'Evolution_MODIFIERS' => EvolutionCMS\Providers\ModifiersServiceProvider::class,
+        'Evolution_phpass' => EvolutionCMS\Providers\PasswordHashServiceProvider::class,
+        'Evolution_PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatServiceProvider::class,
+        'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockServiceProvider::class,
         'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
+        'Evolution_UrlProcessor' => EvolutionCMS\Providers\UrlProcessorServiceProvider::class
     ],
 
     'aliases' => [
@@ -74,6 +75,7 @@ return [
          */
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
-        'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class
+        'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
+        'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class
     ]
 ];

@@ -1,9 +1,9 @@
 <?php namespace EvolutionCMS\Providers;
 
-use EvolutionCMS\Support\DocBlock;
 use Illuminate\Support\ServiceProvider;
+use EvolutionCMS\Legacy\DeprecatedCore;
 
-class DocBlockProvider extends ServiceProvider
+class DeprecatedCoreServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -12,8 +12,8 @@ class DocBlockProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('DocBlock', function () {
-            return new DocBlock;
+        $this->app->singleton('DEPRECATED', function () {
+            return new DeprecatedCore();
         });
     }
 }

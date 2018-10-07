@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Legacy\Modifiers;
 
-class ModifiersProvider extends ServiceProvider
+class ModifiersServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

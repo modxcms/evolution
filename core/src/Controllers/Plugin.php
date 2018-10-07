@@ -19,7 +19,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     protected $internal;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -33,17 +33,17 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
         switch ($this->getIndex()) {
             case 101:
-                $out = evolutionCMS()->hasPermission('new_plugin');
+                $out = $this->managerTheme->getCore()->hasPermission('new_plugin');
                 break;
 
             case 102:
-                $out = evolutionCMS()->hasPermission('edit_plugin');
+                $out = $this->managerTheme->getCore()->hasPermission('edit_plugin');
                 break;
 
             default:
@@ -54,7 +54,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -83,12 +83,12 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
 
         if ($data->exists) {
             if (empty($data->count())) {
-                evolutionCMS()->webAlertAndQuit('Plugin not found for id ' . $id . '.');
+                $this->managerTheme->getCore()->webAlertAndQuit('Plugin not found for id ' . $id . '.');
             }
 
             $_SESSION['itemname'] = $data->name;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
@@ -116,20 +116,20 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     {
         $out = [];
 
-        $ds = evolutionCMS()
+        $ds = $this->managerTheme->getCore()
             ->getDatabase()
-            ->select('sm.id,sm.name,sm.guid', evolutionCMS()
+            ->select('sm.id,sm.name,sm.guid', $this->managerTheme->getCore()
                     ->getDatabase()
                     ->getFullTableName("site_modules") . " sm
-					INNER JOIN " . evolutionCMS()
+					INNER JOIN " . $this->managerTheme->getCore()
                     ->getDatabase()
                     ->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
-					INNER JOIN " . evolutionCMS()
+					INNER JOIN " . $this->managerTheme->getCore()
                     ->getDatabase()
                     ->getFullTableName("site_plugins") . " 
                     sp ON sp.id=smd.resource", "smd.resource='{$this->data->getKey()}' AND sm.enable_sharedparams='1'",
                 'sm.name');
-        while ($row = evolutionCMS()
+        while ($row = $this->managerTheme->getCore()
             ->getDatabase()
             ->getRow($ds)) {
             $out[$row['guid']] = $row['name'];
@@ -143,11 +143,11 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
         $out = '';
         $internal = array();
         if (isset($this->data->plugincode)) {
-            $snippetcode = evolutionCMS()
+            $snippetcode = $this->managerTheme->getCore()
                 ->getDatabase()
                 ->escape($this->data->plugincode);
-            $parsed = evolutionCMS()->parseDocBlockFromString($snippetcode);
-            $out = evolutionCMS()->convertDocBlockIntoList($parsed);
+            $parsed = $this->managerTheme->getCore()->parseDocBlockFromString($snippetcode);
+            $out = $this->managerTheme->getCore()->convertDocBlockIntoList($parsed);
             $internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
         }
 
@@ -169,7 +169,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
 
     private function callEvent($name): string
     {
-        $out = evolutionCMS()->invokeEvent($name, [
+        $out = $this->managerTheme->getCore()->invokeEvent($name, [
             'id' => $this->getElementId(),
             'controller' => $this
         ]);
@@ -184,10 +184,10 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     {
         return [
             'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_plugin'),
-            'new' => evolutionCMS()->hasPermission('new_plugin'),
-            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_plugin'),
-            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_plugin'),
+            'save' => $this->managerTheme->getCore()->hasPermission('save_plugin'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_plugin'),
+            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_plugin'),
+            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_plugin'),
             'cancel' => 1
         ];
     }

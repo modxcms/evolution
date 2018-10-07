@@ -9,7 +9,7 @@ class Phpinfo extends AbstractController implements ManagerTheme\PageControllerI
     protected $view = 'page.phpinfo';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -17,15 +17,15 @@ class Phpinfo extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('logs');
+        return $this->managerTheme->getCore()->hasPermission('logs');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {

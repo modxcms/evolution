@@ -18,7 +18,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
     private $data;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -32,17 +32,17 @@ class Template extends AbstractController implements ManagerTheme\PageController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
         switch ($this->getIndex()) {
             case 16:
-                $out = evolutionCMS()->hasPermission('edit_template');
+                $out = $this->managerTheme->getCore()->hasPermission('edit_template');
                 break;
 
             case 19:
-                $out = evolutionCMS()->hasPermission('new_template');
+                $out = $this->managerTheme->getCore()->hasPermission('new_template');
                 break;
 
             default:
@@ -53,7 +53,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -94,12 +94,12 @@ class Template extends AbstractController implements ManagerTheme\PageController
 
         if ($id > 0) {
             if (!$data->exists) {
-                evolutionCMS()->webAlertAndQuit("No database record has been found for this template.");
+                $this->managerTheme->getCore()->webAlertAndQuit("No database record has been found for this template.");
             }
 
             $_SESSION['itemname'] = $data->templatename;
             if ($data->locked == 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } else {
             $_SESSION['itemname'] = $this->managerTheme->getLexicon("new_template");
@@ -169,7 +169,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
 
     private function callEvent($name): string
     {
-        $out = evolutionCMS()->invokeEvent($name, [
+        $out = $this->managerTheme->getCore()->invokeEvent($name, [
             'id' => $this->getElementId(),
             'controller' => $this
         ]);
@@ -184,10 +184,10 @@ class Template extends AbstractController implements ManagerTheme\PageController
     {
         return [
             'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_template'),
-            'new' => evolutionCMS()->hasPermission('new_template'),
-            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_template'),
-            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_template'),
+            'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
+            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
             'cancel' => 1
         ];
     }

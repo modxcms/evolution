@@ -2,7 +2,6 @@
 
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
-use Exception;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -747,5 +746,13 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @return CoreInterface
+     */
+    public function getCore() : CoreInterface
+    {
+        return $this->core;
     }
 }

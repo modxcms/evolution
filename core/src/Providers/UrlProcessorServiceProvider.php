@@ -1,9 +1,9 @@
 <?php namespace EvolutionCMS\Providers;
 
+use EvolutionCMS\UrlProcessor;
 use Illuminate\Support\ServiceProvider;
-use EvolutionCMS\Legacy\DeprecatedCore;
 
-class DeprecatedCoreProvider extends ServiceProvider
+class UrlProcessorServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -12,8 +12,8 @@ class DeprecatedCoreProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('DEPRECATED', function () {
-            return new DeprecatedCore();
+        $this->app->singleton('UrlProcessor', function ($app) {
+            return new UrlProcessor($app);
         });
     }
 }

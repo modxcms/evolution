@@ -28,13 +28,7 @@ trait Settings
         );
     }
     /**
-     * Returns an entry from the config
-     *
-     * Note: most code accesses the config array directly and we will continue to support this.
-     *
-     * @param string $name
-     * @param mixed $default
-     * @return bool|string
+     * {@inheritdoc}
      */
     public function getConfig($name = '', $default = null)
     {

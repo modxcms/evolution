@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Legacy\PasswordHash;
 
-class PasswordHashProvider extends ServiceProvider
+class PasswordHashServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

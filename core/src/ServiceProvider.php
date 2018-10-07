@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 class ServiceProvider extends BaseServiceProvider
 {
     /**
+     * Регистрация шаблонов с использованием неймспейса
      * Register a view file namespace.
      *
      * @param  string|array  $path
@@ -27,6 +28,13 @@ class ServiceProvider extends BaseServiceProvider
         $this->app['view']->addNamespace($namespace, $path);
     }
 
+    /**
+     * Массовая регистрация виртуальных сниппетов с использованием неймспейса
+     *
+     * @param $path
+     * @param $namespace
+     * @throws \Exception
+     */
     protected function loadSnippetsFrom($path, $namespace)
     {
         $found = $this->app->findElements('snippet', $path, array('php'));
@@ -35,6 +43,13 @@ class ServiceProvider extends BaseServiceProvider
         }
     }
 
+    /**
+     * Массовая регистрация виртуальных чанков с использованием неймспейса
+     *
+     * @param $path
+     * @param $namespace
+     * @throws \Exception
+     */
     protected function loadChunksFrom($path, $namespace)
     {
         $found = $this->app->findElements('chunk', $path, array('tpl', 'html'));
@@ -43,11 +58,25 @@ class ServiceProvider extends BaseServiceProvider
         }
     }
 
+    /**
+     * Регистрация виртуального сниппета с использованием неймспейса
+     *
+     * @param $name
+     * @param $code
+     * @param $namespace
+     */
     protected function addSnippet($name, $code, $namespace)
     {
         $this->app->addSnippet($name, $code, $namespace . '#');
     }
 
+    /**
+     * Регистрация виртуального чанка с использованием неймспейса
+     *
+     * @param $name
+     * @param $code
+     * @param $namespace
+     */
     protected function addChunk($name, $code, $namespace)
     {
         $this->app->addChunk($name, $code, $namespace . '#');

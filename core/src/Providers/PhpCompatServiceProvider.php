@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Legacy\PhpCompat;
 
-class PhpCompatProvider extends ServiceProvider
+class PhpCompatServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

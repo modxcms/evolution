@@ -57,7 +57,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     private $data;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -71,17 +71,17 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
         switch ($this->getIndex()) {
             case 300:
-                $out = evolutionCMS()->hasPermission('new_template');
+                $out = $this->managerTheme->getCore()->hasPermission('new_template');
                 break;
 
             case 301:
-                $out = evolutionCMS()->hasPermission('edit_template');
+                $out = $this->managerTheme->getCore()->hasPermission('edit_template');
                 break;
 
             default:
@@ -92,7 +92,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -129,7 +129,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         if ($id > 0) {
             $_SESSION['itemname'] = $data->caption;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
@@ -246,7 +246,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
 
     private function callEvent($name): string
     {
-        $out = evolutionCMS()->invokeEvent($name, [
+        $out = $this->managerTheme->getCore()->invokeEvent($name, [
             'id' => $this->getElementId(),
             'controller' => $this,
             'forfrontend' => 1
@@ -262,10 +262,10 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     {
         return [
             'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_template'),
-            'new' => evolutionCMS()->hasPermission('new_template'),
-            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_template'),
-            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_template'),
+            'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
+            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
             'cancel' => 1
         ];
     }

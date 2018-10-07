@@ -1,9 +1,9 @@
 <?php namespace EvolutionCMS\Providers;
 
+use EvolutionCMS\Support\DocBlock;
 use Illuminate\Support\ServiceProvider;
-use EvolutionCMS\ExceptionHandler;
 
-class ExceptionHandlerProvider extends ServiceProvider
+class DocBlockServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -12,8 +12,8 @@ class ExceptionHandlerProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('ExceptionHandler', function ($app) {
-            return new ExceptionHandler($app);
+        $this->app->singleton('DocBlock', function () {
+            return new DocBlock;
         });
     }
 }

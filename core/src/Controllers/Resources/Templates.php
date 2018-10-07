@@ -12,7 +12,7 @@ class Templates extends AbstractResources implements TabControllerInterface
     protected $view = 'page.resources.templates';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTabName($withIndex = true): string
     {
@@ -20,11 +20,11 @@ class Templates extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasAnyPermissions([
+        return $this->managerTheme->getCore()->hasAnyPermissions([
             'new_template',
             'edit_template'
         ]);
@@ -42,7 +42,7 @@ class Templates extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []) : array
     {

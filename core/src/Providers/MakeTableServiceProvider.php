@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Support\MakeTable;
 
-class MakeTableProvider extends ServiceProvider
+class MakeTableServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

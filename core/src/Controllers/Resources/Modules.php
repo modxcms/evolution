@@ -12,7 +12,7 @@ class Modules extends AbstractResources implements TabControllerInterface
     protected $view = 'page.resources.modules';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTabName($withIndex = true): string
     {
@@ -20,11 +20,11 @@ class Modules extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasAnyPermissions([
+        return $this->managerTheme->getCore()->hasAnyPermissions([
             'exec_module',
             'new_module',
             'edit_module',
@@ -45,7 +45,7 @@ class Modules extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []) : array
     {
@@ -78,10 +78,10 @@ class Modules extends AbstractResources implements TabControllerInterface
     protected function parameterActionName() : string
     {
         switch (true) {
-            case evolutionCMS()->hasPermission('edit_module'):
+            case $this->managerTheme->getCore()->hasPermission('edit_module'):
                 $action = 'actions.edit';
                 break;
-            case evolutionCMS()->hasPermission('exec_module'):
+            case $this->managerTheme->getCore()->hasPermission('exec_module'):
                 $action = 'actions.run';
                 break;
             default:

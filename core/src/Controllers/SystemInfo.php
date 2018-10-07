@@ -16,10 +16,10 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
     public function __construct(ManagerThemeInterface $managerTheme)
     {
         parent::__construct($managerTheme);
-        $this->database = evolutionCMS()->getDatabase();
+        $this->database = $this->managerTheme->getCore()->getDatabase();
     }
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -27,15 +27,15 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasPermission('logs');
+        return $this->managerTheme->getCore()->hasPermission('logs');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -86,13 +86,13 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             'modx_version'       => [
                 'is_lexicon' => true,
                 'data'       => implode(' ', [
-                    evolutionCMS()->getVersionData('version'),
-                    evolutionCMS()->getVersionData('new_version')
+                    $this->managerTheme->getCore()->getVersionData('version'),
+                    $this->managerTheme->getCore()->getVersionData('new_version')
                 ])
             ],
             'release_date'       => [
                 'is_lexicon' => true,
-                'data'       => evolutionCMS()->getVersionData('release_date')
+                'data'       => $this->managerTheme->getCore()->getVersionData('release_date')
             ],
             'PHP Version'        => [
                 'data' => phpversion(),
@@ -101,7 +101,7 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             'access_permissions' => [
                 'is_lexicon' => true,
                 'data'       => $this->managerTheme->getLexicon(
-                    (bool)evolutionCMS()->getConfig('use_udperms') ? 'enabled' : 'disabled'
+                    (bool)$this->managerTheme->getCore()->getConfig('use_udperms') ? 'enabled' : 'disabled'
                 )
             ],
             'servertime'         => [
@@ -110,19 +110,19 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             ],
             'localtime'          => [
                 'is_lexicon' => true,
-                'data'       => strftime('%H:%M:%S', time() + evolutionCMS()->getConfig('server_offset_time'))
+                'data'       => strftime('%H:%M:%S', time() + $this->managerTheme->getCore()->getConfig('server_offset_time'))
             ],
             'serveroffset'       => [
                 'is_lexicon' => true,
-                'data'       => evolutionCMS()->getConfig('server_offset_time') / (60 * 60) . ' h'
+                'data'       => $this->managerTheme->getCore()->getConfig('server_offset_time') / (60 * 60) . ' h'
             ],
             'database_name'      => [
                 'is_lexicon' => true,
-                'data'       => evolutionCMS()->getService('config')->get('database.connections.default.database')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.database')
             ],
             'database_server'    => [
                 'is_lexicon' => true,
-                'data'       => evolutionCMS()->getService('config')->get('database.connections.default.host')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.host')
             ],
             'database_version'   => [
                 'is_lexicon' => true,
@@ -138,7 +138,7 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             ],
             'table_prefix'       => [
                 'is_lexicon' => true,
-                'data'       => evolutionCMS()->getService('config')->get('database.connections.default.prefix')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.prefix')
             ],
             'cfg_base_path'      => [
                 'is_lexicon' => true,

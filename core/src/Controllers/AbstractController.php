@@ -21,7 +21,7 @@ abstract class AbstractController implements ControllerInterface
     protected $parameters = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(ManagerThemeInterface $managerTheme)
     {
@@ -29,7 +29,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getView(): string
     {
@@ -37,17 +37,17 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     abstract public function canView(): bool;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     abstract public function checkLocked(): ?string;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -55,7 +55,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function process() : bool
     {
@@ -63,7 +63,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function render(array $params = []): string
     {
@@ -74,7 +74,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setIndex($index): void
     {
@@ -82,7 +82,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIndex()
     {
@@ -90,7 +90,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getElementId(): int
     {

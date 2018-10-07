@@ -1,3 +1,5 @@
 <?php namespace EvolutionCMS\Interfaces;
 
-interface ManagerThemeInterface{}
+interface ManagerThemeInterface{
+    public function getCore() : CoreInterface;
+}

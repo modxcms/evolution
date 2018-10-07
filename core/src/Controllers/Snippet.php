@@ -17,7 +17,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     private $data;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked(): ?string
     {
@@ -31,17 +31,17 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
         switch ($this->getIndex()) {
             case 22:
-                $out = evolutionCMS()->hasPermission('edit_snippet');
+                $out = $this->managerTheme->getCore()->hasPermission('edit_snippet');
                 break;
 
             case 23:
-                $out = evolutionCMS()->hasPermission('new_snippet');
+                $out = $this->managerTheme->getCore()->hasPermission('new_snippet');
                 break;
 
             default:
@@ -52,7 +52,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []): array
     {
@@ -80,12 +80,12 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
 
         if ($data->exists) {
             if (empty($data->count())) {
-                evolutionCMS()->webAlertAndQuit('Snippet not found for id ' . $id . '.');
+                $this->managerTheme->getCore()->webAlertAndQuit('Snippet not found for id ' . $id . '.');
             }
 
             $_SESSION['itemname'] = $data->name;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                evolutionCMS()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
@@ -114,24 +114,24 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
         $out = [];
 
         // Get table Names (alphabetical)
-        $tbl_site_module_depobj = evolutionCMS()
+        $tbl_site_module_depobj = $this->managerTheme->getCore()
             ->getDatabase()
             ->getFullTableName('site_module_depobj');
-        $tbl_site_modules = evolutionCMS()
+        $tbl_site_modules = $this->managerTheme->getCore()
             ->getDatabase()
             ->getFullTableName('site_modules');
-        $tbl_site_snippets = evolutionCMS()
+        $tbl_site_snippets = $this->managerTheme->getCore()
             ->getDatabase()
             ->getFullTableName('site_snippets');
 
-        $ds = evolutionCMS()
+        $ds = $this->managerTheme->getCore()
             ->getDatabase()
             ->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm
             INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
             INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd
             .resource='{$this->data->getKey()}' AND sm.enable_sharedparams=1", 'sm.name');
 
-        while ($row = evolutionCMS()
+        while ($row = $this->managerTheme->getCore()
             ->getDatabase()
             ->getRow($ds)) {
             $out[$row['guid']] = $row['name'];
@@ -144,11 +144,11 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     {
         $out = '';
         if (isset($this->data->snippet)) {
-            $snippetcode = evolutionCMS()
+            $snippetcode = $this->managerTheme->getCore()
                 ->getDatabase()
                 ->escape($this->data->snippet);
-            $parsed = evolutionCMS()->parseDocBlockFromString($snippetcode);
-            $out = evolutionCMS()->convertDocBlockIntoList($parsed);
+            $parsed = $this->managerTheme->getCore()->parseDocBlockFromString($snippetcode);
+            $out = $this->managerTheme->getCore()->convertDocBlockIntoList($parsed);
         }
 
         return $out;
@@ -167,7 +167,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
 
     private function callEvent($name): string
     {
-        $out = evolutionCMS()->invokeEvent($name, [
+        $out = $this->managerTheme->getCore()->invokeEvent($name, [
             'id' => $this->getElementId(),
             'controller' => $this
         ]);
@@ -182,10 +182,10 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     {
         return [
             'select' => 1,
-            'save' => evolutionCMS()->hasPermission('save_snippet'),
-            'new' => evolutionCMS()->hasPermission('new_snippet'),
-            'duplicate' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('new_snippet'),
-            'delete' => !empty($this->data->getKey()) && evolutionCMS()->hasPermission('delete_snippet'),
+            'save' => $this->managerTheme->getCore()->hasPermission('save_snippet'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
             'cancel' => 1
         ];
     }

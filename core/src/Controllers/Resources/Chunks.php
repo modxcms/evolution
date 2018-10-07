@@ -12,7 +12,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
     protected $view = 'page.resources.chunks';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTabName($withIndex = true): string
     {
@@ -20,11 +20,11 @@ class Chunks extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return evolutionCMS()->hasAnyPermissions([
+        return $this->managerTheme->getCore()->hasAnyPermissions([
             'new_chunk',
             'edit_chunk'
         ]);
@@ -42,7 +42,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getParameters(array $params = []) : array
     {

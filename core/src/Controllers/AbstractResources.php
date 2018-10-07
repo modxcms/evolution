@@ -16,7 +16,7 @@ abstract class AbstractResources extends AbstractController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkLocked() : ?string
     {
@@ -66,7 +66,7 @@ abstract class AbstractResources extends AbstractController
         $out = array_only($this->managerTheme->getLexicon(), $keys);
 
         foreach ($out as &$value) {
-            $value = iconv(evolutionCMS()->getConfig('modx_charset', 'utf-8'), 'utf-8', $value);
+            $value = iconv($this->managerTheme->getCore()->getConfig('modx_charset', 'utf-8'), 'utf-8', $value);
         }
 
         return $out;

@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Mail;
 
-class MailProvider extends ServiceProvider
+class MailServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use EvolutionCMS\Legacy\ExportSite;
 
-class ExportSiteProvider extends ServiceProvider
+class ExportSiteServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

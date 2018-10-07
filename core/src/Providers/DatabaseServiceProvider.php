@@ -5,7 +5,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use EvolutionCMS\Database;
 
-class DatabaseProvider extends ServiceProvider
+class DatabaseServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
