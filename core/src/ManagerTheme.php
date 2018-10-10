@@ -151,7 +151,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** User management */
         75,
         99,
-        86,
+        86 => Controllers\RoleManagment::class,
         /** template/ snippet management */
         76 => Controllers\Resources::class,
         /** Export to file */

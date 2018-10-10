@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Models;
 
 use Illuminate\Database\Eloquent;
+use EvolutionCMS\Traits;
 
 /**
  * EvolutionCMS\Models\UserRole
@@ -90,6 +91,8 @@ use Illuminate\Database\Eloquent;
  */
 class UserRole extends Eloquent\Model
 {
+    use Traits\Models\ManagerActions;
+
 	public $timestamps = false;
 
 	protected $casts = [
@@ -246,6 +249,13 @@ class UserRole extends Eloquent\Model
 		'display_locks',
 		'change_resourcetype'
 	];
+
+    protected $managerActionsMap = [
+        'actions.new' => 38,
+        'id' => [
+            'actions.edit' => 35
+        ]
+    ];
 
     public static function getLockedElements()
     {
