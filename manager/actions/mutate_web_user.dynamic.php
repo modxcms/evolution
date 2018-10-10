@@ -203,7 +203,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
         <i class="fa fa fa-users"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['web_user_title']) ?>
     </h1>
 
-	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
+	<?= ManagerTheme::getStyle('actionbuttons.dynamic.user') ?>
 
 	<!-- Tab Start -->
 	<div class="sectionBody">

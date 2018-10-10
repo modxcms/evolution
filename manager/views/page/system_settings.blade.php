@@ -15,7 +15,7 @@
             }
           };
         </script>
-        <script src="actions/mutate_settings/functions.js"></script>
+        <script src="media/script/mutate_settings.js"></script>
     @endpush
     <form name="settings" action="index.php?a=30" method="post">
         <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->

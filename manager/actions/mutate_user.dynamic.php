@@ -221,7 +221,7 @@ if($which_browser == 'default') {
         <i class="fa fa fa-user"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['user_title']) ?>
     </h1>
 
-	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
+	<?=ManagerTheme::getStyle('actionbuttons.dynamic.user') ?>
 
 	<!-- Tab Start -->
 	<div class="sectionBody">

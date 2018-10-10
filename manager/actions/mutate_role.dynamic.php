@@ -85,7 +85,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         <i class="fa fa-legal"></i><?= ($roledata['name'] ? $roledata['name'] . '<small>(' . $roledata['id'] . ')</small>' : $_lang['role_title']) ?>
     </h1>
 
-    <?= $_style['actionbuttons']['dynamic']['savedelete'] ?>
+    <?= ManagerTheme::getStyle('actionbuttons.dynamic.savedelete') ?>
 
     <div class="tab-page">
         <div class="container container-body">

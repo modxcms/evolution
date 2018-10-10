@@ -83,7 +83,7 @@ $_SESSION['itemname'] = $pagetitle;
     <i class="fa fa-arrows"></i><?= ($pagetitle ? $pagetitle . '<small>(' . $id . ')</small>' : $_lang['move_resource_title']) ?>
 </h1>
 
-<?= $_style['actionbuttons']['dynamic']['save'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
 
 <div class="tab-page">
     <div class="container container-body">

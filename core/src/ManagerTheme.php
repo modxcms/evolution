@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
+use Illuminate\Support\Arr;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface

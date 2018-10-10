@@ -445,7 +445,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<?= $_style['actionbuttons']['dynamic']['element'] ?>
+	<?= ManagerTheme::getStyle('actionbuttons.dynamic.element') ?>
 
 	<div class="container element-edit-message">
 		<div class="alert alert-info"><?= $_lang['module_msg'] ?></div>

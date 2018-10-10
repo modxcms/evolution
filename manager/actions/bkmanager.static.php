@@ -187,7 +187,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
         <i class="fa fa-database"></i><?= $_lang['bk_manager'] ?>
     </h1>
 
-<?= $_style['actionbuttons']['static']['cancel'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
 
     <div class="tab-pane" id="dbmPane">
         <script type="text/javascript">

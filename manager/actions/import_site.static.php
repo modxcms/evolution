@@ -38,7 +38,7 @@ $allowedfiles = array(
     <i class="fa fa-upload"></i><?= $_lang['import_site_html'] ?>
 </h1>
 
-<?= $_style['actionbuttons']['static']['cancel'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
 
 <div class="tab-page">
     <div class="container container-body">

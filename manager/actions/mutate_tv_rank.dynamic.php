@@ -124,7 +124,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
     <i class="fa fa-sort-numeric-asc"></i><?= $_lang["template_tv_edit_title"] ?>
 </h1>
 
-<?= $_style['actionbuttons']['dynamic']['save'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
 
 <div class="tab-page">
     <div class="container container-body">

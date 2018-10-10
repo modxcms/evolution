@@ -31,7 +31,7 @@ $content = $modx->getDatabase()->getRow($ds);
 
 <h1><?= $_lang['eventlog'] ?></h1>
 
-<?= $_style['actionbuttons']['dynamic']['canceldelete'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.canceldelete') ?>
 
 <form name="resource" method="get">
 	<input type="hidden" name="id" value="<?= $id ?>" />

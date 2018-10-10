@@ -23,7 +23,7 @@ if (isset($_REQUEST['searchid'])) {
         <i class="fa fa-search"></i><?= $_lang['search_criteria'] ?>
     </h1>
 
-<?= $_style['actionbuttons']['static']['cancel'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
 
     <div class="tab-page">
         <div class="container container-body">

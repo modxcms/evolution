@@ -582,7 +582,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                 } ?>
             </h1>
 
-            <?= $_style['actionbuttons']['dynamic']['document'] ?>
+            <?= ManagerTheme::getStyle('actionbuttons.dynamic.document') ?>
 
             <?php
             // breadcrumbs

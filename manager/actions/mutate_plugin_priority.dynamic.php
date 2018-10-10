@@ -84,7 +84,7 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
     <i class="fa fa-sort-numeric-asc"></i><?= $_lang['plugin_priority_title'] ?>
 </h1>
 
-<?= $_style['actionbuttons']['dynamic']['save'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
 
 <div class="tab-page">
     <div class="container container-body">

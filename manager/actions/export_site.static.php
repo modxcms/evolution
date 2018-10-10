@@ -21,7 +21,7 @@ if(!$modx->hasPermission('export_static')) {
 	<i class="fa fa-download"></i><?= $_lang['export_site_html'] ?>
 </h1>
 
-<?= $_style['actionbuttons']['static']['cancel'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
 
 
 <div class="tab-pane" id="exportPane">

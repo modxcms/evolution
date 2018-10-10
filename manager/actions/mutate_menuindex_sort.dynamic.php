@@ -151,7 +151,7 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
     <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
-<?= $_style['actionbuttons']['dynamic']['save'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
 
 <div class="tab-page">
     <div class="container container-body">
