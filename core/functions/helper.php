@@ -55,16 +55,41 @@ if (! function_exists('get_by_key')) {
      * @param mixed $data
      * @param string|int $key
      * @param mixed $default
-     * @param Closure $validate
+     * @param string|Closure $validate
      * @return mixed
      */
     function get_by_key($data, $key, $default = null, $validate = null)
     {
         $out = $default;
-        if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
-            $out = $data[$key];
+        $found = false;
+        if (\is_array($data) && (\is_int($key) || \is_string($key)) && $key !== '') {
+            if (\array_key_exists($key, $data)) {
+                $out = $data[$key];
+                $found = true;
+            } else {
+                $offset = 0;
+                do {
+                    if (($pos = \mb_strpos($key, '.', $offset)) > 0) {
+                        $subData = get_by_key($data, \mb_substr($key, 0, $pos));
+                        $offset = $pos + 1;
+                        $subKey = mb_substr($key, $offset);
+                        if (\is_array($subData) && array_key_exists($subKey, $subData)) {
+                            $out = $subData[$subKey];
+                            $found = true;
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                } while (true);
+
+                if ($found === false && ($pos = \mb_strpos($key, '.', $offset)) > 0) {
+                    $subData = get_by_key($data, \mb_substr($key, 0, $pos));
+                    $out = get_by_key($subData, \mb_substr($key, $pos + 1), $default, $validate);
+                }
+            }
         }
-        if (!empty($validate) && is_callable($validate)) {
+        if ($found === true && ! empty($validate) && \is_callable($validate)) {
             $out = (($validate($out) === true) ? $out : $default);
         }
 
