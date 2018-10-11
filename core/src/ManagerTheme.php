@@ -12,6 +12,9 @@ class ManagerTheme implements ManagerThemeInterface
      */
     protected $core;
 
+    /**
+     * @var string
+     */
     protected $theme;
     protected $namespace = 'manager';
     protected $lang = 'en';
@@ -294,8 +297,22 @@ class ManagerTheme implements ManagerThemeInterface
         $_style = [];
         $modx = $this->core;
         $_lang = $this->getLexicon();
-        include_once MODX_MANAGER_PATH . "media/style/" . $this->getTheme() . "/style.php";
+        include_once $this->getThemeDir(true) . 'style.php';
         $this->style = $_style;
+    }
+
+    /**
+     * @param bool $full
+     * @return string
+     */
+    public function getThemeDir($full = true) : string
+    {
+        return ($full ? MODX_MANAGER_PATH : '') . 'media/style/' . $this->getTheme() . '/';
+    }
+
+    public function getThemeUrl() : string
+    {
+        return MODX_MANAGER_URL . $this->getThemeDir(false);
     }
 
     /**
@@ -538,16 +555,16 @@ class ManagerTheme implements ManagerThemeInterface
                 $target = MODX_BASE_PATH . $target;
                 $lockout_tpl = file_get_contents($target);
             }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/manager.lockout.tpl')) {
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/manager.lockout.tpl';
+            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/manager.lockout.tpl')) {
+                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/manager.lockout.tpl';
                 $lockout_tpl = file_get_contents($target);
             }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/templates/actions/manager.lockout.tpl')) {
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/templates/actions/manager.lockout.tpl';
+            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/templates/actions/manager.lockout.tpl')) {
+                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/templates/actions/manager.lockout.tpl';
                 $login_tpl = file_get_contents($target);
             }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/html/manager.lockout.html')) { // ClipperCMS compatible
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/html/manager.lockout.html';
+            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/html/manager.lockout.html')) { // ClipperCMS compatible
+                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/html/manager.lockout.html';
                 $lockout_tpl = file_get_contents($target);
             }
             else {
@@ -589,23 +606,29 @@ class ManagerTheme implements ManagerThemeInterface
         $this->core->setPlaceholder('year', date('Y'));
 
         // set login logo image
-        if ( !empty($this->core->config['login_logo']) ) {
+        if ($this->core->getConfig('login_logo')) {
             $this->core->setPlaceholder('login_logo', MODX_SITE_URL . $this->core->getConfig('login_logo'));
         } else {
             $this->core->setPlaceholder('login_logo', MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-logo.png');
         }
 
         // set login background image
-        if ( !empty($this->core->config['login_bg']) ) {
-            $this->core->setPlaceholder('login_bg', MODX_SITE_URL . $this->core->config['login_bg']);
+        $path = $this->core->getConfig('login_bg');
+        if (empty($path)) {
+            $path  = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-background.jpg';
         } else {
-            $this->core->setPlaceholder('login_bg', MODX_MANAGER_URL . 'media/style/' . $this->core->config['manager_theme'] . '/images/login/default/login-background.jpg');
+            $path = MODX_SITE_URL . $path;
         }
+        $this->core->setPlaceholder('login_bg', $path);
+        unset($path);
 
         // set form position css class
-        $this->core->setPlaceholder('login_form_position_class', 'loginbox-' . $this->core->config['login_form_position']);
+        $this->core->setPlaceholder(
+            'login_form_position_class',
+            'loginbox-' . $this->core->getConfig('login_form_position')
+        );
 
-        switch ($this->core->config['manager_theme_mode']) {
+        switch ($this->core->getConfig('manager_theme_mode')) {
             case '1':
                 $this->core->setPlaceholder('manager_theme_style', 'lightness');
                 break;
@@ -678,10 +701,7 @@ class ManagerTheme implements ManagerThemeInterface
                 $login_tpl = file_get_contents($target);
             }
         } else {
-            $theme_path = MODX_MANAGER_PATH . 'media/style/' . $this->core->config['manager_theme'] . '/';
-            if (is_file($theme_path . 'style.php')) {
-                include($theme_path . 'style.php');
-            }
+            $theme_path = $this->getThemeDir();
             $chunk = $this->core->getChunk($target);
             if ($chunk !== false && !empty($chunk)) {
                 $login_tpl = $chunk;
