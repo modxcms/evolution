@@ -65,13 +65,19 @@ if(!function_exists('markRow')) {
 if(!function_exists('ls')) {
     /**
      * @param string $curpath
+     * @param array $options
      */
-    function ls($curpath)
+    function ls($curpath, array $options = [])
     {
-        global $_lang, $theme_image_path, $_style;
-        global $excludes, $protected_path, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $modx;
+        extract($options, EXTR_OVERWRITE);
+
+        $_lang = ManagerTheme::getLexicon();
+        $_style = ManagerTheme::getStyle();
         $dircounter = 0;
         $filecounter = 0;
+        $filesizes = 0;
+        $dirs_array = array();
+        $files_array = array();
         $curpath = str_replace('//', '/', $curpath . '/');
 
         if (!is_dir($curpath)) {
@@ -120,8 +126,7 @@ if(!function_exists('ls')) {
                 $type = getExtension($newpath);
                 $files_array[$filecounter]['file'] = $newpath;
                 $files_array[$filecounter]['stats'] = lstat($newpath);
-                $files_array[$filecounter]['text'] = determineIcon($newpath, $_REQUEST['path'],
-                        $_REQUEST['mode']) . ' ' . $file;
+                $files_array[$filecounter]['text'] = determineIcon($newpath, get_by_key($_REQUEST, 'path', ''), get_by_key($_REQUEST, 'mode', '')) . ' ' . $file;
                 $files_array[$filecounter]['view'] = (in_array($type,
                     $viewablefiles)) ? '<a href="javascript:;" onclick="viewfile(\'' . $webstart_path . substr($newpath,
                         $len,
@@ -152,7 +157,7 @@ if(!function_exists('ls')) {
             $filesizes += $dirs_array[$i]['stats']['7'];
             echo '<tr>';
             echo '<td>' . $dirs_array[$i]['text'] . '</td>';
-            echo '<td class="text-nowrap">' . $modx->toDateFormat($dirs_array[$i]['stats']['9']) . '</td>';
+            echo '<td class="text-nowrap">' . evolutionCMS()->toDateFormat($dirs_array[$i]['stats']['9']) . '</td>';
             echo '<td class="text-right">' . nicesize($dirs_array[$i]['stats']['7']) . '</td>';
             echo '<td class="actions text-right">';
             echo $dirs_array[$i]['rename'];
@@ -166,9 +171,9 @@ if(!function_exists('ls')) {
         sort($files_array); // sorting the array alphabetically (Thanks pxl8r!)
         for ($i = 0; $i < $files; $i++) {
             $filesizes += $files_array[$i]['stats']['7'];
-            echo '<tr ' . markRow($files_array[$i]['file'], $_REQUEST['path'], $_REQUEST['mode']) . '>';
+            echo '<tr ' . markRow($files_array[$i]['file'], get_by_key($_REQUEST, 'path'), get_by_key($_REQUEST, 'mode')) . '>';
             echo '<td>' . $files_array[$i]['text'] . '</td>';
-            echo '<td class="text-nowrap">' . $modx->toDateFormat($files_array[$i]['stats']['9']) . '</td>';
+            echo '<td class="text-nowrap">' . evolutionCMS()->toDateFormat($files_array[$i]['stats']['9']) . '</td>';
             echo '<td class="text-right">' . nicesize($files_array[$i]['stats']['7']) . '</td>';
             echo '<td class="actions text-right">';
             echo $files_array[$i]['unzip'];
@@ -181,7 +186,7 @@ if(!function_exists('ls')) {
             echo '</tr>';
         }
 
-        return;
+        return compact('filesizes', 'files', 'folders');
     }
 }
 

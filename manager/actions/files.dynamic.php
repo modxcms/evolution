@@ -13,7 +13,9 @@ $theme_image_path = MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_t
 $excludes = array(
     '.',
     '..',
-    '.svn'
+    '.svn',
+    '.git',
+    '.idea'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
 $editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
@@ -63,18 +65,18 @@ if (!$modx->hasPermission('export_static')) {
 // Mod added by Raymond
 $enablefileunzip = true;
 $enablefiledownload = true;
-$newfolderaccessmode = $new_folder_permissions ? octdec($new_folder_permissions) : 0777;
-$new_file_permissions = $new_file_permissions ? octdec($new_file_permissions) : 0666;
+$newfolderaccessmode = octdec(evolutionCMS()->getConfig('new_folder_permissions', '0777'));
+$new_file_permissions = octdec(evolutionCMS()->getConfig('new_file_permissions', '0666'));
 // End Mod -  by Raymond
 // make arrays from the file upload settings
-$upload_files = explode(',', $upload_files);
-$upload_images = explode(',', $upload_images);
-$upload_media = explode(',', $upload_media);
-$upload_flash = explode(',', $upload_flash);
+$upload_files = explode(',', evolutionCMS()->getConfig('upload_files', ''));
+$upload_images = explode(',', evolutionCMS()->getConfig('upload_images', ''));
+$upload_media = explode(',', evolutionCMS()->getConfig('upload_media', ''));
+$upload_flash = explode(',', evolutionCMS()->getConfig('upload_flash', ''));
 // now merge them
 $uploadablefiles = array_merge($upload_files, $upload_images, $upload_media, $upload_flash);
 $uploadablefiles = add_dot($uploadablefiles);
-
+$filemanager_path = evolutionCMS()->getConfig('filemanager_path', MODX_BASE_PATH);
 
 // end settings
 
@@ -207,7 +209,7 @@ if (substr($webstart_path, 0, 1) == '/') {
 
     <div id="actions">
         <div class="btn-group">
-            <?php if ($_POST['mode'] == 'save' || $_GET['mode'] == 'edit') : ?>
+            <?php if (get_by_key($_POST, 'mode') == 'save' || get_by_key($_GET, 'mode') == 'edit') : ?>
                 <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.editFile.submit();">
                     <i class="<?= $_style["files_save"] ?>"></i><span><?= $_lang['save'] ?></span>
                 </a>
@@ -245,9 +247,9 @@ if (substr($webstart_path, 0, 1) == '/') {
             <?php
             if (!empty($_FILES['userfile'])) {
                 $information = fileupload();
-            } elseif ($_POST['mode'] == 'save') {
+            } elseif (get_by_key($_POST, 'mode') == 'save') {
                 echo textsave();
-            } elseif ($_REQUEST['mode'] == 'delete') {
+            } elseif (get_by_key($_REQUEST, 'mode') == 'delete') {
                 echo delete_file();
             }
 
@@ -304,7 +306,7 @@ if (substr($webstart_path, 0, 1) == '/') {
         }
 
         // Unzip .zip files - by Raymond
-        if ($enablefileunzip && $_REQUEST['mode'] == 'unzip' && is_writable($startpath)) {
+        if ($enablefileunzip && get_by_key($_REQUEST, 'mode') == 'unzip' && is_writable($startpath)) {
             if (!$err = unzip(realpath("{$startpath}/" . $_REQUEST['file']), realpath($startpath))) {
                 echo '<span class="warning"><b>' . $_lang['file_unzip_fail'] . ($err === 0 ? 'Missing zip library (php_zip.dll / zip.so)' : '') . '</b></span><br /><br />';
             } else {
@@ -317,7 +319,7 @@ if (substr($webstart_path, 0, 1) == '/') {
         // New Folder & Delete Folder option - Raymond
         if (is_writable($startpath)) {
             // Delete Folder
-            if ($_REQUEST['mode'] == 'deletefolder') {
+            if (get_by_key($_REQUEST, 'mode') == 'deletefolder') {
                 $folder = $_REQUEST['folderpath'];
                 if (!$token_check || !@rrmdir($folder)) {
                     echo '<span class="warning"><b>' . $_lang['file_folder_not_deleted'] . '</b></span><br /><br />';
@@ -327,7 +329,7 @@ if (substr($webstart_path, 0, 1) == '/') {
             }
 
             // Create folder here
-            if ($_REQUEST['mode'] == 'newfolder') {
+            if (get_by_key($_REQUEST, 'mode') == 'newfolder') {
                 $old_umask = umask(0);
                 $foldername = str_replace('..\\', '', str_replace('../', '', $_REQUEST['name']));
                 if (!mkdirs("{$startpath}/{$foldername}", 0777)) {
@@ -342,7 +344,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 umask($old_umask);
             }
             // Create file here
-            if ($_REQUEST['mode'] == 'newfile') {
+            if (get_by_key($_REQUEST, 'mode') == 'newfile') {
                 $old_umask = umask(0);
                 $filename = str_replace('..\\', '', str_replace('../', '', $_REQUEST['name']));
                 $filename = $modx->getDatabase()->escape($filename);
@@ -362,7 +364,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 }
             }
             // Duplicate file here
-            if ($_REQUEST['mode'] == 'duplicate') {
+            if (get_by_key($_REQUEST, 'mode') == 'duplicate') {
                 $old_umask = umask(0);
                 $filename = $_REQUEST['path'];
                 $filename = $modx->getDatabase()->escape($filename);
@@ -381,7 +383,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 }
             }
             // Rename folder here
-            if ($_REQUEST['mode'] == 'renameFolder') {
+            if (get_by_key($_REQUEST, 'mode') == 'renameFolder') {
                 $old_umask = umask(0);
                 $dirname = $_REQUEST['path'] . '/' . $_REQUEST['dirname'];
                 $dirname = $modx->getDatabase()->escape($dirname);
@@ -401,7 +403,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 umask($old_umask);
             }
             // Rename file here
-            if ($_REQUEST['mode'] == 'renameFile') {
+            if (get_by_key($_REQUEST, 'mode') == 'renameFile') {
                 $old_umask = umask(0);
                 $path = dirname($_REQUEST['path']);
                 $filename = $_REQUEST['path'];
@@ -428,11 +430,7 @@ if (substr($webstart_path, 0, 1) == '/') {
         }
         // End New Folder - Raymond
 
-        $filesize = 0;
-        $files = 0;
-        $folders = 0;
-        $dirs_array = array();
-        $files_array = array();
+
         if (strlen(MODX_BASE_PATH) < strlen($filemanager_path)) {
             $len--;
         }
@@ -449,7 +447,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 </tr>
                 </thead>
                 <?php
-                ls($startpath);
+                extract(ls($startpath, compact('len', 'webstart_path', 'editablefiles', 'enablefileunzip', 'inlineviewablefiles', 'uploadablefiles', 'enablefiledownload', 'viewablefiles', 'protected_path', 'excludes')), EXTR_OVERWRITE);
                 echo "\n\n\n";
                 if ($folders == 0 && $files == 0) {
                     echo '<tr><td colspan="4"><i class="' . $_style['files_deleted_folder'] . ' FilesDeletedFolder"></i> <span style="color:#888;cursor:default;"> ' . $_lang['files_directory_is_empty'] . ' </span></td></tr>';
@@ -498,7 +496,7 @@ if (substr($webstart_path, 0, 1) == '/') {
     </div>
 <?php
 
-if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
+if (get_by_key($_REQUEST, 'mode') == "edit" || get_by_key($_REQUEST, 'mode') == "view") {
     ?>
 
     <div class="section" id="file_editfile">
