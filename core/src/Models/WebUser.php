@@ -28,4 +28,28 @@ class WebUser extends Eloquent\Model
 		'password',
 		'cachepwd'
 	];
+
+    public function attributes()
+    {
+        return $this->hasOne(WebUserAttribute::class,'internalKey','id');
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(WebGroup::class,'webuser','id');
+    }
+
+    public function settings()
+    {
+        return $this->hasMany(WebUserSetting::class,'webuser','id');
+    }
+
+    public function delete()
+    {
+        $this->roles()->delete();
+        $this->attributes()->delete();
+        $this->settings()->delete();
+
+        return parent::delete();
+    }
 }

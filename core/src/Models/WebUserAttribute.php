@@ -102,4 +102,9 @@ class WebUserAttribute extends Eloquent\Model
     {
         return $this->convertTimestamp($this->editedon);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(WebUser::class,'internalKey','id');
+    }
 }
