@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent;
  * @property string $groupname
  *
  * @mixin \Eloquent
+ *
+ * BelongsToMany
+ * @property Eloquent\Collection $plugins
  */
 class SystemEventname extends Eloquent\Model
 {
@@ -25,4 +28,14 @@ class SystemEventname extends Eloquent\Model
 		'service',
 		'groupname'
 	];
+
+    public function plugins() : Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            SitePlugin::class,
+            (new SitePluginEvent)->getTable(),
+            'evtid',
+            'pluginid'
+        )->withPivot('priority');
+    }
 }
