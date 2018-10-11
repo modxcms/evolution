@@ -32,4 +32,9 @@ class MemberGroup extends Eloquent\Model
     {
         return $this->belongsTo(ManagerUser::class, 'member','id');
     }
+
+    public function group()
+    {
+        return $this->belongsTo(MembergroupName::class, 'user_group','id');
+    }
 }

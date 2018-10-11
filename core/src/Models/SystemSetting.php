@@ -20,6 +20,7 @@ class SystemSetting extends Eloquent\Model
 	public $timestamps = false;
 
 	protected $fillable = [
+	    'setting_name',
 		'setting_value'
 	];
 }

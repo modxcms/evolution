@@ -21,6 +21,7 @@ class WebUserSetting extends Eloquent\Model
     ];
 
     protected $fillable = [
+        'setting_name',
         'setting_value'
     ];
 
