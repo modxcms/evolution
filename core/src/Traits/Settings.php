@@ -53,13 +53,19 @@ trait Settings
      */
     public function getConfig($name = '', $default = null)
     {
+        $config = get_by_key(
+            $this->config,
+            $name,
+            ''
+        );
+
+        if ($config === '') {
+            $config = $default;
+        }
+
         $value = $this['config']->get(
             'cms.settings.' . $name,
-            get_by_key(
-                $this->config,
-                $name,
-                $default
-            )
+            $config
         );
 
         return $this->castAttribute($name, $value);
