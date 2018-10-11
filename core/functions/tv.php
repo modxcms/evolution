@@ -697,7 +697,7 @@ if (! function_exists('renderFormElement')) {
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
-                    while (list($item, $itemvalue) = each($index_list)) {
+                    foreach($index_list as $item => $itemvalue) {
                         list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
@@ -710,7 +710,7 @@ if (! function_exists('renderFormElement')) {
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
-                    while (list($item, $itemvalue) = each($index_list)) {
+                    foreach($index_list as $item => $itemvalue) {
                         list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
@@ -724,7 +724,7 @@ if (! function_exists('renderFormElement')) {
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
-                    while (list($item, $itemvalue) = each($index_list)) {
+                    foreach($index_list as $item => $itemvalue) {
                         list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
@@ -789,7 +789,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     static $i = 0;
-                    while (list($item, $itemvalue) = each($index_list)) {
+                    foreach($index_list as $item => $itemvalue) {
                         list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
