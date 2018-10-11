@@ -17,7 +17,7 @@ if($id==$modx->getLoginUserID()) {
 }
 
 // Set the item name for logger
-$username = $modx->getDatabase()->getValue($modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$id}'"));
+$username = EvolutionCMS\Models\ManagerUser::find($id)->username;
 $_SESSION['itemname'] = $username;
 
 // invoke OnBeforeUserFormDelete event
@@ -27,15 +27,7 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 	));
 
 // delete the user.
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('manager_users'), "id='{$id}'");
-
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('member_groups'), "member='{$id}'");
-
-// delete user settings
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('user_settings'), "user='{$id}'");
-
-// delete the attributes
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('user_attributes'), "internalKey='{$id}'");
+EvolutionCMS\Models\ManagerUser::destroy($id);
 
 // invoke OnManagerDeleteUser event
 $modx->invokeEvent("OnManagerDeleteUser",

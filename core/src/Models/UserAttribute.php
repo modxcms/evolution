@@ -102,4 +102,9 @@ class UserAttribute extends Eloquent\Model
     {
         return $this->convertTimestamp($this->editedon);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(ManagerUser::class,'internalKey','id');
+    }
 }

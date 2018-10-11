@@ -19,10 +19,10 @@ if(strlen($pass1)<6){
 }
 
     $pass1 = $modx->getPhpCompat()->htmlspecialchars($pass1, ENT_NOQUOTES);
-	$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
-	$uid = $modx->getLoginUserID();
-	$f['password'] = $modx->getPasswordHash()->HashPassword($pass1);
-	$modx->getDatabase()->update($f,$tbl_manager_users,"id='{$uid}'");
+    $uid = $modx->getLoginUserID();
+    $password = $modx->getPasswordHash()->HashPassword($pass1);
+    $user = EvolutionCMS\Models\ManagerUser::find($uid);
+    $user->update(['password'=>$password]);
 
 	// invoke OnManagerChangePassword event
 	$modx->invokeEvent('OnManagerChangePassword', array (

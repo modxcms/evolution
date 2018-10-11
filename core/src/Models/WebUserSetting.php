@@ -23,4 +23,9 @@ class WebUserSetting extends Eloquent\Model
     protected $fillable = [
         'setting_value'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(WebUser::class, 'webuser','id');
+    }
 }

@@ -27,4 +27,9 @@ class MemberGroup extends Eloquent\Model
 		'user_group',
 		'member'
 	];
+
+    public function user()
+    {
+        return $this->belongsTo(ManagerUser::class, 'member','id');
+    }
 }

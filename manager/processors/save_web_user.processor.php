@@ -6,10 +6,6 @@ if(!$modx->hasPermission('save_web_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$tbl_web_users = $modx->getDatabase()->getFullTableName('web_users');
-$tbl_web_user_attributes = $modx->getDatabase()->getFullTableName('web_user_attributes');
-$tbl_web_groups = $modx->getDatabase()->getFullTableName('web_groups');
-
 $input = $_POST;
 foreach($input as $k => $v) {
 	if($k !== 'comment' && $k !=='user_groups') {
@@ -21,14 +17,12 @@ foreach($input as $k => $v) {
 $id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
-$esc_newusername = $modx->getDatabase()->escape($newusername);
 $fullname = $input['fullname'];
 $genpassword = $input['newpassword'];
 $passwordgenmethod = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
 $specifiedpassword = $input['specifiedpassword'];
 $email = trim($input['email']);
-$esc_email = $modx->getDatabase()->escape($email);
 $oldemail = $input['oldemail'];
 $phone = $input['phone'];
 $mobilephone = $input['mobilephone'];
@@ -62,17 +56,13 @@ if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $
 switch($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		$rs = $modx->getDatabase()->select('count(id)', $tbl_web_users, "username='{$esc_newusername}'");
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\WebUser::where('username','=',$newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exist
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			$rs = $modx->getDatabase()->select('count(id)', $tbl_web_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
-			$limit = $modx->getDatabase()->getValue($rs);
-			if($limit > 0) {
+			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
@@ -99,13 +89,12 @@ switch($input['mode']) {
 
 		// create the user account
 		$field = array();
-		$field['username'] = $esc_newusername;
+		$field['username'] = $newusername;
 		$field['password'] = md5($newpassword);
-		$internalKey = $modx->getDatabase()->insert($field, $tbl_web_users);
-
-		$field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->getDatabase()->escape($field);
-		$modx->getDatabase()->insert($field, $tbl_web_user_attributes);
+		$webUser= EvolutionCMS\Models\WebUser::create($field);
+		$internalKey = $webUser->getKey();
+		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
+		$webUser->attributes()->create($field);
 
 		// Save User Settings
         saveWebUserSettings($internalKey);
@@ -116,13 +105,12 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($use_udperms == 1) {
+		if($modx->config['use_udperms'] == 1) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
-					$f = array();
-					$f['webgroup'] = (int)$user_groups[$i];
-					$f['webuser'] = $internalKey;
-					$modx->getDatabase()->insert($f, $tbl_web_groups);
+					$field = array();
+					$field['webgroup'] = (int)$user_groups[$i];
+					$webUser->roles()->create($field);
 				}
 			}
 		}
@@ -210,17 +198,13 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->getDatabase()->select('count(id)', $tbl_web_users, "username='{$esc_newusername}' AND id!='{$id}'");
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\WebUser::where('id','!=',$id)->where('username','=',$newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exists
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_web_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
-			$limit = $modx->getDatabase()->getValue($rs);
-			if($limit > 0) {
+			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
@@ -233,14 +217,14 @@ switch($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $esc_newusername;
+		$field['username'] = $newusername;
 		if($genpassword == 1) {
 			$field['password'] = md5($newpassword);
 		}
-		$modx->getDatabase()->update($field, $tbl_web_users, "id='{$id}'");
+		$webUser = EvolutionCMS\Models\WebUser::find($id);
+		$webUser->update($field);
 		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->getDatabase()->escape($field);
-		$modx->getDatabase()->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
+		$webUser->attributes->update($field);
 
 		// Save User Settings
         saveWebUserSettings($id);
@@ -251,15 +235,14 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($use_udperms == 1) {
+		if($modx->config['use_udperms'] == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$modx->getDatabase()->delete($tbl_web_groups, "webuser='{$id}'");
+			$webUser->roles()->delete();
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['webgroup'] = (int)$user_groups[$i];
-					$field['webuser'] = $id;
-					$modx->getDatabase()->insert($field, $tbl_web_groups);
+					$webUser->roles()->create($field);
 				}
 			}
 		}

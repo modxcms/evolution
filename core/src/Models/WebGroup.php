@@ -24,4 +24,9 @@ class WebGroup extends Eloquent\Model
 		'webgroup',
 		'webuser'
 	];
+
+    public function user()
+    {
+        return $this->belongsTo(WebUser::class, 'member','id');
+    }
 }

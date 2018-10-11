@@ -6,10 +6,6 @@ if(!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
-$tbl_user_attributes = $modx->getDatabase()->getFullTableName('user_attributes');
-$tbl_member_groups = $modx->getDatabase()->getFullTableName('member_groups');
-
 $input = $_POST;
 
 $id = (int)$input['id'];
@@ -58,9 +54,7 @@ if($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
-	$limit = $modx->getDatabase()->getValue($rs);
-	if($limit > 0) {
+	if (EvolutionCMS\Models\ManagerUser::where('role','=',1)->where('internalKey','=',$id)->first()) {
 		webAlertAndQuit("You cannot alter an administrative user.", 12);
 	}
 
@@ -69,16 +63,12 @@ if($_SESSION['mgrRole'] != 1) {
 switch($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$rs = $modx->getDatabase()->select('count(id)', $tbl_manager_users, sprintf("username='%s'", $modx->getDatabase()->escape($newusername)));
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\ManagerUser::where('username','=',$newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exist
-		$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND id!='%s'", $modx->getDatabase()->escape($email), $id));
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\UserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
 
@@ -103,15 +93,13 @@ switch($input['mode']) {
 		));
 
 		// create the user account
-		$internalKey = $modx->getDatabase()->insert(array('username' => $modx->getDatabase()->escape($newusername)), $tbl_manager_users);
-
 		$field = array();
 		$field['password'] = $modx->getPasswordHash()->HashPassword($newpassword);
-		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$internalKey}'");
-
-		$field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->getDatabase()->escape($field);
-		$modx->getDatabase()->insert($field, $tbl_user_attributes);
+		$field['username'] = $newusername;
+		$managerUser= EvolutionCMS\Models\ManagerUser::create($field);
+		$internalKey = $managerUser->getKey();
+		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
+		$managerUser->attributes()->create($field);
 
 		// Save user settings
         saveManagerUserSettings($internalKey);
@@ -139,13 +127,13 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($use_udperms == 1) {
+		if($modx->config['use_udperms'] == 1) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
-					$f = array();
-					$f['user_group'] = (int)$user_groups[$i];
-					$f['member'] = $internalKey;
-					$modx->getDatabase()->insert($f, $tbl_member_groups);
+					$field = array();
+					$field['user_group'] = (int)$user_groups[$i];
+					$field['member'] = $id;
+					$managerUser->roles()->create($field);
 				}
 			}
 		}
@@ -217,16 +205,12 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->getDatabase()->select('count(id)', $tbl_manager_users, sprintf("username='%s' AND id!='%s'", $modx->getDatabase()->escape($newusername), $id));
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\ManagerUser::where('username','=',$newusername)->where('id','!=',$id)->first()) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exists
-		$rs = $modx->getDatabase()->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND internalKey!='%s'", $modx->getDatabase()->escape($email), $id));
-		$limit = $modx->getDatabase()->getValue($rs);
-		if($limit > 0) {
+		if (EvolutionCMS\Models\UserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
 
@@ -238,14 +222,14 @@ switch($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $modx->getDatabase()->escape($newusername);
+		$field['username'] = $newusername;
 		if($genpassword == 1) {
 			$field['password'] = $modx->getPasswordHash()->HashPassword($newpassword);
 		}
-		$modx->getDatabase()->update($field, $tbl_manager_users, "id='{$id}'");
+		$managerUser = EvolutionCMS\Models\ManagerUser::find($id);
+		$managerUser->update($field);
 		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
-		$field = $modx->getDatabase()->escape($field);
-		$modx->getDatabase()->update($field, $tbl_user_attributes, "internalKey='{$id}'");
+		$managerUser->attributes->update($field);
 
 		// Save user settings
         saveManagerUserSettings($id);
@@ -284,15 +268,15 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($use_udperms == 1) {
+		if($modx->config['use_udperms'] == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$modx->getDatabase()->delete($tbl_member_groups, "member='{$id}'");
+			$managerUser->roles()->delete();
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
-					$modx->getDatabase()->insert($field, $tbl_member_groups);
+					$managerUser->roles()->create($field);
 				}
 			}
 		}

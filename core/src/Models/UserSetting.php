@@ -23,4 +23,9 @@ class UserSetting extends Eloquent\Model
 	protected $fillable = [
 		'setting_value'
 	];
+
+    public function user()
+    {
+        return $this->belongsTo(ManagerUser::class, 'user','id');
+    }
 }
