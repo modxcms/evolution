@@ -222,7 +222,7 @@ while ($row = $modx->db->getRow($rs)) {
                 // handles checkboxes & multiple selects elements
                 $feature_insert = array ();
                 $lst = $_POST["tv" . $row['id']];
-                while (list ($featureValue, $feature_item) = each($lst)) {
+                foreach($lst as $featureValue => $feature_item) {
                     $feature_insert[count($feature_insert)] = $feature_item;
                 }
                 $tmplvar = implode("||", $feature_insert);
