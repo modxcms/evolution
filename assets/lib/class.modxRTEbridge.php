@@ -1017,7 +1017,7 @@ class modxRTEbridge
     {
         global $modx;
 
-        if ($rid > 0 && $modx->getLoginUserType() === 'manager')
+        if ($rid > 0 && ($modx->getLoginUserType() === 'manager' || IN_MANAGER_MODE))
         {
             if(!isset($_POST['secHash']) ||
                !isset($_SESSION['modxRTEbridge']['secHash'][$rid]) ||
