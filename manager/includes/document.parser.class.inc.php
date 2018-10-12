@@ -2859,6 +2859,7 @@ class DocumentParser
         if ($this->config['seostrict'] === '1') {
             $this->sendStrictURI();
         }
+        $this->webAlertAndQuit('asd', '#');
         $this->prepareResponse();
     }
 
@@ -3164,7 +3165,21 @@ class DocumentParser
      */
     public function webAlertAndQuit($msg, $url = '')
     {
-        global $modx_manager_charset;
+        global $modx_manager_charset, $modx_lang_attribute, $modx_textdir, $lastInstallTime;
+
+        if(empty($modx_manager_charset)) {
+            $modx_manager_charset = $this->getConfig('modx_charset');
+        }
+
+        if(empty($modx_lang_attribute)) {
+            $modx_lang_attribute = $this->getConfig('lang_code');
+        }
+
+        if(empty($modx_textdir)) {
+            $modx_textdir = $this->getConfig('manager_direction');
+        }
+        $textdir = $modx_textdir === 'rtl' ? 'rtl' : 'ltr';
+
         switch (true) {
             case (0 === stripos($url, 'javascript:')):
                 $fnc = substr($url, 11);
@@ -3179,21 +3194,38 @@ class DocumentParser
                 $fnc = "window.location.href='" . addslashes($url) . "';";
         }
 
-        echo "<html><head>
-            <title>MODX :: Alert</title>
-            <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
-            <script>
-                function __alertQuit() {
-                    var el = document.querySelector('p');
-                    alert(el.innerHTML);
-                    el.remove();
-                    {$fnc}
-                }
-                window.setTimeout('__alertQuit();',100);
-            </script>
-            </head><body>
-            <p>{$msg}</p>
-            </body></html>";
+        $style = '';
+        if (IN_MANAGER_MODE) {
+            if (empty($lastInstallTime)) {
+                $lastInstallTime = time();
+            }
+
+            $path =  'media/style/' . $this->getConfig('manager_theme') . '/';
+            $css = file_exists(MODX_MANAGER_PATH .  $path . '/css/styles.min.css') ? '/css/styles.min.css' : 'style.css';
+            $style = '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . $path . $css . '?v=' . $lastInstallTime . '"/>';
+        }
+
+        ob_get_clean();
+        echo "<!DOCTYPE html>
+            <html lang=\"{$modx_lang_attribute}\" dir=\"{$textdir}\">
+                <head>
+                <title>MODX :: Alert</title>
+                <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
+                {$style}
+                <script>
+                    function __alertQuit() {
+                        var el = document.querySelector('p');
+                        alert(el.innerHTML);
+                        el.remove();
+                        {$fnc}
+                    }
+                    window.setTimeout('__alertQuit();',100);
+                </script>
+            </head>
+            <body>
+                <p>{$msg}</p>
+            </body>
+        </html>";
         exit;
     }
 
