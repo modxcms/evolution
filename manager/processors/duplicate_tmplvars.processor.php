@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // count duplicates
-$tmplvar = EvolutionCMS\Models\SiteTmplvar::findOrFail($id);
+$tmplvar = EvolutionCMS\Models\SiteTmplvar::with(['tmplvarAccess','tmplvarTemplate'])->findOrFail($id);
 $name = $tmplvar->name;
 $count = EvolutionCMS\Models\SiteTmplvar::where('name', 'like', $name.' '.$_lang['duplicated_el_suffix'].'%')->count();
 if($count>=1) $count = ' '.($count+1);
@@ -25,18 +25,18 @@ $newTmplvar->caption = $tmplvar->caption.' Duplicate '.$count.'';
 $newTmplvar->push();
 
 foreach ($tmplvar->tmplvarTemplate as $tmplvarTemplate) {
-    $field = $tmplvarTemplate->toArray();
-    unset($field['tmplvarid']);
+    $field = $tmplvarTemplate->attributesToArray();
+    Illuminate\Support\Arr::except($fields, ['tmplvarid']);
     $newTmplvar->tmplvarTemplate()->create($field);
 }
 foreach ($tmplvar->tmplvarAccess as $tmplvarAccess) {
-    $field = $tmplvarAccess->toArray();
-    unset($field['tmplvarid']);
+    $field = $tmplvarAccess->attributesToArray();
+    Illuminate\Support\Arr::except($fields, ['tmplvarid']);
     $newTmplvar->tmplvarAccess()->create($field);
 }
 
 $_SESSION['itemname'] = $newTmplvar->name;
 
 // finish duplicating - redirect to new variable
-$header="Location: index.php?r=2&a=301&id=$newTmplvar->id";
+$header="Location: index.php?r=2&a=301&id=".$newTmplvar->getKey();
 header($header);

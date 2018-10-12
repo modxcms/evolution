@@ -147,17 +147,17 @@ class SiteTmplvar extends Eloquent\Model
 
     public function tmplvarContentvalue()
     {
-        return $this->hasMany(SiteTmplvarContentvalue::class,'tmplvarid','id');
+        return $this->hasMany(SiteTmplvarContentvalue::class, 'tmplvarid', 'id');
     }
 
     public function tmplvarAccess()
     {
-        return $this->hasMany(SiteTmplvarAccess::class,'tmplvarid','id');
+        return $this->hasMany(SiteTmplvarAccess::class, 'tmplvarid', 'id');
     }
 
     public function tmplvarTemplate()
     {
-        return $this->hasMany(SiteTmplvarTemplate::class,'tmplvarid','id');
+        return $this->hasMany(SiteTmplvarTemplate::class, 'tmplvarid', 'id');
     }
 
     public function delete()

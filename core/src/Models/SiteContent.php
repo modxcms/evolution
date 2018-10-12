@@ -209,6 +209,6 @@ class SiteContent extends Eloquent\Model
 
     public function templateValues()
     {
-        return $this->hasMany(SiteTmplvarContentvalue::class,'contentid','id');
+        return $this->hasMany(SiteTmplvarContentvalue::class, 'contentid', 'id');
     }
 }

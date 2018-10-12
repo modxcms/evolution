@@ -590,9 +590,10 @@ if(!function_exists('saveTemplateVarAccess')) {
 
         $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->get();
 
-        foreach ($siteTmlvarTemplates as $siteTmlvarTemplate) {
+        $getRankArray = $siteTmlvarTemplates->pluck('rank', 'templateid')->toArray();
+        /*foreach ($siteTmlvarTemplates as $siteTmlvarTemplate) {
             $getRankArray[$siteTmlvarTemplate->templateid] = $siteTmlvarTemplate->rank;
-        }
+        }*/
 
         EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->delete();
         if (!empty($templates)) {

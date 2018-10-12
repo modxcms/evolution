@@ -28,6 +28,6 @@ class SiteTmplvarAccess extends Eloquent\Model
 
     public function tmplvar()
     {
-        return $this->belongsTo(SiteTmplvar::class, 'tmplvarid','id');
+        return $this->belongsTo(SiteTmplvar::class, 'tmplvarid', 'id');
     }
 }

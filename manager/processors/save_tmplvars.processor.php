@@ -136,7 +136,7 @@ switch ($_POST['mode']) {
             'category' => $categoryid,
             'editedon' => $currentdate
         );
-        $tmplVar = EvolutionCMS\Models\SiteTmplvar::find($id);
+        $tmplVar = EvolutionCMS\Models\SiteTmplvar::findOrFail($id);
         $tmplVar->update($field);
 
         // save access permissions

@@ -15,7 +15,7 @@ $forced = isset($_GET['force']) ? $_GET['force'] : 0;
 
 // check for relations
 if(!$forced) {
-    $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarContentvalue::where('tmplvarid', '=', $id)->get();
+    $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarContentvalue::with('resource')->where('tmplvarid', '=', $id)->get();
     $count = $siteTmlvarTemplates->count();
     if($count > 0) {
 		include_once MODX_MANAGER_PATH . "includes/header.inc.php";
