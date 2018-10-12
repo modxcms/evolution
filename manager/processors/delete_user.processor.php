@@ -17,7 +17,7 @@ if($id==$modx->getLoginUserID()) {
 }
 
 // Set the item name for logger
-$username = EvolutionCMS\Models\ManagerUser::find($id)->username;
+$username = EvolutionCMS\Models\ManagerUser::findOrFail($id)->username;
 $_SESSION['itemname'] = $username;
 
 // invoke OnBeforeUserFormDelete event

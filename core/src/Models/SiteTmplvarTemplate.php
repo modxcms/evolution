@@ -23,6 +23,13 @@ class SiteTmplvarTemplate extends Eloquent\Model
 	];
 
 	protected $fillable = [
+	    'tmplvarid',
+        'templateid',
 		'rank'
 	];
+
+    public function tmplvar()
+    {
+        return $this->belongsTo(SiteTmplvar::class, 'tmplvarid','id');
+    }
 }

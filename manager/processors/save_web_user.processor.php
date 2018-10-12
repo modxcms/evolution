@@ -56,13 +56,13 @@ if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $
 switch($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		if (EvolutionCMS\Models\WebUser::where('username','=',$newusername)->first()) {
+		if (EvolutionCMS\Models\WebUser::where('username', '=', $newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exist
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
+			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
@@ -105,7 +105,7 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($modx->config['use_udperms'] == 1) {
+		if($modx->getConfig('use_udperms') == 1) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
@@ -198,13 +198,13 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		if (EvolutionCMS\Models\WebUser::where('id','!=',$id)->where('username','=',$newusername)->first()) {
+		if (EvolutionCMS\Models\WebUser::where('id', '!=', $id)->where('username', '=', $newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88);
 		}
 
 		// check if the email address already exists
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
+			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88);
 			}
 		}
@@ -235,7 +235,7 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($modx->config['use_udperms'] == 1) {
+		if($modx->getConfig('use_udperms') == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$webUser->roles()->delete();
 			if(!empty($user_groups)) {

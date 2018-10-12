@@ -25,4 +25,9 @@ class SiteTmplvarAccess extends Eloquent\Model
 		'tmplvarid',
 		'documentgroup'
 	];
+
+    public function tmplvar()
+    {
+        return $this->belongsTo(SiteTmplvar::class, 'tmplvarid','id');
+    }
 }
