@@ -144,4 +144,29 @@ class SiteTmplvar extends Eloquent\Model
     {
         return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
+
+    public function tmplvarContentvalue()
+    {
+        return $this->hasMany(SiteTmplvarContentvalue::class, 'tmplvarid', 'id');
+    }
+
+    public function tmplvarAccess()
+    {
+        return $this->hasMany(SiteTmplvarAccess::class, 'tmplvarid', 'id');
+    }
+
+    public function tmplvarTemplate()
+    {
+        return $this->hasMany(SiteTmplvarTemplate::class, 'tmplvarid', 'id');
+    }
+
+    public function delete()
+    {
+        $this->tmplvarContentvalue()->delete();
+        $this->tmplvarAccess()->delete();
+        $this->tmplvarTemplate()->delete();
+
+        return parent::delete();
+    }
+
 }

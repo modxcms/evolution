@@ -22,7 +22,7 @@ if(strlen($pass1)<6){
     $uid = $modx->getLoginUserID();
     $password = $modx->getPasswordHash()->HashPassword($pass1);
     $user = EvolutionCMS\Models\ManagerUser::find($uid);
-    $user->update(['password'=>$password]);
+    $user->update(['password' => $password]);
 
 	// invoke OnManagerChangePassword event
 	$modx->invokeEvent('OnManagerChangePassword', array (

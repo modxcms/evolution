@@ -26,4 +26,14 @@ class SiteTmplvarContentvalue extends Eloquent\Model
 		'contentid',
 		'value'
 	];
+
+    public function resource()
+    {
+        return $this->belongsTo(SiteContent::class, 'contentid', 'id');
+    }
+
+    public function tmplvar()
+    {
+        return $this->belongsTo(SiteTmplvar::class, 'tmplvarid', 'id');
+    }
 }

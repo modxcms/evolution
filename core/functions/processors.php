@@ -586,25 +586,21 @@ if(!function_exists('saveTemplateVarAccess')) {
         $templates = isset($_POST['template']) ? $_POST['template'] : []; // get muli-templates based on S.BRENNAN mod
 
         // update template selections
-        $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
-
         $getRankArray = array();
 
-        $getRank = $modx->getDatabase()->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+        $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->get();
 
-        while ($row = $modx->getDatabase()->getRow($getRank)) {
-            $getRankArray[$row['templateid']] = $row['rank'];
-        }
+        $getRankArray = $siteTmlvarTemplates->pluck('rank', 'templateid')->toArray();
+        /*foreach ($siteTmlvarTemplates as $siteTmlvarTemplate) {
+            $getRankArray[$siteTmlvarTemplate->templateid] = $siteTmlvarTemplate->rank;
+        }*/
 
-        $modx->getDatabase()->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
+        EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->delete();
         if (!empty($templates)) {
             for ($i = 0; $i < count($templates); $i++) {
-                $setRank = isset($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-                $modx->getDatabase()->insert(array(
-                    'tmplvarid'  => $id,
-                    'templateid' => $templates[$i],
-                    'rank'       => $setRank,
-                ), $tbl_site_tmplvar_templates);
+                $setRank = get_by_key($getRankArray, $templates[$i], 0);
+                $field = ['tmplvarid'  => $id, 'templateid' => $templates[$i], 'rank' => $setRank];
+                EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
             }
         }
     }
@@ -614,22 +610,17 @@ if(!function_exists('saveDocumentAccessPermissons')) {
     function saveDocumentAccessPermissons($id)
     {
         $modx = evolutionCMS();
-        global $use_udperms;
-
-        $tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
 
         $docgroups = isset($_POST['docgroups']) ? $_POST['docgroups'] : '';
 
         // check for permission update access
-        if ($use_udperms == 1) {
+        if($modx->getConfig('use_udperms') == 1) {
             // delete old permissions on the tv
-            $modx->getDatabase()->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
+            EvolutionCMS\Models\SiteTmplvarAccess::where('tmplvarid', '=', $id)->delete();
             if (is_array($docgroups)) {
                 foreach ($docgroups as $value) {
-                    $modx->getDatabase()->insert(array(
-                        'tmplvarid'     => $id,
-                        'documentgroup' => stripslashes($value),
-                    ), $tbl_site_tmplvar_templates);
+                    $field = ['tmplvarid' => $id, 'documentgroup' => stripslashes($value)];
+                    EvolutionCMS\Models\SiteTmplvarAccess::create($field);
                 }
             }
         }

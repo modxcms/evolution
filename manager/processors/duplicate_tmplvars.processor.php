@@ -12,49 +12,31 @@ if($id==0) {
 }
 
 // count duplicates
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'"));
-$count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_tmplvars'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+$tmplvar = EvolutionCMS\Models\SiteTmplvar::with(['tmplvarAccess','tmplvarTemplate'])->findOrFail($id);
+$name = $tmplvar->name;
+$count = EvolutionCMS\Models\SiteTmplvar::where('name', 'like', $name.' '.$_lang['duplicated_el_suffix'].'%')->count();
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
-// duplicate TV
-$newid = $modx->getDatabase()->insert(
-	array(
-		'type'=>'',
-		'name'=>'',
-		'caption'=>'',
-		'description'=>'',
-		'default_text'=>'',
-		'elements'=>'',
-		'rank'=>'',
-		'display'=>'',
-		'display_params'=>'',
-		'category'=>'',
-		), $modx->getDatabase()->getFullTableName('site_tmplvars'), // Insert into
-	"type, CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, CONCAT(caption, ' Duplicate{$count}') AS caption, description, default_text, elements, rank, display, display_params, category", $modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'"); // Copy from
 
+$newTmplvar = $tmplvar->replicate();
+$newTmplvar->name = $tmplvar->name.' '.$_lang['duplicated_el_suffix'].$count;
+$newTmplvar->caption = $tmplvar->caption.' Duplicate '.$count.'';
+$newTmplvar->push();
 
-// duplicate TV Template Access Permissions
-$modx->getDatabase()->insert(
-	array(
-		'tmplvarid'=>'',
-		'templateid'=>'',
-		'rank'=>'',
-		), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), // Insert into
-	"'{$newid}', templateid, rank", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'"); // Copy from
+foreach ($tmplvar->tmplvarTemplate as $tmplvarTemplate) {
+    $field = $tmplvarTemplate->attributesToArray();
+    Illuminate\Support\Arr::except($fields, ['tmplvarid']);
+    $newTmplvar->tmplvarTemplate()->create($field);
+}
+foreach ($tmplvar->tmplvarAccess as $tmplvarAccess) {
+    $field = $tmplvarAccess->attributesToArray();
+    Illuminate\Support\Arr::except($fields, ['tmplvarid']);
+    $newTmplvar->tmplvarAccess()->create($field);
+}
 
-// duplicate TV Access Permissions
-$modx->getDatabase()->insert(
-	array(
-		'tmplvarid'=>'',
-		'documentgroup'=>'',
-		), $modx->getDatabase()->getFullTableName('site_tmplvar_access'), // Insert into
-	"'{$newid}', documentgroup", $modx->getDatabase()->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'"); // Copy from
-
-// Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$newid}'"));
-$_SESSION['itemname'] = $name;
+$_SESSION['itemname'] = $newTmplvar->name;
 
 // finish duplicating - redirect to new variable
-$header="Location: index.php?r=2&a=301&id=$newid";
+$header="Location: index.php?r=2&a=301&id=".$newTmplvar->getKey();
 header($header);

@@ -206,4 +206,9 @@ class SiteContent extends Eloquent\Model
             ->where('unpub_date', '>', 0)
             ->where('published', '=', 1);
     }
+
+    public function templateValues()
+    {
+        return $this->hasMany(SiteTmplvarContentvalue::class, 'contentid', 'id');
+    }
 }

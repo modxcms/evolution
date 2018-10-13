@@ -54,7 +54,7 @@ if($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	if (EvolutionCMS\Models\ManagerUser::where('role','=',1)->where('internalKey','=',$id)->first()) {
+	if (EvolutionCMS\Models\ManagerUser::where('role', '=', 1)->where('internalKey', '=', $id)->first()) {
 		webAlertAndQuit("You cannot alter an administrative user.", 12);
 	}
 
@@ -63,12 +63,12 @@ if($_SESSION['mgrRole'] != 1) {
 switch($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		if (EvolutionCMS\Models\ManagerUser::where('username','=',$newusername)->first()) {
+		if (EvolutionCMS\Models\ManagerUser::where('username', '=', $newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exist
-		if (EvolutionCMS\Models\UserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
+		if (EvolutionCMS\Models\UserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
 
@@ -127,7 +127,7 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($modx->config['use_udperms'] == 1) {
+		if($modx->getConfig('use_udperms') == 1) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
@@ -205,12 +205,12 @@ switch($input['mode']) {
 		}
 
 		// check if the username already exist
-		if (EvolutionCMS\Models\ManagerUser::where('username','=',$newusername)->where('id','!=',$id)->first()) {
+		if (EvolutionCMS\Models\ManagerUser::where('username', '=', $newusername)->where('id', '!=', $id)->first()) {
 			webAlertAndQuit("User name is already in use!", 12);
 		}
 
 		// check if the email address already exists
-		if (EvolutionCMS\Models\UserAttribute::where('internalKey','!=',$id)->where('email','=',$email)->first()) {
+		if (EvolutionCMS\Models\UserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 			webAlertAndQuit("Email is already in use!", 12);
 		}
 
@@ -268,7 +268,7 @@ switch($input['mode']) {
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
-		if($modx->config['use_udperms'] == 1) {
+		if($modx->getConfig('use_udperms') == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$managerUser->roles()->delete();
 			if(!empty($user_groups)) {

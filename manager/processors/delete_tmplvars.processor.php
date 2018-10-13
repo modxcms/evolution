@@ -15,10 +15,9 @@ $forced = isset($_GET['force']) ? $_GET['force'] : 0;
 
 // check for relations
 if(!$forced) {
-	$drs = $modx->getDatabase()->select('sc.id, sc.pagetitle,sc.description', $modx->getDatabase()->getFullTableName('site_content') . " AS sc
-			INNER JOIN " . $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " AS stcv ON stcv.contentid=sc.id", "stcv.tmplvarid='{$id}'");
-	$count = $modx->getDatabase()->getRecordCount($drs);
-	if($count > 0) {
+    $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarContentvalue::with('resource')->where('tmplvarid', '=', $id)->get();
+    $count = $siteTmlvarTemplates->count();
+    if($count > 0) {
 		include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 		?>
 		<script>
@@ -42,9 +41,9 @@ if(!$forced) {
 				<p><?= $_lang['tmplvar_inuse'] ?></p>
 				<ul>
 					<?php
-					while($row = $modx->getDatabase()->getRow($drs)) {
-						echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['description'] != '' ? ' - ' . $row['description'] : '') . '</li>';
-					}
+                    foreach ($siteTmlvarTemplates as $siteTmlvarTemplate) {
+                        echo '<li><span style="width: 200px"><a href="index.php?id=' . $siteTmlvarTemplate->resource->id . '&a=27">' . $siteTmlvarTemplate->resource->pagetitle . '</a></span>' . ($siteTmlvarTemplate->resource->description != '' ? ' - ' . $siteTmlvarTemplate->resource->description : '') . '</li>';
+                    }
 					?>
 				</ul>
 			</div>
@@ -56,7 +55,7 @@ if(!$forced) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'"));
+$name = EvolutionCMS\Models\SiteTmplvar::findOrFail($id)->name;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTVFormDelete event
@@ -65,16 +64,7 @@ $modx->invokeEvent("OnBeforeTVFormDelete", array(
 ));
 
 // delete variable
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvars'), "id='{$id}'");
-
-// delete variable's content values
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues'), "tmplvarid='{$id}'");
-
-// delete variable's template access
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'");
-
-// delete variable's access permissions
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
+EvolutionCMS\Models\SiteTmplvar::destroy($id);
 
 // invoke OnTVFormDelete event
 $modx->invokeEvent("OnTVFormDelete", array(

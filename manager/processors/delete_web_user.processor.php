@@ -13,7 +13,7 @@ if($id==0) {
 
 // Set the item name for logger
 
-$username = EvolutionCMS\Models\WebUser::find($id)->username;
+$username = EvolutionCMS\Models\WebUser::findOrFail($id)->username;
 $_SESSION['itemname'] = $username;
 
 // invoke OnBeforeWUsrFormDelete event
