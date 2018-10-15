@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_htmlsnippets'), "id='{$id}'"));
+$name = EvolutionCMS\Models\SiteHtmlsnippet::findOrFail($id)->name;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeChunkFormDelete event
@@ -22,7 +22,7 @@ $modx->invokeEvent("OnBeforeChunkFormDelete",
 	));
 
 // delete the chunk.
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_htmlsnippets'), "id='{$id}'");
+EvolutionCMS\Models\SiteHtmlsnippet::destroy($id);
 
 // invoke OnChunkFormDelete event
 $modx->invokeEvent("OnChunkFormDelete",

@@ -12,7 +12,7 @@ $name = trim($_POST['name']);
 $description = $_POST['description'];
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $disabled = isset($_POST['disabled']) && $_POST['disabled'] == "on" ? '1' : '0';
-$editedon = time() + $modx->config['server_offset_time'];
+$createdon = $editedon = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -50,7 +50,7 @@ switch ($_POST['mode']) {
         }
 
         //do stuff to save the new doc
-        $id = EvolutionCMS\Models\SiteHtmlsnippet::create(compact('name', 'description','snippet','locked','category','editor_type','editor_name','disabled','editedon'))->getKey();
+        $id = EvolutionCMS\Models\SiteHtmlsnippet::create(compact('name', 'description','snippet','locked','category','editor_type','editor_name','disabled','createdon','editedon'))->getKey();
 
         // invoke OnChunkFormSave event
         $modx->invokeEvent("OnChunkFormSave", array(
