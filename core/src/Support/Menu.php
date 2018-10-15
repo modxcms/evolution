@@ -24,8 +24,9 @@ class Menu implements MenuInterface
     /**
      * @param $menu
      * @param array $setting
+     * @param bool $show
      */
-    public function build($menu, $setting = array())
+    public function build($menu, $setting = array(), $show = true)
     {
         $this->defaults['outerClass'] = 'nav';
         $this->defaults['parentClass'] = 'dropdown';
@@ -37,7 +38,11 @@ class Menu implements MenuInterface
         $this->defaults = $setting + $this->defaults;
         $this->structurise($menu);
         $this->output = $this->drawSub('main', 0);
-        echo $this->output;
+        if ($show) {
+            echo $this->output;
+        } else {
+            return $this->output;
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerTheme\ControllerInterface;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
+use View;
 
 abstract class AbstractController implements ControllerInterface
 {
@@ -20,20 +21,34 @@ abstract class AbstractController implements ControllerInterface
 
     protected $parameters = [];
 
+    protected $data = [];
+
     /**
      * {@inheritdoc}
      */
-    public function __construct(ManagerThemeInterface $managerTheme)
+    public function __construct(ManagerThemeInterface $managerTheme, array $data = [])
     {
         $this->managerTheme = $managerTheme;
+        $this->data = $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getView(): string
+    public function getView(): ?string
     {
         return $this->view;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setView($view) : bool
+    {
+        if (View::exists($this->managerTheme->getViewName($view))) {
+            $this->view = $view;
+        }
+        return $view === $this->getView();
     }
 
     /**
@@ -70,7 +85,7 @@ abstract class AbstractController implements ControllerInterface
         return $this->managerTheme->view(
             $this->getView(),
             $this->getParameters($params)
-        )->with('controller', $this)->render();
+        )->with('controller', $this)->render();// : '';
     }
 
     /**

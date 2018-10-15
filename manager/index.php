@@ -179,23 +179,22 @@ if (8 !== $action && ManagerTheme::hasManagerAccess() === false) {
 // Update table active_user_sessions
 $modx->updateValidatedUserSession();
 
+$output = '';
+
 if ($action === null) {
     $_style = ManagerTheme::getStyle();
     // first we check to see if this is a frameset request
     if (!isset($_POST['updateMsgCount'])) {
         EvolutionCMS\Tracy\Debugger::$showBar = false;
         // this looks to be a top-level frameset request, so let's serve up a frameset
-        if (is_file(__DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/frames/1.php")) {
-            include_once __DIR__ . "/media/style/" . ManagerTheme::getTheme() . "/frames/1.php";
-        } else {
-            include_once __DIR__ . "/frames/1.php";
-        }
-        exit;
+        $output = ManagerTheme::handle(1, ['frame' => 1]);
     } else {
         if ($modx->hasPermission('messages')) {
             include_once __DIR__ . '/includes/messageCount.inc.php';
         }
     }
 } else {
-    echo ManagerTheme::handle($action);
+    $output = ManagerTheme::handle($action);
 }
+
+echo $output;

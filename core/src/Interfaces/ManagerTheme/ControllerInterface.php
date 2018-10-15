@@ -4,9 +4,11 @@ use EvolutionCMS\Interfaces\ManagerThemeInterface;
 
 interface ControllerInterface
 {
-    public function __construct(ManagerThemeInterface $managerTheme);
+    public function __construct(ManagerThemeInterface $managerTheme, array $data = []);
 
-    public function getView() : string;
+    public function getView() : ?string;
+
+    public function setView($view) : bool;
 
     public function canView() : bool;
 

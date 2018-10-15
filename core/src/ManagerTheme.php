@@ -2,7 +2,6 @@
 
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
-use Illuminate\Support\Arr;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -26,7 +25,7 @@ class ManagerTheme implements ManagerThemeInterface
 
     protected $actions = [
         /** frame management - show the requested frame */
-        1,
+        1 => Controllers\Frame::class,
         /** show the homepage */
         2,
         /** document data */
@@ -249,12 +248,12 @@ class ManagerTheme implements ManagerThemeInterface
         return $lang;
     }
 
-    public function getTheme()
+    public function getTheme() : string
     {
         return $this->theme;
     }
 
-    public function getLang()
+    public function getLang() : string
     {
         return $this->lang;
     }
@@ -366,7 +365,7 @@ class ManagerTheme implements ManagerThemeInterface
         return $action === null ? null : get_by_key($this->actions, $action, $action);
     }
 
-    public function handle($action)
+    public function handle($action, array $data = [])
     {
         $this->saveAction($action);
 
@@ -380,7 +379,7 @@ class ManagerTheme implements ManagerThemeInterface
             \in_array(Interfaces\ManagerTheme\PageControllerInterface::class, class_implements($controllerName), true)
         ) {
             /** @var Interfaces\ManagerTheme\PageControllerInterface $controller */
-            $controller = new $controllerName($this);
+            $controller = new $controllerName($this, $data);
             $controller->setIndex($action);
             if (! $controller->canView()) {
                 $this->core->webAlertAndQuit($this->getLexicon('error_no_privileges'));
