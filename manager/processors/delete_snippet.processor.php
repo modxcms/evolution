@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('site_snippets'), "id='{$id}'"));
+$name = EvolutionCMS\Models\SiteSnippet::findOrFail($id)->name;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeSnipFormDelete event
@@ -22,7 +22,7 @@ $modx->invokeEvent("OnBeforeSnipFormDelete",
 	));
 
 // delete the snippet.
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_snippets'), "id='{$id}'");
+EvolutionCMS\Models\SiteSnippet::destroy($id);
 
 // invoke OnSnipFormDelete event
 $modx->invokeEvent("OnSnipFormDelete",

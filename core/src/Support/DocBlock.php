@@ -65,7 +65,7 @@ class DocBlock
     {
         $params = array();
         if (!empty($string)) {
-            $string = str_replace('\r\n', '\n', $string);
+            $string = str_replace(['\r\n',"\n"], '\n', $string);
             $exp = explode('\n', $string);
             $docblock_start_found = false;
             $name_found = false;
