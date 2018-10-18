@@ -252,16 +252,20 @@ if(!function_exists('allChildren')) {
      */
     function allChildren($currDocID)
     {
-        $modx = evolutionCMS();
         $children = array();
-        $currDocID = $modx->getDatabase()->escape($currDocID);
-        $rs = $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_content'), "parent = '{$currDocID}'");
-        while ($child = $modx->getDatabase()->getRow($rs)) {
-            $children[] = $child['id'];
-            $children = array_merge($children, allChildren($child['id']));
+        $found = collect();
+
+        $docs = EvolutionCMS\Models\SiteContent::withTrashed()
+            ->where('parent', '=', $currDocID)
+            ->pluck('id')
+            ->toArray();
+
+        foreach ($docs as $id) {
+            $children[] = $id;
+            $found->push(allChildren($id));
         }
 
-        return $children;
+        return array_merge($children, $found->collapse()->toArray());
     }
 }
 

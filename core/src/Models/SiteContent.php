@@ -43,6 +43,12 @@ use EvolutionCMS\Traits;
  * @property bool $hidemenu
  * @property int $alias_visible
  *
+ * BelongsTo
+ * @property null|SiteContent $ancestor
+ *
+ * HasMany
+ * @property Eloquent\Collection $childrens
+ *
  * Virtual
  * @property-read \Carbon\Carbon $pub_at
  * @property-read \Carbon\Carbon $unPub_at
@@ -216,5 +222,17 @@ class SiteContent extends Eloquent\Model
     public function templateValues()
     {
         return $this->hasMany(SiteTmplvarContentvalue::class, 'contentid', 'id');
+    }
+
+    public function ancestor() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(__CLASS__, 'parent')
+            ->withTrashed();
+    }
+
+    public function childrens() : Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(__CLASS__, 'parent')
+            ->withTrashed();
     }
 }

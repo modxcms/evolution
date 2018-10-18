@@ -111,7 +111,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $pluginsTime = array();
     public $pluginCache = array();
     /**
-     * @deprecated use UrlProcessor::aliasListing
+     * @deprecated use UrlProcessor::getFacadeRoot()->aliasListing
      */
     public $aliasListing;
     public $lockedElements = null;
@@ -2794,18 +2794,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $parents = array();
         while ($id && $height--) {
             $thisid = $id;
-            if ($this->getConfig('aliaslistingfolder') == 1) {
-                $id = isset(UrlProcessor::aliasListing[$id]['parent']) ? UrlProcessor::aliasListing[$id]['parent'] : $this->getDatabase()->getValue("SELECT `parent` FROM " . $this->getDatabase()->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
-                if (!$id || $id == '0') {
-                    break;
-                }
+            $aliasListing = get_by_key(UrlProcessor::getFacadeRoot()->aliasListing, $id, [], 'is_array');
+            $tmp = get_by_key($aliasListing, 'parent');
+            if ($this->getConfig('aliaslistingfolder')) {
+                $id = $tmp ?? (int)Models\SiteContent::findOrNew($id)->parent;
             } else {
-                $id = UrlProcessor::aliasListing[$id]['parent'];
-                if (!$id) {
-                    break;
-                }
+                $id = $tmp;
             }
-            $parents[$thisid] = $id;
+
+            if ((int)$id === 0) {
+                break;
+            }
+            $parents[$thisid] = (int)$id;
         }
 
         return $parents;
@@ -2820,10 +2820,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $i = 0;
         while ($id && $i < 20) {
-            if ($top == UrlProcessor::aliasListing[$id]['parent']) {
+            if ($top == UrlProcessor::getFacadeRoot()->aliasListing[$id]['parent']) {
                 break;
             }
-            $id = UrlProcessor::aliasListing[$id]['parent'];
+            $id = UrlProcessor::getFacadeRoot()->aliasListing[$id]['parent'];
             $i++;
         }
 
@@ -2853,9 +2853,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $idx = array();
             while ($row = $this->getDatabase()->getRow($res)) {
                 $pAlias = '';
-                if (isset(UrlProcessor::aliasListing[$row['parent']])) {
-                    $pAlias .= !empty(UrlProcessor::aliasListing[$row['parent']]['path']) ? UrlProcessor::aliasListing[$row['parent']]['path'] . '/' : '';
-                    $pAlias .= !empty(UrlProcessor::aliasListing[$row['parent']]['alias']) ? UrlProcessor::aliasListing[$row['parent']]['alias'] . '/' : '';
+                if (isset(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']])) {
+                    $pAlias .= !empty(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path']) ? UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path'] . '/' : '';
+                    $pAlias .= !empty(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias']) ? UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias'] . '/' : '';
                 };
                 $children[$pAlias . $row['alias']] = $row['id'];
                 if ($row['isfolder'] == 1) {
@@ -2890,7 +2890,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $depth--;
 
                 foreach ($documentMap_cache[$id] as $childId) {
-                    $pkey = (strlen(UrlProcessor::aliasListing[$childId]['path']) ? "{UrlProcessor::aliasListing[$childId]['path']}/" : '') . UrlProcessor::aliasListing[$childId]['alias'];
+                    $pkey = (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']) ? "{UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']}/" : '') . UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
                     if (!strlen($pkey)) {
                         $pkey = "{$childId}";
                     }

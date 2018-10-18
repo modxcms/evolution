@@ -94,12 +94,12 @@ class Template extends AbstractController implements ManagerTheme\PageController
 
         if ($id > 0) {
             if (!$data->exists) {
-                $this->managerTheme->getCore()->webAlertAndQuit("No database record has been found for this template.");
+                $this->managerTheme->alertAndQuit('No database record has been found for this template.');
             }
 
             $_SESSION['itemname'] = $data->templatename;
             if ($data->locked == 1 && $_SESSION['mgrRole'] != 1) {
-                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->alertAndQuit('error_no_privileges');
             }
         } else {
             $_SESSION['itemname'] = $this->managerTheme->getLexicon("new_template");

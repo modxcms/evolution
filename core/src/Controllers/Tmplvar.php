@@ -129,7 +129,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         if ($id > 0) {
             $_SESSION['itemname'] = $data->caption;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->alertAndQuit('error_no_privileges');
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];

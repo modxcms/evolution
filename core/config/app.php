@@ -41,6 +41,7 @@ return [
         'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
+        'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
         'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseServiceProvider::class,
         'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreServiceProvider::class,

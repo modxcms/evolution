@@ -83,12 +83,12 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
         if ($data->exists) {
             if (empty($data->count())) {
-                $this->managerTheme->getCore()->webAlertAndQuit('Chunk not found for id ' . $id . '.');
+                $this->managerTheme->alertAndQuit('Chunk not found for id ' . $id . '.', false);
             }
 
             $_SESSION['itemname'] = $data->name;
             if ($data->locked === 1 && $_SESSION['mgrRole'] != 1) {
-                $this->managerTheme->getCore()->webAlertAndQuit($this->managerTheme->getLexicon("error_no_privileges"));
+                $this->managerTheme->alertAndQuit('error_no_privileges');
             }
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
