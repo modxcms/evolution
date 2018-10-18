@@ -157,7 +157,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** template/ snippet management */
         76 => Controllers\Resources::class,
         /** Export to file */
-        83,
+        83 => Controllers\ExportSite::class,
         /** Resource Selector  */
         84,
         /** Backup Manager */

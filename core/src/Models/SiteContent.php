@@ -55,6 +55,7 @@ use EvolutionCMS\Traits;
  * @property-read mixed $is_already_edit
  * @property-read mixed $node_name
  * @property-read mixed $un_pub_at
+ * @property-read bool $wasNull
  *
  * @mixin \Eloquent
  */
@@ -173,6 +174,11 @@ class SiteContent extends Eloquent\Model
     public function getUnPubAtAttribute()
     {
         return $this->convertTimestamp($this->unpub_date);
+    }
+
+    public function getWasNullAttribute() : bool
+    {
+        return trim($this->content) === '' && $this->template === 0;
     }
 
     public static function getLockedElements()

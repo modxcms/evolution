@@ -1,6 +1,9 @@
 <?php namespace EvolutionCMS\Legacy;
 
 use EvolutionCMS\Interfaces\ExportSiteInerface;
+use EvolutionCMS\Models;
+use Illuminate\Database\Eloquent;
+use UrlProcessor;
 
 class ExportSite implements ExportSiteInerface
 {
@@ -21,7 +24,7 @@ class ExportSite implements ExportSiteInerface
      */
     public $count;
     /**
-     * @var
+     * @var array
      */
     public $ignore_ids;
     /**
@@ -94,41 +97,62 @@ class ExportSite implements ExportSiteInerface
     {
         $modx = evolutionCMS();
 
-        if ($modx->getConfig('friendly_urls') == 0) {
-            $modx->setConfig('friendly_urls', 1);
-            $modx->setConfig('use_alias_path', 1);
+        if ($modx->getConfig('friendly_urls') === false) {
+            $modx->setConfig('friendly_urls', true);
+            $modx->setConfig('use_alias_path', true);
             $modx->clearCache('full');
         }
-        $modx->setConfig('make_folders', '1');
+        $modx->setConfig('make_folders', true);
     }
 
     /**
-     * @param string|array $ignore_ids
+     * @param string|array $ignoreIds
      * @param string|int|bool $noncache
      * @return int
      */
-    public function getTotal($ignore_ids = '', $noncache = '0')
+    public function getTotal($ignoreIds = '', $noncache = false)
     {
-        $modx = evolutionCMS();
-        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
-
-        $ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
-        if (count($ignore_ids) > 0) {
-            $ignore_ids = "AND NOT id IN ('" . implode("','", $ignore_ids) . "')";
-        } else {
-            $ignore_ids = '';
-        }
-
-        $this->ignore_ids = $ignore_ids;
-
-        $noncache = ($noncache == 1) ? '' : 'AND cacheable=1';
-        $where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-        $rs = $modx->getDatabase()->select('count(id)', $tbl_site_content, $where);
-        $this->total = (int)$modx->getDatabase()->getValue($rs);
-
+        $this->ignore_ids = $this->cleanIDs($ignoreIds);
+        $this->total = $this->makeQuery($this->ignore_ids, $noncache)->count();
         return $this->total;
     }
 
+    /**
+     * @param string|array $ids
+     */
+    protected function cleanIDs($ids)
+    {
+        return array_filter(
+            array_map('intval', \is_array($ids) ? $ids : explode(',', $ids))
+        );
+    }
+
+    /**
+     * @param string|array $ignoreIds
+     * @param bool|int|string $noncache
+     * @return Eloquent\Builder
+     */
+    protected function makeQuery($ignoreIds = '', $noncache = false) : Eloquent\Builder
+    {
+        /** @var Eloquent\Builder $query */
+        $query = Models\SiteContent::where('deleted', '=', 0)
+            ->where(function (Eloquent\Builder $query) {
+                $query->where(function (Eloquent\Builder $query) {
+                    $query->where('published', '=', 1)
+                        ->where('type', '=', 'document');
+                })->orWhere('isfolder', '=', 1);
+            });
+        if ((bool)$noncache === false) {
+            $query->where('cacheable', '=', 1);
+        }
+
+        $ignoreIds = $this->cleanIDs($ignoreIds);
+        if (!empty($ignoreIds)) {
+            $query->whereNotIn('id', $ignoreIds);
+        }
+
+        return $query;
+    }
     /**
      * @param string $directory
      * @return bool
@@ -237,8 +261,6 @@ class ExportSite implements ExportSiteInerface
         global $_lang;
         $modx = evolutionCMS();
 
-        $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
-
         $ignore_ids = $this->ignore_ids;
         $dirpath = $this->targetDir . '/';
 
@@ -267,25 +289,26 @@ class ExportSite implements ExportSiteInerface
         $ph['msg2'] = $_lang['export_site_success_skip_dir'];
         $msg_success_skip_dir = $this->parsePlaceholder($tpl, $ph);
 
-        $fields = "id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, published";
-        $noncache = $_POST['includenoncache'] == 1 ? '' : 'AND cacheable=1';
-        $where = "parent = '{$parent}' AND deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-        $rs = $modx->getDatabase()->select($fields, $tbl_site_content, $where);
+        $data = $this->makeQuery($ignore_ids, (bool)get_by_key($_POST, 'includenoncache', false))
+            ->where('parent', '=', $parent)
+            ->get();
 
         $ph = array();
         $ph['total'] = $this->total;
         $folder_permission = octdec($modx->getConfig('new_folder_permissions'));
-        while ($row = $modx->getDatabase()->getRow($rs)) {
+        /** @var Models\SiteContent $item */
+        foreach ($data as $item) {
             $this->count++;
-            $filename = '';
+            $row = $item->toArray();
             $row['count'] = $this->count;
-            $row['url'] = $modx->makeUrl($row['id']);
+            $row['url'] = UrlProcessor::makeUrl($row['id']);
+            $filename = '';
 
-            if (!$row['wasNull']) { // needs writing a document
+            if ($item->wasNull === false) { // needs writing a document
                 $docname = $this->getFileName($row['id'], $row['alias'], $prefix, $suffix);
                 $filename = $dirpath . $docname;
                 if (!is_file($filename)) {
-                    if ($row['published'] === '1') {
+                    if ($row['published'] === 1) {
                         $status = $this->makeFile($row['id'], $filename);
                         switch ($status) {
                             case 'failed_no_write'   :

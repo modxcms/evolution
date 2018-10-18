@@ -30,7 +30,8 @@ trait Settings
         'manager_menu_height' => 'float',
         'manager_tree_width' => 'float',
         'show_picker' => 'bool',
-        'show_fullscreen_btn' => 'bool'
+        'show_fullscreen_btn' => 'bool',
+        'export_includenoncache' => 'bool'
     ];
 
     /**
