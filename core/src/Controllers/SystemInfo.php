@@ -13,11 +13,12 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
      */
     protected $database;
 
-    public function __construct(ManagerThemeInterface $managerTheme)
+    public function __construct(ManagerThemeInterface $managerTheme, array $data = [])
     {
-        parent::__construct($managerTheme);
+        parent::__construct($managerTheme, $data);
         $this->database = $this->managerTheme->getCore()->getDatabase();
     }
+
     /**
      * {@inheritdoc}
      */
