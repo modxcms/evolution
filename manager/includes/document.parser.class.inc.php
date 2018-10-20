@@ -2859,7 +2859,6 @@ class DocumentParser
         if ($this->config['seostrict'] === '1') {
             $this->sendStrictURI();
         }
-        $this->webAlertAndQuit('asd', '#');
         $this->prepareResponse();
     }
 
