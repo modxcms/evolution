@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `type` tinyint NOT NULL DEFAULT 1 COMMENT '1- information, 2 - warning, 3- error',
   `user` integer NOT NULL DEFAULT 0 COMMENT 'link to user table',
   `usertype` tinyint NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
-  `source` varchar(50) NOT NULL DEFAULT '',
+  `source` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)

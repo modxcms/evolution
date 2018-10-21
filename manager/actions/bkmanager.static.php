@@ -8,7 +8,7 @@ if (!$modx->hasPermission('bk_manager')) {
 
 $dbase = $modx->getDatabase()->getConfig('database');
 
-if (!$modx->getConfig(snapshot_path)) {
+if (!$modx->getConfig('snapshot_path')) {
     if (is_dir(MODX_BASE_PATH . 'temp/backup/')) {
         $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'temp/backup/');
     } else {
