@@ -1360,7 +1360,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <?php
                     /*******************************
                      * Document Access Permissions */
-                    if($use_udperms == 1) {
+                    if($modx->getConfig('use_udperms')) {
                         $groupsarray = array();
                         $sql = '';
 

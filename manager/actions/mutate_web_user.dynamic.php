@@ -498,7 +498,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				</table>
 			</div>
 			<?php
-			if($use_udperms == 1) {
+			if($modx->getConfig('use_udperms')) {
 
 			$groupsarray = array();
 

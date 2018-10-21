@@ -49,6 +49,9 @@ use EvolutionCMS\Traits;
  * HasMany
  * @property Eloquent\Collection $childrens
  *
+ * BelongsToMany
+ * @property Eloquent\Collection $documentGroups
+ *
  * Virtual
  * @property-read \Carbon\Carbon $pub_at
  * @property-read \Carbon\Carbon $unPub_at
@@ -234,5 +237,10 @@ class SiteContent extends Eloquent\Model
     {
         return $this->hasMany(__CLASS__, 'parent')
             ->withTrashed();
+    }
+
+    public function documentGroups(): Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(DocumentgroupName::class, 'document_groups', 'document', 'document_group');
     }
 }

@@ -34,7 +34,7 @@ class WebUser extends Eloquent\Model
         return $this->hasOne(WebUserAttribute::class,'internalKey','id');
     }
 
-    public function roles()
+    public function memberGroups()
     {
         return $this->hasMany(WebGroup::class,'webuser','id');
     }
@@ -46,7 +46,7 @@ class WebUser extends Eloquent\Model
 
     public function delete()
     {
-        $this->roles()->delete();
+        $this->memberGroups()->delete();
         $this->attributes()->delete();
         $this->settings()->delete();
 

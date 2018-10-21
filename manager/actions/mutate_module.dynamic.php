@@ -636,7 +636,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<h2 class="tab"><?= $_lang['access_permissions'] ?></h2>
 			<script type="text/javascript">tp.addTabPage(document.getElementById("tabPermissions"));</script>
 			<div class="container container-body">
-				<?php if($use_udperms == 1) : ?>
+				<?php if($modx->getConfig('use_udperms')) : ?>
 					<?php
 					// fetch user access permissions for the module
 					$rs = $modx->getDatabase()->select('usergroup', $tbl_site_module_access, "module='{$id}'");

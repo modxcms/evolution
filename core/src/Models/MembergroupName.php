@@ -8,13 +8,27 @@ use Illuminate\Database\Eloquent;
  * @property int $id
  * @property string $name
  *
+ * BelongsToMany
+ * @property Eloquent\Collection $users
+ * @property Eloquent\Collection $documentGroups
+ *
  * @mixin \Eloquent
  */
 class MembergroupName extends Eloquent\Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	protected $fillable = [
-		'name'
-	];
+    protected $fillable = [
+        'name'
+    ];
+
+    public function users(): Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(ManagerUser::class, 'member_groups', 'user_group', 'member');
+    }
+
+    public function documentGroups(): Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(DocumentgroupName::class, 'membergroup_access', 'membergroup', 'documentgroup');
+    }
 }

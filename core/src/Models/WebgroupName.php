@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent;
  * @property int $id
  * @property string $name
  *
+ * BelongsToMany
+ * @property Eloquent\Collection $users
+ * @property Eloquent\Collection $documentGroups
+ *
  * @mixin \Eloquent
  */
 class WebgroupName extends Eloquent\Model
@@ -17,4 +21,14 @@ class WebgroupName extends Eloquent\Model
 	protected $fillable = [
 		'name'
 	];
+
+    public function users(): Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(WebUser::class, 'web_groups', 'webgroup', 'webuser');
+    }
+
+    public function documentGroups(): Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(DocumentgroupName::class, 'webgroup_access', 'webgroup', 'documentgroup');
+    }
 }

@@ -769,7 +769,7 @@ if($which_browser == 'default') {
 					</tr>
 				</table>
 			</div>
-			<?php if($use_udperms == 1) {
+			<?php if($modx->getConfig('use_udperms')) {
 
 			$groupsarray = array();
 

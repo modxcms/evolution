@@ -32,9 +32,14 @@ class ManagerUser extends Eloquent\Model
         return $this->hasOne(UserAttribute::class,'internalKey','id');
     }
 
-    public function roles()
+    public function memberGroups()
     {
         return $this->hasMany(MemberGroup::class,'member','id');
+    }
+
+    public function groups() : Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(MembergroupName::class, 'member_groups', 'member', 'user_group');
     }
 
     public function settings()
@@ -44,7 +49,7 @@ class ManagerUser extends Eloquent\Model
 
     public function delete()
     {
-        $this->roles()->delete();
+        $this->memberGroups()->delete();
         $this->attributes()->delete();
         $this->settings()->delete();
 

@@ -110,7 +110,7 @@ switch($input['mode']) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['webgroup'] = (int)$user_groups[$i];
-					$webUser->roles()->create($field);
+					$webUser->memberGroups()->create($field);
 				}
 			}
 		}
@@ -237,12 +237,12 @@ switch($input['mode']) {
 		// first, check that up_perms are switched on!
 		if($modx->getConfig('use_udperms') == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$webUser->roles()->delete();
+			$webUser->memberGroups()->delete();
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['webgroup'] = (int)$user_groups[$i];
-					$webUser->roles()->create($field);
+					$webUser->memberGroups()->create($field);
 				}
 			}
 		}
