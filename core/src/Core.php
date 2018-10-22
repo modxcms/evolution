@@ -5096,6 +5096,34 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->pluginEvent = array();
     }
 
+    protected function restoreEvent()
+    {
+        $event = $this->event->getPreviousEvent();
+        if ($event) {
+            unset($this->event);
+            $this->event = $event;
+            $this->Event = &$this->event;
+        } else {
+            $this->event->activePlugin = '';
+        }
+
+        return $event;
+    }
+
+    protected function storeEvent()
+    {
+        if ($this->event->activePlugin !== '') {
+            $event = new Event;
+            $event->setPreviousEvent($this->event);
+            $this->event = $event;
+            $this->Event = &$this->event;
+        } else {
+            $event = $this->event;
+        }
+
+        return $event;
+    }
+
     /**
      * Invoke an event.
      *
@@ -5111,8 +5139,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
+        $this->storeEvent();
+
         $out = $this['events']->dispatch('evolution.' . $evtName, [$extParams]);
         if ($out === false) {
+            $this->restoreEvent();
             return false;
         }
 
@@ -5125,6 +5156,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (!isset ($this->pluginEvent[$evtName])) {
+            $this->restoreEvent();
             return $results ?? false;
         }
 
@@ -5176,7 +5208,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        $e->activePlugin = '';
+        $this->restoreEvent();
         return $results;
     }
 

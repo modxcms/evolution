@@ -12,6 +12,10 @@ class Event implements Interfaces\EventInterface
     public $activated = false;
     public $activePlugin = '';
     public $params = array();
+    /**
+     * @var null|Event
+     */
+    private $previousEvent;
 
     /**
      * @param string $name Name of the event
@@ -20,6 +24,19 @@ class Event implements Interfaces\EventInterface
     {
         $this->_resetEventObject();
         $this->name = $name;
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function setPreviousEvent($event)
+    {
+        $this->previousEvent = $event;
+    }
+
+    public function getPreviousEvent()
+    {
+        return $this->previousEvent;
     }
 
     /**
