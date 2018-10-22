@@ -1756,7 +1756,7 @@
           title: '',
           url: '',
           width: '20rem',
-          wrap: w.main.document.body, // parentNode
+          wrap: a.wrap || w.main.document.body, // parentNode
           zIndex: 10500,
           w: null,
           show: function() {
