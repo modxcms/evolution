@@ -1,44 +1,45 @@
 <?php
 
-	/**
-	 *	System Alert Message Queue Display file
-	 *	Written By Raymond Irving, April, 2005
-	 *
-	 *	Used to display system alert messages inside the browser
-	 *
-	 */
+/**
+ *    System Alert Message Queue Display file
+ *    Written By Raymond Irving, April, 2005
+ *
+ *    Used to display system alert messages inside the browser
+ *
+ */
 
-	$sysMsgs = "";
-	$limit = count($SystemAlertMsgQueque);
-	for($i=0;$i<$limit;$i++) {
-		$sysMsgs .= $SystemAlertMsgQueque[$i]."<hr sys/>";
-	}
-	// reset message queque
-	unset($_SESSION['SystemAlertMsgQueque']);
-	$_SESSION['SystemAlertMsgQueque'] = array();
-	$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
+$sysMsgs = "";
+$limit = count($SystemAlertMsgQueque);
+for ($i = 0; $i < $limit; $i++) {
+    $sysMsgs .= $SystemAlertMsgQueque[$i] . "<hr sys/>";
+}
+// reset message queque
+unset($_SESSION['SystemAlertMsgQueque']);
+$_SESSION['SystemAlertMsgQueque'] = array();
+$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-	if($sysMsgs!="") {
-?>
-
-<?php // fetch the styles
-	echo '<link rel="stylesheet" type="text/css" href="'.MODX_MANAGER_URL.'media/style/'.ManagerTheme::getTheme().'/style.css'.'" />';
-?>
-<script type="text/javascript">
-// <![CDATA[
-window.addEvent('domready', function() {
-			var sysAlert = new Element('div').setProperties({
-				'class': 'sysAlert'
-			});
-			sysAlert.innerHTML = '<?php echo $modx->getDatabase()->escape($sysMsgs);?>';
-			var boxHtml = new MooPrompt('<?php echo $_lang['sys_alert']; ?>', sysAlert, {
-				buttons: 1,
-				button1: 'Ok',
-				width: 500
-			});
-});
-// ]]>
-</script>
-<?php
-	}
+if ($sysMsgs != "") {
+    // fetch the styles
+    echo '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . ManagerTheme::getTheme() . '/style.css' . '" />';
+    ?>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (parent.modx) {
+          parent.modx.popup({
+            title: '<?php echo $_lang['sys_alert']; ?>',
+            content: '<?php echo $modx->getDatabase()
+                ->escape($sysMsgs);?>',
+            wrap: document.body,
+            type: 'warning',
+            width: '400px',
+            hide: 0,
+            hover: 0,
+            overlay: 1,
+            overlayclose: 1
+          });
+        }
+      });
+    </script>
+    <?php
+}
 ?>
