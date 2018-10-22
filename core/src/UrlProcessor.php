@@ -62,7 +62,7 @@ class UrlProcessor
     public function makeFriendlyURL($pre, $suff, $alias, bool $isfolder = false, int $id = 0) : string
     {
         if ($id === $this->core->getConfig('site_start') && $this->core->getConfig('seostrict')) {
-            $url = $this->core->getConfig('base_url');
+            $url = $this->core->getConfig('base_url', '/');
         } else {
             $tmp = explode('/', $alias);
             $alias = array_pop($tmp);
