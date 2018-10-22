@@ -54,7 +54,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     ];
 
     /** @var Models\SiteTmplvar|null */
-    private $data;
+    private $object;
 
     /**
      * {@inheritdoc}
@@ -94,11 +94,11 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []): array
+    public function process() : bool
     {
-        $this->data = $this->parameterData();
-        return [
-            'data' => $this->data,
+        $this->object = $this->parameterData();
+        $this->parameters = [
+            'data' => $this->object,
             'categories' => $this->parameterCategories(),
             'types' => $this->parameterTypes(),
             'display' => $this->parameterDisplay(),
@@ -111,6 +111,8 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'origin' => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
             'originId' => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
         ];
+
+        return true;
     }
 
     /**
@@ -264,8 +266,8 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'select' => 1,
             'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
             'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
-            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
-            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
+            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
             'cancel' => 1
         ];
     }
@@ -277,7 +279,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
 
     public function isSelectedTemplate(Models\SiteTemplate $item)
     {
-        return ($this->data->templates->contains('id', $item->getKey()) || \in_array($item->getKey(),
+        return ($this->object->templates->contains('id', $item->getKey()) || \in_array($item->getKey(),
                 $this->getSelectedTplFromRequest(), true));
     }
 }

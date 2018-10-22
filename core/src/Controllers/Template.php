@@ -15,7 +15,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
     ];
 
     /** @var Models\SiteTemplate|null */
-    private $data;
+    private $object;
 
     /**
      * {@inheritdoc}
@@ -55,20 +55,20 @@ class Template extends AbstractController implements ManagerTheme\PageController
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []): array
+    public function process() : bool
     {
-        $this->data = $this->parameterData();
-        return [
-            'data' => $this->data,
+        $this->object = $this->parameterData();
+        $this->parameters = [
+            'data' => $this->object,
             'categories' => $this->parameterCategories(),
             'tvSelected' => $this->parameterTvSelected(),
             'categoriesWithTv' => $this->parameterCategoriesWithTv(
-                $this->data->tvs->reject(function (Models\SiteTmplvar $item) {
+                $this->object->tvs->reject(function (Models\SiteTmplvar $item) {
                     return $item->category === 0;
                 })->pluck('id')->toArray()
             ),
             'tvOutCategory' => $this->parameterTvOutCategory(
-                $this->data->tvs->reject(function (Models\SiteTmplvar $item) {
+                $this->object->tvs->reject(function (Models\SiteTmplvar $item) {
                     return $item->category !== 0;
                 })->pluck('id')->toArray()
             ),
@@ -76,6 +76,8 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'events' => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
+
+        return true;
     }
 
     /**
@@ -186,8 +188,8 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'select' => 1,
             'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
             'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
-            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
-            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
+            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
             'cancel' => 1
         ];
     }

@@ -14,7 +14,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     ];
 
     /** @var Models\SitePlugin|null */
-    private $data;
+    private $object;
 
     protected $internal;
 
@@ -56,11 +56,12 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []): array
+    public function process() : bool
     {
-        $this->data = $this->parameterData();
-        return [
-            'data' => $this->data,
+        $this->object = $this->parameterData();
+
+        $this->parameters = [
+            'data' => $this->object,
             'categories' => $this->parameterCategories(),
             'action' => $this->getIndex(),
             'importParams' => $this->parameterImportParams(),
@@ -69,6 +70,8 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             'events' => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
+
+        return true;
     }
 
     /**
@@ -127,7 +130,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
 					INNER JOIN " . $this->managerTheme->getCore()
                     ->getDatabase()
                     ->getFullTableName("site_plugins") . " 
-                    sp ON sp.id=smd.resource", "smd.resource='{$this->data->getKey()}' AND sm.enable_sharedparams='1'",
+                    sp ON sp.id=smd.resource", "smd.resource='{$this->object->getKey()}' AND sm.enable_sharedparams='1'",
                 'sm.name');
         while ($row = $this->managerTheme->getCore()
             ->getDatabase()
@@ -142,10 +145,10 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     {
         $out = '';
         $internal = array();
-        if (isset($this->data->plugincode)) {
+        if (isset($this->object->plugincode)) {
             $snippetcode = $this->managerTheme->getCore()
                 ->getDatabase()
-                ->escape($this->data->plugincode);
+                ->escape($this->object->plugincode);
             $parsed = $this->managerTheme->getCore()->parseDocBlockFromString($snippetcode);
             $out = $this->managerTheme->getCore()->convertDocBlockIntoList($parsed);
             $internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
@@ -186,8 +189,8 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             'select' => 1,
             'save' => $this->managerTheme->getCore()->hasPermission('save_plugin'),
             'new' => $this->managerTheme->getCore()->hasPermission('new_plugin'),
-            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_plugin'),
-            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_plugin'),
+            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_plugin'),
+            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_plugin'),
             'cancel' => 1
         ];
     }

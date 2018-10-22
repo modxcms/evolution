@@ -16,7 +16,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     ];
 
     /** @var Models\SiteHtmlsnippet|null */
-    private $data;
+    private $object;
 
     protected $which_editor;
 
@@ -58,17 +58,19 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []): array
+    public function process() : bool
     {
-        $this->data = $this->parameterData();
-        return [
-            'data' => $this->data,
+        $this->object = $this->parameterData();
+        $this->parameters = [
+            'data' => $this->object,
             'categories' => $this->parameterCategories(),
             'which_editor' => $this->which_editor,
             'action' => $this->getIndex(),
             'events' => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
+
+        return true;
     }
 
     /**
@@ -160,7 +162,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
         if (!empty($this->which_editor)) {
             $which_editor = $this->which_editor;
         } else {
-            $which_editor = $this->data->editor_name != 'none' ? $this->data->editor_name : 'none';
+            $which_editor = $this->object->editor_name != 'none' ? $this->object->editor_name : 'none';
         }
         $out = $this->managerTheme->getCore()->invokeEvent('OnRichTextEditorInit', [
             'editor' => $which_editor,
@@ -193,8 +195,8 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
             'select' => 1,
             'save' => $this->managerTheme->getCore()->hasPermission('save_chunk'),
             'new' => $this->managerTheme->getCore()->hasPermission('new_chunk'),
-            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_chunk'),
-            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_chunk'),
+            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_chunk'),
+            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_chunk'),
             'cancel' => 1
         ];
     }

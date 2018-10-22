@@ -14,7 +14,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     ];
 
     /** @var Models\SiteSnippet|null */
-    private $data;
+    private $object;
 
     /**
      * {@inheritdoc}
@@ -54,11 +54,12 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []): array
+    public function process() : bool
     {
-        $this->data = $this->parameterData();
-        return [
-            'data' => $this->data,
+        $this->object = $this->parameterData();
+
+        $this->parameters = [
+            'data' => $this->object,
             'categories' => $this->parameterCategories(),
             'action' => $this->getIndex(),
             'importParams' => $this->parameterImportParams(),
@@ -66,6 +67,8 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
             'events' => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
+
+        return true;
     }
 
     /**
@@ -129,7 +132,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
             ->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm
             INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
             INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd
-            .resource='{$this->data->getKey()}' AND sm.enable_sharedparams=1", 'sm.name');
+            .resource='{$this->object->getKey()}' AND sm.enable_sharedparams=1", 'sm.name');
 
         while ($row = $this->managerTheme->getCore()
             ->getDatabase()
@@ -143,10 +146,10 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterDocBlockList()
     {
         $out = '';
-        if (isset($this->data->snippet)) {
+        if (isset($this->object->snippet)) {
             $snippetcode = $this->managerTheme->getCore()
                 ->getDatabase()
-                ->escape($this->data->snippet);
+                ->escape($this->object->snippet);
             $parsed = $this->managerTheme->getCore()->parseDocBlockFromString($snippetcode);
             $out = $this->managerTheme->getCore()->convertDocBlockIntoList($parsed);
         }
@@ -184,8 +187,8 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
             'select' => 1,
             'save' => $this->managerTheme->getCore()->hasPermission('save_snippet'),
             'new' => $this->managerTheme->getCore()->hasPermission('new_snippet'),
-            'duplicate' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('new_snippet'),
-            'delete' => !empty($this->data->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
+            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
             'cancel' => 1
         ];
     }
