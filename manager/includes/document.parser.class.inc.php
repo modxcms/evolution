@@ -5443,6 +5443,13 @@ class DocumentParser
             return false;
         }
 
+        if ($this->event->activePlugin != '') {
+            $event = new SystemEvent;
+            $event->setPreviousEvent($this->event);
+            $this->event = $event;
+            $this->Event = &$this->event;
+        }
+
         $results = null;
         foreach ($this->pluginEvent[$evtName] as $pluginName) { // start for loop
             if ($this->dumpPlugins) {
@@ -5492,7 +5499,16 @@ class DocumentParser
             }
         }
 
-        $e->activePlugin = '';
+        $event = $this->event->getPreviousEvent();
+
+        if ($event) {
+            unset($this->event);
+            $this->event = $event;
+            $this->Event = &$this->event;
+        } else {
+            $this->event->activePlugin = '';
+        }
+
         return $results;
     }
 
@@ -6760,6 +6776,12 @@ class SystemEvent
     public $params = array();
 
     /**
+     * Previous event object
+     * @var SystemEvent
+     */
+    private $previousEvent;
+
+    /**
      * @param string $name Name of the event
      */
     public function __construct($name = "")
@@ -6831,5 +6853,18 @@ class SystemEvent
         $this->setOutput(null);
         $this->_propagate = true;
         $this->activated = false;
+    }
+
+    /**
+     * @param SystemEvent $event
+     */
+    public function setPreviousEvent($event)
+    {
+        $this->previousEvent = $event;
+    }
+
+    public function getPreviousEvent()
+    {
+        return $this->previousEvent;
     }
 }
