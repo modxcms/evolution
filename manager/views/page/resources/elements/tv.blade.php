@@ -24,7 +24,9 @@
                             {!! $item->description !!}
                         </span>
                     </a>
-                    {{ ManagerTheme::getTextDir('&rlm;') }}
+                    @if(ManagerTheme::getTextDir() !== 'ltr')
+                    &rlm;
+                    @endif
                 </span>
             </div>
             <div class="btnCell">

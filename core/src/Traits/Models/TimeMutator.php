@@ -11,7 +11,7 @@ trait TimeMutator
         }
 
         $out = $this->asDateTime($value)
-            ->addSeconds(evolutionCMS()->getConfig('server_offset_time', 0));
+            ->addSeconds(evolutionCMS()->getConfig('server_offset_time'));
 
         $out::setToStringFormat(evolutionCMS()->normalizeFormat());
 

@@ -63,7 +63,7 @@
     /**
      * "View Children" tab setup
      */
-    $maxpageSize = $modx->config['number_of_results'];
+    $maxpageSize = $modx->getConfig('number_of_results');
     define('MAX_DISPLAY_RECORDS_NUM', $maxpageSize);
 
     // Get child document count
@@ -152,16 +152,16 @@
         foreach($resource as $k => $children) {
 
             switch($children['id']) {
-                case $modx->config['site_start']            :
+                case $modx->getConfig('site_start')            :
                     $icon = $_style['tree_page_home'];
                     break;
-                case $modx->config['error_page']            :
+                case $modx->getConfig('error_page')            :
                     $icon = $_style['tree_page_404'];
                     break;
-                case $modx->config['site_unavailable_page'] :
+                case $modx->getConfig('site_unavailable_page') :
                     $icon = $_style['tree_page_hourglass'];
                     break;
-                case $modx->config['unauthorized_page']     :
+                case $modx->getConfig('unauthorized_page')     :
                     $icon = $_style['tree_page_info'];
                     break;
                 default:
@@ -245,7 +245,7 @@
                 }
             },
             view: function() {
-                window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
+                window.open('<?= ($modx->getConfig('friendly_urls')) ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
             }
         };
 
@@ -261,7 +261,7 @@
 
     <div class="tab-pane" id="childPane">
         <script type="text/javascript">
-            docSettings = new WebFXTabPane(document.getElementById("childPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+            docSettings = new WebFXTabPane(document.getElementById("childPane"), <?= ($modx->getConfig('remember_last_tab') ? 'true' : 'false') ?> );
         </script>
 
         <!-- General -->
@@ -403,7 +403,7 @@
             </div>
         </div><!-- end tab-page -->
 
-    @if($modx->config['cache_type'] != 2)
+    @if($modx->getConfig('cache_type'))
         <!-- Page Source -->
         <div class="tab-page" id="tabSource">
             <h2 class="tab">{{ ManagerTheme::getLexicon('page_data_source') }}</h2>

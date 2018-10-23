@@ -111,5 +111,12 @@ return [
     'login_form_position' => 'left',
     'login_form_style' => 'dark',
     'manager_menu_position' => 'top',
-    'tinymce4_skin' => 'lightgray'
+    'tinymce4_skin' => 'lightgray',
+    'allow_manager_access' => 1,
+    'manager_login_startup' => 0,
+    'base_url' => '/',
+    'virtual_dir' => '',
+    'show_picker' => 0,
+    'show_newresource_btn' => 1,
+    'show_fullscreen_btn' => 0
 ];

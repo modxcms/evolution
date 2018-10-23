@@ -275,7 +275,7 @@ class ManagerTheme implements ManagerThemeInterface
         return ($notEmpty === null) ? $this->textDir : (empty($this->textDir) ? '' : $notEmpty);
     }
 
-    public function setTextDir($textDir)
+    public function setTextDir($textDir = 'rtl')
     {
         $this->textDir = $textDir === 'rtl' ? 'rtl' : 'ltr';
     }
@@ -477,7 +477,6 @@ class ManagerTheme implements ManagerThemeInterface
                             @session_destroy();
                             //					setcookie(session_name(), '', 0, MODX_BASE_URL);
                         }
-                        $installGoingOn = 1;
                     }
                 }
             }
@@ -508,187 +507,137 @@ class ManagerTheme implements ManagerThemeInterface
     public function hasManagerAccess()
     {
         // check if user is allowed to access manager interface
-        return $this->getCore()->getConfig('allow_manager_access', true) === true;
+        return $this->getCore()->getConfig('allow_manager_access') === true;
     }
 
     public function getManagerStartupPageId()
     {
-        $homeId = (int)$this->getCore()->getConfig('manager_login_startup', 0);
-        if($homeId <= 0) {
-            $homeId = $this->getCore()->getConfig('site_start', 1);
+        $homeId = (int)$this->getCore()->getConfig('manager_login_startup');
+        if ($homeId <= 0) {
+            $homeId = $this->getCore()->getConfig('site_start');
         }
 
         return $homeId;
     }
 
-    public function renderAccessPage()
+    public function renderAccessPage() : string
     {
-        $homeurl = $this->getCore()->makeUrl($this->getManagerStartupPageId());
-        $logouturl = MODX_MANAGER_URL.'index.php?a=8';
+        return $this->makeTemplate('manager.lockout', 'manager_lockout_tpl');
+    }
 
-        $this->getCore()->setPlaceholder('modx_charset',$this->getCore()->get('ManagerTheme')->getCharset());
-        $this->getCore()->setPlaceholder('theme',$this->getCore()->get('ManagerTheme')->getTheme());
-        $this->getCore()->setPlaceholder(
-            'favicon',
-            (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : 'media/style/' . $this->getTheme() . '/images/') . 'favicon.ico'
-        );
-
-        $this->getCore()->setPlaceholder('site_name',$this->getCore()->getPhpCompat()->entities($this->getCore()->getConfig('site_name')));
-        $this->getCore()->setPlaceholder('logo_slogan',$this->getLexicon("logo_slogan"));
-        $this->getCore()->setPlaceholder('manager_lockout_message',$this->getLexicon("manager_lockout_message"));
-
-        $this->getCore()->setPlaceholder('home',$this->getLexicon("home"));
-        $this->getCore()->setPlaceholder('homeurl',$homeurl);
-        $this->getCore()->setPlaceholder('logout',$this->getLexicon("logout"));
-        $this->getCore()->setPlaceholder('logouturl',$logouturl);
-        $this->getCore()->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/');
-        $this->getCore()->setPlaceholder('year',date('Y'));
-
-        // set login logo image
-        $logo = $this->getCore()->getConfig('login_logo', '');
-        if ($logo !== '') {
-            $logo = MODX_SITE_URL . $logo;
-        } else {
-            $logo = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-logo.png';
-        }
-        $this->getCore()->setPlaceholder('login_logo', $logo);
-
-        // set login background image
-        $bg = $this->getCore()->getConfig('login_bg', '');
-        if ($bg !== '') {
-            $bg = MODX_SITE_URL . $bg;
-        } else {
-            $bg = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-background.jpg';
-        }
-        $this->getCore()->setPlaceholder('login_bg', $bg);
-
-        // set form position css class
-        $this->getCore()->setPlaceholder('login_form_position_class', 'loginbox-' . $this->getCore()->getConfig('login_form_position'));
-        $this->getCore()->setPlaceholder('manager_theme_style', $this->getThemeStyle());
-
-        // load template
-        if(!isset($this->getCore()->config['manager_lockout_tpl']) || empty($this->getCore()->config['manager_lockout_tpl'])) {
-            $this->getCore()->config['manager_lockout_tpl'] = MODX_MANAGER_PATH . 'media/style/common/manager.lockout.tpl';
+    public function getTemplate($name, $config = null)
+    {
+        if(!empty($config) && empty($this->getCore()->getConfig($config))) {
+            $this->getCore()->setConfig($config, MODX_MANAGER_PATH . 'media/style/common/' . $name . '.tpl');
         }
 
-        $target = $this->getCore()->getConfig('manager_lockout_tpl');
+        $target = $this->getCore()->getConfig($config);
         $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
         $target = $this->getCore()->mergeSettingsContent($target);
 
-        if (substr($target,0,1)==='@') {
-            if (substr($target,0,6)==='@CHUNK') {
-                $target = trim(substr($target,7));
-                $lockout_tpl = $this->getCore()->getChunk($target);
-            } elseif (substr($target,0,5)==='@FILE') {
-                $target = trim(substr($target,6));
-                $lockout_tpl = file_get_contents($target);
+        if ($target[0] === '@') {
+            if (stripos($target, '@CHUNK')) {
+                $target = trim(substr($target, 7));
+                $content = $this->getCore()->getChunk($target);
+            } elseif (stripos($target, '@FILE')) {
+                $target = trim(substr($target, 6));
+                $content = file_get_contents($target);
             } else {
-                $lockout_tpl = '';
+                $content = '';
             }
         } else {
             $chunk = $this->getCore()->getChunk($target);
             if ($chunk!==false && !empty($chunk)) {
-                $lockout_tpl = $chunk;
+                $content = $chunk;
             } elseif (is_file(MODX_BASE_PATH . $target)) {
                 $target = MODX_BASE_PATH . $target;
-                $lockout_tpl = file_get_contents($target);
-            } elseif (is_file($this->getThemeDir() . 'manager.lockout.tpl')) {
-                $target = $this->getThemeDir() . 'manager.lockout.tpl';
-                $lockout_tpl = file_get_contents($target);
-            } elseif (is_file($this->getThemeDir() . 'templates/actions/manager.lockout.tpl')) {
-                $target = $this->getThemeDir() . 'templates/actions/manager.lockout.tpl';
-                $lockout_tpl = file_get_contents($target);
-            } elseif (is_file($this->getThemeDir() . 'html/manager.lockout.html')) { // ClipperCMS compatible
-                $target = $this->getThemeDir() . 'html/manager.lockout.html';
-                $lockout_tpl = file_get_contents($target);
+                $content = file_get_contents($target);
+            } elseif (is_file($this->getThemeDir() . $name . '.tpl')) {
+                $target = $this->getThemeDir() . $name . '.tpl';
+                $content = file_get_contents($target);
+            } elseif (is_file($this->getThemeDir() . 'templates/actions/' . $name . '.tpl')) {
+                $target = $this->getThemeDir() . 'templates/actions/' . $name . '.tpl';
+                $content = file_get_contents($target);
+            } elseif (is_file($this->getThemeDir() . 'html/' . $name . '.html')) { // ClipperCMS compatible
+                $target = $this->getThemeDir() . 'html/' . $name . '.html';
+                $content = file_get_contents($target);
             } else {
-                $target = MODX_MANAGER_PATH . 'media/style/common/manager.lockout.tpl';
-                $lockout_tpl = file_get_contents($target);
+                $target = MODX_MANAGER_PATH . 'media/style/common/' . $name . '.tpl';
+                $content = file_get_contents($target);
             }
         }
 
-        /**
-         * merge placeholders
-         */
-        $lockout_tpl = $this->getCore()->mergePlaceholderContent($lockout_tpl);
+        return $content;
+    }
 
-        /**
-         * little tweak for newer parsers
-         */
-        $regx = (strpos($lockout_tpl, '[[+') !==false) ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~';
+    public function makeTemplate($name, $config = null, array $placeholders = [], $clean = true) : string
+    {
+        $content = $this->getTemplate($name, $config);
 
-        /**
-         * cleanup
-         */
-        $lockout_tpl = preg_replace($regx, '', $lockout_tpl);
+        // merge placeholders
+        $this->getCore()->toPlaceholders(array_merge($this->getTemplatePlaceholders(), $placeholders));
+        $content = $this->getCore()->mergePlaceholderContent($content);
+        $content = $this->getCore()->mergeSettingsContent($content);
+        $content = $this->getCore()->mergeConditionalTagsContent($content);
+        $content = $this->getCore()->parseDocumentSource($content);
+        $content = $this->getCore()->cleanUpMODXTags($content);
+        $content = $this->getCore()->parseText($content, $this->getLexicon(), '[%', '%]');
+        $content = $this->getCore()->parseText($content, $this->getStyle(), '[&', '&]');
 
-        return $lockout_tpl;
+        if ($clean) {
+            $content = removeSanitizeSeed(getSanitizedValue($content));
+        }
+
+        return $content;
+    }
+
+    public function getTemplatePlaceholders() : array
+    {
+        $plh = [
+            'favicon' => (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : $this->getThemeUrl() . '/images/') . 'favicon.ico',
+            'homeurl' => $this->getCore()->makeUrl($this->getManagerStartupPageId()),
+            'logouturl' => MODX_MANAGER_URL.'index.php?a=8',
+            'year' => date('Y'),
+            'theme' => $this->getTheme(),
+            'manager_theme_url' => $this->getThemeUrl(),
+            'manager_theme_style' => $this->getThemeStyle(),
+            'manager_path' => MGR_DIR,
+        ];
+
+        // set login logo image
+        $logo = $this->getCore()->getConfig('login_logo', '');
+        if ($logo !== '') {
+            $plh['login_logo'] = MODX_SITE_URL . $logo;
+        } else {
+            $plh['login_logo'] = $this->getThemeUrl() . '/images/login/default/login-logo.png';
+        }
+
+        // set login background image
+        $background = $this->getCore()->getConfig('login_bg', '');
+        if ($background !== '') {
+            $plh['login_bg'] = MODX_SITE_URL . $background;
+        } else {
+            $plh['login_bg'] = $this->getThemeUrl() . 'images/login/default/login-background.jpg';
+        }
+        unset($background);
+
+        return $plh;
     }
 
     public function renderLoginPage()
     {
-        $this->getCore()->setPlaceholder('modx_charset', $this->getCharset());
-        $this->getCore()->setPlaceholder('theme', $this->getTheme());
-        $this->getCore()->setPlaceholder(
-            'favicon',
-            (file_exists(MODX_BASE_PATH . 'favicon.ico') ?
-                MODX_SITE_URL . 'favicon.ico' :
-                'media/style/' . $this->getTheme() . '/images/favicon.ico'
-            )
-        );
+        $plh = [
+            'remember_me' => isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : ''
+        ];
 
         // invoke OnManagerLoginFormPrerender event
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormPrerender');
         $html = is_array($evtOut) ? implode('', $evtOut) : '';
-        $this->getCore()->setPlaceholder('OnManagerLoginFormPrerender', $html);
-
-        $this->getCore()->setPlaceholder(
-            'site_name',
-            $this->getCore()->getPhpCompat()->entities($this->getCore()->getConfig('site_name'))
-        );
-        $this->getCore()->setPlaceholder('manager_path', MGR_DIR);
-        $this->getCore()->setPlaceholder('logo_slogan', $this->getLexicon('logo_slogan'));
-        $this->getCore()->setPlaceholder('login_message', $this->getLexicon("login_message"));
-        $this->getCore()->setPlaceholder('manager_theme_url', $this->getThemeUrl());
-        $this->getCore()->setPlaceholder('year', date('Y'));
-
-        // set login logo image
-        if ($this->getCore()->getConfig('login_logo')) {
-            $this->getCore()->setPlaceholder('login_logo', MODX_SITE_URL . $this->getCore()->getConfig('login_logo'));
-        } else {
-            $this->getCore()->setPlaceholder('login_logo', $this->getThemeDir() . 'images/login/default/login-logo.png');
-        }
-
-        // set login background image
-        $path = $this->getCore()->getConfig('login_bg');
-        if (empty($path)) {
-            $path  = $this->getThemeUrl() . 'images/login/default/login-background.jpg';
-        } else {
-            $path = MODX_SITE_URL . $path;
-        }
-        $this->getCore()->setPlaceholder('login_bg', $path);
-        unset($path);
-
-        // set form position css class
-        $this->getCore()->setPlaceholder(
-            'login_form_position_class',
-            'loginbox-' . $this->getCore()->getConfig('login_form_position')
-        );
-
-        $this->getCore()->setPlaceholder('manager_theme_style', $this->getThemeStyle());
-
-        // set form style css class
-        $this->getCore()->setPlaceholder(
-            'login_form_style_class',
-            'loginbox-' . $this->getCore()->getConfig('login_form_style')
-        );
+        $plh['OnManagerLoginFormPrerender'] = $html;
 
         // andrazk 20070416 - notify user of install/update
         if (isset($_GET['installGoingOn'])) {
-            $installGoingOn = (int)$_GET['installGoingOn'];
-        }
-        if (isset($installGoingOn)) {
-            switch ($installGoingOn) {
+            switch ((int)$_GET['installGoingOn']) {
                 case 1:
                     $this->getCore()->setPlaceholder(
                         'login_message',
@@ -706,80 +655,29 @@ class ManagerTheme implements ManagerThemeInterface
             }
         }
 
-        if ($this->getCore()->config['use_captcha'] == 1) {
-            $this->getCore()->setPlaceholder('login_captcha_message', $this->getLexicon("login_captcha_message"));
-            $this->getCore()->setPlaceholder('captcha_image',
-                '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha"><img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon("login_captcha_message") . '" /></a>');
-            $this->getCore()->setPlaceholder('captcha_input',
-                '<label>' . $this->getLexicon("captcha_code") . '</label> <input type="text" name="captcha_code" tabindex="3" value="" />');
+        if ($this->getCore()->getConfig('use_captcha')) {
+            $plh['login_captcha_message'] = $this->getLexicon("login_captcha_message");
+            $plh['captcha_image'] = '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha">' .
+                '<img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon("login_captcha_message") . '" />' .
+                '</a>';
+            $plh['captcha_input'] = '<label>' . $this->getLexicon("captcha_code") . '</label>' .
+                '<input type="text" name="captcha_code" tabindex="3" value="" />';
         }
 
         // login info
-        $uid = isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '',
-            $_COOKIE['modx_remember_manager']) : '';
-        $this->getCore()->setPlaceholder('uid', $uid);
-        $this->getCore()->setPlaceholder('username', $this->getLexicon("username"));
-        $this->getCore()->setPlaceholder('password', $this->getLexicon("password"));
+        $uid = '';
+        if (isset($_COOKIE['modx_remember_manager'])) {
+            $uid = preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '', $_COOKIE['modx_remember_manager']);
+        }
+        $plh['uid'] = $uid;
 
-        // remember me
-        $html = isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : '';
-        $this->getCore()->setPlaceholder('remember_me', $html);
-        $this->getCore()->setPlaceholder('remember_username', $this->getLexicon("remember_username"));
-        $this->getCore()->setPlaceholder('login_button', $this->getLexicon("login_button"));
 
         // invoke OnManagerLoginFormRender event
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
         $html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">' . implode('', $evtOut) . '</div>' : '';
-        $this->getCore()->setPlaceholder('OnManagerLoginFormRender', $html);
+        $plh['OnManagerLoginFormRender'] = $html;
 
-        // load template
-        $target = $this->getCore()->getConfig('manager_login_tpl');
-        $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
-        $target = $this->getCore()->mergeSettingsContent($target);
-
-        $login_tpl = null;
-        if (substr($target, 0, 1) === '@') {
-            if (substr($target, 0, 6) === '@CHUNK') {
-                $target = trim(substr($target, 7));
-                $login_tpl = $this->getCore()->getChunk($target);
-            } elseif (substr($target, 0, 5) === '@FILE') {
-                $target = trim(substr($target, 6));
-                $login_tpl = file_get_contents($target);
-            }
-        } else {
-            $theme_path = $this->getThemeDir();
-            $chunk = $this->getCore()->getChunk($target);
-            if ($chunk !== false && !empty($chunk)) {
-                $login_tpl = $chunk;
-            } elseif (is_file(MODX_BASE_PATH . $target)) {
-                $target = MODX_BASE_PATH . $target;
-                $login_tpl = file_get_contents($target);
-            } elseif (is_file($target)) {
-                $login_tpl = file_get_contents($target);
-            } elseif (is_file($theme_path . 'login.tpl')) {
-                $target = $theme_path . 'login.tpl';
-                $login_tpl = file_get_contents($target);
-            } elseif (is_file($theme_path . 'templates/actions/login.tpl')) {
-                $target = $theme_path . 'templates/actions/login.tpl';
-                $login_tpl = file_get_contents($target);
-            } elseif (is_file($theme_path . 'html/login.html')) { // ClipperCMS compatible
-                $target = $theme_path . 'html/login.html';
-                $login_tpl = file_get_contents($target);
-            } else {
-                $target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
-                $login_tpl = file_get_contents($target);
-            }
-        }
-
-        // merge placeholders
-        $login_tpl = $this->getCore()->mergePlaceholderContent($login_tpl);
-        /**
-         * little tweak for newer parsers
-         */
-        $regx = (strpos($login_tpl, '[[+') !== false) ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~';
-        $login_tpl = preg_replace($regx, '', $login_tpl); //cleanup
-
-        return $login_tpl;
+        return $this->makeTemplate('login', 'manager_login_tpl', $plh);
     }
 
     public function saveAction($action)

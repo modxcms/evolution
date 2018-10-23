@@ -36,7 +36,9 @@
                     @else
                         </a>
                     @endif
-                    {{ ManagerTheme::getTextDir('&rlm;') }}
+                    @if(ManagerTheme::getTextDir() !== 'ltr')
+                    &rlm;
+                    @endif
                 </span>
             </div>
             <div class="btnCell">

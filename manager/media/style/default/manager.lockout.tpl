@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>[(site_name)] (Evolution CMS Manager Login)</title>
-	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]">
+	<meta http-equiv="content-type" content="text/html; charset=[(modx_charset)]">
 	<meta name="robots" content="noindex, nofollow">
 	<meta name="viewport" content="width=device-width">
 	<link rel="icon" type="image/ico" href="[+favicon+]">
@@ -266,7 +266,7 @@
 		}
 	</style>
 </head>
-<body class="[+manager_theme_style+] [+login_form_position_class+]">
+<body class="[+manager_theme_style+] loginbox-[(login_form_position)]">
 <div class="page">
 	<div class="tab-page loginbox">
 		<form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
@@ -281,13 +281,13 @@
 			<div class="text-muted">
 				<h2>[(site_name)]</h2>
 
-				[+manager_lockout_message+]
+				[%manager_lockout_message%]
 			</div>
 
 			<!-- actions -->
 			<div class="form-group form-group--actions">
-				<input type="button" class="btn btn-default" value="[+home+]" onclick="return gotoHome();" />
-				<input type="button" class="btn btn-success" value="[+logout+]" onclick="return doLogout();" />
+				<input type="button" class="btn btn-default" value="[%home%]" onclick="return gotoHome();" />
+				<input type="button" class="btn btn-success" value="[%logout%]" onclick="return doLogout();" />
 			</div>
 
 		</form>

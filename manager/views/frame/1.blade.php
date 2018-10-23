@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <?= (ManagerTheme::getTextDir() !== null ? 'dir="rtl" lang="' : 'lang="') . ManagerTheme::getLang() . '" xml:lang="' . ManagerTheme::getLang() . '"' ?>>
+<html dir="{{ ManagerTheme::getTextDir() }}" lang="{{ ManagerTheme::getLang() }}" xml:lang="{{ ManagerTheme::getLang() }}">
 <head>
     <title>{{ $modx->getConfig('site_name') }} - (EVO CMS Manager)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?= ManagerTheme::getCharset()?>" />
@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $css }}" />
     @if($modx->getConfig('show_picker'))
         <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
-        <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/color.switcher.css" />
+        <link rel="stylesheet" type="text/css" href="{{ ManagerTheme::getThemeUrl() }}css/color.switcher.css" />
     @endif
     <link rel="icon" type="image/ico" href="{{ ManagerTheme::getStyle('favicon') }}" />
     <style>
@@ -40,9 +40,9 @@
                 tree_min_width: <?= (int)$tree_min_width ?>,
                 session_timeout: <?= (int)$modx->getConfig('session_timeout') ?>,
                 site_start: <?= (int)$modx->getConfig('site_start') ?>,
-                tree_page_click: <?=(!empty($modx->config['tree_page_click']) ? (int)$modx->config['tree_page_click'] : 27) ?>,
-                theme: '<?= entities($modx->getConfig('manager_theme'), $modx->getConfig('modx_charset')) ?>',
-                theme_mode: '<?= entities($modx->getConfig('manager_theme_mode'), $modx->getConfig('modx_charset')) ?>',
+                tree_page_click: {{ $modx->getConfig('tree_page_click') }},
+                theme: '{{ ManagerTheme::getTheme() }}',
+                theme_mode: '{{ ManagerTheme::getThemeStyle() }}',
                 which_browser: '<?= $user['which_browser'] ?>',
                 layout: <?= (int)$modx->getConfig('manager_layout') ?>,
                 textdir: '<?= ManagerTheme::getTextDir() ?>',
@@ -144,11 +144,11 @@
         echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
         ?>
     </script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= EVO_INSTALL_TIME ?>"></script>
-    <?php if ($modx->config['show_picker'] != "0") { ?>
+    <script src="{{ ManagerTheme::getThemeUrl() }}js/modx.min.js?v=<?= EVO_INSTALL_TIME ?>"></script>
+    <?php if ($modx->getConfig('show_picker')) { ?>
     <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <script src="{{ ManagerTheme::getThemeUrl() }}js/color.switcher.js" type="text/javascript"></script>
     <?php } ?>
     <?php
     // invoke OnManagerTopPrerender event
@@ -179,43 +179,39 @@
                                 <div class="mask"></div>
                             </form>
                         </li>
-                        <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
-                        <?php if ($modx->hasPermission('new_document')) { ?>
-                        <li id="newresource" class="dropdown newresource">
-                            <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
-                            <ul class="dropdown-menu">
-                                <?php if ($modx->hasPermission('new_document')) { ?>
-                                <li>
-                                    <a onclick="" href="index.php?a=4" target="main">
-                                        <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a onclick="" href="index.php?a=72" target="main">
-                                        <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                                <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_images'))
-                                { ?>
-                                <li>
-                                    <a onclick="" href="media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=images" target="main">
-                                        <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                                <?php if ($modx->config['use_browser'] && $modx->hasPermission('assets_files'))
-                                { ?>
-                                <li>
-                                    <a onclick="" href="media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=files" target="main">
-                                        <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                        <?php } ?>
-                        <?php } ?>
+                        @if ($modx->getConfig('show_newresource_btn') && $modx->hasPermission('new_document'))
+                            <li id="newresource" class="dropdown newresource">
+                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
+                                <ul class="dropdown-menu">
+                                    <?php if ($modx->hasPermission('new_document')) { ?>
+                                    <li>
+                                        <a onclick="" href="index.php?a=4" target="main">
+                                            <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="" href="index.php?a=72" target="main">
+                                            <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
+                                        </a>
+                                    </li>
+                                    <?php } ?>
+                                    @if ($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
+                                        <li>
+                                            <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=images" target="main">
+                                                <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
+                                        <li>
+                                            <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=files" target="main">
+                                                <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endif
                         <li id="preview">
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
                                 <i class="fa fa-desktop"></i>
@@ -248,11 +244,11 @@
                                     </a>
                                 </li>
                                 <?php
-                                $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+                                $style = $modx->getConfig('settings_version') !== $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
                                 $version = 'Evolution';
                                 ?>
                                 <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->getConfig('settings_version'));
                                 ?>
                             </ul>
                         </li>
@@ -303,13 +299,13 @@
                             </ul>
                         </li>
                         <?php } ?>
-                        <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
-                        <li id="fullscreen">
-                            <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
-                                <i class="fa fa-expand"></i>
-                            </a>
-                        </li>
-                        <?php } ?>
+                        @if($modx->getConfig('show_fullscreen_btn'))
+                            <li id="fullscreen">
+                                <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
+                                    <i class="fa fa-expand"></i>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -344,13 +340,13 @@
                 <a class="treeButton" id="treeMenu_sortingindex" onclick="modx.tabs({url: '<?= MODX_MANAGER_URL ?>?a=56&id=0', title: '<?php echo $_lang['sort_menuindex']; ?>'});" title="<?php echo $_lang['sort_menuindex']; ?>"><i class="fa fa-sort-numeric-asc"></i></a>
                 <?php } ?>
 
-                <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_images')) { ?>
+                @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
                 <a class="treeButton" id="treeMenu_openimages" title="<?php echo $_lang["images_management"] . "\n" . $_lang['em_button_shift'] ?>"><i class="fa fa-camera"></i></a>
-                <?php } ?>
+                @endif
 
-                <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_files')) { ?>
+                @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
                 <a class="treeButton" id="treeMenu_openfiles" title="<?php echo $_lang["files_management"] . "\n" . $_lang['em_button_shift'] ?>"><i class="fa fa-files-o"></i></a>
-                <?php } ?>
+                @endif
 
                 <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
                 <a class="treeButton" id="treeMenu_openelements" title="<?php echo $_lang["element_management"] . "\n" . $_lang['em_button_shift'] ?>"><i class="fa fa-th"></i></a>
@@ -388,18 +384,18 @@
         </div>
     </div>
     <div id="main">
-        <?php if ($modx->config['global_tabs']): ?>
-        <div class="tab-row-container evo-tab-row">
-            <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
-        </div>
-        <div id="evo-tab-page-home" class="evo-tab-page show iframe-scroller">
-            <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
-        </div>
-        <?php else: ?>
-        <div class="iframe-scroller">
-            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
-        </div>
-        <?php endif; ?>
+        @if ($modx->getConfig('global_tabs'))
+            <div class="tab-row-container evo-tab-row">
+                <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
+            </div>
+            <div id="evo-tab-page-home" class="evo-tab-page show iframe-scroller">
+                <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
+        @else
+            <div class="iframe-scroller">
+                <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
+        @endif
         <script>
             if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
                 document.getElementById('mainframe').setAttribute('scrolling', 'no');
@@ -542,42 +538,42 @@ if(!function_exists('constructLink')) {
                 }
             };
             <?php } ?>
-            <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_images')) { ?>
+            @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
 
             document.getElementById('treeMenu_openimages').onclick = function(e) {
                 e.preventDefault();
                 if (modx.config.global_tabs && !e.shiftKey) {
-                    modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browse.php?filemanager=media/browser/' . $modx->config['which_browser'] . '/browse.php&type=images' ?>', title: '<?= $_lang["images_management"] ?>'});
+                    modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ $modx->getConfig('which_browser') }}/browse.php&type=images', title: '<?= $_lang["images_management"] ?>'});
                 } else {
                     var randomNum = '<?= $_lang["files_files"] ?>';
                     if (e.shiftKey) {
                         randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
                     }
                     modx.openWindow({
-                        url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=images',
+                        url: '<?= MODX_MANAGER_URL ?>media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=images',
                         title: randomNum
                     });
                 }
             };
-            <?php } ?>
-            <?php if($modx->config['use_browser'] && $modx->hasPermission('assets_files')) { ?>
+            @endif
+            @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
 
             document.getElementById('treeMenu_openfiles').onclick = function(e) {
                 e.preventDefault();
                 if (modx.config.global_tabs && !e.shiftKey) {
-                    modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browse.php?filemanager=media/browser/' . $modx->config['which_browser'] . '/browse.php&type=files' ?>', title: '<?= $_lang["files_files"] ?>'});
+                    modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ $modx->getConfig('which_browser') }}/browse.php&type=files', title: '<?= $_lang["files_files"] ?>'});
                 } else {
                     var randomNum = '<?= $_lang["files_files"] ?>';
                     if (e.shiftKey) {
                         randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
                     }
                     modx.openWindow({
-                        url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browse.php?&type=files',
+                        url: '<?= MODX_MANAGER_URL ?>media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=files',
                         title: randomNum
                     });
                 }
             };
-            <?php } ?>
+            @endif
 
         }
 

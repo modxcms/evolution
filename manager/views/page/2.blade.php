@@ -79,7 +79,7 @@
     $ph['LogoutIcon'] = sprintf($iconTpl,$icon, 8);
 
     // do some config checks
-    if(($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
+    if($modx->getConfig('warning_visibility') || $_SESSION['mgrRole'] == 1) {
         include_once(MODX_MANAGER_PATH . 'includes/config_check.inc.php');
         if($config_check_results != $_lang['configcheck_ok']) {
             $ph['config_check_results'] = $config_check_results;
@@ -152,7 +152,7 @@
     $ph['UserInfo'] = $modx->parseText($tpl, array(
         'username' => $modx->getLoginUserName(),
         'role' => $_SESSION['mgrPermissions']['name'],
-        'lastlogin' => $modx->toDateFormat($_SESSION['mgrLastlogin'] + $modx->config['server_offset_time']),
+        'lastlogin' => $modx->toDateFormat($modx->timestamp($_SESSION['mgrLastlogin'])),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
         'msginfo' => sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages)
     ));
@@ -165,7 +165,7 @@
     if($modx->getDatabase()->getRecordCount($rs) < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
-        $now = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
+        $now = $modx->timestamp($_SERVER['REQUEST_TIME']);
         $ph['now'] = strftime('%H:%M:%S', $now);
         $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
         $html = '
@@ -203,7 +203,7 @@
                 $webicon,
                 abs($activeusers['internalKey']),
                 $ip,
-                strftime('%H:%M:%S', $activeusers['lasthit'] + $modx->config['server_offset_time']),
+                strftime('%H:%M:%S', $modx->timestamp($activeusers['lasthit'])),
                 $currentaction
             );
         }
@@ -393,7 +393,7 @@
         'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
         'hide'=>'0'
     );
-    if ($modx->config['rss_url_news']) {
+    if ($modx->getConfig('rss_url_news')) {
         $widgets['news'] = array(
             'menuindex' => '40',
             'id' => 'news',
@@ -404,7 +404,7 @@
             'hide'=>'0'
         );
     }
-    if ($modx->config['rss_url_security']) {
+    if ($modx->getConfig('rss_url_security')) {
         $widgets['security'] = array(
             'menuindex' => '50',
             'id' => 'security',
@@ -438,62 +438,6 @@
         }
     }
     $ph['widgets'] = $output;
-
-    // load template
-    if(!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
-        $modx->config['manager_welcome_tpl'] = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';
-    }
-
-    $target = $modx->config['manager_welcome_tpl'];
-    $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
-    $target = $modx->mergeSettingsContent($target);
-
-    if(substr($target, 0, 1) === '@') {
-        if(substr($target, 0, 6) === '@CHUNK') {
-            $content = $modx->getChunk(trim(substr($target, 7)));
-        } elseif(substr($target, 0, 5) === '@FILE') {
-            $content = file_get_contents(trim(substr($target, 6)));
-        } else {
-            $content = '';
-        }
-    } else {
-        $chunk = $modx->getChunk($target);
-        if($chunk !== false && !empty($chunk)) {
-            $content = $chunk;
-        } elseif(is_file(MODX_BASE_PATH . $target)) {
-            $content = file_get_contents(MODX_BASE_PATH . $target);
-        } elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl')) {
-            $content = file_get_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl');
-        } elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html')) // ClipperCMS compatible
-        {
-            $content = file_get_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html');
-        } else {
-            $content = file_get_contents(MODX_MANAGER_PATH . 'media/style/common/welcome.tpl');
-        }
-    }
-
-    // merge placeholders
-    $content = $modx->mergeConditionalTagsContent($content);
-    $content = $modx->mergeSettingsContent($content);
-    $content = $modx->parseText($content, $ph);
-    if(strpos($content, '[+') !== false) {
-        $modx->toPlaceholders($ph);
-        $content = $modx->mergePlaceholderContent($content);
-    }
-    $content = $modx->parseDocumentSource($content);
-    $content = $modx->parseText($content, $_lang, '[%', '%]');
-    $content = $modx->parseText($content, $_style, '[&', '&]');
-    $content = $modx->cleanUpMODXTags($content); //cleanup
-
-    if($js = $modx->getRegisteredClientScripts()) {
-        $content .= $js;
-    }
-
-    echo $content;
-
-    //<span class="conf">
-    //	<a href="javascript:;" class="setting"><i class="fa fa-cog"></i></a>
-    //  <a href="javascript:;" class="closed"><i class="fa fa-close"></i></a>
-    //</span>
     ?>
+    {!! ManagerTheme::makeTemplate('welcome', 'manager_welcome_tpl', $ph) !!}
 @endsection

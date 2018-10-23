@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ $modx_lang_attribute }}" dir="{{ $modx_textdir }}">
+<html lang="{{ ManagerTheme::getLang() }}" dir="{{ ManagerTheme::getTextDir() }}">
 <head>
     <title>Evolution CMS</title>
     <meta http-equiv="Content-Type" content="text/html; charset={{ ManagerTheme::getCharset() }}"/>
@@ -22,12 +22,12 @@
         if (!evo) {
             var evo = {};
         }
-        var actions;
-        var actionStay = [];
-        var dontShowWorker = false;
-        var documentDirty = false;
-        var timerForUnload;
-        var managerPath = '';
+        var actions,
+            actionStay = [],
+            dontShowWorker = false,
+            documentDirty = false,
+            timerForUnload,
+            managerPath = '';
 
         evo.lang = {!! json_encode(Illuminate\Support\Arr::only(
             ManagerTheme::getLexicon(),
@@ -47,4 +47,4 @@
     {!! $modx->getRegisteredClientStartupScripts() !!}
 </head>
 
-<body class="{{ $modx_textdir }} {{ ManagerTheme::getThemeStyle() }}" data-evocp="color">
+<body class="{{ ManagerTheme::getTextDir() }} {{ ManagerTheme::getThemeStyle() }}" data-evocp="color">

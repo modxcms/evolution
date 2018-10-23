@@ -34,7 +34,14 @@ trait Settings
         'export_includenoncache' => 'bool',
         'allow_manager_access' => 'bool',
         'number_of_results' => 'int',
-        'manager_theme_mode' => 'int'
+        'manager_theme_mode' => 'int',
+        'manager_login_startup' => 'int',
+        'global_tabs' => 'bool',
+        'remember_last_tab' => 'bool',
+        'show_newresource_btn' => 'bool',
+        'use_browser' => 'bool',
+        'warning_visibility' => 'bool',
+        'use_captcha' => 'bool'
     ];
 
     /**
@@ -85,6 +92,8 @@ trait Settings
      */
     public function getSettings()
     {
+        $this->config = array_merge($this->getFactorySettings(), $this->config);
+
         // setup default site id - new installation should generate a unique id for the site.
         if ($this->getConfig('site_id', '') === '') {
             $this->setConfig('site_id', 'MzGeQ2faT4Dw06+U49x3');
@@ -111,6 +120,12 @@ trait Settings
                 $this->getConfig('rb_base_dir')
             )
         );
+    }
+
+    public function getFactorySettings() : array
+    {
+        $out = include EVO_CORE_PATH . 'factory/settings.php';
+        return \is_array($out) ? $out : [];
     }
 
     /**

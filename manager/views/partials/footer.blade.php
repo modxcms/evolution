@@ -16,7 +16,7 @@ if (count($SystemAlertMsgQueque) > 0) {
   });
 </script>
 @if(ManagerTheme::isLoadDatePicker())
-    {!! $modx->getManagerApi()->loadDatePicker($modx->config['mgr_date_picker_path']) !!}
+    {!! $modx->getManagerApi()->loadDatePicker($modx->getConfig('mgr_date_picker_path')) !!}
 @endif
 
 @include('manager::partials.debug')

@@ -2,9 +2,10 @@
 <html>
 <head>
     <title>[(site_name)] (Evolution CMS Manager Login)</title>
-    <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
+    <meta http-equiv="content-type" content="text/html; charset=[(modx_charset)]" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/ico" href="[+favicon+]">
     <style type="text/css">
         html { font-size: 16px; height: 100% }
         body { margin: 0; padding: 0 1rem; height: 100%; font-family: sans-serif; font-size: 0.8rem; line-height: 1.5; color: #666; background-color: #F2F2F2; }
@@ -66,16 +67,16 @@
                     <img src="media/style/[(manager_theme)]/images/misc/login-logo.png" alt="[(site_name)]" id="logo" />
                 </a>
             </div>
-            <label for="username">[+username+]</label>
+            <label for="username">[%username%]</label>
             <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
-            <label for="password">[+password+]</label>
+            <label for="password">[%password%]</label>
             <input type="password" class="text" name="password" id="password" tabindex="2" value="" />
             <p class="caption">[+login_captcha_message+]</p>
             <p>[+captcha_image+]</p>
             [+captcha_input+]
             <div class="clear"></div>
             <div class="form-footer">
-                <button type="submit" name="submitButton" class="login" id="submitButton">[+login_button+]</button>
+                <button type="submit" name="submitButton" class="login" id="submitButton">[%login_button%]</button>
             </div>
             [+OnManagerLoginFormRender+]
         </fieldset>

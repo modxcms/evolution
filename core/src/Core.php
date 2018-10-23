@@ -3950,7 +3950,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * Returns the Evolution CMS version information as version, branch, release date and full application name.
      *
      * @param null $data
-     * @return array
+     * @return string|array
      */
 
     public function getVersionData($data = null)
@@ -4730,6 +4730,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
     }
 
+    public function getContext() : string
+    {
+        return $this->isFrontend() ? 'web' : 'mgr';
+    }
+
     /**
      * Returns a user info record for the given manager user
      *
@@ -4769,11 +4774,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getWebUserInfo($uid)
     {
-        $rs = $this->getDatabase()->select('wu.username, wu.password, wua.*', $this->getDatabase()->getFullTableName("web_users") . " wu
-                INNER JOIN " . $this->getDatabase()->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id", "wu.id='{$uid}'");
+        $rs = $this->getDatabase()->select(
+            'wu.username, wu.password, wua.*',
+            $this->getDatabase()->getFullTableName("web_users") . ' wu ' .
+                'INNER JOIN ' . $this->getDatabase()->getFullTableName("web_user_attributes") . ' wua ' .
+                'ON wua.internalkey=wu.id',
+            "wu.id='{$uid}'"
+        );
         if ($row = $this->getDatabase()->getRow($rs)) {
-            if (!isset($row['usertype']) or !$row["usertype"]) {
-                $row["usertype"] = "web";
+            if (!isset($row['usertype']) or !$row['usertype']) {
+                $row['usertype'] = 'web';
             }
             return $row;
         }
@@ -4806,16 +4816,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else if (is_array($dg)) {
             // resolve ids to names
             $dgn = array();
-            $ds = $this->getDatabase()->select('name', $this->getDatabase()->getFullTableName("documentgroup_names"), "id IN (" . implode(",", $dg) . ")");
+            $ds = $this->getDatabase()->select(
+                'name',
+                $this->getDatabase()->getFullTableName("documentgroup_names"),
+                "id IN (" . implode(",", $dg) . ")"
+            );
             while ($row = $this->getDatabase()->getRow($ds)) {
                 $dgn[] = $row['name'];
             }
             // cache docgroup names to session
-            if ($this->isFrontend()) {
-                $_SESSION['webDocgrpNames'] = $dgn;
-            } else {
-                $_SESSION['mgrDocgrpNames'] = $dgn;
-            }
+            $_SESSION[$this->getContext() . 'DocgrpNames'] = $dgn;
             return $dgn;
         }
     }
@@ -4875,8 +4885,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // check cache
         $grpNames = isset ($_SESSION['webUserGroupNames']) ? $_SESSION['webUserGroupNames'] : false;
         if (!is_array($grpNames)) {
-            $rs = $this->getDatabase()->select('wgn.name', $this->getDatabase()->getFullTableName("webgroup_names") . " wgn
-                    INNER JOIN " . $this->getDatabase()->getFullTableName("web_groups") . " wg ON wg.webgroup=wgn.id AND wg.webuser='" . $this->getLoginUserID() . "'");
+            $rs = $this->getDatabase()->select(
+                'wgn.name',
+                $this->getDatabase()->getFullTableName("webgroup_names") . ' wgn ' .
+                    'INNER JOIN ' . $this->getDatabase()->getFullTableName("web_groups") . " wg ON wg.webgroup=wgn.id AND wg.webuser='" . $this->getLoginUserID() . "'"
+            );
             $grpNames = $this->getDatabase()->getColumn("name", $rs);
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
@@ -4938,11 +4951,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return '';
         } // nothing to register
         if (!is_array($options)) {
-            if (is_bool($options))  // backward compatibility with old plaintext parameter
-            {
+            if (\is_bool($options)) {
+                // backward compatibility with old plaintext parameter
                 $options = array('plaintext' => $options);
-            } elseif (is_string($options)) // Also allow script name as 2nd param
-            {
+            } elseif (\is_string($options)) {
+                // Also allow script name as 2nd param
                 $options = array('name' => $options);
             } else {
                 $options = array();

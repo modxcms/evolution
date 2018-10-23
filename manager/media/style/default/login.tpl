@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>[(site_name)] (Evolution CMS Manager Login)</title>
-  <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]">
+  <meta http-equiv="content-type" content="text/html; charset=[(modx_charset)]">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/ico" href="[+favicon+]">
@@ -501,9 +501,9 @@
     }
   </style>
 </head>
-<body class="[+manager_theme_style+] [+login_form_position_class+]">
+<body class="[+manager_theme_style+] loginbox-[(login_form_position)]">
 <div class="page">
-  <div class="tab-page loginbox [+login_form_style_class+]">
+  <div class="tab-page loginbox loginbox-[(login_form_style)]">
     <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
 
       <!-- OnManagerLoginFormPrerender -->
@@ -518,13 +518,13 @@
 
       <!-- username -->
       <div class="form-group">
-        <label for="username" class="text-muted">[+username+]</label>
+        <label for="username" class="text-muted">[%username%]</label>
         <input type="text" class="form-control" name="username" id="username" tabindex="1" value="[+uid+]">
       </div>
 
       <!-- password -->
       <div class="form-group">
-        <label for="password" class="text-muted">[+password+]</label>
+        <label for="password" class="text-muted">[%password%]</label>
         <input type="password" class="form-control" name="password" id="password" tabindex="2" value="">
       </div>
 
@@ -538,8 +538,8 @@
       <!-- actions -->
       <div class="form-group form-group--actions">
         <label for="rememberme" class="text-muted">
-          <input type="checkbox" id="rememberme" name="rememberme" value="1" class="checkbox" [+remember_me+] > [+remember_username+]</label>
-        <button type="submit" name="submitButton" class="btn btn-success" id="submitButton">[+login_button+]</button>
+          <input type="checkbox" id="rememberme" name="rememberme" value="1" class="checkbox" [+remember_me+] > [%remember_username%]</label>
+        <button type="submit" name="submitButton" class="btn btn-success" id="submitButton">[%login_button%]</button>
       </div>
 
       <!-- OnManagerLoginFormRender -->

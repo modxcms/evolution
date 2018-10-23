@@ -173,17 +173,27 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     {
         // reload system settings from the database.
         // this will prevent user-defined settings from being saved as system setting
-        $out = include EVO_CORE_PATH . 'factory/settings.php';
-        $out = array_merge(\is_array($out) ? $out : [], Models\SystemSetting::all()
-            ->pluck('setting_value', 'setting_name')
-            ->toArray(), $this->managerTheme->getCore()->config);
+        $out = array_merge(
+            $this->managerTheme->getCore()->getFactorySettings(),
+            Models\SystemSetting::all()
+                ->pluck('setting_value', 'setting_name')
+                ->toArray(),
+            $this->managerTheme->getCore()->config
+        );
 
-        $out['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]',
-            get_by_key($out, 'filemanager_path'));
-        $out['rb_base_dir'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]',
-            get_by_key($out, 'rb_base_dir'));
+        $out['filemanager_path'] =  str_replace(
+            MODX_BASE_PATH,
+            '[(base_path)]',
+            get_by_key($out, 'filemanager_path')
+        );
 
-        if (!$this->parameterCheckGD()) {
+        $out['rb_base_dir'] = str_replace(
+            MODX_BASE_PATH,
+            '[(base_path)]',
+            get_by_key($out, 'rb_base_dir')
+        );
+
+        if (! $this->parameterCheckGD()) {
             $out['use_captcha'] = 0;
         }
 
@@ -192,7 +202,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
     protected function parameterCheckGD()
     {
-        return extension_loaded('gd');
+        return \extension_loaded('gd');
     }
 
     protected function parameterPasswordHash(): array

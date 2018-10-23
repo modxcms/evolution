@@ -12,7 +12,7 @@ trait Helpers
      */
     public function timestamp($time = null) : int
     {
-        return ($time === null ? time() : (int)$time) + (int)$this->getConfig('server_offset_time', 0);
+        return ($time === null ? time() : (int)$time) + $this->getConfig('server_offset_time');
     }
 
     /**
@@ -21,7 +21,7 @@ trait Helpers
     public function now() : Carbon
     {
         return Carbon::now()->addSeconds(
-            evolutionCMS()->getConfig('server_offset_time', 0)
+            evolutionCMS()->getConfig('server_offset_time')
         );
     }
 
