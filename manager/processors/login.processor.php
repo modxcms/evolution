@@ -301,16 +301,17 @@ $rs = $modx->getDatabase()->select(
     "user='{$internalKey}' AND setting_name='manager_login_startup'"
 );
 $id = (int)$modx->getDatabase()->getValue($rs);
+$ajax = (int)get_by_key($_POST, 'ajax', 0, 'is_scalar');
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');
-	if($_POST['ajax'] == 1) {
+	if($ajax === 1) {
 		echo $header;
 	} else {
 		header($header);
 	}
 } else {
 	$header = 'Location: ' . MODX_MANAGER_URL;
-	if($_POST['ajax'] == 1) {
+	if($ajax === 1) {
 		echo $header;
 	} else {
 		header($header);
