@@ -3,6 +3,7 @@
 use EvolutionCMS\Interfaces\ManagerTheme\ControllerInterface;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use View;
+use Illuminate\Contracts\View\View as ViewContract;
 
 abstract class AbstractController implements ControllerInterface
 {
@@ -85,7 +86,9 @@ abstract class AbstractController implements ControllerInterface
         return $this->managerTheme->view(
             $this->getView(),
             $this->getParameters($params)
-        )->with('controller', $this)->render();// : '';
+        )->with([
+            'controller' => $this
+        ])->render();
     }
 
     /**

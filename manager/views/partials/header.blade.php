@@ -1,92 +1,22 @@
-<?php
-$mxla = ManagerTheme::getLang();
-// invoke OnManagerRegClientStartupHTMLBlock event
-$evtOut = evolutionCMS()->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
-$onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
-$textdir = ManagerTheme::getTextDir() === 'rtl' ? 'rtl' : 'ltr';
-if (!isset($modx->config['mgr_jquery_path'])) {
-    $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
-}
-if (!isset($modx->config['mgr_date_picker_path'])) {
-    $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
-}
-
-$body_class = '';
-$theme_modes = array('', 'lightness', 'light', 'dark', 'darkness');
-if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
-    $body_class .= ' ' . $theme_modes[$_COOKIE['MODX_themeMode']];
-} elseif (!empty($theme_modes[$modx->config['manager_theme_mode']])) {
-    $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
-}
-
-$css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . EVO_INSTALL_TIME;
-
-if (ManagerTheme::getTheme() === 'default') {
-    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')
-        && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
-        $files = array(
-            'bootstrap' => MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css',
-            'font-awesome' => MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css',
-            'fonts' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css',
-            'forms' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css',
-            'mainmenu' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css',
-            'tree' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css',
-            'custom' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css',
-            'tabpane' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css',
-            'contextmenu' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css',
-            'index' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css',
-            'main' => MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css'
-        );
-        $evtOut = $modx->invokeEvent('OnBeforeMinifyCss', array(
-            'files' => $files,
-            'source' => 'manager',
-            'theme' => $modx->config['manager_theme']
-        ));
-        switch (true) {
-            case empty($evtOut):
-            case is_array($evtOut) && count($evtOut) === 0:
-                break;
-            case is_array($evtOut) && count($evtOut) === 1:
-                $files = $evtOut[0];
-                break;
-            default:
-                $modx->webAlertAndQuit(sprintf($_lang['invalid_event_response'], 'OnBeforeMinifyManagerCss'));
-        }
-        require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
-        $minifier = new Formatter\CSSMinify($files);
-        $css = $minifier->minify();
-        file_put_contents(
-            MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css',
-            $css
-        );
-    }
-    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
-        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . EVO_INSTALL_TIME;
-    }
-}
-
-?>
-        <!DOCTYPE html>
-<html lang="<?= $mxla ?>" dir="<?= $textdir ?>">
+<!DOCTYPE html>
+<html lang="{{ $modx_lang_attribute }}" dir="{{ $modx_textdir }}">
 <head>
     <title>Evolution CMS</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?= ManagerTheme::getCharset() ?>"/>
+    <meta http-equiv="Content-Type" content="text/html; charset={{ ManagerTheme::getCharset() }}"/>
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
     <meta name="theme-color" content="#1d2023"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    @if(class_exists(Tracy\Debugger::class) && evolutionCMS()->get('config')->get('tracy.active'))
-        <?php Tracy\Debugger::renderLoader() ?>
+    @if(class_exists(Tracy\Debugger::class) && $modx->get('config')->get('tracy.active'))
+        {!! Tracy\Debugger::renderLoader() !!}
     @endif
-    <link rel="stylesheet" type="text/css" href="<?= $css ?>"/>
+    <link rel="stylesheet" type="text/css" href="{{ ManagerTheme::css() }}"/>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
-    <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
-    <?php if ($modx->config['show_picker'] != "0") { ?>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js"
-            type="text/javascript"></script>
-    <?php } ?>
+    <script type="text/javascript" src="{{ $modx->getConfig('mgr_jquery_path') }}"></script>
+    @if ($modx->getConfig('show_picker') === true)
+        <script src="{{ ManagerTheme::getThemeUrl() }}/js/color.switcher.js" type="text/javascript"></script>
+    @endif
 
-<!-- OnManagerMainFrameHeaderHTMLBlock -->
-    <?= $onManagerMainFrameHeaderHTMLBlock . "\n" ?>
+    {!! ManagerTheme::getMainFrameHeaderHTMLBlock() !!}
 
     <script type="text/javascript">
         if (!evo) {
@@ -99,25 +29,22 @@ if (ManagerTheme::getTheme() === 'default') {
         var timerForUnload;
         var managerPath = '';
 
-        evo.lang = {
-            saving: '<?= $_lang['saving'] ?>',
-            error_internet_connection: '<?= addslashes($_lang['error_internet_connection']) ?>',
-            warning_not_saved: '<?= addslashes($_lang['warning_not_saved']) ?>'
-        };
-        evo.style = {
-            actions_file: '<?= $_style['actions_file'] ?>',
-            actions_pencil: '<?= $_style['actions_pencil'] ?>',
-            actions_reply: '<?= $_style['actions_reply'] ?>',
-            actions_plus: '<?= $_style['actions_plus'] ?>'
-        };
-        evo.urlCheckConnectionToServer = '<?= MODX_MANAGER_URL ?>';
+        evo.lang = {!! json_encode(Illuminate\Support\Arr::only(
+            ManagerTheme::getLexicon(),
+            ['saving', 'error_internet_connection', 'warning_not_saved']
+        )) !!};
+        evo.style = {!! json_encode(Illuminate\Support\Arr::only(
+            ManagerTheme::getStyle(),
+            ['actions_file', 'actions_pencil', 'actions_reply', 'actions_plus']
+        )) !!};
+        evo.urlCheckConnectionToServer = '{{  MODX_MANAGER_URL }}';
     </script>
     <script src="media/script/main.js"></script>
-    <?php
-    if (isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
-        echo '<script>doRefresh(' . $_REQUEST['r'] . ");</script>";
-    }
-    ?>
+    @if (get_by_key($_REQUEST, 'r', '', 'is_numeric')) {
+        <script>doRefresh({{ $_REQUEST['r'] }});</script>
+    @endif
     @stack('scripts.top')
+    {!! $modx->getRegisteredClientStartupScripts() !!}
 </head>
-<body <?= ManagerTheme::getTextDir(' class="rtl"') ?> class="<?= $body_class ?>" data-evocp="color">
+
+<body class="{{ $modx_textdir }} {{ ManagerTheme::getThemeStyle() }}" data-evocp="color">

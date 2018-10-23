@@ -34,6 +34,7 @@ trait Settings
         'export_includenoncache' => 'bool',
         'allow_manager_access' => 'bool',
         'number_of_results' => 'int',
+        'manager_theme_mode' => 'int'
     ];
 
     /**

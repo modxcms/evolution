@@ -15,23 +15,11 @@ if (count($SystemAlertMsgQueque) > 0) {
     }
   });
 </script>
-<?php
-if (in_array($modx->getManagerApi()->action, array(
-    85,
-    27,
-    4,
-    72,
-    13,
-    11,
-    12,
-    87,
-    88
-))) {
-    echo $modx->getManagerApi()
-        ->loadDatePicker($modx->config['mgr_date_picker_path']);
-}
-?>
+@if(ManagerTheme::isLoadDatePicker())
+    {!! $modx->getManagerApi()->loadDatePicker($modx->config['mgr_date_picker_path']) !!}
+@endif
+
 @include('manager::partials.debug')
+{!! $modx->getRegisteredClientScripts() !!}
 </body>
 </html>
-<!-- end footer -->

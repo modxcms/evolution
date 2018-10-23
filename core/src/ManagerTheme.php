@@ -199,6 +199,13 @@ class ManagerTheme implements ManagerThemeInterface
         );
 
         $this->loadStyle();
+
+        if ($this->getCore()->getConfig('mgr_jquery_path', '') === '') {
+            $this->getCore()->setConfig('mgr_jquery_path', 'media/script/jquery/jquery.min.js');
+        }
+        if ($this->getCore()->getConfig('mgr_date_picker_path', '') === '') {
+            $this->getCore()->setConfig('mgr_date_picker_path', 'media/script/air-datepicker/datepicker.inc.php');
+        }
     }
 
     protected function loadLang($lang = 'english')
@@ -239,7 +246,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->lexicon = $_lang;
         $this->langName = $lang;
         $this->lang = $modx_lang_attribute;
-        $this->textDir = $modx_textdir;
+        $this->setTextDir($modx_textdir);
         $this->setCharset($modx_manager_charset);
 
         $this->getCore()->setConfig('lang_code', $this->getLang());
@@ -266,6 +273,11 @@ class ManagerTheme implements ManagerThemeInterface
     public function getTextDir($notEmpty = null)
     {
         return ($notEmpty === null) ? $this->textDir : (empty($this->textDir) ? '' : $notEmpty);
+    }
+
+    public function setTextDir($textDir)
+    {
+        $this->textDir = $textDir === 'rtl' ? 'rtl' : 'ltr';
     }
 
     public function getLexicon($key = null)
@@ -321,6 +333,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         return $key === null ? $this->style : get_by_key($this->style, $key, '');
     }
+
     public function view($name, array $params = [])
     {
         return View::make(
@@ -332,7 +345,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function getViewAttributes(array $params = [])
     {
         $baseParams = [
-            'modx'                 => $this->core,
+            'modx'                 => $this->getCore(),
             'modx_lang_attribute'  => $this->getLang(),
             'modx_manager_charset' => $this->getCharset(),
             'manager_theme'        => $this->getTheme(),
@@ -551,70 +564,63 @@ class ManagerTheme implements ManagerThemeInterface
 
         // set form position css class
         $this->getCore()->setPlaceholder('login_form_position_class', 'loginbox-' . $this->getCore()->getConfig('login_form_position'));
-        switch ((int)$this->getCore()->getConfig('manager_theme_mode')) {
-            case 1:
-                $this->getCore()->setPlaceholder('manager_theme_style', 'lightness');
-                break;
-            case 2:
-                $this->getCore()->setPlaceholder('manager_theme_style', 'light');
-                break;
-            case 3:
-                $this->getCore()->setPlaceholder('manager_theme_style', 'dark');
-                break;
-            case 4:
-                $this->getCore()->setPlaceholder('manager_theme_style', 'darkness');
-                break;
-        }
+        $this->getCore()->setPlaceholder('manager_theme_style', $this->getThemeStyle());
 
         // load template
         if(!isset($this->getCore()->config['manager_lockout_tpl']) || empty($this->getCore()->config['manager_lockout_tpl'])) {
             $this->getCore()->config['manager_lockout_tpl'] = MODX_MANAGER_PATH . 'media/style/common/manager.lockout.tpl';
         }
 
-        $target = $this->getCore()->config['manager_lockout_tpl'];
+        $target = $this->getCore()->getConfig('manager_lockout_tpl');
         $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
         $target = $this->getCore()->mergeSettingsContent($target);
 
-        if(substr($target,0,1)==='@') {
-            if(substr($target,0,6)==='@CHUNK') {
+        if (substr($target,0,1)==='@') {
+            if (substr($target,0,6)==='@CHUNK') {
                 $target = trim(substr($target,7));
                 $lockout_tpl = $this->getCore()->getChunk($target);
-            }
-            elseif(substr($target,0,5)==='@FILE') {
+            } elseif (substr($target,0,5)==='@FILE') {
                 $target = trim(substr($target,6));
                 $lockout_tpl = file_get_contents($target);
+            } else {
+                $lockout_tpl = '';
             }
         } else {
             $chunk = $this->getCore()->getChunk($target);
-            if($chunk!==false && !empty($chunk)) {
+            if ($chunk!==false && !empty($chunk)) {
                 $lockout_tpl = $chunk;
-            }
-            elseif(is_file(MODX_BASE_PATH . $target)) {
+            } elseif (is_file(MODX_BASE_PATH . $target)) {
                 $target = MODX_BASE_PATH . $target;
                 $lockout_tpl = file_get_contents($target);
-            }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/manager.lockout.tpl')) {
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/manager.lockout.tpl';
+            } elseif (is_file($this->getThemeDir() . 'manager.lockout.tpl')) {
+                $target = $this->getThemeDir() . 'manager.lockout.tpl';
                 $lockout_tpl = file_get_contents($target);
-            }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/templates/actions/manager.lockout.tpl')) {
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/templates/actions/manager.lockout.tpl';
-                $login_tpl = file_get_contents($target);
-            }
-            elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/html/manager.lockout.html')) { // ClipperCMS compatible
-                $target = MODX_MANAGER_PATH . 'media/style/' . $this->getTheme() . '/html/manager.lockout.html';
+            } elseif (is_file($this->getThemeDir() . 'templates/actions/manager.lockout.tpl')) {
+                $target = $this->getThemeDir() . 'templates/actions/manager.lockout.tpl';
                 $lockout_tpl = file_get_contents($target);
-            }
-            else {
+            } elseif (is_file($this->getThemeDir() . 'html/manager.lockout.html')) { // ClipperCMS compatible
+                $target = $this->getThemeDir() . 'html/manager.lockout.html';
+                $lockout_tpl = file_get_contents($target);
+            } else {
                 $target = MODX_MANAGER_PATH . 'media/style/common/manager.lockout.tpl';
                 $lockout_tpl = file_get_contents($target);
             }
         }
 
-        // merge placeholders
+        /**
+         * merge placeholders
+         */
         $lockout_tpl = $this->getCore()->mergePlaceholderContent($lockout_tpl);
-        $regx = strpos($lockout_tpl,'[[+')!==false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
-        $lockout_tpl = preg_replace($regx, '', $lockout_tpl); //cleanup
+
+        /**
+         * little tweak for newer parsers
+         */
+        $regx = (strpos($lockout_tpl, '[[+') !==false) ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~';
+
+        /**
+         * cleanup
+         */
+        $lockout_tpl = preg_replace($regx, '', $lockout_tpl);
 
         return $lockout_tpl;
     }
@@ -636,24 +642,27 @@ class ManagerTheme implements ManagerThemeInterface
         $html = is_array($evtOut) ? implode('', $evtOut) : '';
         $this->getCore()->setPlaceholder('OnManagerLoginFormPrerender', $html);
 
-        $this->getCore()->setPlaceholder('site_name', $this->getCore()->getPhpCompat()->entities($this->getCore()->getConfig('site_name')));
+        $this->getCore()->setPlaceholder(
+            'site_name',
+            $this->getCore()->getPhpCompat()->entities($this->getCore()->getConfig('site_name'))
+        );
         $this->getCore()->setPlaceholder('manager_path', MGR_DIR);
         $this->getCore()->setPlaceholder('logo_slogan', $this->getLexicon('logo_slogan'));
         $this->getCore()->setPlaceholder('login_message', $this->getLexicon("login_message"));
-        $this->getCore()->setPlaceholder('manager_theme_url', MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/');
+        $this->getCore()->setPlaceholder('manager_theme_url', $this->getThemeUrl());
         $this->getCore()->setPlaceholder('year', date('Y'));
 
         // set login logo image
         if ($this->getCore()->getConfig('login_logo')) {
             $this->getCore()->setPlaceholder('login_logo', MODX_SITE_URL . $this->getCore()->getConfig('login_logo'));
         } else {
-            $this->getCore()->setPlaceholder('login_logo', MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-logo.png');
+            $this->getCore()->setPlaceholder('login_logo', $this->getThemeDir() . 'images/login/default/login-logo.png');
         }
 
         // set login background image
         $path = $this->getCore()->getConfig('login_bg');
         if (empty($path)) {
-            $path  = MODX_MANAGER_URL . 'media/style/' . $this->getTheme() . '/images/login/default/login-background.jpg';
+            $path  = $this->getThemeUrl() . 'images/login/default/login-background.jpg';
         } else {
             $path = MODX_SITE_URL . $path;
         }
@@ -666,37 +675,33 @@ class ManagerTheme implements ManagerThemeInterface
             'loginbox-' . $this->getCore()->getConfig('login_form_position')
         );
 
-        switch ($this->getCore()->getConfig('manager_theme_mode')) {
-            case '1':
-                $this->getCore()->setPlaceholder('manager_theme_style', 'lightness');
-                break;
-            case '2':
-                $this->getCore()->setPlaceholder('manager_theme_style', 'light');
-                break;
-            case '3':
-                $this->getCore()->setPlaceholder('manager_theme_style', 'dark');
-                break;
-            case '4':
-                $this->getCore()->setPlaceholder('manager_theme_style', 'darkness');
-                break;
-        }
+        $this->getCore()->setPlaceholder('manager_theme_style', $this->getThemeStyle());
 
         // set form style css class
-        $this->getCore()->setPlaceholder('login_form_style_class', 'loginbox-' . $this->getCore()->getConfig('login_form_style'));
+        $this->getCore()->setPlaceholder(
+            'login_form_style_class',
+            'loginbox-' . $this->getCore()->getConfig('login_form_style')
+        );
 
         // andrazk 20070416 - notify user of install/update
         if (isset($_GET['installGoingOn'])) {
-            $installGoingOn = $_GET['installGoingOn'];
+            $installGoingOn = (int)$_GET['installGoingOn'];
         }
         if (isset($installGoingOn)) {
             switch ($installGoingOn) {
-                case 1 :
-                    $this->getCore()->setPlaceholder('login_message',
-                        "<p><span class=\"fail\">" . $this->getLexicon("login_cancelled_install_in_progress") . "</p><p>" . $this->getLexicon("login_message") . "</p>");
+                case 1:
+                    $this->getCore()->setPlaceholder(
+                        'login_message',
+                        '<p><span class="fail">' . $this->getLexicon('login_cancelled_install_in_progress') . '</p>' .
+                        '<p>' . $this->getLexicon('login_message') . '</p>'
+                    );
                     break;
-                case 2 :
-                    $this->getCore()->setPlaceholder('login_message',
-                        "<p><span class=\"fail\">" . $this->getLexicon("login_cancelled_site_was_updated") . "</p><p>" . $this->getLexicon("login_message") . "</p>");
+                case 2:
+                    $this->getCore()->setPlaceholder(
+                        'login_message',
+                        '<p><span class="fail">' . $this->getLexicon('login_cancelled_site_was_updated') . '</p>'.
+                        '<p>' . $this->getLexicon('login_message') . '</p>'
+                    );
                     break;
             }
         }
@@ -768,8 +773,10 @@ class ManagerTheme implements ManagerThemeInterface
 
         // merge placeholders
         $login_tpl = $this->getCore()->mergePlaceholderContent($login_tpl);
-        $regx = strpos($login_tpl,
-            '[[+') !== false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
+        /**
+         * little tweak for newer parsers
+         */
+        $regx = (strpos($login_tpl, '[[+') !== false) ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~';
         $login_tpl = preg_replace($regx, '', $login_tpl); //cleanup
 
         return $login_tpl;
@@ -791,8 +798,7 @@ class ManagerTheme implements ManagerThemeInterface
                 $_SESSION['mgrShortname'],
                 $this->getCore()->tstart,
                 (string)$action,
-                $this->getItemId() === null ?
-                    var_export(null, true) : $this->getItemId()
+                $this->getItemId() ?? var_export(null, true)
             );
             $this->getCore()->getDatabase()->query($sql);
             $flag = true;
@@ -827,5 +833,94 @@ class ManagerTheme implements ManagerThemeInterface
             $message = $this->getLexicon($message);
         }
         $this->getCore()->webAlertAndQuit($message);
+    }
+
+    public function isLoadDatePicker() : bool
+    {
+        $actions = [85, 27, 4, 72, 13, 11, 12, 87, 88];
+        return \in_array($this->getCore()->getManagerApi()->action, $actions, true);
+    }
+
+    public function getCssFiles()
+    {
+        return [
+            'bootstrap' => MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css',
+            'font-awesome' => MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css',
+            'fonts' => $this->getThemeDir() . 'css/fonts.css',
+            'forms' => $this->getThemeDir() . 'css/forms.css',
+            'mainmenu' => $this->getThemeDir() . 'css/mainmenu.css',
+            'tree' => $this->getThemeDir() . 'css/tree.css',
+            'custom' => $this->getThemeDir() . 'css/custom.css',
+            'tabpane' => $this->getThemeDir() . 'css/tabpane.css',
+            'contextmenu' => $this->getThemeDir() . 'css/contextmenu.css',
+            'index' => $this->getThemeDir() . 'css/index.css',
+            'main' => $this->getThemeDir() . 'css/main.css'
+        ];
+    }
+
+    public function css()
+    {
+        $css = $this->getThemeUrl() . 'style.css';
+        $minCssName = 'css/styles.min.css';
+
+        if (!file_exists($this->getThemeDir(). $minCssName) && is_writable($this->getThemeDir() . 'css')) {
+            $files = $this->getCssFiles();
+            $evtOut = $this->getCore()->invokeEvent('OnBeforeMinifyCss', array(
+                'files' => $files,
+                'source' => 'manager',
+                'theme' => $this->getTheme()
+            ));
+            switch (true) {
+                case empty($evtOut):
+                case \is_array($evtOut) && count($evtOut) === 0:
+                    break;
+                case \is_array($evtOut) && count($evtOut) === 1:
+                    $files = $evtOut[0];
+                    break;
+                default:
+                    $this->getCore()->webAlertAndQuit(
+                        sprintf($this->getLexicon('invalid_event_response'), 'OnBeforeMinifyManagerCss')
+                    );
+            }
+            require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
+            $minifier = new \Formatter\CSSMinify($files);
+            $css = $minifier->minify();
+            file_put_contents(
+                $this->getThemeDir(). $minCssName,
+                $css
+            );
+        }
+        if (file_exists($this->getThemeDir(). $minCssName)) {
+            $css = $this->getThemeUrl() . $minCssName;
+        }
+
+        return $css . '?v=' . EVO_INSTALL_TIME;
+    }
+
+    public function getMainFrameHeaderHTMLBlock() : string
+    {
+        $evtOut = $this->getCore()->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+        return \is_array($evtOut) ? implode("\n", $evtOut) : '';
+    }
+
+    public function getThemeStyle() : string
+    {
+        $default = 'dark';
+        $modes = array('', 'lightness', 'light', 'dark', 'darkness');
+
+        $cookie = (int)get_by_key($_COOKIE, 'MODX_themeMode', 0, function ($val) use ($modes) {
+            return (int)$val > 0 && (int)$val <= \count($modes);
+        });
+        $system = $this->getCore()->getConfig('manager_theme_mode');
+
+        if (!empty($cookie)) {
+            $out = $modes[$cookie];
+        } elseif (!empty($system)) {
+            $out = $modes[$system];
+        } else {
+            $out = $default;
+        }
+
+        return $out;
     }
 }
