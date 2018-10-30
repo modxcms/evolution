@@ -6819,7 +6819,17 @@ class SystemEvent
      */
     public function output($msg)
     {
-        $this->_output .= $msg;
+        $this->addOutput($msg);
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function addOutput($data)
+    {
+        if(\is_scalar($data)) {
+            $this->_output .= $data;
+        }
     }
 
     /**
