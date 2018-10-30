@@ -400,15 +400,6 @@ $j(function(){
 					
 				if (visibleOptions == 0){$this.remove();}
 			});
-			
-			// Re-initiate the tooltips, in order for them to pick up any new help text which has been added
-			// This bit is MooTools, matching code inserted further up the page
-			if(!window.ie6){
-				$$(".tooltip").each(function(help_img){
-					help_img.setProperty("title", help_img.getProperty("alt"));
-				});
-				new Tips($$(".tooltip"), {className:"custom"});
-			}
 		}catch(e){
 			// If theres an error, fail nicely
 			alert("ManagerManager: An error has occurred: " + e.name + " - " + e.message);
