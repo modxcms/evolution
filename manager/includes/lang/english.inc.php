@@ -1515,3 +1515,5 @@ $_lang['manager_menu_position_top'] = 'top';
 $_lang['manager_menu_position_left'] = 'left';
 
 $_lang['invalid_event_response'] = 'The %s event has ivalid output';
+
+$_lang['chunk_processor'] = 'Chunks processing class';

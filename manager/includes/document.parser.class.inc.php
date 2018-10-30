@@ -193,6 +193,12 @@ class DocumentParser
             $database_server = '127.0.0.1';
         }
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
+
+        $DLTemplate = MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLTemplate.class.php';
+        if (file_exists($DLTemplate)) {
+            include_once $DLTemplate;
+        }
+
         $this->dbConfig = &$this->db->config; // alias for backward compatibility
         // events
         $this->event = new SystemEvent();
@@ -4333,11 +4339,12 @@ class DocumentParser
     {
         $out = null;
         if (empty($chunkName)) {
-            return $out;
-        }
-        if (isset ($this->chunkCache[$chunkName])) {
+            // nop
+        } elseif ($this->isChunkProcessor('DLTemplate')) {
+            $out = DLTemplate::getInstance($this)->getChunk($chunkName);
+        } elseif (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
-        } else if (stripos($chunkName, '@FILE') === 0) {
+        } elseif (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
             $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
@@ -4421,6 +4428,21 @@ class DocumentParser
     }
 
     /**
+     * @param string|object $processor
+     * @return bool
+     */
+    public function isChunkProcessor($processor)
+    {
+        $value = (string)$this->getConfig('chunk_processor');
+
+        if(is_object($processor)) {
+            $processor = get_class($processor);
+        }
+
+        return is_scalar($processor) && mb_strtolower($value) === mb_strtolower($processor) && class_exists($processor, false);
+    }
+
+    /**
      * parseChunk
      * @version 1.1 (2013-10-17)
      *
@@ -4442,7 +4464,9 @@ class DocumentParser
             return false;
         }
 
-        return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
+        return $prefix === '[+' && $suffix === '+]' && $this->isChunkProcessor('DLTemplate') ?
+            DLTemplate::getInstance($this)->parseChunk($chunkName, $chunkArr) :
+            $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
     }
 
     /**
