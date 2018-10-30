@@ -108,7 +108,7 @@ class shopkeeperDocLister extends site_contentDocLister
                             'data'      => $item,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($item) && $item === false) {
+                        if ($item === false) {
                             $this->skippedDocs++;
                             continue;
                         }
@@ -199,11 +199,14 @@ class shopkeeperDocLister extends site_contentDocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $maxDocs = $this->getCFGDef('maxDocs', 0);
             $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
 
-            $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
+            $subQuery = trim(implode(' ', array(
+                'SELECT', 'count(*)', 'FROM', $from, $where, $group, $limit
+            )));
+            $rs = $this->dbQuery("SELECT count(*) FROM ({$subQuery}) as `tmp`");
             $out = $this->modx->db->getValue($rs);
         }
 
@@ -247,7 +250,7 @@ class shopkeeperDocLister extends site_contentDocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $sort = $this->SortOrderSQL("c.createdon");
             list($tbl_site_content, $sort) = $this->injectSortByTV($tbl_site_content . ' ' . $this->_filters['join'],
                 $sort);
@@ -356,7 +359,7 @@ class shopkeeperDocLister extends site_contentDocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $rs = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
                 $group . " " .

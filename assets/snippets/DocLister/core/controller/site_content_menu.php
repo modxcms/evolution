@@ -335,7 +335,7 @@ class site_content_menuDocLister extends site_contentDocLister
                             'data'      => $data,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($data) && $data === false) {
+                        if ($data === false) {
                             continue;
                         }
                     }
@@ -635,7 +635,7 @@ class site_content_menuDocLister extends site_contentDocLister
                                 'data'      => $data,
                                 'nameParam' => 'prepare'
                             ));
-                            if (is_bool($data) && $data === false) {
+                            if ($data === false) {
                                 continue;
                             }
                         }

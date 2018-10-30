@@ -142,7 +142,13 @@ abstract class filterDocLister
             case '!=':
             case 'no':
             case 'isnot':
-                $output .= " != '" . $this->modx->db->escape($value) . "'";
+                $output = '(' . $output . " != '" . $this->modx->db->escape($value) . "' OR " . $output . ' IS NULL)';
+                break;
+            case 'isnull':
+                $output .= ' IS NULL';
+                break;
+            case 'isnotnull':
+                $output .= ' IS NOT NULL';
                 break;
             case '>':
             case 'gt':
@@ -191,7 +197,9 @@ abstract class filterDocLister
                      * искомый $word = " когда". С trim найдем "...мне некогда..." и "...тут когда-то...";
                      * Без trim будт обнаружено только "...тут когда-то..."
                      */
-                    $word_arr[] = $this->DocLister->LikeEscape($output, $word);
+                    if (($likeWord = $this->DocLister->LikeEscape($output, $word)) !== '') {
+                        $word_arr[] = $likeWord;
+                    }
                 }
                 if (!empty($word_arr)) {
                     $output = '(' . implode(' OR ', $word_arr) . ')';
@@ -203,7 +211,7 @@ abstract class filterDocLister
                 $output .= ' IN(' . $this->DocLister->sanitarIn($value, ',', true) . ')';
                 break;
             case 'notin':
-                $output .= ' NOT IN(' . $this->DocLister->sanitarIn($value, ',', true) . ')';
+                $output = '(' . $output . ' NOT IN(' . $this->DocLister->sanitarIn($value, ',', true) . ') OR ' . $output . ' IS NULL)';
                 break;
             default:
                 $output = '';

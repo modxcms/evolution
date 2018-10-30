@@ -26,13 +26,14 @@ class DLTemplate
     /**
      * @var null|Twig_Environment twig object
      */
-    protected $twig = null;
+    protected $twig;
 
     protected $twigEnabled = false;
+    protected $bladeEnabled = false;
 
-    protected $twigTemplateVars = array();
+    protected $templateData = array();
 
-    public $phx = null;
+    public $phx;
 
     /**
      * gets the instance via lazy initialization (created on first usage)
@@ -76,25 +77,44 @@ class DLTemplate
     {
     }
 
+    public function getTemplatePath()
+    {
+        return $this->templatePath;
+    }
+
     /**
      * Задает относительный путь к папке с шаблонами
      *
-     * @param $path
+     * @param string $path
+     * @param bool $supRoot
      * @return $this
      */
-    public function setTemplatePath($path)
+    public function setTemplatePath($path, $supRoot = false)
     {
         $path = trim($path);
-        $path = preg_replace(array(
-            '/\.*[\/|\\\]/i',
-            '/[\/|\\\]+/i'
-        ), array('/', '/'), $path);
+        if ($supRoot === false) {
+            $path = $this->cleanPath($path);
+        }
 
         if (!empty($path)) {
             $this->templatePath = $path;
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    protected function cleanPath($path)
+    {
+        return preg_replace(array('/\.*[\/|\\\]/i', '/[\/|\\\]+/i'), array('/', '/'), $path);
+    }
+
+    public function getTemplateExtension()
+    {
+        return $this->templateExtension;
     }
 
     /**
@@ -105,7 +125,8 @@ class DLTemplate
      */
     public function setTemplateExtension($ext)
     {
-        $ext = trim($ext, ". \t\n\r\0\x0B");
+        $ext = $this->cleanPath(trim($ext, ". \t\n\r\0\x0B"));
+
         if (!empty($ext)) {
             $this->templateExtension = $ext;
         }
@@ -114,18 +135,30 @@ class DLTemplate
     }
 
     /**
-     * Additional data for twig templates
+     * Additional data for external templates
      *
      * @param array $data
      * @return $this
      */
-    public function setTwigTemplateVars($data = array())
+    public function setTemplateData($data = array())
     {
         if (is_array($data)) {
-            $this->twigTemplateVars = $data;
+            $this->templateData = $data;
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function getTemplateData($data = array())
+    {
+        $plh = $this->templateData;
+        $plh['data'] = $data;
+        $plh['modx'] = $this->modx;
+        return $plh;
     }
 
     /**
@@ -158,7 +191,9 @@ class DLTemplate
     public function getChunk($name)
     {
         $tpl = '';
+        $ext = null;
         $this->twigEnabled = substr($name, 0, 3) == '@T_';
+        $this->bladeEnabled = substr($name, 0, 3) == '@B_';//(0 === strpos($name, '@B_'));
         if ($name != '' && !isset($this->modx->chunkCache[$name])) {
             $mode = (preg_match(
                 '/^((@[A-Z_]+)[:]{0,1})(.*)/Asu',
@@ -168,29 +203,22 @@ class DLTemplate
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
             if ($this->twigEnabled) {
                 $mode = '@' . substr($mode, 3);
+            } elseif ($this->bladeEnabled) {
+                $mode = '@' . substr($mode, 3);
+                $ext = $this->getTemplateExtension();
+                $this->setTemplateExtension('blade.php');
             }
             switch ($mode) {
                 case '@FILE':
                     if ($subTmp != '') {
                         $real = realpath(MODX_BASE_PATH . $this->templatePath);
-                        $path = realpath(MODX_BASE_PATH . $this->templatePath . preg_replace(array(
-                                '/\.*[\/|\\\]/i',
-                                '/[\/|\\\]+/i'
-                            ), array('/', '/'), $subTmp) . '.' . $this->templateExtension);
-                        $fname = explode(".", $path);
-                        if ($real == substr(
-                            $path,
-                            0,
-                            strlen($real)
-                        ) && end($fname) == $this->templateExtension && file_exists($path)
+                        $path = realpath(MODX_BASE_PATH . $this->templatePath . $this->cleanPath($subTmp) . '.' . $this->templateExtension);
+                        if (basename($path, '.' . $this->templateExtension) !== '' &&
+                            0 === strpos($path, $real) &&
+                            file_exists($path)
                         ) {
                             $tpl = file_get_contents($path);
                         }
-                    }
-                    break;
-                case '@CHUNK':
-                    if ($subTmp != '') {
-                        $tpl = $this->modx->getChunk($subTmp);
                     }
                     break;
                 case '@INLINE':
@@ -237,13 +265,41 @@ class DLTemplate
                 case '@TEMPLATE':
                     $tpl = $this->getTemplate($subTmp);
                     break;
+                case '@CHUNK':
+                    $tpl = $this->getBaseChunk($subTmp);
+                    break;
                 default:
-                    $tpl = $this->modx->getChunk($name);
+                    $tpl = $this->getBaseChunk($name);
             }
             $this->modx->chunkCache[$name] = $tpl;
         } else {
-            if ($name != '') {
-                $tpl = $this->modx->getChunk($name);
+            $tpl = $this->getBaseChunk($name);
+        }
+
+        if($ext !== null) {
+            $this->setTemplateExtension($ext);
+        }
+        return $tpl;
+    }
+
+    protected function getBaseChunk($name)
+    {
+        if (empty($name)) {
+            return null;
+        }
+
+        if (isset ($this->modx->chunkCache[$name])) {
+            $tpl = $this->modx->chunkCache[$name];
+        } else {
+            $table = $this->modx->getFullTableName('site_htmlsnippets');
+            $query = $this->modx->db->query(
+                "SELECT `snippet` FROM " . $table . " WHERE `name`='" . $this->modx->db->escape($name) . "' AND `disabled`=0"
+            );
+            if ($this->modx->db->getRecordCount($query) == 1) {
+                $row = $this->modx->db->getRow($query);
+                $tpl = $row['snippet'];
+            } else {
+                $tpl = null;
             }
         }
 
@@ -331,13 +387,14 @@ class DLTemplate
     public function parseChunk($name, $data = array(), $parseDocumentSource = false, $disablePHx = false)
     {
         $out = $this->getChunk($name);
-        if ($this->twigEnabled && ($out != '') && ($twig = $this->getTwig($name, $out))) {
-            $plh = $this->twigTemplateVars;
-            $plh['data'] = $data;
-            $plh['modx'] = $this->modx;
-            $out = $twig->render(md5($name), $plh);
-        } else {
-            if (is_array($data) && ($out != '')) {
+        switch (true) {
+            case $this->twigEnabled && $out !== '' && ($twig = $this->getTwig($name, $out)):
+                $out = $twig->render(md5($name), $this->getTemplateData($data));
+                break;
+            case $this->bladeEnabled && $out !== '' && ($blade = $this->getBlade($name, $out)):
+                $out = $blade->with($this->getTemplateData($data))->render();
+                break;
+            case is_array($data) && ($out != ''):
                 if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
                     $item = $this->renameKeyArr($data, '[', ']', '+');
                     $out = str_replace(array_keys($item), array_values($item), $out);
@@ -349,9 +406,8 @@ class DLTemplate
                     $this->phx->placeholders = array();
                     $this->setPHxPlaceholders($data);
                     $out = $this->phx->Parse($out);
-                    $out = $this->cleanPHx($out);
                 }
-            }
+                break;
         }
         if ($parseDocumentSource) {
             $out = $this->parseDocumentSource($out);
@@ -403,6 +459,34 @@ class DLTemplate
         }
 
         return $twig;
+    }
+
+    /**
+     * Return clone of blade
+     *
+     * @param string $name
+     * @param string $tpl
+     * @return Illuminate\View\Factory
+     */
+    protected function getBlade($name, $tpl)
+    {
+        $out = null;
+        try {
+            /**
+             * Illuminate\View\Factory $blade
+             */
+            $blade = $this->modx->blade;
+            $cache = md5($name). '-'. sha1($tpl);
+            $path = MODX_BASE_PATH . '/assets/cache/blade/' . $cache . '.blade.php';
+            if (! file_exists($path)) {
+                file_put_contents($path, $tpl);
+            }
+            $out = $blade->make('cache::' . $cache);
+        } catch (\Exception $exception) {
+            $this->modx->messageQuit($exception->getMessage());
+        }
+
+        return $out;
     }
 
     /**

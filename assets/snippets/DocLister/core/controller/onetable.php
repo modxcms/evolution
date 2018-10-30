@@ -127,7 +127,7 @@ class onetableDocLister extends DocLister
                             'data'      => $item,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($item) && $item === false) {
+                        if ($item === false) {
                             $this->skippedDocs++;
                             continue;
                         }
@@ -206,7 +206,7 @@ class onetableDocLister extends DocLister
 
             if ($extPrepare) {
                 $row = $extPrepare->init($this, array('data' => $row));
-                if (is_bool($row) && $row === false) {
+                if ($row === false) {
                     continue;
                 }
             }
@@ -250,7 +250,7 @@ class onetableDocLister extends DocLister
 
             $limit = $this->LimitSQL($this->getCFGDef('queryLimit', 0));
             $fields = $this->getCFGDef('selectFields', '*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $sort = $this->SortOrderSQL($this->getPK());
             $rs = $this->dbQuery("SELECT {$fields} FROM {$from} {$where} {$group} {$sort} {$limit}");
 
@@ -318,7 +318,7 @@ class onetableDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', '*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
         $sort = $this->SortOrderSQL($this->getPK());
         $limit = $this->LimitSQL($this->getCFGDef('queryLimit', 0));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
@@ -356,32 +356,30 @@ class onetableDocLister extends DocLister
                 $where = array();
             }
             if ($sanitarInIDs != "''") {
-                if ($sanitarInIDs != "''") {
-                    switch ($this->getCFGDef('idType', 'parents')) {
-                        case 'parents':
-                            switch ($this->getCFGDef('showParent', '0')) {
-                                case '-1':
-                                    $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs})";
-                                    break;
-                                case 0:
-                                    $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs}) AND {$this->getPK()} NOT IN({$sanitarInIDs})";
-                                    break;
-                                case 1:
-                                default:
-                                    $tmpWhere = "({$this->getParentField()} IN ({$sanitarInIDs}) OR {$this->getPK()} IN({$sanitarInIDs}))";
-                                    break;
-                            }
-                            if (($addDocs = $this->getCFGDef('documents', '')) != '') {
-                                $addDocs = $this->sanitarIn($this->cleanIDs($addDocs));
-                                $where[] = "((" . $tmpWhere . ") OR {$this->getPK()} IN({$addDocs}))";
-                            } else {
-                                $where[] = $tmpWhere;
-                            }
-                            break;
-                        case 'documents':
-                            $where[] = "{$this->getPK()} IN({$sanitarInIDs})";
-                            break;
-                    }
+                switch ($this->getCFGDef('idType', 'parents')) {
+                    case 'parents':
+                        switch ($this->getCFGDef('showParent', '0')) {
+                            case '-1':
+                                $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs})";
+                                break;
+                            case 0:
+                                $tmpWhere = "{$this->getParentField()} IN ({$sanitarInIDs}) AND {$this->getPK()} NOT IN({$sanitarInIDs})";
+                                break;
+                            case 1:
+                            default:
+                                $tmpWhere = "({$this->getParentField()} IN ({$sanitarInIDs}) OR {$this->getPK()} IN({$sanitarInIDs}))";
+                                break;
+                        }
+                        if (($addDocs = $this->getCFGDef('documents', '')) != '') {
+                            $addDocs = $this->sanitarIn($this->cleanIDs($addDocs));
+                            $where[] = "((" . $tmpWhere . ") OR {$this->getPK()} IN({$addDocs}))";
+                        } else {
+                            $where[] = $tmpWhere;
+                        }
+                        break;
+                    case 'documents':
+                        $where[] = "{$this->getPK()} IN({$sanitarInIDs})";
+                        break;
                 }
             }
             if (!empty($where)) {
@@ -393,7 +391,7 @@ class onetableDocLister extends DocLister
             $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $maxDocs = $this->getCFGDef('maxDocs', 0);
             $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
-            $rs = ("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
+            $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
             $out = $this->modx->db->getValue($rs);
         }
 

@@ -283,8 +283,7 @@ abstract class DocLister
         if ($ext = $this->getCFGDef('templateExtension')) {
             $DLTemplate->setTemplateExtension($ext);
         }
-        $DLTemplate->setTwigTemplateVars(array('DocLister' => $this));
-        $this->DLTemplate = $DLTemplate;
+        $this->DLTemplate = $DLTemplate->setTemplateData(array('DocLister' => $this));
     }
 
     /**
@@ -1018,7 +1017,7 @@ abstract class DocLister
                     'nameParam' => 'prepareWrap',
                     'return'    => 'placeholders'
                 ));
-                if (is_bool($params) && $params === false) {
+                if ($params === false) {
                     $out = $data;
                     $parse = false;
                 }
@@ -1671,7 +1670,8 @@ abstract class DocLister
                 $output = false;
             } else {
                 $output['join'] = $filter->get_join();
-                $output['where'] = stripslashes($filter->get_where());
+                $output['where'] = $filter->get_where();
+
             }
         }
         $this->debug->debug('getFilter');
