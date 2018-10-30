@@ -129,6 +129,19 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		jQuery('#captchaOff').change(function() {
 			jQuery('.captchaRow').fadeOut();
 		});
+
+        document.querySelectorAll('[name="chunk_processor"]').forEach(function(item) {
+          item.addEventListener('change', function() {
+            document.querySelectorAll('[name="enable_at_syntax"], [name="enable_filter"]').forEach(function(el) {
+              if (item.checked && item.value === 'DLTemplate') {
+                el.checked = !!el.value;
+                el.disabled = true;
+              } else {
+                el.disabled = false;
+              }
+            });
+          }, false);
+        });
 	</script>
 <?php
 if(is_numeric($_GET['tab'])) {
