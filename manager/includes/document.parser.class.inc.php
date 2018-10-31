@@ -2748,11 +2748,7 @@ class DocumentParser
             throw new RuntimeException('Call DocumentParser::executeParser on CLI mode');
         }
 
-        //error_reporting(0);
-        set_error_handler(array(
-            & $this,
-            "phpError"
-        ), E_ALL);
+        $this->registerErrorHandlers();
         $this->db->connect();
 
         // get the settings
@@ -6151,6 +6147,27 @@ class DocumentParser
     /* End of API functions                                       */
     /***************************************************************************************/
 
+    public function registerErrorHandlers()
+    {
+        $modx = $this;
+
+        set_error_handler(array($modx, 'phpError'), E_ALL);
+
+        register_shutdown_function(function() use($modx) {
+            $error = error_get_last();
+            if (\is_array($error)) {
+                $code = isset($error['type']) ? $error['type'] : 0;
+                if ($code>0) {
+                    $modx->phpError(
+                        $code,
+                        isset($error['message']) ? $error['message'] : '',
+                        isset($error['file']) ? $error['file'] : '',
+                        isset($error['line']) ? $error['line'] : ''
+                    );
+                }
+            }
+        });
+    }
     /**
      * PHP error handler set by http://www.php.net/manual/en/function.set-error-handler.php
      *
@@ -6406,6 +6423,7 @@ class DocumentParser
         }
 
         // Display error
+        ob_get_clean();
         if (isset($_SESSION['mgrValidated'])) {
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
