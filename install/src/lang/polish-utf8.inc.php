@@ -2,8 +2,8 @@
 /**
  * EVO Installer language file
  *
- * @version 1.5.0
- * @date 2018/02/23
+ * @version 1.5.1
+ * @date 2018/10/31
  * @author EVO Project Team
  *
  * @language Polish
@@ -32,7 +32,7 @@ $_lang["btnback_value"] = 'Wstecz';
 $_lang["btnclose_value"] = 'Zamknij';
 $_lang["btnnext_value"] = 'Dalej';
 $_lang["cant_write_config_file"] = 'EVO nie może zapisać pliku konfiguracyjnego. Skopiuj następujący kod do pliku';
-$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into EVO Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
+$_lang["cant_write_config_file_note"] = 'Po zakończeniu instalacji będziesz mógł zalogować się do EVO Admin pod adresem: twojadomena.com/[+MGR_DIR+]/';
 $_lang["checkbox_select_options"] = 'Zaznacz wybrane opcje: ';
 $_lang["checking_if_cache_exist"] = 'Sprawdzanie, czy istnieją foldery <span class=\"mono\">/assets/cache</span> oraz <span class=\"mono\">/assets/cache/rss</span>: ';
 $_lang["checking_iconv"] = 'Sprawdzanie czy rozszerzenie <span class="mono">iconv</span> jest dostępne: ';
@@ -49,7 +49,7 @@ $_lang["checking_mysql_strict_mode"] = 'Sprawdzanie trybu "strict sql_mode" dla 
 $_lang["checking_mysql_version"] = 'Sprawdzanie wersji MySQL: ';
 $_lang["checking_php_version"] = 'Sprawdzanie wersji PHP: ';
 $_lang["checking_registerglobals"] = 'Sprawdzanie, czy zmienne globalne (Register_Globals) są wyłączone: ';
-$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your EVO install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install EVO, but consider yourself warned.';
+$_lang["checking_registerglobals_note"] = 'Taka konfiguracja powoduje, że Twoja strona jest znacznie bardziej podatna na ataki typu Cross Site Scripting (XSS). Powinieneś wyłączyć tę opcję na serwerze. Są trzy podstawowe sposoby, aby to zrobić: można zmodyfikować główny plik php.ini, dodać regułę w pliku .htaccess znajdującym się w głównym folderze EVO lub dodać własny plik php.ini w każdym z folderów EVO (a jest ich sporo) z ustawieniami nadpisującymi ustawienia globalne. W dalszym ciągu możesz zainstalować EVO - pamiętaj jednak, że zostałeś ostrzeżony.';
 $_lang["checking_sessions"] = 'Sprawdzanie, czy obsługa sesji jest skonfigurowana poprawnie: ';
 $_lang["checking_table_prefix"] = 'Sprawdzanie prefiksu tabeli `';
 $_lang["choose_language"] = 'Wybierz język';
@@ -58,7 +58,7 @@ $_lang["config_permissions_note"] = 'Dla nowych instalacji na systemach Linux/Un
 $_lang["connection_screen_collation"] = 'System porównań (collation): ';
 $_lang["connection_screen_connection_method"] = 'Metoda połączenia: ';
 $_lang["connection_screen_database_connection_information"] = 'Informacje o bazie danych';
-$_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this EVO install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
+$_lang["connection_screen_database_connection_note"] = 'Wybierz nazwę bazy danych, którą chcesz użyć dla tej instalacji EVO. Jeśli baza danych nie istnieje, instalator podejmie próbę utworzenia jej. Utworzenie nowej bazy danych może się nie powieść, jeśli użytkownik MySQL nie ma wystarczających uprawnień.';
 $_lang["connection_screen_database_host"] = 'Host bazy danych:';
 $_lang["connection_screen_database_info"] = 'Informacje o bazie danych';
 $_lang["connection_screen_database_login"] = 'Nazwa użytkownika bazy: ';
@@ -83,7 +83,7 @@ $_lang["database_connection_failed_note"] = 'Sprawdź nazwę użytkownika i has�
 $_lang["database_use_failed"] = 'Baza danych nie może być użyta!';
 $_lang["database_use_failed_note"] = 'Sprawdź prawa dostępu do bazy danych dla wybranego użytkownika i spróbuj ponownie.';
 $_lang["default_language"] = 'Domyślny język Menedżera';
-$_lang["default_language_description"] = 'This is the default language that will be used in the EVO Manager back end control panel.';
+$_lang["default_language_description"] = 'Domyślny język dla EVO Manager.';
 $_lang["depedency_create"] = 'Zależność utworzona';
 $_lang["depedency_update"] = 'Zależność uaktualniona';
 $_lang["during_execution_of_sql"] = ' podczas wykonywania zapytania SQL ';
@@ -94,8 +94,8 @@ $_lang["failed"] = 'NIE POWIODŁO SIĘ!';
 $_lang["guid_set"] = 'GUID ustawiony';
 $_lang["help"] = 'Pomoc!';
 $_lang["help_link"] = 'https://evo.im/';
-$_lang["help_title"] = 'Installation assistance in the EVO forums';
-$_lang["iagree_box"] = 'I agree to the terms of <a href="../assets/docs/license.txt" target="_blank">the EVO license</a>. For translations of the GPL version 2 license, please visit the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System website</a>.';
+$_lang["help_title"] = 'Wsparcie przy instalacji EVO';
+$_lang["iagree_box"] = 'Akceptuję warunki <a href="../assets/docs/license.txt" target="_blank">licencji EVO</a>. Tłumaczenia licencji GPL w wersji 2 znajdziesz na stronie <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System</a>.';
 $_lang["install"] = 'Instaluj';
 $_lang["install_overwrite"] = 'Instaluj/Nadpisz: ';
 $_lang["install_results"] = 'Wyniki instalacji';
@@ -105,7 +105,7 @@ $_lang["installation_install_new_copy"] = 'Zainstaluj nową kopię ';
 $_lang["installation_install_new_note"] = 'Wybór tej opcji może spowodować nadpisanie danych w wybranej bazie danych.';
 $_lang["installation_mode"] = 'Typ instalacji';
 $_lang["installation_new_installation"] = 'Nowa instalacja';
-$_lang["installation_note"] = '<strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Tools</strong> -> System Configuration in the EVO Manager.';
+$_lang["installation_note"] = '<strong>Uwaga:</strong> Zanim zaczniesz przeglądać zasoby swojej strony zaloguj się do Menedżera i zapisz konfigurację. Wybierz zakładkę: <strong>Ustawienia</strong> -> Konfiguracja systemu.';
 $_lang["installation_successful"] = 'Instalacja zakończona pomyślnie!';
 $_lang["installation_upgrade_advanced"] = 'Zaawansowany tryb aktualizacji';
 $_lang["installation_upgrade_advanced_note"] = 'Tryb dla użytkowników zaawansowanych. Wybierz go, jeśli przenosisz instalację do bazy danych z innym kodowaniem znaków.<br /><b>Będziesz potrzebował pełnej nazwy bazy danych, nazwy użytkownika oraz jego hasła, jak również szczegółów dotyczących połączenia i systemu porównań.</b>';
@@ -116,10 +116,10 @@ $_lang["installing_demo_site"] = 'Instalowanie strony demo: ';
 $_lang["language_code"] = 'pl';
 $_lang["loading"] = 'Ładowanie...';
 $_lang["modules"] = 'Moduły';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://evo.im/" target="_blank" style="color: green; text-decoration:underline">EVO</a> Content Management Framework (CMF) project. All rights reserved. EVO is licensed under the GNU GPL.';
-$_lang["modx_footer2"] = 'EVO is free software.  We encourage you to be creative and make use of EVO in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified EVO, that you keep the source code free!';
-$_lang["modx_install"] = 'EVO &raquo; Instaluj';
-$_lang["modx_requires_php"] = ', i EVO wymagają PHP [+min_version+] lub późniejszy ';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://evo.im/" target="_blank" style="color: green; text-decoration:underline">Evolution CMS</a>. Wszystkie prawa zastrzeżone. EVO działa na licencji GNU GPL.';
+$_lang["modx_footer2"] = 'EVO jest wolnym oprogramowaniem. Zachęcamy Cię, abyś kreatywnie wykorzystywał EVO w jakikolwiek sposób, który uznasz za przydatny. Prosimy jedynie, abyś pozostawił kod źródłowy otwartym i darmowym w przypadku gdy zdecydujesz się na redystrybucję EVO w zmodyfikowanej przez siebie wersji.';
+$_lang["modx_install"] = 'EVO &raquo; Instalacja';
+$_lang["modx_requires_php"] = ', i EVO wymagają PHP [+min_version+] lub nowszego';
 $_lang["mysql_5051"] = ' MySQL w wersji 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Wersja 5.0.51 MySQL posiada wiele dobrze znanych błędów, które mogą przyczynić się do nieprawidłowego działania EVO. Zalecamy uaktualnienie MySQL przed kontynuowaniem instalacji.';
 $_lang["mysql_version_is"] = 'Wersja MySQL: ';
@@ -129,7 +129,7 @@ $_lang["not_found"] = 'nie znaleziono';
 $_lang["ok"] = 'OK!';
 $_lang["optional_items"] = 'Komponenty opcjonalne';
 $_lang["optional_items_note"] = 'Wybierz opcje instalacji, a następnie kliknij przycisk `Instaluj`: ';
-$_lang["php_security_notice"] = '<legend>Security notice</legend><p>While EVO will work on your PHP version, usage of EVO on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 5.6 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
+$_lang["php_security_notice"] = '<legend>Informacja dotycząca bezpieczeństwa</legend><p>EVO będzie działać na tej wersji PHP, jednak nie jest ona zalecana. Używana przez Ciebie wersja PHP posiada wiele błędów związanych z bezpieczeństwem. Zaktualizuj PHP do wersji 5.6 lub nowszej, w której błędy bezpieczeństwa nie występują. Zalecamy zmianę wersji PHP na wyższą, ze względu na bezpieczeństwo Twojej strony internetowej.</p>';
 $_lang["please_correct_error"] = '. Proszę popraw błąd';
 $_lang["please_correct_errors"] = '. Proszę popraw błędy';
 $_lang["plugins"] = 'Pluginy';
@@ -149,7 +149,7 @@ $_lang["sample_web_site_note"] = 'Pamiętaj, że ta operacja <b>nadpisze</b> ist
 $_lang["session_problem"] = 'Wystąpił problem z obsługą sesji przez serwer. Proszę skonsultuj się z administratorem aby usunąć ten problem.';
 $_lang["session_problem_try_again"] = 'Ponowić próbę?';
 $_lang["setup_cannot_continue"] = 'Z powodów wymienionych powyżej instalacja nie może być kontynuowana';
-$_lang["setup_couldnt_install"] = 'EVO setup couldn\'t install/alter some tables inside the selected database.';
+$_lang["setup_couldnt_install"] = 'Instalator EVO nie mógł zainstalować/zmodyfikować niektórych tabel w wybranej bazie danych.';
 $_lang["setup_database"] = 'Instalator spróbuje teraz skonfigurować bazę danych:<br />';
 $_lang["setup_database_create_connection"] = 'Łączenie z bazą danych: ';
 $_lang["setup_database_create_connection_failed"] = 'Połączenie z bazą danych nie powiodło się!';
@@ -170,12 +170,12 @@ $_lang["status_failed"] = 'BŁĄD!';
 $_lang["status_failed_could_not_create_database"] = 'BŁĄD! - nie można utworzyć bazy danych';
 $_lang["status_failed_database_collation_does_not_match"] = 'BŁĄD! - niezgodność systemów porównań; użyj SET NAMES lub wybierz %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'BŁĄD! - wybrany prefiks tabeli jest już wykorzystywany!';
-$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
+$_lang['status_failed_mysqli'] = 'Błąd - rozszerzenie mysqli dla PHP nie jest zainstalowane!';
 $_lang["status_passed"] = 'OK - baza danych została wybrana';
 $_lang["status_passed_database_created"] = 'OK - baza danych utworzona';
 $_lang["status_passed_server"] = 'OK - system porównań dostępny';
 $_lang["strict_mode"] = 'Tryb `strict sql_mode` dla MySQL jest włączony!';
-$_lang["strict_mode_error"] = 'Certain features of EVO may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
+$_lang["strict_mode_error"] = 'Niektóre z funkcji EVO mogą działać niepoprawnie gdy tryb STRICT_TRANS_TABLES sql_mode jest włączony. Możesz zmienić tryb MySQL edytując plik my.cnf lub kontaktując się z administratorem serwera.';
 $_lang["summary_setup_check"] = 'Instalator wykonał serię testów aby sprawdzić, czy wszystko jest gotowe do rozpoczęcia procesu instalacji.';
 $_lang["system_configuration"] = 'Konfiguracja systemu';
 $_lang["system_configuration_validate_referer_description"] = 'Włączenie <strong>weryfikacji nagłówków HTTP_REFERER</strong> jest rekomendowane aby zmniejszyć prawdopodobieństwo ataków CSRF, jednak przy niektórych konfiguracjach serwera może spowodować, że Menedżer EVO będzie niedostępny.';
@@ -195,11 +195,11 @@ $_lang["unable_install_template"] = 'Nie można zainstalować szablonów. Plik';
 $_lang["upgrade_note"] = '<strong>Uwaga:</strong> Przed rozpoczęciem przeglądania swojej strony zaloguj się jako administrator do Menedżera EVO, a następnie sprawdź i zapisz konfigurację systemu.';
 $_lang["upgraded"] = 'Zaktualizowano';
 $_lang["validate_referer_title"] = 'Weryfikuj nagłówki HTTP_REFERER?';
-$_lang["visit_forum"] = ', visit the <a href="http://forums.modx.com/" target="_blank">EVO Forums</a>.';
+$_lang["visit_forum"] = ', odwiedź <a href="http://forums.modx.com/" target="_blank">Forum EVO</a>.';
 $_lang["warning"] = 'UWAGA!';
 $_lang["welcome_message_start"] = 'Najpierw wybierz typ instalacji: ';
 $_lang["welcome_message_text"] = 'Ten kreator przeprowadzi Cię przez proces instalacji.';
-$_lang["welcome_message_welcome"] = 'Welcome to the EVO installation program.';
+$_lang["welcome_message_welcome"] = 'Witamy w instalatorze EVO.';
 $_lang["writing_config_file"] = 'Zapisywanie pliku konfiguracyjnego: ';
 $_lang["yes"] = 'Tak';
 $_lang["you_running_php"] = '- włączone PHP';
