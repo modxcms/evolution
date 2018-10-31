@@ -6236,7 +6236,6 @@ class DocumentParser
      */
     public function messageQuit($msg = 'unspecified error', $query = '', $is_error = true, $nr = '', $file = '', $source = '', $text = '', $line = '', $output = '')
     {
-
         if (0 < $this->messageQuitCount) {
             return;
         }
@@ -6270,7 +6269,7 @@ class DocumentParser
         }
 
         if (!empty ($query)) {
-            $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>';
+            $str .= '<pre style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">SQL &gt; <span id="sqlHolder">' . $query . '</span></pre>';
         }
 
         $errortype = array(
@@ -6293,10 +6292,10 @@ class DocumentParser
 
         if (!empty($nr) || !empty($file)) {
             if ($text != '') {
-                $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">Error : ' . $text . '</div>';
+                $str .= '<pre style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">Error : ' . $text . '</pre>';
             }
             if ($output != '') {
-                $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">' . $output . '</div>';
+                $str .= '<pre style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">' . $output . '</pre>';
             }
             if ($nr !== '') {
                 $table[] = array('ErrorType[num]', $errortype [$nr] . "[" . $nr . "]");
