@@ -2,8 +2,8 @@
 /**
  * EVO Manager language file
  *
- * @version 1.4.4
- * @date 2018/05/02
+ * @version 1.4.5
+ * @date 2018/10/31
  * @author The EVO Project Team
  * @author Piotr Matysiak (pmfx)
  *
@@ -127,7 +127,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Strona błędu Twojego serwisu je
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Oznacza to, że Twoja strona błędu jest niedostępna dla użytkowników albo nie istnieje. Może to powodować niestabilność i wiele błędnych wpisów w logach serwisu. Upewnij się, że żadna grupa użytkowników nie jest przypisana do strony.';
 $_lang["configcheck_errorpage_unpublished"] = 'Strona błędu Twojego serwisu jest nieopublikowana lub nie istnieje.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Oznacza to, że strona błędu Twojego serwisu jest niedostępna dla odwiedzających. Opublikuj tą stronę albo upewnij się, że jest ona przypisana do istniejącego dokumentu w drzewie zawartości Twojej strony.';
-$_lang["configcheck_filemanager_path"] = 'Obecne ustawienie <a href="/[+MGR_DIR+]/#?a=17&tab=5">File Manager path</a> wygląda na niepoprawne. ';
+$_lang["configcheck_filemanager_path"] = 'Obecne ustawienie <a href="index.php?a=17&tab=5">File Manager path</a> wygląda nieprawidłowo.';
 $_lang["configcheck_filemanager_path_msg"] = 'To może się zdarzyć np. po przeniesieniu instalacji do innego katalogu lub innego serwera. Proszę sprawdzić i zapisać Konfigurację EVO.';
 $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Nie pokazuj tego ponownie.</em></a>';
 $_lang["configcheck_images"] = 'Katalog obrazów nie jest zapisywalny';
@@ -140,7 +140,7 @@ $_lang["configcheck_notok"] = 'Jedno lub więcej z ustawień konfiguracyjnych ni
 $_lang["configcheck_ok"] = 'Sprawdzanie przebiegło pomyślnie - brak ostrzeżeń.';
 $_lang["configcheck_php_gdzip"] = 'Rozszerzenia GD i/albo Zip PHP nie zostały znalezione.';
 $_lang["configcheck_php_gdzip_msg"] = 'Do poprawnego działania EVO potrzebuje włączonych w konfiguracji PHP rozszerzeń GD oraz Zip. EVO będzie wciąż działał poprawnie, jednak nie będzie możliwe korzystanie z wszystkich jego funkcji: managera plików, edytora obrazów oraz Captcha przy logowaniu.';
-$_lang["configcheck_rb_base_dir"] = 'Obecne ustawienie <a href="/[+MGR_DIR+]/#?a=17&tab=6">File base path</a> wygląda nieprawidłowo.';
+$_lang["configcheck_rb_base_dir"] = 'Obecne ustawienie <a href="index.php?a=17&tab=6">File base path</a> wygląda nieprawidłowo.';
 $_lang["configcheck_rb_base_dir_msg"] = 'To może się zdarzyć np. po przeniesieniu instalacji do innego katalogu lub innego serwera. Proszę sprawdzić i zapisać Konfigurację EVO.';
 $_lang["configcheck_register_globals"] = 'register_globals jest włączona w konfiguracji PHP';
 $_lang["configcheck_register_globals_msg"] = 'Taka konfiguracja może zagrozić bezpieczeństwu strony, ponieważ powoduje większą wrażliwość na ataki typu XSS.';
@@ -436,6 +436,10 @@ $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Wstaw';
 $_lang["maxImageWidth"] = 'Maksymalna szerokość obrazu';
 $_lang["maxImageHeight"] = 'Maksymalna wysokość obrazu';
+$_lang["clientResize"] = 'Zmień rozmiar obrazów po stronie użytkownika';
+$_lang["clientResize_message"] = 'Gdy włączone, rozmiar obrazów zostanie zmieniony przez przeglądarkę, przed wysłaniem na serwer';
+$_lang["noThumbnailsRecreation"] = 'Generuj miniaturki tylko podczas wysyłania';
+$_lang["noThumbnailsRecreation_message"] = 'Przeglądarka plików EVO stworzy miniaturki tylko podczas wysyłania; Jeśli  niektóre pliki nie mają miniaturek, miniaturki dla nich nie zostaną stworzone';
 $_lang["thumbWidth"] = 'Maksymalna szerokość miniatury';
 $_lang["thumbHeight"] = 'Maksymalna wysokość miniatury';
 $_lang["thumbsDir"] = 'Położenie katalogu miniatur';
@@ -711,6 +715,7 @@ $_lang["plugin_priority"] = 'Edytuj kolejność wykonywania pluginów';
 $_lang["plugin_priority_instructions"] = 'Przeciągnij aby zmienić kojejność pluginów w każdej z kategorii wydarzeń. Plugin który ma być uruchomiony jako pierwszy powinien być na szczycie listy.';
 $_lang["plugin_priority_title"] = 'Kolejność wykonywania pluginów';
 $_lang["purge_plugin"] = 'Usuń przestarzałe wtyczki';
+$_lang["purge_plugin_confirm"] = 'Czy na pewno chcesz usunąć przestarzałe pluginy?';
 $_lang["plugin_title"] = 'Stwórz/edytuj wtyczkę';
 $_lang["preview"] = 'Podgląd';
 $_lang["preview_msg"] = 'To jest podgląd twoich ostatnio zapisanych zmian. Kliknij tutaj aby <a href="javascript:;" onclick="saveRefreshPreview();">zapisać i odświeżyć</a> obecne zmiany';
@@ -956,7 +961,7 @@ $_lang["settings_show_picker_message"] = 'Zmienia wygląd Menedżera i zapisuje 
 $_lang["show_fullscreen_btn"] = 'Przełącznik pełnego ekranu';
 $_lang["show_newresource_btn"] = 'Przycisk nowego zasobu';
 $_lang["settings_site"] = 'Strona';
-$_lang["settings_strip_image_paths_message"] = 'If this is set to \'No\', EVO  will write file browser src\'s (images, files, flash, etc.) as absolute URLs. Relative URLs are helpful should you wish to move your EVO install, e.g., from a staging site to a production site. If you have no idea what this means, it\'s best just to leave it set to \'Yes\'.';
+$_lang["settings_strip_image_paths_message"] = 'Jeśli wybrano "Nie", EVO będzie tworzyć ścieżki do plików (obrazów, plików, filmów itd.) jako absolutne URL. Z kolei URL relatywne są pomocne gdy np. chcesz przenieść swoje EVO z domeny tymczasowej na docelową. Jeśli nie wiesz co to oznacza, wybierz opcję "Tak".';
 $_lang["settings_strip_image_paths_title"] = 'Przepisuj ścieżki przeglądarki';
 $_lang["settings_templvars"] = 'Zmienne szablonu';
 $_lang["settings_title"] = 'Konfiguracja systemu';
@@ -1207,7 +1212,7 @@ $_lang["webpwdreminder_title"] = 'E-mail przypomnienia Web';
 $_lang["websignupemail_message"] = 'Tutaj możesz ustawić treść wiadomości wysyłanej użytkownikowi po utworzeniu dla niego nowego konta. Wiadomość będzie zawierać nazwę użytkownika i hasło. <br /><b>Uwaga:</b> Poniższe znaczniki zostaną zamienione na tekst przy wysyłaniu wiadomości: <br /><br />[+sname+] - Nazwa Twojej strony, <br />[+saddr+] - Adres e-mail, <br />[+surl+] - URL Twojej strony, <br />[+uid+] - Nazwa lub ID użytkownika, <br />[+pwd+] - Hasło użytkownika, <br />[+ufn+] - Pełna nazwa użytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w treści wiadomości, ponieważ w przeciwnym razie użytkownik nie będzie w stanie zalogować się do serwisu!</b>';
 $_lang["websignupemail_title"] = 'E-mail rejestracyjny Web';
 $_lang["allow_multiple_emails_title"] = 'Pozwalaj użytkownikom mieć ten sam e-mail';
-$_lang["allow_multiple_emails_message"] = 'Allows Web Users to share the same email address for situations when a member may not have their own email address or there is just one family email address.<br/>Note: Any password reminder and registration logic will need to account for this option if set to yes.';
+$_lang["allow_multiple_emails_message"] = 'Pozwala użytkownikom Web korzystać z tego samego adresu e-mail. Uwaga: logika snippetów rejestrowania użytkownika i resetowania hasła, będzie musiała wziąć to ustawienie pod uwagę, jeśli wybrano "Tak".';
 $_lang["wednesday"] = 'Środa';
 $_lang["welcome_messages"] = 'Twoja skrzynka wiadomości zawiera <b>%d</b> wiadomość(-ci), z których <b>%s</b> jest nieprzeczytane.';
 $_lang["welcome_title"] = 'Witaj w swoim systemie EVO';
@@ -1245,7 +1250,7 @@ $_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbud
 $_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbudowane filtry będą domyślnie wyłączone';
 
 $_lang["enable_at_syntax_title"] = 'Włącz &lt;@SYNTAX&gt;';
-$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt;(atmark syntax) is simple and lightweight template syntax. This is designed to consider coexistence with HTML tags and content strings.';
+$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt;(atmark syntax) to prosta i lekka składnia szablonów. Została zaprojektowania aby wziąć pod uwagę współistnienie tagów HTML oraz ciągów danych treści.';
 
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
@@ -1490,7 +1495,7 @@ $_lang["viewopts_cb_alltabs"] = 'Wszystkie karty';
 $_lang['email_sender_method'] = 'Nadawca wiadomości';
 $_lang['auto'] = 'Wykryj automatycznie';
 $_lang['use_emailsender'] = 'Użyj wartości [(emailsender)]';
-$_lang['email_sender_method_message'] = 'The envelope sender of the message. This will usually be turned into a Return-Path header by the receiver, and is the address that bounces will be sent to. Auto-detect will work in most cases.';
+$_lang['email_sender_method_message'] = 'Nadawca koperty wiadomości. Zwykle zostanie zamieniony na nagłówek Return-Path przez odbiorcę i jest to adres, do którego zostaną wysłane odrzucone wiadomości. Automatyczne wykrywanie będzie działać w większości przypadków.';
 
 $_lang['login_form_position_title'] = 'Pozycja formularza logowania';
 $_lang['login_form_position_left'] = 'Lewa strona';
@@ -1504,3 +1509,4 @@ $_lang['login_bg_message'] = 'Zalecana szerokość to 1920px';
 $_lang['manager_menu_position_title'] = 'Położenie głównej nawigacji';
 $_lang['manager_menu_position_top'] = 'Góra';
 $_lang['manager_menu_position_left'] = 'Lewa';
+$_lang['invalid_event_response'] = 'Zdarzenie %s ma nieprawidłowy wynik';
