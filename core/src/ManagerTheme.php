@@ -280,9 +280,9 @@ class ManagerTheme implements ManagerThemeInterface
         $this->textDir = $textDir === 'rtl' ? 'rtl' : 'ltr';
     }
 
-    public function getLexicon($key = null)
+    public function getLexicon($key = null, $default = '')
     {
-        return $key === null ? $this->lexicon : get_by_key($this->lexicon, $key, '');
+        return $key === null ? $this->lexicon : get_by_key($this->lexicon, $key, $default);
     }
 
     public function getCharset()

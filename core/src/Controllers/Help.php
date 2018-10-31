@@ -39,26 +39,23 @@ class Help extends AbstractController implements ManagerTheme\PageControllerInte
     {
         $pages = [];
 
-        if ($handle = opendir($this->helpBasePath)) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != ".." && $file != ".svn" && $file != 'index.html' && !is_dir($this->helpBasePath . $file)) {
-                    $name = substr($file, 0, strrpos($file, '.'));
-                    $prefix = substr($name, 0, 2);
-                    if (is_numeric($prefix)) {
-                        $name = substr($name, 2, strlen($name) - 1);
-                    }
-                    $hnLower = strtolower($name);
-                    $name = isset($_lang[$hnLower]) ? $this->managerTheme->getLexicon($hnLower) : str_replace('_', ' ',
-                        $name);
-                    $pages[$file] = [
-                        'name' => $name,
-                        'path' => $this->helpBasePath . $file
-                    ];
-                }
+        $help = glob($this->helpBasePath . '*.phtml');
+        natcasesort($help);
+
+        foreach ($help as $file) {
+            $fileName = basename($file, '.phtml');
+            preg_match('/^(\d+)(.*)$/', $fileName, $prefix);
+            if (isset($prefix[1]) && is_numeric($prefix[1])) {
+                $helpname = $prefix[2];
+            } else {
+                $helpname = $fileName;
             }
-            closedir($handle);
+
+            $pages[$file] = [
+                'name' => $this->managerTheme->getLexicon(strtolower($helpname), str_replace('_', ' ', $helpname)),
+                'path' => $file
+            ];
         }
-        sort($pages);
 
         return $pages;
     }
