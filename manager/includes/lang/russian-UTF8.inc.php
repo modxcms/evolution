@@ -2,8 +2,8 @@
 /**
  * EVO Manager language file
  *
- * @version 1.2.1RC
- * @date 2016/12/26
+ * @version 1.4.5
+ * @date 2018/10/31
  * @author The EVO Project Team
  *
  * @language Russian
