@@ -2564,7 +2564,9 @@ class DocumentParser
                     }
                 }
             }
-        } elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']) {
+        } elseif(preg_match('#/\?q\=' . $strictURL . '#i', $_SERVER['REQUEST_URI']) ||
+            ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page'])
+        ) {
             // Force page redirect
             //$strictURL = ltrim($strictURL,'/');
             if (!empty($qstring)) {
