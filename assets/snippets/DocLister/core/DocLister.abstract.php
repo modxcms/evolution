@@ -306,7 +306,7 @@ abstract class DocLister
                     break;
                 case ')':
                     $open--;
-                    if ($open == 0) {
+                    if ($open === 0) {
                         $res[] = $cur . ')';
                         $cur = '';
                     } else {
@@ -318,7 +318,7 @@ abstract class DocLister
                     $cur .= $e;
                     break;
                 case ';':
-                    if ($open == 0) {
+                    if ($open === 0) {
                         $res[] = $cur;
                         $cur = '';
                     } else {
@@ -330,11 +330,11 @@ abstract class DocLister
             }
         }
         $cur = preg_replace("/(\))$/u", '', $cur);
-        if ($cur != '') {
+        if ($cur !== '') {
             $res[] = $cur;
         }
 
-        return $res;
+        return array_reverse($res);
     }
 
     /**
@@ -1646,10 +1646,19 @@ abstract class DocLister
                 $logic_op_found = true;
                 $subfilters = mb_substr($filter_string, strlen($op) + 1, mb_strlen($filter_string, "UTF-8"), "UTF-8");
                 $subfilters = $this->smartSplit($subfilters);
-                foreach ($subfilters as $subfilter) {
-                    $subfilter = $this->getFilters(trim($subfilter));
+                $lastFilter = '';
+                foreach ($subfilters as $filter) {
+                    /**
+                     * С правой стороны не выполняется trim, т.к. там находятся значения. А они могу быть чувствительны к пробелам
+                     */
+                    $subfilter = $this->getFilters(ltrim($filter) . $lastFilter);
                     if (!$subfilter) {
-                        continue;
+                        $lastFilter = explode(';', $filter, 2);
+                        $subfilter = isset($lastFilter[1]) ? $this->getFilters($lastFilter[1]) : '';
+                        $lastFilter = $lastFilter[0];
+                        if (!$subfilter) {
+                            continue;
+                        }
                     }
                     if ($subfilter['join']) {
                         $joins[] = $subfilter['join'];
@@ -1658,8 +1667,8 @@ abstract class DocLister
                         $wheres[] = $subfilter['where'];
                     }
                 }
-                $output['join'] = !empty($joins) ? implode(' ', $joins) : '';
-                $output['where'] = !empty($wheres) ? '(' . implode($sql, $wheres) . ')' : '';
+                $output['join'] = !empty($joins) ? implode(' ', array_reverse($joins)) : '';
+                $output['where'] = !empty($wheres) ? '(' . implode($sql, array_reverse($wheres)) . ')' : '';
             }
         }
 
