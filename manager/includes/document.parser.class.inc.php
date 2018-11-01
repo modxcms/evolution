@@ -14,12 +14,6 @@ if (!defined('E_USER_DEPRECATED')) {
 class DocumentParser
 {
     /**
-     * This is New evolution
-     * @var string
-     */
-    public $apiVersion = '1.0.0';
-
-    /**
      * db object
      * @var DBAPI
      * @see /manager/includes/extenders/ex_dbapi.inc.php
