@@ -42,7 +42,7 @@ class Filters {
      * @return string
      */
     public static function lcfirst($value) {
-        return is_scalar($value) ? lcfirst($value) : '';
+        return is_scalar($value) ? mb_strtolower(mb_substr($value, 0, 1)) . mb_substr($value, 1) : '';
     }
 
     /**
@@ -50,7 +50,7 @@ class Filters {
      * @return string
      */
     public static function ucfirst($value) {
-        return is_scalar($value) ? ucfirst($value) : '';
+        return is_scalar($value) ? mb_strtoupper(mb_substr($value, 0, 1)) . mb_substr($value, 1) : '';
     }
 
     /**
@@ -58,7 +58,7 @@ class Filters {
      * @return string
      */
     public static function ucwords($value) {
-        return is_scalar($value) ? ucwords($value) : '';
+        return is_scalar($value) ? mb_convert_case($value, MB_CASE_TITLE, "UTF-8") : '';
     }
 
     /**
