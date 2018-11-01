@@ -6772,7 +6772,7 @@ class DocumentParser
      */
     private static function _getCleanQueryString()
     {
-        $q = MODX_CLI ? null : $_GET['q'];
+        $q = MODX_CLI ? null : (isset($_GET['q']) ? $_GET['q'] : '');
 
         //Return null if the query doesn't exist
         if (empty($q)) {
