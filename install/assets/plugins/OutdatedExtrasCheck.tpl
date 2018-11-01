@@ -1,10 +1,10 @@
 /**
  * OutdatedExtrasCheck
  *
- * Check for Outdated critical extras not compatible with EVO 1.4.5
+ * Check for Outdated critical extras not compatible with EVO 1.4.6
  *
  * @category	plugin
- * @version     1.4.5
+ * @version     1.4.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     evo
  * @author      Author: Nicola Lambathakis
