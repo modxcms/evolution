@@ -50,7 +50,7 @@ switch (true)
             $widgets['xtraCheck'] = array(
                 'menuindex' => '0',
                 'id'        => 'xtraCheck' . $checkOutdated->getPluginId() . '',
-                'cols'      => 'col-12',
+                'cols'      => 'col-lg-12',
                 'headAttr'  => 'style="color:#E84B39;"',
                 'bodyAttr'  => '',
                 'icon'      => 'fa-warning',
