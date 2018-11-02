@@ -32,7 +32,7 @@ switch (true)
         }
         $checkOutdated = new CheckOutdated($modx, $modx->event->activePlugin, $_lang);
         $outdated = $checkOutdated->load(
-            MODX_BASE_PATH . 'assets/plugins/extrascheck/outdated.json'
+            'https://raw.githubusercontent.com/evolution-cms/OutdatedExtrasCheck/master/outdated.json'
         );
 
         $out = '';
