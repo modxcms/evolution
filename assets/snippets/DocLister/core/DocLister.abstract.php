@@ -1000,7 +1000,8 @@ abstract class DocLister
     {
         $out = $data;
         $docs = count($this->_docs) - $this->skippedDocs;
-        if ((($this->getCFGDef("noneWrapOuter", "1") && $docs == 0) || $docs > 0) && !empty($this->ownerTPL) || !empty($this->getCFGDef('prepareWrap'))) {
+        $wrap = $this->getCFGDef('prepareWrap');
+        if ((($this->getCFGDef("noneWrapOuter", "1") && $docs == 0) || $docs > 0) && !empty($this->ownerTPL) || !empty($wrap)) {
             $this->debug->debug("", "renderWrapTPL", 2);
             $parse = true;
             $plh = array($this->getCFGDef("sysKey", "dl") . ".wrap" => $data);
