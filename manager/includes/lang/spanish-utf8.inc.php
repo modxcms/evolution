@@ -7,7 +7,7 @@
  * @author The EVO Project Team
  *
  * @language Spanish
- * @package modx
+ * @package evo
  * @subpackage manager
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
@@ -157,8 +157,8 @@ $_lang["configcheck_validate_referer_msg"] = 'The configuration setting <strong>
 $_lang["configcheck_warning"] = 'Advertencia de configuración:';
 $_lang["configcheck_what"] = '¿Qué significa esto?';
 $_lang["confirm_block"] = '¿Estás seguro de que quieres bloquear a este usuario?';
+$_lang["confirm_delete_category"] = '¿Estás seguro de que quieres borrar esta categoría?';
 $_lang["confirm_delete_eventlog"] = '¿Estás seguro de que quieres borrar esta bitácora de eventos?';
-$_lang["confirm_delete_eventlog"] = 'Are you sure you want to delete this event log?';
 $_lang["confirm_delete_file"] = '¿Estás segura de que quieres borrar el archivo?\n\n¡Esto puede hacer que tu sitio deje de funcionar correctamente! Sólo borra este archivo si sabes con seguridad que lo que estás haciendo no va a romper nada.';
 $_lang["confirm_delete_group"] = 'Are you sure you want to delete this group?';
 $_lang["confirm_delete_htmlsnippet"] = '¿Estás seguro de que quieres borrar este chunk?';
