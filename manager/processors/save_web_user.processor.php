@@ -168,15 +168,14 @@ switch($input['mode']) {
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
 
 			<div id="actions">
-				<ul class="actionButtons">
-					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
-				</ul>
+                <div class="btn-group">
+                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a>
+                </div>
 			</div>
 
-			<div class="section">
-				<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
-				<div class="sectionBody">
-					<div id="disp">
+			<div class="sectionBody">
+				<div class="tab-page">
+					<div class="container container-body" id="disp">
 						<p>
 							<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?>
 						</p>
@@ -306,16 +305,16 @@ switch($input['mode']) {
 
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
 
-			<div id="actions">
-				<ul class="actionButtons">
-					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
-				</ul>
-			</div>
+            <div id="actions">
+                <div class="btn-group">
+                    <a href="<?php echo $stayUrl ?>" class="btn"><i class="<?php echo $_style["actions_save"] ?>"></i>
+                        <?php echo $_lang['edit']; ?></a>
+                </div>
+            </div>
 
-			<div class="section">
-				<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
-				<div class="sectionBody">
-					<div id="disp">
+			<div class="sectionBody">
+				<div class="tab-page">
+					<div class="container container-body" id="disp">
 						<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?></p>
 					</div>
 				</div>
