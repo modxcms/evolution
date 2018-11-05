@@ -163,15 +163,14 @@ switch($input['mode']) {
 			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
-				<ul class="actionButtons">
-					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
-				</ul>
+                <div class="btn-group">
+                    <a class="btn" href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a>
 			</div>
+            </div>
 
-			<div class="section">
-				<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 				<div class="sectionBody">
-					<div id="disp">
+				<div class="tab-page">
+					<div class="container container-body" id="disp">
 						<p>
 							<?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername), $modx->getPhpCompat()->htmlspecialchars($newpassword)); ?>
 						</p>
@@ -299,16 +298,18 @@ switch($input['mode']) {
 			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
-				<ul class="actionButtons">
-					<li class="transition"><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
-				</ul>
+                <div class="btn-group">
+                    <a class="btn" href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl;
+                    ?>"><i
+                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a>
+			</div>
 			</div>
 
-			<div class="section">
-				<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 				<div class="sectionBody">
-					<div id="disp">
-						<p><?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername), $modx->getPhpCompat()->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID()) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
+                <div class="tab-page">
+                    <div class="container container-body" id="disp">
+                        <p><?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername),
+                                    $modx->getPhpCompat()->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID()) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
 					</div>
 				</div>
 			</div>
