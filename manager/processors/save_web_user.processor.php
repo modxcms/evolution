@@ -1,14 +1,14 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('save_web_user')) {
+if (!$modx->hasPermission('save_web_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $input = $_POST;
-foreach($input as $k => $v) {
-	if($k !== 'comment' && $k !=='user_groups') {
+foreach ($input as $k => $v) {
+    if ($k !== 'comment' && $k !== 'user_groups') {
 		$v = $modx->getPhpCompat()->htmlspecialchars($v, ENT_NOQUOTES);
 	}
 	$input[$k] = $v;
@@ -44,16 +44,16 @@ $blockedafter = !empty($input['blockedafter']) ? $modx->toTimeStamp($input['bloc
 $user_groups = $input['user_groups'];
 
 // verify password
-if($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
+if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
 	webAlertAndQuit("Password typed is mismatched", 88);
 }
 
 // verify email
-if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!", 88);
 }
 
-switch($input['mode']) {
+switch ($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
 		if (EvolutionCMS\Models\WebUser::where('username', '=', $newusername)->first()) {
@@ -68,15 +68,15 @@ switch($input['mode']) {
 		}
 
 		// generate a new password for this user
-		if($specifiedpassword != "" && $passwordgenmethod == "spec") {
-			if(strlen($specifiedpassword) < 6) {
+        if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
+            if (strlen($specifiedpassword) < 6) {
 				webAlertAndQuit("Password is too short!", 88);
 			} else {
 				$newpassword = $specifiedpassword;
 			}
-		} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
+        } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
 			webAlertAndQuit("You didn't specify a password for this user!", 88);
-		} elseif($passwordgenmethod == 'g') {
+        } elseif ($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
 			webAlertAndQuit("No password generation method specified!", 88);
@@ -95,6 +95,11 @@ switch($input['mode']) {
 		$internalKey = $webUser->getKey();
 		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$webUser->attributes()->create($field);
+
+        $field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street',
+            'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
+        $field = $modx->db->escape($field);
+        $modx->db->insert($field, $tbl_web_user_attributes);
 
 		// Save User Settings
         saveWebUserSettings($internalKey);
@@ -132,9 +137,9 @@ switch($input['mode']) {
             "id" => $internalKey
         ));
 
-		if($passwordnotifymethod == 'e') {
+        if ($passwordnotifymethod == 'e') {
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $websignupemail_message, $site_url);
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$internalKey}" : "87";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
@@ -143,7 +148,7 @@ switch($input['mode']) {
 				header($header);
 			}
 		} else {
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$internalKey}" : "87";
 				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
@@ -157,7 +162,8 @@ switch($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a>
+                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?>
+                    </a>
                 </div>
 			</div>
 
@@ -177,22 +183,22 @@ switch($input['mode']) {
 		break;
 	case '88' : // edit user
 		// generate a new password for this user
-		if($genpassword == 1) {
-			if($specifiedpassword != "" && $passwordgenmethod == "spec") {
-				if(strlen($specifiedpassword) < 6) {
+        if ($genpassword == 1) {
+            if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
+                if (strlen($specifiedpassword) < 6) {
 					webAlertAndQuit("Password is too short!", 88);
 				} else {
 					$newpassword = $specifiedpassword;
 				}
-			} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
+            } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
 				webAlertAndQuit("You didn't specify a password for this user!", 88);
-			} elseif($passwordgenmethod == 'g') {
+            } elseif ($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
 				webAlertAndQuit("No password generation method specified!", 88);
 			}
 		}
-		if($passwordnotifymethod == 'e') {
+        if ($passwordnotifymethod == 'e') {
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $websignupemail_message, $site_url);
 		}
 
@@ -217,12 +223,14 @@ switch($input['mode']) {
 		// update user name and password
 		$field = array();
 		$field['username'] = $newusername;
-		if($genpassword == 1) {
+        if ($genpassword == 1) {
 			$field['password'] = md5($newpassword);
 		}
 		$webUser = EvolutionCMS\Models\WebUser::find($id);
 		$webUser->update($field);
-		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
+        $field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
+            'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil',
+            'blockedafter');
 		$webUser->attributes->update($field);
 
 		// Save User Settings
@@ -237,8 +245,8 @@ switch($input['mode']) {
 		if($modx->getConfig('use_udperms') == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$webUser->memberGroups()->delete();
-			if(!empty($user_groups)) {
-				for($i = 0; $i < count($user_groups); $i++) {
+            if (!empty($user_groups)) {
+                for ($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['webgroup'] = (int)$user_groups[$i];
 					$webUser->memberGroups()->create($field);
@@ -261,7 +269,7 @@ switch($input['mode']) {
         ));
 
         // invoke OnWebChangePassword event
-        if($genpassword == 1) {
+        if ($genpassword == 1) {
             $modx->invokeEvent("OnWebChangePassword", array(
                 "userid" => $id,
                 "username" => $newusername,
@@ -275,8 +283,8 @@ switch($input['mode']) {
             "id" => $id
         ));
 
-		if($genpassword == 1 && $passwordnotifymethod == 's') {
-			if($input['stay'] != '') {
+        if ($genpassword == 1 && $passwordnotifymethod == 's') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$id}" : "87";
 				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
@@ -306,7 +314,7 @@ switch($input['mode']) {
 
 			include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 		} else {
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "88&id={$id}" : "87";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);

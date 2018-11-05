@@ -1,8 +1,8 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('save_user')) {
+if (!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
@@ -38,19 +38,19 @@ $blockedafter = !empty($input['blockedafter']) ? $modx->toTimeStamp($input['bloc
 $user_groups = $input['user_groups'];
 
 // verify password
-if($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
+if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
 	webAlertAndQuit("Password typed is mismatched", 12);
 }
 
 // verify email
-if($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!", 12);
 }
 
 // verify admin security
-if($_SESSION['mgrRole'] != 1) {
+if ($_SESSION['mgrRole'] != 1) {
 	// Check to see if user tried to spoof a "1" (admin) role
-	if(!$modx->hasPermission('save_user')) {
+    if (!$modx->hasPermission('save_user')) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
@@ -60,7 +60,7 @@ if($_SESSION['mgrRole'] != 1) {
 
 }
 
-switch($input['mode']) {
+switch ($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
 		if (EvolutionCMS\Models\ManagerUser::where('username', '=', $newusername)->first()) {
@@ -73,15 +73,15 @@ switch($input['mode']) {
 		}
 
 		// generate a new password for this user
-		if($specifiedpassword != "" && $passwordgenmethod == "spec") {
-			if(strlen($specifiedpassword) < 6) {
+        if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
+            if (strlen($specifiedpassword) < 6) {
 				webAlertAndQuit("Password is too short!", 12);
 			} else {
 				$newpassword = $specifiedpassword;
 			}
-		} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
+        } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
 			webAlertAndQuit("You didn't specify a password for this user!", 12);
-		} elseif($passwordgenmethod == 'g') {
+        } elseif ($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
 			webAlertAndQuit("No password generation method specified!", 12);
@@ -100,6 +100,11 @@ switch($input['mode']) {
 		$internalKey = $managerUser->getKey();
 		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$managerUser->attributes()->create($field);
+
+        $field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street',
+            'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
+        $field = $modx->db->escape($field);
+        $modx->db->insert($field, $tbl_user_attributes);
 
 		// Save user settings
         saveManagerUserSettings($internalKey);
@@ -139,9 +144,9 @@ switch($input['mode']) {
 		}
 		// end of user_groups stuff!
 
-		if($passwordnotifymethod == 'e') {
+        if ($passwordnotifymethod == 'e') {
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $signupemail_message, MODX_MANAGER_URL);
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "12&id={$internalKey}" : "11";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
@@ -150,7 +155,7 @@ switch($input['mode']) {
 				header($header);
 			}
 		} else {
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "12&id={$internalKey}" : "11";
 				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
@@ -164,11 +169,12 @@ switch($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a class="btn" href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a>
+                    <a class="btn" href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?>
+                    </a>
 			</div>
             </div>
 
-				<div class="sectionBody">
+            <div class="sectionBody">
 				<div class="tab-page">
 					<div class="container container-body" id="disp">
 						<p>
@@ -184,22 +190,22 @@ switch($input['mode']) {
 		break;
 	case '12' : // edit user
 		// generate a new password for this user
-		if($genpassword == 1) {
-			if($specifiedpassword != "" && $passwordgenmethod == "spec") {
-				if(strlen($specifiedpassword) < 6) {
+        if ($genpassword == 1) {
+            if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
+                if (strlen($specifiedpassword) < 6) {
 					webAlertAndQuit("Password is too short!", 12);
 				} else {
 					$newpassword = $specifiedpassword;
 				}
-			} elseif($specifiedpassword == "" && $passwordgenmethod == "spec") {
+            } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
 				webAlertAndQuit("You didn't specify a password for this user!", 12);
-			} elseif($passwordgenmethod == 'g') {
+            } elseif ($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
 				webAlertAndQuit("No password generation method specified!", 12);
 			}
 		}
-		if($passwordnotifymethod == 'e') {
+        if ($passwordnotifymethod == 'e') {
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $signupemail_message, MODX_MANAGER_URL);
 		}
 
@@ -222,12 +228,14 @@ switch($input['mode']) {
 		// update user name and password
 		$field = array();
 		$field['username'] = $newusername;
-		if($genpassword == 1) {
+        if ($genpassword == 1) {
 			$field['password'] = $modx->getPasswordHash()->HashPassword($newpassword);
 		}
 		$managerUser = EvolutionCMS\Models\ManagerUser::find($id);
 		$managerUser->update($field);
-		$field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter');
+        $field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
+            'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil',
+            'blockedafter');
 		$managerUser->attributes->update($field);
 
 		// Save user settings
@@ -250,7 +258,7 @@ switch($input['mode']) {
 		));
 
 		// invoke OnManagerChangePassword event
-		if($genpassword == 1) {
+        if ($genpassword == 1) {
 			$modx->invokeEvent("OnManagerChangePassword", array(
 				"userid" => $id,
 				"username" => $newusername,
@@ -270,8 +278,8 @@ switch($input['mode']) {
 		if($modx->getConfig('use_udperms') == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$managerUser->memberGroups()->delete();
-			if(!empty($user_groups)) {
-				for($i = 0; $i < count($user_groups); $i++) {
+            if (!empty($user_groups)) {
+                for ($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
@@ -281,11 +289,11 @@ switch($input['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
-		if($id == $modx->getLoginUserID() && ($genpassword !== 1 && $passwordnotifymethod != 's')) {
+        if ($id == $modx->getLoginUserID() && ($genpassword !== 1 && $passwordnotifymethod != 's')) {
 			$modx->webAlertAndQuit($_lang["user_changeddata"], 'javascript:top.location.href="index.php?a=8";');
 		}
-		if($genpassword == 1 && $passwordnotifymethod == 's') {
-			if($input['stay'] != '') {
+        if ($genpassword == 1 && $passwordnotifymethod == 's') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
 				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
@@ -301,7 +309,8 @@ switch($input['mode']) {
                 <div class="btn-group">
                     <a class="btn" href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl;
                     ?>"><i
-                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a>
+                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?>
+                    </a>
 			</div>
 			</div>
 
@@ -317,7 +326,7 @@ switch($input['mode']) {
 
 			include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
 		} else {
-			if($input['stay'] != '') {
+            if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
