@@ -300,78 +300,78 @@
         'icon' => 'fa-home',
         'title' => '[%welcome_title%]',
         'body' => '
-				<div class="wm_buttons card-body">
-					<!--@IF:[[#hasPermission?key=new_document]]-->
-					<span class="wm_button">
-						<a target="main" href="index.php?a=4">
-							<i class="[&icons_resource_large&]"></i>
-							<span>[%add_resource%]</span>
-						</a>
-					</span>
-					<span class="wm_button">
-						<a target="main" href="index.php?a=72">
-							<i class="[&icons_weblink_large&]"></i>
-							<span>[%add_weblink%]</span>
-						</a>
-					</span>
-					<!--@ENDIF-->
-					<!--@IF:[[#hasPermission?key=assets_images]]-->
-					<span class="wm_button">
-						<a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
-							<i class="[&icons_images_large&]"></i>
-							<span>[%images_management%]</span>
-						</a>
-					</span>
-					<!--@ENDIF-->
-					<!--@IF:[[#hasPermission?key=assets_files]]-->
-					<span class="wm_button">
-						<a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
-							<i class="[&icons_files_large&]"></i>
-							<span>[%files_management%]</span>
-						</a>
-					</span>
-					<!--@ENDIF-->
-					<!--@IF:[[#hasPermission?key=change_password]]-->
-					<span class="wm_button">
-						<a target="main" href="index.php?a=28">
-							<i class="[&icons_password_large&]"></i>
-							<span>[%change_password%]</span>
-						</a>
-					</span>
-					<!--@ENDIF-->
-					<span class="wm_button">
-						<a target="_top" href="index.php?a=8">
-							<i class="[&icons_logout_large&]"></i>
-							<span>[%logout%]</span>
-						</a>
-					</span>
-				</div>
-				<div class="userprofiletable card-body">
-					<table>
-						<tr>
-							<td width="150">[%yourinfo_username%]</td>
-							<td><b>[[#getLoginUserName]]</b></td>
-						</tr>
-						<tr>
-							<td>[%yourinfo_role%]</td>
-							<td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
-						</tr>
-						<tr>
-							<td>[%yourinfo_previous_login%]</td>
-							<td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
-						</tr>
-						<tr>
-							<td>[%yourinfo_total_logins%]</td>
-							<td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
-						</tr>
-						<!--@IF:[[#hasPermission?key=messages]]-->
-						<tr>
-							<td>[%inbox%]</td>
-							<td><a href="index.php?a=10" target="main"><b>[[#getMessageCount]]</b></a></td>
-						</tr>
-						<!--@ENDIF-->
-					</table>
-				</div>
+            <div class="wm_buttons card-body">' .
+                ($modx->hasPermission("new_document") ? '
+                <span class="wm_button">
+                    <a target="main" href="index.php?a=4">
+                        <i class="[&icons_resource_large&]"></i>
+                        <span>[%add_resource%]</span>
+                    </a>
+                </span>
+                <span class="wm_button">
+                    <a target="main" href="index.php?a=72">
+                        <i class="[&icons_weblink_large&]"></i>
+                        <span>[%add_weblink%]</span>
+                    </a>
+                </span>
+                ' : '') .
+                ($modx->hasPermission("assets_images") ? '
+                <span class="wm_button">
+                    <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
+                        <i class="[&icons_images_large&]"></i>
+                        <span>[%images_management%]</span>
+                    </a>
+                </span>
+                ' : '') .
+                ($modx->hasPermission("assets_files") ? '
+                <span class="wm_button">
+                    <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
+                        <i class="[&icons_files_large&]"></i>
+                        <span>[%files_management%]</span>
+                    </a>
+                </span>
+                ' : '') .
+                ($modx->hasPermission("change_password") ? '
+                <span class="wm_button">
+                    <a target="main" href="index.php?a=28">
+                        <i class="[&icons_password_large&]"></i>
+                        <span>[%change_password%]</span>
+                    </a>
+                </span>
+                ' : '') . '
+                <span class="wm_button">
+                    <a target="_top" href="index.php?a=8">
+                        <i class="[&icons_logout_large&]"></i>
+                        <span>[%logout%]</span>
+                    </a>
+                </span>
+            </div>
+            <div class="userprofiletable card-body">
+                <table>
+                    <tr>
+                        <td width="150">[%yourinfo_username%]</td>
+                        <td><b>' . $modx->getLoginUserName() . '</b></td>
+                    </tr>
+                    <tr>
+                        <td>[%yourinfo_role%]</td>
+                        <td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
+                    </tr>
+                    <tr>
+                        <td>[%yourinfo_previous_login%]</td>
+                        <td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
+                    </tr>
+                    <tr>
+                        <td>[%yourinfo_total_logins%]</td>
+                        <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
+                    </tr>' .
+                    ($modx->hasPermission("change_password") ? '
+                    <tr>
+                        <td>[%inbox%]</td>
+                        <td><a href="index.php?a=10" target="main"><b>' . ($_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], '<span style="color:red;">' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"]) . '</b></a></td>
+                    </tr>
+                    ' : '') . '
+                </table>
+            </div>
 		',
         'hide'=>'0'
     );
