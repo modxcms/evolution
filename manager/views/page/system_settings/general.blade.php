@@ -150,6 +150,19 @@
         <div class="split my-1"></div>
 
         @include('manager::form.radio', [
+            'name' => 'chunk_processor',
+            'label' => ManagerTheme::getLexicon('chunk_processor'),
+            'small' => '[(chunk_processor)]',
+            'value' => $settings['chunk_processor'],
+            'options' => [
+                '' => 'DocumentParser',
+                'DLTemplate' => 'DLTemplate'
+            ]
+        ])
+
+        <div class="split my-1"></div>
+
+        @include('manager::form.radio', [
             'name' => 'enable_filter',
             'label' => ManagerTheme::getLexicon('enable_filter_title'),
             'small' => '[(enable_filter)]',

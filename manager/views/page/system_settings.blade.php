@@ -155,6 +155,27 @@
               return;
             }
           }
+
+          function setChangesChunkProcessor(item)
+          {
+            item = item || document.querySelector('[name="chunk_processor"]:checked');
+            document.querySelectorAll('[name="enable_at_syntax"], [name="enable_filter"]').forEach(function(el) {
+              if (item.checked && item.value === 'DLTemplate') {
+                el.checked = !!el.value;
+                el.disabled = true;
+              } else {
+                el.disabled = false;
+              }
+            });
+          }
+
+          setChangesChunkProcessor();
+
+          document.querySelectorAll('[name="chunk_processor"]').forEach(function(item) {
+            item.addEventListener('change', function() {
+              setChangesChunkProcessor(item);
+            }, false);
+          });
         </script>
         @if(is_numeric(get_by_key($_GET, 'tab')))
             <script>tpSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
