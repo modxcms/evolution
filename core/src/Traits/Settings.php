@@ -41,7 +41,8 @@ trait Settings
         'show_newresource_btn' => 'bool',
         'use_browser' => 'bool',
         'warning_visibility' => 'bool',
-        'use_captcha' => 'bool'
+        'use_captcha' => 'bool',
+        'tree_page_click' => 'int'
     ];
 
     /**
