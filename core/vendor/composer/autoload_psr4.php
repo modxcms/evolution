@@ -35,6 +35,6 @@ return array(
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/event-manager/lib/Doctrine/Common'),
+    'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'AgelxNash\\Modx\\Evo\\Database\\' => array($vendorDir . '/agelxnash/modx-evo-database/src'),
-    '' => array($vendorDir . '/nesbot/carbon/src'),
 );

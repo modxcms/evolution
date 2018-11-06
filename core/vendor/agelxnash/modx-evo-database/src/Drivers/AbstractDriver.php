@@ -151,7 +151,7 @@ abstract class AbstractDriver implements DriverInterface
 
         if ($this->isResult($result)) {
             $result = $this->getRow($result, 'num');
-            $out = isset($result[0]) ? $result[0] : false;
+            $out = is_array($result) && array_key_exists(0, $result) ? $result[0] : false;
         }
 
         return $out;

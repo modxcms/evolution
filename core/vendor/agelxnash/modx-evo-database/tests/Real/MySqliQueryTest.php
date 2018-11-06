@@ -8,7 +8,7 @@ use AgelxNash\Modx\Evo\Database\Drivers\MySqliDriver;
 /**
  * @property MySqliDriver $instance
  */
-class MySqliQuery extends RealQueryTest
+class MySqliQueryTest extends RealQueryTest
 {
     protected $driver = MySqliDriver::class;
     protected $connectorClass = mysqli::class;

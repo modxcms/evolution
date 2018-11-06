@@ -63,7 +63,7 @@
     "illuminate/translation": "5.6.*",
     "illuminate/view": "5.6.*",
     "league/flysystem": "^1.0.8",
-    "phpmailer/phpmailer": "6.0",
+    "phpmailer/phpmailer": "6.0.5",
     "illuminate/container": "5.6.*",
     "wikimedia/composer-merge-plugin": "dev-master",
     "tracy/tracy": "~2.5",

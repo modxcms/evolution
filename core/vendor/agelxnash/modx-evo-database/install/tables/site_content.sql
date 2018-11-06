@@ -38,6 +38,7 @@ CREATE TABLE `{PREFIX}site_content` (
   `content_dispo` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-inline, 1-attachment',
   `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
   `alias_visible` int(2) NOT NULL DEFAULT '1',
+  `issue_1` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `parent` (`parent`),
