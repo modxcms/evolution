@@ -146,6 +146,7 @@ if ($conn) {
             $database_connection_method,
             $auto_template_logic
         );
+        $sqlParser->database_collation = $database_collation;
         $sqlParser->mode = ($installMode < 1) ? 'new' : 'upd';
         $sqlParser->ignoreDuplicateErrors = true;
         $sqlParser->connect();

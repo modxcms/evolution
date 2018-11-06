@@ -118,5 +118,6 @@ return [
     'virtual_dir' => '',
     'show_picker' => 0,
     'show_newresource_btn' => 1,
-    'show_fullscreen_btn' => 0
+    'show_fullscreen_btn' => 0,
+    'chunk_processor' => ''
 ];

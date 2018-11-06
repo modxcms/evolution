@@ -28,12 +28,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     use Traits\Path, Traits\Helpers;
 
     /**
-     * This is New evolution
-     * @var string
-     */
-    public $apiVersion = '1.0.0';
-
-    /**
      * event object
      * @var Event
      */
@@ -4001,11 +3995,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $out = null;
         if (empty($chunkName)) {
-            return $out;
-        }
-        if (isset ($this->chunkCache[$chunkName])) {
+            // nop
+        } elseif ($this->isChunkProcessor('DLTemplate')) {
+            $out = \DLTemplate::getInstance($this)->getChunk($chunkName);
+        } elseif (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
-        } else if (stripos($chunkName, '@FILE') === 0) {
+        } elseif (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
             $where = sprintf("`name`='%s' AND disabled=0", $this->getDatabase()->escape($chunkName));
@@ -4014,7 +4009,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->getDatabase()->getFullTableName('site_htmlsnippets'),
                 $where
             );
-            if ($this->getDatabase()->getRecordCount($rs) == 1) {
+            if ($this->getDatabase()->getRecordCount($rs) === 1) {
                 $row = $this->getDatabase()->getRow($rs);
                 $out = $this->chunkCache[$chunkName] = $row['snippet'];
             } else {
@@ -4022,6 +4017,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         return $out;
+    }
+
+    /**
+     * @param string|object $processor
+     * @return bool
+     */
+    public function isChunkProcessor($processor)
+    {
+        $value = (string)$this->getConfig('chunk_processor');
+        if(is_object($processor)) {
+            $processor = get_class($processor);
+        }
+        return is_scalar($processor) && mb_strtolower($value) === mb_strtolower($processor) && class_exists($processor, false);
     }
 
     /**
@@ -4114,7 +4122,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
+        return $prefix === '[+' && $suffix === '+]' && $this->isChunkProcessor('DLTemplate') ?
+            \DLTemplate::getInstance($this)->parseChunk($chunkName, $chunkArr) :
+            $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
     }
 
     /**
@@ -4435,14 +4445,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * Elements representing a site content field consist of an associative array of 'name' and 'value'.
      * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
      *
-     * @param $idnames {array; '*'} - Which TVs to fetch. Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
-     * @param $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'
-     * @param $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
-     * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
-     * @param $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
-     * @param $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
+     * @param string|array $idnames {array; '*'} - Which TVs to fetch. Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
+     * @param string|array $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'
+     * @param int|string $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
+     * @param int|string $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+     * @param string $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
+     * @param string $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
      *
-     * @return {array; false} - Result array, or false.
+     * @return array|bool Result array, or false.
      */
     public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC')
     {
@@ -4451,12 +4461,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (($idnames != '*' && !is_array($idnames)) || empty($idnames) ) {
+        if (($idnames !== '*' && !is_array($idnames)) || empty($idnames) ) {
             return false;
         } else {
 
             // get document record
-            if ($docid == '') {
+            if (empty($docid)) {
                 $docid = $this->documentIdentifier;
                 $docRow = $this->documentObject;
             } else {
@@ -4469,31 +4479,42 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             // get user defined template variables
-            $fields = ($fields == '') ? 'tv.*' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
+            if (!empty($fields) && (is_scalar($fields) || \is_array($fields))) {
+                if(\is_scalar($fields)) {
+                    $fields = explode(',', $fields);
+                }
+                $fields = array_filter(array_map('trim', $fields), function($value) {
+                    return $value !== 'value';
+                });
+                $fields = 'tv.' . implode(',tv.', $fields);
+            } else {
+                $fields = 'tv.*';
+            }
             $sort = ($sort == '') ? '' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
 
-            if ($idnames == '*') {
+            if ($idnames === '*') {
                 $query = 'tv.id<>0';
             } else {
                 $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
             }
 
-            $rs = $this->getDatabase()->select("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value", $this->getDatabase()->getFullTableName('site_tmplvars') . " tv
-                    INNER JOIN " . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
-                    LEFT JOIN " . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'", "{$query} AND tvtpl.templateid = '{$docRow['template']}'", ($sort ? "{$sort} {$dir}" : ""));
-
+            $rs = $this->getDatabase()->select(
+                "{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
+                $this->getDatabase()->getFullTableName('site_tmplvars') . ' tv ' .
+                'INNER JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . ' tvtpl ON tvtpl.tmplvarid = tv.id ' .
+                'LEFT JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid = tv.id AND tvc.contentid = '" . $docid . "'",
+                $query . " AND tvtpl.templateid = '" . $docRow['template'] . "'",
+                ($sort ? ($sort . ' ' . $dir) : '')
+            );
             $result = $this->getDatabase()->makeArray($rs);
 
             // get default/built-in template variables
             if(is_array($docRow)){
                 ksort($docRow);
 
-                foreach ($docRow as $key => $value) {
-                    if ($idnames == '*' || in_array($key, $idnames)) {
-                        array_push($result, array(
-                            'name' => $key,
-                            'value' => $value
-                        ));
+                foreach ($docRow as $name => $value) {
+                    if ($idnames === '*' || \in_array($name, $idnames)) {
+                        $result[] = compact('name', 'value');
                     }
                 }
             }

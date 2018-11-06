@@ -367,6 +367,7 @@ class UrlProcessor
                     'alias'    => $query->alias === '' ? $query->getKey() : $query->alias,
                     'parent'   => $query->parent,
                     'isfolder' => $query->isfolder,
+                    'alias_visible' => $query->alias_visible,
                 );
                 if ($query->parent > 0) {
                     if ((bool)$this->core->getConfig('use_alias_path')) {
@@ -620,7 +621,9 @@ class UrlProcessor
                     }
                 }
             }
-        } elseif ($url_path !== $strictURL && $id !== (int)$this->core->getConfig('error_page')) {
+        } elseif (preg_match('#/\?q\=' . $strictURL . '#i', $_SERVER['REQUEST_URI']) ||
+            ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))
+        ) {
             if (!empty($qstring)) {
                 $url = $this->core->getConfig('site_url') . $strictURL . '?' . $qstring;
             } else {

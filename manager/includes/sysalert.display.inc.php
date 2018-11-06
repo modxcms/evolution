@@ -8,27 +8,24 @@
  *
  */
 
-$sysMsgs = "";
+$sysMsgs = '';
 $limit = count($SystemAlertMsgQueque);
 for ($i = 0; $i < $limit; $i++) {
-    $sysMsgs .= $SystemAlertMsgQueque[$i] . "<hr sys/>";
+    $sysMsgs .= $SystemAlertMsgQueque[$i] . '<hr sys/>';
 }
 // reset message queque
 unset($_SESSION['SystemAlertMsgQueque']);
 $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-if ($sysMsgs != "") {
-    // fetch the styles
-    echo '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . ManagerTheme::getTheme() . '/style.css' . '" />';
-    ?>
+if ($sysMsgs != '') : ?>
+    <link rel="stylesheet" type="text/css" href="<?=MODX_MANAGER_URL;?>media/style/<?=ManagerTheme::getTheme();?>/style.css" />
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         if (parent.modx) {
           parent.modx.popup({
             title: '<?php echo $_lang['sys_alert']; ?>',
-            content: '<?php echo $modx->getDatabase()
-                ->escape($sysMsgs);?>',
+            content: '<?php echo $modx->getDatabase()->escape($sysMsgs);?>',
             wrap: document.body,
             type: 'warning',
             width: '400px',
@@ -40,6 +37,4 @@ if ($sysMsgs != "") {
         }
       });
     </script>
-    <?php
-}
-?>
+<? endif; ?>

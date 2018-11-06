@@ -653,8 +653,9 @@ if (is_dir($tvPath) && is_readable($tvPath)) {
                 $params['output_widget_params'],
                 "$templatePath/{$params['filename']}",
                 /* not currently used */
-                $params['template_assignments'] != "*" ? $params['template_assignments'] : implode(",",
-                    array_map(create_function('$v', 'return $v[0];'), $mt)),
+                $params['template_assignments'] != "*" ?
+                    $params['template_assignments'] :
+                    implode(',', array_map(function($value){return isset($value[0]) && is_scalar($value[0]);},$mt)),
                 /* comma-separated list of template names */
                 $params['modx_category'],
                 $params['lock_tv'],

@@ -14,7 +14,7 @@ CREATE TABLE `{PREFIX}active_users` (
   `action` varchar(10) NOT NULL default '',
   `id` int(10) default NULL,
   PRIMARY KEY (`sid`, `username`)
-) ENGINE=MyISAM COMMENT='Contains data about last user action.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data about last user action.';
 
 DROP TABLE IF EXISTS `{PREFIX}active_user_locks`;
 
@@ -27,7 +27,7 @@ CREATE TABLE `{PREFIX}active_user_locks` (
   `lasthit` int(20) NOT NULL default '0',
   PRIMARY KEY(`id`),
   UNIQUE INDEX ix_element_id (`elementType`,`elementId`,`sid`)
-) ENGINE=MyISAM COMMENT='Contains data about locked elements.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data about locked elements.';
 
 DROP TABLE IF EXISTS `{PREFIX}active_user_sessions`;
 
@@ -37,14 +37,14 @@ CREATE TABLE `{PREFIX}active_user_sessions` (
   `lasthit` int(20) NOT NULL default '0',
   `ip` varchar(50) NOT NULL default '',
   PRIMARY KEY(`sid`)
-) ENGINE=MyISAM COMMENT='Contains data about valid user sessions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data about valid user sessions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `category` varchar(45) NOT NULL DEFAULT '',
   `rank` INT(5) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Categories to be used snippets,tv,chunks, etc';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
   `id` int(10) NOT NULL auto_increment,
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
   KEY `document` (`document`),
   KEY `document_group` (`document_group`),
   UNIQUE INDEX `ix_dg_id` (`document_group`,`document`)
-) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
   `id` int(10) NOT NULL auto_increment,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
   `private_webgroup` tinyint DEFAULT 0 COMMENT 'determines whether the document is private to web users',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `description` text,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)
-) ENGINE=MyISAM COMMENT='Stores event and error logs';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Stores event and error logs';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `id` int(10) NOT NULL auto_increment,
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `ip` varchar(46),
   `useragent` varchar(255),
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains a record of user interaction.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains a record of user interaction.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
   `id` int(10) NOT NULL auto_increment,
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
   `password` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM COMMENT='Contains login information for backend users.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains login information for backend users.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
   `id` int(10) NOT NULL auto_increment,
@@ -106,21 +106,21 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
   `member` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE INDEX `ix_group_member` (`user_group`,`member`)
-) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_access` (
   `id` int(10) NOT NULL auto_increment,
   `membergroup` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_names` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(245) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `id` int(10) NOT NULL auto_increment,
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   KEY aliasidx (`alias`),
   KEY typeidx (`type`),
   FULLTEXT KEY `content_ft_idx` (`pagetitle`,`description`,`content`)
-) ENGINE=MyISAM COMMENT='Contains the site document tree.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains the site document tree.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `editedon` integer NOT NULL DEFAULT '0',
   `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the snippet',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains the site chunks.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains the site chunks.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
   `properties` text,
   `modulecode` mediumtext COMMENT 'module boot up code',
   PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='Site Modules';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Site Modules';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -211,14 +211,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
   `resource` integer NOT NULL DEFAULT 0,
   `type` integer(2) NOT NULL DEFAULT 0 COMMENT '10-chunks, 20-docs, 30-plugins, 40-snips, 50-tpls, 60-tvs',
   PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='Module Dependencies';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Module Dependencies';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_access` (
   `id` integer UNSIGNED NOT NULL AUTO_INCREMENT,
   `module` integer NOT NULL DEFAULT 0,
   `usergroup` integer NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='Module users group access permission';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Module users group access permission';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `id` int(10) NOT NULL auto_increment,
@@ -235,14 +235,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `createdon` integer NOT NULL DEFAULT '0',
   `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains the site plugins.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains the site plugins.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugin_events` (
   `pluginid` INT(10) NOT NULL,
   `evtid` INT(10) NOT NULL default 0,
   `priority` INT(10) NOT NULL default 0 COMMENT 'determines plugin run order',
   PRIMARY KEY ( `pluginid` , `evtid` )
-) ENGINE=MyISAM COMMENT='Links to system events';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Links to system events';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
   `id` int(10) NOT NULL auto_increment,
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
   `editedon` integer NOT NULL DEFAULT '0',
   `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the snippet',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains the site snippets.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains the site snippets.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `id` int(10) NOT NULL auto_increment,
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `createdon` integer NOT NULL DEFAULT '0',
   `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains the site templates.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains the site templates.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,
@@ -283,20 +283,20 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
   `service` tinyint NOT NULL default '0' COMMENT 'System Service number',
   `groupname` varchar(20) NOT NULL default '',
   PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='System Event Names.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='System Event Names.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_settings` (
   `setting_name` varchar(50) NOT NULL default '',
   `setting_value` text,
   PRIMARY KEY (`setting_name`)
-) ENGINE=MyISAM COMMENT='Contains Content Manager settings.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains Content Manager settings.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_access` (
   `id` int(10) NOT NULL auto_increment,
   `tmplvarid` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains data used for template variable access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for template variable access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
   `id` int(11) NOT NULL auto_increment,
@@ -308,14 +308,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
   KEY idx_id (contentid),
   FULLTEXT KEY `value_ft_idx` (`value`),
   UNIQUE INDEX `ix_tvid_contentid` (`tmplvarid`,`contentid`)
-) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Site Template Variables Content Values Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
   `tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
   `templateid` int(11) NOT NULL default '0',
   `rank` int(11) NOT NULL default '0',
   PRIMARY KEY (`tmplvarid`, `templateid`)
-) ENGINE=MyISAM COMMENT='Site Template Variables Templates Link Table';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Site Template Variables Templates Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
   `id` INT(11) NOT NULL auto_increment,
@@ -335,7 +335,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
   `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (id),
   KEY `indx_rank`(`rank`)
-) ENGINE=MyISAM COMMENT='Site Template Variables';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Site Template Variables';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `id` int(10) NOT NULL auto_increment,
@@ -367,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
-) ENGINE=MyISAM COMMENT='Contains information about the backend users.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains information about the backend users.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
   `id` int(10) NOT NULL auto_increment,
@@ -380,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
   `postdate` int(20) NOT NULL default '0',
   `messageread` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains messages for the Content Manager messaging system.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains messages for the Content Manager messaging system.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `id` int(10) NOT NULL auto_increment,
@@ -458,7 +458,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `display_locks` int(1) NOT NULL default '0',
   `change_resourcetype` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains information describing the user roles.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
   `user` integer NOT NULL,
@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
   PRIMARY KEY ( `user` , `setting_name` ),
   KEY `setting_name` (`setting_name`),
   KEY `user` (`user`)
-) ENGINE=MyISAM COMMENT='Contains backend user settings.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains backend user settings.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
   `id` int(10) NOT NULL auto_increment,
@@ -475,21 +475,21 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
   `webuser` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`)
-) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for web access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_access` (
   `id` int(10) NOT NULL auto_increment,
   `webgroup` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for web access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_names` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(245) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains data used for web access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `id` int(10) NOT NULL auto_increment,
@@ -521,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
-) ENGINE=MyISAM COMMENT='Contains information for web users.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains information for web users.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
   `id` int(10) NOT NULL auto_increment,
@@ -539,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
   PRIMARY KEY ( `webuser` , `setting_name` ),
   KEY `setting_name` (`setting_name`),
   KEY `webuserid` (`webuser`)
-) ENGINE=MyISAM COMMENT='Contains web user settings.';
+) ENGINE=MyISAM {TABLEENCODING} COMMENT='Contains web user settings.';
 
 
 # upgrade-able[[ - This block of code will be executed during upgrades
@@ -869,8 +869,8 @@ ALTER TABLE `{PREFIX}manager_log`
   ADD COLUMN `useragent` varchar(255);
 
 ALTER TABLE `{PREFIX}manager_log`
-	CHANGE COLUMN `ip` `ip` VARCHAR(46) NULL DEFAULT NULL AFTER `message`;  
-  
+	CHANGE COLUMN `ip` `ip` VARCHAR(46) NULL DEFAULT NULL AFTER `message`;
+
 # ]]upgrade-able
 
 
