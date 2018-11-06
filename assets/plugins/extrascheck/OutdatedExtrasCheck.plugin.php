@@ -18,10 +18,10 @@ switch (true)
     case ($role === 1 && $wdgVisibility === 'AdminExcluded'):
         // show widget to all manager users excluded Admin role 1
         break;
-    case ($role != $ThisRole && $wdgVisibility === 'ThisRoleOnly'):
+    case (isset($ThisRole) && $role != $ThisRole && $wdgVisibility === 'ThisRoleOnly'):
         // show widget only to "this" role id
         break;
-    case ($user != $ThisUser && $wdgVisibility === 'ThisUserOnly'):
+    case (isset($ThisUser) && $user != $ThisUser && $wdgVisibility === 'ThisUserOnly'):
         // show widget only to "this" username
         break;
     default: // get plugin id and setting button

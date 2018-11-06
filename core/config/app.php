@@ -77,6 +77,7 @@ return [
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
         'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
-        'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class
+        'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class,
+        'DLTemplate' => EvolutionCMS\Parser::class
     ]
 ];
