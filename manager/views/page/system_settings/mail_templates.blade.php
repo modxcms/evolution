@@ -162,7 +162,7 @@
                     'name' => 'reload_websignupemail_message',
                     'id' => 'reload_websignupemail_message_select',
                     'class' => 'form-control-sm',
-                    'attributes' => 'onchange="confirmLangChange(this, \'system_email_websignup\', \'websignupemail_message_textarea\');',
+                    'attributes' => 'onchange="confirmLangChange(this, \'system_email_websignup\', \'websignupemail_message_textarea\');"',
                     'first' => [
                         'text' => ManagerTheme::getLexicon('language_title')
                     ],
