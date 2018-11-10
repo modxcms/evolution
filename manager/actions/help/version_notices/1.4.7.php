@@ -14,6 +14,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	<li>[F] Fix #888 The FileSource 0.1 is dependent on the mootools (Serg)</li>
 	<li>[I] #887 Elements in ElementsInTree plugin sorted by name (Nicola)</li>
 	<li>[F] Fix #882 broken extras module link in RSS check (Nicola)</li>
+	<li>[I] New Enable Mootools Setting Option (Load Mootools.js in manager for backward compatibility) (Nicola)</li>
 	<li>[U] Updated extras url from extras.evolution-cms.com to extras.evo.im (dmi3yy)</li>
 	<li>[R] Format code save_user_processor (Serg)</li>
 	<li>[U] Updated Help Version Noticies 1.4.2 - 1.4.7 (Nicola)</li>
