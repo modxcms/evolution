@@ -1524,3 +1524,5 @@ $_lang['manager_menu_position_left'] = 'sinistra';
 $_lang['invalid_event_response'] = 'L\'evento %s ha un output errato';
 
 $_lang['chunk_processor'] = 'Classe di elaborazione dei chunk';
+$_lang['enable_mootools'] = 'Abilita Mootools nel manager';
+$_lang['enable_mootools_message'] = 'Carica  nel manager la libreria Mootools.js per la retrocompatibilità';
