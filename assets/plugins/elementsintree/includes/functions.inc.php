@@ -190,7 +190,7 @@ function createModulesList($action)
                 '(mg.member IS NULL OR mg.member=%s) AND sm.disabled!=1 AND sm.locked!=1',
                 $modx->getLoginUserID()
             ),
-            '5,1'
+            '4,2'
         );
     } else {
         $query = $modx->db->select(
@@ -200,7 +200,7 @@ function createModulesList($action)
                 'LEFT JOIN [+prefix+]categories as cats ON sm.category=cats.id'
             ),
             'sm.disabled!=1',
-            '5,1'
+            '4,2'
         );
     }
 
