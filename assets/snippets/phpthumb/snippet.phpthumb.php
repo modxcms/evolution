@@ -5,7 +5,7 @@
  * PHPThumb creates thumbnails and altered images on the fly and caches them
  *
  * @category    snippet
- * @version    1.3.1
+ * @version    1.3.2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Content
@@ -87,6 +87,7 @@ $outputFilename = MODX_BASE_PATH . $fNamePref . $fName . $fNameSuf;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH . 'assets/snippets/phpthumb/phpthumb.class.php';
     $phpThumb = new phpthumb();
+    $phpThumb->config_cache_directory = MODX_BASE_PATH . $tmpFolder;
     $phpThumb->config_temp_directory = $tmpFolder;
     $phpThumb->config_document_root = MODX_BASE_PATH;
     $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
