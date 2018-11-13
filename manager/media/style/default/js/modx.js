@@ -1587,7 +1587,7 @@
           if (!!w.main.__alertQuit) {
             w.main.alert = function(a) { };
             var message = w.main.document.body.innerHTML;
-            w.main.document.body.innerHTML = '';
+            w.main.document.body.style.display = 'none';
             history.pushState(null, d.title, modx.getActionFromUrl(w.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.location.search);
             w.onpopstate = function() {
               history.go(1);
