@@ -726,3 +726,12 @@ div.stepcontainer {
 .progressbar li.active:before {
     border-color: #3189ba;
 }
+
+.is-invalid {
+    display: none;
+    color: red;
+}
+
+.has-error .is-invalid {
+    display: inline-block;
+}

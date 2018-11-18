@@ -18,19 +18,21 @@
     <p>[%connection_screen_server_connection_note%]</p>
     <p class="labelHolder">
         <label for="databasehost">[%connection_screen_database_host%]</label>
-        <input id="databasehost" value="[+databasehost+]" name="databasehost" />
+        <input type="text" id="databasehost" value="[+databasehost+]" name="databasehost" />
+        <small class="is-invalid">[%alert_enter_host%]</small>
     </p>
     <p class="labelHolder">
         <label for="databaseloginname">[%connection_screen_database_login%]</label>
-        <input id="databaseloginname" name="databaseloginname" value="[+databaseloginname+]" />
+        <input type="text" id="databaseloginname" name="databaseloginname" value="[+databaseloginname+]" />
+        <small class="is-invalid">[%alert_enter_login%]</small>
     </p>
     <p class="labelHolder">
         <label for="databaseloginpassword">[%connection_screen_database_pass%]</label>
-        <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="[+databaseloginpassword+]" />
+        <input type="text" id="databaseloginpassword" name="databaseloginpassword" value="[+databaseloginpassword+]" />
     </p>
     <!-- connection test action/status message -->
     <div class="clickHere">
-        &rarr; <a id="servertest" href="javascript:void(0);">[%connection_screen_server_test_connection%]</a>
+        &rarr; <a id="servertest" href="javascript:;">[%connection_screen_server_test_connection%]</a>
     </div>
     <div class="status" id="serverstatus"></div>
     <!-- end connection test action/status message -->
@@ -40,31 +42,33 @@
             <p>[%connection_screen_database_connection_note%]</p>
             <p class="labelHolder">
                 <label for="database_name">[%connection_screen_database_name%]</label>
-                <input id="database_name" value="[+database_name+]" name="database_name" />
+                <input type="text" id="database_name" value="[+database_name+]" name="database_name" />
+                <small class="is-invalid">[%alert_enter_database_name%]</small>
             </p>
             <p class="labelHolder">
                 <label for="tableprefix">[%connection_screen_table_prefix%]</label>
-                <input id="tableprefix" value="[+tableprefix+]" name="tableprefix" />
+                <input type="text" id="tableprefix" value="[+tableprefix+]" name="tableprefix" />
+                <small class="is-invalid">[%alert_table_prefixes%]</small>
             </p>
             <p class="labelHolder" style="display:[+show#connection_method+]">
                 <label for="database_connection_method">[%connection_screen_connection_method%]</label>
-                <div id="connection_method" name="connection_method">
+                <span id="connection_method" name="connection_method">
                     <select id="database_connection_method" name="database_connection_method">
                         <option value="SET CHARACTER SET" [+selected_set_character_set+]>SET CHARACTER SET</option>
                         <option value="SET NAMES" [+selected_set_names+]>SET NAMES</option>
                     </select>
-                </div>
+                </span>
             </p>
             <p class="labelHolder">
                 <label for="database_collation">[%connection_screen_collation%]</label>
-                <div id="collation">
+                <span id="collation">
                     <select id="database_collation" name="database_collation">
                         <option value="[+database_collation+]" selected="selected">[+database_collation+]</option>
                     </select>
-                </div>
+                </span>
             </p>
             <div class="clickHere">
-                &rarr; <a id="databasetest" href="javascript:void(0);">[%connection_screen_database_test_connection%]</a>
+                &rarr; <a id="databasetest" href="javascript:;">[%connection_screen_database_test_connection%]</a>
             </div>
             <div class="status" id="databasestatus">&nbsp;</div>
         </div>
@@ -76,19 +80,22 @@
             <p>[%connection_screen_default_admin_note%]</p>
             <p class="labelHolder">
                 <label for="cmsadmin">[%connection_screen_default_admin_login%]</label>
-                <input id="cmsadmin" value="[+cmsadmin+]" name="cmsadmin" />
+                <input type="text" id="cmsadmin" value="[+cmsadmin+]" name="cmsadmin" />
+                <small class="is-invalid">[%alert_enter_adminlogin%]</small>
             </p>
             <p class="labelHolder">
                 <label for="cmsadminemail">[%connection_screen_default_admin_email%]</label>
-                <input id="cmsadminemail" value="[+cmsadminemail+]" name="cmsadminemail" style="width:250px;" />
+                <input type="text" id="cmsadminemail" value="[+cmsadminemail+]" name="cmsadminemail" />
             </p>
             <p class="labelHolder">
                 <label for="cmspassword">[%connection_screen_default_admin_password%]</label>
-                <input id="cmspassword" type="password" name="cmspassword" value="[+cmspassword+]" />
+                <input type="password" id="cmspassword" name="cmspassword" value="[+cmspassword+]" />
+                <small class="is-invalid">[%alert_enter_adminpassword%]</small>
             </p>
             <p class="labelHolder">
                 <label for="cmspasswordconfirm">[%connection_screen_default_admin_password_confirm%]</label>
-                <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="[+cmspasswordconfirm+]" />
+                <input type="password" id="cmspasswordconfirm" name="cmspasswordconfirm" value="[+cmspasswordconfirm+]" />
+                <small class="is-invalid">[%alert_enter_adminconfirm%]</small>
             </p>
             <h3 style="margin-top:2em">[%default_language%]</h3>
             <p>[%default_language_description%]</p>
@@ -101,186 +108,235 @@
         </div>
     </div>
     <p class="buttonlinks">
-        <a href="javascript:void(0);" class="prev" id="prevlink" title="[%btnback_value%]"><span>[%btnback_value%]</span></a>
-        <a style="display:none;" id="nextlink" href="javascript:void(0);" title="[%btnnext_value%]"><span>[%btnnext_value%]</span></a>
+        <a href="javascript:;" id="prevlink" title="[%btnback_value%]" class="prev"><span>[%btnback_value%]</span></a>
+        <a href="javascript:;" id="nextlink" title="[%btnnext_value%]" style="display:none;"><span>[%btnnext_value%]</span></a>
     </p>
 </form>
-<script type="text/javascript" src="../[+MGR_DIR+]/media/script/mootools/mootools.js"></script>
-<script type="text/javascript">
-language = '[+install_language+]';
-installMode = '[+installMode+]';
-</script>
-<script type="text/javascript">
-function testServer() {
-    // get the server test status as soon as collation received
-    var url = "index.php?self=1&action=connection/servertest";
+<script>
+  var form = document.install;
+  var language = '[+install_language+]';
+  var installMode = parseInt('[+installMode+]');
 
-    host = $('databasehost').value;
-    uid = $('databaseloginname').value;
-    pwd = $('databaseloginpassword').value;
+  document.querySelectorAll('[name]').forEach(function(el) {
+    el.onkeyup = function() {
+      if (this.value === '') {
+        this.parentElement.classList.add('has-error');
+      } else {
+        this.parentElement.classList.remove('has-error')
+      }
+    };
+    el.onchange = function() {
+      if (this.value === '') {
+        this.parentElement.classList.add('has-error');
+      } else {
+        this.parentElement.classList.remove('has-error')
+      }
+    };
+  });
 
-    var pars = Object.toQueryString({
+  // get collation from the database server
+  document.getElementById('servertest').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    if (form.databasehost.value === '') {
+      form.databasehost.parentElement.classList.add('has-error');
+      form.databasehost.focus();
+      return false;
+    }
+
+    if (form.databaseloginname.value === '') {
+      form.databaseloginname.parentElement.classList.add('has-error');
+      form.databaseloginname.focus();
+      return false;
+    }
+
+    var url = 'index.php?self=1&action=connection/collation';
+
+    new Ajax(url, {
+      data: {
         q: url,
-        host: host,
-        uid: uid,
-        pwd: pwd,
+        host: form.databasehost.value,
+        uid: form.databaseloginname.value,
+        pwd: form.databaseloginpassword.value,
         language: language
+      },
+      success: testServer
     });
+  });
 
-    new Ajax(url, { postBody: pars, update: $('serverstatus'), onComplete: setColor }).request();
-}
+  // database test
+  document.getElementById('databasetest').addEventListener('click', function(e) {
+    e.preventDefault();
 
-function setDefaults() {
-    if ($('database_pass') !== null && document.getElementById('AUH')) {
-        window.Slider2.slideIn();
-        var Slider2FX = new Fx.Styles('AUHMask', { duration: 997, transition: Fx.Transitions.linear });
-        Slider2FX.start({ 'opacity': [0, 1] });
-        window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
-        Slider2Scroll = new Fx.Scroll(window);
-        Slider2Scroll.toElement('managerlanguage_select');
-    }
-}
-
-function setColor() {
-    var col = $('database_collation');
-
-    ss = document.getElementById('serverstatus');
-    ssv = ss.innerHTML;
-    if ($('server_pass') !== null) {
-        col.setStyle('background-color', '#9CCD00');
-        col.setStyle('border-width', '1px');
-        col.setStyle('font-weight', 'bold');
-
-        window.Slider1.slideIn(); //toggle the slider up and down.
-        var Slider1FX = new Fx.Styles('collationMask', { duration: 997, transition: Fx.Transitions.linear });
-        Slider1FX.start({ 'opacity': [0, 1] });
-        window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
-        Slider1Scroll = new Fx.Scroll(window);
-        Slider1Scroll.toElement('databasestatus');
-        $('database_name').focus();
-    } else {
-        window.Slider1.slideOut(); //toggle the slider up and down.
-        $('collationMask').setStyle('opacity', 0);
-    }
-}
-
-var f = document.install;
-// get collation from the database server
-$('servertest').addEvent('click', function(e) {
-    e = new Event(e).stop();
-    if (f.databasehost.value == "") {
-        alert("[%alert_enter_host%]");
-        f.databasehost.focus();
-        return false;
-    }
-    if (f.databaseloginname.value == "") {
-        alert("[%alert_enter_login%]");
-        f.databaseloginname.focus();
-        return false;
+    if (form.database_name.value === '') {
+      form.database_name.parentElement.classList.add('has-error');
+      form.database_name.focus();
+      return false;
     }
 
-    var url = "index.php?self=1&action=connection/collation";
+    var url = 'index.php?self=1&action=connection/databasetest';
 
-    host = $('databasehost').value;
-    uid = $('databaseloginname').value;
-    pwd = $('databaseloginpassword').value;
-
-    var pars = Object.toQueryString({
+    new Ajax(url, {
+      data: {
         q: url,
-        host: host,
-        uid: uid,
-        pwd: pwd,
-        language: language
-    });
-
-    new Ajax(url, { postBody: pars, update: $('collation'), onComplete: testServer }).request();
-});
-
-// database test
-$('databasetest').addEvent('click', function(e) {
-    e = new Event(e).stop();
-    if (f.database_name.value == "") {
-        alert("[%alert_enter_database_name%]");
-        f.database_name.focus();
-        return false;
-    }
-
-    var url = "index.php?self=1&action=connection/databasetest";
-
-    host = $('databasehost').value;
-    uid = $('databaseloginname').value;
-    pwd = $('databaseloginpassword').value;
-    database_name = $('database_name').value;
-    tableprefix = $('tableprefix').value;
-    database_collation = $('database_collation').getValue();
-    database_connection_method = $('database_connection_method').value;
-
-    var pars = Object.toQueryString({
-        q: url,
-        host: host,
-        uid: uid,
-        pwd: pwd,
-        database_name: database_name,
-        tableprefix: tableprefix,
-        database_collation: database_collation,
-        database_connection_method: database_connection_method,
+        host: form.databasehost.value,
+        uid: form.databaseloginname.value,
+        pwd: form.databaseloginpassword.value,
+        database_name: form.database_name.value,
+        tableprefix: form.tableprefix.value,
+        database_collation: form.database_collation.value,
+        database_connection_method: form.database_connection_method.value,
         language: language,
         installMode: installMode
+      },
+      success: setDefaults
     });
-    new Ajax(url, { postBody: pars, update: $('databasestatus'), onComplete: setDefaults }).request();
-    $('nextlink').style.display = 'inline';
-});
 
+    document.getElementById('nextlink').style.display = 'inline-block';
+  });
 
-Slider1 = new Fx.Slide('setCollation', { duration: 477 }); //transition:Fx.Sine.easeOut,
-Slider1.hide();
-$('setCollation').style.backgroundColor = '#ffff00';
-$('setCollation').style.display = 'block';
-if ((installMode == 0 || installMode == 2) && document.getElementById('AUH')) {
-    Slider2 = new Fx.Slide('AUH', { duration: 477 }); //transition:Fx.Sine.easeOut,
-    Slider2.hide();
-    $('AUH').style.display = 'block';
-    $('AUH').style.backgroundColor = '#ffff00';
-}
+  document.getElementById('setCollation').style.backgroundColor = '#ffff00';
+  document.getElementById('setCollation').style.display = 'none';
 
-$('prevlink').addEvent('click', function(e) {
-    document.getElementById('install_form').action = 'index.php?action=mode';
-    document.getElementById('install_form').submit();
-});
+  if ((installMode === 0 || installMode === 2) && document.getElementById('AUH')) {
+    document.getElementById('AUH').style.display = 'none';
+    document.getElementById('AUH').style.backgroundColor = '#ffff00';
+  }
 
-$('nextlink').addEvent('click', function(e) {
+  document.getElementById('prevlink').addEventListener('click', function(e) {
+    form.action = 'index.php?action=mode';
+    form.submit();
+  });
+
+  document.getElementById('nextlink').addEventListener('click', function(e) {
     var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (alpha.indexOf(f.tableprefix.value.charAt(0), 0) == -1) {
-        alert("[%alert_table_prefixes%]");
-        f.tableprefix.focus();
-        return false;
+    if (alpha.indexOf(form.tableprefix.value.charAt(0), 0) === -1) {
+      form.tableprefix.parentElement.classList.add('has-error');
+      form.tableprefix.focus();
+      return false;
     }
-    dbs = document.getElementById('databasestatus');
-    dbsv = dbs.innerHTML;
-    if (dbsv.length == 0 || dbsv == '&nbsp;') {
-        alert("[%alert_database_test_connection%]");
-        return false;
+    var dbs = document.getElementById('databasestatus');
+    var dbsv = dbs.innerHTML;
+    if (dbsv.length === 0 || dbsv === '&nbsp;') {
+      alert('[%alert_database_test_connection%]');
+      return false;
     }
-    if (dbsv.indexOf("failed") >= 0) {
-        alert("[%alert_database_test_connection_failed%]");
-        return false;
+    if (dbsv.indexOf('failed') >= 0) {
+      alert('[%alert_database_test_connection_failed%]');
+      return false;
     }
-    if (f.cmsadmin && f.cmsadmin.value == "") {
-        alert("[%alert_enter_adminlogin%]");
-        f.cmsadmin.focus();
-        return false;
+    if (form.cmsadmin && form.cmsadmin.value === '') {
+      form.cmsadmin.parentElement.classList.add('has-error');
+      form.cmsadmin.focus();
+      return false;
     }
-    if (f.cmspassword && f.cmspassword.value == "") {
-        alert("[%alert_enter_adminpassword%]");
-        f.cmspassword.focus();
-        return false;
+    if (form.cmspassword && form.cmspassword.value === '') {
+      form.cmspassword.parentElement.classList.add('has-error');
+      form.cmspassword.focus();
+      return false;
     }
-    if (f.cmspassword && f.cmspassword.value != f.cmspasswordconfirm.value) {
-        alert("[%alert_enter_adminconfirm%]");
-        f.cmspassword.focus();
-        return false;
+    if (form.cmspasswordconfirm && form.cmspasswordconfirm.value !== form.cmspasswordconfirm.value) {
+      form.cmspasswordconfirm.parentElement.classList.add('has-error');
+      form.cmspasswordconfirm.focus();
+      return false;
     }
-    document.getElementById('install_form').action = 'index.php?action=options';
-    document.getElementById('install_form').submit();
-});
+    form.action = 'index.php?action=options';
+    form.submit();
+  });
+
+  function testServer()
+  {
+    if (arguments[0]) {
+      document.getElementById('collation').innerHTML = arguments[0];
+    }
+    // get the server test status as soon as collation received
+    var url = 'index.php?self=1&action=connection/servertest';
+
+    new Ajax(url, {
+      data: {
+        q: url,
+        host: form.databasehost.value,
+        uid: form.databaseloginname.value,
+        pwd: form.databaseloginpassword.value,
+        language: language
+      },
+      success: setColor
+    });
+  }
+
+  function setDefaults()
+  {
+    if (arguments[0]) {
+      document.getElementById('databasestatus').innerHTML = arguments[0];
+    }
+    if (document.getElementById('database_pass') !== null && document.getElementById('AUH')) {
+      document.getElementById('AUH').style.display = 'block';
+      document.getElementById('AUHMask').style.opacity = '1';
+      window.setTimeout(function() {
+        document.getElementById('AUH').style.backgroundColor = '#ffffff';
+      }, 1000);
+    }
+  }
+
+  function setColor()
+  {
+    if (arguments[0]) {
+      document.getElementById('serverstatus').innerHTML = arguments[0];
+    }
+    var col = document.getElementById('database_collation');
+    var ss = document.getElementById('serverstatus');
+    var ssv = ss.innerHTML;
+    if (document.getElementById('server_pass') !== null) {
+      col.style.backgroundColor = '#9CCD00';
+      col.style.borderWidth = '1px';
+      col.style.fontWeight = 'bold';
+
+      document.getElementById('setCollation').style.display = 'block';
+      document.getElementById('collationMask').style.opacity = '1';
+      window.setTimeout(function() {
+        document.getElementById('setCollation').style.backgroundColor = '#ffffff';
+      }, 1000);
+      document.getElementById('database_name').focus();
+    } else {
+      document.getElementById('setCollation').style.display = 'none';
+      document.getElementById('collationMask').style.opacity = '0';
+    }
+  }
+
+  function objToQueryString(obj)
+  {
+    return '?' +
+        Object.keys(obj).map(function(key) {
+          return encodeURIComponent(key) + '=' +
+              encodeURIComponent(obj[key]);
+        }).join('&');
+  }
+
+  var Ajax = (function() {
+    return (function() {
+      var url = arguments[0] && arguments[0][0] || '';
+      var data = arguments[0] && arguments[0][1] || {};
+      if (url) {
+        if (typeof data.data === 'object') {
+          data.data = objToQueryString(data.data);
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        xhr.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+        xhr.onreadystatechange = function() {
+          if (this.readyState === 4) {
+            if (typeof data.update !== 'undefined') {
+              data.update.innerHTML = this.response;
+            }
+            if (typeof data.success === 'function') {
+              data.success(this.response);
+            }
+          }
+        };
+        xhr.send(data.data);
+      }
+    })(arguments);
+  });
 </script>
