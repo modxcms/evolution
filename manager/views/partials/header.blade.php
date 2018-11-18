@@ -40,7 +40,7 @@
         evo.urlCheckConnectionToServer = '{{  MODX_MANAGER_URL }}';
     </script>
     <script src="media/script/main.js"></script>
-    @if (get_by_key($_REQUEST, 'r', '', 'is_numeric')) {
+    @if (get_by_key($_REQUEST, 'r', '', 'is_numeric'))
         <script>doRefresh({{ $_REQUEST['r'] }});</script>
     @endif
     @stack('scripts.top')
