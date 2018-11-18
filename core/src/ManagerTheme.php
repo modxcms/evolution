@@ -594,6 +594,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function getTemplatePlaceholders() : array
     {
         $plh = [
+            'modx_charset' => $this->getCharset(),
             'favicon' => (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : $this->getThemeUrl() . '/images/') . 'favicon.ico',
             'homeurl' => $this->getCore()->makeUrl($this->getManagerStartupPageId()),
             'logouturl' => MODX_MANAGER_URL.'index.php?a=8',
@@ -627,7 +628,13 @@ class ManagerTheme implements ManagerThemeInterface
     public function renderLoginPage()
     {
         $plh = [
-            'remember_me' => isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : ''
+            'login_form_position_class' => 'loginbox-' . $this->getCore()->getConfig('login_form_position'),
+            'login_form_style_class' => 'loginbox-' . $this->getCore()->getConfig('login_form_style'),
+            'username' => $this->getLexicon('username'),
+            'password' => $this->getLexicon('password'),
+            'remember_me' => isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : '',
+            'remember_username' => $this->getLexicon('remember_username'),
+            'login_button' => $this->getLexicon('login_button'),
         ];
 
         // invoke OnManagerLoginFormPrerender event
@@ -661,7 +668,7 @@ class ManagerTheme implements ManagerThemeInterface
                 '<img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon("login_captcha_message") . '" />' .
                 '</a>';
             $plh['captcha_input'] = '<label>' . $this->getLexicon("captcha_code") . '</label>' .
-                '<input type="text" name="captcha_code" tabindex="3" value="" />';
+                '<input type="text" name="captcha_code" tabindex="3" value="" class="form-control" />';
         }
 
         // login info
@@ -670,7 +677,6 @@ class ManagerTheme implements ManagerThemeInterface
             $uid = preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '', $_COOKIE['modx_remember_manager']);
         }
         $plh['uid'] = $uid;
-
 
         // invoke OnManagerLoginFormRender event
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
