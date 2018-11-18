@@ -58,6 +58,8 @@ if($modx->getManagerApi()->hasFormValues()) {
 	$modx->getManagerApi()->loadFormValues();
 }
 
+$content = array_merge($content, $_POST);
+
 // Add lock-element JS-Script
 $lockElementId = $id;
 $lockElementType = 6;
