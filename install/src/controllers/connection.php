@@ -11,18 +11,24 @@ if ($installMode === 0) {
         '_';
 } else {
     $database_name = '';
-    if (! is_file($base_path . MGR_DIR . '/includes/config.inc.php')) {
+
+    if (! is_file(EVO_CORE_PATH . 'config/database/connections/default.php')) {
         $upgradeable = 0;
     } else {
         // Include the file so we can test its validity
-        include $base_path . MGR_DIR . '/includes/config.inc.php';
+        $db_config = include_once EVO_CORE_PATH . 'config/database/connections/default.php';
+        $database_server = $db_config['host'];
+        $database_collation = $db_config['collation'];
+        $database_connection_method = $db_config['method'];
+        $database_connection_charset = $db_config['charset'];
+        $table_prefix = $db_config['prefix'];
+
         // We need to have all connection settings - but prefix may be empty so we have to ignore it
-        if ($dbase) {
-            $database_name = trim($dbase, '`');
-            $host = explode(':', $database_server, 2);
-            if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
+        if (isset($db_config['database'])) {
+            $database_name = trim($db_config['database'], '`');
+            if (!$conn = mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'],'', isset($db_config['port']) ? $db_config['port'] : null)) {
                 $upgradeable = (isset($_POST['installmode']) && $_POST['installmode'] === 'new') ? 0 : 2;
-            } elseif (! mysqli_select_db($conn, trim($dbase, '`'))) {
+            } elseif (! mysqli_select_db($conn, $database_name)) {
                 $upgradeable = (isset($_POST['installmode']) && $_POST['installmode'] === 'new') ? 0 : 2;
             } else {
                 $upgradeable = 1;

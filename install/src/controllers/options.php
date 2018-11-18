@@ -13,10 +13,12 @@ switch($installMode){
             $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
         break;
     case 1:
-        include $base_path . MGR_DIR . '/includes/config.inc.php';
-        $host = explode(':', $database_server, 2);
-        if (@ $conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
-            if (@ mysqli_query($conn, "USE {$dbase}")) {
+        $db_config = include_once EVO_CORE_PATH . 'config/database/connections/default.php';
+        $database_collation = $db_config['collation'];
+        $database_connection_charset = $db_config['charset'];
+        if (@ $conn = mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'], '', isset
+        ($db_config['port']) ? $db_config['port'] : null)) {
+            if (@ mysqli_query($conn, "USE " . $db_config['database'])) {
                 if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
                     $rs = mysqli_query($conn, "show session variables like 'collation_server'");
                 }
@@ -40,13 +42,13 @@ switch($installMode){
             $database_connection_method = 'SET NAMES';
         }
 
-        $_POST['database_name'] = $dbase;
-        $_POST['tableprefix'] = $table_prefix;
+        $_POST['database_name'] = $db_config['database'];
+        $_POST['tableprefix'] = $db_config['prefix'];
         $_POST['database_connection_charset'] = $database_connection_charset;
         $_POST['database_connection_method'] = $database_connection_method;
-        $_POST['databasehost'] = $database_server;
-        $_SESSION['databaseloginname'] = $database_user;
-        $_SESSION['databaseloginpassword'] = $database_password;
+        $_POST['databasehost'] = $db_config['host'];
+        $_SESSION['databaseloginname'] = $db_config['username'];
+        $_SESSION['databaseloginpassword'] = $db_config['password'];
         break;
     default:
         throw new Exception('installmode is undefined');

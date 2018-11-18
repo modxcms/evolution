@@ -183,10 +183,18 @@ if (!$isWriteable) {
     echo '<span class="ok">'.$_lang['ok'].'</span></p>';
 }
 
-
 // connect to the database
 if ($installMode == 1) {
-    include "../".MGR_DIR."/includes/config.inc.php";
+    $db_config = include_once EVO_CORE_PATH . 'config/database/connections/default.php';
+    $database_server = $db_config['host'];
+    $database_user = $db_config['username'];
+    $database_password = $db_config['password'];
+    $database_collation = $db_config['collation'];
+    $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+    $database_connection_charset = $db_config['charset'];
+    $database_connection_method = $db_config['method'];
+    $dbase = '`' . $db_config['database'] . '`';
+    $table_prefix = $db_config['prefix'];
 } else {
     // get db info from post
     $database_server = $_POST['databasehost'];
@@ -330,12 +338,12 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
-    <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
-    <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
-    <input type="hidden" value="<?php echo $_POST['database_collation'] ?>" name="database_collation" />
-    <input type="hidden" value="<?php echo $_POST['database_connection_charset'] ?>" name="database_connection_charset" />
-    <input type="hidden" value="<?php echo $_POST['database_connection_method'] ?>" name="database_connection_method" />
-    <input type="hidden" value="<?php echo $_POST['databasehost'] ?>" name="databasehost" />
+    <input type="hidden" value="<?php echo trim($dbase, '`'); ?>" name="database_name" />
+    <input type="hidden" value="<?php echo $table_prefix ?>" name="tableprefix" />
+    <input type="hidden" value="<?php echo $database_collation ?>" name="database_collation" />
+    <input type="hidden" value="<?php echo $database_connection_charset ?>" name="database_connection_charset" />
+    <input type="hidden" value="<?php echo $database_connection_method ?>" name="database_connection_method" />
+    <input type="hidden" value="<?php echo $database_server ?>" name="databasehost" />
     <input type="hidden" value="<?php echo $_POST['cmsadmin'] ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo $_POST['cmsadminemail'] ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo $_POST['cmspassword'] ?>" name="cmspassword" />
