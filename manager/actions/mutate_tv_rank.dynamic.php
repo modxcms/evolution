@@ -148,7 +148,7 @@ if ($modx->db->getRecordCount($rs)) {
     </div>
 </div>
 
-<form action="" method="post" name="sortableListForm">
+<form name="sortableListForm" method="post" action="">
     <input type="hidden" name="listSubmitted" value="true" />
     <input type="hidden" id="list" name="list" value="" />
 </form>

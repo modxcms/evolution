@@ -187,7 +187,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 </script>
 
-<form action="index.php?a=89" method="post" name="userform">
+<form name="userform" method="post" action="index.php">
 	<?php
 	// invoke OnWUsrFormPrerender event
 	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender", array("id" => $user));
@@ -195,6 +195,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		echo implode("", $evtOut);
 	}
 	?>
+    <input type="hidden" name="a" value="89">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />

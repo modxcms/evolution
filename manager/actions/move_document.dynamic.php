@@ -88,7 +88,7 @@ $_SESSION['itemname'] = $pagetitle;
 <div class="tab-page">
     <div class="container container-body">
         <p class="alert alert-info"><?= $_lang['move_resource_message'] ?></p>
-        <form method="post" action="index.php" name="newdocumentparent">
+        <form name="newdocumentparent" method="post" action="index.php">
             <input type="hidden" name="a" value="52" />
             <input type="hidden" name="id" value="<?= $id ?>" />
             <input type="hidden" name="idshow" value="<?= $id ?>" />

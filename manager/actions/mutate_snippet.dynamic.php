@@ -414,7 +414,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 </script>
 
-<form name="mutate" method="post" action="index.php?a=24">
+<form name="mutate" method="post" action="index.php">
     <?php
     // invoke OnSnipFormPrerender event
     $evtOut = $modx->invokeEvent("OnSnipFormPrerender", array("id" => $id));
@@ -427,6 +427,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
     $parsed = $modx->parseDocBlockFromString($snippetcode);
     $docBlockList = $modx->convertDocBlockIntoList($parsed);
     ?>
+    <input type="hidden" name="a" value="24">
     <input type="hidden" name="id" value="<?= $content['id'] ?>">
     <input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 

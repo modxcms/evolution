@@ -27,7 +27,8 @@ if (isset($_REQUEST['searchid'])) {
 
     <div class="tab-page">
         <div class="container container-body">
-            <form action="index.php?a=71" method="post" name="searchform" enctype="multipart/form-data" class="form-group">
+            <form name="searchform" method="post" action="index.php" enctype="multipart/form-data" class="form-group">
+                <input type="hidden" name="a" value="71">
                 <div class="row form-row">
                     <div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_top'] ?></div>
                     <div class="col-md-9 col-lg-10">

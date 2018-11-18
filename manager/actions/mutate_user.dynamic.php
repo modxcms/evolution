@@ -198,7 +198,7 @@ if($which_browser == 'default') {
 
 </script>
 
-<form action="index.php?a=32" method="post" name="userform">
+<form name="userform" method="post" action="index.php">
 	<?php
 
 	// invoke OnUserFormPrerender event
@@ -209,6 +209,7 @@ if($which_browser == 'default') {
 		echo implode("", $evtOut);
 	}
 	?>
+    <input type="hidden" name="a" value="32">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 	<input type="hidden" name="id" value="<?php echo $user ?>">
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />

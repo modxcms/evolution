@@ -99,7 +99,7 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
     </div>
 </div>
 
-<form action="" method="post" name="sortableListForm">
+<form name="sortableListForm" method="post" action="">
     <input type="hidden" name="listSubmitted" value="true" />
     <?php
     foreach ($sortables as $list) {

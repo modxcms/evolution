@@ -435,7 +435,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 </script>
 
-<form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
+<form name="mutate" method="post" action="index.php" id="mutate" class="module">
 	<?php
 	// invoke OnModFormPrerender event
 	$evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
@@ -449,6 +449,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	$docBlockList = $modx->convertDocBlockIntoList($docBlock);
 	$internal = array();
 	?>
+    <input type="hidden" name="a" value="109">
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 

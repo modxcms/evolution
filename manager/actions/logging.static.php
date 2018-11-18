@@ -64,7 +64,8 @@ $logs = $modx->db->makeArray($rs);
         <div class="container container-body">
             <div class="element-edit-message-tab alert alert-warning"><?= $_lang["mgrlog_query_msg"] ?></div>
 
-            <form action="index.php?a=13" name="logging" method="POST" class="form-group">
+            <form name="logging" method="post" action="index.php" class="form-group">
+                <input type="hidden" name="a" value="13">
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_user"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">

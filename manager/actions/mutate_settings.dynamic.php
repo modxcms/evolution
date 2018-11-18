@@ -57,7 +57,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		}
 	</script>
 	<script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
-	<form name="settings" action="index.php?a=30" method="post">
+	<form name="settings" method="post" action="index.php">
+        <input type="hidden" name="a" value="30">
 
 		<h1>
 			<?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>

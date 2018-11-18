@@ -53,6 +53,8 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
+$content = array_merge($content, $_POST);
+
 // Add lock-element JS-Script
 $lockElementId = $id;
 $lockElementType = 5;
@@ -474,8 +476,8 @@ function bold($cond = false)
 
 </script>
 
-<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
-
+<form name="mutate" method="post" action="index.php" enctype="multipart/form-data">
+    <input type="hidden" name="a" value="103">
     <input type="hidden" name="id" value="<?= $content['id'] ?>">
     <input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
@@ -564,7 +566,7 @@ function bold($cond = false)
                 <span><?= $_lang['plugin_code'] ?></span>
             </div>
             <div class="section-editor clearfix">
-                <textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']) ?></textarea>
+                <textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['plugincode'])) ?></textarea>
             </div>
             <!-- PHP text editor end -->
         </div>
