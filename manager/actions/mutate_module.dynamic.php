@@ -69,6 +69,8 @@ if($modx->manager->hasFormValues()) {
 	$modx->manager->loadFormValues();
 }
 
+$content = array_merge($content, $_POST);
+
 // Add lock-element JS-Script
 $lockElementId = $id;
 $lockElementType = 6;
@@ -551,7 +553,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<span><?= $_lang['module_code'] ?></span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['modulecode']) ?></textarea>
+				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['modulecode'])) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
