@@ -536,10 +536,10 @@ class ManagerTheme implements ManagerThemeInterface
         $target = $this->getCore()->mergeSettingsContent($target);
 
         if ($target[0] === '@') {
-            if (stripos($target, '@CHUNK')) {
+            if (stripos($target, '@CHUNK') === 0) {
                 $target = trim(substr($target, 7));
                 $content = $this->getCore()->getChunk($target);
-            } elseif (stripos($target, '@FILE')) {
+            } elseif (stripos($target, '@FILE') === 0) {
                 $target = trim(substr($target, 6));
                 $content = file_get_contents($target);
             } else {
@@ -581,8 +581,8 @@ class ManagerTheme implements ManagerThemeInterface
         $content = $this->getCore()->mergeConditionalTagsContent($content);
         $content = $this->getCore()->parseDocumentSource($content);
         $content = $this->getCore()->cleanUpMODXTags($content);
-        $content = $this->getCore()->parseText($content, $this->getLexicon(), '[%', '%]');
-        $content = $this->getCore()->parseText($content, $this->getStyle(), '[&', '&]');
+        $content = $this->getCore()->parseText($content, $this->getLexicon(), '[+', '+]');
+        $content = $this->getCore()->parseText($content, $this->getStyle(), '[+', '+]');
 
         if ($clean) {
             $content = removeSanitizeSeed(getSanitizedValue($content));
@@ -628,13 +628,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function renderLoginPage()
     {
         $plh = [
-            'login_form_position_class' => 'loginbox-' . $this->getCore()->getConfig('login_form_position'),
-            'login_form_style_class' => 'loginbox-' . $this->getCore()->getConfig('login_form_style'),
-            'username' => $this->getLexicon('username'),
-            'password' => $this->getLexicon('password'),
-            'remember_me' => isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : '',
-            'remember_username' => $this->getLexicon('remember_username'),
-            'login_button' => $this->getLexicon('login_button'),
+            'remember_me' => isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' : ''
         ];
 
         // invoke OnManagerLoginFormPrerender event
@@ -668,7 +662,7 @@ class ManagerTheme implements ManagerThemeInterface
                 '<img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon("login_captcha_message") . '" />' .
                 '</a>';
             $plh['captcha_input'] = '<label>' . $this->getLexicon("captcha_code") . '</label>' .
-                '<input type="text" name="captcha_code" tabindex="3" value="" class="form-control" />';
+                '<input type="text" name="captcha_code" tabindex="3" value="" />';
         }
 
         // login info

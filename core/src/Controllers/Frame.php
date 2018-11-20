@@ -59,14 +59,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ]
         );
 
-        if ($this->managerTheme->getCore()->getConfig('manager_menu_height') === '') {
-            $this->managerTheme->getCore()->setConfig('manager_menu_height', 2.2); // rem
-        }
-
-        if ($this->managerTheme->getCore()->getConfig('manager_tree_width') === '') {
-            $this->managerTheme->getCore()->setConfig('manager_tree_width', 20); // rem
-        }
-
         $body_class = '';
         $tree_width = $this->managerTheme->getCore()->getConfig('manager_tree_width');
         $this->parameters['tree_min_width'] = 0;

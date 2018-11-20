@@ -128,6 +128,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public $old;
 
+    /**
+     * @deprecated
+     * @var array|false
+     */
+    public $_TVnames = false;
+
     /** @var UrlProcessor|null */
     public $urlProcessor;
 
@@ -188,6 +194,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
+     * @see: https://stackoverflow.com/a/13186679/2323306
      * @param string $name
      * @return mixed|null
      */
@@ -1811,13 +1818,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        if (strpos($phpcode, ';') !== false) {
+        if (is_scalar($phpcode) && strpos($phpcode, ';') !== false) {
             if (substr($phpcode, 0, 5) === '<?php') {
                 $phpcode = substr($phpcode, 5);
             }
             $return = eval($phpcode);
-        } else {
+        } elseif(! empty($phpcode) && ! is_bool($phpcode)) {
             $return = call_user_func_array($phpcode, array($params));
+        } else {
+            $return = '';
         }
         $echo = ob_get_contents();
         ob_end_clean();
@@ -2416,6 +2425,41 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return $documentObject;
     }
 
+    public function makeDocumentObject($id, $values = true)
+    {
+        if (is_array($this->documentObject) && $id === $this->documentObject['id']) {
+            $documentObject = $this->documentObject;
+        } else {
+            $documentObject = $this->db->query("SELECT * FROM ".$this->getDatabase()->getFullTableName('site_content')." WHERE id = ".(int)$id);
+            $documentObject = $this->db->getRow($documentObject);
+        }
+        if($documentObject === null) $documentObject = array();
+        else {
+            $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getDatabase()->getFullTableName("site_tmplvars") . " tv
+                    INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
+                    LEFT JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
+            $tmplvars = array();
+            while ($row = $this->db->getRow($rs)) {
+                $tmplvars[$row['name']] = array(
+                    $row['name'],
+                    $row['value'],
+                    $row['display'],
+                    $row['display_params'],
+                    $row['type']
+                );
+            }
+            $documentObject = array_merge($documentObject, $tmplvars);
+        }
+        if ($values === true) {
+            foreach ($documentObject as $key => $value) {
+                if (is_array($value)) {
+                    $documentObject[$key] = isset($value[1]) ? $value[1] : '';
+                }
+            }
+        }
+        return $documentObject;
+    }
+
     /**
      * Parse a source string.
      *
@@ -2689,18 +2733,53 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->_sendRedirectForRefPage($this->documentObject['content']);
             }
 
-            // get the template and start parsing!
-            if (!$this->documentObject['template']) {
-                $templateCode = '[*content*]';
-            } // use blank template
-            else {
-                $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
+            $documentObject = $this->documentObject;
+            switch (true) {
+                case $this['view']->exists('tpl-' . $documentObject['template'] . '_doc-' . $documentObject['id']):
+                    $template = 'tpl-' . $documentObject['template'] . '_doc-' . $documentObject['id'];
+                    break;
+                case $this['view']->exists('doc-' . $documentObject['id']):
+                    $template = 'doc-' . $documentObject['id'];
+                    break;
+                case $this['view']->exists('tpl-' . $documentObject['template']):
+                    $template = 'tpl-' . $documentObject['template'];
+                    break;
+                default:
+                    $content = $documentObject['template'] ? $this->documentContent : $documentObject['content'];
+                    if (!$content) {
+                        $content = $documentObject['content'];
+                    }
+                    if (0 === strpos($content, '@FILE:')) {
+                        $template = str_replace('@FILE:', '', trim($content));
+                        if (!$this['view']->exists($template)) {
+                            $this->documentObject['template'] = 0;
+                            $this->documentContent = $documentObject['content'];
+                        }
+                    }
             }
+            if (!empty($template)) {
+                $this->minParserPasses = -1;
+                $this->maxParserPasses = -1;
+                /** @var \Illuminate\View\View $tpl */
+                $tpl = $this['view']->make($template, [
+                    'modx'     => $this,
+                    'documentObject' => isset($this->documentObject['id']) ? $this->makeDocumentObject($this->documentObject['id']) : []
+                ]);
 
-            if (substr($templateCode, 0, 8) === '@INCLUDE') {
-                $templateCode = $this->atBindInclude($templateCode);
+                $templateCode = $tpl->render();
+            } else {
+                // get the template and start parsing!
+                if (!$this->documentObject['template']) {
+                    $templateCode = '[*content*]';
+                } // use blank template
+                else {
+                    $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
+                }
+
+                if (substr($templateCode, 0, 8) === '@INCLUDE') {
+                    $templateCode = $this->atBindInclude($templateCode);
+                }
             }
-
 
             $this->documentContent = &$templateCode;
 
@@ -3888,6 +3967,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function clearCache($type = '', $report = false)
     {
         $cache_dir = $this->bootstrapPath();
+
+        /*$this['command.view.clear']->handle();*/
+        $path = $this['config']['view.compiled'];
+        if ($path) {
+            foreach ($this['files']->glob("{$path}/*") as $view) {
+                $this['files']->delete($view);
+            }
+        }
+
         if (is_array($type)) {
             foreach ($type as $_) {
                 $this->clearCache($_, $report);
@@ -6042,5 +6130,4 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $this->logEvent(0, $type, $msg, $title);
     }
-
 }

@@ -24,8 +24,8 @@ if ($sysMsgs != '') : ?>
       document.addEventListener('DOMContentLoaded', function() {
         if (parent.modx) {
           parent.modx.popup({
-            title: '<?php echo $_lang['sys_alert']; ?>',
-            content: '<?php echo $modx->getDatabase()->escape($sysMsgs);?>',
+            title: '<?=$_lang['sys_alert']; ?>',
+            content: '<?=$modx->getDatabase()->escape($sysMsgs);?>',
             wrap: document.body,
             type: 'warning',
             width: '400px',
@@ -37,4 +37,4 @@ if ($sysMsgs != '') : ?>
         }
       });
     </script>
-<? endif; ?>
+<?php endif; ?>

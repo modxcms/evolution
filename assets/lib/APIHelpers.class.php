@@ -94,14 +94,14 @@ class APIhelpers
      * @license    GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
      * @param string $email проверяемый email
      * @param boolean $dns проверять ли DNS записи
-     * @return boolean Результат проверки почтового ящика
+     * @return boolean|string Результат проверки почтового ящика
      * @author Anton Shevchuk
      */
     public static function emailValidate($email, $dns = true)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             list(, $domain) = explode("@", $email, 2);
-            if (!$dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
+            if (! $dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
                 $error = false;
             } else {
                 $error = 'dns';
@@ -270,13 +270,14 @@ class APIhelpers
                 $out = str_replace(
                     array_keys($chars),
                     array_values($chars),
-                    is_null($charset) ? $data : self::e($data, $charset)
+                    $charset === null ? $data : self::e($data, $charset)
                 );
                 break;
             case is_array($data):
-                $out = $data;
-                foreach ($out as $key => &$val) {
-                    $val = self::sanitarTag($val, $charset, $chars);
+                $out = array();
+                foreach ($data as $key => $val) {
+                    $key = self::sanitarTag($key, $charset, $chars);
+                    $out[$key] = self::sanitarTag($val, $charset, $chars);
                 }
                 break;
             default:
@@ -402,9 +403,7 @@ class APIhelpers
         foreach ($IDs as $item) {
             $item = trim($item);
             if (is_scalar($item) && (int)$item >= 0) { //Fix 0xfffffffff
-                if (!empty($ignore) && in_array((int)$item, $ignore, true)) {
-                    $this->log[] = 'Ignore id ' . (int)$item;
-                } else {
+                if (empty($ignore) && !\in_array((int)$item, $ignore, true)) {
                     $out[] = (int)$item;
                 }
             }
@@ -426,29 +425,6 @@ class APIhelpers
      */
     public static function renameKeyArr($data, $prefix = '', $suffix = '', $addPS = '.', $sep = '.')
     {
-        $out = array();
-        if ($prefix == '' && $suffix == '') {
-            $out = $data;
-        } else {
-            $InsertPrefix = ($prefix != '') ? ($prefix . $addPS) : '';
-            $InsertSuffix = ($suffix != '') ? ($addPS . $suffix) : '';
-            foreach ($data as $key => $item) {
-                $key = $InsertPrefix . $key;
-                $val = null;
-                switch (true) {
-                    case is_scalar($item):
-                        $val = $item;
-                        break;
-                    case is_array($item):
-                        $val = self::renameKeyArr($item, $key . $sep, $InsertSuffix, '', $sep);
-                        $out = array_merge($out, $val);
-                        $val = '';
-                        break;
-                }
-                $out[$key . $InsertSuffix] = $val;
-            }
-        }
-
-        return $out;
+        return rename_key_arr($data, $prefix, $suffix, $addPS, $sep);
     }
 }

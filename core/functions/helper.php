@@ -160,3 +160,43 @@ if (! function_exists('is_ajax')) {
         return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH', null)) === 'xmlhttprequest');
     }
 }
+
+if (! function_exists('rename_key_arr')) {
+    /**
+     * Renaming array elements
+     *
+     * @param array $data
+     * @param string $prefix
+     * @param string $suffix
+     * @param string $addPS separator prefix/suffix and array keys
+     * @param string $sep flatten an multidimensional array and combine keys with separator
+     * @return array
+     */
+    function rename_key_arr($data, $prefix = '', $suffix = '', $addPS = '.', $sep = '.')
+    {
+        $out = array();
+        if ($prefix === '' && $suffix === '') {
+            $out = $data;
+        } else {
+            $InsertPrefix = ($prefix !== '') ? ($prefix . $addPS) : '';
+            $InsertSuffix = ($suffix !== '') ? ($addPS . $suffix) : '';
+            foreach ($data as $key => $item) {
+                $key = $InsertPrefix . $key;
+                $val = null;
+                switch (true) {
+                    case is_scalar($item):
+                        $val = $item;
+                        break;
+                    case is_array($item):
+                        $val = rename_key_arr($item, $key . $sep, $InsertSuffix, '', $sep);
+                        $out = array_merge($out, $val);
+                        $val = '';
+                        break;
+                }
+                $out[$key . $InsertSuffix] = $val;
+            }
+        }
+
+        return $out;
+    }
+}

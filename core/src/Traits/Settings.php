@@ -42,17 +42,22 @@ trait Settings
         'use_browser' => 'bool',
         'warning_visibility' => 'bool',
         'use_captcha' => 'bool',
-        'tree_page_click' => 'int'
+        'tree_page_click' => 'int',
+        'allow_multiple_emails' => 'bool'
     ];
 
     /**
      * @param $name
      * @param $value
+     * @param bool $legacy
      */
-    public function setConfig($name, $value)
+    public function setConfig($name, $value, $legacy = false)
     {
-        $this['config']
-            ->set('cms.settings.' . $name, $value);
+        if ($legacy === true) {
+            $this->config[$name] = $value;
+        } else {
+            $this['config']->set('cms.settings.' . $name, $value);
+        }
     }
 
     /**
@@ -101,9 +106,9 @@ trait Settings
         }
 
         // store base_url and base_path inside config array
-        //$this->config['base_url'] = MODX_BASE_URL;
-        //$this->config['base_path'] = MODX_BASE_PATH;
-        //$this->config['site_url'] = MODX_SITE_URL;
+        $this->setConfig('base_url', MODX_BASE_URL, true);
+        $this->setConfig('base_path', MODX_BASE_PATH, true);
+        $this->setConfig('site_url', MODX_SITE_URL, true);
         $this->error_reporting = $this->getConfig('error_reporting');
         $this->setConfig(
             'filemanager_path',

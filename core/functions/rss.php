@@ -5,7 +5,7 @@ if (! function_exists('fetchRssChannelItems')) {
         $items = [];
         $file = evolutionCMS()->getCachePath() . 'rss/' . md5($url);
         $loadPath = file_exists($file) ? $file : $url;
-        $content = file_get_contents($loadPath);
+        $content = empty($loadPath) ? '' : file_get_contents($loadPath);
 
         if (!empty($content)) {
             $xml = (new SimpleXmlElement($content))

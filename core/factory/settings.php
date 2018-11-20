@@ -119,5 +119,8 @@ return [
     'show_picker' => 0,
     'show_newresource_btn' => 1,
     'show_fullscreen_btn' => 0,
-    'chunk_processor' => ''
+    'chunk_processor' => 'DLTemplate',
+    'allow_multiple_emails' => 0,
+    'manager_menu_height' => 2.2, // rem
+    'manager_tree_width' => 20, // rem
 ];
