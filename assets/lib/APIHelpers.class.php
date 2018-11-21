@@ -244,6 +244,7 @@ class APIhelpers
     }
 
     /**
+     * @deprecated use replace_array()
      * @param $data
      * @param string $charset
      * @param array $chars
@@ -265,29 +266,11 @@ class APIhelpers
             '%60' => '&#96;'
         )
     ) {
-        switch (true) {
-            case is_scalar($data):
-                $out = str_replace(
-                    array_keys($chars),
-                    array_values($chars),
-                    $charset === null ? $data : self::e($data, $charset)
-                );
-                break;
-            case is_array($data):
-                $out = array();
-                foreach ($data as $key => $val) {
-                    $key = self::sanitarTag($key, $charset, $chars);
-                    $out[$key] = self::sanitarTag($val, $charset, $chars);
-                }
-                break;
-            default:
-                $out = '';
-        }
-
-        return $out;
+        return replace_array($data, $chars);
     }
 
     /**
+     * @deprecated use e()
      * @param $text
      * @param string $charset
      * @return string
@@ -415,6 +398,7 @@ class APIhelpers
 
     /**
      * Переменовывание элементов массива
+     * @deprecated use rename_key_arr()
      *
      * @param array $data массив с данными
      * @param string $prefix префикс ключей

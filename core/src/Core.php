@@ -2427,33 +2427,35 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     public function makeDocumentObject($id, $values = true)
     {
-        if (is_array($this->documentObject) && $id === $this->documentObject['id']) {
+        if (\is_array($this->documentObject) && $id === $this->documentObject['id']) {
             $documentObject = $this->documentObject;
         } else {
             $documentObject = $this->db->query("SELECT * FROM ".$this->getDatabase()->getFullTableName('site_content')." WHERE id = ".(int)$id);
             $documentObject = $this->db->getRow($documentObject);
-        }
-        if($documentObject === null) $documentObject = array();
-        else {
-            $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getDatabase()->getFullTableName("site_tmplvars") . " tv
+
+            if ($documentObject === null) {
+                $documentObject = array();
+            } else {
+                $rs = $this->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $this->getDatabase()->getFullTableName("site_tmplvars") . " tv
                     INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") . " tvtpl ON tvtpl.tmplvarid = tv.id
                     LEFT JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
-            $tmplvars = array();
-            while ($row = $this->db->getRow($rs)) {
-                $tmplvars[$row['name']] = array(
-                    $row['name'],
-                    $row['value'],
-                    $row['display'],
-                    $row['display_params'],
-                    $row['type']
-                );
+                $tmplvars = array();
+                while ($row = $this->db->getRow($rs)) {
+                    $tmplvars[$row['name']] = array(
+                        $row['name'],
+                        $row['value'],
+                        $row['display'],
+                        $row['display_params'],
+                        $row['type']
+                    );
+                }
+                $documentObject = array_merge($documentObject, $tmplvars);
             }
-            $documentObject = array_merge($documentObject, $tmplvars);
         }
         if ($values === true) {
             foreach ($documentObject as $key => $value) {
-                if (is_array($value)) {
-                    $documentObject[$key] = isset($value[1]) ? $value[1] : '';
+                if (\is_array($value)) {
+                    $documentObject[$key] = $value[1] ?? '';
                 }
             }
         }

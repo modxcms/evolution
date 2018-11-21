@@ -365,7 +365,7 @@ class Phx
                         $output = html_entity_decode($output, ENT_QUOTES, $this->modx->config['modx_charset']);
                         break;
                     case "esc":
-                        $output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", APIHelpers::e($output));
+                        $output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", e($output));
                         $output = str_replace(array("[", "]", "`"), array("&#91;", "&#93;", "&#96;"), $output);
                         break;
                     case "strip":
@@ -546,7 +546,7 @@ class Phx
     public function LogClean($string)
     {
         $string = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", $string);
-        $string = APIHelpers::sanitarTag($string);
+        $string = replace_array($string);
 
         return $string;
     }

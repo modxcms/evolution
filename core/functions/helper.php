@@ -200,3 +200,37 @@ if (! function_exists('rename_key_arr')) {
         return $out;
     }
 }
+
+if (! function_exists('replace_array')) {
+    /**
+     * @param $data
+     * @param array $chars
+     * @param bool $withKey
+     * @return array|mixed|string
+     */
+    function replace_array(
+        $data,
+        array $chars = [
+            '['   => '&#91;', ']'   => '&#93;',
+            '{'   => '&#123;', '}'   => '&#125;',
+            '`'   => '&#96;',
+        ],
+        $withKey = true
+    ) {
+        switch (true) {
+            case is_scalar($data):
+                $out = str_replace(array_keys($chars), array_values($chars), $data);
+                break;
+            case is_array($data):
+                $out = array();
+                foreach ($data as $key => $val) {
+                    $key = $withKey ? replace_array($key, $chars) : $key;
+                    $out[$key] = replace_array($val, $chars);
+                }
+                break;
+            default:
+                $out = '';
+        }
+        return $out;
+    }
+}
