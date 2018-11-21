@@ -25,7 +25,7 @@ if (!defined('MODX_BASE_PATH')) {
 $newFolderAccessMode = $modx->getConfig('new_folder_permissions');
 $newFolderAccessMode = empty($new) ? 0777 : octdec($newFolderAccessMode);
 
-$cacheFolder = isset($cacheFolder) ? $cacheFolder : $modx->getCacheFolder() . "/images";
+$cacheFolder = isset($cacheFolder) ? $cacheFolder : $modx->getCacheFolder() . "images";
 /**
  * @see: https://github.com/kalessil/phpinspectionsea/blob/master/docs/probable-bugs.md#mkdir-race-condition
  */
@@ -34,7 +34,7 @@ if (!file_exists($path) && mkdir($path) && is_dir($path)) {
     chmod(MODX_BASE_PATH . $cacheFolder, $newFolderAccessMode);
 }
 
-$tmpFolder = $modx->getCacheFolder() . '/tmp';
+$tmpFolder = $modx->getCacheFolder() . 'tmp';
 if (!empty($input)) {
     $input = rawurldecode($input);
 }
@@ -59,7 +59,7 @@ if (!file_exists($path) && mkdir($path) && is_dir($path)) {
 }
 
 $path_parts = pathinfo($input);
-$tmpImagesFolder = str_replace('assets/images', '', $tmpImagesFolder);
+$tmpImagesFolder = str_replace('assets/images', '',$path_parts['dirname']);
 $tmpImagesFolder = explode('/', $tmpImagesFolder);
 $ext = strtolower($path_parts['extension']);
 $options = 'f=' . (in_array($ext, array('png', 'gif', 'jpeg')) ? $ext : 'jpg&q=85') . '&' .
