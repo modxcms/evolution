@@ -1,5 +1,39 @@
 [
     {
+        "name": "agelxnash/evo-fix-class-name",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/AgelxNash/evo-fix-class-name.git",
+            "reference": "d09ad7e2f3206e64429c72a6b59fcdb48bd03264"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/AgelxNash/evo-fix-class-name/zipball/d09ad7e2f3206e64429c72a6b59fcdb48bd03264",
+            "reference": "d09ad7e2f3206e64429c72a6b59fcdb48bd03264",
+            "shasum": ""
+        },
+        "time": "2018-11-21T04:26:39+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "AgelxNash\\EvoFixClassName\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "agel_nash",
+                "email": "modx@agel-nash.ru"
+            }
+        ]
+    },
+    {
         "name": "agelxnash/modx-evo-database",
         "version": "1.4.6",
         "version_normalized": "1.4.6.0",
@@ -1232,17 +1266,17 @@
     },
     {
         "name": "phpmailer/phpmailer",
-        "version": "v6.0.5",
-        "version_normalized": "6.0.5.0",
+        "version": "v6.0.6",
+        "version_normalized": "6.0.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/PHPMailer/PHPMailer.git",
-            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32"
+            "reference": "8190d73eb5def11a43cfb020b7f36db65330698c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/cb3ea134d4d3729e7857737d5f320cce9caf4d32",
-            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/8190d73eb5def11a43cfb020b7f36db65330698c",
+            "reference": "8190d73eb5def11a43cfb020b7f36db65330698c",
             "shasum": ""
         },
         "require": {
@@ -1267,7 +1301,7 @@
             "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
             "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
         },
-        "time": "2018-03-27T13:49:45+00:00",
+        "time": "2018-11-16T00:41:32+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1455,12 +1489,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "74a42b8d8d9f9cd672be58e7d1c65094da4ae971"
+            "reference": "fd696a6dc1b30ec46ec4ca16831ca24ef22bb970"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/74a42b8d8d9f9cd672be58e7d1c65094da4ae971",
-            "reference": "74a42b8d8d9f9cd672be58e7d1c65094da4ae971",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fd696a6dc1b30ec46ec4ca16831ca24ef22bb970",
+            "reference": "fd696a6dc1b30ec46ec4ca16831ca24ef22bb970",
             "shasum": ""
         },
         "conflict": {
@@ -1534,7 +1568,7 @@
             "pagarme/pagarme-php": ">=0,<3",
             "paragonie/random_compat": "<2",
             "paypal/merchant-sdk-php": "<3.12",
-            "phpmailer/phpmailer": ">=5,<5.2.24",
+            "phpmailer/phpmailer": ">=5,<5.2.27|>=6,<6.0.6",
             "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
             "phpwhois/phpwhois": "<=4.2.5",
             "phpxmlrpc/extras": "<0.6.1",
@@ -1586,7 +1620,7 @@
             "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
             "tecnickcom/tcpdf": "<6.2.22",
             "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-            "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+            "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
             "theonedemon/phpwhois": "<=4.2.5",
             "titon/framework": ">=0,<9.9.99",
             "truckersmp/phpwhois": "<=4.3.1",
@@ -1630,7 +1664,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2018-11-01T18:39:28+00:00",
+        "time": "2018-11-16T03:31:38+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [

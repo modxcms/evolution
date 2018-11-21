@@ -37,4 +37,5 @@ return array(
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/event-manager/lib/Doctrine/Common'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'AgelxNash\\Modx\\Evo\\Database\\' => array($vendorDir . '/agelxnash/modx-evo-database/src'),
+    'AgelxNash\\EvoFixClassName\\' => array($vendorDir . '/agelxnash/evo-fix-class-name/src'),
 );
