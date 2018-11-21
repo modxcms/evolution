@@ -452,11 +452,11 @@ class modxRTEbridge
     // Get final value of editor-config
     public function determineValue($key, $conf=NULL)
     {
-        if($conf == NULL) { $conf = $this->themeConfig[$key]; };
+        if($conf == NULL && isset($this->themeConfig[$key])) { $conf = $this->themeConfig[$key]; };
 
         $value = isset($this->themeConfig[$key]['bridged']) ? $this->themeConfig[$key]['bridged'] : NULL;
         $value = $value === NULL && isset($this->themeConfig[$key]['force']) ? $this->themeConfig[$key]['force'] : $value;
-        $value = $value === NULL ? $this->themeConfig[$key]['value'] : $value;
+        $value = $value === NULL && isset($this->themeConfig[$key]['value']) ? $this->themeConfig[$key]['value'] : $value;
 
         if(!in_array($conf['type'], array('boolean','bool'))) {
             if ($value === '' && $conf['empty'] === false) {  // Empty values not allowed

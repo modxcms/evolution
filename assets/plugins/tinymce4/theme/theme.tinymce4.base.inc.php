@@ -44,7 +44,7 @@ $this->set('statusbar',             true,                           'bool' );   
 
 $this->set('document_base_url',     MODX_SITE_URL,                  'string' );     // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
 $this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');      // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
-$this->set('entities',        $this->pluginParams['entities'],      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
+$this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
 $this->set('language',              $this->lang('lang_code'),       'string');      // https://www.tinymce.com/docs/configure/localization/#language
 if($this->lang('lang_code') != 'en')
