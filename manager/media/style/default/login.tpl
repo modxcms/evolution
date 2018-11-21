@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/ico" href="[+favicon+]">
-    <link rel="stylesheet" type="text/css" href="media/style/[(manager_theme)]/style.css">
+    <link rel="stylesheet" type="text/css" href="[+manager_theme_url+]style.css">
     <style>
         html {
             font-size: 16px;
@@ -456,13 +456,13 @@
 
             <!-- username -->
             <div class="form-group">
-                <label for="username" class="text-muted">[+username+]</label>
+                <label for="username" class="text-muted">[%username%]</label>
                 <input type="text" class="form-control" name="username" id="username" tabindex="1" value="[+uid+]">
             </div>
 
             <!-- password -->
             <div class="form-group">
-                <label for="password" class="text-muted">[+password+]</label>
+                <label for="password" class="text-muted">[%password%]</label>
                 <input type="password" class="form-control" name="password" id="password" tabindex="2" value="">
             </div>
 
@@ -476,8 +476,8 @@
             <!-- actions -->
             <div class="form-group form-group--actions">
                 <label for="rememberme" class="text-muted">
-                    <input type="checkbox" id="rememberme" name="rememberme" value="1" class="checkbox" [+remember_me+]> [+remember_username+]</label>
-                <button type="submit" name="submitButton" class="btn btn-success" id="submitButton">[+login_button+]</button>
+                    <input type="checkbox" id="rememberme" name="rememberme" value="1" class="checkbox" [+remember_me+]> [%remember_username%]</label>
+                <button type="submit" name="submitButton" class="btn btn-success" id="submitButton">[%login_button%]</button>
             </div>
 
             <!-- OnManagerLoginFormRender -->
@@ -520,7 +520,7 @@
           window.location = this.response.substr(10);
         } else {
           var cimg = document.getElementById('captcha_image');
-          if (cimg) cimg.src = 'includes/veriword.php?rand=' + Math.random();
+          if (cimg) cimg.src = 'captcha.php?rand=' + Math.random();
           document.getElementById('mainloader').classList.remove('show');
           alert(this.response);
         }

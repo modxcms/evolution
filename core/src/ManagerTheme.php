@@ -573,7 +573,6 @@ class ManagerTheme implements ManagerThemeInterface
     public function makeTemplate($name, $config = null, array $placeholders = [], $clean = true) : string
     {
         $content = $this->getTemplate($name, $config);
-
         // merge placeholders
         $this->getCore()->toPlaceholders(array_merge($this->getTemplatePlaceholders(), $placeholders));
         $content = $this->getCore()->mergePlaceholderContent($content);
@@ -581,8 +580,8 @@ class ManagerTheme implements ManagerThemeInterface
         $content = $this->getCore()->mergeConditionalTagsContent($content);
         $content = $this->getCore()->parseDocumentSource($content);
         $content = $this->getCore()->cleanUpMODXTags($content);
-        $content = $this->getCore()->parseText($content, $this->getLexicon(), '[+', '+]');
-        $content = $this->getCore()->parseText($content, $this->getStyle(), '[+', '+]');
+        $content = $this->getCore()->parseText($content, $this->getLexicon(), '[%', '%]');
+        $content = $this->getCore()->parseText($content, $this->getStyle(), '[&', '&]');
 
         if ($clean) {
             $content = removeSanitizeSeed(getSanitizedValue($content));
@@ -595,7 +594,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         $plh = [
             'modx_charset' => $this->getCharset(),
-            'favicon' => (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : $this->getThemeUrl() . '/images/') . 'favicon.ico',
+            'favicon' => (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : $this->getThemeUrl() . 'images/') . 'favicon.ico',
             'homeurl' => $this->getCore()->makeUrl($this->getManagerStartupPageId()),
             'logouturl' => MODX_MANAGER_URL.'index.php?a=8',
             'year' => date('Y'),
@@ -610,7 +609,7 @@ class ManagerTheme implements ManagerThemeInterface
         if ($logo !== '') {
             $plh['login_logo'] = MODX_SITE_URL . $logo;
         } else {
-            $plh['login_logo'] = $this->getThemeUrl() . '/images/login/default/login-logo.png';
+            $plh['login_logo'] = $this->getThemeUrl() . 'images/login/default/login-logo.png';
         }
 
         // set login background image

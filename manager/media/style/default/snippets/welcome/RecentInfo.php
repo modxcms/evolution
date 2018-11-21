@@ -7,7 +7,7 @@ if ($modx->getDatabase()->getRecordCount($rs) < 1) {
 $tpl = '<tr>
     <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap text-right"><span class="label label-info">[+id+]</span></td>
     <td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle:htmlentities+]</a></td>
-    <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat=`'.$modx->toDateFormat(0,'formatOnly').' %H:%M:%S`+]</td>
+    <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+edit_date+]</td>
     <td data-toggle="collapse" data-target=".collapse[+id+]">[+username:htmlentities+]</td>
     <td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 </tr>
@@ -89,7 +89,9 @@ while ($ph = $modx->getDatabase()->getRow($rs)) {
     $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['introtext']);
     $ph['alias'] = $ph['alias'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['alias']);
 
-    $output[] = $modx->parseText($tpl, $ph);
+    $ph['edit_date'] = $modx->toDateFormat($modx->timestamp($ph['editedon']));
+
+    $output[] = $modx->parseChunk('@CODE: ' . $tpl, $ph, '[+', '+]');
 }
 
 return implode("\n", $output);

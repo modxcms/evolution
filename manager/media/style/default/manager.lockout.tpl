@@ -2,11 +2,11 @@
 <html>
 <head>
 	<title>[(site_name)] (Evolution CMS Manager Login)</title>
-	<meta http-equiv="content-type" content="text/html; charset=[(modx_charset)]">
+	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]">
 	<meta name="robots" content="noindex, nofollow">
 	<meta name="viewport" content="width=device-width">
 	<link rel="icon" type="image/ico" href="[+favicon+]">
-	<link rel="stylesheet" type="text/css" href="media/style/[(manager_theme)]/style.css">
+	<link rel="stylesheet" type="text/css" href="[+manager_theme_url+]style.css">
 	<style>
 		html {
 			font-size: 16px;
