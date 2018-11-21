@@ -5250,11 +5250,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        $this->storeEvent();
-
         $out = $this['events']->dispatch('evolution.' . $evtName, [$extParams]);
         if ($out === false) {
-            $this->restoreEvent();
             return false;
         }
 
@@ -5267,9 +5264,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (!isset ($this->pluginEvent[$evtName])) {
-            $this->restoreEvent();
             return $results ?? false;
         }
+
+        $this->storeEvent();
 
         foreach ($this->pluginEvent[$evtName] as $pluginName) { // start for loop
             if ($this->dumpPlugins) {
