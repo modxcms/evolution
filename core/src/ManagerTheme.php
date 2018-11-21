@@ -522,7 +522,12 @@ class ManagerTheme implements ManagerThemeInterface
 
     public function renderAccessPage() : string
     {
-        return $this->makeTemplate('manager.lockout', 'manager_lockout_tpl');
+        $plh = [];
+        
+        $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
+        $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
+
+        return $this->makeTemplate('manager.lockout', 'manager_lockout_tpl', $plh);
     }
 
     public function getTemplate($name, $config = null)
@@ -675,6 +680,9 @@ class ManagerTheme implements ManagerThemeInterface
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
         $html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">' . implode('', $evtOut) . '</div>' : '';
         $plh['OnManagerLoginFormRender'] = $html;
+
+        $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
+        $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
 
         return $this->makeTemplate('login', 'manager_login_tpl', $plh);
     }
