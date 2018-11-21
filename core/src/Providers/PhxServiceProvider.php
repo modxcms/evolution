@@ -1,7 +1,8 @@
-<?php namespace AgelxNash\EvoFixClassName\Providers;
+<?php namespace EvolutionCMS\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use EvolutionCMS\ServiceProvider;
 use EvolutionCMS\Phx;
+use EvolutionCMS\AliasLoader;
 
 class PhxServiceProvider extends ServiceProvider
 {
@@ -17,5 +18,7 @@ class PhxServiceProvider extends ServiceProvider
         });
 
         AliasLoader::getInstance()->alias('Phx', Phx::class);
+        AliasLoader::getInstance()->alias('PHxParser', Phx::class);
+        AliasLoader::getInstance()->alias('DLphx', Phx::class);
     }
 }

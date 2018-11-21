@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df
+class ComposerStaticInitbc9b72ef46457041b037370bec2e9f5d
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -91,7 +91,6 @@ class ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df
         'A' => 
         array (
             'AgelxNash\\Modx\\Evo\\Database\\' => 28,
-            'AgelxNash\\EvoFixClassName\\' => 26,
         ),
     );
 
@@ -220,10 +219,6 @@ class ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df
         array (
             0 => __DIR__ . '/..' . '/agelxnash/modx-evo-database/src',
         ),
-        'AgelxNash\\EvoFixClassName\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/agelxnash/evo-fix-class-name/src',
-        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -256,10 +251,10 @@ class ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit3f22d204ecd3f1124b023e9ef77a30df::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbc9b72ef46457041b037370bec2e9f5d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbc9b72ef46457041b037370bec2e9f5d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbc9b72ef46457041b037370bec2e9f5d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitbc9b72ef46457041b037370bec2e9f5d::$classMap;
 
         }, null, ClassLoader::class);
     }

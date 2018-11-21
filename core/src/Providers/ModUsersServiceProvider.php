@@ -1,6 +1,6 @@
-<?php namespace AgelxNash\EvoFixClassName\Providers;
+<?php namespace EvolutionCMS\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use EvolutionCMS\ServiceProvider;
 use modUsers;
 
 class ModUsersServiceProvider extends ServiceProvider

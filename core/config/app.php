@@ -54,7 +54,13 @@ return [
         'Evolution_PHPCOMPAT' => EvolutionCMS\Providers\PhpCompatServiceProvider::class,
         'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockServiceProvider::class,
         'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
-        'Evolution_UrlProcessor' => EvolutionCMS\Providers\UrlProcessorServiceProvider::class
+        'Evolution_UrlProcessor' => EvolutionCMS\Providers\UrlProcessorServiceProvider::class,
+
+        'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
+        'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
+        'Fix_ModResource' => EvolutionCMS\Providers\ModResourceServiceProvider::class,
+        'Fix_ModUsers' => EvolutionCMS\Providers\ModUsersServiceProvider::class,
+        'Fix_Fs' => EvolutionCMS\Providers\FsServiceProvider::class
     ],
 
     'aliases' => [

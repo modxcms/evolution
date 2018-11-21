@@ -1,39 +1,5 @@
 [
     {
-        "name": "agelxnash/evo-fix-class-name",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/AgelxNash/evo-fix-class-name.git",
-            "reference": "d09ad7e2f3206e64429c72a6b59fcdb48bd03264"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/AgelxNash/evo-fix-class-name/zipball/d09ad7e2f3206e64429c72a6b59fcdb48bd03264",
-            "reference": "d09ad7e2f3206e64429c72a6b59fcdb48bd03264",
-            "shasum": ""
-        },
-        "time": "2018-11-21T04:26:39+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "AgelxNash\\EvoFixClassName\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "agel_nash",
-                "email": "modx@agel-nash.ru"
-            }
-        ]
-    },
-    {
         "name": "agelxnash/modx-evo-database",
         "version": "1.4.6",
         "version_normalized": "1.4.6.0",
