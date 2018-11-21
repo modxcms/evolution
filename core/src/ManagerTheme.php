@@ -523,7 +523,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function renderAccessPage() : string
     {
         $plh = [];
-        
+
         $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
         $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
 

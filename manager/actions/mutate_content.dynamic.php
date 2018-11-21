@@ -77,11 +77,10 @@ if($_SESSION['mgrDocgroups']) {
 
 if(!empty ($id)) {
     $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
-    if($docgrp) {
+    if(isset($docgrp)) {
         $access .= " OR dg.document_group IN ({$docgrp})";
     }
     $rs = $modx->getDatabase()->select('sc.*', "{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id", "sc.id='{$id}' AND ({$access})");
-    $content = array();
     $content = $modx->getDatabase()->getRow($rs);
     $modx->documentObject = &$content;
     if(!$content) {
@@ -148,393 +147,393 @@ $lockElementType = 7;
 require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 ?>
     <script type="text/javascript">
-        /* <![CDATA[ */
+      /* <![CDATA[ */
 
-        // save tree folder state
-        if(parent.tree) parent.tree.saveFolderState();
+      // save tree folder state
+      if(parent.tree) parent.tree.saveFolderState();
 
-        function changestate(el) {
-            if(parseInt(el.value) === 1) {
-                el.value = 0;
-            } else {
-                el.value = 1;
-            }
+      function changestate(el) {
+        if(parseInt(el.value) === 1) {
+          el.value = 0;
+        } else {
+          el.value = 1;
+        }
+        documentDirty = true;
+      }
+
+      var actions = {
+        save: function() {
+          documentDirty = false;
+          form_save = true;
+          document.mutate.save.click();
+        },
+        delete: function() {
+          if(confirm("<?= $_lang['confirm_delete_resource']?>") === true) {
+            document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?= $add_path ?>";
+          }
+        },
+        cancel: function() {
+          documentDirty = false;
+          document.location.href = 'index.php?<?=($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
+        },
+        duplicate: function() {
+          if(confirm("<?= $_lang['confirm_resource_duplicate']?>") === true) {
+            document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94<?= $add_path ?>";
+          }
+        },
+        view: function() {
+          window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
+        }
+      };
+
+      var allowParentSelection = false;
+      var allowLinkSelection = false;
+
+      function enableLinkSelection(b) {
+        var llock = document.getElementById('llock');
+        if(b) {
+          parent.tree.ca = "link";
+          llock.className = "<?= $_style["actions_chain_broken"] ?>";
+          allowLinkSelection = true;
+        }
+        else {
+          parent.tree.ca = "open";
+          llock.className = "<?= $_style["actions_chain"] ?>";
+          allowLinkSelection = false;
+        }
+      }
+
+      function setLink(lId) {
+        if(!allowLinkSelection) {
+          window.location.href = "index.php?a=3&id=" + lId + "<?= $add_path ?>";
+        }
+        else {
+          documentDirty = true;
+          document.mutate.ta.value = lId;
+        }
+      }
+
+      function enableParentSelection(b) {
+        var plock = document.getElementById('plock');
+        if(b) {
+          parent.tree.ca = "parent";
+          plock.className = "<?= $_style["actions_folder_open"] ?>";
+          allowParentSelection = true;
+        }
+        else {
+          parent.tree.ca = "open";
+          plock.className = "<?= $_style["actions_folder"] ?>";
+          allowParentSelection = false;
+        }
+      }
+
+      function setParent(pId, pName) {
+        if(!allowParentSelection) {
+          window.location.href = "index.php?a=3&id=" + pId + "<?= $add_path ?>";
+        }
+        else {
+          if(pId === 0 || checkParentChildRelation(pId, pName)) {
             documentDirty = true;
+            document.mutate.parent.value = pId;
+            var elm = document.getElementById('parentName');
+            if(elm) {
+              elm.innerHTML = (pId + " (" + pName + ")");
+            }
+          }
         }
+      }
 
-        var actions = {
-            save: function() {
-                documentDirty = false;
-                form_save = true;
-                document.mutate.save.click();
-            },
-            delete: function() {
-                if(confirm("<?= $_lang['confirm_delete_resource']?>") === true) {
-                    document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?= $add_path ?>";
-                }
-            },
-            cancel: function() {
-                documentDirty = false;
-                document.location.href = 'index.php?<?=($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
-            },
-            duplicate: function() {
-                if(confirm("<?= $_lang['confirm_resource_duplicate']?>") === true) {
-                    document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94<?= $add_path ?>";
-                }
-            },
-            view: function() {
-                window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
-            }
-        };
-
-        var allowParentSelection = false;
-        var allowLinkSelection = false;
-
-        function enableLinkSelection(b) {
-            var llock = document.getElementById('llock');
-            if(b) {
-                parent.tree.ca = "link";
-                llock.className = "<?= $_style["actions_chain_broken"] ?>";
-                allowLinkSelection = true;
-            }
-            else {
-                parent.tree.ca = "open";
-                llock.className = "<?= $_style["actions_chain"] ?>";
-                allowLinkSelection = false;
-            }
+      // check if the selected parent is a child of this document
+      function checkParentChildRelation(pId, pName) {
+        var sp;
+        var id = document.mutate.id.value;
+        var tdoc = parent.tree.document;
+        var pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
+        if(!pn) return;
+        if(pn.id.substr(4) === id) {
+          alert("<?= $_lang['illegal_parent_self']?>");
+          return;
         }
-
-        function setLink(lId) {
-            if(!allowLinkSelection) {
-                window.location.href = "index.php?a=3&id=" + lId + "<?= $add_path ?>";
-            }
-            else {
-                documentDirty = true;
-                document.mutate.ta.value = lId;
-            }
-        }
-
-        function enableParentSelection(b) {
-            var plock = document.getElementById('plock');
-            if(b) {
-                parent.tree.ca = "parent";
-                plock.className = "<?= $_style["actions_folder_open"] ?>";
-                allowParentSelection = true;
-            }
-            else {
-                parent.tree.ca = "open";
-                plock.className = "<?= $_style["actions_folder"] ?>";
-                allowParentSelection = false;
-            }
-        }
-
-        function setParent(pId, pName) {
-            if(!allowParentSelection) {
-                window.location.href = "index.php?a=3&id=" + pId + "<?= $add_path ?>";
-            }
-            else {
-                if(pId === 0 || checkParentChildRelation(pId, pName)) {
-                    documentDirty = true;
-                    document.mutate.parent.value = pId;
-                    var elm = document.getElementById('parentName');
-                    if(elm) {
-                        elm.innerHTML = (pId + " (" + pName + ")");
-                    }
-                }
-            }
-        }
-
-        // check if the selected parent is a child of this document
-        function checkParentChildRelation(pId, pName) {
-            var sp;
-            var id = document.mutate.id.value;
-            var tdoc = parent.tree.document;
-            var pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
-            if(!pn) return;
+        else {
+          while(pn.getAttribute("p") > 0) {
+            pId = pn.getAttribute("p");
+            pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
             if(pn.id.substr(4) === id) {
-                alert("<?= $_lang['illegal_parent_self']?>");
-                return;
+              alert("<?= $_lang['illegal_parent_child']?>");
+              return;
             }
-            else {
-                while(pn.getAttribute("p") > 0) {
-                    pId = pn.getAttribute("p");
-                    pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
-                    if(pn.id.substr(4) === id) {
-                        alert("<?= $_lang['illegal_parent_child']?>");
-                        return;
-                    }
-                }
+          }
+        }
+        return true;
+      }
+
+      var curTemplate = -1;
+      var curTemplateIndex = 0;
+
+      function storeCurTemplate() {
+        var dropTemplate = document.getElementById('template');
+        if(dropTemplate) {
+          for(var i = 0; i < dropTemplate.length; i++) {
+            if(dropTemplate[i].selected) {
+              curTemplate = dropTemplate[i].value;
+              curTemplateIndex = i;
             }
-            return true;
+          }
+        }
+      }
+
+      var newTemplate;
+
+      function templateWarning() {
+        var dropTemplate = document.getElementById('template');
+        if(dropTemplate) {
+          for(var i = 0; i < dropTemplate.length; i++) {
+            if(dropTemplate[i].selected) {
+              newTemplate = dropTemplate[i].value;
+              break;
+            }
+          }
+        }
+        if(curTemplate === newTemplate) {
+          return;
         }
 
-        var curTemplate = -1;
-        var curTemplateIndex = 0;
-
-        function storeCurTemplate() {
-            var dropTemplate = document.getElementById('template');
-            if(dropTemplate) {
-                for(var i = 0; i < dropTemplate.length; i++) {
-                    if(dropTemplate[i].selected) {
-                        curTemplate = dropTemplate[i].value;
-                        curTemplateIndex = i;
-                    }
-                }
-            }
-        }
-
-        var newTemplate;
-
-        function templateWarning() {
-            var dropTemplate = document.getElementById('template');
-            if(dropTemplate) {
-                for(var i = 0; i < dropTemplate.length; i++) {
-                    if(dropTemplate[i].selected) {
-                        newTemplate = dropTemplate[i].value;
-                        break;
-                    }
-                }
-            }
-            if(curTemplate === newTemplate) {
-                return;
-            }
-
-            if(documentDirty === true) {
-                if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
-                    documentDirty = false;
-                    document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
-                    document.mutate.newtemplate.value = newTemplate;
-                    document.mutate.submit();
-                } else {
-                    dropTemplate[curTemplateIndex].selected = true;
-                }
-            }
-            else {
-                document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
-                document.mutate.newtemplate.value = newTemplate;
-                document.mutate.submit();
-            }
-        }
-
-        // Added for RTE selection
-        function changeRTE() {
-            var whichEditor = document.getElementById('which_editor'),
-                newEditor,
-                i;
-            if(whichEditor) {
-                for(i = 0; i < whichEditor.length; i++) {
-                    if(whichEditor[i].selected) {
-                        newEditor = whichEditor[i].value;
-                        break;
-                    }
-                }
-            }
-            var dropTemplate = document.getElementById('template');
-            if(dropTemplate) {
-                for(i = 0; i < dropTemplate.length; i++) {
-                    if(dropTemplate[i].selected) {
-                        newTemplate = dropTemplate[i].value;
-                        break;
-                    }
-                }
-            }
-
+        if(documentDirty === true) {
+          if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
             documentDirty = false;
             document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
             document.mutate.newtemplate.value = newTemplate;
-            document.mutate.which_editor.value = newEditor;
             document.mutate.submit();
+          } else {
+            dropTemplate[curTemplateIndex].selected = true;
+          }
+        }
+        else {
+          document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
+          document.mutate.newtemplate.value = newTemplate;
+          document.mutate.submit();
+        }
+      }
+
+      // Added for RTE selection
+      function changeRTE() {
+        var whichEditor = document.getElementById('which_editor'),
+          newEditor,
+          i;
+        if(whichEditor) {
+          for(i = 0; i < whichEditor.length; i++) {
+            if(whichEditor[i].selected) {
+              newEditor = whichEditor[i].value;
+              break;
+            }
+          }
+        }
+        var dropTemplate = document.getElementById('template');
+        if(dropTemplate) {
+          for(i = 0; i < dropTemplate.length; i++) {
+            if(dropTemplate[i].selected) {
+              newTemplate = dropTemplate[i].value;
+              break;
+            }
+          }
         }
 
-        /**
-         * Snippet properties
-         */
+        documentDirty = false;
+        document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
+        document.mutate.newtemplate.value = newTemplate;
+        document.mutate.which_editor.value = newEditor;
+        document.mutate.submit();
+      }
 
-        var snippetParams = {};     // Snippet Params
-        var currentParams = {};     // Current Params
-        var lastsp, lastmod = {};
+      /**
+       * Snippet properties
+       */
 
-        function showParameters(ctrl) {
-            var c, p, df, cp, ar, desc, value, key, dt, f;
+      var snippetParams = {};     // Snippet Params
+      var currentParams = {};     // Current Params
+      var lastsp, lastmod = {};
 
-            cp = {};
-            currentParams = {}; // reset;
+      function showParameters(ctrl) {
+        var c, p, df, cp, ar, desc, value, key, dt, f;
 
-            if(ctrl && ctrl.form) {
-                f = ctrl.form;
-            } else {
-                f = document.forms['mutate'];
-                ctrl = f.snippetlist;
-            }
+        cp = {};
+        currentParams = {}; // reset;
 
-            // get display format
-            df = "";//lastsp = ctrl.options[ctrl.selectedIndex].value;
-
-            // load last modified param values
-            if(lastmod[df]) cp = lastmod[df].split("&");
-            for(p = 0; p < cp.length; p++) {
-                cp[p] = (cp[p] + '').replace(/^\s|\s$/, ""); // trim
-                ar = cp[p].split("=");
-                currentParams[ar[0]] = ar[1];
-            }
-
-            // setup parameters
-            var t, dp = (snippetParams[df]) ? snippetParams[df].split("&") : [""];
-            if(dp) {
-                t = '<table width="100%" class="displayparams"><thead><tr><td width="50%"><?= $_lang['parameter']?><\/td><td width="50%"><?= $_lang['value']?><\/td><\/tr><\/thead>';
-                for(p = 0; p < dp.length; p++) {
-                    dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
-                    ar = dp[p].split("=");
-                    key = ar[0];     // param
-                    ar = (ar[1] + '').split(";");
-                    desc = ar[0];   // description
-                    dt = ar[1];     // data type
-                    value = decode((currentParams[key]) ? currentParams[key] : (dt == 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
-                    if(value !== currentParams[key]) currentParams[key] = value;
-                    value = (value + '').replace(/^\s|\s$/, ""); // trim
-                    if(dt) {
-                        switch(dt) {
-                            case 'int':
-                                c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" \/>';
-                                break;
-                            case 'list':
-                                c = '<select name="prop_' + key + '" height="1" style="width:168px" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
-                                var ls = (ar[2] + '').split(",");
-                                if(currentParams[key] === ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                                for(var i = 0; i < ls.length; i++) {
-                                    c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ls[i] + '<\/option>';
-                                }
-                                c += '<\/select>';
-                                break;
-                            default:  // string
-                                c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" \/>';
-                                break;
-
-                        }
-                        t += '<tr><td bgcolor="#FFFFFF" width="50%">' + desc + '<\/td><td bgcolor="#FFFFFF" width="50%">' + c + '<\/td><\/tr>';
-                    }
-                }
-                t += '<\/table>';
-                var td = (document.getElementById) ? document.getElementById('snippetparams') : document.all['snippetparams'];
-                td.innerHTML = t;
-            }
-            implodeParameters();
+        if(ctrl && ctrl.form) {
+          f = ctrl.form;
+        } else {
+          f = document.forms['mutate'];
+          ctrl = f.snippetlist;
         }
 
-        function setParameter(key, dt, ctrl) {
-            var v;
-            if(!ctrl) return null;
-            switch(dt) {
+        // get display format
+        df = "";//lastsp = ctrl.options[ctrl.selectedIndex].value;
+
+        // load last modified param values
+        if(lastmod[df]) cp = lastmod[df].split("&");
+        for(p = 0; p < cp.length; p++) {
+          cp[p] = (cp[p] + '').replace(/^\s|\s$/, ""); // trim
+          ar = cp[p].split("=");
+          currentParams[ar[0]] = ar[1];
+        }
+
+        // setup parameters
+        var t, dp = (snippetParams[df]) ? snippetParams[df].split("&") : [""];
+        if(dp) {
+          t = '<table width="100%" class="displayparams"><thead><tr><td width="50%"><?= $_lang['parameter']?><\/td><td width="50%"><?= $_lang['value']?><\/td><\/tr><\/thead>';
+          for(p = 0; p < dp.length; p++) {
+            dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
+            ar = dp[p].split("=");
+            key = ar[0];     // param
+            ar = (ar[1] + '').split(";");
+            desc = ar[0];   // description
+            dt = ar[1];     // data type
+            value = decode((currentParams[key]) ? currentParams[key] : (dt == 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
+            if(value !== currentParams[key]) currentParams[key] = value;
+            value = (value + '').replace(/^\s|\s$/, ""); // trim
+            if(dt) {
+              switch(dt) {
                 case 'int':
-                    ctrl.value = parseInt(ctrl.value);
-                    if(isNaN(ctrl.value)) ctrl.value = 0;
-                    v = ctrl.value;
-                    break;
+                  c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" \/>';
+                  break;
                 case 'list':
-                    v = ctrl.options[ctrl.selectedIndex].value;
-                    break;
-                default:
-                    v = ctrl.value + '';
-                    break;
+                  c = '<select name="prop_' + key + '" height="1" style="width:168px" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
+                  var ls = (ar[2] + '').split(",");
+                  if(currentParams[key] === ar[2]) currentParams[key] = ls[0]; // use first list item as default
+                  for(var i = 0; i < ls.length; i++) {
+                    c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ls[i] + '<\/option>';
+                  }
+                  c += '<\/select>';
+                  break;
+                default:  // string
+                  c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" \/>';
+                  break;
+
+              }
+              t += '<tr><td bgcolor="#FFFFFF" width="50%">' + desc + '<\/td><td bgcolor="#FFFFFF" width="50%">' + c + '<\/td><\/tr>';
             }
-            currentParams[key] = v;
-            implodeParameters();
+          }
+          t += '<\/table>';
+          var td = (document.getElementById) ? document.getElementById('snippetparams') : document.all['snippetparams'];
+          td.innerHTML = t;
         }
+        implodeParameters();
+      }
 
-        function resetParameters() {
-            document.mutate.params.value = "";
-            lastmod[lastsp] = "";
-            showParameters();
+      function setParameter(key, dt, ctrl) {
+        var v;
+        if(!ctrl) return null;
+        switch(dt) {
+          case 'int':
+            ctrl.value = parseInt(ctrl.value);
+            if(isNaN(ctrl.value)) ctrl.value = 0;
+            v = ctrl.value;
+            break;
+          case 'list':
+            v = ctrl.options[ctrl.selectedIndex].value;
+            break;
+          default:
+            v = ctrl.value + '';
+            break;
         }
+        currentParams[key] = v;
+        implodeParameters();
+      }
 
-        // implode parameters
-        function implodeParameters() {
-            var v, p, s = '';
-            for(p in currentParams) {
-                v = currentParams[p];
-                if(v) s += '&' + p + '=' + encode(v);
-            }
-            //document.forms['mutate'].params.value = s;
-            if(lastsp) lastmod[lastsp] = s;
+      function resetParameters() {
+        document.mutate.params.value = "";
+        lastmod[lastsp] = "";
+        showParameters();
+      }
+
+      // implode parameters
+      function implodeParameters() {
+        var v, p, s = '';
+        for(p in currentParams) {
+          v = currentParams[p];
+          if(v) s += '&' + p + '=' + encode(v);
         }
+        //document.forms['mutate'].params.value = s;
+        if(lastsp) lastmod[lastsp] = s;
+      }
 
-        function encode(s) {
-            s = s + '';
-            s = s.replace(/\=/g, '%3D'); // =
-            s = s.replace(/\&/g, '%26'); // &
-            return s;
+      function encode(s) {
+        s = s + '';
+        s = s.replace(/\=/g, '%3D'); // =
+        s = s.replace(/\&/g, '%26'); // &
+        return s;
+      }
+
+      function decode(s) {
+        s = s + '';
+        s = s.replace(/\%3D/g, '='); // =
+        s = s.replace(/\%26/g, '&'); // &
+        return s;
+      }
+
+      <?php if ($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
+      var lastImageCtrl;
+      var lastFileCtrl;
+
+      function OpenServerBrowser(url, width, height) {
+        var iLeft = (screen.width - width) / 2;
+        var iTop = (screen.height - height) / 2;
+
+        var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes';
+        sOptions += ',width=' + width;
+        sOptions += ',height=' + height;
+        sOptions += ',left=' + iLeft;
+        sOptions += ',top=' + iTop;
+
+        var oWindow = window.open(url, 'FCKBrowseWindow', sOptions);
+      }
+
+      function BrowseServer(ctrl) {
+        lastImageCtrl = ctrl;
+        var w = screen.width * 0.5;
+        var h = screen.height * 0.5;
+        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=images', w, h);
+      }
+
+      function BrowseFileServer(ctrl) {
+        lastFileCtrl = ctrl;
+        var w = screen.width * 0.5;
+        var h = screen.height * 0.5;
+        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=files', w, h);
+      }
+
+      function SetUrlChange(el) {
+        if('createEvent' in document) {
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', false, true);
+          el.dispatchEvent(evt);
+        } else {
+          el.fireEvent('onchange');
         }
+      }
 
-        function decode(s) {
-            s = s + '';
-            s = s.replace(/\%3D/g, '='); // =
-            s = s.replace(/\%26/g, '&'); // &
-            return s;
+      function SetUrl(url, width, height, alt) {
+        if(lastFileCtrl) {
+          var c = document.getElementById(lastFileCtrl);
+          if(c && c.value !== url) {
+            c.value = url;
+            SetUrlChange(c);
+          }
+          lastFileCtrl = '';
+        } else if(lastImageCtrl) {
+          var c = document.getElementById(lastImageCtrl);
+          if(c && c.value !== url) {
+            c.value = url;
+            SetUrlChange(c);
+          }
+          lastImageCtrl = '';
+        } else {
+
         }
+      }
 
-        <?php if ($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
-        var lastImageCtrl;
-        var lastFileCtrl;
-
-        function OpenServerBrowser(url, width, height) {
-            var iLeft = (screen.width - width) / 2;
-            var iTop = (screen.height - height) / 2;
-
-            var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes';
-            sOptions += ',width=' + width;
-            sOptions += ',height=' + height;
-            sOptions += ',left=' + iLeft;
-            sOptions += ',top=' + iTop;
-
-            var oWindow = window.open(url, 'FCKBrowseWindow', sOptions);
-        }
-
-        function BrowseServer(ctrl) {
-            lastImageCtrl = ctrl;
-            var w = screen.width * 0.5;
-            var h = screen.height * 0.5;
-            OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=images', w, h);
-        }
-
-        function BrowseFileServer(ctrl) {
-            lastFileCtrl = ctrl;
-            var w = screen.width * 0.5;
-            var h = screen.height * 0.5;
-            OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=files', w, h);
-        }
-
-        function SetUrlChange(el) {
-            if('createEvent' in document) {
-                var evt = document.createEvent('HTMLEvents');
-                evt.initEvent('change', false, true);
-                el.dispatchEvent(evt);
-            } else {
-                el.fireEvent('onchange');
-            }
-        }
-
-        function SetUrl(url, width, height, alt) {
-            if(lastFileCtrl) {
-                var c = document.getElementById(lastFileCtrl);
-                if(c && c.value !== url) {
-                    c.value = url;
-                    SetUrlChange(c);
-                }
-                lastFileCtrl = '';
-            } else if(lastImageCtrl) {
-                var c = document.getElementById(lastImageCtrl);
-                if(c && c.value !== url) {
-                    c.value = url;
-                    SetUrlChange(c);
-                }
-                lastImageCtrl = '';
-            } else {
-
-            }
-        }
-
-        <?php $ResourceManagerLoaded = true; } ?>
-        /* ]]> */
+      <?php $ResourceManagerLoaded = true; } ?>
+      /* ]]> */
     </script>
 
     <form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
@@ -624,7 +623,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                 <div class="tab-pane" id="documentPane">
                     <script type="text/javascript">
-                        var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+                      var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
                     </script>
 
                     <!-- General -->
@@ -724,6 +723,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $from = "{$tbl_site_templates} AS t LEFT JOIN {$tbl_categories} AS c ON t.category = c.id";
                                             $rs = $modx->getDatabase()->select($field, $from, '', 'c.category, t.templatename ASC');
                                             $currentCategory = '';
+                                            $closeOptGroup = false;
                                             while($row = $modx->getDatabase()->getRow($rs)) {
                                                 if($row['selectable'] != 1 && $row['id'] != $content['template']) {
                                                     continue;
@@ -882,7 +882,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             </div>
                                             <div id="content_body">
                                                 <?php
-                                                if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4') && $use_editor == 1) {
+                                                if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4') && $modx->getConfig('use_editor')) {
                                                     $htmlContent = $content['content'];
                                                     ?>
                                                     <div class="section-editor clearfix">
@@ -911,8 +911,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             $templateVariablesOutput = '';
 
                             if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
-                                $template = $default_template;
-                                $group_tvs = empty($modx->config['group_tvs']) ? 0 : (int)$modx->config['group_tvs'];
+                                $template = getDefaultTemplate();
+                                $group_tvs = $modx->getConfig('group_tvs');
                                 if (isset ($_REQUEST['newtemplate'])) {
                                     $template = $_REQUEST['newtemplate'];
                                 } else {
@@ -932,7 +932,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
                                 LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
                                 LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
-                                $dgs = $docgrp ? " OR tva.documentgroup IN ({$docgrp})" : '';
+                                $dgs = !empty($docgrp) ? " OR tva.documentgroup IN ({$docgrp})" : '';
                                 $vs = array(
                                     $template,
                                     $_SESSION['mgrRole'],
@@ -944,6 +944,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $from .= '
                                     LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
                                     $sort = 'category_rank,category_id,' . $sort;
+                                } else {
+                                    $field .= ', 0 as category_id, "' . $_lang['no_category'] . '" as category, 0 as category_rank';
                                 }
                                 $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
                                 $rs = $modx->getDatabase()->select($field, $from, $where, $sort);
@@ -1040,7 +1042,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                         // splitter
                                         if ($group_tvs) {
-                                            if (($split && $i) || $ii) {
+                                            if ((! empty($split) && $i) || $ii) {
                                                 $templateVariablesTmp .= '
                                             <tr><td colspan="2"><div class="split"></div></td></tr>' . "\n";
                                             }
@@ -1469,27 +1471,27 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <h2 class="tab" id="tab_access_header"><?=ManagerTheme::getLexicon('access_permissions');?></h2>
                                 <script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabAccess"));</script>
                                 <script type="text/javascript">
-                                    /* <![CDATA[ */
-                                    function makePublic(b) {
-                                        var notPublic = false;
-                                        var f = document.forms['mutate'];
-                                        var chkpub = f['chkalldocs'];
-                                        var chks = f['docgroups[]'];
-                                        if(!chks && chkpub) {
-                                            chkpub.checked = true;
-                                            return false;
-                                        } else if(!b && chkpub) {
-                                            if(!chks.length) notPublic = chks.checked;
-                                            else for(var i = 0; i < chks.length; i++) if(chks[i].checked) notPublic = true;
-                                            chkpub.checked = !notPublic;
-                                        } else {
-                                            if(!chks.length) chks.checked = (b) ? false : chks.checked;
-                                            else for(var i = 0; i < chks.length; i++) if(b) chks[i].checked = false;
-                                            chkpub.checked = true;
-                                        }
+                                  /* <![CDATA[ */
+                                  function makePublic(b) {
+                                    var notPublic = false;
+                                    var f = document.forms['mutate'];
+                                    var chkpub = f['chkalldocs'];
+                                    var chks = f['docgroups[]'];
+                                    if(!chks && chkpub) {
+                                      chkpub.checked = true;
+                                      return false;
+                                    } else if(!b && chkpub) {
+                                      if(!chks.length) notPublic = chks.checked;
+                                      else for(var i = 0; i < chks.length; i++) if(chks[i].checked) notPublic = true;
+                                      chkpub.checked = !notPublic;
+                                    } else {
+                                      if(!chks.length) chks.checked = (b) ? false : chks.checked;
+                                      else for(var i = 0; i < chks.length; i++) if(b) chks[i].checked = false;
+                                      chkpub.checked = true;
                                     }
+                                  }
 
-                                    /* ]]> */
+                                  /* ]]> */
                                 </script>
                                 <p><?=ManagerTheme::getLexicon('access_permissions_docs_message');?></p>
                                 <ul>
@@ -1528,10 +1530,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
     </form>
 
     <script type="text/javascript">
-        storeCurTemplate();
+      storeCurTemplate();
     </script>
 <?php
-if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $use_editor == 1) {
+if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $modx->getConfig('use_editor')) {
     if(is_array($richtexteditorIds)) {
         foreach($richtexteditorIds as $editor => $elements) {
             // invoke OnRichTextEditorInit event

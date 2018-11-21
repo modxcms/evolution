@@ -43,7 +43,9 @@ trait Settings
         'warning_visibility' => 'bool',
         'use_captcha' => 'bool',
         'tree_page_click' => 'int',
-        'allow_multiple_emails' => 'bool'
+        'allow_multiple_emails' => 'bool',
+        'use_editor' => 'bool',
+        'group_tvs' => 'bool'
     ];
 
     /**

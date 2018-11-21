@@ -3106,7 +3106,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
 
-        if (!$includeThisUser && $this->lockedElements[$type][$id]['sid'] == $this->sid) {
+        if (!$includeThisUser && get_by_key($this->lockedElements, $type . '.' . $id . 'sid') == $this->sid) {
             return null;
         }
 
