@@ -1,4 +1,7 @@
 <?php
+$enable_filter = $modx->getConfig('enable_filter');
+$modx->setConfig('enable_filter', true);
+
 $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_content'), '', 'editedon DESC', 10);
 
 if ($modx->getDatabase()->getRecordCount($rs) < 1) {
@@ -91,7 +94,8 @@ while ($ph = $modx->getDatabase()->getRow($rs)) {
 
     $ph['edit_date'] = $modx->toDateFormat($modx->timestamp($ph['editedon']));
 
-    $output[] = $modx->parseChunk('@CODE: ' . $tpl, $ph, '[+', '+]');
+    $output[] = $modx->parseText($tpl, $ph);
 }
 
+$modx->setConfig('enable_filter', $enable_filter);
 return implode("\n", $output);
