@@ -157,6 +157,7 @@ class DataGrid implements DataGridInterface{
 
 		// build rows
 		$rowcount = $this->_isDataset ? $modx->getDatabase()->getRecordCount($this->ds) : count($this->ds);
+        $tblRows = '';
 		$this->_fieldnames = explode(",", $this->fields);
 		if($rowcount == 0) {
 			$tblRows .= "<tr><td " . $this->_itemStyle . " " . $this->_itemClass . " colspan='" . $this->_colcount . "'>" . $this->noRecordMsg . "</td></tr>\n";
@@ -191,11 +192,11 @@ class DataGrid implements DataGridInterface{
 		if($this->header) {
 			$o .= "<tr><td bgcolor='#ffffff' colspan='" . $this->_colcount . "'>" . $this->header . "</td></tr>";
 		}
-		if($tblPager && $ptop) {
+		if(!empty($tblPager) && $ptop) {
 			$o .= "<tr><td align='" . (substr($this->pagerLocation, -4) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
 		}
 		$o .= $tblColHdr . $tblRows;
-		if($tblPager && $pbot) {
+		if(!empty($tblPager) && $pbot) {
 			$o .= "<tr><td align='" . (substr($this->pagerLocation, -4) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
 		}
 		if($this->footer) {
@@ -226,7 +227,7 @@ class DataGrid implements DataGridInterface{
 			$color = isset($this->_colcolors[$c]) ? $this->_colcolors[$c] : null;
 			$type = isset($this->_coltypes[$c]) ? $this->_coltypes[$c] : null;
 			$nowrap = isset($this->_colwraps[$c]) ? $this->_colwraps[$c] : null;
-			$value = $row[($this->_isDataset && $fld ? $fld : $c)];
+			$value = get_by_key($row, ($this->_isDataset && $fld ? $fld : $c), '');
 			if($color && $Style) {
 				$colStyle = substr($colStyle, 0, -1) . ";background-color:$color;'";
 			}

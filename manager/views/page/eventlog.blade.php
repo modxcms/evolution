@@ -8,9 +8,10 @@
 
     // initialize page view state - the $_PAGE object
     $modx->getManagerApi()->initPageViewState();
+    $_PAGE = [];
 
     // get and save search string
-    if ($_REQUEST['op'] == 'reset') {
+    if (get_by_key($_REQUEST, 'op') === 'reset') {
         $sqlQuery = $query = '';
         $_PAGE['vs']['search'] = '';
     } else {
@@ -22,7 +23,7 @@
     }
 
     // get & save listmode
-    $listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : $_PAGE['vs']['lm'];
+    $listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : get_by_key($_PAGE, 'vs.lm');
     $_PAGE['vs']['lm'] = $listmode;
 
     // context menu
@@ -99,7 +100,7 @@
     @endpush
 
     <form name="resource" method="post">
-        <input type="hidden" name="id" value="{{ $id }}" />
+        <input type="hidden" name="id" value="{{ get_by_key($_REQUEST, 'id') }}" />
         <input type="hidden" name="listmode" value="{{ $listmode }}" />
         <input type="hidden" name="op" value="" />
 
@@ -133,7 +134,7 @@
                         $ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info fa fa-info-circle' , 'text-warning fa fa-exclamation-triangle' , 'text-danger fa fa-times-circle' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
-                        $grd = new \EvolutionCMS\Support\DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+                        $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 100); // set page size to 0 t show all items
                         $grd->pagerClass = '';
                         $grd->pageClass = 'page-item';
                         $grd->selPageClass = 'page-item active';

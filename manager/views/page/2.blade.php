@@ -433,7 +433,7 @@
     $tpl = $modx->getChunk('manager#welcome\Widget');
     $output = '';
     foreach($widgets as $widget) {
-        if ($widget['hide'] != '1'){
+        if ((bool)get_by_key($widget, 'hide', false) !== true) {
             $output .= $modx->parseText($tpl, $widget);
         }
     }

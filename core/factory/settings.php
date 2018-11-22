@@ -123,4 +123,8 @@ return [
     'allow_multiple_emails' => 0,
     'manager_menu_height' => 2.2, // rem
     'manager_tree_width' => 20, // rem
+    'track_visitors' => 0,
+    'login_logo' => '',
+    'login_bg' => '',
+    'smtp_secure' => ''
 ];

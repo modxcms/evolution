@@ -63,7 +63,7 @@
 
             <?php endif ?>
 
-            <?php if ($view->new_translations[$view->get('manager_language')] && !empty($view->new_translations[$view->get('manager_language')])) : ?>
+            <?php if (! empty($view->new_translations[$view->get('manager_language')])) : ?>
 
                 <div id="tab-translate-phrases" class="tab-page">
                     <h2 id="tab-header-translate" class="tab"><?= $view->txt('Translations') ?></h2>

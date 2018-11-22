@@ -643,14 +643,13 @@ if (! function_exists('renderFormElement')) {
         $field_value = '',
         $field_style = '',
         $row = array(),
-        $tvsArray = array()
+        $tvsArray = array(),
+        $content = null
     ) {
         $modx = evolutionCMS();
-        global $_style;
-        global $_lang;
-        global $content;
-        global $which_browser;
-
+        if ($content === null) {
+            global $content;
+        }
         if (substr($default_text, 0, 6) === '@@EVAL' && $field_value === $default_text) {
             $eval_str = trim(substr($default_text, 7));
             $default_text = eval($eval_str);
@@ -690,7 +689,7 @@ if (! function_exists('renderFormElement')) {
                         $field_value = 0;
                     }
                     $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . $_style["actions_calendar_delete"] . '"></i></a>';
+                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . ManagerTheme::getStyle('actions_calendar_delete') . '"></i></a>';
 
                     break;
                 case "dropdown": // handler for select boxes
@@ -799,10 +798,9 @@ if (! function_exists('renderFormElement')) {
                     }
                     break;
                 case "image": // handles image fields using htmlarea image manager
-                    global $_lang;
                     global $ResourceManagerLoaded;
-                    global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    global $content, $which_editor;
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $field_html .= "
 						<script type=\"text/javascript\">
 							/* <![CDATA[ */
@@ -824,13 +822,13 @@ if (! function_exists('renderFormElement')) {
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$which_browser}/browser.php?Type=images', w, h);
+									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$modx->getConfig('which_browser')}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$which_browser}/browser.php?Type=files', w, h);
+									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$modx->getConfig('which_browser')}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {
@@ -864,14 +862,13 @@ if (! function_exists('renderFormElement')) {
 						</script>";
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';
                     break;
                 case "file": // handles the input of file uploads
                     /* Modified by Timon for use with resource browser */
-                    global $_lang;
                     global $ResourceManagerLoaded;
-                    global $content, $use_editor, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $use_editor == 1 && $which_editor == 3)) {
+                    global $content, $which_editor;
+                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         /* I didn't understand the meaning of the condition above, so I left it untouched ;-) */
                         $field_html .= "
 						<script type=\"text/javascript\">
@@ -894,13 +891,13 @@ if (! function_exists('renderFormElement')) {
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$which_browser}/browser.php?Type=images', w, h);
+									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$modx->getConfig('which_browser')}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$which_browser}/browser.php?Type=files', w, h);
+									OpenServerBrowser('" . MODX_MANAGER_URL . "media/browser/{$modx->getConfig('which_browser')}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {
@@ -934,7 +931,7 @@ if (! function_exists('renderFormElement')) {
 						</script>";
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
 
                     break;
 
@@ -962,7 +959,7 @@ if (! function_exists('renderFormElement')) {
                         $chunk_name = trim(substr($field_elements, 7));
                         $chunk_body = $modx->getChunk($chunk_name);
                         if ($chunk_body == false) {
-                            $custom_output = $_lang['chunk_no_exist'] . '(' . $_lang['htmlsnippet_name'] . ':' . $chunk_name . ')';
+                            $custom_output = ManagerTheme::getLexicon('chunk_no_exist') . '(' . ManagerTheme::getLexicon('htmlsnippet_name') . ':' . $chunk_name . ')';
                         } else {
                             $custom_output = $chunk_body;
                         }

@@ -124,11 +124,8 @@ if($formRestored == true) {
 }
 
 // increase menu index if this is a new document
-if(!isset ($_REQUEST['id'])) {
-    if(!isset ($modx->config['auto_menuindex'])) {
-        $modx->config['auto_menuindex'] = 1;
-    }
-    if($modx->config['auto_menuindex']) {
+if(!isset($_REQUEST['id'])) {
+    if ($modx->getConfig('auto_menuindex')) {
         $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
         $rs = $modx->getDatabase()->select('count(*)', $tbl_site_content, "parent='{$pid}'");
         $content['menuindex'] = $modx->getDatabase()->getValue($rs);
@@ -140,7 +137,7 @@ if(!isset ($_REQUEST['id'])) {
 $content['type'] = get_by_key($content, 'type', 'document', 'is_scalar');
 
 if(isset ($_POST['which_editor'])) {
-    $modx->config['which_editor'] = $_POST['which_editor'];
+    $modx->setConfig('which_editor', get_by_key($_POST, 'which_editor', '', 'is_scalar'));
 }
 
 // Add lock-element JS-Script
@@ -184,7 +181,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
           }
         },
         view: function() {
-          window.open('<?= ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
+          window.open('<?= $modx->getConfig('friendly_urls') ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
         }
       };
 
@@ -494,14 +491,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         lastImageCtrl = ctrl;
         var w = screen.width * 0.5;
         var h = screen.height * 0.5;
-        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=images', w, h);
+        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->getConfig('which_browser') ?>/browser.php?Type=images', w, h);
       }
 
       function BrowseFileServer(ctrl) {
         lastFileCtrl = ctrl;
         var w = screen.width * 0.5;
         var h = screen.height * 0.5;
-        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=files', w, h);
+        OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->getConfig('which_browser') ?>/browser.php?Type=files', w, h);
       }
 
       function SetUrlChange(el) {
@@ -560,7 +557,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         <input type="hidden" name="a" value="5" />
         <input type="hidden" name="id" value="<?= (int)get_by_key($content, 'id', 0, 'is_scalar') ?>" />
         <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
-        <input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?= $modx->getConfig('upload_maxsize') ?>" />
         <input type="hidden" name="refresh_preview" value="0" />
         <input type="hidden" name="newtemplate" value="" />
         <input type="hidden" name="dir" value="<?= entities($dir, $modx->getConfig('modx_charset')) ?>" />
@@ -587,7 +584,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
             <?php
             // breadcrumbs
-            if($modx->config['use_breadcrumbs']) {
+            if($modx->getConfig('use_breadcrumbs')) {
+                $out = '';
                 $temp = array();
                 $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
 
@@ -625,7 +623,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                 <div class="tab-pane" id="documentPane">
                     <script type="text/javascript">
-                      var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+                      var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= $modx->getConfig('remember_last_tab') ? 'true' : 'false' ?> );
                     </script>
 
                     <!-- General -->
@@ -875,7 +873,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                         if(is_array($evtOut)) {
                                                             for($i = 0; $i < count($evtOut); $i++) {
                                                                 $editor = $evtOut[$i];
-                                                                echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+                                                                echo "\t\t\t", '<option value="', $editor, '"', ($modx->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
                                                             }
                                                         }
                                                         ?>
@@ -894,8 +892,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                     // Richtext-[*content*]
                                                     $richtexteditorIds = array();
                                                     $richtexteditorOptions = array();
-                                                    $richtexteditorIds[$modx->config['which_editor']][] = 'ta';
-                                                    $richtexteditorOptions[$modx->config['which_editor']]['ta'] = '';
+                                                    $richtexteditorIds[$modx->getConfig('which_editor')][] = 'ta';
+                                                    $richtexteditorOptions[$modx->getConfig('which_editor')]['ta'] = '';
                                                 } else {
                                                     echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->getPhpCompat()->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
                                                 }
@@ -1033,7 +1031,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $tvOptions = $modx->parseProperties($row['elements']);
                                             if (!empty($tvOptions)) {
                                                 // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
-                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->config['which_editor'];
+                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->getConfig('which_editor');
                                             };
                                             // Add richtext editor to the list
                                             $richtexteditorIds[$editor][] = "tv" . $row['id'];
@@ -1071,7 +1069,19 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         $templateVariablesTmp .= '
                                         <tr>
                                             <td><span class="warning">' . $row['caption'] . $tvName . '</span>' . $tvDescription . $tvInherited . '</td>
-                                            <td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' . renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray) . '</div></td>
+                                            <td><div style="position:relative;' . ($row['type'] == 'date' ? '' : '') . '">' .
+                                                renderFormElement(
+                                                    $row['type'],
+                                                    $row['id'],
+                                                    $row['default_text'],
+                                                    $row['elements'],
+                                                    $tvPBV,
+                                                    '',
+                                                    $row,
+                                                    $tvsArray,
+                                                    $content
+                                                ) .
+                                            '</div></td>
                                         </tr>';
 
                                         if ($group_tvs && $row['category_id'] == 0) {
@@ -1101,7 +1111,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <div class="tab-header" id="tv_header">' . $_lang['settings_templvars'] . '</div>
                         <div class="tab-pane" id="paneTemplateVariables">
                             <script type="text/javascript">
-                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->getConfig('remember_last_tab') ? 'true' : 'false') . ');
                             </script>';
                                     } else if ($group_tvs == 3) {
                                         $templateVariables .= '
@@ -1115,7 +1125,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'templateVariables\'));</script>
                         <div class="tab-pane" id="paneTemplateVariables">
                             <script type="text/javascript">
-                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') . ');
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->getConfig('remember_last_tab') ? 'true' : 'false') . ');
                             </script>';
                                     }
                                     if ($templateVariablesOutput) {
@@ -1182,7 +1192,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <em> <?= $modx->config['datetime_format'] ?> HH:MM:SS</em></td>
+                                        <em> <?= $modx->getConfig('datetime_format') ?> HH:MM:SS</em></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -1198,7 +1208,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <em> <?= $modx->config['datetime_format'] ?> HH:MM:SS</em>
+                                        <em> <?= $modx->getConfig('datetime_format') ?> HH:MM:SS</em>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1464,7 +1474,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         if(!empty($permissions)) {
                             // Add the "All Document Groups" item if we have rights in both contexts
                             if($isManager && $isWeb) {
-                                array_unshift($permissions, "\t\t" . '<li><input type="checkbox" class="checkbox" name="chkalldocs" id="groupall"' . (!$notPublic ? ' checked="checked"' : '') . ' onclick="makePublic(true);" /><label for="groupall" class="warning">' . $_lang['all_doc_groups'] . '</label></li>');
+                                array_unshift($permissions, "\t\t" . '<li><input type="checkbox" class="checkbox" name="chkalldocs" id="groupall"' . (empty($notPublic) ? ' checked="checked"' : '') . ' onclick="makePublic(true);" /><label for="groupall" class="warning">' . $_lang['all_doc_groups'] . '</label></li>');
                             }
                             // Output the permissions list...
                             ?>

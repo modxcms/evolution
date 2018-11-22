@@ -3065,7 +3065,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function hasPermission($pm)
     {
         $state = 0;
-        $pms = $_SESSION['mgrPermissions'];
+        $pms = get_by_key($_SESSION, 'mgrPermissions', [], 'is_array');
         if ($pms) {
             $state = (isset($pms[$pm]) && (bool)$pms[$pm] === true);
         }
@@ -5803,11 +5803,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     ->toArray();
             }
 
-            $which_browser_default = $this->configGlobal['which_browser'] ?
-                $this->configGlobal['which_browser'] : $this->getConfig('which_browser');
+            $which_browser_default = get_by_key(
+                $this->configGlobal,
+                'which_browser',
+                $this->getConfig('which_browser')
+            );
 
             if (get_by_key($usrSettings, 'which_browser') === 'default') {
-                $row['setting_value'] = $which_browser_default;
+                $usrSettings['which_browser'] = $which_browser_default;
             }
 
             if (isset ($usrType)) {
