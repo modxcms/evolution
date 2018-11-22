@@ -23,6 +23,8 @@ class ExceptionHandler
     {
         $this->container = $container;
 
+        $this->prepareActiveTracy();
+
         Debugger::enable(
             ! $this->container['config']->get('tracy.active'),
             evolutionCMS()->storagePath() . '/logs'
@@ -32,6 +34,17 @@ class ExceptionHandler
         //Debugger::$logSeverity = E_NOTICE | E_WARNING;
 
         $this->injectTracyPanels();
+    }
+
+    protected function prepareActiveTracy()
+    {
+        $flag = $this->container['config']->get('tracy.active');
+        if (is_scalar($flag)) {
+            $this->container['config']->set(
+                'tracy.active',
+                $flag === 'manager' && $this->container->isLoggedIn('mgr')
+            );
+        }
     }
 
     protected function injectTracyPanels() : void
