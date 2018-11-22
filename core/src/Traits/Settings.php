@@ -53,8 +53,8 @@ trait Settings
         'denyExtensionRename' => 'bool',
         'denyZipDownload' => 'bool',
         'showHiddenFiles' => 'bool',
-        'new_folder_permissions' => 'int',
-        'new_file_permissions' => 'int',
+        'new_folder_permissions' => 'string', //Don't set int
+        'new_file_permissions' => 'string', //Don't set int
         'upload_maxsize' => 'int',
         'noThumbnailsRecreation' => 'bool',
         'clientResize' => 'bool',
