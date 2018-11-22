@@ -1753,7 +1753,7 @@ class SqlFormatter
         }, $bindings);
         $sql = str_replace(['%', '?'], ['%%', '%s'], $sql);
 
-        return '<div><code>'.nl2br(trim(vsprintf($sql, $bindings))).'</code></div>';
+        return '<div><code>'.nl2br(trim(empty($bindings) ? $sql : vsprintf($sql, $bindings))).'</code></div>';
     }
 
     /**
