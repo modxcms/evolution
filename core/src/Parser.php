@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS;
 
+use EvolutionCMS\Legacy\Phx;
 /**
  */
 class Parser
@@ -191,7 +192,7 @@ class Parser
         $ext = null;
         $this->twigEnabled = substr($name, 0, 3) == '@T_';
         $this->bladeEnabled = substr($name, 0, 3) == '@B_';//(0 === strpos($name, '@B_'));
-        if ($name != '' && !isset($this->modx->chunkCache[$name])) {
+        if ($name != '' && ! array_key_exists($name, $this->modx->chunkCache)) {
             $mode = (preg_match(
                     '/^((@[A-Z_]+)[:]{0,1})(.*)/Asu',
                     trim($name),
@@ -279,25 +280,22 @@ class Parser
         return $tpl;
     }
 
-    protected function getBaseChunk($name)
+    public function getBaseChunk($name)
     {
         if (empty($name)) {
             return null;
         }
 
-        if (isset ($this->modx->chunkCache[$name])) {
+        if (array_key_exists($name, $this->modx->chunkCache)) {
             $tpl = $this->modx->chunkCache[$name];
         } else {
-            $table = $this->modx->getFullTableName('site_htmlsnippets');
-            $query = $this->modx->db->query(
-                "SELECT `snippet` FROM " . $table . " WHERE `name`='" . $this->modx->db->escape($name) . "' AND `disabled`=0"
-            );
-            if ($this->modx->db->getRecordCount($query) == 1) {
-                $row = $this->modx->db->getRow($query);
-                $tpl = $row['snippet'];
-            } else {
-                $tpl = null;
-            }
+            /** @var \Illuminate\Database\Eloquent\Collection $chunk */
+            $chunk = Models\SiteHtmlsnippet::where('name', '=', $name)
+                ->where('disabled', '=', 0)
+                ->get();
+
+            $tpl = ($chunk->count() === 1) ? $chunk->first()->snippet : null;
+            $this->modx->chunkCache[$name] = $tpl;
         }
 
         return $tpl;

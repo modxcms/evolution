@@ -1,7 +1,7 @@
 <?php namespace EvolutionCMS\Providers;
 
 use EvolutionCMS\ServiceProvider;
-use EvolutionCMS\Phx;
+use EvolutionCMS\Legacy\Phx;
 use EvolutionCMS\AliasLoader;
 
 class PhxServiceProvider extends ServiceProvider

@@ -540,21 +540,9 @@ class ManagerTheme implements ManagerThemeInterface
         $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
         $target = $this->getCore()->mergeSettingsContent($target);
 
-        if ($target[0] === '@') {
-            if (stripos($target, '@CHUNK') === 0) {
-                $target = trim(substr($target, 7));
-                $content = $this->getCore()->getChunk($target);
-            } elseif (stripos($target, '@FILE') === 0) {
-                $target = trim(substr($target, 6));
-                $content = file_get_contents($target);
-            } else {
-                $content = '';
-            }
-        } else {
-            $chunk = $this->getCore()->getChunk($target);
-            if ($chunk!==false && !empty($chunk)) {
-                $content = $chunk;
-            } elseif (is_file(MODX_BASE_PATH . $target)) {
+        $content = $this->getCore()->getChunk($target);
+        if (empty($content)) {
+            if (is_file(MODX_BASE_PATH . $target)) {
                 $target = MODX_BASE_PATH . $target;
                 $content = file_get_contents($target);
             } elseif (is_file($this->getThemeDir() . $name . '.tpl')) {

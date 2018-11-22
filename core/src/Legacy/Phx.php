@@ -1,6 +1,9 @@
-<?php namespace EvolutionCMS;
+<?php namespace EvolutionCMS\Legacy;
+
+use EvolutionCMS\Core;
 
 /**
+ * @deprecated
  * Name: PHx (Placeholders Xtended)
  * Version: 2.2.1
  * Modified by Agel Nash (modx@agel-nash.ru)
@@ -193,10 +196,8 @@ class Phx
                     default:
                         $this->Log("MODx / PHx placeholder variable: " . $input);
                         // Check if placeholder is set
-                        if (!array_key_exists($input, $this->placeholders) && !array_key_exists(
-                                $input,
-                                $this->modx->placeholders
-                            )
+                        if (! array_key_exists($input, $this->placeholders) &&
+                            ! array_key_exists($input, $this->modx->placeholders)
                         ) {
                             // not set so try again later.
                             $input = '';
@@ -461,31 +462,29 @@ class Phx
                         $snippet = '';
                         // modified by Anton Kuzmin (23.06.2010) //
                         $snippetName = 'phx:' . $modifier_cmd[$i];
-                        if (isset($this->modx->snippetCache[$snippetName])) {
+                        if (array_key_exists($snippetName, $this->modx->snippetCache)) {
                             $snippet = $this->modx->snippetCache[$snippetName];
                         } else {
 // not in cache so let's check the db
-                            $sql = "SELECT snippet FROM " . $this->modx->getDatabase()->getFullTableName("site_snippets") . " WHERE " . $this->modx->getDatabase()->getFullTableName("site_snippets") . ".name='" . $this->modx->getDatabase()->escape($snippetName) . "';";
-                            $result = $this->modx->getDatabase()->query($sql);
-                            if ($this->modx->getDatabase()->getRecordCount($result) == 1) {
-                                $row = $this->modx->getDatabase()->getRow($result);
-                                $snippet = $this->modx->snippetCache[$row['name']] = $row['snippet'];
+                            $snippetObject = $this->modx->getSnippetFromDatabase($snippetName);
+                            $this->modx->snippetCache[$snippetObject['name']] = $snippetObject['content'];
+                            $this->modx->snippetCache[$snippetObject['name'] . 'Props'] = $snippetObject['properties'];
+                            if ($snippetObject['content'] !== null) {
+                                $snippet = $snippetObject['content'];
                                 $this->Log("  |--- DB -> Custom Modifier");
                             } else {
-                                if ($this->modx->getDatabase()->getRecordCount($result) == 0) {
-// If snippet not found, look in the modifiers folder
-                                    $filename = $this->modx->config['rb_base_dir'] . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
-                                    if (@file_exists($filename)) {
-                                        $file_contents = @file_get_contents($filename);
-                                        $file_contents = str_replace('<' . '?php', '', $file_contents);
-                                        $file_contents = str_replace('?' . '>', '', $file_contents);
-                                        $file_contents = str_replace('<?', '', $file_contents);
-                                        $snippet = $this->modx->snippetCache[$snippetName] = $file_contents;
-                                        $this->modx->snippetCache[$snippetName . 'Props'] = '';
-                                        $this->Log("  |--- File ($filename) -> Custom Modifier");
-                                    } else {
-                                        $this->Log("  |--- PHX Error:  {$modifier_cmd[$i]} could not be found");
-                                    }
+                                // If snippet not found, look in the modifiers folder
+                                $filename = $this->modx->getConfig('rb_base_dir') . 'plugins/phx/modifiers/' . $modifier_cmd[$i] . '.phx.php';
+                                if (@file_exists($filename)) {
+                                    $file_contents = @file_get_contents($filename);
+                                    $file_contents = str_replace('<' . '?php', '', $file_contents);
+                                    $file_contents = str_replace('?' . '>', '', $file_contents);
+                                    $file_contents = str_replace('<?', '', $file_contents);
+                                    $snippet = $this->modx->snippetCache[$snippetName] = $file_contents;
+                                    $this->modx->snippetCache[$snippetName . 'Props'] = '';
+                                    $this->Log("  |--- File ($filename) -> Custom Modifier");
+                                } else {
+                                    $this->Log("  |--- PHX Error:  {$modifier_cmd[$i]} could not be found");
                                 }
                             }
                         }

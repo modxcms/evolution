@@ -1972,7 +1972,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         list($key, $modifiers) = $this->splitKeyAndFilter($key);
         $snip_call['name'] = $key;
-        $snippetObject = $this->_getSnippetObject($key);
+        $snippetObject = $this->getSnippetObject($key);
         if (is_null($snippetObject['content'])) {
             return null;
         }
@@ -2229,7 +2229,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param $snip_name
      * @return mixed
      */
-    private function _getSnippetObject($snip_name)
+    public function getSnippetObject($snip_name)
     {
         if (array_key_exists($snip_name, $this->snippetCache)) {
             $snippetObject['name'] = $snip_name;
@@ -2248,7 +2248,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             );
             $snippetObject['properties'] = '';
         } else {
-            $snippetObject = $this->_getSnippetFromDatabase($snip_name);
+            $snippetObject = $this->getSnippetFromDatabase($snip_name);
 
             $this->snippetCache[$snip_name] = $snippetObject['content'];
             $this->snippetCache["{$snip_name}Props"] = $snippetObject['properties'];
@@ -2257,7 +2257,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return $snippetObject;
     }
 
-    private function _getSnippetFromDatabase($snip_name) : array
+    public function getSnippetFromDatabase($snip_name) : array
     {
         $snippetObject = [];
 
@@ -2266,7 +2266,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             ->where('disabled', '=', 0)
             ->get();
         if ($snippetModelCollection->count() > 1) {
-            exit('Error $modx->_getSnippetObject()' . $snip_name);
+            exit('Error $modx->getSnippetObject()' . $snip_name);
         } elseif ($snippetModelCollection->count() === 1) {
             /** @var Models\SiteSnippet $snippetModel */
             $snippetModel = $snippetModelCollection->first();
@@ -4058,11 +4058,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function runSnippet($snippetName, $params = array())
     {
-        if (isset ($this->snippetCache[$snippetName])) {
+        if (array_key_exists($snippetName, $this->snippetCache)) {
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $snippetObject = $this->_getSnippetFromDatabase($snippetName);
+            $snippetObject = $this->getSnippetFromDatabase($snippetName);
 
             $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'] === null ?? "return false;";
             $properties = $this->snippetCache[$snippetName . "Props"] = $snippetObject['properties'];
@@ -4093,18 +4093,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } elseif (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $where = sprintf("`name`='%s' AND disabled=0", $this->getDatabase()->escape($chunkName));
-            $rs = $this->getDatabase()->select(
-                'snippet',
-                $this->getDatabase()->getFullTableName('site_htmlsnippets'),
-                $where
-            );
-            if ($this->getDatabase()->getRecordCount($rs) === 1) {
-                $row = $this->getDatabase()->getRow($rs);
-                $out = $this->chunkCache[$chunkName] = $row['snippet'];
-            } else {
-                $out = $this->chunkCache[$chunkName] = null;
-            }
+            $out = \DLTemplate::getInstance($this)->getBaseChunk($chunkName);
         }
         return $out;
     }
@@ -6082,7 +6071,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function splitKeyAndFilter($key)
     {
-        if ($this->getConfig('enable_filter') == 1 && strpos($key, ':') !== false && stripos($key, '@FILE') !== 0) {
+        if ($this->getConfig('enable_filter') && strpos($key, ':') !== false && stripos($key, '@FILE') !== 0) {
             list($key, $modifiers) = explode(':', $key, 2);
         } else {
             $modifiers = false;
