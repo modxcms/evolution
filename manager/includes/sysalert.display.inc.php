@@ -9,7 +9,7 @@
  */
 
 $sysMsgs = '';
-$limit = count($SystemAlertMsgQueque);
+$limit = isset($SystemAlertMsgQueque) && is_array($SystemAlertMsgQueque) ? count($SystemAlertMsgQueque) : 0;
 for ($i = 0; $i < $limit; $i++) {
     $sysMsgs .= $SystemAlertMsgQueque[$i] . '<hr sys/>';
 }
