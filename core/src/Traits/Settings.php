@@ -57,7 +57,10 @@ trait Settings
         'new_file_permissions' => 'int',
         'upload_maxsize' => 'int',
         'noThumbnailsRecreation' => 'bool',
-        'clientResize' => 'bool'
+        'clientResize' => 'bool',
+        'publish_default' => 'bool',
+        'search_default' => 'bool',
+        'cache_default' => 'bool'
     ];
 
     /**

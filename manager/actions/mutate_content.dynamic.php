@@ -129,13 +129,15 @@ if(!isset ($_REQUEST['id'])) {
         $modx->config['auto_menuindex'] = 1;
     }
     if($modx->config['auto_menuindex']) {
-        $pid = (int)$_REQUEST['pid'];
+        $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
         $rs = $modx->getDatabase()->select('count(*)', $tbl_site_content, "parent='{$pid}'");
         $content['menuindex'] = $modx->getDatabase()->getValue($rs);
     } else {
         $content['menuindex'] = 0;
     }
 }
+
+$content['type'] = get_by_key($content, 'type', 'document', 'is_scalar');
 
 if(isset ($_POST['which_editor'])) {
     $modx->config['which_editor'] = $_POST['which_editor'];
@@ -178,7 +180,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         },
         duplicate: function() {
           if(confirm("<?= $_lang['confirm_resource_duplicate']?>") === true) {
-            document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94<?= $add_path ?>";
+            document.location.href = "index.php?id=<?= (int)get_by_key($_REQUEST, 'id', 0, 'is_scalar') ?>&a=94<?= $add_path ?>";
           }
         },
         view: function() {
@@ -471,7 +473,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         return s;
       }
 
-      <?php if ($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
+      <?php if (get_by_key($content, 'type') === 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
       var lastImageCtrl;
       var lastFileCtrl;
 
@@ -556,7 +558,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
         ?>
         <input type="hidden" name="a" value="5" />
-        <input type="hidden" name="id" value="<?= $content['id'] ?>" />
+        <input type="hidden" name="id" value="<?= (int)get_by_key($content, 'id', 0, 'is_scalar') ?>" />
         <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?= (isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576) ?>" />
         <input type="hidden" name="refresh_preview" value="0" />
@@ -646,7 +648,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="pagetitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="pagetitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'pagetitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                         <script>document.getElementsByName("pagetitle")[0].focus();</script>
                                     </td>
                                 </tr>
@@ -656,7 +658,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_long_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="longtitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="longtitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'longtitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -665,7 +667,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_description_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'description', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -674,7 +676,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_alias_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="alias" type="text" maxlength="100" value="<?= stripslashes($content['alias']) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="alias" type="text" maxlength="100" value="<?= stripslashes(get_by_key($content, 'alias', '', 'is_scalar')) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -683,7 +685,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('link_attributes_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'link_attributes', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
 
@@ -707,7 +709,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_summary_help');?>" spellcheck="true"></i>
                                     </td>
                                     <td valign="top">
-                                        <textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
+                                        <textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'introtext', '', 'is_scalar'))) ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -759,7 +761,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_menu_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="menutitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="menutitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'menutitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -779,7 +781,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_show_menu_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="hidemenucheck" type="checkbox" class="checkbox" <?= ($content['hidemenu'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?= ($content['hidemenu'] == 1 ? 1 : 0) ?>" />
+                                        <input name="hidemenucheck" type="checkbox" class="checkbox" <?= (empty($content['hidemenu']) ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?= (empty($content['hidemenu']) ? 0 : 1) ?>" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -882,8 +884,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             </div>
                                             <div id="content_body">
                                                 <?php
-                                                if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4') && $modx->getConfig('use_editor')) {
-                                                    $htmlContent = $content['content'];
+                                                if((!empty($content['richtext']) || $modx->getManagerApi()->action == '4') && $modx->getConfig('use_editor')) {
+                                                    $htmlContent = get_by_key($content, 'content', '', 'is_scalar');
                                                     ?>
                                                     <div class="section-editor clearfix">
                                                         <textarea id="ta" name="ta" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($htmlContent) ?></textarea>
@@ -1162,8 +1164,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_published_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
-                                        <input type="hidden" name="published" value="<?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? 1 : 0 ?>" />
+                                        <input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $modx->getConfig('publish_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
+                                        <input type="hidden" name="published" value="<?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $modx->getConfig('publish_default')) ? 1 : 0 ?>" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1172,7 +1174,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_publishdate_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ($content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
+                                        <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'pub_date', 0, 'is_scalar') === 0 || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
                                             <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
@@ -1188,7 +1190,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_unpublishdate_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ($content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
+                                        <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'unpub_date', 0, 'is_scalar') === 0 || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
                                             <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
@@ -1216,8 +1218,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         </td>
                                         <td>
                                             <select name="type" class="inputBox" onchange="documentDirty=true;">
-                                                <option value="document"<?= (($content['type'] == "document" || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : "") ?> ><?=ManagerTheme::getLexicon('resource_type_webpage');?></option>
-                                                <option value="reference"<?= (($content['type'] == "reference" || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : "") ?> ><?=ManagerTheme::getLexicon('resource_type_weblink');?></option>
+                                                <option value="document"<?= ($content['type'] === 'document' || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_webpage');?></option>
+                                                <option value="reference"<?= ($content['type'] === 'reference' || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_weblink');?></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -1230,7 +1232,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <td>
                                             <select name="contentType" class="inputBox" onchange="documentDirty=true;">
                                                 <?php
-                                                if(!$content['contentType']) {
+                                                if(empty($content['contentType'])) {
                                                     $content['contentType'] = 'text/html';
                                                 }
                                                 $custom_contenttype = (isset ($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml");
@@ -1249,8 +1251,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         </td>
                                         <td>
                                             <select name="content_dispo" class="inputBox" size="1" onchange="documentDirty=true;">
-                                                <option value="0"<?= (!$content['content_dispo'] ? ' selected="selected"' : '') ?>><?=ManagerTheme::getLexicon('inline');?></option>
-                                                <option value="1"<?= ($content['content_dispo'] == 1 ? ' selected="selected"' : '') ?>><?=ManagerTheme::getLexicon('attachment');?></option>
+                                                <option value="0"<?= (empty($content['content_dispo']) ? ' selected="selected"' : '') ?>><?=ManagerTheme::getLexicon('inline');?></option>
+                                                <option value="1"<?= (!empty($content['content_dispo']) ? ' selected="selected"' : '') ?>><?=ManagerTheme::getLexicon('attachment');?></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -1285,8 +1287,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_folder_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="isfoldercheck" type="checkbox" class="checkbox" <?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
-                                        <input type="hidden" name="isfolder" value="<?= (($content['isfolder'] == 1 || $modx->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="isfoldercheck" type="checkbox" class="checkbox" <?= ((! empty($content['isfolder']) || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
+                                        <input type="hidden" name="isfolder" value="<?= ((! empty($content['isfolder']) || $modx->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
 
@@ -1306,8 +1308,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_richtext_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="richtextcheck" type="checkbox" class="checkbox" <?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
-                                        <input type="hidden" name="richtext" value="<?= ($content['richtext'] == 0 && $modx->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
+                                        <input name="richtextcheck" type="checkbox" class="checkbox" <?= (empty($content['richtext']) && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
+                                        <input type="hidden" name="richtext" value="<?= (empty($content['richtext']) && $modx->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1316,7 +1318,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_trackvisit_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="donthitcheck" type="checkbox" class="checkbox" <?= ($content['donthit'] != 1 ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= ($content['donthit'] == 1 ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="donthitcheck" type="checkbox" class="checkbox" <?= (empty($content['donthit']) ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= (empty($content['donthit'])? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1325,7 +1327,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_searchable_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $modx->getConfig('search_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $modx->getConfig('search_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1334,8 +1336,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_cacheable_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
-                                        <input type="hidden" name="cacheable" value="<?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $modx->getConfig('cache_default')) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
+                                        <input type="hidden" name="cacheable" value="<?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $modx->getConfig('cache_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1517,7 +1519,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     // invoke OnDocFormRender event
                     $evtOut = $modx->invokeEvent('OnDocFormRender', array(
                         'id' => $id,
-                        'template' => $content['template']
+                        'template' => (int)get_by_key($content, 'template', 0, 'is_scalar')
                     ));
 
                     if(is_array($evtOut)) {
@@ -1533,7 +1535,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
       storeCurTemplate();
     </script>
 <?php
-if(($content['richtext'] == 1 || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $modx->getConfig('use_editor')) {
+if((! empty($content['richtext']) || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $modx->getConfig('use_editor')) {
     if(is_array($richtexteditorIds)) {
         foreach($richtexteditorIds as $editor => $elements) {
             // invoke OnRichTextEditorInit event
