@@ -45,7 +45,19 @@ trait Settings
         'tree_page_click' => 'int',
         'allow_multiple_emails' => 'bool',
         'use_editor' => 'bool',
-        'group_tvs' => 'bool'
+        'group_tvs' => 'bool',
+        'jpegQuality' => 'int',
+        'thumbHeight' => 'int',
+        'maxImageHeight' => 'int',
+        'maxImageWidth' => 'int',
+        'denyExtensionRename' => 'bool',
+        'denyZipDownload' => 'bool',
+        'showHiddenFiles' => 'bool',
+        'new_folder_permissions' => 'int',
+        'new_file_permissions' => 'int',
+        'upload_maxsize' => 'int',
+        'noThumbnailsRecreation' => 'bool',
+        'clientResize' => 'bool'
     ];
 
     /**
