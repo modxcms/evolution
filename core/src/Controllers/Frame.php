@@ -419,7 +419,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'element_tplvars',
                 'elements',
                 '<i class="fa fa-list-alt"></i>' . $this->managerTheme->getLexicon('tmplvars') . '<i class="fa fa-angle-right toggle"></i>',
-                'index.php?a=76&tab=' . $tab,
+                'index.php?a=76&tab=' . $tab++,
                 $this->managerTheme->getLexicon('tmplvars'),
                 '',
                 'new_template,edit_template',
