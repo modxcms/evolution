@@ -19,6 +19,7 @@ use UrlProcessor;
  *      $this->loadExtension('ManagerAPI');
  * @property Legacy\PasswordHash $phpass
  *      $this->loadExtension('phpass');
+ * @property Parser $tpl
  */
 class Core extends AbstractLaravel implements Interfaces\CoreInterface
 {
@@ -174,6 +175,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getService('ExceptionHandler');
         $this->getSettings();
         $this->getService('UrlProcessor');
+        $this->getService('DLTemplate');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
 
@@ -3105,7 +3107,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
-
         if (!$includeThisUser && get_by_key($this->lockedElements, $type . '.' . $id . '.sid') == $this->sid) {
             return null;
         }
@@ -4087,13 +4088,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (empty($chunkName)) {
             // nop
         } elseif ($this->isChunkProcessor('DLTemplate')) {
-            $out = \DLTemplate::getInstance($this)->getChunk($chunkName);
+            $out = $this->tpl->getChunk($chunkName);
         } elseif (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
         } elseif (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $out = \DLTemplate::getInstance($this)->getBaseChunk($chunkName);
+            $out = $this->tpl->getBaseChunk($chunkName);
         }
         return $out;
     }
@@ -4146,9 +4147,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (empty($matches)) {
             return $tpl;
         }
-
         foreach ($matches[1] as $i => $key) {
-
             if (strpos($key, ':') !== false && $execModifier) {
                 list($key, $modifiers) = $this->splitKeyAndFilter($key);
             } else {
@@ -4202,7 +4201,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         return $prefix === '[+' && $suffix === '+]' && $this->isChunkProcessor('DLTemplate') ?
-            \DLTemplate::getInstance($this)->parseChunk($chunkName, $chunkArr) :
+            $this->tpl->parseChunk($chunkName, $chunkArr) :
             $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
     }
 

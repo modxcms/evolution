@@ -57,7 +57,8 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             'langKeys' => $this->parameterLang(),
             'templates' => $this->parameterTemplates(),
             'tabEvents' => $this->parameterTabEvents(),
-            'actionButtons' => $this->parameterActionButtons()
+            'actionButtons' => $this->parameterActionButtons(),
+            'fileSetting' => app('config')->get('cms.settings')
         ];
     }
 
