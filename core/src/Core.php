@@ -139,6 +139,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $urlProcessor;
 
     /**
+     * @deprecated Needs for the newChunkie class by Thomas Jakobi
+     * @var array
+     */
+    public $chunkieCache = [];
+
+    /**
      * @param array $services
      */
     public function __construct()

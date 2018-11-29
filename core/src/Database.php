@@ -1,13 +1,19 @@
 <?php namespace EvolutionCMS;
 
 use AgelxNash\Modx\Evo\Database\Database as BaseDatabase;
-use AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver;
+use AgelxNash\Modx\Evo\Database\Drivers;
 use Exception;
 use AgelxNash\Modx\Evo\Database\Exceptions;
 
 class Database extends BaseDatabase implements Interfaces\DatabaseInterface
 {
     public $config;
+
+    public function __construct(array $config, $driver = Drivers\MySqliDriver::class)
+    {
+        parent::__construct($config, $driver);
+        $this->config['table_prefix'] = $this->getConfig('prefix');
+    }
 
     /**
      * @param $tableName
@@ -88,7 +94,7 @@ class Database extends BaseDatabase implements Interfaces\DatabaseInterface
     {
         parent::setDebug($flag);
         $driver = $this->getDriver();
-        if ($driver instanceof IlluminateDriver) {
+        if ($driver instanceof Drivers\IlluminateDriver) {
             if ($this->isDebug()) {
                 $driver->getConnect()->enableQueryLog();
             } else {
