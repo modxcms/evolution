@@ -90,7 +90,7 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
 
         $parentDocument->isfolder = true;
         $parentDocument->save();
-        if ($document->ancestor->childrens()->count() <= 1) {
+        if ($document->ancestor && $document->ancestor->childrens()->count() <= 1) {
             $document->ancestor->isfolder = false;
             $document->ancestor->save();
         }
