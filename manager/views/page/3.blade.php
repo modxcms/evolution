@@ -20,9 +20,7 @@
     $tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
 
     // Get access permissions
-    if($_SESSION['mgrDocgroups']) {
-        $docgrp = implode(",", $_SESSION['mgrDocgroups']);
-    }
+    $docgrp = $_SESSION['mgrDocgroups'] ? implode(",", $_SESSION['mgrDocgroups']) : '';
     $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 
     //
@@ -196,8 +194,8 @@
             $listDocs[] = array(
                 'docid' => '<div class="text-right">' . $children['id'] . '</div>',
                 'title' => $title,
-                'createdon' => '<div class="text-right">' . ($modx->toDateFormat($children['createdon'] + $server_offset_time, 'dateOnly')) . '</div>',
-                'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? ($modx->toDateFormat($children['pub_date'] + $server_offset_time, 'dateOnly')) : '') . '</div>',
+                'createdon' => '<div class="text-right">' . ($modx->toDateFormat($children['createdon'] + $modx->timestamp(0), 'dateOnly')) . '</div>',
+                'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? ($modx->toDateFormat($children['pub_date'] + $modx->timestamp(0), 'dateOnly')) : '') . '</div>',
                 'status' => '<div class="text-nowrap">' . ($children['published'] == 0 ? '<span class="unpublishedDoc">' . $_lang['page_data_unpublished'] . '</span>' : '<span class="publishedDoc">' . $_lang['page_data_published'] . '</span>') . '</div>',
                 'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['edit'] . '"><i class="' . $_style["icons_edit_resource"] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['move'] . '"><i
 				class="' . $_style["icons_move_document"] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
@@ -307,13 +305,13 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_created') }}:</td>
-                        <td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= $modx->toDateFormat($content['createdon'] + $modx->timestamp(0)) ?> (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php if($editedbyname != '') { ?>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_edited') }}:</td>
-                        <td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= $modx->toDateFormat($content['editedon'] + $modx->timestamp(0)) ?> (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php } ?>
@@ -432,7 +430,7 @@
         <script type="text/javascript"> docSettings.setSelectedIndex({{ $_GET['tab'] }});</script>
     @endif
 
-    @if($show_preview == 1)
+    @if(!empty($show_preview))
         <div class="sectionHeader">{{ ManagerTheme::getLexicon('preview') }}</div>
         <div class="sectionBody" id="lyr2">
             <iframe src="{{ MODX_SITE_URL }}index.php?id={{ $id }}&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>

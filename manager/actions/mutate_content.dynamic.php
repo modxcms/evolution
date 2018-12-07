@@ -6,6 +6,8 @@ $pg = isset($_REQUEST['page']) ? '&page=' . (int) $_REQUEST['page'] : '';
 $add_path = $sd . $sb . $pg;
 /*******************/
 
+$richtexteditorIds = array();
+
 // check permissions
 switch($modx->getManagerApi()->action) {
     case 27:
@@ -890,12 +892,16 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                     </div>
                                                     <?php
                                                     // Richtext-[*content*]
-                                                    $richtexteditorIds = array();
-                                                    $richtexteditorOptions = array();
-                                                    $richtexteditorIds[$modx->getConfig('which_editor')][] = 'ta';
-                                                    $richtexteditorOptions[$modx->getConfig('which_editor')]['ta'] = '';
+                                                    $richtexteditorIds = [
+                                                        $modx->getConfig('which_editor') => ['ta']
+                                                    ];
+                                                    $richtexteditorOptions = [
+                                                        $modx->getConfig('which_editor') => [
+                                                            'ta' => ''
+                                                        ]
+                                                    ];
                                                 } else {
-                                                    echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->getPhpCompat()->htmlspecialchars($content['content']), '</textarea></div>' . "\n";
+                                                    echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->getPhpCompat()->htmlspecialchars(get_by_key($content, 'content', '')), '</textarea></div>' . "\n";
                                                 }
                                                 ?>
                                             </div>

@@ -54,19 +54,19 @@ if (count($children)>0) {
         ), $modx->getDatabase()->getFullTableName('site_content'), "id IN (".implode(", ", $children).")");
 }
 
-if ($site_start==$id) {
+if ($modx->getConfig('site_start')==$id) {
     $modx->webAlertAndQuit("Document is 'Site start' and cannot be deleted!");
 }
 
-if ($site_unavailable_page==$id) {
+if ($modx->getConfig('site_unavailable_page')==$id) {
     $modx->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be deleted!");
 }
 
-if ($error_page==$id) {
+if ($modx->getConfig('error_page')==$id) {
     $modx->webAlertAndQuit("Document is used as the 'Site error page' and cannot be deleted!");
 }
 
-if ($unauthorized_page==$id) {
+if ($modx->getConfig('unauthorized_page')==$id) {
     $modx->webAlertAndQuit("Document is used as the 'Site unauthorized page' and cannot be deleted!");
 }
 

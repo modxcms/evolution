@@ -476,3 +476,7 @@ $_style['actionbuttons'] = array(
 		</div>',
 	)
 );
+
+$_style['tree_page_gif'] = $_style['tree_page'];
+$_style['tree_page_jpg'] = $_style['tree_page'];
+$_style['tree_page_png'] = $_style['tree_page'];

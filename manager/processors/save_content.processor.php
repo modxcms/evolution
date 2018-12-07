@@ -17,7 +17,7 @@ $link_attributes = $modx->getDatabase()->escape($_POST['link_attributes']);
 $isfolder = (int)$_POST['isfolder'];
 $richtext = (int)$_POST['richtext'];
 $published = (int)$_POST['published'];
-$parent = $_POST['parent'] != '' ? (int)$_POST['parent'] : 0;
+$parent = (int)get_by_key($_POST, 'parent', 0, 'is_scalar');
 $template = (int)$_POST['template'];
 $menuindex = !empty($_POST['menuindex']) ? (int)$_POST['menuindex'] : 0;
 $searchable = (int)$_POST['searchable'];
@@ -25,7 +25,7 @@ $cacheable = (int)$_POST['cacheable'];
 $syncsite = (int)$_POST['syncsite'];
 $pub_date = $_POST['pub_date'];
 $unpub_date = $_POST['unpub_date'];
-$document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? array() : $_POST['docgroups'];
+$document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? [] : get_by_key($_POST, 'docgroups', [], 'is_array');
 $type = $modx->getDatabase()->escape($_POST['type']);
 $contentType = $modx->getDatabase()->escape($_POST['contentType']);
 $contentdispo = (int)$_POST['content_dispo'];
@@ -69,11 +69,11 @@ if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {
 }
 
 // friendly url alias checks
-if ($friendly_urls) {
+if ($modx->getConfig('friendly_urls')) {
     // auto assign alias
-    if (!$alias && $automatic_alias) {
+    if (!$alias && $modx->getConfig('automatic_alias')) {
         $alias = strtolower($modx->stripAlias(trim($pagetitle)));
-        if(!$allow_duplicate_alias) {
+        if(!$modx->getConfig('allow_duplicate_alias')) {
             if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$alias'")) != 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
@@ -99,9 +99,9 @@ if ($friendly_urls) {
     }
 
     // check for duplicate alias name if not allowed
-    elseif ($alias && !$allow_duplicate_alias) {
+    elseif ($alias && !$modx->getConfig('allow_duplicate_alias')) {
         $alias = $modx->stripAlias($alias);
-        if ($use_alias_path) {
+        if ($modx->getConfig('use_alias_path')) {
             // only check for duplicates on the same level if alias_path is on
             $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
         } else {
@@ -140,7 +140,7 @@ elseif ($alias) {
 }
 
 // determine published status
-$currentdate = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
+$currentdate = $modx->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
 
 if (empty ($pub_date)) {
     $pub_date = 0;
@@ -166,9 +166,7 @@ if (empty ($unpub_date)) {
 
 // get document groups for current user
 $tmplvars = array ();
-if ($_SESSION['mgrDocgroups']) {
-    $docgrp = implode(",", $_SESSION['mgrDocgroups']);
-}
+$docgrp = $_SESSION['mgrDocgroups'] ? implode(",", $_SESSION['mgrDocgroups']) : '';
 
 // ensure that user has not made this document inaccessible to themselves
 if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
@@ -218,16 +216,16 @@ while ($row = $modx->getDatabase()->getRow($rs)) {
             $tmplvar = $_POST["tv" . $row['id']];
         break;
         default:
-            if (is_array($_POST["tv" . $row['id']])) {
+            $tmp = get_by_key($_POST, 'tv' . $row['id']);
+            if (is_array($tmp)) {
                 // handles checkboxes & multiple selects elements
-                $feature_insert = array ();
-                $lst = $_POST["tv" . $row['id']];
-                foreach($lst as $featureValue => $feature_item) {
+                $feature_insert = [];
+                foreach ($tmp as $featureValue => $feature_item) {
                     $feature_insert[count($feature_insert)] = $feature_item;
                 }
                 $tmplvar = implode("||", $feature_insert);
             } else {
-                $tmplvar = $_POST["tv" . $row['id']];
+                $tmplvar = $tmp;
             }
         break;
     }
@@ -254,7 +252,7 @@ if ($actionToTake != "new") {
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
-if ($use_udperms == 1) {
+if ($modx->getConfig('use_udperms') == 1) {
     if ($existingDocument['parent'] != $parent) {
         $udperms = new EvolutionCMS\Legacy\Permissions();
         $udperms->user = $modx->getLoginUserID();
@@ -367,7 +365,7 @@ switch ($actionToTake) {
         }
 
         // document access permissions
-        if ($use_udperms == 1 && is_array($document_groups)) {
+        if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
             $new_groups = array();
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
@@ -381,7 +379,7 @@ switch ($actionToTake) {
         } else {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
-            if($use_udperms && !($isManager || $isWeb) && $parent != 0) {
+            if($modx->getConfig('use_udperms') && !($isManager || $isWeb) && $parent != 0) {
                 // inherit document access permissions
                 $modx->getDatabase()->insert(
                     array(
@@ -449,12 +447,12 @@ switch ($actionToTake) {
             $oldparent = $existingDocument['parent'];
             $doctype = $existingDocument['type'];
 
-            if ($id == $site_start && $published == 0) {
+            if ($id == $modx->getConfig('site_start') && $published == 0) {
                 $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
             }
-            $today = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
-            if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
+            $today = $modx->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
+            if ($id == $modx->getConfig('site_start') && ($pub_date > $today || $unpub_date != "0")) {
                 $modx->getManagerApi()->saveFormValues(27);
                 $modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
             }
@@ -578,7 +576,7 @@ switch ($actionToTake) {
             }
 
             // set document permissions
-            if ($use_udperms == 1 && is_array($document_groups)) {
+            if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
                 $new_groups = array();
                 // process the new input
                 foreach ($document_groups as $value_pair) {

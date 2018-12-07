@@ -598,7 +598,7 @@ class MakeTable implements MakeTableInterface
      */
     public function handlePaging()
     {
-        $offset = (is_numeric($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] - 1 : 0;
+        $offset = (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] - 1 : 0;
         $limitClause = ' LIMIT ' . ($offset * MAX_DISPLAY_RECORDS_NUM) . ', ' . MAX_DISPLAY_RECORDS_NUM;
 
         return $limitClause;
