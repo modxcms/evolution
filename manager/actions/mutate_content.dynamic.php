@@ -1334,7 +1334,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_trackvisit_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="donthitcheck" type="checkbox" class="checkbox" <?= (empty($content['donthit']) ? 'checked="checked"' : '') ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= (empty($content['donthit'])? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="donthitcheck" type="checkbox" class="checkbox" <?= empty($content['donthit']) ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= empty($content['donthit']) ? 0 : 1 ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
