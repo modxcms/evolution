@@ -7,7 +7,7 @@ $add_path = $sd . $sb . $pg;
 /*******************/
 
 $richtexteditorIds = array();
-
+$defaultContentType = 'document';
 // check permissions
 switch($modx->getManagerApi()->action) {
     case 27:
@@ -17,6 +17,8 @@ switch($modx->getManagerApi()->action) {
         break;
     case 85:
     case 72:
+        $defaultContentType = 'reference';
+        // no break
     case 4:
         if(!$modx->hasPermission('new_document')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -136,7 +138,7 @@ if(!isset($_REQUEST['id'])) {
     }
 }
 
-$content['type'] = get_by_key($content, 'type', 'document', 'is_scalar');
+$content['type'] = get_by_key($content, 'type', $defaultContentType, 'is_scalar');
 
 if(isset ($_POST['which_editor'])) {
     $modx->setConfig('which_editor', get_by_key($_POST, 'which_editor', '', 'is_scalar'));
