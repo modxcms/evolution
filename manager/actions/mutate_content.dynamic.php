@@ -683,7 +683,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('link_attributes_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'link_attributes', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'link_attributes', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
 
