@@ -39,7 +39,7 @@ class ExceptionHandler
     protected function prepareActiveTracy()
     {
         $flag = $this->container['config']->get('tracy.active');
-        if (is_scalar($flag)) {
+        if (is_string($flag)) {
             $this->container['config']->set(
                 'tracy.active',
                 $flag === 'manager' && $this->container->isLoggedIn('mgr')
