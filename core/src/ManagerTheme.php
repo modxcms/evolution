@@ -192,8 +192,6 @@ class ManagerTheme implements ManagerThemeInterface
 
         $this->theme = $theme;
 
-        $_COOKIE['MODX_themeMode'] = $this->getTheme();
-
         $this->loadLang(
             $this->getCore()->getConfig('manager_language')
         );
