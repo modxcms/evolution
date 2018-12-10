@@ -37,8 +37,8 @@ class Form extends Core
         $this->mailConfig = array(
             'isHtml'   => $this->getCFGDef('isHtml', 1),
             'to'       => $this->getCFGDef('to'),
-            'from'     => $this->getCFGDef('from', $this->modx->config['emailsender']),
-            'fromName' => $this->getCFGDef('fromName', $this->modx->config['site_name']),
+            'from'     => $this->getCFGDef('from', $this->modx->getConfig('emailsender')),
+            'fromName' => $this->getCFGDef('fromName', $this->modx->getConfig('site_name')),
             'subject'  => $this->getCFGDef('subject'),
             'replyTo'  => $this->getCFGDef('replyTo'),
             'cc'       => $this->getCFGDef('cc'),
@@ -175,7 +175,7 @@ class Form extends Core
      */
     public function renderReport($tplParam = 'reportTpl')
     {
-        $tpl = $this->getCFGDef($tplParam);
+        $tpl = $this->getCFGDef($tplParam, 'reportTpl');
         if (empty($tpl) && $tplParam == 'reportTpl') {
             $tpl = '@CODE:';
             foreach ($this->getFormData('fields') as $key => $value) {
@@ -306,27 +306,24 @@ class Form extends Core
     public function sendAutosender()
     {
         $to = $this->getCFGDef('autosender');
-        if (empty($to)) {
-            $out = true;
-        } else {
-            $config = $this->getMailSendConfig($to, 'autosenderFromName', 'autoSubject');
-            $asConfig = $this->config->loadArray($this->getCFGDef('autoMailConfig'));
-            if (!empty($asConfig) && is_array($asConfig)) {
-                $asConfig = $this->parseMailerParams($asConfig);
-                $config = array_merge($config, $asConfig);
-            }
-            $mailer = new Mailer($this->modx, $config);
-            $report = $this->renderReport('automessageTpl');
-            $out = $mailer->send($report);
-            $this->log(
-                'Mail autosender report',
-                array(
-                    'report'        => $report,
-                    'mailer_config' => $mailer->config,
-                    'result'        => $out
-                )
-            );
+
+        $config = $this->getMailSendConfig($to, 'autosenderFromName', 'autoSubject');
+        $asConfig = $this->config->loadArray($this->getCFGDef('autoMailConfig'));
+        if (!empty($asConfig) && is_array($asConfig)) {
+            $asConfig = $this->parseMailerParams($asConfig);
+            $config = array_merge($config, $asConfig);
         }
+        $mailer = new Mailer($this->modx, $config);
+        $report = $this->renderReport('automessageTpl');
+        $out = empty($to) ? true : $mailer->send($report);
+        $this->log(
+            'Mail autosender report',
+            array(
+                'report'        => $report,
+                'mailer_config' => $mailer->config,
+                'result'        => $out
+            )
+        );
 
         return $out;
     }
@@ -338,30 +335,27 @@ class Form extends Core
     public function sendCCSender()
     {
         $to = $this->getField($this->getCFGDef('ccSenderField', 'email'));
-        if (empty($to)) {
-            $out = true;
-        } else {
-            if ($this->getCFGDef('ccSender', 0)) {
-                $config = $this->getMailSendConfig($to, 'ccSenderFromName', 'ccSubject');
-                $ccConfig = $this->config->loadArray($this->getCFGDef('ccMailConfig'));
-                if (!empty($ccConfig) && is_array($ccConfig)) {
-                    $ccConfig = $this->parseMailerParams($ccConfig);
-                    $config = array_merge($config, $ccConfig);
-                }
-                $mailer = new Mailer($this->modx, $config);
-                $report = $this->renderReport('ccSenderTpl');
-                $out = $mailer->send($report);
-                $this->log(
-                    'Mail CC report',
-                    array(
-                        'report' => $report,
-                        'mailer_config' => $mailer->config,
-                        'result' => $out
-                    )
-                );
-            } else {
-                $out = true;
+
+        if ($this->getCFGDef('ccSender', 0)) {
+            $config = $this->getMailSendConfig($to, 'ccSenderFromName', 'ccSubject');
+            $ccConfig = $this->config->loadArray($this->getCFGDef('ccMailConfig'));
+            if (!empty($ccConfig) && is_array($ccConfig)) {
+                $ccConfig = $this->parseMailerParams($ccConfig);
+                $config = array_merge($config, $ccConfig);
             }
+            $mailer = new Mailer($this->modx, $config);
+            $report = $this->renderReport('ccSenderTpl');
+            $out = empty($to) ? true : $mailer->send($report);
+            $this->log(
+                'Mail CC report',
+                array(
+                    'report' => $report,
+                    'mailer_config' => $mailer->config,
+                    'result' => $out
+                )
+            );
+        } else {
+            $out = true;
         }
 
         return $out;
@@ -448,7 +442,7 @@ class Form extends Core
             array(
                 'subject'  => $subject,
                 'to'       => $to,
-                'fromName' => $this->getCFGDef($fromParam, $this->modx->config['site_name'])
+                'fromName' => $this->getCFGDef($fromParam, $this->modx->getConfig('site_name'))
             )
         );
         $out = $this->parseMailerParams($out);

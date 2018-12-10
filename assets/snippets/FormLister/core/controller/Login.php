@@ -27,7 +27,7 @@ class Login extends Core
         if (0 === strpos($requestUri, MODX_BASE_URL)) {
             $requestUri = substr($requestUri, strlen(MODX_BASE_URL));
         } 
-        $this->requestUri = $this->modx->config['site_url'] . $requestUri;
+        $this->requestUri = $this->modx->getConfig('site_url') . $requestUri;
         $this->context = $this->getCFGDef('context', 'web');
         $lang = $this->lexicon->loadLang('login');
         if ($lang) {
@@ -93,8 +93,8 @@ class Login extends Core
         $loginCookie = $this->getCFGDef('cookieName', 'WebLoginPE');
         $this->user->authUser($login, $remember, $loginCookie, true);
         $this->setFormStatus(true);
-        if (isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier == $this->modx->config['unauthorized_page']) {
-            $uaPage = $this->modx->makeUrl($this->modx->config['unauthorized_page'], "", "", "full");
+        if (isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier == $this->modx->getConfig('unauthorized_page')) {
+            $uaPage = $this->modx->makeUrl($this->modx->getConfig('unauthorized_page'), "", "", "full");
             $requested = explode('?', $this->requestUri);
             if (array_shift($requested) != $uaPage) {
                 $this->setField('redirectTo', $this->requestUri);

@@ -12,8 +12,10 @@ class AssetsHelper
      * @var \DocumentParser
      * @access protected
      */
-    protected $modx = null;
-    protected $fs = null;
+    protected $modx;
+
+    /** @var \Helpers\FS */
+    protected $fs;
 
     /**
      * @var AssetsHelper cached reference to singleton instance
@@ -52,7 +54,6 @@ class AssetsHelper
      */
     private function __clone()
     {
-
     }
 
     /**
@@ -62,7 +63,6 @@ class AssetsHelper
      */
     private function __wakeup()
     {
-
     }
 
     /**
@@ -94,12 +94,12 @@ class AssetsHelper
     public function registerScript($name, $params)
     {
         $out = '';
-        if (!isset($this->modx->loadedjscripts[$name])) {
+        if (! isset($this->modx->loadedjscripts[$name])) {
             $src = $params['src'];
-            $remote = strpos($src, "http") !== false;
-            if (!$remote) {
+            $remote = strpos($src, 'http') === 0 || strpos($src, '//') === 0;
+            if (! $remote) {
                 $src = $this->modx->config['site_url'] . $src;
-                if (!$this->fs->checkFile($params['src'])) {
+                if (! $this->fs->checkFile($params['src'])) {
                     $this->modx->logEvent(0, 3, 'Cannot load ' . $src, 'Assets helper');
 
                     return $out;
@@ -116,7 +116,6 @@ class AssetsHelper
             }
 
             $this->modx->loadedjscripts[$name] = $params;
-
         }
 
         return $out;
@@ -129,7 +128,9 @@ class AssetsHelper
     public function registerScriptsList($list = array())
     {
         $out = '';
-        if (!is_array($list)) return $out;
+        if (! \is_array($list)) {
+            return $out;
+        }
 
         foreach ($list as $script => $params) {
             $out .= $this->registerScript($script, $params);

@@ -154,7 +154,7 @@ function saveTemplateAccess($id)
         $newAssignedTvs = $_POST['assignedTv'];
 
         // Preserve rankings of already assigned TVs
-        $rs = $modx->db->select("tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "");
+        $rs = $modx->db->select("`tmplvarid`, `rank`", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "");
 
         $ranksArr = array();
         $highest = 0;

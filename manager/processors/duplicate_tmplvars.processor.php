@@ -26,12 +26,12 @@ $newid = $modx->db->insert(
 		'description'=>'',
 		'default_text'=>'',
 		'elements'=>'',
-		'rank'=>'',
+		'`rank`'=>'',
 		'display'=>'',
 		'display_params'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_tmplvars'), // Insert into
-	"type, CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, CONCAT(caption, ' Duplicate{$count}') AS caption, description, default_text, elements, rank, display, display_params, category", $modx->getFullTableName('site_tmplvars'), "id='{$id}'"); // Copy from
+	"type, CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, CONCAT(caption, ' Duplicate{$count}') AS caption, description, default_text, elements, `rank`, display, display_params, category", $modx->getFullTableName('site_tmplvars'), "id='{$id}'"); // Copy from
 
 
 // duplicate TV Template Access Permissions
@@ -39,9 +39,9 @@ $modx->db->insert(
 	array(
 		'tmplvarid'=>'',
 		'templateid'=>'',
-		'rank'=>'',
+		'`rank`'=>'',
 		), $modx->getFullTableName('site_tmplvar_templates'), // Insert into
-	"'{$newid}', templateid, rank", $modx->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'"); // Copy from
+	"'{$newid}', templateid, `rank`", $modx->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'"); // Copy from
 
 // duplicate TV Access Permissions
 $modx->db->insert(

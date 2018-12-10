@@ -69,6 +69,13 @@ function getSanitizedValue($value = '')
     return $value;
 }
 
+if (! function_exists('html_escape')) {
+    function html_escape($str, $charset = 'UTF-8')
+    {
+        return htmlentities($str, ENT_COMPAT | ENT_SUBSTITUTE, $charset, false);
+    }
+}
+
 modx_sanitize_gpc($_GET);
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     modx_sanitize_gpc($_POST);

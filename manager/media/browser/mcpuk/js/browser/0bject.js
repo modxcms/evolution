@@ -9,7 +9,7 @@
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
   */
-
+var lazyLoadInstance = {};
 var browser = {
     opener: {},
     support: {},

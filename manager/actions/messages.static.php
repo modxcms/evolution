@@ -234,7 +234,8 @@ if (!$modx->hasPermission('messages')) {
                 }
             }
         </script>
-        <form action="index.php?a=66" method="post" name="messagefrm">
+        <form name="messagefrm" method="post" action="index.php">
+            <input type="hidden" name="a" value="66">
             <b><?= $_lang['messages_send_to'] ?>:</b>
             <div class="form-group form-inline">
                 <div class="row form-row">

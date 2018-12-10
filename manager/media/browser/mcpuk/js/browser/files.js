@@ -48,6 +48,7 @@ browser.initFiles = function() {
         $('#files .file div.' + val).css('display', display);
     });
     this.statusDir();
+    lazyLoadInstance.update();
 };
 
 browser.showFiles = function(callBack, selected) {
@@ -77,7 +78,7 @@ browser.showFiles = function(callBack, selected) {
             } else {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
-                else if (file.smallThumb) {
+                else if (file.smallThumb || _.getFileExtension(file.name) === 'svg') {
                     var icon = browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
@@ -86,7 +87,7 @@ browser.showFiles = function(callBack, selected) {
                     icon = 'themes/' + browser.theme + '/img/files/big/' + icon + '.png';
                 }
                 html += '<div class="file">' +
-                    '<div class="thumb" style="background-image:url(\'' + icon + '\')" ></div>' +
+                    '<div class="lazy thumb ' + (file.thumb ? '' : 'skipthumb') + '" data-src="' + icon + '"></div>' +
                     '<div class="name">' + _.htmlData(file.name) + '</div>' +
                     '<div class="time">' + file.date + '</div>' +
                     '<div class="size">' + browser.humanSize(file.size) + '</div>' +
@@ -265,7 +266,7 @@ browser.menuFile = function(file, e) {
         }
         if (data.thumb || data.smallThumb || this.support.zip) {
             html += (html.length ? '<div class="delimiter"></div>' : '');
-            if (data.thumb || data.smallThumb)
+            if (data.thumb || data.smallThumb || data.preview)
                 html +='<a href="kcact:view">' + this.label("View") + '</a>';
             if (this.support.zip) html += (html.length ? '<div class="delimiter"></div>' : '') +
                 '<a href="kcact:download">' + this.label("Download") + '</a>';
@@ -401,7 +402,7 @@ browser.menuFile = function(file, e) {
             html += '<div class="delimiter"></div>';
         }
 
-        if (data.thumb || data.smallThumb)
+        if (data.thumb || data.smallThumb || data.preview)
             html +='<a href="kcact:view">' + this.label("View") + '</a>';
 
         html +=

@@ -204,7 +204,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 			$webicon,
 			abs($activeusers['internalKey']),
 			$ip,
-			strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),
+			strftime($modx->toDateFormat(0,'formatOnly').' %H:%M:%S', $activeusers['lasthit'] + $server_offset_time),
 			$currentaction
 		);
 	}
@@ -296,6 +296,22 @@ $widgets['welcome'] = array(
 						</a>
 					</span> 
 					<!--@ENDIF-->
+					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
+					<span class="wm_button">
+						<a target="main" href="index.php?a=76">
+							<i class="[&icons_resources_large&]" title="[%element_management%]"></i>
+							<span>[%elements%]</span>
+						</a>
+					</span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
+					<span class="wm_button">
+						<a target="main" href="index.php?a=93">
+							<i class="[&icons_backup_large&]" title="[%bk_manager%]"></i>
+							<span>[%backup%]</span>
+						</a>
+					</span> 
+					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=change_password]]--> 
 					<span class="wm_button">
 						<a target="main" href="index.php?a=28">
@@ -564,18 +580,10 @@ function getRecentInfoList() {
 
 		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
-		if($ph['longtitle'] == '') {
-			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['description'] == '') {
-			$ph['description'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['introtext'] == '') {
-			$ph['introtext'] = '(<i>[%not_set%]</i>)';
-		}
-		if($ph['alias'] == '') {
-			$ph['alias'] = '(<i>[%not_set%]</i>)';
-		}
+        $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['longtitle']);
+        $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['description']);
+        $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['introtext']);
+        $ph['alias'] = $ph['alias'] == '' ? '(<i>[%not_set%]</i>)' : html_escape($ph['alias']);
 
 		$output[] = $modx->parseText($tpl, $ph);
 	}
@@ -583,12 +591,13 @@ function getRecentInfoList() {
 }
 
 function getRecentInfoRowTpl() {
+	$modx = EvolutionCMS();
 	$tpl = '
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle:htmlentities+]</a></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat=`'.$modx->toDateFormat(0,'formatOnly').' %H:%M:%S`+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-nowrap">[+username:htmlentities+]</td>
 							<td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 						</tr>
 						<tr class="resource-overview-accordian collapse collapse[+id+]">
@@ -602,7 +611,7 @@ function getRecentInfoRowTpl() {
 										<li><b>[%resource_alias%]</b>: [+alias+]</li>
 										<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
 										<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-										<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
+										<li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
 									</ul>
 								</div>
 							</td>

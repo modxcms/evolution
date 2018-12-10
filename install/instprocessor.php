@@ -73,7 +73,8 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 // connect to the database
 echo "<p>". $_lang['setup_database_create_connection'];
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     echo '<span class="notok">'.$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
     return;
 } else {
@@ -125,35 +126,6 @@ if ($installMode == 0) {
     }
 }
 
-if(!function_exists('parseProperties')) {
-    /**
-     * parses a resource property string and returns the result as an array
-     * duplicate of method in documentParser class
-     *
-     * @param string $propertyString
-     * @return array
-     */
-    function parseProperties($propertyString) {
-        $parameter= array ();
-        if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            $countParams = count($tmpParams);
-            for ($x= 0; $x < $countParams; $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
-                            $parameter[trim($pTmp[0])]= $pvTmp[2];
-                }
-            }
-        }
-        return $parameter;
-    }
-}
-
 // check status of Inherit Parent Template plugin
 $auto_template_logic = 'parent';
 if ($installMode != 0) {
@@ -183,6 +155,7 @@ $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method, $auto_template_logic);
+$sqlParser->database_collation = $database_collation;
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 /* image and file manager paths now handled via settings screen in Manager
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
@@ -588,8 +561,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
                     }
                     if($insert === true) {
-                        $properties = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
-                        if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
+                         if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0',$category);")) {
                             echo "<p>".mysqli_error($sqlParser->conn)."</p>";
                             return;
                         }
@@ -609,10 +581,11 @@ if (isset ($_POST['plugin']) || $installData) {
                     if ($ds) {
                         $row = mysqli_fetch_assoc($ds);
                         $id = $row["id"];
-                        // remove existing events
-                        mysqli_query($sqlParser->conn, 'DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_plugin_events` WHERE pluginid = \'' . $id . '\'');
+                        $_events = implode("','", $events);
                         // add new events
-                        mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`" . $table_prefix . "system_eventnames` se WHERE name IN ('" . implode("','", $events) . "')");
+                        mysqli_query($sqlParser->conn, "INSERT IGNORE INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`" . $table_prefix . "system_eventnames` se WHERE name IN ('{$_events}')");
+                        // remove absent events
+                        mysqli_query($sqlParser->conn, "DELETE `pe` FROM {$dbase}.`{$table_prefix}site_plugin_events` `pe` LEFT JOIN {$dbase}.`{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
                     }
                 }
             }

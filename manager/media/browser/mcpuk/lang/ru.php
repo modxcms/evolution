@@ -38,8 +38,11 @@ $lang = array(
     "Please enter new folder name." => "Укажите имя новой папки.",
     "Unallowable characters in folder name." => "Недопустимые символы в имени папки.",
     "Folder name shouldn't begins with '.'" => "Имя папки не может начинаться с '.'",
+    "Unable to create folder." => "Не удалось создать папку.",
+    "Unable to rename folder." => "Не удалось переименовать папку.",
+    "Unable to delete folder." => "Не удалось удалить папку.",
     "Please enter new file name." => "Укажите новое имя файла",
-    "Unallowable characters in file name." => "Недопустимые символны в имени файла.",
+    "Unallowable characters in file name." => "Недопустимые символы в имени файла.",
     "File name shouldn't begins with '.'" => "Имя файла не может начинаться с '.'",
     "Are you sure you want to delete this file?" => "Вы уверены, что хотите удалить этот файл?",
     "Are you sure you want to delete this folder and all its content?" => "Вы уверены, что хотите удалить эту папку и всё её содержимое?",
@@ -111,10 +114,6 @@ $lang = array(
     "Download" => "Скачать",
     "Download files" => "Скачать файлы",
     "Clipboard" => "Буфер обмена",
-    "Checking for new version..." => "Проверяем наличие обновлений...",
-    "Unable to connect!" => "Невозможно подключиться!",
-    "Download version {version} now!" => "Скачать версию {version} сейчас!",
-    "KCFinder is up to date!" => "Вы используете последнюю версию KCFinder'а!",
     "Licenses:" => "Лицензии:",
     "Attention" => "Внимание",
     "Question" => "Вопрос",
@@ -123,6 +122,8 @@ $lang = array(
     "You cannot rename the extension of files!" => "Вы не можете изменять расширения файлов!",
     "Uploading file {number} of {count}... {progress}" => "Загрузка {number} файла из {count}... {progress}",
     "Failed to upload {filename}!" => "Неудачная попытка загрузки {filename}!",
+    "Server error" => "Ошибка при выполнении запроса",
+    "Unable to process server response" => "Ошибка при обработке ответа сервера"
 );
 
 ?>

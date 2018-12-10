@@ -123,7 +123,7 @@ class dataTable extends \autoTable
         }
         $dir = $this->fs->takeFileDir($url);
         $iterator = new \FilesystemIterator($dir);
-        if (!$iterator->valid()) {
+        if (! $iterator->valid()) {
             rmdir($dir);
         }
         if ($cache) {

@@ -41,9 +41,9 @@ class SummaryText
 
     /**
      * SummaryText constructor.
-     * @param $text
-     * @param $action
-     * @param null $break
+     * @param string $text
+     * @param string $action
+     * @param null|string $break
      */
     public function __construct($text, $action, $break = null)
     {
@@ -214,7 +214,7 @@ class SummaryText
                 } else {
                     $next_char = "";
                 }
-                if (!$quotes_on) {
+                if (! $quotes_on) {
                     // Check if it's a tag
                     // On a "<" add 3 if it's an opening tag (like <a href...)
                     // or add only 1 if it's an ending tag (like </a>)
@@ -354,7 +354,7 @@ class SummaryText
                 if (mb_strstr($tag, ' ', 'UTF-8')) {
                     $tag = mb_substr($tag, 0, strpos($tag, ' '), 'UTF-8');
                 }
-                if (!mb_stristr($tag, 'br', 'UTF-8') && !mb_stristr($tag, 'img', 'UTF-8') && !empty($tag)) {
+                if (! mb_stristr($tag, 'br', 'UTF-8') && ! mb_stristr($tag, 'img', 'UTF-8') && ! empty($tag)) {
                     $endTags .= '</' . $tag . '>';
                 }
             }

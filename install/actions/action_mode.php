@@ -5,7 +5,8 @@ if (is_file($base_path . MGR_DIR . '/includes/config.inc.php')) { // Include the
     include_once $base_path . MGR_DIR . '/includes/config.inc.php';
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
     if (isset($dbase)) {
-        if (!$conn = @mysqli_connect($database_server, $database_user, $database_password))
+        $host = explode(':', $database_server, 2);
+        if (!$conn = @mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null))
             $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
         elseif (!@mysqli_select_db($conn, trim($dbase, '`')))
             $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;

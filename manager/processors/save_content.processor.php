@@ -14,30 +14,30 @@ $pagetitle = $modx->db->escape($_POST['pagetitle']);
 $description = $modx->db->escape($_POST['description']);
 $alias = $modx->db->escape($_POST['alias']);
 $link_attributes = $modx->db->escape($_POST['link_attributes']);
-$isfolder = $_POST['isfolder'];
-$richtext = $_POST['richtext'];
-$published = $_POST['published'];
-$parent = $_POST['parent'] != '' ? $_POST['parent'] : 0;
-$template = $_POST['template'];
-$menuindex = !empty($_POST['menuindex']) ? $_POST['menuindex'] : 0;
-$searchable = $_POST['searchable'];
-$cacheable = $_POST['cacheable'];
-$syncsite = $_POST['syncsite'];
+$isfolder = (int)$_POST['isfolder'];
+$richtext = (int)$_POST['richtext'];
+$published = (int)$_POST['published'];
+$parent = $_POST['parent'] != '' ? (int)$_POST['parent'] : 0;
+$template = (int)$_POST['template'];
+$menuindex = !empty($_POST['menuindex']) ? (int)$_POST['menuindex'] : 0;
+$searchable = (int)$_POST['searchable'];
+$cacheable = (int)$_POST['cacheable'];
+$syncsite = (int)$_POST['syncsite'];
 $pub_date = $_POST['pub_date'];
 $unpub_date = $_POST['unpub_date'];
 $document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? array() : $_POST['docgroups'];
-$type = $_POST['type'];
+$type = $modx->db->escape($_POST['type']);
 $contentType = $modx->db->escape($_POST['contentType']);
 $contentdispo = (int)$_POST['content_dispo'];
 $longtitle = $modx->db->escape($_POST['longtitle']);
 $donthit = (int)$_POST['donthit'];
 $menutitle = $modx->db->escape($_POST['menutitle']);
 $hidemenu = (int)$_POST['hidemenu'];
-$aliasvisible = $_POST['alias_visible'];
+$aliasvisible = (int)$_POST['alias_visible'];
 
 /************* webber ********/
-$sd=isset($_POST['dir'])?'&dir='.$_POST['dir']:'&dir=DESC';
-$sb=isset($_POST['sort'])?'&sort='.$_POST['sort']:'&sort=pub_date';
+$sd=isset($_POST['dir']) && strtolower($_POST['dir']) === 'asc' ? '&dir=ASC' : '&dir=DESC';
+$sb=isset($_POST['sort'])?'&sort='.html_escape($_POST['sort'], $modx->config['modx_charset']):'&sort=pub_date';
 $pg=isset($_POST['page'])?'&page='.(int)$_POST['page']:'';
 $add_path=$sd.$sb.$pg;
 
@@ -190,7 +190,7 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 }
 
 $rs = $modx->db->select(
-    "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+    "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value",
     "{$tbl_site_tmplvars} AS tv
         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
@@ -222,7 +222,7 @@ while ($row = $modx->db->getRow($rs)) {
                 // handles checkboxes & multiple selects elements
                 $feature_insert = array ();
                 $lst = $_POST["tv" . $row['id']];
-                while (list ($featureValue, $feature_item) = each($lst)) {
+                foreach($lst as $featureValue => $feature_item) {
                     $feature_insert[count($feature_insert)] = $feature_item;
                 }
                 $tmplvar = implode("||", $feature_insert);
@@ -591,10 +591,10 @@ switch ($actionToTake) {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
             $rs = $modx->db->select(
-                'groups.id, groups.document_group',
-                "{$tbl_document_groups} AS groups
-                    LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups.document_group",
-                "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups.document = '{$id}'"
+                'groups_document.id, groups_document.document_group',
+                "{$tbl_document_groups} AS groups_document
+                    LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups_document.document_group",
+                "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups_document.document = '{$id}'"
                 );
             $old_groups = array();
             while ($row = $modx->db->getRow($rs)) $old_groups[$row['document_group']] = $row['id'];

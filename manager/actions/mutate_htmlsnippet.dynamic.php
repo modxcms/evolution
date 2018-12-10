@@ -119,7 +119,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
     </script>
 
-    <form class="htmlsnippet" id="mutate" name="mutate" method="post" action="index.php">
+    <form name="mutate" method="post" action="index.php" id="mutate" class="htmlsnippet">
         <?php
 
         // invoke OnChunkFormPrerender event

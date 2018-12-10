@@ -80,7 +80,7 @@ table.sysSettings tr.noborder td {border:none;}
     ?>
       <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
         <?php
-        
+
         $currentCategory = '';
                         while ($row = $modx->db->getRow($rs)) {
             $thisCategory = $row['category'];
@@ -96,13 +96,13 @@ table.sysSettings tr.noborder td {border:none;}
             } else {
                 $closeOptGroup = false;
             }
-            
+
             $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
             if ($selectedtext) {
                 $oldTmpId = $row['id'];
                 $oldTmpName = $row['templatename'];
             }
-            
+
             echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
             $currentCategory = $thisCategory;
         }
@@ -130,12 +130,45 @@ table.sysSettings tr.noborder td {border:none;}
         </td>
     </tr>
     <tr>
+      <th><?php echo $_lang['chunk_processor'] ?><br><small>[(chunk_processor)]</small></th>
+      <td >
+          <?php echo wrap_label('DocumentParser', form_radio('chunk_processor', ''));?><br />
+          <?php echo wrap_label('DLTemplate',  form_radio('chunk_processor', 'DLTemplate'));?>
+      </td>
+    </tr>
+    <tr>
+      <th><?php echo $_lang['enable_mootools'] ?><br><small>[(enable_mootools)]</small></th>
+      <td>
+        <?php echo wrap_label($_lang['yes'],form_radio('enable_mootools', 1));?><br />
+        <?php echo wrap_label($_lang['no'], form_radio('enable_mootools', 0));?>
+        <div class="comment">
+            <?php echo $_lang['enable_mootools_message']; ?>          
+        </div>
+      </td>
+      </tr>
+    <tr>
+    <tr>
+      <th><?php echo $_lang['enable_at_syntax_title'] ?><br><small>[(enable_at_syntax)]</small></th>
+      <td >
+          <?php echo wrap_label($_lang['yes'],form_radio('enable_at_syntax', 1));?><br />
+          <?php echo wrap_label($_lang['no'], form_radio('enable_at_syntax', 0));?>
+        <div class="comment">
+            <?php echo $_lang['enable_at_syntax_message']; ?>
+          <ul>
+            <li><a href="https://github.com/modxcms/evolution/wiki/@IF-@ELSEIF-@ELSE-@ENDIF" target="_blank">@IF @ELSEIF @ELSE @ENDIF</a></li>
+            <li>&lt;@LITERAL&gt; {{string}} [*string*] [[string]] &lt;@ENDLITERAL&gt;</li>
+            <li>&lt;!--@- Do not output -@--&gt;</li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
       <th><?php echo $_lang['enable_filter_title'] ?><br><small>[(enable_filter)]</small></th>
       <td >
         <?php
             // Check if PHX is enabled
             $count = $modx->db->getRecordCount(
-              $modx->db->select('id', '[+prefix+]site_plugins', 
+              $modx->db->select('id', '[+prefix+]site_plugins',
               "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
             );
             if($count) {
@@ -147,21 +180,6 @@ table.sysSettings tr.noborder td {border:none;}
         <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>
         <div class="comment"><?php echo $_lang['enable_filter_message']; ?></div>
-      </td>
-    </tr>
-    <tr>
-      <th><?php echo $_lang['enable_at_syntax_title'] ?><br><small>[(enable_at_syntax)]</small></th>
-      <td >
-        <?php echo wrap_label($_lang['yes'],form_radio('enable_at_syntax', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('enable_at_syntax', 0));?>
-        <div class="comment">
-            <?php echo $_lang['enable_at_syntax_message']; ?>
-            <ul>
-                <li><a href="https://github.com/modxcms/evolution/wiki/@IF-@ELSEIF-@ELSE-@ENDIF" target="_blank">@IF @ELSEIF @ELSE @ENDIF</a></li>
-                <li>&lt;@LITERAL&gt; {{string}} [*string*] [[string]] &lt;@ENDLITERAL&gt;</li>
-                <li>&lt;!--@- Do not output -@--&gt;</li>
-            </ul>
-        </div>
       </td>
     </tr>
   <tr>
@@ -220,7 +238,7 @@ table.sysSettings tr.noborder td {border:none;}
 <label><input type="radio" name="docid_incrmnt_method" value="0"
     <?php echo ($docid_incrmnt_method=='0') ? 'checked="checked"' : "" ; ?> />
     <?php echo $_lang['docid_incrmnt_method_0']?></label><br />
-    
+
 <label><input type="radio" name="docid_incrmnt_method" value="1"
     <?php echo ($docid_incrmnt_method=='1') ? 'checked="checked"' : "" ; ?> />
     <?php echo $_lang['docid_incrmnt_method_1']?></label><br />

@@ -10,8 +10,10 @@ require_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 class PHPThumb
 {
 
-    private $thumb = null;
-    protected $fs = null;
+    /** @var \phpthumb */
+    private $thumb;
+    /** @var FS */
+    protected $fs;
     public $debugMessages = '';
 
     /**

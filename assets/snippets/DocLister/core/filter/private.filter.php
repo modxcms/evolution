@@ -23,7 +23,7 @@ class private_DL_filter extends content_DL_filter
      * @param string $filter
      * @return bool
      */
-    public function parseFilter($filter)
+    protected function parseFilter($filter)
     {
         return true;
     }

@@ -98,7 +98,8 @@ if( ! function_exists('get_installmode')) {
             if (!isset($dbase) || empty($dbase)) {
                 $installmode = 0;
             } else {
-                $conn = mysqli_connect($database_server, $database_user, $database_password);
+                $host = explode(':', $database_server, 2);
+                $conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null);
                 if ($conn) {
                     $_SESSION['database_server'] = $database_server;
                     $_SESSION['database_user'] = $database_user;

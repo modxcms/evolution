@@ -6,7 +6,7 @@ class CSSMinify
 
     public function __construct($cssFilesPath = array())
     {
-        if (is_array($cssFilesPath) && !empty($cssFilesPath)) {
+        if (is_array($cssFilesPath) && ! empty($cssFilesPath)) {
             $this->cssPath = $cssFilesPath;
         }
     }

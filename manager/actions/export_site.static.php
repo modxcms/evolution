@@ -40,7 +40,7 @@ if(!$modx->hasPermission('export_static')) {
 				echo $rs;
 			} else {
 				?>
-				<form action="index.php" method="post" name="exportFrm">
+				<form name="exportFrm" method="post" action="index.php">
 					<input type="hidden" name="export" value="export" />
 					<input type="hidden" name="a" value="83" />
 					<style type="text/css">

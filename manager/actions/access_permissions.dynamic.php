@@ -84,7 +84,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_users_tab'] ?></p>
 			<div class="form-group">
 				<b><?= $_lang['access_permissions_add_user_group'] ?></b>
-				<form method="post" action="index.php" name="accesspermissions">
+				<form name="accesspermissions" method="post" action="index.php">
 					<input type="hidden" name="a" value="41" />
 					<input type="hidden" name="operation" value="add_user_group" />
 					<div class="input-group">
@@ -97,9 +97,9 @@ if($modx->db->getRecordCount($rs) < 1) {
 			</div>
 			<?php
 			$rs = $modx->db->select('groupnames.*, users.id AS user_id, users.username user_name', $tbl_membergroup_names . ' AS groupnames
-			LEFT JOIN ' . $tbl_member_groups . ' AS groups ON groups.user_group = groupnames.id
-			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups.member', '', 'groupnames.name, user_name');
-			if($modx->db->getRecordCount($rs) < 1) {
+			LEFT JOIN ' . $tbl_member_groups . ' AS groups_member ON groups_member.user_group = groupnames.id
+			LEFT JOIN ' . $tbl_manager_users . ' AS users ON users.id = groups_member.member', '', 'groupnames.name, user_name');
+            if($modx->db->getRecordCount($rs) < 1) {
 				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
 				<?php
@@ -114,7 +114,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 							echo '</div><div class="form-group">';
 						}
 						?>
-						<form method="post" action="index.php" name="accesspermissions">
+						<form name="accesspermissions" method="post" action="index.php">
 							<input type="hidden" name="a" value="41" />
 							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
 							<input type="hidden" name="operation" value="rename_user_group" />
@@ -155,7 +155,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 			<p class="element-edit-message-tab alert alert-warning"><?= $_lang['access_permissions_resources_tab'] ?></p>
 			<div class="form-group">
 				<b><?= $_lang['access_permissions_add_resource_group'] ?></b>
-				<form method="post" action="index.php" name="accesspermissions">
+				<form name="accesspermissions" method="post" action="index.php">
 					<input type="hidden" name="a" value="41" />
 					<input type="hidden" name="operation" value="add_document_group" />
 					<div class="input-group">
@@ -185,7 +185,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 							echo '</div><div class="form-group">';
 						}
 						?>
-						<form method="post" action="index.php" name="accesspermissions">
+						<form name="accesspermissions" method="post" action="index.php">
 							<input type="hidden" name="a" value="41" />
 							<input type="hidden" name="groupid" value="<?= $row['id'] ?>" />
 							<input type="hidden" name="operation" value="rename_document_group" />
@@ -237,7 +237,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 				?>
 				<div class="form-group">
 					<b><?= $_lang["access_permissions_group_link"] ?></b>
-					<form method="post" action="index.php" name="accesspermissions">
+					<form name="accesspermissions" method="post" action="index.php">
 						<input type="hidden" name="a" value="41" />
 						<input type="hidden" name="operation" value="add_document_group_to_user_group" />
 						<?= $_lang["access_permissions_link_user_group"] ?>

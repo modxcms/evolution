@@ -20,7 +20,6 @@ include_once("{$core_path}lang/english.inc.php");
 if($manager_language !== 'english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
 	include_once("{$core_path}lang/{$manager_language}.inc.php");
 }
-
 // include the logger
 include_once("{$core_path}log.class.inc.php");
 
@@ -179,6 +178,8 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 } else if($rt === true || (is_array($rt) && in_array(true, $rt))) {
 	$matchPassword = true;
 }
+
+$blocked_minutes = (int)$modx->config['blocked_minutes'];
 
 if(!$matchPassword) {
 	jsAlert($_lang['login_processor_wrong_password']);

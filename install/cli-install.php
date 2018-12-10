@@ -1,7 +1,7 @@
 <?php
 /**
  * EVO Cli Installer
- * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y 
+ * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new --installData=n --removeInstall=y
  */
 
 $self = 'install/cli-install.php';
@@ -68,17 +68,17 @@ if ( empty($args) ){
     $cmspassword = readline($_lang['connection_screen_default_admin_password']. ' ');
     $managerlanguage = readline('Мanager language:' . ' [en] ');
     $installData = readline('Instal demo-site (y/n):' . ' [n] ');
-    
+
 }else{
-    
+
     $cli_variables = [];
     foreach ($args as $arg) {
         $tmp = array_map('trim', explode('=', $arg));
         if (count($tmp) === 2) {
             $k = ltrim($tmp[0], '-');
-            
+
             $cli_variables[$k] = $tmp[1];
-            
+
         }
     }
 
@@ -87,11 +87,11 @@ if ( empty($args) ){
     $databaseloginpassword = $cli_variables['database_password'];
     $database_name = $cli_variables['database'];
     $tableprefix = $cli_variables['table_prefix'];
-    
+
     $cmsadmin = $cli_variables['cmsadmin'];
     $cmsadminemail = $cli_variables['cmsadminemail'];
     $cmspassword = $cli_variables['cmspassword'];
-    
+
     $managerlanguage = $cli_variables['language'];
     $installData = $cli_variables['installData'];
     $mode = $cli_variables['mode'];
@@ -100,12 +100,12 @@ if ( empty($args) ){
 }
 
 
-if ($databasehost == '') { $databasehost= 'localhost'; } 
+if ($databasehost == '') { $databasehost= 'localhost'; }
 if ($tableprefix == ''){ $tableprefix = $tableprefixauto; }
-if ($database_connection_method == '') { $database_connection_method = 'SET CHARACTER SET'; } 
-if ($database_collation == '') { $database_collation = 'utf8_general_ci'; } 
+if ($database_connection_method == '') { $database_connection_method = 'SET CHARACTER SET'; }
+if ($database_collation == '') { $database_collation = 'utf8_general_ci'; }
 if ($cmsadmin == ''){ $cmsadmin = 'admin'; }
-if ($managerlanguage == '') { $managerlanguage = 'en'; } 
+if ($managerlanguage == '') { $managerlanguage = 'en'; }
 if ($installData == 'y') { $installData = 1;}
 if ($mode == 'upgrade') { $installMode = 1;}
 
@@ -115,7 +115,7 @@ switch ($managerlanguage) {
     case 'ru':
         $managerlanguage = 'russian-UTF8';
         break;
-    
+
     case 'en':
     default:
         $managerlanguage = 'english';
@@ -284,7 +284,8 @@ if ($installMode == 1) {
     $table_prefix = $tableprefix;
 }
 echo $_lang['creating_database_connection'];
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     $errors++;
     echo $_lang['database_connection_failed'].PHP_EOL;
 } else {
@@ -452,7 +453,8 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 // connect to the database
 echo $_lang['setup_database_create_connection'].': ';
-if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+$host = explode(':', $database_server, 2);
+if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
     echo $_lang["setup_database_create_connection_failed"]." ".$_lang['setup_database_create_connection_failed_note'].PHP_EOL;
     return;
 } else {
@@ -477,7 +479,7 @@ if ($create) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
         echo $_lang['setup_database_creation_failed']." ".$_lang['setup_database_creation_failed_note'].PHP_EOL;
         $errors += 1;
-        
+
         echo 'database charset: ' . $database_charset . PHP_EOL;
         echo 'database collation: ' . $database_collation . PHP_EOL;
 
@@ -615,7 +617,7 @@ if(is_dir($tvPath) && is_readable($tvPath)) {
                 $params['output_widget'],
                 $params['output_widget_params'],
                 "$templatePath/{$params['filename']}", /* not currently used */
-                $params['template_assignments']!="*"?$params['template_assignments']:implode(",",array_map(create_function('$v','return $v[0];'),$mt)), /* comma-separated list of template names */
+                $params['template_assignments']!="*"?$params['template_assignments']:implode(',', array_map(function($value){return isset($value[0]) && is_scalar($value[0]);},$mt)), /* comma-separated list of template names */
                 $params['modx_category'],
                 $params['lock_tv'],  /* value should be 1 or 0 */
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
@@ -1030,7 +1032,7 @@ if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 }
 
 // Install Templates
-$moduleTemplate = $mt; 
+$moduleTemplate = $mt;
 if (!empty($moduleTemplate) || $installData) {
     echo PHP_EOL . $_lang['templates'] . ":" . PHP_EOL;
     //$selTemplates = $_POST['template'];

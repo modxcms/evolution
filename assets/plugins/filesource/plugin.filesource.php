@@ -71,7 +71,7 @@ switch ($modx->event->name)
 {
     case 'OnPluginFormPrerender':
     case 'OnSnipFormPrerender':
-        global $content;
+        global $content, $_lang;
         if(substr(trim($content[$vals]),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
         {
             $content['file_binding'] = str_replace(array(';','\''),'',trim(substr(trim($content[$vals]),$count,250)));
@@ -103,29 +103,28 @@ switch ($modx->event->name)
             else $content['file_binding'] = '';
             $_SESSION['itemname']=$content['name'];
         }
+        if (preg_match('/\s' . $_lang['duplicated_el_suffix'] . '\s?\d*$/', $content['name'])) {
+            $content['file_binding'] = '';
+        }
         //else $_SESSION['itemname']="New snippet";
         break;
     case 'OnSnipFormRender':
     case 'OnPluginFormRender':
         global $content;
-        
         $output = '
-<script type="text/javascript">
-mE1   = new Element("tr");
-mE11  = new Element("th",{"align":"left","styles":{"padding-top":"14px"}});
-mE12  = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
-mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"75","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px"},"events":{"change":function(){documentDirty=true;}}});
-
-mE11.appendText("' . _lang('Static file path') . '");
-mE11.inject(mE1);
-mE122.inject(mE12);
-mE12.inject(mE1);
-
-setPlace = $("displayparamrow");
-
-mE1.inject(setPlace,"after");
-</script>
-';
+        <script>  
+        if (el = document.querySelector(\'#displayparamrow\') || false) {
+          el.innerHTML +=
+              \'<table style="width: 100%; margin-top: 1rem;">\' +
+              \' <tr>\' +
+              \'  <th style="width: 10rem">' . _lang('Static file path') . '</th>\' +
+              \'  <td>\' +
+              \'    <input type="text" class="inputBox" name="filebinding" value="' . $content['file_binding'] . '" maxlength="75" onchange="documentDirty=true;">\' +
+              \'  </td>\' +
+              \' </tr>\' +
+              \'</table>\';
+        }
+        </script>';
         break;
     case 'OnBeforeSnipFormSave':
         if($has_filebinding==='1')

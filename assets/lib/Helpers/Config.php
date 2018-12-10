@@ -10,7 +10,8 @@ use APIhelpers;
 class Config
 {
     private $_cfg = array();
-    protected $fs = null;
+    /** @var FS */
+    protected $fs;
     protected $path = '';
 
     /**
@@ -20,7 +21,7 @@ class Config
      */
     public function __construct($cfg = array())
     {
-        if (!empty($cfg)) {
+        if (! empty($cfg)) {
             $this->setConfig($cfg);
         }
         $this->fs = FS::getInstance();
@@ -69,7 +70,9 @@ class Config
 
             if ($this->fs->checkFile($configFile)) {
                 $json = file_get_contents(MODX_BASE_PATH . $configFile);
-                $config = array_merge($config, jsonHelper::jsonDecode($json, array('assoc' => true), true));
+                /** @var array $json */
+                $json = jsonHelper::jsonDecode($json, array('assoc' => true), true);
+                $config = array_merge($config, $json);
             }
         }
 
@@ -90,7 +93,7 @@ class Config
     /**
      * Сохранение массива настроек
      * @param array $cfg массив настроек
-     * @return int результат сохранения настроек
+     * @return int|bool результат сохранения настроек
      */
     public function setConfig($cfg, $overwrite = false)
     {
@@ -106,7 +109,7 @@ class Config
 
     /**
      * @param $name
-     * @param null $def
+     * @param mixed $def
      * @return mixed
      */
     public function getCFGDef($name, $def = null)

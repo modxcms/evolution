@@ -93,7 +93,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
         case "dropdown": // handler for select boxes
             $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
             $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-            while (list($item, $itemvalue) = each($index_list)) {
+            foreach($index_list as $item => $itemvalue) {
                 list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
@@ -105,7 +105,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
         case "listbox": // handler for select boxes
             $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
             $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-            while (list($item, $itemvalue) = each($index_list)) {
+            foreach($index_list as $item => $itemvalue) {
                 list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
@@ -118,7 +118,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
             $field_value = explode("||", $field_value);
             $field_html .= '<select id="tv' . $field_id . '[]" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
             $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-            while (list($item, $itemvalue) = each($index_list)) {
+            foreach($index_list as $item => $itemvalue) {
                 list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
@@ -145,7 +145,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
             $field_value = !is_array($field_value) ? explode("||", $field_value) : $field_value;
             $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
             static $i = 0;
-            while (list($item, $itemvalue) = each($index_list)) {
+            foreach($index_list as $item => $itemvalue) {
                 list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
@@ -156,7 +156,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
             break;
         case "option": // handles radio buttons
             $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
-            while (list($item, $itemvalue) = each($index_list)) {
+            foreach($index_list as $item => $itemvalue) {
                 list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;

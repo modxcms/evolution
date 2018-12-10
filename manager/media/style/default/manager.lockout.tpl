@@ -1,66 +1,321 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>EVO Content Manager</title>
-	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
-	<meta name="robots" content="noindex, nofollow" />
-	<style type="text/css">
-		/* Neutralize styles, fonts and viewport: ---------------------------------------------------------------- */
-		html, body, form, fieldset { margin: 0; padding: 0; }
-		html { font-size: 100.01%; line-height: 1.5; /* http://meyerweb.com/eric/thoughts/2006/02/08/unitless-line-heights/ */ font-family: sans-serif; height: 100%; color: #333; }
-		body { font-size: 75%; margin-bottom: 1px; background: #F4F4F4; text-shadow: 0 1px 0 #fff; }
-		h1 { padding: 0; margin: 0; font-weight: normal; font-size: 218%; }
-		form { border: 5px solid #EAECEE; padding: 10px; }
-		.sectionHeader { padding: 5px 3px 5px 18px; font-weight: bold; color: #000; background: #EAECEE; }
-		.sectionBody { padding: 20px; display: block; background: #fff; }
-		#mx_loginbox { width: 460px; margin: 30px auto 0; }
-		fieldset.buttonset { text-align: center; border: none; padding-top: 20px; }
-		.loginLicense { width: 460px; color: #B2B2B2; margin: 0.5em auto; font-size: 90%; padding-left: 20px; }
-		.loginLicense a { color: #B2B2B2; }
-		.notice { width: 100%; padding: 5px; border: 1px solid #eee; background-color: #F4F4F4; color: #707070; }
-		#preLoader { position: absolute; z-index: 50000; width: 100%; height: 100%; text-align: center; vertical-align: middle; }
-		.loginMessage { font-size: 11px; color: #000; }
-	</style>
-	<script type="text/javascript">
-		function doLogout() {
-			top.location = '[+logouturl+]';
-		}
-		function gotoHome() {
-			top.location = '[+homeurl+]';
-		}
-	</script>
-	<script type="text/javascript">
-		/* <![CDATA[ */
-		if(top.frames.length) {
-			top.location = self.document.location;
-		}
-		/* ]]> */
-	</script>
-</head>
-<body id="login">
-<!-- start the login box -->
-<div id="mx_loginbox">
-	<form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
-		<!-- the logo -->
-		<div class="sectionHeader">
-			<img src='media/style/[(manager_theme)]/images/misc/login-logo.png' alt='[+logo_slogan+]' />
-		</div>
-		<!-- end #mx_logobox -->
-		<div class="sectionBody">
-			<h1>[(site_name)]</h1>
-			<div class="loginMessage">[+manager_lockout_message+]</div>
-			<fieldset class="buttonset">
-				<input type="button" class="login" id="submitButton" value="[%home%]" onClick="return gotoHome();" />
-				&nbsp;
-				<input type="button" class="login" id="submitButton" value="[+logout+]" onClick="return doLogout();" />
-			</fieldset>
-		</div>
-		<br clear="all" />
-	</form>
-</div>
-<!-- close #mx_loginbox -->
+    <title>[(site_name)] (Evolution CMS Manager Login)</title>
+    <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/ico" href="[+favicon+]">
+    <link rel="stylesheet" type="text/css" href="media/style/[(manager_theme)]/style.css">
+    <style>
+        html {
+            font-size: 16px;
+            }
+        html,
+        body {
+            min-height: 100%;
+            height: 100%;
+            }
+        body.loginbox-center {
+            min-height: 1px;
+            height: auto;
+            }
+        body,
+        body.lightness,
+        body.light,
+        body.dark,
+        body.darkness {
+            background-color: #2a313b !important;
+            background-image: url('[+login_bg+]') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
+            }
+        @media (max-width: 479px) {
+            body,
+            body.lightness,
+            body.light,
+            body.dark,
+            body.darkness {
+                background-image: none !important;
+                }
+            }
+        /* page div */
 
-<!-- convert this to a language include -->
-<p class="loginLicense"><strong>EVO</strong>&trade; is licensed under the GPL license. &copy; 2005-2018 <a href="http://evo.im/" target="_blank">EVO</a>. </p>
+        .page {
+            height: 100%;
+            }
+        @media (min-width: 480px) {
+            .loginbox-center .page {
+                max-width: 25rem;
+                margin-top: 10vh;
+                margin-bottom: 10vh;
+                margin-left: auto;
+                margin-right: auto;
+                height: auto;
+                }
+            }
+        @media (min-width: 1200px) {
+            .loginbox-center .page {
+                margin-top: 20vh;
+                margin-bottom: 20vh;
+                }
+            }
+        .darkness .page {
+            background-color: transparent;
+            }
+        /* loginbox */
+
+        .loginbox {
+            width: 100%;
+            min-height: 100vh;
+            box-shadow: none;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            -webkit-animation-name: anim-loginbox;
+            -webkit-animation-duration: .5s;
+            -webkit-animation-iteration-count: 1;
+            -webkit-animation-timing-function: ease;
+            -webkit-animation-fill-mode: forwards;
+            animation-name: anim-loginbox;
+            animation-duration: .5s;
+            animation-iteration-count: 1;
+            animation-timing-function: ease;
+            animation-fill-mode: forwards;
+            }
+        .loginbox-right .loginbox {
+            -webkit-animation-name: anim-loginbox-right;
+            animation-name: anim-loginbox-right;
+            }
+        .loginbox-center .loginbox {
+            -webkit-animation-name: anim-loginbox-center;
+            animation-name: anim-loginbox-center;
+            }
+        @media (min-width: 480px) {
+            .loginbox {
+                max-width: 25rem;
+                box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, .5);
+                }
+            .loginbox-right .loginbox {
+                margin-left: auto;
+                }
+            .loginbox-center .loginbox {
+                min-height: 1px;
+                }
+            }
+        .loginbox,
+        .dark .loginbox,
+        .darkness .loginbox {
+            background-color: rgba(0, 0, 0, 0.85);
+            transition: background ease-in-out .3s;
+            }
+        @media (max-width: 479px) {
+            .loginbox,
+            .dark .loginbox,
+            .darkness .loginbox {
+                background-color: transparent;
+                }
+            }
+        /* form */
+
+        .loginbox form a {
+            color: #818a91;
+            }
+        .darkness .loginbox form {
+            background-color: transparent;
+            }
+        /* container */
+
+        .container-body {
+            padding: 1.75rem;
+            }
+        @media (min-width: 480px) {
+            .container-body {
+                padding: 2.5rem;
+                }
+            }
+        .darkness > .container-body {
+            background-color: transparent;
+            }
+        /* copyrights */
+
+        .copyrights {
+            width: 100%;
+            padding: .5rem 1.5rem 1.5rem 1.75rem;
+            font-size: .675rem;
+            color: #aaa;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.15);
+            }
+        @media (min-width: 480px) {
+            .copyrights {
+                max-width: 25rem;
+                padding-left: 2.5rem;
+                background-color: rgba(0, 0, 0, 0.85);
+                }
+            .loginbox-right .copyrights {
+                margin-left: auto;
+                }
+            }
+        @media (min-width: 480px) and (max-width: 767px) {
+            .loginbox-center .copyrights {
+                will-change: transform;
+                transform: translate3d(0, 0, 0);
+                -webkit-animation-name: anim-loginbox-center;
+                -webkit-animation-duration: .5s;
+                -webkit-animation-iteration-count: 1;
+                -webkit-animation-timing-function: ease;
+                -webkit-animation-fill-mode: forwards;
+                animation-name: anim-loginbox-center;
+                animation-duration: .5s;
+                animation-iteration-count: 1;
+                animation-timing-function: ease;
+                animation-fill-mode: forwards;
+                }
+            }
+        @media (min-width: 768px) {
+            .copyrights {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                width: auto;
+                max-width: none;
+                text-align: right;
+                background-color: transparent;
+                }
+            .loginbox-right .copyrights {
+                left: 0;
+                right: auto;
+                padding-left: 1.5rem;
+                }
+            .loginbox-center .copyrights {
+                right: auto;
+                left: 50%;
+                transform: translate3d(-50%, 0, 0);
+                }
+            }
+        .copyrights a {
+            color: #fff
+            }
+        /* buttons */
+        .btn {
+            border-radius: 0;
+            }
+        .btn-success {
+            color: #fff !important;
+            background-color: #449d44 !important;
+            border-color: #419641 !important;
+            }
+        .btn-success:hover,
+        .btn-success:focus {
+            background-color: #5cb85c !important;
+            border-color: #5cb85c !important;
+            }
+        /* loginbox keyframes */
+        @-webkit-keyframes anim-loginbox {
+            from {
+                opacity: 0;
+                transform: translate3d(-10%, 0, 0);
+                }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+                }
+            }
+        @keyframes anim-loginbox {
+            from {
+                opacity: 0;
+                transform: translate3d(-10%, 0, 0);
+                }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+                }
+            }
+        @-webkit-keyframes anim-loginbox-right {
+            from {
+                opacity: 0;
+                }
+            to {
+                opacity: 1;
+                }
+            }
+        @keyframes anim-loginbox-right {
+            from {
+                opacity: 0;
+                }
+            to {
+                opacity: 1;
+                }
+            }
+        @-webkit-keyframes anim-loginbox-center {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 1.5rem, 0);
+                }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+                }
+            }
+        @keyframes anim-loginbox-center {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 1.5rem, 0);
+                }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+                }
+            }
+    </style>
+</head>
+<body class="[+manager_theme_style+] [+login_form_position_class+]">
+<div class="page">
+    <div class="tab-page loginbox">
+        <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
+
+            <!-- logo -->
+            <div class="form-group form-group--logo text-center">
+                <a class="logo" href="../" title="[(site_name)]">
+                    <img src="[+login_logo+]" alt="[(site_name)]" id="logo">
+                </a>
+            </div>
+
+            <div class="text-muted">
+                <h2>[(site_name)]</h2>
+
+                [+manager_lockout_message+]
+            </div>
+
+            <!-- actions -->
+            <div class="form-group form-group--actions">
+                <input type="button" class="btn btn-default" value="[+home+]" onclick="return gotoHome();" />
+                <input type="button" class="btn btn-success" value="[+logout+]" onclick="return doLogout();" />
+            </div>
+
+        </form>
+    </div>
+
+    <!-- copyrights -->
+    <div class="copyrights">
+        <p class="loginLicense"></p>
+        <div class="gpl">&copy; 2005-2018 by the <a href="http://evo.im/" target="_blank">EVO</a>. <strong>EVO</strong>&trade; is licensed under the GPL.</div>
+    </div>
+</div>
+
+<!-- script -->
+<script>
+  function doLogout()
+  {
+    top.location = '[+logouturl+]';
+  }
+
+  function gotoHome()
+  {
+    top.location = '[+homeurl+]';
+  }
+</script>
 </body>
 </html>

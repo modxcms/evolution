@@ -37,7 +37,7 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 				break;
 				
 				case 'metatags':
-					$output .= '$j("select[name*\'=metatags\']").parent("td").hide()'."\n";
+					$output .= '$j("select[name*=\'metatags\']").parent("td").hide()'."\n";
 				break;
 				
 				//case 'hidemenu':

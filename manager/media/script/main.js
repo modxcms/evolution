@@ -73,21 +73,24 @@ evo.sortable = function(a, b) {
 
   function onmousedown(e) {
     o.el = this;
-    o.x = e.pageX;
-    o.y = e.pageY;
+    o.x = e.pageX || e.touches[0].pageX;
+    o.y = e.pageY || e.touches[0].pageY;
     o.marginX = parseFloat(getComputedStyle(o.el).marginLeft) + parseFloat(getComputedStyle(o.el).marginRight);
     o.marginY = parseFloat(getComputedStyle(o.el).marginTop) + parseFloat(getComputedStyle(o.el).marginBottom);
     o.el.classList.add(o.handleClass);
     o.el.ownerDocument.addEventListener('mousemove', onmousemove);
     o.el.ownerDocument.addEventListener('mouseup', onmouseup);
+    o.el.ownerDocument.addEventListener('touchmove', onmousemove);
+    o.el.ownerDocument.addEventListener('touchend', onmouseup);
     o.el.ownerDocument.onselectstart = function(e) {
       e.preventDefault();
     };
+    o.el.ownerDocument.body.style.overflow = 'hidden';
   }
 
   function onmousemove(e) {
     if (o.position === 'vertical') {
-      var y = (e.pageY - o.y);
+      var y = ((e.pageY || e.touches[0].pageY) - o.y);
       if (y >= o.el.offsetHeight && o.el.nextElementSibling) {
         o.y += o.el.offsetHeight + o.marginY;
         o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
@@ -104,7 +107,7 @@ evo.sortable = function(a, b) {
       o.el.style.webkitTransform = 'translateY(' + y + 'px)';
       o.el.style.transform = 'translateY(' + y + 'px)';
     } else {
-      var x = (e.pageX - o.x);
+      var x = ((e.pageX || e.touches[0].pageX) - o.x);
       if (x >= o.el.offsetWidth && o.el.nextElementSibling) {
         o.x += o.el.offsetWidth + o.marginX;
         o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
@@ -129,12 +132,16 @@ evo.sortable = function(a, b) {
     o.el.classList.remove(o.handleClass);
     o.el.ownerDocument.removeEventListener('mousemove', onmousemove);
     o.el.ownerDocument.removeEventListener('mouseup', onmouseup);
+    o.el.ownerDocument.removeEventListener('touchmove', onmousemove);
+    o.el.ownerDocument.removeEventListener('touchend', onmouseup);
     o.el.ownerDocument.onselectstart = null;
+    o.el.ownerDocument.body.style.overflow = '';
     o.complete(o.el);
   }
 
   for (var i = 0; i < a.length; i++) {
     a[i].addEventListener('mousedown', onmousedown);
+    a[i].addEventListener('touchstart', onmousedown);
   }
 };
 

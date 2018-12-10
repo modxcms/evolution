@@ -27,7 +27,7 @@ class dir {
         do {
             $file = "$dir/is_writable_" . md5($i++);
         } while (file_exists($file));
-        if (!@touch($file))
+        if (@file_put_contents($file, '') === false)
             return false;
         unlink($file);
         return true;

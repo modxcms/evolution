@@ -195,7 +195,8 @@ switch($installMode){
         break;
     case 1:
         include $base_path . MGR_DIR . '/includes/config.inc.php';
-        if (@ $conn = mysqli_connect($database_server, $database_user, $database_password)) {
+        $host = explode(':', $database_server, 2);
+        if (@ $conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
             if (@ mysqli_query($conn, "USE {$dbase}")) {
                 if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
                     $rs = mysqli_query($conn, "show session variables like 'collation_server'");

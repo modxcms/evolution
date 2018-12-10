@@ -26,7 +26,8 @@ if(!$modx->hasPermission('change_password')) {
 
 <div class="tab-page">
 	<div class="contaier container-body">
-		<form action="index.php?a=34" method="post" name="userform">
+		<form name="userform" method="post" action="index.php">
+            <input type="hidden" name="a" value="34">
 			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
 			<p><?php echo $_lang['change_password_message'] ?></p>
 			<div class="row form-row">

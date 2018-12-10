@@ -57,7 +57,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		}
 	</script>
 	<script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
-	<form name="settings" action="index.php?a=30" method="post">
+	<form name="settings" method="post" action="index.php">
+        <input type="hidden" name="a" value="30">
 
 		<h1>
 			<?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>
@@ -89,47 +90,69 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			</div>
 		</div>
 	</form>
-	<script>
-		jQuery('input:radio').change(function() {
-			documentDirty = true;
-		});
-		jQuery('#furlRowOn').change(function() {
-			jQuery('.furlRow').fadeIn();
-		});
-		jQuery('#furlRowOff').change(function() {
-			jQuery('.furlRow').fadeOut();
-		});
-		jQuery('#udPermsOn').change(function() {
-			jQuery('.udPerms').slideDown();
-		});
-		jQuery('#udPermsOff').change(function() {
-			jQuery('.udPerms').slideUp();
-		});
-		jQuery('#editorRowOn').change(function() {
-			jQuery('.editorRow').slideDown();
-		});
-		jQuery('#editorRowOff').change(function() {
-			jQuery('.editorRow').slideUp();
-		});
-		jQuery('#rbRowOn').change(function() {
-			jQuery('.rbRow').fadeIn();
-		});
-		jQuery('#rbRowOff').change(function() {
-			jQuery('.rbRow').fadeOut();
-		});
-		jQuery('#useSmtp').change(function() {
-			jQuery('.smtpRow').fadeIn();
-		});
-		jQuery('#useMail').change(function() {
-			jQuery('.smtpRow').fadeOut();
-		});
-		jQuery('#captchaOn').change(function() {
-			jQuery('.captchaRow').fadeIn();
-		});
-		jQuery('#captchaOff').change(function() {
-			jQuery('.captchaRow').fadeOut();
-		});
-	</script>
+    <script>
+      jQuery('input:radio').change(function() {
+        documentDirty = true;
+      });
+      jQuery('#furlRowOn').change(function() {
+        jQuery('.furlRow').fadeIn();
+      });
+      jQuery('#furlRowOff').change(function() {
+        jQuery('.furlRow').fadeOut();
+      });
+      jQuery('#udPermsOn').change(function() {
+        jQuery('.udPerms').slideDown();
+      });
+      jQuery('#udPermsOff').change(function() {
+        jQuery('.udPerms').slideUp();
+      });
+      jQuery('#editorRowOn').change(function() {
+        jQuery('.editorRow').slideDown();
+      });
+      jQuery('#editorRowOff').change(function() {
+        jQuery('.editorRow').slideUp();
+      });
+      jQuery('#rbRowOn').change(function() {
+        jQuery('.rbRow').fadeIn();
+      });
+      jQuery('#rbRowOff').change(function() {
+        jQuery('.rbRow').fadeOut();
+      });
+      jQuery('#useSmtp').change(function() {
+        jQuery('.smtpRow').fadeIn();
+      });
+      jQuery('#useMail').change(function() {
+        jQuery('.smtpRow').fadeOut();
+      });
+      jQuery('#captchaOn').change(function() {
+        jQuery('.captchaRow').fadeIn();
+      });
+      jQuery('#captchaOff').change(function() {
+        jQuery('.captchaRow').fadeOut();
+      });
+
+      function setChangesChunkProcessor(item)
+      {
+        item = item || document.querySelector('[name="chunk_processor"]:checked');
+        document.querySelectorAll('[name="enable_at_syntax"], [name="enable_filter"]').forEach(function(el) {
+          if (item.checked && item.value === 'DLTemplate') {
+            el.checked = !!el.value;
+            el.disabled = true;
+          } else {
+            el.disabled = false;
+          }
+        });
+      }
+
+      document.querySelectorAll('[name="chunk_processor"]').forEach(function(item) {
+        item.addEventListener('change', function() {
+          setChangesChunkProcessor(item);
+        }, false);
+      });
+
+      setChangesChunkProcessor();
+
+    </script>
 <?php
 if(is_numeric($_GET['tab'])) {
 	echo '<script type="text/javascript">tpSettings.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';

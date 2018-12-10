@@ -198,7 +198,7 @@ if($which_browser == 'default') {
 
 </script>
 
-<form action="index.php?a=32" method="post" name="userform">
+<form name="userform" method="post" action="index.php">
 	<?php
 
 	// invoke OnUserFormPrerender event
@@ -209,6 +209,7 @@ if($which_browser == 'default') {
 		echo implode("", $evtOut);
 	}
 	?>
+    <input type="hidden" name="a" value="32">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 	<input type="hidden" name="id" value="<?php echo $user ?>">
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
@@ -240,7 +241,9 @@ if($which_browser == 'default') {
 					</tr>
 					<?php if(!empty($userdata['id'])) { ?>
 						<tr id="showname" style="display: <?php echo ($modx->manager->action == '12' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
-							<td colspan="3"><i class="<?php echo $_style["icons_user"] ?>"></i>&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+							<th><?php echo $_lang['username']; ?>:</th>
+							<td>&nbsp;</td>
+							<td><i class="<?php echo $_style["icons_user"] ?>"></i>&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
 								<input type="hidden" name="oldusername" value="<?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?>" />
 							</td>
 						</tr>

@@ -143,7 +143,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         MODX_MANAGER_URL: '<?= MODX_MANAGER_URL ?>',
         user: {
           role: <?= (int)$user['role'] ?>,
-          username: '<?= $user['username'] ?>'
+          username: "<?= html_escape($user['username'], $modx->config['modx_charset']) ?>"
         },
         config: {
           mail_check_timeperiod: <?= $modx->config['mail_check_timeperiod'] ?>,
@@ -153,8 +153,8 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           session_timeout: <?= (int)$modx->config['session_timeout'] ?>,
           site_start: <?= (int)$modx->config['site_start'] ?>,
           tree_page_click: <?=(!empty($modx->config['tree_page_click']) ? (int)$modx->config['tree_page_click'] : 27) ?>,
-          theme: '<?= $modx->config['manager_theme'] ?>',
-          theme_mode: '<?= $modx->config['manager_theme_mode'] ?>',
+          theme: "<?= html_escape($modx->config['manager_theme'], $modx->config['modx_charset']) ?>",
+          theme_mode: "<?= html_escape($modx->config['manager_theme_mode'], $modx->config['modx_charset']) ?>",
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',
@@ -325,9 +325,9 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                         </li>
                         <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
-                                <span class="username"><?= $user['username'] ?></span>
+                                <span class="username"><?= html_escape($user['username'], $modx->config['modx_charset']) ?></span>
                                 <?php if ($user['photo']) { ?>
-                                    <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
+                                    <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . html_escape($user['photo'], $modx->config['modx_charset']) ?>);"></span>
                                 <?php } else { ?>
                                     <span class="icon"><?= $_style['menu_user'] ?></span>
                                 <?php } ?>
@@ -349,13 +349,6 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                         <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
                                     </a>
                                 </li>
-                                <?php
-                                $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
-                                $version = 'Evolution';
-                                ?>
-                                <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
-                                ?>
                             </ul>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
@@ -402,6 +395,13 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
                                             </a>
                                         </li>
                                     <?php } ?>
+                                    <?php
+                                    $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+                                    $version = 'Evolution';
+                                    ?>
+                                    <?php
+                                    echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+                                    ?>
                                 </ul>
                             </li>
                         <?php } ?>

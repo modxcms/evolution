@@ -46,7 +46,7 @@ $allowedfiles = array(
 			if(!isset($_POST['import'])) {
 				echo "<div class=\"element-edit-message\">" . $_lang['import_site_message'] . "</div>";
 				?>
-				<form action="index.php" method="post" name="importFrm">
+				<form name="importFrm" method="post" action="index.php">
 					<input type="hidden" name="import" value="import" />
 					<input type="hidden" name="a" value="95" />
 					<input type="hidden" name="parent" value="0" />

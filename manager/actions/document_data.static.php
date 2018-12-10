@@ -188,9 +188,9 @@ if($numRecords > 0) {
 		//$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
 		//$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
 		if($modx->hasPermission('edit_document')) {
-			$title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a></span>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . html_escape($children['pagetitle'], $modx->config['modx_charset']) . '</span></a></span>';
 		} else {
-			$title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . html_escape($children['pagetitle'], $modx->config['modx_charset']) . '</span></span>';
 		}
 
 		$icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["publish_resource"] . '"><i class="' . $_style["icons_publish_document"] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["unpublish_resource"] . '"><i class="' . $_style["icons_unpublish_resource"] . '" ></i></a>';
@@ -257,7 +257,7 @@ if($numRecords > 0) {
 	<script type="text/javascript" src="media/script/tablesort.js"></script>
 
 	<h1>
-		<i class="fa fa-info"></i><?= iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
+		<i class="fa fa-info"></i><?= html_escape(iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']), $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
 	</h1>
 
 <?= $_style['actionbuttons']['static']['document'] ?>
@@ -279,21 +279,21 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td width="200" valign="top"><?= $_lang['resource_title'] ?>:</td>
-						<td><b><?= $content['pagetitle'] ?></b></td>
+						<td><b><?= html_escape($content['pagetitle'], $modx->config['modx_charset']) ?></b></td>
 					</tr>
 					<tr>
 						<td width="200" valign="top"><?= $_lang['long_title'] ?>:</td>
 						<td>
-							<small><?= $content['longtitle'] != '' ? $content['longtitle'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
+							<small><?= $content['longtitle'] != '' ? html_escape($content['longtitle'], $modx->config['modx_charset']) : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
 						</td>
 					</tr>
 					<tr>
 						<td valign="top"><?= $_lang['resource_description'] ?>:</td>
-						<td><?= $content['description'] != '' ? $content['description'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+						<td><?= $content['description'] != '' ? html_escape($content['description'], $modx->config['modx_charset']) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
 					</tr>
 					<tr>
 						<td valign="top"><?= $_lang['resource_summary'] ?>:</td>
-						<td><?= $content['introtext'] != '' ? $content['introtext'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+						<td><?= $content['introtext'] != '' ? html_escape($content['introtext'], $modx->config['modx_charset']) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
 					</tr>
 					<tr>
 						<td valign="top"><?= $_lang['type'] ?>:</td>
@@ -301,7 +301,7 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td valign="top"><?= $_lang['resource_alias'] ?>:</td>
-						<td><?= $content['alias'] != '' ? $content['alias'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+						<td><?= $content['alias'] != '' ? html_escape($content['alias'], $modx->config['modx_charset']) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
 					</tr>
 					<tr>
 						<td colspan="2">&nbsp;</td>
@@ -311,13 +311,13 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td><?= $_lang['page_data_created'] ?>:</td>
-						<td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= $createdbyname ?></b>)
+						<td><?= $modx->toDateFormat($content['createdon'] + $server_offset_time) ?> (<b><?= html_escape($createdbyname, $modx->config['modx_charset']) ?></b>)
 						</td>
 					</tr>
 					<?php if($editedbyname != '') { ?>
 						<tr>
 							<td><?= $_lang['page_data_edited'] ?>:</td>
-							<td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= $editedbyname ?></b>)
+							<td><?= $modx->toDateFormat($content['editedon'] + $server_offset_time) ?> (<b><?= html_escape($editedbyname, $modx->config['modx_charset']) ?></b>)
 							</td>
 						</tr>
 					<?php } ?>
@@ -349,7 +349,7 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td><?= $_lang['resource_opt_menu_index'] ?>:</td>
-						<td><?= $content['menuindex'] ?></td>
+						<td><?= html_escape($content['menuindex'], $modx->config['modx_charset']) ?></td>
 					</tr>
 					<tr>
 						<td><?= $_lang['resource_opt_show_menu'] ?>:</td>
@@ -371,7 +371,7 @@ if($numRecords > 0) {
 					</tr>
 					<tr>
 						<td><?= $_lang['page_data_template'] ?>:</td>
-						<td><?= $templatename ?></td>
+						<td><?= html_escape($templatename, $modx->config['modx_charset']) ?></td>
 					</tr>
 					<tr>
 						<td><?= $_lang['page_data_editor'] ?>:</td>
@@ -393,7 +393,7 @@ if($numRecords > 0) {
 				<div class="form-group clearfix">
 					<?php if($numRecords > 0) : ?>
 						<div class="float-xs-left">
-							<span class="publishedDoc"><?= $numRecords . ' ' . $_lang['resources_in_container'] ?> (<strong><?= $content['pagetitle'] ?></strong>)</span>
+							<span class="publishedDoc"><?= $numRecords . ' ' . $_lang['resources_in_container'] ?> (<strong><?= html_escape($content['pagetitle'], $modx->config['modx_charset']) ?></strong>)</span>
 						</div>
 					<?php endif; ?>
 					<div class="float-xs-right">

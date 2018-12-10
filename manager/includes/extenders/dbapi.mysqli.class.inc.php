@@ -60,7 +60,8 @@ class DBAPI
         $tstart = $modx->getMicroTime();
         $safe_count = 0;
         do {
-            $this->conn = new mysqli($host, $uid, $pwd, $dbase);
+            $host = explode(':', $host, 2);
+            $this->conn = new mysqli($host[0], $uid, $pwd, $dbase, isset($host[1]) ? $host[1] : null);
             if ($this->conn->connect_error) {
                 $this->conn = null;
                 if (isset($modx->config['send_errormail']) && $modx->config['send_errormail'] !== '0') {
@@ -564,7 +565,7 @@ class DBAPI
         }
         if ($dsq) {
             $r = $this->getRow($dsq, 'num');
-            $out = isset($r[0]) ? $r[0] : false;
+            $out = is_array($r) && array_key_exists(0, $r) ? $r[0] : false;
         }
 
         return $out;

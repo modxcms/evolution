@@ -7,7 +7,7 @@
  */
 $e = $modx->event;
 include_once(MODX_BASE_PATH . 'assets/lib/MODxAPI/modUsers.php');
-if ($e->name == 'OnWebAuthentication') {
+if ($e->name == 'OnWebAuthentication' && isset($userObj)) {
     /**
      * @var modUsers $userObj
      */
@@ -21,7 +21,7 @@ if ($e->name == 'OnWebAuthentication') {
         $userObj->save();
     }
 }
-if ($e->name == 'OnWebLogin') {
+if ($e->name == 'OnWebLogin' && isset($userObj)) {
     if (!$userObj->get('lastlogin')) {
         $userObj->set('lastlogin', time());
     } else {
@@ -38,9 +38,15 @@ if ($e->name == 'OnWebLogin') {
 if ($e->name == 'OnWebPageInit' || $e->name == 'OnPageNotFound') {
     $user = new \modUsers($modx);
     if ($uid = $modx->getLoginUserID('web')) {
+        if ($trackWebUserActivity == 'Yes') {
+            $sid = $modx->sid = session_id();
+            $pageId = (int)$modx->documentIdentifier;
+            $q = $modx->db->query("REPLACE INTO {$modx->getFullTableName('active_users')} (`sid`, `internalKey`, `username`, `lasthit`, `action`, `id`) values('{$sid}',-{$uid}, '{$_SESSION['webShortname']}', '{$modx->time}', 998, {$pageId})");
+            $modx->updateValidatedUserSession();
+        }
         if (isset($_REQUEST[$logoutKey])) {
             $user->logOut($cookieName, true);
-            $page = $modx->config['site_url'] . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
+            $page = $modx->getConfig('site_url') . (isset($_REQUEST['q']) ? $_REQUEST['q'] : '');
             $query = $_GET;
             unset($query[$logoutKey], $query['q']);
             if ($query) {

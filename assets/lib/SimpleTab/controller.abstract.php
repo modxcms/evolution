@@ -72,7 +72,7 @@ abstract class AbstractController
         $ids = isset($_POST['ids']) ? (string)$_POST['ids'] : '';
         $ids = isset($_POST['id']) ? (string)$_POST['id'] : $ids;
         $out['success'] = false;
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             if ($this->data->deleteAll($ids, $this->rid)) {
                 $out['success'] = true;
             }
@@ -90,7 +90,7 @@ abstract class AbstractController
         $ids = isset($_POST['ids']) ? (string)$_POST['ids'] : '';
         $dir = isset($_POST['dir']) ? $_POST['dir'] : 'top';
         $out['success'] = false;
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             if ($this->data->place($ids, $dir, $this->rid)) {
                 $out['success'] = true;
             }
@@ -125,7 +125,7 @@ abstract class AbstractController
      */
     public function listing()
     {
-        if (!$this->rid) {
+        if (! $this->rid) {
             $this->isExit = true;
 
             return;

@@ -2,8 +2,8 @@
 /**
  * EVO Manager language file
  *
- * @version 1.4.4
- * @date 2018/05/02
+ * @version 1.4.6
+ * @date 2018/11/10
  * @author The EVO Project Team
  * @author Piotr Matysiak (pmfx)
  *
@@ -95,7 +95,7 @@ $_lang["cfg_base_url"] = 'MODX_BASE_URL';
 $_lang["cfg_manager_path"] = 'MODX_MANAGER_PATH';
 $_lang["cfg_manager_url"] = 'MODX_MANAGER_URL';
 $_lang["cfg_site_url"] = 'MODX_SITE_URL';
-$_lang["change_name"] = 'Zmień nazwę';
+$_lang["change_name"] = 'Zmień nazwę użytkownika';
 $_lang["change_password"] = 'Zmień hasło';
 $_lang["change_password_confirm"] = 'Potwierdź hasło';
 $_lang["change_password_message"] = 'Proszę wprowadzić nowe hasło, następnie ponowić je i zatwierdzić. Hasło musi mieć minimum 6 znaków. ';
@@ -127,7 +127,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Strona błędu Twojego serwisu je
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Oznacza to, że Twoja strona błędu jest niedostępna dla użytkowników albo nie istnieje. Może to powodować niestabilność i wiele błędnych wpisów w logach serwisu. Upewnij się, że żadna grupa użytkowników nie jest przypisana do strony.';
 $_lang["configcheck_errorpage_unpublished"] = 'Strona błędu Twojego serwisu jest nieopublikowana lub nie istnieje.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Oznacza to, że strona błędu Twojego serwisu jest niedostępna dla odwiedzających. Opublikuj tą stronę albo upewnij się, że jest ona przypisana do istniejącego dokumentu w drzewie zawartości Twojej strony.';
-$_lang["configcheck_filemanager_path"] = 'Obecne ustawienie <a href="/[+MGR_DIR+]/#?a=17&tab=5">File Manager path</a> wygląda na niepoprawne. ';
+$_lang["configcheck_filemanager_path"] = 'Obecne ustawienie <a href="index.php?a=17&tab=5">File Manager path</a> wygląda nieprawidłowo.';
 $_lang["configcheck_filemanager_path_msg"] = 'To może się zdarzyć np. po przeniesieniu instalacji do innego katalogu lub innego serwera. Proszę sprawdzić i zapisać Konfigurację EVO.';
 $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Nie pokazuj tego ponownie.</em></a>';
 $_lang["configcheck_images"] = 'Katalog obrazów nie jest zapisywalny';
@@ -140,7 +140,7 @@ $_lang["configcheck_notok"] = 'Jedno lub więcej z ustawień konfiguracyjnych ni
 $_lang["configcheck_ok"] = 'Sprawdzanie przebiegło pomyślnie - brak ostrzeżeń.';
 $_lang["configcheck_php_gdzip"] = 'Rozszerzenia GD i/albo Zip PHP nie zostały znalezione.';
 $_lang["configcheck_php_gdzip_msg"] = 'Do poprawnego działania EVO potrzebuje włączonych w konfiguracji PHP rozszerzeń GD oraz Zip. EVO będzie wciąż działał poprawnie, jednak nie będzie możliwe korzystanie z wszystkich jego funkcji: managera plików, edytora obrazów oraz Captcha przy logowaniu.';
-$_lang["configcheck_rb_base_dir"] = 'Obecne ustawienie <a href="/[+MGR_DIR+]/#?a=17&tab=6">File base path</a> wygląda nieprawidłowo.';
+$_lang["configcheck_rb_base_dir"] = 'Obecne ustawienie <a href="index.php?a=17&tab=6">File base path</a> wygląda nieprawidłowo.';
 $_lang["configcheck_rb_base_dir_msg"] = 'To może się zdarzyć np. po przeniesieniu instalacji do innego katalogu lub innego serwera. Proszę sprawdzić i zapisać Konfigurację EVO.';
 $_lang["configcheck_register_globals"] = 'register_globals jest włączona w konfiguracji PHP';
 $_lang["configcheck_register_globals_msg"] = 'Taka konfiguracja może zagrozić bezpieczeństwu strony, ponieważ powoduje większą wrażliwość na ataki typu XSS.';
@@ -177,7 +177,7 @@ $_lang["confirm_delete_user"] = 'Czy na pewno chcesz usunąć tego użytkownika?
 $_lang["confirm_duplicate_record"] = 'Czy na pewno chcesz zduplikować ten rekord?';
 $_lang["confirm_empty_trash"] = 'Opróżnienie kosza spowoduje całkowite usunięcie wcześniej skasowanych dokumentów?nnKontynuować?';
 $_lang["confirm_load_depends"] = 'Czy na pewno chcesz załadować ekran Menedżera zależności bez zapisywania zmian?';
-$_lang["confirm_name_change"] = 'Zmiana nazwy użytkownika może wpłynąć na inne aplikacje podlinkowane do panelu administracji. nn Czy na pewno chcesz zmienić nazwę użytkownika?';
+$_lang["confirm_name_change"] = 'Zmiana nazwy użytkownika może wpłynąć na inne aplikacje podłączone do panelu administracji.\n\nCzy na pewno chcesz zmienić tę nazwę użytkownika?';
 $_lang["confirm_publish"] = '\n\nOpublikowanie tego dokumentu spowoduje usunięcie wcześniejszych dat publikacji/zamknięcia publikacji, które mogły być ustawione. Jeśli chcesz zachować te daty wybierz \'edycję\' dokumentu.nnKontynuować?';
 $_lang["confirm_remove_locks"] = 'Użytkownicy czasami zamykają przeglądarkę podczas edycji dokumentu, szablonu, snippeta lub parsera. W ten sposób pozostawiają edytowane pozycje zablokowane. Naciskając OK możesz zdjąć wszystkie aktualne blokady.nnKontynuować?';
 $_lang["confirm_reset_sort_order"] = 'Czy jesteś pewien że chcesz zresetować \"sort order/index\" wszystkich wyświetlonych elementów do 0?';
@@ -436,6 +436,10 @@ $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Wstaw';
 $_lang["maxImageWidth"] = 'Maksymalna szerokość obrazu';
 $_lang["maxImageHeight"] = 'Maksymalna wysokość obrazu';
+$_lang["clientResize"] = 'Zmień rozmiar obrazów po stronie użytkownika';
+$_lang["clientResize_message"] = 'Gdy włączone, rozmiar obrazów zostanie zmieniony przez przeglądarkę, przed wysłaniem na serwer';
+$_lang["noThumbnailsRecreation"] = 'Generuj miniaturki tylko podczas wysyłania';
+$_lang["noThumbnailsRecreation_message"] = 'Przeglądarka plików EVO stworzy miniaturki tylko podczas wysyłania; Jeśli  niektóre pliki nie mają miniaturek, miniaturki dla nich nie zostaną stworzone';
 $_lang["thumbWidth"] = 'Maksymalna szerokość miniatury';
 $_lang["thumbHeight"] = 'Maksymalna wysokość miniatury';
 $_lang["thumbsDir"] = 'Położenie katalogu miniatur';
@@ -514,6 +518,8 @@ $_lang["manager_theme_mode1"] = 'Wszystko jasne';
 $_lang["manager_theme_mode2"] = 'Ciemna nawigacja';
 $_lang["manager_theme_mode3"] = 'Ciemna nawigacja i drzewo zasobów';
 $_lang["manager_theme_mode4"] = 'Wszystko ciemne';
+$_lang['manager_theme_mode_message'] = 'Ustawienie jest traktowane jako domyślne i może być ominięte, gdy użyto przycisku zmiany motywu w drzewie zasobów: <i class="fa fa-lg fa-adjust"></i>';
+$_lang['manager_theme_mode_title'] = 'Motyw kolorystyczny';
 $_lang["messages"] = 'Wiadomości';
 $_lang["messages_all"] = 'Wszystkich';
 $_lang["messages_compose"] = 'Nowa wiadomość';
@@ -593,7 +599,7 @@ $_lang["move_resource"] = 'Przenieś dokument';
 $_lang["move_resource_message"] = 'Możesz przenieść dokument wraz z dokumentami podrzędnymi poprzez zaznaczenie nowego dokumentu nadrzędnego w drzewie. Jeśli wybierzesz dokument, który nie jest folderem, zostanie on w niego zmieniony. Proszę kliknąć na nowym dokumencie nadrzędnym w drzewie.';
 $_lang["move_resource_new_parent"] = 'Proszę wybrać nowy dokument nadrzędny w drzewie dokumentów.';
 $_lang["move_resource_title"] = 'Przenieś dokument';
-$_lang["name"] = 'Nazwa';
+$_lang["name"] = 'Nazwa użytkownika';
 $_lang["new_category"] = 'Nowa kategoria';
 $_lang["new_file_permissions_message"] = 'Przy ładowaniu nowego pliku w Menadżerze Plików, system spróbuje zmienić uprawnienia pliku na podane. Może to nie działać w pewnych przypadkach, np. na serwerze IIS - w takim przypadku musisz zmienić uprawnienia ręcznie.';
 $_lang["new_file_permissions_title"] = 'Uprawnienia nowych plików';
@@ -636,11 +642,11 @@ $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Akcja';
 $_lang["onlineusers_actionid"] = 'ID akcji';
-$_lang["onlineusers_ipaddress"] = 'Adres IP użytkownika';
+$_lang["onlineusers_ipaddress"] = 'Adres IP';
 $_lang["onlineusers_lasthit"] = 'Ostatnio odwiedzone';
 $_lang["onlineusers_message"] = 'Użytkownicy aktywni w ostatnich 20 minutach (';
 $_lang["onlineusers_title"] = 'Zalogowani użytkownicy';
-$_lang["onlineusers_user"] = 'Użytkownik';
+$_lang["onlineusers_user"] = 'Nazwa użytkownika';
 $_lang["onlineusers_userid"] = 'ID Użytkownika';
 $_lang["optimize_table"] = 'Kliknij tutaj, aby zoptymalizować tabelę';
 $_lang["page_data_alias"] = 'Alias';
@@ -695,8 +701,8 @@ $_lang["password_gen_specify"] = 'Pozwól mi wprowadzić hasło:';
 $_lang["password_method"] = 'Metoda powiadamiania o haśle';
 $_lang["password_method_email"] = 'Wyślij nowe hasło emailem.';
 $_lang["password_method_screen"] = 'Pokaż nowe hasło na ekranie.';
-$_lang["password_msg"] = 'Nowym hasłem dla <b>%s</b> jest <b>%s</b>.';
-$_lang["php_version_check"] = 'EVO jest kompatybilny z PHP wersją 5.0.0 i wyższą. This server is using version %s%. Zaktualizuj swoją instalację PHP!';
+$_lang["password_msg"] = 'Nowym hasłem dla <b>%s</b> jest <b>%s</b><br>';
+$_lang["php_version_check"] = 'EVO jest kompatybilne z wersją PHP 5.6.0 i wyższą. Ten serwer używa wersji %s%. Zaktualizuj swoją wersję PHP!';
 $_lang["plugin"] = 'Wtyczka';
 $_lang["plugins"] = 'Wtyczki';
 $_lang["plugin_code"] = 'Kod wtyczki (php)';
@@ -711,6 +717,7 @@ $_lang["plugin_priority"] = 'Edytuj kolejność wykonywania pluginów';
 $_lang["plugin_priority_instructions"] = 'Przeciągnij aby zmienić kojejność pluginów w każdej z kategorii wydarzeń. Plugin który ma być uruchomiony jako pierwszy powinien być na szczycie listy.';
 $_lang["plugin_priority_title"] = 'Kolejność wykonywania pluginów';
 $_lang["purge_plugin"] = 'Usuń przestarzałe wtyczki';
+$_lang["purge_plugin_confirm"] = 'Czy na pewno chcesz usunąć przestarzałe pluginy?';
 $_lang["plugin_title"] = 'Stwórz/edytuj wtyczkę';
 $_lang["preview"] = 'Podgląd';
 $_lang["preview_msg"] = 'To jest podgląd twoich ostatnio zapisanych zmian. Kliknij tutaj aby <a href="javascript:;" onclick="saveRefreshPreview();">zapisać i odświeżyć</a> obecne zmiany';
@@ -956,12 +963,13 @@ $_lang["settings_show_picker_message"] = 'Zmienia wygląd Menedżera i zapisuje 
 $_lang["show_fullscreen_btn"] = 'Przełącznik pełnego ekranu';
 $_lang["show_newresource_btn"] = 'Przycisk nowego zasobu';
 $_lang["settings_site"] = 'Strona';
-$_lang["settings_strip_image_paths_message"] = 'If this is set to \'No\', EVO  will write file browser src\'s (images, files, flash, etc.) as absolute URLs. Relative URLs are helpful should you wish to move your EVO install, e.g., from a staging site to a production site. If you have no idea what this means, it\'s best just to leave it set to \'Yes\'.';
+$_lang["settings_strip_image_paths_message"] = 'Jeśli wybrano "Nie", EVO będzie tworzyć ścieżki do plików (obrazów, plików, filmów itd.) jako absolutne URL. Z kolei URL relatywne są pomocne gdy np. chcesz przenieść swoje EVO z domeny tymczasowej na docelową. Jeśli nie wiesz co to oznacza, wybierz opcję "Tak".';
 $_lang["settings_strip_image_paths_title"] = 'Przepisuj ścieżki przeglądarki';
 $_lang["settings_templvars"] = 'Zmienne szablonu';
 $_lang["settings_title"] = 'Konfiguracja systemu';
 $_lang["settings_ui"] = 'Interfejs i edytor';
 $_lang["settings_users"] = 'Użytkownik';
+$_lang["settings_email_templates"] = 'E-mail i szablony';
 $_lang["show_meta"] = 'Pokazuj zakładkę META tagów i słów kluczowych';
 $_lang["show_meta_message"] = 'Pokazuj zakładkę META tagów i słów kluczowych podczas edycji dokumentu.';
 $_lang["show_tree"] = 'Pokaż drzewo';
@@ -1207,7 +1215,7 @@ $_lang["webpwdreminder_title"] = 'E-mail przypomnienia Web';
 $_lang["websignupemail_message"] = 'Tutaj możesz ustawić treść wiadomości wysyłanej użytkownikowi po utworzeniu dla niego nowego konta. Wiadomość będzie zawierać nazwę użytkownika i hasło. <br /><b>Uwaga:</b> Poniższe znaczniki zostaną zamienione na tekst przy wysyłaniu wiadomości: <br /><br />[+sname+] - Nazwa Twojej strony, <br />[+saddr+] - Adres e-mail, <br />[+surl+] - URL Twojej strony, <br />[+uid+] - Nazwa lub ID użytkownika, <br />[+pwd+] - Hasło użytkownika, <br />[+ufn+] - Pełna nazwa użytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w treści wiadomości, ponieważ w przeciwnym razie użytkownik nie będzie w stanie zalogować się do serwisu!</b>';
 $_lang["websignupemail_title"] = 'E-mail rejestracyjny Web';
 $_lang["allow_multiple_emails_title"] = 'Pozwalaj użytkownikom mieć ten sam e-mail';
-$_lang["allow_multiple_emails_message"] = 'Allows Web Users to share the same email address for situations when a member may not have their own email address or there is just one family email address.<br/>Note: Any password reminder and registration logic will need to account for this option if set to yes.';
+$_lang["allow_multiple_emails_message"] = 'Pozwala użytkownikom Web korzystać z tego samego adresu e-mail. Uwaga: logika snippetów rejestrowania użytkownika i resetowania hasła, będzie musiała wziąć to ustawienie pod uwagę, jeśli wybrano "Tak".';
 $_lang["wednesday"] = 'Środa';
 $_lang["welcome_messages"] = 'Twoja skrzynka wiadomości zawiera <b>%d</b> wiadomość(-ci), z których <b>%s</b> jest nieprzeczytane.';
 $_lang["welcome_title"] = 'Witaj w swoim systemie EVO';
@@ -1242,10 +1250,8 @@ $_lang["enable_filter_title"] = 'Włącz filtry';
 $_lang["enable_filter_message"] = 'Filtry pozwalają na manipulowanie pokazywaniem lub przetwarzaniem tagów. Pozwalają zmodyfikować wartości na poziomie szablonu analogicznie jak PHx. <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">Więcej informacji</a>.'; // todo: change link to documentation
 $_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbudowane filtry będą domyślnie wyłączone';
 
-$_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbudowane filtry będą domyślnie wyłączone';
-
 $_lang["enable_at_syntax_title"] = 'Włącz &lt;@SYNTAX&gt;';
-$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt;(atmark syntax) is simple and lightweight template syntax. This is designed to consider coexistence with HTML tags and content strings.';
+$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt;(atmark syntax) to prosta i lekka składnia szablonów. Została zaprojektowania aby wziąć pod uwagę współistnienie tagów HTML oraz ciągów danych treści.';
 
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
@@ -1264,7 +1270,7 @@ $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
 $_lang["bkmgr_restore_confirm"] = 'Czy jesteś pewien, że chcesz przywrócić kopię zapasową\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
 
-$_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
+$_lang["files.dynamic.php1"] = 'Nowy plik';
 $_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
 $_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
 $_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
@@ -1490,12 +1496,15 @@ $_lang["viewopts_cb_alltabs"] = 'Wszystkie karty';
 $_lang['email_sender_method'] = 'Nadawca wiadomości';
 $_lang['auto'] = 'Wykryj automatycznie';
 $_lang['use_emailsender'] = 'Użyj wartości [(emailsender)]';
-$_lang['email_sender_method_message'] = 'The envelope sender of the message. This will usually be turned into a Return-Path header by the receiver, and is the address that bounces will be sent to. Auto-detect will work in most cases.';
+$_lang['email_sender_method_message'] = 'Nadawca koperty wiadomości. Zwykle zostanie zamieniony na nagłówek Return-Path przez odbiorcę i jest to adres, do którego zostaną wysłane odrzucone wiadomości. Automatyczne wykrywanie będzie działać w większości przypadków.';
 
 $_lang['login_form_position_title'] = 'Pozycja formularza logowania';
 $_lang['login_form_position_left'] = 'Lewa strona';
 $_lang['login_form_position_center'] = 'Wyśrodkowany';
 $_lang['login_form_position_right'] = 'Prawa strona';
+$_lang["login_form_style"] = 'Styl formularza logowania';
+$_lang["login_form_style_dark"] = 'Ciemny';
+$_lang["login_form_style_light"] = 'Jasny';
 $_lang['login_logo_title'] = 'Logo strony logowania';
 $_lang['login_logo_message'] = 'Zalecana szerokość to 360px i typ pliku PNG';
 $_lang['login_bg_title'] = 'Tło strony logowania';
@@ -1504,3 +1513,4 @@ $_lang['login_bg_message'] = 'Zalecana szerokość to 1920px';
 $_lang['manager_menu_position_title'] = 'Położenie głównej nawigacji';
 $_lang['manager_menu_position_top'] = 'Góra';
 $_lang['manager_menu_position_left'] = 'Lewa';
+$_lang['invalid_event_response'] = 'Zdarzenie %s ma nieprawidłowy wynik';
