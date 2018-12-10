@@ -152,7 +152,7 @@ class Register extends Form
                     $uidName => $result,
                     'hash'   => $hash
                 ));
-                $url = $this->getCFGDef('activateTo', $this->modx->config['site_start']);
+                $url = $this->getCFGDef('activateTo', $this->modx->getConfig('site_start'));
                 $this->setField(
                     'activate.url',
                     $this->modx->makeUrl($url, '', $query, 'full')

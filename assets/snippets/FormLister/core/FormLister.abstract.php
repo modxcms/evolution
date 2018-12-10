@@ -122,7 +122,7 @@ abstract class Core
         }
         $this->lexicon = new Lexicon($modx, array(
             'langDir' => 'assets/snippets/FormLister/core/lang/',
-            'lang'    => $this->getCFGDef('lang', $this->modx->config['manager_language'])
+            'lang'    => $this->getCFGDef('lang', $this->modx->getConfig('manager_language'))
         ));
         $this->DLTemplate = \DLTemplate::getInstance($modx);
         $this->DLTemplate->setTemplatePath($this->getCFGDef('templatePath'));
@@ -152,7 +152,7 @@ abstract class Core
     {
         $lexicon = $this->getCFGDef('lexicon');
         $langDir = $this->getCFGDef('langDir', 'assets/snippets/FormLister/core/lang/');
-        $lang = $this->getCFGDef('lang', $this->modx->config['manager_language']);
+        $lang = $this->getCFGDef('lang', $this->modx->getConfig('manager_language'));
         if ($lexicon) {
             $_lexicon = $this->config->loadArray($lexicon);
             if (isset($_lexicon[0])) {
@@ -1128,7 +1128,7 @@ abstract class Core
                 if (isset($redirect['header'])) {
                     $header = $redirect['header'];
                 }
-                $page = isset($redirect['page']) ? $redirect['page'] : $this->modx->config['site_start'];
+                $page = isset($redirect['page']) ? $redirect['page'] : $this->modx->getConfig('site_start');
             }
             if (is_numeric($page)) {
                 $redirect = $this->modx->makeUrl($page, '', $query, 'full');

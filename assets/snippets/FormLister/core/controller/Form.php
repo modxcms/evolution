@@ -37,8 +37,8 @@ class Form extends Core
         $this->mailConfig = array(
             'isHtml'   => $this->getCFGDef('isHtml', 1),
             'to'       => $this->getCFGDef('to'),
-            'from'     => $this->getCFGDef('from', $this->modx->config['emailsender']),
-            'fromName' => $this->getCFGDef('fromName', $this->modx->config['site_name']),
+            'from'     => $this->getCFGDef('from', $this->modx->getConfig('emailsender')),
+            'fromName' => $this->getCFGDef('fromName', $this->modx->getConfig('site_name')),
             'subject'  => $this->getCFGDef('subject'),
             'replyTo'  => $this->getCFGDef('replyTo'),
             'cc'       => $this->getCFGDef('cc'),
@@ -442,7 +442,7 @@ class Form extends Core
             array(
                 'subject'  => $subject,
                 'to'       => $to,
-                'fromName' => $this->getCFGDef($fromParam, $this->modx->config['site_name'])
+                'fromName' => $this->getCFGDef($fromParam, $this->modx->getConfig('site_name'))
             )
         );
         $out = $this->parseMailerParams($out);

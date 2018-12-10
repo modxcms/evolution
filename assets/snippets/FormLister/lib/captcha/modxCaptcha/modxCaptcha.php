@@ -64,7 +64,7 @@ class ModxCaptcha
     {
         // set default words
         $words = "MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
-        $words = $this->modx->config['captcha_words'] ? $this->modx->config['captcha_words'] : $words;
+        $words = $this->modx->getConfig('captcha_words') ? $this->modx->getConfig('captcha_words') : $words;
         $words = str_replace(array(' ', ',,'), array('', ','), $words);
         $arr_words = explode(',', $words);
 
