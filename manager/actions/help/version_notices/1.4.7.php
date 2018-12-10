@@ -11,7 +11,9 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	<li>[U] phpThumb 1.3.3 (AgelxNash)</li>
   	<li>[U] ElementsInTree 1.5.10 (AgelxNash)</li>
   	<li>[U] DocLister 2.4.1 (AgelxNash)</li>
+  	<li>[U] Formlister 1.8.1 (AgelxNash)</li>
   	<li>[U] DocInfo  0.4.1 (AgelxNash)</li>
+  	<li>[U] FileSource 0.1 (Serg)
 	<li>[U] Updated extras url from extras.evolution-cms.com to extras.evo.im (dmi3yy)</li>
 	<li>[U] Updated Help Version Noticies 1.4.2 - 1.4.7 (Nicola)</li>
 	<li>[U] Updated Languages files: English, Italian, German, Spanish and Polish</li>
@@ -22,5 +24,6 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	<li>[F] Fix #888 The FileSource 0.1 is dependent on the mootools (Serg)</li>
 	<li>[F] Fix #892 Duplicated element name issue (Serg)</li>
 	<li>[F] Fix #882 broken extras module link in RSS check (Nicola)</li>
+	<li>[F] Fix for php7 in ddmultiplefields.php</li>
 	<li>[R] Format code save_user_processor (Serg)</li>
 </ul>
