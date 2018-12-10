@@ -143,7 +143,7 @@ class modManagers extends MODxAPI
             $this->close();
             $this->newDoc = false;
 
-            if (!$find = $this->findUser($id)) {
+            if (! $find = $this->findUser($id)) {
                 $this->id = null;
             } else {
                 $this->set('editedon', time());
@@ -175,7 +175,7 @@ class modManagers extends MODxAPI
      */
     public function set($key, $value)
     {
-        if (is_scalar($value) && is_scalar($key) && !empty($key)) {
+        if (is_scalar($value) && is_scalar($key) && ! empty($key)) {
             switch ($key) {
                 case 'password':
                     $this->givenPassword = $value;
@@ -233,20 +233,20 @@ class modManagers extends MODxAPI
             return false;
         }
 
-        if (!$this->checkUnique('manager_users', 'username')) {
+        if (! $this->checkUnique('manager_users', 'username')) {
             $this->log['UniqueUsername'] = 'username not unique <pre>' . print_r($this->get('username'),
                     true) . '</pre>';
 
             return false;
         }
 
-        if (!$this->checkUnique('user_attributes', 'email', 'internalKey')) {
+        if (! $this->checkUnique('user_attributes', 'email', 'internalKey')) {
             $this->log['UniqueEmail'] = 'Email not unique <pre>' . print_r($this->get('email'), true) . '</pre>';
 
             return false;
         }
 
-        if(!$this->get('role')) {
+        if(! $this->get('role')) {
             $this->log['UniqueEmail'] = 'Wrong manager role <pre>' . print_r($this->get('role'), true) . '</pre>';
         }
 
@@ -260,7 +260,7 @@ class modManagers extends MODxAPI
             $this->Uset($key, 'user');
             unset($fld[$key]);
         }
-        if (!empty($this->set['user'])) {
+        if (! empty($this->set['user'])) {
             if ($this->newDoc) {
                 $SQL = "INSERT into {$this->makeTable('manager_users')} SET " . implode(', ', $this->set['user']);
             } else {
@@ -282,7 +282,7 @@ class modManagers extends MODxAPI
             $this->Uset($key, 'attribute');
             unset($fld[$key]);
         }
-        if (!empty($this->set['attribute'])) {
+        if (! empty($this->set['attribute'])) {
             if ($this->newDoc) {
                 $this->set('internalKey', $this->id)->Uset('internalKey', 'attribute');
                 $SQL = "INSERT into {$this->makeTable('user_attributes')} SET " . implode(', ',
@@ -295,7 +295,7 @@ class modManagers extends MODxAPI
         }
         unset($fld['id']);
         foreach ($fld as $key => $value) {
-            if ($value == '' || !$this->isChanged($key)) {
+            if ($value == '' || ! $this->isChanged($key)) {
                 continue;
             }
             $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('user_settings')} WHERE `user` = '{$this->id}' AND `setting_name` = '{$key}'");
@@ -306,7 +306,7 @@ class modManagers extends MODxAPI
             }
         }
         // TODO
-        if (!$this->newDoc && $this->givenPassword) {
+        if (! $this->newDoc && $this->givenPassword) {
             $this->invokeEvent('OnManagerChangePassword', array(
                 'userObj'      => $this,
                 'userid'       => $this->id,
@@ -316,7 +316,7 @@ class modManagers extends MODxAPI
             ), $fire_events);
         }
 
-        if (!empty($this->groupIds)) {
+        if (! empty($this->groupIds)) {
             $this->setUserGroups($this->id, $this->groupIds);
         }
         // TODO
@@ -412,7 +412,7 @@ class modManagers extends MODxAPI
         $b = $tmp->get('blocked');
         $bu = $tmp->get('blockeduntil');
         $ba = $tmp->get('blockedafter');
-        $flag = (($b && !$bu && !$ba) || ($bu && $now < $bu) || ($ba && $now > $ba));
+        $flag = (($b && ! $bu && ! $ba) || ($bu && $now < $bu) || ($ba && $now > $ba));
         unset($tmp);
 
         return $flag;
@@ -434,7 +434,7 @@ class modManagers extends MODxAPI
 
         $flag = $pluginFlag = false;
         if (
-            (null !== $tmp->getID()) && (!$blocker || ($blocker && !$tmp->checkBlock($id)))
+            (null !== $tmp->getID()) && (! $blocker || ($blocker && ! $tmp->checkBlock($id)))
         ) {
             $_password = $tmp->get('password');
             $eventResult = $this->getInvokeEventResult('OnManagerAuthentication', array(
@@ -451,7 +451,7 @@ class modManagers extends MODxAPI
             } else {
                 $pluginFlag = (bool)$eventResult;
             }
-            if (!$pluginFlag) {
+            if (! $pluginFlag) {
                 $hashType = $this->getPasswordHashType($_password);
                 switch ($hashType) {
                     case 'phpass':
@@ -488,7 +488,7 @@ class modManagers extends MODxAPI
      */
     public function logOut($cookieName = 'modx_remember_manager', $fire_events = false)
     {
-        if (!$uid = $this->modx->getLoginUserID('mgr')) {
+        if (! $uid = $this->modx->getLoginUserID('mgr')) {
             return;
         }
         $params = array(
@@ -534,7 +534,7 @@ class modManagers extends MODxAPI
                     $_SESSION['mgrPermissions'] = $this->mgrPermissions;
                     $_SESSION['mgrDocgroups'] = $this->getDocumentGroups();
                     $_SESSION['mgrToken'] = md5($this->get('sessionid'));
-                    if (!empty($remember)) {
+                    if (! empty($remember)) {
                         $this->setAutoLoginCookie($cookieName, $remember);
                     }
                 }
@@ -584,7 +584,7 @@ class modManagers extends MODxAPI
      */
     public function setAutoLoginCookie($cookieName, $remember = true)
     {
-        if (!empty($cookieName) && $this->getID() !== null) {
+        if (! empty($cookieName) && $this->getID() !== null) {
             $secure = $this->isSecure();
             $remember = is_bool($remember) ? $this->getRememberTime() : (int)$remember;
             $cookieValue = $this->get('username');
@@ -659,7 +659,7 @@ class modManagers extends MODxAPI
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('member_groups')} (`user_group`, `member`) VALUES ('{$gid}', '{$uid}')");
                 }
-                if (!$this->newDoc) {
+                if (! $this->newDoc) {
                     $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
                     $this->query("DELETE FROM {$this->makeTable('member_groups')} WHERE `member`={$uid} AND `user_group` NOT IN ({$groupIds})");
                 }

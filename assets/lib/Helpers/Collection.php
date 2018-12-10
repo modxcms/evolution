@@ -93,7 +93,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param $offset
-     * @param null $length
+     * @param null|int $length
      * @return array
      */
     public function slice($offset, $length = null)
@@ -132,7 +132,7 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param $data
-     * @param null $id
+     * @param null|int|string $id
      * @return $this
      */
     public function add($data, $id = null)
@@ -280,10 +280,13 @@ class Collection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        if (! isset($offset)) {
-            return $this->add($value);
+        if ($offset !== null) {
+            $this->set($offset, $value);
+        } else {
+            $this->add($value);
         }
-        $this->set($offset, $value);
+
+        return $this;
     }
 
     /**

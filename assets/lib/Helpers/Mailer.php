@@ -17,8 +17,8 @@ class Mailer
     /**
      * @var MODxMailer $mail
      */
-    protected $mail = null;
-    protected $modx = null;
+    protected $mail;
+    protected $modx;
     public $config = array();
     protected $debug = false;
     protected $queuePath = 'assets/cache/mail/';
@@ -43,7 +43,7 @@ class Mailer
     {
         $this->modx = $modx;
         $this->noemail = (bool)(isset($cfg['noemail']) ? $cfg['noemail'] : 0);
-        if (!$this->noemail) {
+        if (! $this->noemail) {
             $this->mail = new MODxMailer();
             if (method_exists('MODxMailer', 'init')) {
                 $this->mail->init($modx);
@@ -61,7 +61,7 @@ class Mailer
      */
     public function addAddressToMailer($type, $addr)
     {
-        if (!$this->noemail && !empty($addr)) {
+        if (! $this->noemail && ! empty($addr)) {
             $a = array_filter(array_map('trim', explode(',', $addr)));
             foreach ($a as $address) {
                 switch ($type) {
@@ -89,7 +89,7 @@ class Mailer
      */
     public function attachFiles($filelist = array())
     {
-        if (!$this->noemail) {
+        if (! $this->noemail) {
             $contentType = "application/octetstream";
             foreach ($filelist as $file) {
                 if (is_file($file['filepath']) && is_readable($file['filepath'])) {
@@ -108,7 +108,7 @@ class Mailer
     public function send($report)
     {
         //если отправлять некуда или незачем, то делаем вид, что отправили
-        if (!$this->getCFGDef('to') || $this->noemail) {
+        if (! $this->getCFGDef('to') || $this->noemail) {
             return true;
         } elseif (empty($report)) {
             return false;
@@ -127,12 +127,12 @@ class Mailer
 
     /**
      * @param $report
-     * @return bool
+     * @return bool|string
      */
     public function toQueue($report)
     {
         //если отправлять некуда или незачем, то делаем вид, что отправили
-        if (!$this->getCFGDef('to') || $this->noemail) {
+        if (! $this->getCFGDef('to') || $this->noemail) {
             return true;
         } elseif (empty($report)) {
             return false;
@@ -165,7 +165,7 @@ class Mailer
      */
     public function setQueuePath($path = '')
     {
-        if (!empty($path)) {
+        if (! empty($path)) {
             $this->queuePath = $path;
             return true;
         } else {

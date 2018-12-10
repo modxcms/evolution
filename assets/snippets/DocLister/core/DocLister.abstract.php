@@ -48,14 +48,14 @@ abstract class DocLister
      * @var DocumentParser
      * @access protected
      */
-    protected $modx = null;
+    protected $modx;
 
     /**
      * Шаблонизатор чанков
      * @var DLTemplate
      * @access protected
      */
-    protected $DLTemplate = null;
+    protected $DLTemplate;
 
     /**
      * Массив загруженных экстендеров
@@ -133,7 +133,7 @@ abstract class DocLister
      * @var DLdebug|xNop
      * @access public
      */
-    public $debug = null;
+    public $debug;
 
     /**
      * Массив дополнительно подключаемых таблиц с псевдонимами
@@ -160,7 +160,8 @@ abstract class DocLister
     /** @var string имя шаблона обертки для записей */
     public $ownerTPL = '';
 
-    public $FS = null;
+    /** @var \Helpers\FS */
+    public $FS;
     /** @var string результатирующая строка которая была последний раз сгенирирована
      *               вызовами методов DocLister::render и DocLister::getJSON
      */
@@ -175,16 +176,21 @@ abstract class DocLister
     protected $alias = '';
 
     /** @var null|paginate_DL_Extender */
-    protected $extPaginate = null;
+    protected $extPaginate;
 
     /** @var null|Helpers\Config */
-    public $config = null;
+    public $config;
+
+    /**
+     * @var cache_DL_Extender
+     */
+    protected $extCache;
 
     /**
      * Конструктор контроллеров DocLister
      *
      * @param DocumentParser $modx объект DocumentParser - основной класс MODX
-     * @param array $cfg массив параметров сниппета
+     * @param mixed $cfg массив параметров сниппета
      * @param int $startTime время запуска сниппета
      * @throws Exception
      */
@@ -202,7 +208,7 @@ abstract class DocLister
             $this->modx = $modx;
             $this->setDebug(1);
 
-            if (!is_array($cfg) || empty($cfg)) {
+            if (! is_array($cfg) || empty($cfg)) {
                 $cfg = $this->modx->Event->params;
             }
         } else {
@@ -419,7 +425,7 @@ abstract class DocLister
             $this->_table[$name] = $this->modx->getFullTableName($name);
         }
         $table = $this->_table[$name];
-        if (!empty($alias) && is_scalar($alias)) {
+        if (! empty($alias) && is_scalar($alias)) {
             $table .= " as `" . $alias . "`";
         }
 
@@ -1635,7 +1641,7 @@ abstract class DocLister
     {
         $this->debug->debug("getFilters: " . $this->debug->dumpData($filter_string), 'getFilter', 1);
         // the filter parameter tells us, which filters can be used in this query
-        $filter_string = trim($filter_string, ' ;');
+        $filter_string = ltrim(trim($filter_string, ';'));
         if (!$filter_string) {
             return;
         }
@@ -1652,7 +1658,7 @@ abstract class DocLister
                     /**
                      * С правой стороны не выполняется trim, т.к. там находятся значения. А они могу быть чувствительны к пробелам
                      */
-                    $subfilter = $this->getFilters(ltrim($filter) . $lastFilter);
+                    $subfilter = $this->getFilters(ltrim($filter) . ltrim($lastFilter));
                     if (!$subfilter) {
                         $lastFilter = explode(';', $filter, 2);
                         $subfilter = isset($lastFilter[1]) ? $this->getFilters($lastFilter[1]) : '';

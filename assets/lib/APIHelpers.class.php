@@ -80,7 +80,7 @@ class APIhelpers
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
             $out = $data[$key];
         }
-        if (!empty($validate) && is_callable($validate)) {
+        if (! empty($validate) && is_callable($validate)) {
             $out = (($validate($out) === true) ? $out : $default);
         }
         return $out;
@@ -94,14 +94,14 @@ class APIhelpers
      * @license    GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
      * @param string $email проверяемый email
      * @param boolean $dns проверять ли DNS записи
-     * @return boolean Результат проверки почтового ящика
+     * @return boolean|string Результат проверки почтового ящика
      * @author Anton Shevchuk
      */
     public static function emailValidate($email, $dns = true)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             list(, $domain) = explode("@", $email, 2);
-            if (!$dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
+            if (! $dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
                 $error = false;
             } else {
                 $error = 'dns';
@@ -232,7 +232,7 @@ class APIhelpers
             case ($tmp = self::getEnv('HTTP_X_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
-            case (!empty($_SERVER['REMOTE_ADDR'])):
+            case (! empty($_SERVER['REMOTE_ADDR'])):
                 $out = $_SERVER['REMOTE_ADDR'];
                 break;
             default:
@@ -270,13 +270,14 @@ class APIhelpers
                 $out = str_replace(
                     array_keys($chars),
                     array_values($chars),
-                    is_null($charset) ? $data : self::e($data, $charset)
+                    $charset === null ? $data : self::e($data, $charset)
                 );
                 break;
             case is_array($data):
-                $out = $data;
-                foreach ($out as $key => &$val) {
-                    $val = self::sanitarTag($val, $charset, $chars);
+                $out = array();
+                foreach ($data as $key => $val) {
+                    $key = self::sanitarTag($key, $charset, $chars);
+                    $out[$key] = self::sanitarTag($val, $charset, $chars);
                 }
                 break;
             default:
@@ -402,9 +403,7 @@ class APIhelpers
         foreach ($IDs as $item) {
             $item = trim($item);
             if (is_scalar($item) && (int)$item >= 0) { //Fix 0xfffffffff
-                if (!empty($ignore) && in_array((int)$item, $ignore, true)) {
-                    $this->log[] = 'Ignore id ' . (int)$item;
-                } else {
+                if (empty($ignore) || !\in_array((int)$item, $ignore, true)) {
                     $out[] = (int)$item;
                 }
             }

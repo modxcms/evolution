@@ -7,13 +7,13 @@
 abstract class Template
 {
     /**
-     * @var \DocumentParser|null
+     * @var \DocumentParser
      */
-    protected $_modx = null;
+    protected $_modx;
     /**
-     * @var null|string
+     * @var string
      */
-    protected $_tplFolder = null;
+    protected $_tplFolder;
     /**
      * @var string
      */
@@ -47,7 +47,7 @@ abstract class Template
      * Template constructor.
      * @param \DocumentParser $modx
      * @param bool $ajax
-     * @param null $tplFolder
+     * @param null|string $tplFolder
      */
     public function __construct(\DocumentParser $modx, $ajax = false, $tplFolder = null)
     {
@@ -166,7 +166,7 @@ abstract class Template
     /**
      * @param $key
      * @param array $param
-     * @param null $default
+     * @param mixed $default
      * @return mixed|null
      */
     public static function getParam($key, array $param = array(), $default = null)
@@ -177,7 +177,7 @@ abstract class Template
     /**
      * @param $action
      * @param array $data
-     * @param null $module
+     * @param null|int|string $module
      * @param bool $full
      * @return string
      */

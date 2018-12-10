@@ -102,10 +102,9 @@ abstract class Plugin
         $templates = isset($this->params['templates']) ? explode(',', $this->params['templates']) : false;
         $roles = isset($this->params['roles']) ? explode(',', $this->params['roles']) : false;
 
-        $tplFlag = ($this->checkTemplate && !$templates || ($templates && !in_array(
-            $this->params['template'],
-            $templates
-        )));
+        $tplFlag = ($this->checkTemplate && (
+            ! $templates || ($templates && !in_array($this->params['template'],$templates))
+        ));
 
         $documents = isset($this->params['documents']) ? explode(',', $this->params['documents']) : false;
         $docFlag = ($this->checkId && $tplFlag) ? !($documents && in_array($this->params['id'], $documents)) : $tplFlag;
@@ -121,9 +120,9 @@ abstract class Plugin
      */
     public function prerender()
     {
-        if (!$this->checkTable()) {
+        if (! $this->checkTable()) {
             $result = $this->createTable();
-            if (!$result) {
+            if (! $result) {
                 $this->modx->logEvent(0, 3, "Cannot create {$this->table} table.", $this->pluginName);
 
                 return;
@@ -184,7 +183,7 @@ abstract class Plugin
      */
     public function render()
     {
-        if (!$this->checkPermissions()) {
+        if (! $this->checkPermissions()) {
             $output = $this->prerender();
             if ($output !== false) {
                 $ph = $this->getTplPlaceholders();
@@ -205,7 +204,7 @@ abstract class Plugin
      */
     public function renderEmpty()
     {
-        if (!$this->checkPermissions()) {
+        if (! $this->checkPermissions()) {
             $tpl = MODX_BASE_PATH . $this->emptyTpl;
             if ($this->fs->checkFile($tpl)) {
                 $output = '[+js+]' . file_get_contents($tpl);
@@ -249,9 +248,9 @@ abstract class Plugin
         $eventsTable = $this->modx->getFullTableName('system_eventnames');
         foreach ($events as $event) {
             $result = $this->modx->db->select('`id`', $eventsTable, "`name` = '{$event}'");
-            if (!$this->modx->db->getRecordCount($result)) {
+            if (! $this->modx->db->getRecordCount($result)) {
                 $sql = "INSERT INTO {$eventsTable} VALUES (NULL, '{$event}', '{$eventsType}', '{$this->pluginName} Events')";
-                if (!$this->modx->db->query($sql)) {
+                if (! $this->modx->db->query($sql)) {
                     $this->modx->logEvent(0, 3, "Cannot register {$event} event.", $this->pluginName);
                 }
             }
