@@ -104,7 +104,7 @@ switch ($input['mode']) {
         $field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street',
             'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
         $field = $modx->db->escape($field);
-        $modx->db->insert($field, $tbl_user_attributes);
+        $modx->db->insert($field, $modx->getFullTableName('user_attributes'));
 
 		// Save user settings
         saveManagerUserSettings($internalKey);
