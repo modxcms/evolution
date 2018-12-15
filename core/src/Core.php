@@ -161,11 +161,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->instance('path.resources', $this->resourcePath());
         $this->instance('path.bootstrap', $this->bootstrapPath());
 
+        /**
+         * Laravel: $this->config instance of the Illuminate\Config\Repository
+         * EvolutionCMS: $this->config is array
+         * Before loading the provider we merge settings!!!
+         * @TODO: This is dirty code. Any ideas?
+         */
+        $this->saveConfig = $this->config;
+        $this->booting(function () {
+            $this->config = $this->configCompatibility();
+        });
+
         parent::__construct();
 
         $this->initialize();
-
-        $this->config['view']['paths'] = $this['config']->get('view.paths');
     }
 
     public function initialize()
@@ -5744,9 +5753,22 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getSettings()
     {
+        /**
+         * Restore original settings
+         * And hack again at the getSettings() method
+         * @TODO: This is dirty code. Any ideas?
+         */
+        $this->config = $this->saveConfig;
+        $this->saveConfig = [];
+
         if (empty($this->config)) {
             $this->recoverySiteCache();
         }
+
+        /**
+         * @TODO: This is dirty code. Any ideas?
+         */
+        $this->config = $this->configCompatibility();
 
         $this->loadConfig();
 

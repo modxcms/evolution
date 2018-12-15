@@ -7,6 +7,12 @@ trait Settings
      */
     public $config = [];
 
+    /**
+     * Needs only for the configCompatibility hack
+     * @var array
+     */
+    protected $saveConfig = [];
+
     protected $casts = [
         'error_reporting' => 'int',
         'site_start' => 'int',
@@ -188,5 +194,16 @@ trait Settings
     protected function getCastType($key)
     {
         return isset($this->casts[$key]) ? trim(strtolower($this->casts[$key])) : null;
+    }
+
+    /**
+     * Hack for compatibility Laravel with EvolutionCMS
+     * @TODO: This is dirty code. Any ideas?
+     *
+     * @return array
+     */
+    protected function configCompatibility() : array
+    {
+        return array_merge($this->config, ['view' => $this['config']->get('view')]);
     }
 }
