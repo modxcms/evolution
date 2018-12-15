@@ -55,6 +55,7 @@ return [
         'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockServiceProvider::class,
         'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
         'Evolution_UrlProcessor' => EvolutionCMS\Providers\UrlProcessorServiceProvider::class,
+        'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
