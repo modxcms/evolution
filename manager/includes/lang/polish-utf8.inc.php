@@ -1235,8 +1235,9 @@ $_lang["a17_error_reporting_title"] = 'Poziom wykrywania błędów PHP';
 $_lang["a17_error_reporting_msg"] = 'Ustaw poziom wykrywania błędów PHP.';
 $_lang["a17_error_reporting_opt0"] = 'Ignoruj wszystko';
 $_lang["a17_error_reporting_opt1"] = 'Ignoruj ostrzeżenia niskiego poziomu (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Wykrywaj wszystkie błędy poza E_NOTICE';
-$_lang["a17_error_reporting_opt99"] = 'Wykrywaj wszystko';
+$_lang["a17_error_reporting_opt2"] = 'Wykrywaj wszystkie błędy poza E_NOTICE and E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt99"] = 'Wykrywaj wszystko błędy poza E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt199"] = 'Wykrywaj wszystko';
 
 $_lang["pwd_hash_algo_title"] = 'Algorytm haszowania';
 $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';

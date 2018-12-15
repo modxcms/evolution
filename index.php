@@ -65,12 +65,14 @@ if (! file_exists($config['core'] . '/bootstrap.php')) {
     }
     exit;
 }
-require $config['core'] . '/bootstrap.php';
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
 @ini_set('session.use_trans_sid', 0);
 @ini_set('session.use_only_cookies',1);
+
+require $config['core'] . '/bootstrap.php';
+
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 header('Cache-Control: private, must-revalidate');
 ob_start();

@@ -1222,8 +1222,9 @@ $_lang["a17_error_reporting_title"] = 'Detectie level van de PHP foutmelding';
 $_lang["a17_error_reporting_msg"] = 'Bepaal het level van de PHP foutmelding.';
 $_lang["a17_error_reporting_opt0"] = 'Negeer alle';
 $_lang["a17_error_reporting_opt1"] = 'Negeer de waarschuwing van een melding met laag niveau (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">deprecated</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Detecteer alle foutmeldingen behalve E_NOTICE';
-$_lang["a17_error_reporting_opt99"] = 'Detecteer alle';
+$_lang["a17_error_reporting_opt2"] = 'Detecteer alle foutmeldingen behalve E_NOTICE and E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt99"] = 'Detecteer alle foutmeldingen behalve E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt199"] = 'Detecteer alle';
 
 $_lang["pwd_hash_algo_title"] = 'Hash algoritme';
 $_lang["pwd_hash_algo_message"] = 'Wachtwoord hash algoritme.';

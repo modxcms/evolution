@@ -1230,8 +1230,9 @@ $_lang["a17_error_reporting_title"] = 'Обнаружение уровня ош�
 $_lang["a17_error_reporting_msg"] = 'Набор обнаружения уровня ошибок РНР';
 $_lang["a17_error_reporting_opt0"] = 'Игнорировать все';
 $_lang["a17_error_reporting_opt1"] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Обнаружить все ошибки кроме E_NOTICE';
-$_lang["a17_error_reporting_opt99"] = 'Обнаружить все';
+$_lang["a17_error_reporting_opt2"] = 'Обнаружить все ошибки кроме E_NOTICE and E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt99"] = 'Обнаружить все кроме E_USER_DEPRECATED';
+$_lang["a17_error_reporting_opt199"] = 'Обнаружить все';
 
 $_lang["pwd_hash_algo_title"] = 'Алгоритм шифрования';
 $_lang["pwd_hash_algo_message"] = 'Алгоритм шифрования паролей.';

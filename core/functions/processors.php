@@ -233,7 +233,7 @@ if(!function_exists('evalModule')) {
                 default:
                     $error_level = 99;
             }
-            if ($modx->getConfig('error_reporting') === '99' || 2 < $error_level) {
+            if ($modx->getConfig('error_reporting') >= 99 || 2 < $error_level) {
                 $modx->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'],
                     $_SESSION['itemname'] . ' - Module', $error_info['message'], $error_info['line'], $msg);
                 $modx->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");

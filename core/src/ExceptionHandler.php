@@ -5,9 +5,7 @@ use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Exception;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use EvolutionCMS\Tracy\Debugger;
-use EvolutionCMS\Interfaces\TracyPanel;
-
+use EvolutionCMS\Providers\TracyServiceProvider;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php
  */
@@ -22,40 +20,17 @@ class ExceptionHandler
     public function __construct(Container $container)
     {
         $this->container = $container;
-
-        $this->prepareActiveTracy();
-
-        Debugger::enable(
-            ! $this->container['config']->get('tracy.active'),
-            evolutionCMS()->storagePath() . '/logs'
-        );
-        Debugger::$strictMode = false;
-        Debugger::$showLocation = true;
-        //Debugger::$logSeverity = E_NOTICE | E_WARNING;
-
-        $this->injectTracyPanels();
-    }
-
-    protected function prepareActiveTracy()
-    {
-        $flag = $this->container['config']->get('tracy.active');
-        if (is_string($flag)) {
-            $this->container['config']->set(
-                'tracy.active',
-                $flag === 'manager' && $this->container->isLoggedIn('mgr')
-            );
+        $this->container->register(TracyServiceProvider::class);
+        if (! $this->container['config']->get('tracy.active')) {
+            $this->registerHanlders();
         }
     }
 
-    protected function injectTracyPanels() : void
+    protected function registerHanlders()
     {
-        foreach ($this->container['config']->get('tracy.panels') as $panel) {
-            $panel = new $panel;
-            if (is_a($panel, TracyPanel::class)) {
-                $panel->setEvolutionCMS($this->container);
-            }
-            Debugger::getBar()->addPanel($panel);
-        }
+        register_shutdown_function([$this, 'handleShutdown']);
+        set_exception_handler([$this, 'handleException']);
+        set_error_handler([$this, 'phpError']);
     }
 
     /**
@@ -118,6 +93,13 @@ class ExceptionHandler
         }
         if ($this->container->stopOnNotice == false) {
             switch ($nr) {
+                case E_USER_DEPRECATED:
+                    if ($this->container->error_reporting <= 99) {
+                        return true;
+                    }
+                    $isError = false;
+                    $msg = 'PHP User deprecated (this message show logged in only)';
+                    break;
                 case E_NOTICE:
                     if ($this->container->error_reporting <= 2) {
                         return true;
@@ -358,10 +340,10 @@ class ExceptionHandler
             $this->container->logEvent(0, $error_level, $str, $source);
         }
 
-        if ($error_level === 2 && $this->container->error_reporting !== '99') {
+        if ($error_level === 2 && $this->container->error_reporting < 99) {
             return true;
         }
-        if ($this->container->error_reporting === '99' && !isset($_SESSION['mgrValidated'])) {
+        if ($this->container->error_reporting >= 99 && !isset($_SESSION['mgrValidated'])) {
             return true;
         }
         if (!headers_sent()) {

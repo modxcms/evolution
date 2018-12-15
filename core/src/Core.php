@@ -209,9 +209,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function __get($name)
     {
         if ($this->hasEvolutionProperty($name)) {
-            if ($this->getConfig('error_reporting', 0) > 1) {
+            if ($this->getConfig('error_reporting') > 99) {
                 trigger_error(
-                    'Property $' . $name . ' is deprecated and should no longer be used. ',
+                    'Property EvolutionCMS\Core::$' . $name . ' is deprecated and should no longer be used. ',
                     E_USER_DEPRECATED
                 );
             }
@@ -229,36 +229,21 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     function __call($method_name, $arguments)
     {
         $old = $this->getDeprecatedCore();
-        //////////@TODO LOAD DeprecatedCore
         if (method_exists($old, $method_name)) {
-            $error_type = 1;
-        } else {
-            $error_type = 3;
+            if ($this->getConfig('error_reporting') > 99) {
+                trigger_error(
+                    'The EvolutionCMS\Core::' . $method_name . '() method is deprecated and should no longer be used. ',
+                    E_USER_DEPRECATED
+                );
+            }
+
+            return call_user_func_array([$old, $method_name], $arguments);
         }
 
-        if (!isset($this->config['error_reporting']) || 1 < $this->getConfig('error_reporting')) {
-            if ($error_type == 1) {
-                $title = 'Call deprecated method';
-                $msg = $this->getPhpCompat()->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
-            } else {
-                $title = 'Call undefined method';
-                $msg = $this->getPhpCompat()->htmlspecialchars("\$modx->{$method_name}() is undefined function");
-            }
-            $info = debug_backtrace();
-            $m[] = $msg;
-            if (!empty($this->currentSnippet)) {
-                $m[] = 'Snippet - ' . $this->currentSnippet;
-            } elseif (!empty($this->event->activePlugin)) {
-                $m[] = 'Plugin - ' . $this->event->activePlugin;
-            }
-            $m[] = $this->decoded_request_uri;
-            $m[] = str_replace('\\', '/', $info[0]['file']) . '(line:' . $info[0]['line'] . ')';
-            $msg = implode('<br />', $m);
-            $this->logEvent(0, $error_type, $msg, $title);
-        }
-        if (method_exists($old, $method_name)) {
-            return call_user_func_array(array($old, $method_name), $arguments);
-        }
+        trigger_error(
+            'The EvolutionCMS\Core::' . $method_name . '() method is undefined',
+            E_USER_ERROR
+        );
     }
 
     /**
@@ -1733,11 +1718,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function detectError($error)
     {
         $detected = false;
-        if ($this->getConfig('error_reporting') == 99 && $error) {
+        if ($this->getConfig('error_reporting') === 199 && $error) {
             $detected = true;
-        } elseif ($this->getConfig('error_reporting') == 2 && ($error & ~E_NOTICE)) {
+        } elseif ($this->getConfig('error_reporting') === 99 && ($error & ~E_USER_DEPRECATED)) {
             $detected = true;
-        } elseif ($this->getConfig('error_reporting') == 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT)) {
+        } elseif ($this->getConfig('error_reporting') === 2 && ($error & ~E_NOTICE & ~E_USER_DEPRECATED)) {
+            $detected = true;
+        } elseif ($this->getConfig('error_reporting') === 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT)) {
             $detected = true;
         }
 
@@ -2280,9 +2267,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $snippetModel = $snippetModelCollection->first();
             $snip_content = $snippetModel->snippet;
             $snip_prop = $snippetModel->properties;
+
             $snip_prop = array_merge(
                 $this->parseProperties($snip_prop),
-                $this->parseProperties($snippetModel->activeModule->properties)
+                $this->parseProperties(optional($snippetModel->activeModule)->properties ?? [])
             );
             $snip_prop = empty($snip_prop) ? '{}' : json_encode($snip_prop);
 

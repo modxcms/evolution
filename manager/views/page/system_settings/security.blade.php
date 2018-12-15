@@ -111,6 +111,7 @@
                 1 => ManagerTheme::getLexicon('a17_error_reporting_opt1'),
                 2 => ManagerTheme::getLexicon('a17_error_reporting_opt2'),
                 99 => ManagerTheme::getLexicon('a17_error_reporting_opt99'),
+                199 => ManagerTheme::getLexicon('a17_error_reporting_opt199'),
             ],
             'comment' => ManagerTheme::getLexicon('a17_error_reporting_msg')
         ])
