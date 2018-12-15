@@ -37,7 +37,7 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = $modx->getConfig('number_of_results', 100);
+$limit = $modx->getConfig('number_of_results');
 header('Content-Type: text/html; charset='.$modx->getConfig('modx_charset'), true);
 
 if (isset($action)) {

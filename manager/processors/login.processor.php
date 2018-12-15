@@ -284,7 +284,7 @@ if(!$activeSession) {
 }
 
 $log = new EvolutionCMS\Legacy\LogHandler();
-$log->initAndWriteLog('Logged in', $modx->getLoginUserID(), $_SESSION['mgrShortname'], '58', '-', 'MODX');
+$log->initAndWriteLog('Logged in', $modx->getLoginUserID('mgr'), $_SESSION['mgrShortname'], '58', '-', 'MODX');
 
 // invoke OnManagerLogin event
 $modx->invokeEvent('OnManagerLogin', array(

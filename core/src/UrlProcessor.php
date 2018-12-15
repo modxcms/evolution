@@ -451,8 +451,8 @@ class UrlProcessor
     {
         $out = false;
         if ($alias !== '') {
-            $table = $this->getFullTableName('site_content');
-            $query = $this->db->query("SELECT 
+            $table = $this->core->getDatabase()->getFullTableName('site_content');
+            $query = $this->core->getDatabase()->query("SELECT 
                 `sc`.`id` AS `hidden_id`,
                 `children`.`id` AS `child_id`,
                 children.alias AS `child_alias`,
@@ -462,7 +462,7 @@ class UrlProcessor
               LEFT JOIN " . $table . " AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
               WHERE `sc`.`parent` = '" . (int)$parentid . "' AND `sc`.`alias_visible` = '0'
               GROUP BY `children`.`id`");
-            while ($child = $this->db->getRow($query)) {
+            while ($child = $this->core->getDatabase()->getRow($query)) {
                 if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
                     $out = $child['child_id'];
                     break;

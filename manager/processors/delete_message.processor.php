@@ -18,7 +18,7 @@ if (!$message) {
     $modx->webAlertAndQuit("Wrong number of messages returned!");
 }
 
-if ($message['recipient']!=$modx->getLoginUserID()) {
+if ($message['recipient']!=$modx->getLoginUserID('mgr')) {
     $modx->webAlertAndQuit("You are not allowed to delete this message!");
 }
 

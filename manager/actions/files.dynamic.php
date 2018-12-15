@@ -9,7 +9,7 @@ $token_check = checkToken();
 $newToken = makeToken();
 
 // settings
-$theme_image_path = MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$theme_image_path = MODX_MANAGER_URL . 'media/style/' . $modx->getConfig('manager_theme') . '/images/';
 $excludes = array(
     '.',
     '..',

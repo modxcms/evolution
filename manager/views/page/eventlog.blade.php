@@ -8,14 +8,16 @@
 
     // initialize page view state - the $_PAGE object
     $modx->getManagerApi()->initPageViewState();
-    $_PAGE = [];
+    $_PAGE = [
+        'vs' => []
+    ];
 
     // get and save search string
     if (get_by_key($_REQUEST, 'op') === 'reset') {
         $sqlQuery = $query = '';
         $_PAGE['vs']['search'] = '';
     } else {
-        $sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
+        $sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : get_by_key($_PAGE, 'vs.search');
         if (!is_numeric($sqlQuery)) {
             $sqlQuery = $modx->getDatabase()->escape($query);
         }
@@ -151,7 +153,7 @@
                         if ($listmode == '1') {
                             $grd->pageSize = 0;
                         }
-                        if ($_REQUEST['op'] == 'reset') {
+                        if (get_by_key($_REQUEST, 'op') === 'reset') {
                             $grd->pageNumber = 1;
                         }
                         // render grid

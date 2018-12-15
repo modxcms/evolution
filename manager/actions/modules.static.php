@@ -9,18 +9,20 @@ if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') 
 // initialize page view state - the $_PAGE object
 $modx->getManagerApi()->initPageViewState();
 
+$_PAGE = [];
+
 // get and save search string
-if ($_REQUEST['op'] == 'reset') {
+if (get_by_key($_REQUEST, 'op') == 'reset') {
     $query = '';
     $_PAGE['vs']['search'] = '';
 } else {
-    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
+    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : get_by_key($_PAGE, 'vs.search');
     $sqlQuery = $modx->getDatabase()->escape($query);
     $_PAGE['vs']['search'] = $query;
 }
 
 // get & save listmode
-$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : $_PAGE['vs']['lm'];
+$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : get_by_key($_PAGE, 'vs.lm');
 $_PAGE['vs']['lm'] = $listmode;
 
 
@@ -111,7 +113,7 @@ echo $cm->render();
 				FROM ' . $modx->getDatabase()->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
+                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1
                 ORDER BY sm.name');
             if ($modx->hasPermission('edit_module')) {
                 $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
@@ -124,7 +126,7 @@ echo $cm->render();
             $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
-        $grd = new \EvolutionCMS\Support\DataGrid('', $rs, $number_of_results); // set page size to 0 t show all items
+        $grd = new \EvolutionCMS\Support\DataGrid('', $rs, 0); // set page size to 0 t show all items
         $grd->noRecordMsg = $_lang["no_records_found"];
         $grd->cssClass = "table data";
         $grd->columnHeaderClass = "tableHeader";
@@ -138,7 +140,7 @@ echo $cm->render();
         if ($listmode == '1') {
             $grd->pageSize = 0;
         }
-        if ($_REQUEST['op'] == 'reset') {
+        if (get_by_key($_REQUEST, 'op') === 'reset') {
             $grd->pageNumber = 1;
         }
         // render grid

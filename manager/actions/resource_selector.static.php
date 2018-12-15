@@ -177,7 +177,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
             <div class="row">
                 <div class="table-responsive">
                     <?php
-                    $grd = new \EvolutionCMS\Support\DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+                    $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 0); // set page size to 0 t show all items
                     $grd->noRecordMsg = $_lang["no_records_found"];
                     $grd->cssClass = "table data nowrap";
                     $grd->columnHeaderClass = "tableHeader";

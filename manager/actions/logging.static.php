@@ -257,7 +257,7 @@ if ($limit < 1) {
                         <td class="text-nowrap"><?= '[' . $logentry['action'] . '] ' . $logentry['message'] ?></td>
                         <td class="text-xs-right"><?= $logentry['itemid'] ?></td>
                         <td><?= $item ?></td>
-                        <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $server_offset_time) ?></td>
+                        <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $modx->getConfig('server_offset_time')) ?></td>
                         <td class="text-nowrap"><?= $logentry['ip'] ?></td>
                         <td class="text-nowrap"><?= $logentry['useragent'] ?></td>
                     </tr>

@@ -45,7 +45,7 @@ if (isset($_REQUEST['searchid'])) {
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
                         $option[] = '<option value="0"' . $selected . '>(blank)</option>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $templatename = htmlspecialchars($row['templatename'], ENT_QUOTES, $modx->config['modx_charset']);
+                            $templatename = htmlspecialchars($row['templatename'], ENT_QUOTES, $modx->getConfig('modx_charset'));
                             $selected = $row['id'] == $templateid ? ' selected="selected"' : '';
                             $option[] = sprintf('<option value="%s"%s>%s(%s)</option>', $row['id'], $selected, $templatename, $row['id']);
                         }
@@ -83,11 +83,12 @@ if (isset($_REQUEST['submitok'])) {
     $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
     $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
 
-    $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, ManagerTheme::getCharset());
-    $searchlongtitle = $modx->getDatabase()->escape(trim($_REQUEST['searchfields']));
-    $search_alias = $modx->getDatabase()->escape(trim($_REQUEST['searchfields']));
+    $searchfields = trim(get_by_key($_REQUEST, 'searchfields', '', 'is_scalar'));
+    $searchlongtitle = $modx->getDatabase()->escape($searchfields);
+    $search_alias = $modx->getDatabase()->escape($searchfields);
+    $searchfields = htmlentities($searchfields, ENT_QUOTES, ManagerTheme::getCharset());
     $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? (int)$_REQUEST['templateid'] : '';
-    $searchcontent = $modx->getDatabase()->escape($_REQUEST['content']);
+    $searchcontent = $modx->getDatabase()->escape(get_by_key($_REQUEST, 'content', '', 'is_scalar'));
 
     $fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';
 
@@ -97,7 +98,7 @@ if (isset($_REQUEST['submitok'])) {
     $idFromAlias = false;
     if (isset($_REQUEST['url']) && $_REQUEST['url'] !== '') {
         $url = $modx->getDatabase()->escape($_REQUEST['url']);
-        $friendly_url_suffix = $modx->config['friendly_url_suffix'];
+        $friendly_url_suffix = $modx->getConfig('friendly_url_suffix');
         $base_url = MODX_BASE_URL;
         $site_url = MODX_SITE_URL;
         $url = preg_replace('@' . $friendly_url_suffix . '$@', '', $url);
@@ -206,8 +207,7 @@ if (isset($_REQUEST['submitok'])) {
     <div class="tab-page">
         <div class="container container-body">
             <?php
-            if ($_GET['ajax'] != 1) {
-
+            if ((int)get_by_key($_GET, 'ajax', 0) !== 1) {
                 if ($limit < 1) {
                     echo $_lang['search_empty'];
                 } else {

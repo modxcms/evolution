@@ -4765,14 +4765,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * Returns current user id.
      *
      * @param string $context . Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
-     * @return string
+     * @return bool|int
      */
     public function getLoginUserID($context = '')
     {
         $out = false;
 
         if (!empty($context)) {
-            if (is_scalar($context) && isset($_SESSION[$context . 'Validated'])) {
+            if (\is_string($context) && isset($_SESSION[$context . 'Validated'])) {
                 $out = $_SESSION[$context . 'InternalKey'];
             }
         } else {
@@ -4787,7 +4787,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
         }
-        return $out;
+        return $out === false ? false : (int)$out;
     }
 
     /**

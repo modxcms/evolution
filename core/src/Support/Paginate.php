@@ -106,12 +106,18 @@ class Paginate implements PaginginateInterface
         if ($this->int_cur_position != 0) {
             $array_paging['first_link'] = "<a href=\"$PHP_SELF?int_cur_position=0" . $this->str_ext_argv . "\">";
             $array_paging['previous_link'] = "<a href=\"$PHP_SELF?int_cur_position=" . ($this->int_cur_position - $this->int_num_result) . $this->str_ext_argv . "\">";
+        } else {
+            $array_paging['first_link'] = '';
+            $array_paging['previous_link'] = '';
         }
 
         if (($this->int_nbr_row - $this->int_cur_position) > $this->int_num_result) {
             $int_new_position = $this->int_cur_position + $this->int_num_result;
             $array_paging['last_link'] = "<a href=\"$PHP_SELF?int_cur_position=" . $this->int_nbr_row . $this->str_ext_argv . "\">";
             $array_paging['next_link'] = "<a href=\"$PHP_SELF?int_cur_position=$int_new_position" . $this->str_ext_argv . "\">";
+        } else {
+            $array_paging['last_link'] = '';
+            $array_paging['next_link'] = '';
         }
 
         return $array_paging;

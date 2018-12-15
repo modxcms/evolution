@@ -28,7 +28,7 @@ $children = array();
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID();
+$udperms->user = $modx->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
@@ -49,7 +49,7 @@ if (count($children)>0) {
     $modx->getDatabase()->update(
         array(
             'deleted'   => 1,
-            'deletedby' => $modx->getLoginUserID(),
+            'deletedby' => $modx->getLoginUserID('mgr'),
             'deletedon' => $deltime,
         ), $modx->getDatabase()->getFullTableName('site_content'), "id IN (".implode(", ", $children).")");
 }
@@ -74,7 +74,7 @@ if ($modx->getConfig('unauthorized_page')==$id) {
 $modx->getDatabase()->update(
     array(
         'deleted'   => 1,
-        'deletedby' => $modx->getLoginUserID(),
+        'deletedby' => $modx->getLoginUserID('mgr'),
         'deletedon' => $deltime,
     ), $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'");
 

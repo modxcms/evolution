@@ -21,19 +21,52 @@ switch($modx->getManagerApi()->action) {
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID('mgr') . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
 }
 // end check for lock
 
+$userdata = [
+    'fullname' => '',
+    'blocked' => 0,
+    'blockeduntil' => 0,
+    'blockedafter' => 0,
+    'failedlogins' => 0,
+    'email' => '',
+    'phone' => '',
+    'mobilephone' => '',
+    'dob' => 0,
+    'gender' => 3,
+    'country' => '',
+    'street' => '',
+    'city' => '',
+    'state' => '',
+    'zip' => '',
+    'fax' => '',
+    'photo' => '',
+    'comment' => '',
+    'role' => ''
+];
+$usersettings = [
+    'allowed_days' => '',
+    'allowed_ip' => '',
+    'manager_login_startup' => '',
+    'which_browser' => 'default'
+];
+$usernamedata = [
+    'username' => ''
+];
+
 if($modx->getManagerApi()->action == '12') {
 	// get user attribute
 	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_attributes'), "internalKey = '{$user}'");
-	$userdata = $modx->getDatabase()->getRow($rs);
+    $userdatatmp = $modx->getDatabase()->getRow($rs);
 	if(!$userdata) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
+    $userdata = array_merge($userdata, $userdatatmp);
+    unset($userdatatmp);
 
     if($_SESSION['mgrRole'] != 1 && $userdata['role'] == 1) {
         $modx->webAlertAndQuit('Illegal attempt to create/modify administrator by non-administrator!');
@@ -42,7 +75,6 @@ if($modx->getManagerApi()->action == '12') {
 
 	// get user settings
 	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_settings'), "user = '{$user}'");
-	$usersettings = array();
 	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
 	// manually extract so that user display settings are not overwritten
 	foreach($usersettings as $k => $v) {
@@ -59,17 +91,14 @@ if($modx->getManagerApi()->action == '12') {
 	}
 	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
-	$userdata = array();
-	$usersettings = array();
-	$usernamedata = array();
 	$_SESSION['itemname'] = $_lang["new_user"];
 }
 
 // avoid doubling htmlspecialchars (already encoded in DB)
 foreach($userdata as $key => $val) {
-	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->config['modx_charset']);
+	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->getConfig('modx_charset'));
 };
-$usernamedata['username'] = html_entity_decode($usernamedata['username'], ENT_NOQUOTES, $modx->config['modx_charset']);
+$usernamedata['username'] = html_entity_decode($usernamedata['username'], ENT_NOQUOTES, $modx->getConfig('modx_charset'));
 
 // restore saved form
 $formRestored = false;
@@ -81,7 +110,7 @@ if($modx->getManagerApi()->hasFormValues()) {
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
 	$usersettings = array_merge($usersettings, $userdata);
-	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
+	$usersettings['allowed_days'] = isset($_POST['allowed_days']) && is_array($_POST['allowed_days']) ? implode(',', $_POST['allowed_days']) : '';
 	extract($usersettings, EXTR_OVERWRITE);
 }
 
@@ -94,8 +123,8 @@ if($manager_language != "english" && file_exists(MODX_MANAGER_PATH . "includes/l
 asort($_country_lang);
 
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
-if($which_browser == 'default') {
-	$which_browser = $modx->configGlobal['which_browser'] ? $modx->configGlobal['which_browser'] : $modx->config['which_browser'];
+if($usersettings['which_browser'] === 'default') {
+    $usersettings['which_browser'] = $modx->configGlobal['which_browser'] ?? $modx->getConfig('which_browser');
 }
 ?>
 <script type="text/javascript">
@@ -186,7 +215,7 @@ if($which_browser == 'default') {
 			document.userform.save.click();
 		},
 		delete: function() {
-			<?php if($_GET['id'] == $modx->getLoginUserID()) { ?>
+			<?php if(get_by_key($_GET, 'id', 0, 'is_scalar') === $modx->getLoginUserID('mgr')) { ?>
 			alert("<?php echo $_lang['alert_delete_self']; ?>");
 			<?php } else { ?>
 			if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
@@ -228,7 +257,7 @@ if($which_browser == 'default') {
 
 		<div class="tab-pane" id="userPane">
 			<script type="text/javascript">
-				tpUser = new WebFXTabPane(document.getElementById("userPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+				tpUser = new WebFXTabPane(document.getElementById("userPane"), <?php echo $modx->getConfig('remember_last_tab') === true ? 'true' : 'false'; ?> );
 			</script>
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -265,10 +294,10 @@ if($which_browser == 'default') {
 							<span style="display:<?php echo $modx->getManagerApi()->action == "11" ? "block" : "none"; ?>" id="passwordBlock">
 							<fieldset style="width:300px">
 								<legend><?php echo $_lang['password_gen_method']; ?></legend>
-								<input type=radio name="passwordgenmethod" value="g" <?php echo $_POST['passwordgenmethod'] == "spec" ? "" : 'checked="checked"'; ?> />
+								<input type=radio name="passwordgenmethod" value="g" <?php echo get_by_key($_POST, 'passwordgenmethod') === 'spec' ? '' : 'checked="checked"'; ?> />
 								<?php echo $_lang['password_gen_gen']; ?>
 								<br />
-								<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod'] == "spec" ? 'checked="checked"' : ""; ?>>
+								<input type=radio name="passwordgenmethod" value="spec" <?php echo get_by_key($_POST, 'passwordgenmethod') === 'spec' ? 'checked="checked"' : ""; ?>>
 								<?php echo $_lang['password_gen_specify']; ?>
 								<br />
 								<div>
@@ -283,10 +312,10 @@ if($which_browser == 'default') {
 							<br />
 							<fieldset style="width:300px">
 								<legend><?php echo $_lang['password_method']; ?></legend>
-								<input type=radio name="passwordnotifymethod" value="e" <?php echo $_POST['passwordnotifymethod'] == "e" ? 'checked="checked"' : ""; ?> />
+								<input type=radio name="passwordnotifymethod" value="e" <?php echo get_by_key($_POST, 'passwordnotifymethod') === 'e' ? 'checked="checked"' : ""; ?> />
 								<?php echo $_lang['password_method_email']; ?>
 								<br />
-								<input type=radio name="passwordnotifymethod" value="s" <?php echo $_POST['passwordnotifymethod'] == "e" ? "" : 'checked="checked"'; ?> />
+								<input type=radio name="passwordnotifymethod" value="s" <?php echo get_by_key($_POST, 'passwordnotifymethod') === 'e' ? '' : 'checked="checked"'; ?> />
 								<?php echo $_lang['password_method_screen']; ?>
 							</fieldset>
 							</span></td>
@@ -406,7 +435,7 @@ if($which_browser == 'default') {
 						<tr>
 							<th><?php echo $_lang['user_prevlogin']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><?php echo $modx->toDateFormat($userdata['lastlogin'] + $server_offset_time) ?></td>
+							<td><?php echo $modx->toDateFormat($userdata['lastlogin'] + $modx->getConfig('server_offset_time')) ?></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_failedlogincount']; ?>:</th>
@@ -434,7 +463,7 @@ if($which_browser == 'default') {
 						</tr>
 					<?php } ?>
 				</table>
-				<?php if($_GET['id'] == $modx->getLoginUserID()) { ?>
+				<?php if(get_by_key($_GET, 'id', 0, 'is_scalar') == $modx->getLoginUserID('mgr')) { ?>
 					<p><?php echo $_lang['user_edit_self_msg']; ?></p>
 				<?php } ?>
 			</div>
@@ -567,20 +596,20 @@ if($which_browser == 'default') {
 			                <small>[(manager_theme_mode)]</small>
 			            </td>
 			            <td>
-							<label><input type="radio" name="manager_theme_mode" value="" <?= $manager_theme_mode == '' ? 'checked="checked"' : "" ?> />
+							<label><input type="radio" name="manager_theme_mode" value="" <?= $modx->getConfig('manager_theme_mode') === 0 ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['option_default'] ?></label>
 			                <br />
 
-			                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
+			                <label><input type="radio" name="manager_theme_mode" value="1" <?= $modx->getConfig('manager_theme_mode') === 1 ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['manager_theme_mode1'] ?></label>
 			                <br />
-			                <label><input type="radio" name="manager_theme_mode" value="2" <?= $manager_theme_mode == '2' ? 'checked="checked"' : "" ?> />
+			                <label><input type="radio" name="manager_theme_mode" value="2" <?= $modx->getConfig('manager_theme_mode') === 2 ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['manager_theme_mode2'] ?></label>
 			                <br />
-			                <label><input type="radio" name="manager_theme_mode" value="3" <?= $manager_theme_mode == '3' ? 'checked="checked"' : "" ?> />
+			                <label><input type="radio" name="manager_theme_mode" value="3" <?= $modx->getConfig('manager_theme_mode') === 3 ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['manager_theme_mode3'] ?></label>
 			                <br />
-			                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($manager_theme_mode == '4') ? 'checked="checked"' : "" ?> />
+			                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($modx->getConfig('manager_theme_mode') === 4) ? 'checked="checked"' : "" ?> />
 			                    <?= $_lang['manager_theme_mode4'] ?></label>
 			            </td>
 			        </tr>
@@ -668,7 +697,7 @@ if($which_browser == 'default') {
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["upload_maxsize_message"] ?></td>
 					</tr>
-					<tr id='editorRow0' style="display: <?php echo $use_editor == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='editorRow0' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang["which_editor_title"] ?></th>
 						<td><select name="which_editor" onChange="documentDirty=true;">
 								<option value=""></option>
@@ -687,31 +716,31 @@ if($which_browser == 'default') {
 								?>
 							</select></td>
 					</tr>
-					<tr id='editorRow1' style="display: <?php echo $use_editor == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='editorRow1' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["which_editor_message"] ?></td>
 					</tr>
-					<tr id='editorRow14' class="row3" style="display: <?php echo $use_editor == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='editorRow14' class="row3" style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang["editor_css_path_title"] ?></th>
 						<td><input onChange="documentDirty=true;" type='text' maxlength='255' name="editor_css_path" value="<?php echo isset($usersettings["editor_css_path"]) ? $usersettings["editor_css_path"] : ""; ?>" /></td>
 					</tr>
-					<tr id='editorRow15' class='row3' style="display: <?php echo $use_editor == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='editorRow15' class='row3' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["editor_css_path_message"] ?></td>
 					</tr>
-					<tr id='rbRow1' class='row3' style="display: <?php echo $use_browser == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='rbRow1' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang["rb_base_dir_title"] ?></th>
 						<td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"] : ""; ?>" /></td>
 					</tr>
-					<tr id='rbRow2' class='row3' style="display: <?php echo $use_browser == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='rbRow2' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["rb_base_dir_message"] ?></td>
 					</tr>
-					<tr id='rbRow4' class='row3' style="display: <?php echo $use_browser == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='rbRow4' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang["rb_base_url_title"] ?></th>
 						<td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"] : ""; ?>" /></td>
 					</tr>
-					<tr id='rbRow5' class='row3' style="display: <?php echo $use_browser == 1 ? $displayStyle : 'none'; ?>">
+					<tr id='rbRow5' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["rb_base_url_message"] ?></td>
 					</tr>
@@ -746,12 +775,12 @@ if($which_browser == 'default') {
 					function BrowseServer() {
 						var w = screen.width * 0.7;
 						var h = screen.height * 0.7;
-						OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
+						OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/<?php echo $modx->getConfig('which_browser');?>/browser.php?Type=images", w, h);
 					}
 
 					function SetUrl(url, width, height, alt) {
 						document.userform.photo.value = url;
-						document.images['iphoto'].src = "<?php echo $base_url; ?>" + url;
+						document.images['iphoto'].src = "<?php echo MODX_BASE_URL; ?>" + url;
 					}
 				</script>
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
@@ -778,7 +807,7 @@ if($which_browser == 'default') {
 				$groupsarray = $modx->getDatabase()->getColumn('user_group', $rs);
 			}
 			// retain selected doc groups between post
-			if(is_array($_POST['user_groups'])) {
+			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
 				foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
 			}
 			?>

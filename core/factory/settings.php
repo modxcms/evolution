@@ -126,5 +126,6 @@ return [
     'track_visitors' => 0,
     'login_logo' => '',
     'login_bg' => '',
-    'smtp_secure' => ''
+    'smtp_secure' => '',
+    'snapshot_path' => '[(base_path)]assets/backup/'
 ];

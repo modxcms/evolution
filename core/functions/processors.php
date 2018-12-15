@@ -278,7 +278,7 @@ if(!function_exists('jsAlert')) {
     function jsAlert($msg)
     {
         $modx = evolutionCMS();
-        if ($_POST['ajax'] != 1) {
+        if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
             echo "<script>window.setTimeout(\"alert('" . addslashes($modx->getDatabase()->escape($msg)) . "')\",10);history.go(-1)</script>";
         } else {
             echo $msg . "\n";

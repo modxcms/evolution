@@ -113,7 +113,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         }
         $this->parameters['unlockTranslations'] = $unlockTranslations;
 
-        $user = $this->managerTheme->getCore()->getUserInfo($this->managerTheme->getCore()->getLoginUserID());
+        $user = $this->managerTheme->getCore()->getUserInfo($this->managerTheme->getCore()->getLoginUserID('mgr'));
         if ((isset($user['which_browser']) && $user['which_browser'] == 'default') || (!isset($user['which_browser']))) {
             $user['which_browser'] = $this->managerTheme->getCore()->getConfig('which_browser');
         }
@@ -571,7 +571,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 				FROM ' . $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $this->managerTheme->getCore()->getDatabase()->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $this->managerTheme->getCore()->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
+                WHERE (mg.member IS NULL OR mg.member = ' . $this->managerTheme->getCore()->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1
                 ORDER BY sm.name');
             } else {
                 $rs = $this->managerTheme->getCore()->getDatabase()->select(

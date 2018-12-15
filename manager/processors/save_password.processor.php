@@ -19,7 +19,7 @@ if(strlen($pass1)<6){
 }
 
     $pass1 = $modx->getPhpCompat()->htmlspecialchars($pass1, ENT_NOQUOTES);
-    $uid = $modx->getLoginUserID();
+    $uid = $modx->getLoginUserID('mgr');
     $password = $modx->getPasswordHash()->HashPassword($pass1);
     $user = EvolutionCMS\Models\ManagerUser::find($uid);
     $user->update(['password' => $password]);

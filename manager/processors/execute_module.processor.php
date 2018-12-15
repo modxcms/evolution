@@ -16,7 +16,7 @@ if($_SESSION['mgrRole']!=1){
 	$rs = $modx->getDatabase()->select(
 		'sma.usergroup,mg.member',
 		$modx->getDatabase()->getFullTableName("site_module_access")." sma
-			LEFT JOIN ".$modx->getDatabase()->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
+			LEFT JOIN ".$modx->getDatabase()->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID('mgr')."'",
 		"sma.module = '{$id}'"
 		);
 	//initialize permission to -1, if it stays -1 no permissions

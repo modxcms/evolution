@@ -236,7 +236,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                     }
 
                                     echo '<tr>' . "\n" . '<td><label class="form-check form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n";
-                                    echo '<td class="text-xs-center">' . (!empty($db_status['Comment']) ? '<i class="' . $_style['actions_help'] . '" data-tooltip="' . $db_status['Comment'] . '"></i>' : '') . '</td>' . "\n";
+                                    echo '<td class="text-xs-center">' . (!empty($db_status['Comment']) ? '<i class="' . $_style['actions_info'] . '" data-tooltip="' . $db_status['Comment'] . '"></i>' : '') . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Collation'] . '</td>' . "\n";
 
@@ -246,13 +246,13 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         $modx->getDatabase()->getConfig('prefix') . 'manager_log',
                                     );
                                     if ($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
-                                        echo '<td class="text-xs-right"><a class="text-danger" href="index.php?a=54&mode=' . $action . '&u=' . $db_status['Name'] . '" title="' . $_lang['truncate_table'] . '">' . nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</a>' . '</td>' . "\n";
+                                        echo '<td class="text-xs-right"><a class="text-danger" href="index.php?a=54&mode=93&u=' . $db_status['Name'] . '" title="' . $_lang['truncate_table'] . '">' . nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</a>' . '</td>' . "\n";
                                     } else {
                                         echo '<td class="text-xs-right">' . nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n";
                                     }
 
                                     if ($modx->hasPermission('settings')) {
-                                        echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? '<a class="text-danger" href="index.php?a=54&mode=' . $action . '&t=' . $db_status['Name'] . '" title="' . $_lang['optimize_table'] . '">' . nicesize($db_status['Data_free']) . '</a>' : '-') . '</td>' . "\n";
+                                        echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? '<a class="text-danger" href="index.php?a=54&mode=93&t=' . $db_status['Name'] . '" title="' . $_lang['optimize_table'] . '">' . nicesize($db_status['Data_free']) . '</a>' : '-') . '</td>' . "\n";
                                     } else {
                                         echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? nicesize($db_status['Data_free']) : '-') . '</td>' . "\n";
                                     }
@@ -372,7 +372,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
             <div class="container container-body">
                 <?= $ph['result_msg_snapshot'] ?>
                 <div class="element-edit-message-tab alert alert-warning">
-                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->getConfig(snapshot_path)}")) ?>
+                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->getConfig('snapshot_path')}")) ?>
                 </div>
                 <form method="post" name="snapshot" action="index.php">
                     <input type="hidden" name="a" value="93" />
@@ -394,7 +394,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <input type="hidden" name="mode" value="restore2" />
                     <input type="hidden" name="filename" value="" />
                     <?php
-                    $pattern = "{$modx->getConfig(snapshot_path)}*.sql";
+                    $pattern = "{$modx->getConfig('snapshot_path')}*.sql";
                     $files = glob($pattern, GLOB_NOCHECK);
                     $total = ($files[0] !== $pattern) ? count($files) : 0;
                     $detailFields = array(
@@ -482,7 +482,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
     </div>
 <?php
 
-if (is_numeric($_GET['tab'])) {
+$tab = get_by_key($_GET, 'tab', false);
+if (is_numeric($tab)) {
     echo '<script type="text/javascript">tpDBM.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';
 }
 

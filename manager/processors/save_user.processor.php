@@ -289,7 +289,7 @@ switch ($input['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
-        if ($id == $modx->getLoginUserID() && ($genpassword !== 1 && $passwordnotifymethod != 's')) {
+        if ($id == $modx->getLoginUserID('mgr') && ($genpassword !== 1 && $passwordnotifymethod != 's')) {
 			$modx->webAlertAndQuit($_lang["user_changeddata"], 'javascript:top.location.href="index.php?a=8";');
 		}
         if ($genpassword == 1 && $passwordnotifymethod == 's') {
@@ -307,9 +307,9 @@ switch ($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a class="btn" href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl;
+                    <a class="btn" href="<?php echo ($id == $modx->getLoginUserID('mgr')) ? 'index.php?a=8' : $stayUrl;
                     ?>"><i
-                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?>
+                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID('mgr')) ? $_lang['logout'] : $_lang['edit']; ?>
                     </a>
 			</div>
 			</div>
@@ -318,7 +318,7 @@ switch ($input['mode']) {
                 <div class="tab-page">
                     <div class="container container-body" id="disp">
                         <p><?php echo sprintf($_lang["password_msg"], $modx->getPhpCompat()->htmlspecialchars($newusername),
-                                    $modx->getPhpCompat()->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID()) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
+                                    $modx->getPhpCompat()->htmlspecialchars($newpassword)) . (($id == $modx->getLoginUserID('mgr')) ? ' ' . $_lang['user_changeddata'] : ''); ?></p>
 					</div>
 				</div>
 			</div>

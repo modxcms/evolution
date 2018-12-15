@@ -15,7 +15,7 @@ $children = array();
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID();
+$udperms->user = $modx->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 $udperms->duplicateDoc = true;

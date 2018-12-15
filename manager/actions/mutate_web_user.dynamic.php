@@ -22,23 +22,50 @@ $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID('mgr') . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 }
 // end check for lock
+$userdata = [
+    'fullname' => '',
+    'blocked' => 0,
+    'blockeduntil' => 0,
+    'blockedafter' => 0,
+    'failedlogins' => 0,
+    'email' => '',
+    'phone' => '',
+    'mobilephone' => '',
+    'dob' => 0,
+    'gender' => 3,
+    'country' => '',
+    'street' => '',
+    'city' => '',
+    'state' => '',
+    'zip' => '',
+    'fax' => '',
+    'photo' => '',
+    'comment' => ''
+];
+$usersettings = [
+    'allowed_days' => '',
+    'login_home' => '',
+    'allowed_ip' => '',
+];
+$usernamedata = [];
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
 	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
-	$userdata = $modx->getDatabase()->getRow($rs);
-	if(!$userdata) {
+	$userdatatmp = $modx->getDatabase()->getRow($rs);
+	if(!$userdatatmp) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
+	$userdata = array_merge($userdata, $userdatatmp);
+	unset($userdatatmp);
 
 	// get user settings
 	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_settings'), "webuser = '{$user}'");
-	$usersettings = array();
 	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
 	extract($usersettings, EXTR_OVERWRITE);
 
@@ -50,17 +77,18 @@ if($modx->getManagerApi()->action == '88') {
 	}
 	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
-	$userdata = array();
-	$usersettings = array();
-	$usernamedata = array();
 	$_SESSION['itemname'] = $_lang["new_web_user"];
 }
 
 // avoid doubling htmlspecialchars (already encoded in DB)
 foreach($userdata as $key => $val) {
-	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->config['modx_charset']);
+	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->getConfig('modx_charset'));
 };
-$usernamedata['username'] = html_entity_decode($usernamedata['username'], ENT_NOQUOTES, $modx->config['modx_charset']);
+$usernamedata['username'] = html_entity_decode(
+    get_by_key($usernamedata, 'username', ''),
+    ENT_NOQUOTES,
+    $modx->getConfig('modx_charset')
+);
 
 // restore saved form
 $formRestored = false;
@@ -210,7 +238,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 		<div class="tab-pane" id="webUserPane">
 			<script type="text/javascript">
-				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->getConfig('remember_last_tab') == 1 ? 'true' : 'false'; ?> );
 			</script>
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -247,10 +275,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 							<span style="display:<?php echo $modx->getManagerApi()->action == "87" ? "block" : "none"; ?>" id="passwordBlock">
 							<fieldset style="width:300px">
 								<legend><?php echo $_lang['password_gen_method']; ?></legend>
-								<input type=radio name="passwordgenmethod" value="g" <?php echo $_POST['passwordgenmethod'] == "spec" ? "" : 'checked="checked"'; ?> />
+								<input type=radio name="passwordgenmethod" value="g" <?php echo get_by_key($_POST, 'passwordgenmethod') === 'spec' ? '' : 'checked="checked"'; ?> />
 								<?php echo $_lang['password_gen_gen']; ?>
 								<br />
-								<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod'] == "spec" ? 'checked="checked"' : ""; ?>>
+								<input type=radio name="passwordgenmethod" value="spec" <?php echo get_by_key($_POST, 'passwordgenmethod') === 'spec' ? 'checked="checked"' : ""; ?>>
 								<?php echo $_lang['password_gen_specify']; ?>
 								<br />
 								<div>
@@ -265,10 +293,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 							<br />
 							<fieldset style="width:300px">
 								<legend><?php echo $_lang['password_method']; ?></legend>
-								<input type=radio name="passwordnotifymethod" value="e" <?php echo $_POST['passwordnotifymethod'] == "e" ? 'checked="checked"' : ""; ?> />
+								<input type=radio name="passwordnotifymethod" value="e" <?php echo get_by_key($_POST, 'passwordnotifymethod') === 'e' ? 'checked="checked"' : ""; ?> />
 								<?php echo $_lang['password_method_email']; ?>
 								<br />
-								<input type=radio name="passwordnotifymethod" value="s" <?php echo $_POST['passwordnotifymethod'] == "e" ? "" : 'checked="checked"'; ?> />
+								<input type=radio name="passwordnotifymethod" value="s" <?php echo get_by_key($_POST, 'passwordnotifymethod') === 'e' ? '' : 'checked="checked"'; ?> />
 								<?php echo $_lang['password_method_screen']; ?>
 							</fieldset>
 							</span></td>
@@ -343,9 +371,9 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<td>&nbsp;</td>
 						<td><select name="gender" onChange="documentDirty=true;">
 								<option value=""></option>
-								<option value="1" <?php echo ($_POST['gender'] == '1' || $userdata['gender'] == '1') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_male']; ?></option>
-								<option value="2" <?php echo ($_POST['gender'] == '2' || $userdata['gender'] == '2') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_female']; ?></option>
-								<option value="3" <?php echo ($_POST['gender'] == '3' || $userdata['gender'] == '3') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_other']; ?></option>
+								<option value="1" <?php echo (get_by_key($_POST, 'gender') === '1' || $userdata['gender'] == '1') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_male']; ?></option>
+								<option value="2" <?php echo (get_by_key($_POST, 'gender') === '2' || $userdata['gender'] == '2') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_female']; ?></option>
+								<option value="3" <?php echo (get_by_key($_POST, 'gender') === '3' || $userdata['gender'] == '3') ? "selected='selected'" : ""; ?>><?php echo $_lang['user_other']; ?></option>
 							</select></td>
 					</tr>
 					<tr>
@@ -362,7 +390,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<tr>
 							<th><?php echo $_lang['user_prevlogin']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><?php echo $modx->toDateFormat($userdata['lastlogin'] + $server_offset_time) ?></td>
+							<td><?php echo $modx->toDateFormat($userdata['lastlogin'] + $modx->getConfig('server_offset_time')) ?></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_failedlogincount']; ?>:</th>
@@ -474,12 +502,12 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					function BrowseServer() {
 						var w = screen.width * 0.7;
 						var h = screen.height * 0.7;
-						OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
+						OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/<?php echo $modx->getConfig('which_browser');?>/browser.php?Type=images", w, h);
 					}
 
 					function SetUrl(url, width, height, alt) {
 						document.userform.photo.value = url;
-						document.images['iphoto'].src = "<?php echo $base_url; ?>" + url;
+						document.images['iphoto'].src = "<?php echo MODX_BASE_URL; ?>" + url;
 					}
 				</script>
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
@@ -507,7 +535,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				$groupsarray = $modx->getDatabase()->getColumn('webgroup', $rs);
 			}
 			// retain selected user groups between post
-			if(is_array($_POST['user_groups'])) {
+			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
 				foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
 			}
 			?>

@@ -27,7 +27,7 @@ $add_path=$sd.$sb.$pg;
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID();
+$udperms->user = $modx->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
@@ -41,9 +41,9 @@ $modx->getDatabase()->update(
 		'published'   => 1,
 		'pub_date'    => 0,
 		'unpub_date'  => 0,
-		'editedby'    => $modx->getLoginUserID(),
+		'editedby'    => $modx->getLoginUserID('mgr'),
 		'editedon'    => time(),
-		'publishedby' => $modx->getLoginUserID(),
+		'publishedby' => $modx->getLoginUserID('mgr'),
 		'publishedon' => time(),
 	), $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'");
 

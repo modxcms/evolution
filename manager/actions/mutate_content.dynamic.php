@@ -25,7 +25,7 @@ switch($modx->getManagerApi()->action) {
         } elseif(isset($_REQUEST['pid']) && $_REQUEST['pid'] != '0') {
             // check user has permissions for parent
             $udperms = new EvolutionCMS\Legacy\Permissions();
-            $udperms->user = $modx->getLoginUserID();
+            $udperms->user = $modx->getLoginUserID('mgr');
             $udperms->document = empty($_REQUEST['pid']) ? 0 : $_REQUEST['pid'];
             $udperms->role = $_SESSION['mgrRole'];
             if(!$udperms->checkPermissions()) {
@@ -56,7 +56,7 @@ if($modx->getManagerApi()->action == 27) {
     //editing an existing document
     // check permissions on the document
     $udperms = new EvolutionCMS\Legacy\Permissions();
-    $udperms->user = $modx->getLoginUserID();
+    $udperms->user = $modx->getLoginUserID('mgr');
     $udperms->document = $id;
     $udperms->role = $_SESSION['mgrRole'];
 

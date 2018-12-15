@@ -255,7 +255,7 @@ if ($actionToTake != "new") {
 if ($modx->getConfig('use_udperms') == 1) {
     if ($existingDocument['parent'] != $parent) {
         $udperms = new EvolutionCMS\Legacy\Permissions();
-        $udperms->user = $modx->getLoginUserID();
+        $udperms->user = $modx->getLoginUserID('mgr');
         $udperms->document = $parent;
         $udperms->role = $_SESSION['mgrRole'];
 
@@ -305,7 +305,7 @@ switch ($actionToTake) {
         }
 
         $publishedon = ($published ? $currentdate : 0);
-        $publishedby = ($published ? $modx->getLoginUserID() : 0);
+        $publishedby = ($published ? $modx->getLoginUserID('mgr') : 0);
 
         if ((!empty($pub_date))&&($published)){
             $publishedon=$pub_date;
@@ -329,9 +329,9 @@ switch ($actionToTake) {
             "menuindex"        => $menuindex ,
             "searchable"       => $searchable ,
             "cacheable"        => $cacheable ,
-            "createdby"        => $modx->getLoginUserID() ,
+            "createdby"        => $modx->getLoginUserID('mgr') ,
             "createdon"        => $currentdate ,
-            "editedby"         => $modx->getLoginUserID() ,
+            "editedby"         => $modx->getLoginUserID('mgr') ,
             "editedon"         => $currentdate ,
             "publishedby"      => $publishedby ,
             "publishedon"      => $publishedon ,
@@ -486,10 +486,10 @@ switch ($actionToTake) {
             // if it was changed from unpublished to published
             if (!$was_published && $published) {
                 $publishedon = $currentdate;
-                $publishedby = $modx->getLoginUserID();
+                $publishedby = $modx->getLoginUserID('mgr');
                 }elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
                 $publishedon = $pub_date;
-                $publishedby = $modx->getLoginUserID();
+                $publishedby = $modx->getLoginUserID('mgr');
                    }elseif ($was_published && !$published) {
                 $publishedon = 0;
                 $publishedby = 0;
@@ -524,7 +524,7 @@ switch ($actionToTake) {
                 . "menuindex={$menuindex}, "
                 . "searchable={$searchable}, "
                 . "cacheable={$cacheable}, "
-                . "editedby=" . $modx->getLoginUserID() . ", "
+                . "editedby=" . $modx->getLoginUserID('mgr') . ", "
                 . "editedon={$currentdate}, "
                 . "publishedon={$publishedon}, "
                 . "publishedby={$publishedby}, "

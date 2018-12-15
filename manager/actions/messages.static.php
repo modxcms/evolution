@@ -5,6 +5,9 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 if (!$modx->hasPermission('messages')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
+
+$subjecttext = '';
+$messagetext = '';
 ?>
 
 <h1>
@@ -21,7 +24,7 @@ if (!$modx->hasPermission('messages')) {
             if (!$message) {
                 echo "Wrong number of messages returned!";
             } else {
-                if ($message['recipient'] != $modx->getLoginUserID()) {
+                if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
                     // output message!
@@ -51,7 +54,7 @@ if (!$modx->hasPermission('messages')) {
                                 <tr>
                                     <td><b><?= $_lang['messages_sent'] ?>:</b></td>
                                     <td>&nbsp;</td>
-                                    <td><?= $modx->toDateFormat($message['postdate'] + $server_offset_time) ?></td>
+                                    <td><?= $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) ?></td>
                                 </tr>
                                 <tr>
                                     <td><b><?= $_lang['messages_subject'] ?>:</b></td>
@@ -87,7 +90,7 @@ if (!$modx->hasPermission('messages')) {
         <p><b><?= $_lang['messages_inbox'] ?></b></p>
         <?php
         // Get  number of rows
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "");
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
         $num_rows = $modx->getDatabase()->getValue($rs);
 
         // ==============================================================
@@ -116,7 +119,7 @@ if (!$modx->hasPermission('messages')) {
         $array_row_paging = $p->getPagingRowArray();
 
         // Display the result as you like...
-        $pager .= $_lang['showing'] . " " . $array_paging['lower'];
+        $pager = $_lang['showing'] . " " . $array_paging['lower'];
         $pager .= " " . $_lang['to'] . " " . $array_paging['upper'];
         $pager .= " (" . $array_paging['total'] . " " . $_lang['total'] . ")";
         $pager .= "<br />" . $array_paging['previous_link'] . "&lt;&lt;" . (isset($array_paging['previous_link']) ? "</a> " : " ");
@@ -130,7 +133,7 @@ if (!$modx->hasPermission('messages')) {
         // Of course you can now play with array_row_paging in order to print
         // only the results you would like...
 
-        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
+        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
         $limit = $modx->getDatabase()->getRecordCount($rs);
         if ($limit < 1) {
             echo $_lang['messages_no_messages'];
@@ -168,7 +171,7 @@ if (!$modx->hasPermission('messages')) {
                                 <td class="<?= $messagestyle ?>" style="cursor: pointer;" onClick="window.location.href='index.php?a=10&id=<?= $message['id'] ?>&m=r';"><?= $message['subject'] ?></td>
                                 <td><?= $sendername ?></td>
                                 <td><?= $message['private'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
-                                <td><?= $modx->toDateFormat($message['postdate'] + $server_offset_time) ?></td>
+                                <td><?= $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) ?></td>
                             </tr>
                             <?php
                         }
@@ -187,13 +190,13 @@ if (!$modx->hasPermission('messages')) {
     <div class="container container-body">
         <p><b><?= $_lang['messages_compose'] ?></b></p>
         <?php
-        if (($_REQUEST['m'] == 'rp' || $_REQUEST['m'] == 'f') && isset($_REQUEST['id'])) {
+        if (isset($_REQUEST['m'], $_REQUEST['id']) && ($_REQUEST['m'] == 'rp' || $_REQUEST['m'] == 'f')) {
             $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "id='" . $_REQUEST['id'] . "'");
             $message = $modx->getDatabase()->getRow($rs);
             if (!$message) {
                 echo "Wrong number of messages returned!";
             } else {
-                if ($message['recipient'] != $modx->getLoginUserID()) {
+                if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
                     // output message!
@@ -207,7 +210,7 @@ if (!$modx->hasPermission('messages')) {
                     }
                     $subjecttext = $_REQUEST['m'] == 'rp' ? "Re: " : "Fwd: ";
                     $subjecttext .= $message['subject'];
-                    $messagetext = "\n\n\n-----\n" . $_lang['messages_from'] . ": $sendername\n" . $_lang['messages_sent'] . ": " . $modx->toDateFormat($message['postdate'] + $server_offset_time) . "\n" . $_lang['messages_subject'] . ": " . $message['subject'] . "\n\n" . $message['message'];
+                    $messagetext = "\n\n\n-----\n" . $_lang['messages_from'] . ": $sendername\n" . $_lang['messages_sent'] . ": " . $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) . "\n" . $_lang['messages_subject'] . ": " . $message['subject'] . "\n\n" . $message['message'];
                     if ($_REQUEST['m'] == 'rp') {
                         $recipientindex = $message['sender'];
                     }
@@ -294,9 +297,9 @@ if (!$modx->hasPermission('messages')) {
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . " and messageread=0");
+$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . " and messageread=0");
 $_SESSION['nrnewmessages'] = $modx->getDatabase()->getValue($rs);
-$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "");
+$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
 $_SESSION['nrtotalmessages'] = $modx->getDatabase()->getValue($rs);
 $messagesallowed = $modx->hasPermission('messages');
 ?>

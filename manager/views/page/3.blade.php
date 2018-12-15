@@ -207,6 +207,7 @@
     } else {
         // No Child documents
         $children_output = '<div class="container"><p>' . $_lang['resources_in_container_no'] . '</p></div>';
+        $add_path = '';
     }
     ?>
     <script type="text/javascript">

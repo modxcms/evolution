@@ -119,7 +119,7 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
 
         // check permissions on the document
         $udperms = new Permissions();
-        $udperms->user = $this->managerTheme->getCore()->getLoginUserID();
+        $udperms->user = $this->managerTheme->getCore()->getLoginUserID('mgr');
         $udperms->document = $document->getKey();
         $udperms->role = $_SESSION['mgrRole'];
 
@@ -156,7 +156,7 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
     protected function checkNewParentPermission($id)
     {
         $udperms = new Permissions;
-        $udperms->user = $this->managerTheme->getCore()->getLoginUserID();
+        $udperms->user = $this->managerTheme->getCore()->getLoginUserID('mgr');
         $udperms->document = $id;
         $udperms->role = $_SESSION['mgrRole'];
 

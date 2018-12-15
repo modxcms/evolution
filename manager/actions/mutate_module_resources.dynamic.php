@@ -24,7 +24,7 @@ $tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 $modx->getManagerApi()->initPageViewState();
 
 // check to see the  editor isn't locked
-$rs = $modx->getDatabase()->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='" . $modx->getLoginUserID() . "'");
+$rs = $modx->getDatabase()->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='" . $modx->getLoginUserID('mgr') . "'");
 if($username = $modx->getDatabase()->getValue($rs)) {
 	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'module'));
 }

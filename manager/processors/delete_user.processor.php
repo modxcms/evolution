@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 // delete the user, but first check if we are deleting our own record
-if($id==$modx->getLoginUserID()) {
+if($id==$modx->getLoginUserID('mgr')) {
 	$modx->webAlertAndQuit("You can't delete yourself!");
 }
 

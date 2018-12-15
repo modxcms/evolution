@@ -453,7 +453,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	<div class="tab-pane" id="modulePane">
 		<script type="text/javascript">
-			tp = new WebFXTabPane(document.getElementById("modulePane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+			tp = new WebFXTabPane(document.getElementById("modulePane"), <?= ($modx->getConfig('remember_last_tab') === true ? 'true' : 'false') ?> );
 		</script>
 
 		<!-- General -->
