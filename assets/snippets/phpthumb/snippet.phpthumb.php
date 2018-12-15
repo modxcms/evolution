@@ -25,7 +25,8 @@ if (! defined('MODX_BASE_PATH')) {
 $newFolderAccessMode = $modx->getConfig('new_folder_permissions');
 $newFolderAccessMode = empty($new) ? 0777 : octdec($newFolderAccessMode);
 
-$cacheFolder = isset($cacheFolder) ? $cacheFolder : $modx->getCacheFolder() . 'images';
+$defaultCacheFolder = 'assets/cache/';
+$cacheFolder = isset($cacheFolder) ? $cacheFolder : $defaultCacheFolder . 'images';
 $phpThumbPath = isset($phpThumbPath) ? $phpThumbPath : 'assets/snippets/phpthumb/';
 
 /**
@@ -48,8 +49,8 @@ if (empty($input) || ! file_exists(MODX_BASE_PATH . $input)) {
  * allow read in phpthumb cache folder
  */
 if (! file_exists(MODX_BASE_PATH . $cacheFolder . '/.htaccess') &&
-    $cacheFolder !== $modx->getCacheFolder() &&
-    strpos($cacheFolder, $modx->getCacheFolder()) === 0
+    $cacheFolder !== $defaultCacheFolder &&
+    strpos($cacheFolder, $defaultCacheFolder) === 0
 ) {
     file_put_contents(MODX_BASE_PATH . $cacheFolder . '/.htaccess', "order deny,allow\nallow from all\n");
 }
@@ -85,8 +86,8 @@ if (! file_exists($outputFilename)) {
         require_once MODX_BASE_PATH . $phpThumbPath . '/phpthumb.class.php';
     }
     $phpThumb = new phpthumb();
-    $phpThumb->config_cache_directory = MODX_BASE_PATH . $modx->getCacheFolder();
-    $phpThumb->config_temp_directory = $modx->getCacheFolder();
+    $phpThumb->config_cache_directory = MODX_BASE_PATH . $defaultCacheFolder;
+    $phpThumb->config_temp_directory = $defaultCacheFolder;
     $phpThumb->config_document_root = MODX_BASE_PATH;
     $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
     foreach ($params as $key => $value) {

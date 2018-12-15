@@ -142,7 +142,7 @@ trait Path
      */
     public function getCacheFolder()
     {
-        return 'assets/cache/';
+        return 'cache/';
     }
 
     /**
