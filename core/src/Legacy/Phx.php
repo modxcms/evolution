@@ -43,16 +43,21 @@ class Phx
      * @param int|bool|string $debug
      * @param int $maxpass
      */
-    public function __construct(Core $modx, $debug = false, $maxpass = 50)
+    public function __construct(...$args)
     {
+        $modx = get_by_key($args, 0);
+        if (! $modx instanceof Core) {
+            $modx = evolutionCMS();
+        }
+
         $this->modx = $modx;
         $this->user["mgrid"] = isset($_SESSION['mgrInternalKey']) ? intval($_SESSION['mgrInternalKey']) : 0;
         $this->user["usrid"] = isset($_SESSION['webInternalKey']) ? intval($_SESSION['webInternalKey']) : 0;
         $this->user["id"] = ($this->user["usrid"] > 0) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 
-        $this->debug = (bool)$debug;
+        $this->debug = (bool)get_by_key($args, 1, false);
 
-        $this->maxPasses = ($maxpass != '') ? $maxpass : 50;
+        $this->maxPasses = (int)get_by_key($args, 2, 50);
 
         $this->modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
         if (function_exists('mb_internal_encoding')) {
