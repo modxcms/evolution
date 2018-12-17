@@ -96,11 +96,6 @@ switch ($input['mode']) {
 		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$webUser->attributes()->create($field);
 
-        $field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street',
-            'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-        $field = $modx->db->escape($field);
-        $modx->db->insert($field, $modx->getFullTableName('web_user_attributes'));
-
 		// Save User Settings
         saveWebUserSettings($internalKey);
 

@@ -101,11 +101,6 @@ switch ($input['mode']) {
 		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$managerUser->attributes()->create($field);
 
-        $field = compact('internalKey', 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street',
-            'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
-        $field = $modx->db->escape($field);
-        $modx->db->insert($field, $modx->getFullTableName('user_attributes'));
-
 		// Save user settings
         saveManagerUserSettings($internalKey);
 
