@@ -79,7 +79,7 @@ function mm_requireFields($fields, $roles = '', $templates = ''){
 					//if it's tv & it's not used in current template
 					if ($mm_fields[$field]['tv'] && tplUseTvs($mm_current_page['template'], $field) === false){
 						//Go to next field
-						continue;
+						break;
 					}
 					
 					// What type is this field?
