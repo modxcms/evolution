@@ -11,6 +11,8 @@ return [
         'evoAdminLang' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminLang'],
         'evoCharset' => [EvolutionCMS\Support\BladeDirective::class, 'evoCharset'],
         'evoAdminThemeUrl' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminThemeUrl'],
-        'evoAdminThemeName' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminThemeName']
+        'evoAdminThemeName' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminThemeName'],
+        'makeUrl' => [EvolutionCMS\Support\BladeDirective::class, 'makeUrl'],
+
     ]
 ];

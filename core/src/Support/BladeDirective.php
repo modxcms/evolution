@@ -36,4 +36,10 @@ class BladeDirective
     {
         return '<?php echo ManagerTheme::getTheme();?>';
     }
+   
+   public static function makeUrl($id) : string
+    {
+        return '<?php echo app("UrlProcessor")->makeUrl(' . $id . ');?>';
+    }
+
 }
