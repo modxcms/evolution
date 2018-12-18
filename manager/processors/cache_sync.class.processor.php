@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @deprecated use EvolutionCMS\Cache
+ * @deprecated use EvolutionCMS\Legacy\Cache
  */
-class synccache extends EvolutionCMS\Cache
+class synccache extends EvolutionCMS\Legacy\Cache
 {
 }

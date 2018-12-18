@@ -47,7 +47,7 @@ while($row = $modx->getDatabase()->getRow($rs)) {
 }
 
 // empty cache
-$sync = new EvolutionCMS\Cache();
+$sync = new EvolutionCMS\Legacy\Cache();
 $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache

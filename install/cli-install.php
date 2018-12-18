@@ -1486,7 +1486,7 @@ include_once($path . '../' . MGR_DIR . '/includes/document.parser.class.inc.php'
 $modx = new DocumentParser;
 $modx->db->connect();
 // always empty cache after install
-$sync = new EvolutionCMS\Cache();
+$sync = new EvolutionCMS\Legacy\Cache();
 $sync->setCachepath($path . "../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
