@@ -394,9 +394,10 @@
         </script>
     @endpush
 
-    <form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
+    <form name="mutate" method="post" action="index.php" enctype="multipart/form-data">
         {!! get_by_key($events, 'OnPluginFormPrerender') !!}
 
+        <input type="hidden" name="a" value="103">
         <input type="hidden" name="id" value="{{ $data->getKey() }}">
         <input type="hidden" name="mode" value="{{ $action }}">
 

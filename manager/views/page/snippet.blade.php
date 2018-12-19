@@ -352,9 +352,9 @@
         </script>
     @endpush
 
-    <form name="mutate" method="post" action="index.php?a=24">
+    <form name="mutate" method="post" action="index.php">
         {!! get_by_key($events, 'OnSnipFormPrerender') !!}
-
+        <input type="hidden" name="a" value="24">
         <input type="hidden" name="id" value="{{ $data->getKey() }}">
         <input type="hidden" name="mode" value="{{ $action }}">
 

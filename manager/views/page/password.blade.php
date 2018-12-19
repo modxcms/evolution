@@ -23,7 +23,8 @@
 
     <div class="tab-page">
         <div class="contaier container-body">
-            <form action="index.php?a=34" method="post" name="userform">
+            <form name="userform" method="post" action="index.php">
+                <input type="hidden" name="a" value="34">
                 <p>{{ ManagerTheme::getLexicon('change_password_message') }}</p>
                 @include('manager::form.input', [
                     'name' => 'pass1',

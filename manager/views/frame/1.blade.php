@@ -243,13 +243,6 @@
                                         <i class="fa fa-sign-out"></i><?= $_lang['logout'] ?>
                                     </a>
                                 </li>
-                                <?php
-                                $style = $modx->getConfig('settings_version') !== $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
-                                $version = 'Evolution';
-                                ?>
-                                <?php
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->getConfig('settings_version'));
-                                ?>
                             </ul>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
@@ -296,6 +289,14 @@
                                     </a>
                                 </li>
                                 <?php } ?>
+
+                                <?php
+                                $style = $modx->getConfig('settings_version') !== $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+                                $version = 'Evolution';
+                                ?>
+                                <?php
+                                    echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->getConfig('settings_version'));
+                                ?>
                             </ul>
                         </li>
                         <?php } ?>

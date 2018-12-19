@@ -17,7 +17,8 @@
         </script>
         <script src="media/script/mutate_settings.js"></script>
     @endpush
-    <form name="settings" action="index.php?a=30" method="post">
+    <form name="settings" method="post" action="index.php">
+        <input type="hidden" name="a" value="30">
         <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
         <input type="hidden" name="site_id" value="{{ get_by_key($modx->config, 'site_id') }}" />
         <input type="hidden" name="settings_version" value="{{ $modx->getVersionData('version') }}" />
