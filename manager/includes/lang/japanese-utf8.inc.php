@@ -1157,9 +1157,8 @@ $_lang["a17_error_reporting_title"] = 'PHPエラーの検出レベル';
 $_lang["a17_error_reporting_msg"] = 'PHPエラーの検出レベルを設定します。';
 $_lang["a17_error_reporting_opt0"] = '全て無視する';
 $_lang["a17_error_reporting_opt1"] = '通知レベルの軽度の警告を無視する(<a href="https://www.google.com/search?hl=ja&q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = '~E_NOTICE 以外の全てのエラーを検出';
-$_lang["a17_error_reporting_opt99"] = '~E_NOTICE & ~E_USER_DEPRECATED 以外の全てのエラーを検出';
-$_lang["a17_error_reporting_opt199"] = '全て検出する';
+$_lang["a17_error_reporting_opt2"] = 'E_NOTICE 以外の全てのエラーを検出';
+$_lang["a17_error_reporting_opt99"] = '全て検出する';
 
 $_lang["pwd_hash_algo_title"] = 'ハッシュ生成アルゴリズム';
 $_lang["pwd_hash_algo_message"] = 'パスワード文字列はここで設定したアルゴリズムによって解読困難な文字列に変換され、DBに保存されます。これにより、悪意の第三者がDBデータからパスワードを取得することを防ぐことができます。上から順にセキュアなアルゴリズムです。UNCRYPT以外はサーバによっては利用できないことがあるため、サーバ移管の際は注意してください。';

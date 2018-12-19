@@ -13,7 +13,7 @@
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 
-$filename = __DIR__ . '/russian-UTF8.inc.php';
+$filename = dirname(__FILE__) . '/russian-UTF8.inc.php';
 $contents = file_get_contents($filename);
 eval('?>' . $contents);
 $modx_lang_attribute = 'uk'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1

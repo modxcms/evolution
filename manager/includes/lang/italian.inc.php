@@ -1036,8 +1036,7 @@ Password: [+pwd+]
 Quando ti sarai autenticato nel sistema di gestione ([+surl+]), potrai cambiare la tua password.
 
 Cordiali Saluti,
-
- l\'amministratore del Sito
+ l\'amministratore del Sito
 </html>';
 $_lang["system_email_webreminder"] = 'Salve [+uid+]
 
@@ -1245,9 +1244,8 @@ $_lang["a17_error_reporting_title"] = 'Livello di dettaglio degli errori PHP:';
 $_lang["a17_error_reporting_msg"] = 'Imposta il livello di rilevamento degli errori PHP.';
 $_lang["a17_error_reporting_opt0"] = 'Ignora tutti gli errori';
 $_lang["a17_error_reporting_opt1"] = 'Ignora gli errori di basso livello (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Rileva tutti gli errori eccetto E_NOTICE and E_USER_DEPRECATED';
-$_lang["a17_error_reporting_opt99"] = 'Rileva tutti gli errori eccetto E_USER_DEPRECATED';
-$_lang["a17_error_reporting_opt199"] = 'Rileva tutti gli errori';
+$_lang["a17_error_reporting_opt2"] = 'Rileva tutti gli errori eccetto E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Rileva tutti gli errori';
 
 $_lang["pwd_hash_algo_title"] = 'Algoritmo di hash:';
 $_lang["pwd_hash_algo_message"] = 'Password algoritmo di hash.';
@@ -1526,3 +1524,5 @@ $_lang['manager_menu_position_left'] = 'sinistra';
 $_lang['invalid_event_response'] = 'L\'evento %s ha un output errato';
 
 $_lang['chunk_processor'] = 'Classe di elaborazione dei chunk';
+$_lang['enable_mootools'] = 'Abilita Mootools nel manager';
+$_lang['enable_mootools_message'] = 'Carica  nel manager la libreria Mootools.js per la retrocompatibilità';
