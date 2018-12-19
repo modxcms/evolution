@@ -14,7 +14,6 @@ require_once(dirname(__DIR__) . "/lib/DLTemplate.class.php");
 require_once(dirname(__DIR__) . "/lib/DLCollection.class.php");
 require_once(dirname(__DIR__) . "/lib/xnop.class.php");
 
-use EvolutionCMS\Core as DocumentParser;
 /**
  * Class DocLister
  */
@@ -49,14 +48,14 @@ abstract class DocLister
      * @var DocumentParser
      * @access protected
      */
-    protected $modx = null;
+    protected $modx;
 
     /**
      * Шаблонизатор чанков
      * @var DLTemplate
      * @access protected
      */
-    protected $DLTemplate = null;
+    protected $DLTemplate;
 
     /**
      * Массив загруженных экстендеров
@@ -134,7 +133,7 @@ abstract class DocLister
      * @var DLdebug|xNop
      * @access public
      */
-    public $debug = null;
+    public $debug;
 
     /**
      * Массив дополнительно подключаемых таблиц с псевдонимами
@@ -161,7 +160,8 @@ abstract class DocLister
     /** @var string имя шаблона обертки для записей */
     public $ownerTPL = '';
 
-    public $FS = null;
+    /** @var \Helpers\FS */
+    public $FS;
     /** @var string результатирующая строка которая была последний раз сгенирирована
      *               вызовами методов DocLister::render и DocLister::getJSON
      */
@@ -176,16 +176,21 @@ abstract class DocLister
     protected $alias = '';
 
     /** @var null|paginate_DL_Extender */
-    protected $extPaginate = null;
+    protected $extPaginate;
 
     /** @var null|Helpers\Config */
-    public $config = null;
+    public $config;
+
+    /**
+     * @var cache_DL_Extender
+     */
+    protected $extCache;
 
     /**
      * Конструктор контроллеров DocLister
      *
      * @param DocumentParser $modx объект DocumentParser - основной класс MODX
-     * @param array $cfg массив параметров сниппета
+     * @param mixed $cfg массив параметров сниппета
      * @param int $startTime время запуска сниппета
      * @throws Exception
      */
@@ -203,7 +208,7 @@ abstract class DocLister
             $this->modx = $modx;
             $this->setDebug(1);
 
-            if (!is_array($cfg) || empty($cfg)) {
+            if (! is_array($cfg) || empty($cfg)) {
                 $cfg = $this->modx->Event->params;
             }
         } else {
@@ -284,8 +289,7 @@ abstract class DocLister
         if ($ext = $this->getCFGDef('templateExtension')) {
             $DLTemplate->setTemplateExtension($ext);
         }
-        $DLTemplate->setTemplateData(array('DocLister' => $this));
-        $this->DLTemplate = $DLTemplate;
+        $this->DLTemplate = $DLTemplate->setTemplateData(array('DocLister' => $this));
     }
 
     /**
@@ -308,7 +312,7 @@ abstract class DocLister
                     break;
                 case ')':
                     $open--;
-                    if ($open == 0) {
+                    if ($open === 0) {
                         $res[] = $cur . ')';
                         $cur = '';
                     } else {
@@ -320,7 +324,7 @@ abstract class DocLister
                     $cur .= $e;
                     break;
                 case ';':
-                    if ($open == 0) {
+                    if ($open === 0) {
                         $res[] = $cur;
                         $cur = '';
                     } else {
@@ -332,11 +336,11 @@ abstract class DocLister
             }
         }
         $cur = preg_replace("/(\))$/u", '', $cur);
-        if ($cur != '') {
+        if ($cur !== '') {
             $res[] = $cur;
         }
 
-        return $res;
+        return array_reverse($res);
     }
 
     /**
@@ -418,10 +422,10 @@ abstract class DocLister
     public function getTable($name, $alias = '')
     {
         if (!isset($this->_table[$name])) {
-            $this->_table[$name] = $this->modx->getDatabase()->getFullTableName($name);
+            $this->_table[$name] = $this->modx->getFullTableName($name);
         }
         $table = $this->_table[$name];
-        if (!empty($alias) && is_scalar($alias)) {
+        if (! empty($alias) && is_scalar($alias)) {
             $table .= " as `" . $alias . "`";
         }
 
@@ -574,7 +578,7 @@ abstract class DocLister
 
         $link = $this->checkExtender('request') ? $this->extender['request']->getLink() : $this->getRequest();
         if ($id == $this->modx->config['site_start']) {
-            $url = MODX_SITE_URL . ($link != '' ? "?{$link}" : "");
+            $url = $this->modx->config['site_url'] . ($link != '' ? "?{$link}" : "");
         } else {
             $url = $this->modx->makeUrl($id, '', $link, $this->getCFGDef('urlScheme', ''));
         }
@@ -760,7 +764,7 @@ abstract class DocLister
         $out = array();
         foreach ($data as $item) {
             if ($item !== '') {
-                $out[] = $this->modx->getDatabase()->escape($item);
+                $out[] = $this->modx->db->escape($item);
             }
         }
         $q = $quote ? "'" : "";
@@ -1002,7 +1006,8 @@ abstract class DocLister
     {
         $out = $data;
         $docs = count($this->_docs) - $this->skippedDocs;
-        if ((($this->getCFGDef("noneWrapOuter", "1") && $docs == 0) || $docs > 0) && !empty($this->ownerTPL) || !empty($this->getCFGDef('prepareWrap'))) {
+        $wrap = $this->getCFGDef('prepareWrap');
+        if ((($this->getCFGDef("noneWrapOuter", "1") && $docs == 0) || $docs > 0) && !empty($this->ownerTPL) || !empty($wrap)) {
             $this->debug->debug("", "renderWrapTPL", 2);
             $parse = true;
             $plh = array($this->getCFGDef("sysKey", "dl") . ".wrap" => $data);
@@ -1019,7 +1024,7 @@ abstract class DocLister
                     'nameParam' => 'prepareWrap',
                     'return'    => 'placeholders'
                 ));
-                if (is_bool($params) && $params === false) {
+                if ($params === false) {
                     $out = $data;
                     $parse = false;
                 }
@@ -1636,7 +1641,7 @@ abstract class DocLister
     {
         $this->debug->debug("getFilters: " . $this->debug->dumpData($filter_string), 'getFilter', 1);
         // the filter parameter tells us, which filters can be used in this query
-        $filter_string = trim($filter_string, ' ;');
+        $filter_string = ltrim(trim($filter_string, ';'));
         if (!$filter_string) {
             return;
         }
@@ -1648,10 +1653,19 @@ abstract class DocLister
                 $logic_op_found = true;
                 $subfilters = mb_substr($filter_string, strlen($op) + 1, mb_strlen($filter_string, "UTF-8"), "UTF-8");
                 $subfilters = $this->smartSplit($subfilters);
-                foreach ($subfilters as $subfilter) {
-                    $subfilter = $this->getFilters(trim($subfilter));
+                $lastFilter = '';
+                foreach ($subfilters as $filter) {
+                    /**
+                     * С правой стороны не выполняется trim, т.к. там находятся значения. А они могу быть чувствительны к пробелам
+                     */
+                    $subfilter = $this->getFilters(ltrim($filter) . ltrim($lastFilter));
                     if (!$subfilter) {
-                        continue;
+                        $lastFilter = explode(';', $filter, 2);
+                        $subfilter = isset($lastFilter[1]) ? $this->getFilters($lastFilter[1]) : '';
+                        $lastFilter = $lastFilter[0];
+                        if (!$subfilter) {
+                            continue;
+                        }
                     }
                     if ($subfilter['join']) {
                         $joins[] = $subfilter['join'];
@@ -1660,8 +1674,8 @@ abstract class DocLister
                         $wheres[] = $subfilter['where'];
                     }
                 }
-                $output['join'] = !empty($joins) ? implode(' ', $joins) : '';
-                $output['where'] = !empty($wheres) ? '(' . implode($sql, $wheres) . ')' : '';
+                $output['join'] = !empty($joins) ? implode(' ', array_reverse($joins)) : '';
+                $output['where'] = !empty($wheres) ? '(' . implode($sql, array_reverse($wheres)) . ')' : '';
             }
         }
 
@@ -1672,7 +1686,8 @@ abstract class DocLister
                 $output = false;
             } else {
                 $output['join'] = $filter->get_join();
-                $output['where'] = stripslashes($filter->get_where());
+                $output['where'] = $filter->get_where();
+
             }
         }
         $this->debug->debug('getFilter');
@@ -1799,7 +1814,7 @@ abstract class DocLister
     public function dbQuery($q)
     {
         $this->debug->debug($q, "query", 1, 'sql');
-        $out = $this->modx->getDatabase()->query($q);
+        $out = $this->modx->db->query($q);
         $this->debug->debugEnd("query");
 
         return $out;

@@ -80,7 +80,7 @@ class APIhelpers
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
             $out = $data[$key];
         }
-        if (!empty($validate) && is_callable($validate)) {
+        if (! empty($validate) && is_callable($validate)) {
             $out = (($validate($out) === true) ? $out : $default);
         }
         return $out;
@@ -232,7 +232,7 @@ class APIhelpers
             case ($tmp = self::getEnv('HTTP_X_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
-            case (!empty($_SERVER['REMOTE_ADDR'])):
+            case (! empty($_SERVER['REMOTE_ADDR'])):
                 $out = $_SERVER['REMOTE_ADDR'];
                 break;
             default:
@@ -386,7 +386,7 @@ class APIhelpers
         foreach ($IDs as $item) {
             $item = trim($item);
             if (is_scalar($item) && (int)$item >= 0) { //Fix 0xfffffffff
-                if (empty($ignore) && !\in_array((int)$item, $ignore, true)) {
+                if (empty($ignore) || !\in_array((int)$item, $ignore, true)) {
                     $out[] = (int)$item;
                 }
             }

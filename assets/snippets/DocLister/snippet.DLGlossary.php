@@ -86,7 +86,7 @@ if (! empty($loadfilter)) {
 } else {
     $field = sqlHelper::tildeField($field);
     if ($action === 'regexp') {
-        $where = $field . " REGEXP '" . $modx->getDatabase()->escape($char) . "'";
+        $where = $field . " REGEXP '" . $modx->db->escape($char) . "'";
     } else {
         $where = sqlHelper::LikeEscape($modx, $field, $char, '=', '[+value+]%');
     }

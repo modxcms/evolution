@@ -186,7 +186,7 @@ class site_contentDocLister extends DocLister
                             'data'      => $item,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($item) && $item === false) {
+                        if ($item === false) {
                             $this->skippedDocs++;
                             continue;
                         }
@@ -289,7 +289,7 @@ class site_contentDocLister extends DocLister
 
             if ($extPrepare) {
                 $row = $extPrepare->init($this, array('data' => $row));
-                if (is_bool($row) && $row === false) {
+                if ($row === false) {
                     continue;
                 }
             }
@@ -372,14 +372,14 @@ class site_contentDocLister extends DocLister
                 if (trim($where) == 'WHERE') {
                     $where = '';
                 }
-                $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+                $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
 
                 $q_true = $q_true ? $q_true : $group != '';
                 if ($q_true) {
                     $maxDocs = $this->getCFGDef('maxDocs', 0);
                     $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
                     $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
-                    $out = $this->modx->getDatabase()->getValue($rs);
+                    $out = $this->modx->db->getValue($rs);
                 } else {
                     $out = count($this->IDs);
                 }
@@ -427,7 +427,7 @@ class site_contentDocLister extends DocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($tbl_site_content, $sort) = $this->injectSortByTV(
                 $tbl_site_content . ' ' . $this->_filters['join'],
@@ -438,7 +438,7 @@ class site_contentDocLister extends DocLister
 
             $rs = $this->dbQuery("SELECT {$fields} FROM {$tbl_site_content} {$where} {$group} {$sort} {$limit}");
 
-            while ($item = $this->modx->getDatabase()->getRow($rs)) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
             };
         }
@@ -469,7 +469,7 @@ class site_contentDocLister extends DocLister
 
         $rs = $this->dbQuery("SELECT id FROM {$tbl_site_content} {$where}");
 
-        while ($item = $this->modx->getDatabase()->getRow($rs)) {
+        while ($item = $this->modx->db->getRow($rs)) {
             $out[] = $item['id'];
         }
 
@@ -551,7 +551,7 @@ class site_contentDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
 
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $rs = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
@@ -559,7 +559,7 @@ class site_contentDocLister extends DocLister
                 $sort . " " .
                 $this->LimitSQL($this->getCFGDef('queryLimit', 0)));
 
-            while ($item = $this->modx->getDatabase()->getRow($rs)) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
             }
         }

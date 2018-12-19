@@ -34,10 +34,10 @@ function prepareSection($section) {
 
 function mm_minimizablesections($sections, $roles = '', $templates = '',$minimized = '') {
  if (!useThisRule($roles, $templates)){return;}
-
+ 
  global $modx;
  $e = &$modx->Event;
- $site = MODX_SITE_URL;
+ $site = $modx->config['site_url'];
  $widgetDir = $site.'assets/plugins/managermanager/widgets/mm_minimizablesections/';
 
  $output='';

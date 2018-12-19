@@ -10,7 +10,7 @@ class Helper extends \APIhelpers
 {
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var \EvolutionCMS\Core
+     * @var \DocumentParser
      * @access protected
      */
     protected static $modx = null;
@@ -20,10 +20,10 @@ class Helper extends \APIhelpers
     protected static $mode = 'list';
 
     /**
-     * @param \EvolutionCMS\Core $modx
+     * @param \DocumentParser $modx
      * @param string $mode
      */
-    public static function init(\EvolutionCMS\Core $modx, $mode = 'list')
+    public static function init(\DocumentParser $modx, $mode = 'list')
     {
         self::$modx = $modx;
         self::setMode($mode);
@@ -52,9 +52,9 @@ class Helper extends \APIhelpers
      */
     protected static function _counter($from, $where = '')
     {
-        $q = self::$modx->getDatabase()->select('count(id)', self::$modx->getDatabase()->getFullTableName($from), $where);
+        $q = self::$modx->db->select('count(id)', self::$modx->getFullTableName($from), $where);
 
-        return self::$modx->getDatabase()->getValue($q);
+        return self::$modx->db->getValue($q);
     }
 
     /**
@@ -70,7 +70,7 @@ class Helper extends \APIhelpers
             isset($request[$key]) && is_scalar($request[$key]) &&
             preg_match("/^(.*)_(\d+)$/i", $request[$key], $match)
         ) ? $match : array();
-        if (!empty($match)) {
+        if (! empty($match)) {
             $data = array(
                 'key' => $match[1],
                 'id'  => $match[2]
@@ -96,7 +96,7 @@ class Helper extends \APIhelpers
         if ($post) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
-        if (!empty($header)) {
+        if (! empty($header)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);

@@ -13,7 +13,7 @@ if (!defined('MODX_BASE_PATH')) {
 $role = $_SESSION['mgrRole'];
 
 if ((!isset($adminRoleOnly) || $adminRoleOnly === 'yes') && (int)$role !== 1) {
-  return;
+    return;
 }
 
 $eitBaseBath = MODX_BASE_PATH . 'assets/plugins/elementsintree/';
@@ -30,35 +30,36 @@ switch ($modx->event->name) {
     case 'OnManagerMainFrameHeaderHTMLBlock':
         include_once $eitBaseBath . 'includes/on_manager_main_frame_header_html_block.inc.php';
         break;
-  case 'OnManagerTreePrerender': // Main elementsInTree-part
+    case 'OnManagerTreePrerender': // Main elementsInTree-part
         include_once $eitBaseBath . 'includes/on_manager_tree_prerender.inc.php';
         break;
-  case 'OnManagerTreeRender':
+    case 'OnManagerTreeRender':
         if (hasAnyPermission()) {
             include_once $eitBaseBath . 'includes/on_manager_tree_render.inc.php';
         } else {
             $modx->event->addOutput('</div></div>');
         } // Issue 1340
-    break;
-  case 'OnTempFormSave':
-  case 'OnTVFormSave':
-  case 'OnChunkFormSave':
-  case 'OnSnipFormSave':
-  case 'OnPluginFormSave':
-  case 'OnModFormSave':
-  case 'OnTempFormDelete':
-  case 'OnTVFormDelete':
-  case 'OnChunkFormDelete':
-  case 'OnSnipFormDelete':
-  case 'OnPluginFormDelete':
-  case 'OnModFormDelete':
-    // Set reloadTree = true for this events
+        break;
+    case 'OnTempFormSave':
+    case 'OnTVFormSave':
+    case 'OnChunkFormSave':
+    case 'OnSnipFormSave':
+    case 'OnPluginFormSave':
+    case 'OnModFormSave':
+    case 'OnTempFormDelete':
+    case 'OnTVFormDelete':
+    case 'OnChunkFormDelete':
+    case 'OnSnipFormDelete':
+    case 'OnPluginFormDelete':
+    case 'OnModFormDelete':
+        // Set reloadTree = true for this events
         $_SESSION['elementsInTree']['reloadTree'] = true;
         break;
-  default:
+    default:
         if (isset($_GET['r']) && (int)$_GET['r'] === 2) {
             $_SESSION['elementsInTree']['reloadTree'] = true;
         }
         break;
 }
+
 return;

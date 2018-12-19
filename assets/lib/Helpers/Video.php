@@ -90,7 +90,7 @@ class Video
      */
     public function __construct($link = null, $autostart = true, $info = false)
     {
-        if (!empty($link)) {
+        if (! empty($link)) {
             $this->setLink($link);
             $this->setInfo($info);
             if ($autostart) {
@@ -181,10 +181,10 @@ class Video
     /** Обработка ссылки. Возвращает идентификатор видеохостинга или false */
     public function process($link = null, $info = null)
     {
-        if (!empty($link)) {
+        if (! empty($link)) {
             $this->setLink($link);
         }
-        if (!empty($info)) {
+        if (! empty($info)) {
             $this->setInfo($info);
         }
 
@@ -208,11 +208,11 @@ class Video
     /** Скачать превью. Если не указать имя файла для записи - функция вернет содержимое файла */
     public function fetchImage($filename = null)
     {
-        if (!$url = $this->getImage()) {
+        if (! $url = $this->getImage()) {
             return false;
         }
 
-        if (!$res = $this->fetchPage($url)) {
+        if (! $res = $this->fetchPage($url)) {
             return false;
         }
 
@@ -228,7 +228,7 @@ class Video
             $this->link = 'http://' . $this->link;
         }
 
-        if (!$this->link_parts = parse_url($this->link)) {
+        if (! $this->link_parts = parse_url($this->link)) {
             return false;
         }
 
@@ -244,7 +244,7 @@ class Video
         if ('youtube.com' == $h) {
             parse_str($this->link_parts['query'], $q);
 
-            if ('/watch' == $p && !empty($q['v'])) {
+            if ('/watch' == $p && ! empty($q['v'])) {
                 return $this->foundYoutube($q['v']);
             }
             if (0 === strpos($p, '/embed/')) {
@@ -396,7 +396,7 @@ class Video
         $class = isset($options['class']) ? $options['class'] : '';
 
         $url = $this->getVideo($autoplay);
-        if (!empty($class)) {
+        if (! empty($class)) {
             $class = ' class="' . $class . '"';
         }
 

@@ -34,7 +34,7 @@ class Lexicon
         $langDir = empty($langDir) ? MODX_BASE_PATH . \APIhelpers::getkey($this->cfg, 'langDir',
                 'lang/') : MODX_BASE_PATH . $langDir;
         if (empty($lang)) {
-            $lang = \APIhelpers::getkey($this->cfg, 'lang', $this->modx->config['manager_language']);
+            $lang = \APIhelpers::getkey($this->cfg, 'lang', $this->modx->getConfig('manager_language'));
         }
 
         if (is_scalar($name) && !empty($name)) {
@@ -70,7 +70,7 @@ class Lexicon
      */
     public function fromArray($lang)
     {
-        $language = \APIhelpers::getkey($this->cfg, 'lang', $this->modx->config['manager_language']);
+        $language = \APIhelpers::getkey($this->cfg, 'lang', $this->modx->getConfig('manager_language'));
         if (is_array($lang) && isset($lang[$language])) {
             $this->_lang = array_merge($this->_lang, $lang[$language]);
         }

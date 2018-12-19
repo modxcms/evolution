@@ -229,7 +229,7 @@ class modResource extends MODxAPI
     {
         $out = null;
         $id = (int)$this->getID();
-        if (!empty($id)) {
+        if (! empty($id)) {
             $out = $this->modx->makeUrl($id);
         }
 
@@ -324,8 +324,11 @@ class modResource extends MODxAPI
      */
     public function set($key, $value)
     {
-        if ((is_scalar($value) || $this->isTVarrayField($key) || $this->isJsonField($key)) && is_scalar($key) && !empty($key)) {
+        if ((is_scalar($value) || $this->isTVarrayField($key) || $this->isJsonField($key)) && is_scalar($key) && ! empty($key)) {
             switch ($key) {
+                case 'donthit':
+                    $value = (int)((bool)$value);
+                    break;
                 case 'parent':
                     $value = (int)$value;
                     break;
@@ -397,12 +400,12 @@ class modResource extends MODxAPI
     {
         $currentAdmin = APIHelpers::getkey($_SESSION, 'mgrInternalKey', 0);
         $value = (int)$value;
-        if (!empty($value)) {
+        if (! empty($value)) {
             $by = $this->findUserBy($value);
             $exists = $this->managerUsers->exists(function ($key, Helpers\Collection $val) use ($by, $value) {
                 return ($val->containsKey($by) && $val->get($by) === (string)$value);
             });
-            if (!$exists) {
+            if (! $exists) {
                 $value = 0;
             }
         }
@@ -470,9 +473,9 @@ class modResource extends MODxAPI
             $this->markAllEncode();
             $this->newDoc = false;
             $result = $this->query("SELECT * from {$this->makeTable('site_content')} where `id`=" . (int)$id);
-            $this->fromArray($this->modx->getDatabase()->getRow($result));
+            $this->fromArray($this->modx->db->getRow($result));
             $result = $this->query("SELECT * from {$this->makeTable('site_tmplvar_contentvalues')} where `contentid`=" . (int)$id);
-            while ($row = $this->modx->getDatabase()->getRow($result)) {
+            while ($row = $this->modx->db->getRow($result)) {
                 $this->field[$this->tvid[$row['tmplvarid']]] = $row['value'];
             }
             $fld = array();
@@ -498,7 +501,7 @@ class modResource extends MODxAPI
     /**
      * @param bool $fire_events
      * @param bool $clearCache
-     * @return bool|null
+     * @return mixed
      */
     public function save($fire_events = false, $clearCache = false)
     {
@@ -512,8 +515,8 @@ class modResource extends MODxAPI
         $uid = $this->modx->getLoginUserID('mgr');
 
         if (
-            $this->field['parent'] == 0 &&
-            !$this->modxConfig('udperms_allowroot') &&
+            empty($this->field['parent']) &&
+            ! $this->modxConfig('udperms_allowroot') &&
             !($uid && isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1)
         ) {
             $this->log['rootForbidden'] = 'Only Administrators can create documents in the root folder because udperms_allowroot setting is off';
@@ -537,19 +540,19 @@ class modResource extends MODxAPI
                 if ($tmp == $value) {
                     switch ($key) {
                         case 'cacheable':
-                            $value = $this->modxConfig('cache_default');
+                            $value = (int)$this->modxConfig('cache_default');
                             break;
                         case 'template':
-                            $value = $value = $this->modxConfig('default_template');
+                            $value = (int)$this->modxConfig('default_template');
                             break;
                         case 'published':
-                            $value = $this->modxConfig('publish_default');
+                            $value = (int)$this->modxConfig('publish_default');
                             break;
                         case 'searchable':
-                            $value = $this->modxConfig('search_default');
+                            $value = (int)$this->modxConfig('search_default');
                             break;
                         case 'donthit':
-                            $value = $this->modxConfig('track_visitors');
+                            $value = (int)$this->modxConfig('track_visitors');
                             break;
                     }
                 }
@@ -559,13 +562,13 @@ class modResource extends MODxAPI
                 case $key == 'parent':
                     $parent = (int)$this->get($key);
                     $q = $this->query("SELECT count(`id`) FROM {$this->makeTable('site_content')} WHERE `id`='{$parent}'");
-                    if ($this->modx->getDatabase()->getValue($q) != 1) {
+                    if ($this->modx->db->getValue($q) != 1) {
                         $parent = 0;
                     }
                     $this->field[$key] = $parent;
                     $this->Uset($key);
                     break;
-                case ($key == 'alias_visible' && !$this->checkVersion('1.0.10', true)):
+                case ($key == 'alias_visible' && ! $this->checkVersion('1.0.10', true)):
                     $this->eraseField('alias_visible');
                     break;
                 default:
@@ -574,7 +577,7 @@ class modResource extends MODxAPI
             unset($fld[$key]);
         }
 
-        if (!empty($this->set)) {
+        if (! empty($this->set)) {
             if ($this->newDoc) {
                 $SQL = "INSERT into {$this->makeTable('site_content')} SET " . implode(', ', $this->set);
             } else {
@@ -584,7 +587,7 @@ class modResource extends MODxAPI
             $this->query($SQL);
 
             if ($this->newDoc) {
-                $this->id = $this->modx->getDatabase()->getInsertId();
+                $this->id = $this->modx->db->getInsertId();
             }
 
             if ($parent > 0) {
@@ -594,7 +597,7 @@ class modResource extends MODxAPI
 
         $_deleteTVs = $_insertTVs = array();
         foreach ($fld as $key => $value) {
-            if (empty($this->tv[$key]) || !$this->isChanged($key) || !$this->belongsToTemplate($this->tv[$key])) {
+            if (empty($this->tv[$key]) || ! $this->isChanged($key) || ! $this->belongsToTemplate($this->tv[$key])) {
                 continue;
             } elseif ($value === '' || is_null($value) || (isset($this->tvd[$key]) && $value == $this->tvd[$key]['default'])) {
                 $_deleteTVs[] = $this->tv[$key];
@@ -603,7 +606,7 @@ class modResource extends MODxAPI
             }
         }
 
-        if (!empty($_insertTVs)) {
+        if (! empty($_insertTVs)) {
             $values = array();
             foreach ($_insertTVs as $id => $value) {
                 $values[] = "({$this->id}, {$id}, '{$value}')";
@@ -613,7 +616,7 @@ class modResource extends MODxAPI
     `value` = VALUES(`value`)");
         }
 
-        if (!empty($_deleteTVs)) {
+        if (! empty($_deleteTVs)) {
             $ids = implode(',', $_deleteTVs);
             $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` IN ({$ids})");
         }
@@ -623,18 +626,18 @@ class modResource extends MODxAPI
             $this->newDoc = false;
         }
 
-        if (!empty($this->groupIds)) {
+        if (! empty($this->groupIds)) {
             $this->setDocumentGroups($this->id, $this->groupIds);
         }
-
-        $this->modx->getAliasListing($this->id);
-
         $this->invokeEvent('OnDocFormSave', array(
             'mode'   => $this->mode,
             'id'     => isset($this->id) ? $this->id : '',
             'doc'    => $this->toArray(),
             'docObj' => $this
         ), $fire_events);
+
+
+        $this->modx->getAliasListing($this->id);
 
         if ($clearCache) {
             $this->clearCache($fire_events);
@@ -684,7 +687,7 @@ class modResource extends MODxAPI
     public function clearTrash($fire_events = false)
     {
         $q = $this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `deleted`='1'");
-        $_ids = $this->modx->getDatabase()->getColumn('id', $q);
+        $_ids = $this->modx->db->getColumn('id', $q);
         if (is_array($_ids) && $_ids != array()) {
             $this->invokeEvent('OnBeforeEmptyTrash', array(
                 "ids" => $_ids
@@ -712,9 +715,9 @@ class modResource extends MODxAPI
         $_ids = $this->cleanIDs($ids, ',');
         if (is_array($_ids) && $_ids != array()) {
             $id = $this->sanitarIn($_ids);
-            if (!empty($id)) {
+            if (! empty($id)) {
                 $q = $this->query("SELECT `id` FROM {$this->makeTable('site_content')} where `parent` IN ({$id})");
-                $id = $this->modx->getDatabase()->getColumn('id', $q);
+                $id = $this->modx->db->getColumn('id', $q);
                 if ($depth > 0 || $depth === true) {
                     $id = $this->children($id, is_bool($depth) ? $depth : ($depth - 1));
                 }
@@ -759,7 +762,7 @@ class modResource extends MODxAPI
             (int)$this->modxConfig('site_unavailable_page')
         );
         $data = $this->query("SELECT DISTINCT setting_value FROM {$this->makeTable('web_user_settings')} WHERE `setting_name`='login_home' AND `setting_value`!=''");
-        $data = $this->modx->getDatabase()->makeArray($data);
+        $data = $this->modx->db->makeArray($data);
         foreach ($data as $item) {
             $ignore[] = (int)$item['setting_value'];
         }
@@ -777,12 +780,12 @@ class modResource extends MODxAPI
         $alias = strtolower($alias);
         if ($this->modxConfig('friendly_urls')) {
             $_alias = $this->escape($alias);
-            if ((!$this->modxConfig('allow_duplicate_alias') && !$this->modxConfig('use_alias_path')) || ($this->modxConfig('allow_duplicate_alias') && $this->modxConfig('use_alias_path'))) {
-                $flag = $this->modx->getDatabase()->getValue($this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `alias`='{$_alias}' AND `parent`={$this->get('parent')} LIMIT 1"));
+            if ((! $this->modxConfig('allow_duplicate_alias') && ! $this->modxConfig('use_alias_path')) || ($this->modxConfig('allow_duplicate_alias') && $this->modxConfig('use_alias_path'))) {
+                $flag = $this->modx->db->getValue($this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `alias`='{$_alias}' AND `parent`={$this->get('parent')} LIMIT 1"));
             } else {
-                $flag = $this->modx->getDatabase()->getValue($this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `alias`='{$_alias}' LIMIT 1"));
+                $flag = $this->modx->db->getValue($this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `alias`='{$_alias}' LIMIT 1"));
             }
-            if (($flag && $this->newDoc) || (!$this->newDoc && $flag && $this->id != $flag)) {
+            if (($flag && $this->newDoc) || (! $this->newDoc && $flag && $this->id != $flag)) {
                 $suffix = substr($alias, -2);
                 if (preg_match('/-(\d+)/', $suffix, $tmp) && isset($tmp[1]) && (int)$tmp[1] > 1) {
                     $suffix = (int)$tmp[1] + 1;
@@ -816,7 +819,7 @@ class modResource extends MODxAPI
         if ($this->modx->_TVnames === false || empty($this->modx->_TVnames) || $reload) {
             $this->modx->_TVnames = array();
             $result = $this->query('SELECT `id`,`name`,`default_text`,`type`,`display`,`display_params` FROM ' . $this->makeTable('site_tmplvars'));
-            while ($row = $this->modx->getDatabase()->GetRow($result)) {
+            while ($row = $this->modx->db->GetRow($result)) {
                 $this->modx->_TVnames[$row['name']] = array(
                     'id'      => $row['id'],
                     'type'    => $row['type'],
@@ -853,7 +856,7 @@ class modResource extends MODxAPI
         if ($this->tvTpl === false) {
             $q = $this->query("SELECT `tmplvarid`, `templateid` FROM " . $this->makeTable('site_tmplvar_templates'));
             $this->tvTpl = array();
-            while ($item = $this->modx->getDatabase()->getRow($q)) {
+            while ($item = $this->modx->db->getRow($q)) {
                 $this->tvTpl[$item['templateid']][] = $item['tmplvarid'];
             }
             $this->saveToCache($this->tvTpl, '_tvTpl');
@@ -868,7 +871,7 @@ class modResource extends MODxAPI
      */
     protected function loadTVDefault(array $tvId = array())
     {
-        if (is_array($tvId) && !empty($tvId)) {
+        if (is_array($tvId) && ! empty($tvId)) {
             $this->tvd = array();
             foreach ($tvId as $id) {
                 $name = $this->tvid[$id];
@@ -890,10 +893,10 @@ class modResource extends MODxAPI
             if (is_scalar($tpl)) {
                 $sql = "SELECT `id` FROM {$this->makeTable('site_templates')} WHERE `templatename` = '" . $this->escape($tpl) . "'";
                 $rs = $this->query($sql);
-                if (!$rs || $this->modx->getDatabase()->getRecordCount($rs) <= 0) {
+                if (! $rs || $this->modx->db->getRecordCount($rs) <= 0) {
                     throw new Exception("Template {$tpl} is not exists");
                 }
-                $tpl = $this->modx->getDatabase()->getValue($rs);
+                $tpl = $this->modx->db->getValue($rs);
             } else {
                 throw new Exception("Invalid template name: " . print_r($tpl, 1));
             }
@@ -951,7 +954,7 @@ class modResource extends MODxAPI
         $template = $this->modxConfig('default_template');
         switch ($this->modxConfig('auto_template_logic')) {
             case 'sibling':
-                if (!$parent) {
+                if (! $parent) {
                     $site_start = $this->modxConfig('site_start');
                     $where = "sc.isfolder=0 AND sc.id!={$site_start}";
                     $sibl = $this->modx->getDocumentChildren($parent, 1, 0, 'template', $where, 'menuindex', 'ASC', 1);
@@ -1087,7 +1090,7 @@ class modResource extends MODxAPI
 
             $rs = $this->query("SELECT `dg`.`document_group`, `dgn`.`name` FROM {$doc_groups} as `dg` INNER JOIN {$docgroup_names} as `dgn` ON `dgn`.`id`=`dg`.`document_group`
                 WHERE `dg`.`document` = " . $doc->getID());
-            while ($row = $this->modx->getDatabase()->getRow($rs)) {
+            while ($row = $this->modx->db->getRow($rs)) {
                 $out[$row['document_group']] = $row['name'];
             }
 
@@ -1115,7 +1118,7 @@ class modResource extends MODxAPI
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('document_groups')} (`document_group`, `document`) VALUES ('{$gid}', '{$id}')");
                 }
-                if (!$this->newDoc) {
+                if (! $this->newDoc) {
                     $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
                     $this->query("DELETE FROM {$this->makeTable('document_groups')} WHERE `document`={$id} AND `document_group` NOT IN ({$groupIds})");
                 }

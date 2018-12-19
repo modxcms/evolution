@@ -144,7 +144,7 @@ function mm_ddResizeImage($tvs = '', $roles = '', $templates = '', $width = '', 
 			$multipleField = ($multipleField == '1') ? true : false;
 
 			//Подключаем phpThumb
-			require_once MODX_BASE_PATH.'assets/plugins/managermanager/widgets/ddresizeimage/phpthumb.class.php';
+			require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
 
 			//Перебираем их
 			foreach ($tvs as $tv){

@@ -2,8 +2,6 @@
 
 require_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 
-use EvolutionCMS\Core as DocumentParser;
-
 /**
  * Class AbstractController
  * @package SimpleTab
@@ -40,16 +38,16 @@ abstract class AbstractController
 
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var DocumentParser
+     * @var \DocumentParser
      * @access protected
      */
     protected $modx = null;
 
     /**
      * AbstractController constructor.
-     * @param DocumentParser $modx
+     * @param \DocumentParser $modx
      */
-    public function __construct(DocumentParser $modx)
+    public function __construct(\DocumentParser $modx)
     {
         $this->FS = \Helpers\FS::getInstance();
         $this->modx = $modx;
@@ -74,7 +72,7 @@ abstract class AbstractController
         $ids = isset($_POST['ids']) ? (string)$_POST['ids'] : '';
         $ids = isset($_POST['id']) ? (string)$_POST['id'] : $ids;
         $out['success'] = false;
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             if ($this->data->deleteAll($ids, $this->rid)) {
                 $out['success'] = true;
             }
@@ -92,7 +90,7 @@ abstract class AbstractController
         $ids = isset($_POST['ids']) ? (string)$_POST['ids'] : '';
         $dir = isset($_POST['dir']) ? $_POST['dir'] : 'top';
         $out['success'] = false;
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             if ($this->data->place($ids, $dir, $this->rid)) {
                 $out['success'] = true;
             }
@@ -127,7 +125,7 @@ abstract class AbstractController
      */
     public function listing()
     {
-        if (!$this->rid) {
+        if (! $this->rid) {
             $this->isExit = true;
 
             return;

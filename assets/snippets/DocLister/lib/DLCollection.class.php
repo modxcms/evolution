@@ -1,7 +1,6 @@
 <?php
 include_once(MODX_BASE_PATH . "assets/lib/Helpers/Collection.php");
 
-use EvolutionCMS\Core as DocumentParser;
 /**
  * Class DLCollection
  */
@@ -49,9 +48,9 @@ class DLCollection extends Helpers\Collection
     {
         $i = 0;
         if ($exec) {
-            $q = $this->modx->getDatabase()->query($q);
+            $q = $this->modx->db->query($q);
         }
-        while ($row = $this->modx->getDatabase()->getRow($q)) {
+        while ($row = $this->modx->db->getRow($q)) {
             $data = $this->create($row);
             $this->add($data);
             $i++;

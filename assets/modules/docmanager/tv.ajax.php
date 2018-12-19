@@ -3,19 +3,13 @@
  * This file includes slightly modified code from the MODX core distribution.
  */
 define('MODX_API_MODE', true);
-
-include_once '../../../index.php';
-
+include_once ('../../../index.php');
 $modx->db->connect();
 $modx->getSettings();
-
 $modx->invokeEvent('OnManagerPageInit');
+if (!isset($_SESSION['mgrValidated'])) die('');
 
-if (!isset($_SESSION['mgrValidated'])) {
-    die('');
-}
-
-include_once MODX_BASE_PATH . 'assets/modules/docmanager/classes/docmanager.class.php';
+include_once(MODX_BASE_PATH . 'assets/modules/docmanager/classes/docmanager.class.php');
 $dm = new DocManager($modx);
 $dm->getLang();
 $dm->getTheme();
@@ -26,12 +20,11 @@ $which_browser = $modx->configGlobal['which_browser'] ? $modx->configGlobal['whi
 
 if (isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
     $rs = $modx->db->select('*', $modx->getFullTableName('site_tmplvars') . " tv
-			LEFT JOIN " . $modx->getFullTableName('site_tmplvar_templates') . " AS tvt ON tv.id = tvt.tmplvarid",
-        "tvt.templateid ='{$_POST['tplID']}'");
+			LEFT JOIN " . $modx->getFullTableName('site_tmplvar_templates') . " AS tvt ON tv.id = tvt.tmplvarid", "tvt.templateid ='{$_POST['tplID']}'");
     $limit = $modx->db->getRecordCount($rs);
 
     if ($limit > 0) {
-        require MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
+        require(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
         $output .= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
         $i = 0;
@@ -131,18 +124,12 @@ function DMrenderFormElement($field_type, $field_id, $default_text, $field_eleme
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
                 }
-                $field_html .= '<option value="' . htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue,
-                        $field_value) ? ' selected="selected"' : '') . '>' . htmlspecialchars($item) . '</option>';
+                $field_html .= '<option value="' . htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue, $field_value) ? ' selected="selected"' : '') . '>' . htmlspecialchars($item) . '</option>';
             }
             $field_html .= "</select>";
             break;
         case "url": // handles url input fields
-            $urls = array(''         => '--',
-                          'http://'  => 'http://',
-                          'https://' => 'https://',
-                          'ftp://'   => 'ftp://',
-                          'mailto:'  => 'mailto:'
-            );
+            $urls = array('' => '--', 'http://' => 'http://', 'https://' => 'https://', 'ftp://' => 'ftp://', 'mailto:' => 'mailto:');
             $field_html = '<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv' . $field_id . '_prefix" name="tv' . $field_id . '_prefix" onchange="documentDirty=true;">';
             foreach ($urls as $k => $v) {
                 if (strpos($field_value, $v) === false) {
@@ -164,8 +151,7 @@ function DMrenderFormElement($field_type, $field_id, $default_text, $field_eleme
                 if (strlen($itemvalue) == 0) {
                     $itemvalue = $item;
                 }
-                $field_html .= '<input type="checkbox" value="' . htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '[]" ' . (in_array($itemvalue,
-                        $field_value) ? " checked='checked'" : "") . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '">' . $item . '</label><br />';
+                $field_html .= '<input type="checkbox" value="' . htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '[]" ' . (in_array($itemvalue, $field_value) ? " checked='checked'" : "") . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '">' . $item . '</label><br />';
                 $i++;
             }
             break;
@@ -290,6 +276,5 @@ function DMrenderFormElement($field_type, $field_id, $default_text, $field_eleme
         default: // the default handler -- for errors, mostly
             $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . htmlspecialchars($field_value) . '" ' . $field_style . ' onchange="documentDirty=true;" />';
     } // end switch statement
-
     return $field_html;
 } // end renderFormElement function

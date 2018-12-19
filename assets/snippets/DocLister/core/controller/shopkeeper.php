@@ -108,7 +108,7 @@ class shopkeeperDocLister extends site_contentDocLister
                             'data'      => $item,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($item) && $item === false) {
+                        if ($item === false) {
                             $this->skippedDocs++;
                             continue;
                         }
@@ -199,12 +199,15 @@ class shopkeeperDocLister extends site_contentDocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $maxDocs = $this->getCFGDef('maxDocs', 0);
             $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
 
-            $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
-            $out = $this->modx->getDatabase()->getValue($rs);
+            $subQuery = trim(implode(' ', array(
+                'SELECT', 'count(*)', 'FROM', $from, $where, $group, $limit
+            )));
+            $rs = $this->dbQuery("SELECT count(*) FROM ({$subQuery}) as `tmp`");
+            $out = $this->modx->db->getValue($rs);
         }
 
         return $out;
@@ -247,7 +250,7 @@ class shopkeeperDocLister extends site_contentDocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $sort = $this->SortOrderSQL("c.createdon");
             list($tbl_site_content, $sort) = $this->injectSortByTV($tbl_site_content . ' ' . $this->_filters['join'],
                 $sort);
@@ -256,7 +259,7 @@ class shopkeeperDocLister extends site_contentDocLister
 
             $rs = $this->dbQuery("SELECT {$fields} FROM {$tbl_site_content} {$where} {$group} {$sort} {$limit}");
 
-            while ($item = $this->modx->getDatabase()->getRow($rs)) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
             }
         }
@@ -288,7 +291,7 @@ class shopkeeperDocLister extends site_contentDocLister
         $rs = $this->dbQuery("SELECT id FROM {$tbl_site_content} {$where} AND c.id IN(SELECT DISTINCT s.parent FROM " . $this->getTable('catalog',
                 's') . ")");
 
-        while ($item = $this->modx->getDatabase()->getRow($rs)) {
+        while ($item = $this->modx->db->getRow($rs)) {
             $out[] = $item['id'];
         }
 
@@ -356,7 +359,7 @@ class shopkeeperDocLister extends site_contentDocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $rs = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
                 $group . " " .
@@ -364,7 +367,7 @@ class shopkeeperDocLister extends site_contentDocLister
                 $this->LimitSQL($this->getCFGDef('queryLimit', 0))
             );
 
-            while ($item = $this->modx->getDatabase()->getRow($rs)) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
             }
         }

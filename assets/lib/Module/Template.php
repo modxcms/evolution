@@ -7,13 +7,13 @@
 abstract class Template
 {
     /**
-     * @var \DocumentParser|null
+     * @var \DocumentParser
      */
-    protected $_modx = null;
+    protected $_modx;
     /**
-     * @var null|string
+     * @var string
      */
-    protected $_tplFolder = null;
+    protected $_tplFolder;
     /**
      * @var string
      */
@@ -45,11 +45,11 @@ abstract class Template
 
     /**
      * Template constructor.
-     * @param \EvolutionCMS\Core $modx
+     * @param \DocumentParser $modx
      * @param bool $ajax
-     * @param null $tplFolder
+     * @param null|string $tplFolder
      */
-    public function __construct(\EvolutionCMS\Core $modx, $ajax = false, $tplFolder = null)
+    public function __construct(\DocumentParser $modx, $ajax = false, $tplFolder = null)
     {
         $this->_modx = $modx;
         self::$_ajax = (boolean)$ajax;
@@ -166,7 +166,7 @@ abstract class Template
     /**
      * @param $key
      * @param array $param
-     * @param null $default
+     * @param mixed $default
      * @return mixed|null
      */
     public static function getParam($key, array $param = array(), $default = null)
@@ -177,7 +177,7 @@ abstract class Template
     /**
      * @param $action
      * @param array $data
-     * @param null $module
+     * @param null|int|string $module
      * @param bool $full
      * @return string
      */
@@ -196,7 +196,7 @@ abstract class Template
                 'id'     => empty($module) ? self::getParam('id', $content, 0) : (int)$module
             )
         );
-        $out = implode("?", array($this->_modx->getManagerUrl(), http_build_query($data)));
+        $out = implode("?", array(MODX_MANAGER_URL, http_build_query($data)));
         if ($full) {
             $out = $this->_modx->getConfig('site_url') . ltrim($out, '/');
         }

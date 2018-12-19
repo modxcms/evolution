@@ -137,12 +137,18 @@ abstract class filterDocLister
             case '=':
             case 'eq':
             case 'is':
-                $output .= " = '" . $this->modx->getDatabase()->escape($value) . "'";
+                $output .= " = '" . $this->modx->db->escape($value) . "'";
                 break;
             case '!=':
             case 'no':
             case 'isnot':
-                $output .= " != '" . $this->modx->getDatabase()->escape($value) . "'";
+                $output = '(' . $output . " != '" . $this->modx->db->escape($value) . "' OR " . $output . ' IS NULL)';
+                break;
+            case 'isnull':
+                $output .= ' IS NULL';
+                break;
+            case 'isnotnull':
+                $output .= ' IS NOT NULL';
                 break;
             case '>':
             case 'gt':
@@ -171,14 +177,14 @@ abstract class filterDocLister
                 $output = $this->DocLister->LikeEscape($output, $value, '=', '%[+value+]');
                 break;
             case 'regexp':
-                $output .= " REGEXP '" . $this->modx->getDatabase()->escape($value) . "'";
+                $output .= " REGEXP '" . $this->modx->db->escape($value) . "'";
                 break;
             case 'against':
                 /** content:pagetitle,description,content,introtext:against:искомая строка */
                 if (trim($value) != '') {
                     $field = explode(",", $this->field);
                     $field = implode(",", $this->DocLister->renameKeyArr($field, $this->getTableAlias()));
-                    $output = "MATCH ({$field}) AGAINST ('{$this->modx->getDatabase()->escape($value)}*')";
+                    $output = "MATCH ({$field}) AGAINST ('{$this->modx->db->escape($value)}*')";
                 }
                 break;
             case 'containsOne':
@@ -191,7 +197,9 @@ abstract class filterDocLister
                      * искомый $word = " когда". С trim найдем "...мне некогда..." и "...тут когда-то...";
                      * Без trim будт обнаружено только "...тут когда-то..."
                      */
-                    $word_arr[] = $this->DocLister->LikeEscape($output, $word);
+                    if (($likeWord = $this->DocLister->LikeEscape($output, $word)) !== '') {
+                        $word_arr[] = $likeWord;
+                    }
                 }
                 if (!empty($word_arr)) {
                     $output = '(' . implode(' OR ', $word_arr) . ')';
@@ -199,11 +207,25 @@ abstract class filterDocLister
                     $output = '';
                 }
                 break;
+            case 'containsAll':
+                $words = explode($this->DocLister->getCFGDef('filter_delimiter', ','), $value);
+                $word_arr = array();
+                foreach ($words as $word) {
+                    if (($likeWord = $this->DocLister->LikeEscape($output, $word)) !== '') {
+                        $word_arr[] = $likeWord;
+                    }
+                }
+                if (!empty($word_arr)) {
+                    $output = '(' . implode(' AND ', $word_arr) . ')';
+                } else {
+                    $output = '';
+                }
+            break;
             case 'in':
                 $output .= ' IN(' . $this->DocLister->sanitarIn($value, ',', true) . ')';
                 break;
             case 'notin':
-                $output .= ' NOT IN(' . $this->DocLister->sanitarIn($value, ',', true) . ')';
+                $output = '(' . $output . ' NOT IN(' . $this->DocLister->sanitarIn($value, ',', true) . ') OR ' . $output . ' IS NULL)';
                 break;
             default:
                 $output = '';

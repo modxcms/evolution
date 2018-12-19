@@ -31,17 +31,17 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
 	'jq' => array(
-		'url' => MODX_SITE_URL.'assets/plugins/managermanager/js/jquery.min.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.min.js',
 		'name' => 'jquery',
 		'version' => '1.9.1'
 	),
 	'mm' => array(
-		'url' => MODX_SITE_URL.'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
 		'name' => 'ddMM',
 		'version' => '1.2.1'
 	),
 	'ddTools' => array(
-		'url' => MODX_SITE_URL.'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
 		'name' => 'jquery.ddTools',
 		'version' => '1.8.6'
 	)
@@ -207,7 +207,7 @@ if (!function_exists('initJQddManagerManager')){
 
 		$output =
 '
-$j.ddMM.config.site_url = "'.MODX_SITE_URL.'";
+$j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
 

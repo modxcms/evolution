@@ -136,7 +136,7 @@ class Reminder extends Form
                 $uid = $this->getField($this->userField);
                 if ($hash = $this->getUserHash($uid)) {
                     $this->setFields($this->user->toArray());
-                    $url = $this->getCFGDef('resetTo', isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier > 0 ? $this->modx->documentIdentifier : $this->config['site_start']);
+                    $url = $this->getCFGDef('resetTo', isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier > 0 ? $this->modx->documentIdentifier : $this->modx->getConfig('site_start'));
                     $uidName = $this->getCFGDef('uidName', $this->uidField);
                     $this->setField('reset.url', $this->modx->makeUrl($url, "",
                         http_build_query(array($uidName  => $this->getField($this->uidField),

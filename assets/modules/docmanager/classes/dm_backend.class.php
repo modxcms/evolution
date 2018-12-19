@@ -516,7 +516,8 @@ class DocManagerBackend {
 	}
 
 	function logDocumentChange($action) {
-		$log = new EvolutionCMS\Legacy\LogHandler;
+		include_once MODX_MANAGER_PATH.'includes/log.class.inc.php';
+		$log = new logHandler;
 
 		switch ($action) {
 			case 'template' :

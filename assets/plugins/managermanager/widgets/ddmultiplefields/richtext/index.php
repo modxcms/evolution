@@ -33,7 +33,7 @@ if ($_SESSION['mgrValidated']){
 	));
 
 	echo ddTools::parseText(file_get_contents(MODX_BASE_PATH.$windowDir.'template.html'), array(
-		'site_url' => MODX_SITE_URL,
+		'site_url' => $modx->config['site_url'],
 		'mmDir' => $mmDir,
 		'windowDir' => $windowDir,
 		'charset' => '<meta charset="'.$modx->config['modx_charset'].'" />',

@@ -66,15 +66,15 @@ class Qm {
         if (isset($_SESSION['mgrUsrConfigSet']['manager_language'])) $manager_language = $_SESSION['mgrUsrConfigSet']['manager_language'];
 
 		// Include_once the language file
-        if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php")) {
+        if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
             $manager_language = "english"; // if not set, get the english language file.
         }
         // Include default language
-        include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
+        include_once MODX_MANAGER_PATH."includes/lang/english.inc.php";
 
         // Include user language
-        if($manager_language!="english" && file_exists(MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php")) {
-            include_once MODX_MANAGER_PATH . "includes/lang/".$manager_language.".inc.php";
+        if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+            include_once MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php";
         }
 
         // Get event
@@ -159,6 +159,11 @@ class Qm {
                     $save = 0;
                     $imagePreview = '';
 
+                    // Includes
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.format.inc.php');
+
                     // Get save status
                     if (isset($_POST['save'])) $save = intval($_POST['save']);
 
@@ -227,9 +232,9 @@ class Qm {
                         <head>
                         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
                         <title></title>
-                        <link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/style.css" />
-                        <!--[if IE]><link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/ie.css" /><![endif]-->
-                        <script src="'.MODX_SITE_URL.$this->jqpath.'" type="text/javascript"></script>
+                        <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
+                        <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
+                        <script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>
                         </head>
                         ';
 
@@ -252,13 +257,13 @@ class Qm {
                                 // Image preview
                                 if ($tv['type'] == 'image') {
                                     $imagePreview = '
-                                    <div id="qm-tv-image-preview"><img class="qm-tv-image-preview-drskip qm-tv-image-preview-skip" src="'.MODX_SITE_URL.$tv['value'].'" alt="" /></div>
+                                    <div id="qm-tv-image-preview"><img class="qm-tv-image-preview-drskip qm-tv-image-preview-skip" src="'.$this->modx->config['site_url'].$tv['value'].'" alt="" /></div>
                                     <script type="text/javascript" charset="UTF-8">
                                     
                                     $(document).ready(function() {
                                         
                                         var previewImage = "#tv'.$tvName.'";
-                                        var siteUrl = "'.MODX_SITE_URL.'";
+                                        var siteUrl = "'.$this->modx->config['site_url'].'";
                                         
                                         OriginalSetUrl = SetUrl; // Copy the existing Image browser SetUrl function						
                             			SetUrl = function(url, width, height, alt) {	// Redefine it to also tell the preview to update
@@ -479,30 +484,29 @@ class Qm {
                         </ul>
     					</div>';
 
-                        $MGR_DIR = $this->modx->getManagerUrl( );
                         $css = '
-                        <link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/style.css" />';
+                        <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />';
 
                         $css .= '
-                        <!--[if IE]><link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/ie.css" /><![endif]-->
+                        <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
                         ';
 
                         // font-awesome
                         if ($this->loadfa == 'true') {
                         $css .= '
-                        <link rel="stylesheet" type="text/css" href="'.$MGR_DIR.'media/style/common/font-awesome/css/font-awesome.min.css" />
+                        <link rel="stylesheet" type="text/css" href="'.MODX_MANAGER_URL.'media/style/common/font-awesome/css/font-awesome.min.css" />
                             ';
                         }
                         // Buttons Styles
                         if ($this->buttonStyle == 'actionButtons') {
                             $css .= '
-                            <link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/actionButtons.css" />
+                            <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/actionButtons.css" />
                             ';
                         }
                         else
                         if ($this->buttonStyle == 'navButtons') {
                             $css .= '
-                            <link rel="stylesheet" type="text/css" href="'.MODX_SITE_URL.'assets/plugins/qm/css/navButtons.css" />
+                            <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/navButtons.css" />
                             ';
                         }
                         // Top toolbar Autohide false
@@ -705,23 +709,23 @@ class Qm {
                         }
                         // Insert jQuery and ColorBox in head if needed
                         $head = '';
-                        if ($this->loadfrontendjq == 'true') $head .= '<script src="'.MODX_SITE_URL.$this->jqpath.'" type="text/javascript"></script>';
+                        if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
                         if ($this->loadtb == 'true') {
                             $head .= '
-                            <link type="text/css" media="screen" rel="stylesheet" href="'.MODX_SITE_URL.'assets/plugins/qm/css/colorbox.css" />
+                            <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/colorbox.css" />
                             
                             <style type="text/css">
-                            .cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderTopLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderTopCenter.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderTopRight.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderBottomLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderBottomCenter.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderBottomRight.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderMiddleLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.MODX_SITE_URL.'assets/plugins/qm/css/images/internet_explorer/borderMiddleRight.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopLeft.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopCenter.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopRight.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomLeft.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomCenter.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomRight.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleLeft.png, sizingMethod=\'scale\');}
+                            .cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleRight.png, sizingMethod=\'scale\');}
                             </style>
                             
-                            <script type="text/javascript" src="'.MODX_SITE_URL.'assets/plugins/qm/js/jquery.colorbox-min.js"></script>
+                            <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/plugins/qm/js/jquery.colorbox-min.js"></script>
                             ';
                         }
 
@@ -972,7 +976,7 @@ class Qm {
 
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
-                    if ($this->loadmanagerjq == 'true') $mc->head .= '<script src="'.MODX_SITE_URL.$this->jqpath.'" type="text/javascript"></script>';
+                    if ($this->loadmanagerjq == 'true') $mc->head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
 
                     // Add control button
                     $mc->addLine('$("body").prepend(controls);');

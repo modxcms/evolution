@@ -54,7 +54,7 @@ class modxRTEbridge
         $this->gSettingsCustom        = isset($bridgeConfig['gSettingsCustom']) ? $bridgeConfig['gSettingsCustom'] : array();
         $this->gSettingsDefaultValues = isset($bridgeConfig['gSettingsDefaultValues']) ? $bridgeConfig['gSettingsDefaultValues'] : array();
 
-        $this->mgrAction = $modx->getManagerApi()->action;
+        $this->mgrAction = $modx->manager->action;
 
         // Determine settings from Modx
         $this->mgrAction = $this->mgrAction ? $this->mgrAction : 11;
@@ -457,11 +457,11 @@ class modxRTEbridge
     // Get final value of editor-config
     public function determineValue($key, $conf=NULL)
     {
-        if($conf == NULL) { $conf = $this->themeConfig[$key]; };
+        if($conf == NULL && isset($this->themeConfig[$key])) { $conf = $this->themeConfig[$key]; };
 
         $value = isset($this->themeConfig[$key]['bridged']) ? $this->themeConfig[$key]['bridged'] : NULL;
         $value = $value === NULL && isset($this->themeConfig[$key]['force']) ? $this->themeConfig[$key]['force'] : $value;
-        $value = $value === NULL ? $this->themeConfig[$key]['value'] : $value;
+        $value = $value === NULL && isset($this->themeConfig[$key]['value']) ? $this->themeConfig[$key]['value'] : $value;
 
         if(!in_array($conf['type'], array('boolean','bool'))) {
             if ($value === '' && $conf['empty'] === false) {  // Empty values not allowed
@@ -540,7 +540,7 @@ class modxRTEbridge
         $entermode = !empty($ph[$this->editorKey . '_entermode']) ? $ph[$this->editorKey . '_entermode'] : 'p';
         $ph['entermode_options'] = '<label><input name="[+name+]" type="radio" value="p" ' . $this->checked($entermode == 'p') . '/>' . $this->lang('entermode_opt1') . '</label><br />';
         $ph['entermode_options'] .= '<label><input name="[+name+]" type="radio" value="br" ' . $this->checked($entermode == 'br') . '/>' . $this->lang('entermode_opt2') . '</label>';
-        switch ($modx->getManagerApi()->action) {
+        switch ($modx->manager->action) {
             case '11':
             case '12':
             case '119':
@@ -692,6 +692,7 @@ class modxRTEbridge
 
     public function getSkinNames()
     {
+        global $modx;
         $params = $this->pluginParams;
 
         if (empty($params['skinsDirectory'])) {
@@ -736,6 +737,7 @@ class modxRTEbridge
 
     public function getSkinThemeNames()
     {
+        global $modx;
         $params = $this->pluginParams;
 
         $themeDir = "{$params['base_path']}{$params['skinthemeDirectory']}";
@@ -1024,7 +1026,7 @@ class modxRTEbridge
         if ($rid > 0 && ($modx->getLoginUserType() === 'manager' || IN_MANAGER_MODE))
         {
             if(!isset($_POST['secHash']) ||
-                !isset($_SESSION['modxRTEbridge']['secHash'][$rid]) ||
+               !isset($_SESSION['modxRTEbridge']['secHash'][$rid]) ||
                 $_POST['secHash'] != $_SESSION['modxRTEbridge']['secHash'][$rid]) return 'secHash invalid';
 
             $editableIds = explode(',', $_POST['phs']);

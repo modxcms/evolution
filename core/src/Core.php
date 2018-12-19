@@ -145,6 +145,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $chunkieCache = [];
 
     /**
+     * @deprecated Needs for the modxRTEbridge class
+     * @var array
+     */
+    public $modxRTEbridge = [];
+
+    /**
      * @param array $services
      */
     public function __construct()

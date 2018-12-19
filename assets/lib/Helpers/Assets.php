@@ -8,11 +8,14 @@ require_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 class AssetsHelper
 {
     /**
-     * @var EvolutionCMS\Core
+     * Объект DocumentParser - основной класс MODX
+     * @var \DocumentParser
      * @access protected
      */
-    protected $modx = null;
-    protected $fs = null;
+    protected $modx;
+
+    /** @var \Helpers\FS */
+    protected $fs;
 
     /**
      * @var AssetsHelper cached reference to singleton instance
@@ -24,7 +27,7 @@ class AssetsHelper
      *
      * @return self
      */
-    public static function getInstance(EvolutionCMS\Core $modx)
+    public static function getInstance(DocumentParser $modx)
     {
 
         if (null === self::$instance) {
@@ -38,7 +41,7 @@ class AssetsHelper
      * is not allowed to call from outside: private!
      *
      */
-    private function __construct(EvolutionCMS\Core $modx)
+    private function __construct(DocumentParser $modx)
     {
         $this->modx = $modx;
         $this->fs = \Helpers\FS::getInstance();
@@ -51,7 +54,6 @@ class AssetsHelper
      */
     private function __clone()
     {
-
     }
 
     /**
@@ -61,7 +63,6 @@ class AssetsHelper
      */
     private function __wakeup()
     {
-
     }
 
     /**
@@ -93,12 +94,12 @@ class AssetsHelper
     public function registerScript($name, $params)
     {
         $out = '';
-        if (!isset($this->modx->loadedjscripts[$name])) {
+        if (! isset($this->modx->loadedjscripts[$name])) {
             $src = $params['src'];
-            $remote = strpos($src, "http") !== false;
-            if (!$remote) {
-                $src = MODX_SITE_URL . $src;
-                if (!$this->fs->checkFile($params['src'])) {
+            $remote = strpos($src, 'http') === 0 || strpos($src, '//') === 0;
+            if (! $remote) {
+                $src = $this->modx->config['site_url'] . $src;
+                if (! $this->fs->checkFile($params['src'])) {
                     $this->modx->logEvent(0, 3, 'Cannot load ' . $src, 'Assets helper');
 
                     return $out;
@@ -115,7 +116,6 @@ class AssetsHelper
             }
 
             $this->modx->loadedjscripts[$name] = $params;
-
         }
 
         return $out;
@@ -128,7 +128,9 @@ class AssetsHelper
     public function registerScriptsList($list = array())
     {
         $out = '';
-        if (!is_array($list)) return $out;
+        if (! \is_array($list)) {
+            return $out;
+        }
 
         foreach ($list as $script => $params) {
             $out .= $this->registerScript($script, $params);

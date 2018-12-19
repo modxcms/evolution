@@ -8,7 +8,7 @@ abstract class Action
 {
     /**
      * Объект DocumentParser - основной класс MODX
-     * @var \EvolutionCMS\Core
+     * @var \DocumentParser
      * @access protected
      */
     protected static $modx = null;
@@ -18,19 +18,19 @@ abstract class Action
     protected static $_tplObj = null;
 
     /**
-     * @param \EvolutionCMS\Core $modx
+     * @param \DocumentParser $modx
      */
-    public static function setMODX(\EvolutionCMS\Core $modx)
+    public static function setMODX(\DocumentParser $modx)
     {
         self::$modx = $modx;
     }
 
     /**
-     * @param \EvolutionCMS\Core $modx
+     * @param \DocumentParser $modx
      * @param Template $tpl
      * @param \MODxAPI $classTable
      */
-    public static function init(\EvolutionCMS\Core $modx, Template $tpl, \MODxAPI $classTable)
+    public static function init(\DocumentParser $modx, Template $tpl, \MODxAPI $classTable)
     {
         self::setMODX($modx);
         self::$TPL = Template::showLog();
@@ -52,9 +52,9 @@ abstract class Action
      */
     protected static function _checkObj($id)
     {
-        $q = self::$modx->getDatabase()->select('id', self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $id);
+        $q = self::$modx->db->select('id', self::$modx->getFullTableName(self::TABLE()), "id = " . $id);
 
-        return (self::$modx->getDatabase()->getRecordCount($q) == 1);
+        return (self::$modx->db->getRecordCount($q) == 1);
     }
 
     /**
@@ -64,9 +64,9 @@ abstract class Action
      */
     protected static function _getValue($field, $id)
     {
-        $q = self::$modx->getDatabase()->select($field, self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $id);
+        $q = self::$modx->db->select($field, self::$modx->getFullTableName(self::TABLE()), "id = " . $id);
 
-        return self::$modx->getDatabase()->getValue($q);
+        return self::$modx->db->getValue($q);
     }
 
     /**
@@ -95,7 +95,7 @@ abstract class Action
         self::$TPL = 'ajax/getValue';
         $data = Helper::jeditable('data');
         $out = array();
-        if (!empty($data)) {
+        if (! empty($data)) {
             $modObj = self::$classTable;
             $modObj->edit($data['id']);
             if ($modObj->getID() !== null && ((is_object($callback) && ($callback instanceof \Closure)) || is_callable($callback))) {
@@ -149,9 +149,9 @@ abstract class Action
         $dataID = (int)Template::getParam('docId', $_GET);
         if ($dataID > 0 && self::_checkObj($dataID)) {
             $oldValue = self::_getValue('deleted_at', $dataID);
-            $q = self::$modx->getDatabase()->update(array(
+            $q = self::$modx->db->update(array(
                 'deleted_at' => empty($oldValue) ? date('Y-m-d H:i:s') : null
-            ), self::$modx->getDatabase()->getFullTableName(self::TABLE()), "id = " . $dataID);
+            ), self::$modx->getFullTableName(self::TABLE()), "id = " . $dataID);
             if ($q) {
                 $data['log'] = $oldValue ? 'Запись с ID ' . $dataID . ' восстановлена' : 'Запись с ID ' . $dataID . ' удалена';
             } else {

@@ -35,7 +35,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 	$output = '';
 
 	if ($e->name == 'OnDocFormPrerender'){
-		$pluginDir = MODX_SITE_URL.'assets/plugins/managermanager/';
+		$pluginDir = $modx->config['site_url'].'assets/plugins/managermanager/';
 		$widgetDir = $pluginDir.'widgets/ddselectdocuments/';
 
 		$output .= includeJsCss($widgetDir.'ddselectdocuments.css', 'html');

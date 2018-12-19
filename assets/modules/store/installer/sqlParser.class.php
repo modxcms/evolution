@@ -84,6 +84,8 @@ class SqlParser {
 			$num = $num + 1;
 			if ($sql_do) $modx->db->query($sql_do, false);
 		}
+
+
 	}
 
     public function getTableEncoding()
@@ -92,6 +94,7 @@ class SqlParser {
         if (!empty($this->database_collation)) {
             $out .= ' COLLATE=' . $this->database_collation;
         }
+
         return $out;
     }
 }
