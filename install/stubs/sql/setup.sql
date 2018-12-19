@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `type` tinyint NOT NULL DEFAULT 1 COMMENT '1- information, 2 - warning, 3- error',
   `user` integer NOT NULL DEFAULT 0 COMMENT 'link to user table',
   `usertype` tinyint NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
-  `source` varchar(255) NOT NULL DEFAULT '',
+  `source` varchar(50) NOT NULL DEFAULT '',
   `description` text,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)
@@ -530,7 +530,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
   `cachepwd` varchar(100) NOT NULL default '' COMMENT 'Store new unconfirmed password',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM {TABLEENCODING};
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
   `webuser` integer NOT NULL,
@@ -934,7 +934,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('friendly_urls','1'),
 ('friendly_alias_urls','1'),
 ('use_alias_path','1'),
-('aliaslistingfolder','0'),
 ('cache_type','2'),
 ('failed_login_attempts','3'),
 ('blocked_minutes','60'),
@@ -959,7 +958,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('warning_visibility', '0'),
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
-('enable_filter', '0'),
 ('seostrict', '1'),
 ('number_of_results','30'),
 ('theme_refresher',''),
@@ -1121,6 +1119,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('1009','OnBeforeFileBrowserCopy','1','File Browser Events'),
 ('1010','OnBeforeFileBrowserRename','1','File Browser Events'),
 ('1011','OnFileBrowserRename','1','File Browser Events');
+
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
 

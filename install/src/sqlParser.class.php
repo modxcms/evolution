@@ -27,6 +27,7 @@ class SqlParser {
     public $connection_method;
     public $ignoreDuplicateErrors;
     public $autoTemplateLogic;
+    public $database_collation;
 
 	public function __construct($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
 		$this->host = $host;
