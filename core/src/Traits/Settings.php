@@ -51,7 +51,7 @@ trait Settings
         'tree_page_click' => 'int',
         'allow_multiple_emails' => 'bool',
         'use_editor' => 'bool',
-        'group_tvs' => 'bool',
+        'group_tvs' => 'int',
         'jpegQuality' => 'int',
         'thumbHeight' => 'int',
         'maxImageHeight' => 'int',
