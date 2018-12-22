@@ -284,9 +284,9 @@
         <div class="split my-1"></div>
 
         @include('manager::form.select', [
-            'name' => 'group_tvs',
+            'name' => 'resource_tree_node_name',
             'label' => ManagerTheme::getLexicon('setting_resource_tree_node_name'),
-            'small' => '[(group_tvs)]',
+            'small' => '[(resource_tree_node_name)]',
             'value' => $settings['resource_tree_node_name'],
             'options' => [
                 'pagetitle' => '[*pagetitle*]',
