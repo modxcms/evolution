@@ -1374,7 +1374,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                     <?php
                     //Template Variables
-                    if ($modx->getConfig('group_tvs') > 2 && $templateVariablesOutput) {
+                    if ($group_tvs > 2 && $templateVariablesOutput) {
                         echo $templateVariables;
                     }
                     ?>
