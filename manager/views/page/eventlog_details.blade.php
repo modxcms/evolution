@@ -59,7 +59,7 @@
                         </tr>
                         <tr>
                             <td width="100%" colspan="4"><br />
-                                {{ $log->description }}
+                                {!! $log->description !!}
                             </td>
                         </tr>
                     </table>
