@@ -15,7 +15,9 @@
  *
  * @see         https://github.com/Mihanik71/CodeMirror-MODx
  */
-global $content, $which_editor;
+global $content;
+
+$which_editor = $modx->getConfig('which_editor');
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
@@ -56,7 +58,7 @@ $limitedHeight = false;
 /*
  * Switch event
  */
-switch($modx->Event->name) {
+switch($modx->event->name) {
 	case 'OnTempFormRender'   :
 		$object_name = $content['templatename'];
 		$rte = ($prte ? $prte : 'none');
@@ -150,6 +152,7 @@ switch($modx->Event->name) {
 		$this->logEvent(1, 2, 'Undefined event : <b>' . $modx->Event->name . '</b> in <b>' . $this->Event->activePlugin . '</b> Plugin', 'CodeMirror Plugin : ' . $modx->Event->name);
 }
 $output = '';
+
 if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
 	define('INIT_CODEMIRROR', 1);
 	$output = <<< HEREDOC
@@ -405,5 +408,4 @@ if(('none' == $rte) && $mode && $elements !== NULL) {
 			</script>\n";
 	};
 };
-
-$modx->Event->output($output);
+$modx->event->addOutput($output);
