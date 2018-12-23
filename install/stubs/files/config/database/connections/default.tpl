@@ -11,6 +11,6 @@ return [
     'collation' => env('DB_COLLATION', '[+connection_collation+]'), //$database_collation
     'prefix' => env('DB_PREFIX', '[+table_prefix+]'), //$table_prefix
     'method' => env('DB_METHOD', '[+connection_method+]'), //$database_connection_method
-    'strict' => env('DB_STRICT', true),
+    'strict' => env('DB_STRICT', false),
     'engine' => env('DB_ENGINE'),
 ];
