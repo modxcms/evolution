@@ -5804,7 +5804,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             if ($usrType == 'web') {
-                $usrSettings = Models\WebUserSetting::where('user', '=', $id)->get()
+                $usrSettings = Models\WebUserSetting::where('webuser', '=', $id)->get()
                     ->pluck('setting_value', 'setting_name')
                     ->toArray();
             } else {
