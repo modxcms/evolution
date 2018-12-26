@@ -134,6 +134,7 @@ trait Settings
         $this->setConfig('base_url', MODX_BASE_URL, true);
         $this->setConfig('base_path', MODX_BASE_PATH, true);
         $this->setConfig('site_url', MODX_SITE_URL, true);
+        $this->setConfig('site_manager_path', MODX_MANAGER_PATH, true);
         $this->error_reporting = $this->getConfig('error_reporting');
         $this->setConfig(
             'filemanager_path',
