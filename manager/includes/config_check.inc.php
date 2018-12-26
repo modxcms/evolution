@@ -24,14 +24,6 @@ if ($sysfiles_check!=='0'){
       $warnings[] = array($_lang['configcheck_sysfiles_mod']);
 }
 
-if (is_writable("includes/config.inc.php")){
-    // Warn if world writable
-    if(@fileperms('includes/config.inc.php') & 0x0002) {
-      $warningspresent = 1;
-      $warnings[] = array($_lang['configcheck_configinc']);
-    }
-}
-
 if (file_exists("../install/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_installer']);
