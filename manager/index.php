@@ -71,7 +71,7 @@ if (file_exists(__DIR__ . '/config.php')) {
     ];
 }
 
-if (!empty($config['core']) && file_exists($config['core'] . '/bootstrap.php')) {
+if (!empty($config['core']) && file_exists($config['core'] . '/.install')) {
     require_once $config['core'] . '/bootstrap.php';
 } else {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
