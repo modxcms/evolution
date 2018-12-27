@@ -51,8 +51,9 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 $mstart = memory_get_usage();
+$isGet = mb_strtoupper($_SERVER['REQUEST_METHOD']) === 'GET';
 
-if(mb_strtoupper($_SERVER['REQUEST_METHOD']) === 'GET' && count($_GET) === 1 && !empty($_GET['time'])) {
+if($isGet && count($_GET) === 1 && !empty($_GET['time'])) {
     die();
 }
 // we use this to make sure files are accessed through
@@ -148,10 +149,12 @@ if ((int)$modx->getConfig('validate_referer') !== 0) {
             );
         }
     } else {
-        $modx->webAlertAndQuit(
-            "A possible CSRF attempt was detected. No referer was provided by the server.",
-            "index.php"
-        );
+        if (! $isGet) {
+            $modx->webAlertAndQuit(
+                "A possible CSRF attempt was detected. No referer was provided by the server.",
+                "index.php"
+            );
+        }
     }
 }
 
