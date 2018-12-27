@@ -975,6 +975,7 @@ if ($conn) {
             define('MODX_CLASS', '\DocumentParser');
         }
 
+        file_put_contents(EVO_CORE_PATH . '.install', time());
         $modx = evolutionCMS();
         $modx->getDatabase()->connect();
         // always empty cache after install

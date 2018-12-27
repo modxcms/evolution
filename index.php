@@ -59,10 +59,18 @@ if (file_exists(__DIR__ . '/config.php')) {
     $config = array_merge($config, require __DIR__ . '/config.php');
 }
 if (! file_exists($config['core'] . '/bootstrap.php')) {
+    header('HTTP/1.1 503 Service Temporarily Unavailable');
+    header('Status: 503 Service Temporarily Unavailable');
+    header('Retry-After: 3600');
+
     $path = __DIR__ . '/install/src/template/not_installed.tpl';
     if (file_exists($path)) {
         readfile($path);
+    } else {
+        echo '<h3>Unable to load configuration settings</h3>';
+        echo 'Please run the EVO install utility';
     }
+
     exit;
 }
 

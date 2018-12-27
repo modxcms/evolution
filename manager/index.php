@@ -74,8 +74,13 @@ if (file_exists(__DIR__ . '/config.php')) {
 if (!empty($config['core']) && file_exists($config['core'] . '/bootstrap.php')) {
     require_once $config['core'] . '/bootstrap.php';
 } else {
-    echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the EVO <a href='../install'>install utility</a>";
+    header('HTTP/1.1 503 Service Temporarily Unavailable');
+    header('Status: 503 Service Temporarily Unavailable');
+    header('Retry-After: 3600');
+
+    echo '<h3>Unable to load configuration settings</h3>';
+    echo 'Please run the EVO install utility';
+
     exit;
 }
 
