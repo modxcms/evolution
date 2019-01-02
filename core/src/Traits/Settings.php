@@ -145,6 +145,14 @@ trait Settings
             )
         );
         $this->setConfig(
+            'snapshot_path',
+            str_replace(
+                '[(base_path)]',
+                MODX_BASE_PATH,
+                $this->getConfig('snapshot_path')
+            )
+        );
+        $this->setConfig(
             'rb_base_dir',
             str_replace(
                 '[(base_path)]',
