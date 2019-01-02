@@ -66,23 +66,23 @@ if ($mode == 'restore1') {
 
     // MySQLdumper class can be found below
 } elseif ($mode == 'snapshot') {
-    if (!is_dir(rtrim($modx->getConfig(snapshot_path), '/'))) {
-        mkdir(rtrim($modx->getConfig(snapshot_path), '/'));
-        @chmod(rtrim($modx->getConfig(snapshot_path), '/'), 0777);
+    if (!is_dir(rtrim($modx->getConfig('snapshot_path'), '/'))) {
+        mkdir(rtrim($modx->getConfig('snapshot_path'), '/'));
+        @chmod(rtrim($modx->getConfig('snapshot_path'), '/'), 0777);
     }
-    if (!is_file("{$modx->getConfig(snapshot_path)}.htaccess")) {
+    if (!is_file("{$modx->getConfig('snapshot_path')}.htaccess")) {
         $htaccess = "order deny,allow\ndeny from all\n";
-        file_put_contents("{$modx->getConfig(snapshot_path)}.htaccess", $htaccess);
+        file_put_contents("{$modx->getConfig('snapshot_path')}.htaccess", $htaccess);
     }
-    if (!is_writable(rtrim($modx->getConfig(snapshot_path), '/'))) {
-        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig(snapshot_path))));
+    if (!is_writable(rtrim($modx->getConfig('snapshot_path'), '/'))) {
+        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig('snapshot_path'))));
     }
     $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
     $rs = $modx->getDatabase()->query($sql);
     $tables = $modx->getDatabase()->getColumn('Name', $rs);
     $today = date('Y-m-d_H-i-s');
     global $path;
-    $path = "{$modx->getConfig(snapshot_path)}{$today}.sql";
+    $path = "{$modx->getConfig('snapshot_path')}{$today}.sql";
 
     @set_time_limit(120); // set timeout limit to 2 minutes
     $dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
@@ -90,7 +90,7 @@ if ($mode == 'restore1') {
     $dumper->setDroptables(true);
     $dumpfinished = $dumper->createDump('snapshot');
 
-    $pattern = "{$modx->getConfig(snapshot_path)}*.sql";
+    $pattern = "{$modx->getConfig('snapshot_path')}*.sql";
     $files = glob($pattern, GLOB_NOCHECK);
     $total = ($files[0] !== $pattern) ? count($files) : 0;
     arsort($files);
