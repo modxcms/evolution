@@ -2,7 +2,7 @@
 /**
  * MODX Installer language file
  *
- * @author MEGU, yamamoto, TxO
+ * @author MEGU, yamamoto, TxO, masco
  * @version 1.5.0
  * @date 2018/02/23
  *
@@ -32,13 +32,15 @@ $_lang["btnback_value"] = '戻る';
 $_lang["btnclose_value"] = 'インストール終了';
 $_lang["btnnext_value"] = '進む';
 $_lang["cant_write_config_file"] = '設定ファイルを生成できませんでした。以下をコピーしてconfig.inc.phpに反映してください ';
-$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
+$_lang["cant_write_config_file_note"] = 'それが終われば、ブラウザでYourSiteName.com/[+MGR_DIR+]/にアクセスするとログインできます。';
 $_lang["checkbox_select_options"] = '拡張機能の選択:';
 $_lang["checking_if_cache_exist"] = '<span class="mono">/assets/cache</span>ディレクトリの存在チェック(なければ転送に失敗しています): ';
+$_lang["checking_iconv"] = '拡張機能 <span class="mono">iconv</span> を利用可能かどうか確認してください: ';
+$_lang["checking_iconv_note"] = '拡張機能 iconvをインストール/有効にすることは重要です。有効にする方法がわからない場合は、ホストに訪ねてください。';
 $_lang["checking_if_cache_file_writable"] = 'ファイル<span class="mono">/assets/cache/siteCache.idx.php</span>の書き込み属性(606などに設定): ';
 $_lang["checking_if_cache_file2_writable"] = 'ファイル<span class="mono">/assets/cache/sitePublishing.idx.php</span>の書き込み属性(606などに設定): ';
 $_lang["checking_if_cache_writable"] = '<span class="mono">/assets/cache</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> exists and is writable: ';
+$_lang["checking_if_config_exist_and_writable"] = '<span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> が存在し書き込み可能かどうか確認してください: ';
 $_lang["checking_if_export_exists"] = '<span class="mono">/assets/export</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_export_writable"] = '<span class="mono">/assets/export</span>ディレクトリの書き込み属性(707などに設定): ';
 $_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの存在(なければ転送に失敗しています): ';
@@ -52,7 +54,7 @@ $_lang["checking_sessions"] = 'セッション情報が正常に構成される�
 $_lang["checking_table_prefix"] = 'Tableプリフィックスの設定 `';
 $_lang["choose_language"] = '言語を選択してください';
 $_lang["chunks"] = 'チャンク';
-$_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
+$_lang["config_permissions_note"] = 'Linux / Unixを新規にインストールする場合は、<span class="mono">/[+MGR_DIR+]/includes/</span> ディレクトリ内に<span class="mono">config.inc.php</span> という名前の空のファイルを作成してください。ファイルのパーミッションは0666に設定してください。';
 $_lang["connection_screen_collation"] = '照合順序(エンコード指定含む):<br />※utf8_general_ciを<br />おすすめします';
 $_lang["connection_screen_connection_method"] = '接続時の文字セットの扱い:';
 $_lang["connection_screen_database_connection_information"] = 'データベース設定';
@@ -82,9 +84,9 @@ $_lang["database_use_failed"] = 'データベースを選択できません。�
 $_lang["database_use_failed_note"] = 'データベースのユーザー権限を確認してください。';
 $_lang["default_language"] = '管理画面で使用する言語';
 $_lang["default_language_description"] = '管理画面で使用する言語を選択してください。(※Japanese-eucを選択するとプリインストールされるサンプルコンテンツやアドオンの説明文は文字化けしますのでご注意ください。アドオンの機能は利用できます。)';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
-$_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
+$_lang["depedency_create"] = '依存関係が作成されました';
+$_lang["depedency_update"] = '依存関係が更新されました';
+$_lang["during_execution_of_sql"] = ' SQL文の実行中 ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'エラー';
 $_lang["errors"] = 'エラー';
@@ -114,13 +116,13 @@ $_lang["installing_demo_site"] = 'サンプルサイトのインストール: ';
 $_lang["language_code"] = 'ja';
 $_lang["loading"] = '処理中...';
 $_lang["modules"] = 'モジュール';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
-$_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
-$_lang["modx_install"] = 'MODX &raquo; インストール';
-$_lang["modx_requires_php"] = 'MODXの動作にはPHP [+min_version+]以上が必要です。';
-$_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://evo.im/" target="_blank" style="color: green; text-decoration:underline">EVO</a> Content Management Framework (CMF) project. All rights reserved. EVO は GPL に基づいて使用が許諾されます。';
+$_lang["modx_footer2"] = 'Evo はフリーソフトウェアです。私たちはあなたが創造的であり、あなたが適当であると思われる方法で EVO を利用することを奨励します。変更を加えて、変更した EVO を再配布する場合は、必ずソースコードフリーを保持してください。';
+$_lang["modx_install"] = 'EVO &raquo; インストール';
+$_lang["modx_requires_php"] = 'EVOの動作にはPHP [+min_version+]以上が必要です。';
+$_lang["mysql_5051"] = ' MySQLサーバーのバージョンは 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL 5.0.51には不具合が確認されています。MySQLのアップデートをおすすめします。';
-$_lang["mysql_version_is"] = ' Version ';
+$_lang["mysql_version_is"] = ' バージョン ';
 $_lang["no"] = 'いいえ';
 $_lang["none"] = '全ての選択を解除';
 $_lang["not_found"] = '見つかりません';
@@ -134,11 +136,12 @@ $_lang["plugins"] = 'プラグイン';
 $_lang["preinstall_validation"] = 'インストール前の状態確認';
 $_lang['recommend_collation'] = 'utf8mb4_general_ci';
 $_lang['recommend_collations_order'] = 'utf8mb4_general_ci,utf8_general_ci,utf8mb4_bin,utf8_bin';
-$_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
-$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
-$_lang["recommend_setting_change_validate_referer_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the Manager. We strongly recommend enabling this setting to reduce the risk of a CSRF (Cross Site Request Forgery) attack.';
+$_lang["recommend_setting_change_title"] = '推奨設定の変更';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = '設定変更: <strong>HTTP_REFERERヘッダを検証しますか？</strong>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'あなたのサイトは管理画面に入ってくるリクエストのHTTP_REFERERを検証するように設定されていません。この設定を有効にして、CSRF（Cross Site Request Forgery）攻撃のリスクを減らすことを強くお勧めします。';
 $_lang["remove_install_folder_auto"] = 'インストールディレクトリを自動的に削除する<br />※この操作はサーバ設定によっては実行されないことがあります。<br />削除できなかった場合は、管理画面ログイン時に太文字で警告が表示されますので、手作業で削除してください。';
 $_lang["remove_install_folder_manual"] = '管理画面にログインする前に、&quot;<b>install</b>&quot; フォルダを必ず削除してください。';
+$_lang["resetting_database"] = 'デモサイト用データベースのリセット: ';
 $_lang["retry"] = '再チェック';
 $_lang["running_database_updates"] = '実行中のデータベースのアップデート: ';
 $_lang["sample_web_site"] = 'サンプルサイト';
@@ -167,21 +170,21 @@ $_lang["status_failed"] = '接続できません';
 $_lang["status_failed_could_not_create_database"] = 'データベースを作成できません';
 $_lang["status_failed_database_collation_does_not_match"] = '問題があります - データベース側の照合順序のデフォルト値が「%s」になっています。phpMyAdminが利用できる場合は、該当データベースの「操作」タブで照合順序のデフォルト値を変更してください。';
 $_lang["status_failed_table_prefix_already_in_use"] = '接続できません - このTableプリフィクスはすでに使われています。異なるTableプリフィクスを指定するか、phpMyAdminなどを利用し関連Tableを削除してください。';
-$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
+$_lang['status_failed_mysqli'] = 'エラー -  PHP用のmysqli拡張モジュールがインストールされていません。';
 $_lang["status_passed"] = '問題ありません';
 $_lang["status_passed_database_created"] = 'データベースを作成できます';
 $_lang["status_passed_server"] = '接続できます';
 $_lang["strict_mode"] = ' MySQLがストリクトモードになっています。';
 $_lang["strict_mode_error"] = 'ストリクトモードが無効である必要があります。my.cnfを編集することで、MySQLのモードを変更することができます。あるいは、サーバー管理者へお尋ねください。';
 $_lang["summary_setup_check"] = '<strong>インストール実行前の最終チェックです。</strong>';
-$_lang["system_configuration"] = 'System Configuration';
-$_lang["system_configuration_validate_referer_description"] = 'The <strong>Validate HTTP_REFERER headers</strong> setting is recommended and can protect your site from CSRF attacks, but in some server configurations, can make your manager inaccessible.';
+$_lang["system_configuration"] = 'システム構成';
+$_lang["system_configuration_validate_referer_description"] = '<strong>HTTP_REFERERヘッダーを検証</strong>設定は推奨されており、サイトをCSRF攻撃から保護することができますが、サーバー設定によっては管理画面にアクセスできない場合があります。';
 $_lang["table_prefix_already_inuse"] = ' - このテーブルプレフィックスはすでに使われています。';
 $_lang["table_prefix_already_inuse_note"] = '異なるテーブルプリフィクスを指定するか、phpMyAdminなどを利用し関連テーブルを削除し、再びインストールを試してみてください。';
 $_lang["table_prefix_not_exist"] = ' - 指定されたテーブルプレフィックスがデータベース内に存在していなかったため、インストールが完了しませんでした。正しいテーブルプリフィックスを指定し、再度実行してください。';
-$_lang["table_prefix_not_exist_note"] = 'Setup couldn\'t install into the selected database, as it does not contain existing tables with the prefix you specified to be upgraded. Please choose an existing table prefix, and run Setup again.';
+$_lang["table_prefix_not_exist_note"] = 'アップグレードに指定したプレフィックスを持つ既存のテーブルが含まれていないため、セットアップは選択したデータベースにインストールできませんでした。既存のテーブルプレフィックスを選択して、もう一度セットアップを実行してください。';
 $_lang["templates"] = 'テンプレート';
-$_lang["to_log_into_content_manager"] = 'To log into the Content Manager ([+MGR_DIR+]/index.php) you can click on the `Close` button.';
+$_lang["to_log_into_content_manager"] = '管理画面 ([+MGR_DIR+]/index.php) にログインするために「Close」ボタンをクリックしてください。';
 $_lang["toggle"] = '選択状態を反転';
 $_lang['tvs'] = 'テンプレート変数';
 $_lang["unable_install_chunk"] = 'チャンクをインストールできません';
@@ -191,13 +194,13 @@ $_lang["unable_install_snippet"] = 'スニペットをインストールでき�
 $_lang["unable_install_template"] = 'テンプレートをインストールできません';
 $_lang["upgrade_note"] = '<strong>注意:</strong>管理画面に無事にログインできたら、リソース(旧称・ドキュメント)および各種設定を日本語を含めて編集・保存し、文字化けが起きないかどうかを必ず確認してください。また管理画面内の「イベントログ」を開き、エラーの有無をご確認ください。';
 $_lang["upgraded"] = 'アップデートしました';
-$_lang["validate_referer_title"] = 'Validate HTTP_REFERER headers?';
+$_lang["validate_referer_title"] = 'HTTP_REFERERヘッダを検証しますか？';
 $_lang["visit_forum"] = ' <a href="http://forum.modx.jp/" target="_blank">MODX フォーラム</a>';
 $_lang["warning"] = '注意 ';
 $_lang["welcome_message_start"] = 'インストールの種別を選択してください。';
-$_lang["welcome_message_text"] = '心踊る、未知の領域へようこそ。ガイドに従ってインストールを進めましょう。MODXのインストールは簡単。インストーラの説明に従って、次へ次へと進めてください。<br /><br />このインストーラの手順に従うことにより、他のCMSとのデータベースの共有設定(Tableプリフィクス)や、サンプルコンテンツ及び、推奨される拡張機能のインストールを個別に選択できます。何も選択せずシンプルにコアのみをインストールすることもできます。また、すでに運用中のMODXをアップデートしたり、データベースの設定を変更することもできます。';
-$_lang["welcome_message_welcome"] = 'MODXのインストールを開始します。';
+$_lang["welcome_message_text"] = '心踊る、未知の領域へようこそ。ガイドに従ってインストールを進めましょう。EVOのインストールは簡単。インストーラの説明に従って、次へ次へと進めてください。<br /><br />このインストーラの手順に従うことにより、他のCMSとのデータベースの共有設定(Tableプリフィクス)や、サンプルコンテンツ及び、推奨される拡張機能のインストールを個別に選択できます。何も選択せずシンプルにコアのみをインストールすることもできます。また、すでに運用中のEVOをアップデートしたり、データベースの設定を変更することもできます。';
+$_lang["welcome_message_welcome"] = 'EVOのインストールを開始します。';
 $_lang["writing_config_file"] = 'config.inc.phpへの書き込み(設定情報): ';
 $_lang["yes"] = 'はい';
-$_lang["you_running_php"] = ' - You are running on PHP ';
+$_lang["you_running_php"] = ' - PHP上で動いています ';
 ?>
