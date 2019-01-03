@@ -1,3 +1,3 @@
 <?php
 
-include_once MODX_MANAGER_PATH . 'includes/functions/tv.php';
+include_once EVO_CORE_PATH . 'functions/tv.php';
