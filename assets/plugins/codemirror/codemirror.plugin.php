@@ -64,7 +64,7 @@ switch($modx->event->name) {
 		$rte = ($prte ? $prte : 'none');
 		break;
 	case 'OnChunkFormRender'  :
-		$rte = isset($which_editor) ? $which_editor : 'none';
+		$rte = isset($editor) ? $editor : 'none';
 		break;
 
 	case 'OnRichTextEditorInit':
