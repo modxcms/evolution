@@ -609,7 +609,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             $this->sitemenu['user_management_title'] = [
                 'user_management_title',
                 'users',
-                '<i class="fa fa user-circle-o"></i>' . $this->managerTheme->getLexicon('user_management_title') . '<i class="fa fa-angle-right toggle"></i>',
+                '<i class="fa fa-user-circle-o"></i>' . $this->managerTheme->getLexicon('user_management_title') . '<i class="fa fa-angle-right toggle"></i>',
                 'index.php?a=75',
                 $this->managerTheme->getLexicon('user_management_title'),
                 '',
