@@ -12,6 +12,7 @@ $base_path = dirname(__DIR__) . '/';
 define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 define('MODX_SITE_URL', '/');
+define('EVO_CORE_PATH', $base_path .'core/');
 
 require_once 'src/functions.php';
 
@@ -167,7 +168,7 @@ if (!function_exists('f_owc')) {
 }
 
 // check PHP version
-define('PHP_MIN_VERSION', '5.4.0');
+define('PHP_MIN_VERSION', '7.1.3');
 $phpMinVersion = PHP_MIN_VERSION; // Maybe not necessary. For backward compatibility
 echo PHP_EOL . $_lang['checking_php_version'];
 // -1 if left is less, 0 if equal, +1 if left is higher
@@ -183,7 +184,7 @@ if (version_compare(phpversion(), PHP_MIN_VERSION) < 0) {
 // check directories
 // cache exists?
 echo strip_tags($_lang['checking_if_cache_exist']);
-if (!file_exists($path . "../assets/cache") || !file_exists($path . "../assets/cache/rss")) {
+if (!file_exists($path . "../assets/cache")) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -214,14 +215,6 @@ if (!is_writable($tmp)) {
     echo $_lang['ok'] . PHP_EOL;
 }
 
-
-echo strip_tags($_lang['checking_if_cache_file2_writable']);
-if (!is_writable($path . "../assets/cache/sitePublishing.idx.php")) {
-    $errors++;
-    echo $_lang['failed'] . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
 
 
 // File Browser directories exists?
@@ -375,6 +368,7 @@ if ($conn) {
 }
 
 // check for strict mode
+/*
 if ($conn) {
     echo $_lang['checking_mysql_strict_mode'];
     $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
@@ -393,7 +387,7 @@ if ($conn) {
     } else {
         echo $_lang['ok'] . PHP_EOL;
     }
-}
+}*/
 // Version and strict mode check end
 
 // andrazk 20070416 - add install flag and disable manager login
@@ -886,15 +880,17 @@ $confph['user_name'] = mysqli_real_escape_string($conn, $database_user);
 $confph['password'] = mysqli_real_escape_string($conn, $database_password);
 $confph['connection_charset'] = $database_connection_charset;
 $confph['connection_method'] = $database_connection_method;
+$confph['connection_collation'] = $database_collation;
 $confph['dbase'] = str_replace('`', '', $dbase);
 $confph['table_prefix'] = $table_prefix;
 $confph['lastInstallTime'] = time();
 $confph['site_sessionname'] = $site_sessionname;
 
-$configString = file_get_contents($path . 'stubs/config.tpl');
+
+$configString = file_get_contents($path . '/stubs/files/config/database/connections/default.tpl');
 $configString = parse($configString, $confph);
 
-$filename = $base_path . MGR_DIR . '/includes/config.inc.php';
+$filename = EVO_CORE_PATH . 'config/database/connections/default.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
     $configFileFailed = true;
@@ -907,13 +903,13 @@ if (@ fwrite($handle, $configString) === false) {
 @ fclose($handle);
 
 // try to chmod the config file go-rwx (for suexeced php)
-$chmodSuccess = @chmod($filename, 0404);
+@chmod($filename, 0404);
 
 if ($configFileFailed == true) {
     echo $_lang['failed'] . PHP_EOL;
     $errors += 1;
 
-    echo $_lang['cant_write_config_file'] . ' ' . MGR_DIR . '/includes/config.inc.php' . PHP_EOL;
+    echo $_lang['cant_write_config_file'] . ' ' . EVO_CORE_PATH . 'config/database/connections/default.php' . PHP_EOL;
     echo ' ' . PHP_EOL;
     echo ' ' . PHP_EOL;
     echo $configString;
@@ -1477,23 +1473,37 @@ if ($callBackFnc != "") {
 }
 
 // Setup the MODX API -- needed for the cache processor
+if (file_exists(dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
+    require_once dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php';
+}
+define('MODX_API_MODE', true);
+if (!defined('MODX_BASE_PATH')) {
+    define('MODX_BASE_PATH', $base_path);
+}
 if (!defined('MODX_MANAGER_PATH')) {
     define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
 }
 $database_type = 'mysqli';
 // initiate a new document parser
-include_once($path . '../' . MGR_DIR . '/includes/document.parser.class.inc.php');
-$modx = new DocumentParser;
-$modx->db->connect();
+if (!defined('EVO_BOOTSTRAP_FILE')) {
+    define('EVO_BOOTSTRAP_FILE', EVO_CORE_PATH . 'bootstrap.php');
+    require_once EVO_CORE_PATH . 'bootstrap.php';
+}
+
+if (! defined('MODX_CLASS')) {
+    define('MODX_CLASS', '\DocumentParser');
+}
+
+file_put_contents(EVO_CORE_PATH . '.install', time());
+$modx = evolutionCMS();
+$modx->getDatabase()->connect();
+
 // always empty cache after install
-$sync = new EvolutionCMS\Legacy\Cache();
-$sync->setCachepath($path . "../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache
+$modx->clearCache();
 
 // try to chmod the cache go-rwx (for suexeced php)
-$chmodSuccess = @chmod($path . '../assets/cache/siteCache.idx.php', 0600);
-$chmodSuccess = @chmod($path . '../assets/cache/sitePublishing.idx.php', 0600);
+@chmod(dirname(__DIR__, 3) . '/assets/cache/siteCache.idx.php', 0600);
+@chmod(dirname(__DIR__, 3) . '/assets/cache/sitePublishing.idx.php', 0600);
 
 // remove any locks on the manager functions so initial manager login is not blocked
 mysqli_query($conn, "TRUNCATE TABLE `" . $table_prefix . "active_users`");
@@ -1528,3 +1538,4 @@ if ($removeInstall === 'y') {
     unlink($base_path . 'README.md');
     echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
 }
+
