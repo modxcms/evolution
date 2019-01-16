@@ -345,7 +345,7 @@ if(('none' == $rte) && $mode && $elements !== NULL) {
 			$setHeight = '';
 		};
 
-		$object_id = md5($evt->name . '-' . $content['id'] . '-' . $el);
+		$object_id = md5($modx->event->name . '-' . $content['id'] . '-' . $el);
 
 		$output .= "
 			<script>
