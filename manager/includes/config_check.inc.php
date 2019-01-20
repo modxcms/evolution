@@ -16,28 +16,23 @@ if($_SESSION['mgrRole'] == 1) {
 }
 
 // NOW CHECK CONFIG
-$warningspresent = 0;
-
+$warnings = array();
 $sysfiles_check = $modx->getManagerApi()->checkSystemChecksum();
 if ($sysfiles_check!=='0'){
-      $warningspresent = 1;
       $warnings[] = array($_lang['configcheck_sysfiles_mod']);
 }
 
 if (file_exists("../install/")) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_installer']);
 }
 
 if (!extension_loaded('gd') || !extension_loaded('zip')) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_php_gdzip']);
 }
 
 if(!isset($modx->config['_hide_configcheck_validate_referer']) || $modx->config['_hide_configcheck_validate_referer'] !== '1') {
     if(isset($_SESSION['mgrPermissions']['settings']) && $_SESSION['mgrPermissions']['settings'] == '1') {
-        if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(setting_value)', $modx->getDatabase()->getFullTableName('system_settings'), "setting_name='validate_referer' AND setting_value='0'"))) {
-            $warningspresent = 1;
+        if ($modx->getConfig('validate_referer') == '0') {
             $warnings[] = array($_lang['configcheck_validate_referer']);
         }
     }
@@ -49,7 +44,6 @@ if(!isset($modx->config['_hide_configcheck_templateswitcher_present']) || $modx-
         $rs = $modx->getDatabase()->select('name, disabled', $modx->getDatabase()->getFullTableName('site_plugins'), "name IN ('TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher') OR plugincode LIKE '%TemplateSwitcher%'");
         $row = $modx->getDatabase()->getRow($rs);
         if($row && $row['disabled'] == 0) {
-            $warningspresent = 1;
             $warnings[] = array($_lang['configcheck_templateswitcher_present']);
             $tplName = $row['name'];
             $script = <<<JS
@@ -87,27 +81,25 @@ JS;
         }
     }
 }
-
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['unauthorized_page']}'")) == 0) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
+$unathorized_page_id = $modx->getConfig('unauthorized_page');
+$error_page_id = $modx->getConfig('error_page');
+$pages = \EvolutionCMS\Models\SiteContent::select (['id', 'published', 'privateweb'])
+    ->whereIn('id', [$unathorized_page_id, $error_page_id])
+    ->get();
+foreach ($pages as $page) {
+    if ($page->id == $unathorized_page_id && !$page->published) {
+        $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
+    }
+    if ($page->id == $unathorized_page_id && $page->privateweb) {
+        $warnings[] = array($_lang['configcheck_unauthorizedpage_unavailable']);
+    }
+    if ($page->id == $error_page_id && !$page->published) {
+        $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
+    }
+    if ($page->id == $error_page_id && $page->privateweb) {
+        $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
+    }
 }
-
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('published', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['error_page']}'")) == 0) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_errorpage_unpublished']);
-}
-
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['unauthorized_page']}'")) == 1) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_unauthorizedpage_unavailable']);
-}
-
-if ($modx->getDatabase()->getValue($modx->getDatabase()->select('privateweb', $modx->getDatabase()->getFullTableName('site_content'), "id='{$modx->config['error_page']}'")) == 1) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
-}
-
 if (!function_exists('checkSiteCache')) {
     /**
      * @return bool
@@ -118,38 +110,33 @@ if (!function_exists('checkSiteCache')) {
         if (file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
             $checked= @include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
         }
+
         return $checked;
     }
 }
 
 if (!is_writable(MODX_BASE_PATH . "assets/cache/")) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_cache']);
 }
 
 if (!checkSiteCache()) {
-    $warningspresent = 1;
     $warnings[]= array($lang['configcheck_sitecache_integrity']);
 }
 
 if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_images']);
 }
 
 if(strpos($modx->config['rb_base_dir'],MODX_BASE_PATH)!==0) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_rb_base_dir']);
 }
 if(strpos($modx->config['filemanager_path'],MODX_BASE_PATH)!==0) {
-    $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_filemanager_path']);
 }
 
 // clear file info cache
 clearstatcache();
-
-if ($warningspresent==1) {
+if (!empty($warnings)) {
 
 if(!isset($modx->config['send_errormail'])) $modx->config['send_errormail']='3';
 $config_check_results = "<h3>".$_lang['configcheck_notok']."</h3>";
