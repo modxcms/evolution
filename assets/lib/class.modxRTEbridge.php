@@ -44,10 +44,7 @@ class modxRTEbridge
         };
 
         $this->modx = evolutionCMS();
-        $settings = \EvolutionCMS\Models\SystemSetting::where('setting_name', 'like', $editorKey . '_%')
-            ->pluck('setting_value', 'setting_name')
-            ->toArray();
-
+        $settings = $this->modx->allConfig();
         // Check right path
         $file = !empty($basePath) ? $basePath : __FILE__;
         $current_path = str_replace('\\', '/', dirname($file) . '/');
@@ -84,10 +81,15 @@ class modxRTEbridge
             // Get user-config
             case 12:    // Edit user
             case 119:   // Purge plugin processor
-                $editorConfig = $this->modx->getUserSettings();
+                $editorConfig = \EvolutionCMS\Models\UserSetting::where('user', '=',
+                    $this->modx->getLoginUserID('mgr'))->get()
+                    ->pluck('setting_value', 'setting_name')
+                    ->toArray();
                 break;
             // Get Modx-config
             case 17:    // Modx-configuration
+                $editorConfig = array_merge($settings, $this->modx->configGlobal);
+                break;
             default:
                 $editorConfig = $settings;
                 break;
@@ -133,13 +135,20 @@ class modxRTEbridge
         };
 
         // Take over editor-configuration from Modx
+        if (isset($this->modxParams['custom_buttons_useglobal']) && $this->modxParams['custom_buttons_useglobal'] == '1') {
+            $this->modxParams['custom_buttons1_useglobal'] = '1';
+            $this->modxParams['custom_buttons2_useglobal'] = '1';
+            $this->modxParams['custom_buttons3_useglobal'] = '1';
+            $this->modxParams['custom_buttons4_useglobal'] = '1';
+        }
+
         foreach ($modxParamsArr as $p) {
             $useGlobalName = $p . '_useglobal';
             if (!in_array($this->mgrAction, array(
                     11,
                     12
-                )) && isset($this->modxParams[$useGlobalName]) && $this->modxParams[$useGlobalName] == '1' && isset($settings[$editorKey . '_' . $p])) {
-                $value = $settings[$editorKey . '_' . $p];
+                )) && isset($this->modxParams[$useGlobalName]) && $this->modxParams[$useGlobalName] == '1' && isset($this->modx->configGlobal[$editorKey . '_' . $p])) {
+                $value = $this->modx->configGlobal[$editorKey . '_' . $p];
             } else {
                 $value = isset($editorConfig[$editorKey . '_' . $p]) ? $editorConfig[$editorKey . '_' . $p] : null;
                 $value = $value === null && isset($this->gSettingsDefaultValues[$p]) ? $this->gSettingsDefaultValues[$p] : $value;
@@ -325,7 +334,8 @@ class modxRTEbridge
         // Init via elements
         if (isset($this->pluginParams['elements'])) {
 
-            $this->pluginParams['elements'] = !is_array($this->pluginParams['elements']) ? explode(',', $this->pluginParams['elements']) : $this->pluginParams['elements']; // Allow setting via plugin-configuration
+            $this->pluginParams['elements'] = !is_array($this->pluginParams['elements']) ? explode(',',
+                $this->pluginParams['elements']) : $this->pluginParams['elements']; // Allow setting via plugin-configuration
 
             // Allows bridging elements+TV-options etc before looping
             $this->renderBridgeParams('initBridge');
@@ -343,26 +353,26 @@ class modxRTEbridge
                 // Init only once at all - Load Editors-Library, CSS etc
                 if (!defined($this->editorKey . '_INIT_ONCE')) {
                     define($this->editorKey . '_INIT_ONCE', 1);
-                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init_once.html") ."\n";
+                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init_once.html") . "\n";
                     if (!empty($this->initOnceArr)) {
                         $output .= implode("\n", $this->initOnceArr);
                     }
                     // Provide JS-object with parameters for external scripts like MultiTV
                     $jsParams = array(
-                        'default'=>'config_'.$this->editorKey.'_'.$this->modxParams['theme']
+                        'default' => 'config_' . $this->editorKey . '_' . $this->modxParams['theme']
                     );
-                    $output .= "<script>var modxRTEbridge_{$this->editorKey} = ". json_encode($jsParams) .";</script>";
+                    $output .= "<script>var modxRTEbridge_{$this->editorKey} = " . json_encode($jsParams) . ";</script>";
                 }
 
                 // Init only once per config (enables multiple config-objects i.e. for richtext / richtextmini via [+configJs+])
                 if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
                     define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
-                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
+                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") . "\n";
                 }
 
                 // Loop through tvs
-                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") ."\n";
-                $output  = $this->modx->parseText($output, $ph);
+                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") . "\n";
+                $output = $this->modx->parseText($output, $ph);
                 $output = str_replace('\\', '/', $output);
             }
 
@@ -378,8 +388,8 @@ class modxRTEbridge
 
             if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
                 define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
-                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
-                $output  = $this->modx->parseText($output, $ph);
+                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") . "\n";
+                $output = $this->modx->parseText($output, $ph);
             }
         }
 
@@ -388,7 +398,7 @@ class modxRTEbridge
         if (!empty($placeholderArr)) {
             foreach ($placeholderArr[1] as $key => $val) {
                 $output = str_replace($placeholderArr[0][$key], '', $output);
-                $this->debugMessages[] = 'Removed empty placeholder: '.$placeholderArr[1];
+                $this->debugMessages[] = 'Removed empty placeholder: ' . $placeholderArr[1];
             }
         }
 
@@ -622,7 +632,8 @@ class modxRTEbridge
                         "<!-- modxRTEbridge {$this->editorKey} -->") === false) { // Avoid double init if already cached..
                     if (strpos($this->modx->documentOutput, '</body>') !== false) {
                         // Append to <body>
-                        $this->modx->documentOutput = str_replace('</body>', $initJs . "</body>", $this->modx->documentOutput);
+                        $this->modx->documentOutput = str_replace('</body>', $initJs . "</body>",
+                            $this->modx->documentOutput);
                     } else {
                         // No <body> - append to source
                         $this->modx->documentOutput .= $initJs;
