@@ -1433,7 +1433,7 @@ $_lang["lock_element_type_8"] = "ルール";
 $_lang["lock_element_editing"] = "[+lasthit_df+]から、あなたはこの[+element_type+]を編集しています";
 $_lang["lock_element_locked_by"] = "この [+element_type+] は[+lasthit_df+]からuser\n[+username+] によってロックされました";
 
-$_lang["minifyphp_incache_title"] = 'サイトキャッシュ内のPHPコードを圧縮e';
+$_lang["minifyphp_incache_title"] = 'サイトキャッシュ内のPHPコードを圧縮';
 $_lang["minifyphp_incache_message"] = 'PHPコード（スニペットとプラグイン）を圧縮し、このサイトのキャッシュファイルを保存する、参考：<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
 
 $_lang["logout_reminder_msg"] = "注意：[+date+]にログアウトを忘れています。あなたの仕事を終えた後は、ログアウトすることに注意を払ってください。";
