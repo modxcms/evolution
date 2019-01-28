@@ -943,7 +943,7 @@ if ($installMode == 0) {
 }
 
 // Reset database for installation of demo-site
-if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
+if ($installData == 1 && $moduleSQLDataFile && $moduleSQLResetFile) {
     echo $_lang['resetting_database'];
     $sqlParser->process($moduleSQLResetFile);
     // display database results
@@ -966,7 +966,7 @@ if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 
 // Install Templates
 $moduleTemplate = $mt;
-if (!empty($moduleTemplate) || $installData) {
+if (!empty($moduleTemplate) || $installData == 1) {
     echo PHP_EOL . $_lang['templates'] . ":" . PHP_EOL;
     //$selTemplates = $_POST['template'];
     foreach ($moduleTemplates as $k => $moduleTemplate) {
@@ -1029,7 +1029,7 @@ if (!empty($moduleTemplate) || $installData) {
 
 // Install Template Variables
 $moduleTVs = $mtv;
-if (is_array($moduleTVs) || $installData) {
+if (is_array($moduleTVs) || $installData == 1) {
     echo PHP_EOL . $_lang['tvs'] . ': ' . PHP_EOL;
     //$selTVs = $_POST['tv'];
     foreach ($moduleTVs as $k => $moduleTV) {
@@ -1109,7 +1109,7 @@ if (is_array($moduleTVs) || $installData) {
 
 $moduleChunks = $mc;
 // Install Chunks
-if (is_array($moduleChunks) || $installData) {
+if (is_array($moduleChunks) || $installData == 1) {
     echo PHP_EOL . $_lang['chunks'] . ": " . PHP_EOL;
     foreach ($moduleChunks as $k => $moduleChunk) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
@@ -1170,7 +1170,7 @@ if (is_array($moduleChunks) || $installData) {
 
 // Install Modules
 $moduleModules = $mm;
-if (is_array($moduleModules) || $installData) {
+if (is_array($moduleModules) || $installData == 1) {
     echo PHP_EOL . $_lang['modules'] . ":" . PHP_EOL;
     //$selModules = $_POST['module'];
     foreach ($moduleModules as $k => $moduleModule) {
@@ -1224,7 +1224,7 @@ if (is_array($moduleModules) || $installData) {
 
 // Install Plugins
 $modulePlugins = $mp;
-if (is_array($modulePlugins) || $installData) {
+if (is_array($modulePlugins) || $installData == 1) {
     echo PHP_EOL . $_lang['plugins'] . ":" . PHP_EOL;
     $selPlugs = $_POST['plugin'];
     foreach ($modulePlugins as $k => $modulePlugin) {
@@ -1326,7 +1326,7 @@ if (is_array($modulePlugins) || $installData) {
 
 // Install Snippets
 $moduleSnippet = $ms;
-if (is_array($moduleSnippet) || $installData) {
+if (is_array($moduleSnippet) || $installData == 1) {
     echo PHP_EOL . $_lang['snippets'] . ":" . PHP_EOL;
     //$selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k => $moduleSnippet) {
@@ -1377,7 +1377,7 @@ if (is_array($moduleSnippet) || $installData) {
 }
 
 // Install demo-site
-if ($installData && $moduleSQLDataFile) {
+if ($installData == 1 && $moduleSQLDataFile) {
     echo PHP_EOL . $_lang['installing_demo_site'];
     $sqlParser->process($moduleSQLDataFile);
     // display database results
