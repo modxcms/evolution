@@ -69,7 +69,7 @@ class modxRTEbridge
         $this->gSettingsCustom = isset($bridgeConfig['gSettingsCustom']) ? $bridgeConfig['gSettingsCustom'] : array();
         $this->gSettingsDefaultValues = isset($bridgeConfig['gSettingsDefaultValues']) ? $bridgeConfig['gSettingsDefaultValues'] : array();
 
-        $this->mgrAction = $this->modx->manager->action;
+        $this->mgrAction = $this->modx->get('ManagerTheme')->$manager->getActionId();
 
         // Determine settings from Modx
         $this->mgrAction = $this->mgrAction ? $this->mgrAction : 11;
