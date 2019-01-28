@@ -88,7 +88,7 @@ class modxRTEbridge
                 break;
             // Get Modx-config
             case 17:    // Modx-configuration
-                $editorConfig = array_merge($settings, $this->modx->configGlobal);
+                $editorConfig = empty($this->modx->configGlobal) ? $settings : array_merge($settings, $this->modx->configGlobal);
                 break;
             default:
                 $editorConfig = $settings;
