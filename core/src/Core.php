@@ -49,7 +49,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @var array
      */
-    public $configGlobal = null; // contains backup of settings overwritten by user-settings
+    public $configGlobal = array(); // contains backup of settings overwritten by user-settings
     public $rs;
     public $result;
     public $sql;
