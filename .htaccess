@@ -18,6 +18,9 @@ RewriteRule .* - [F,L]
 #redirect http to https
 #RewriteCond %{HTTP:SSL} !=1 [NC]
 #RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R=301]
+#or
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} !^$
