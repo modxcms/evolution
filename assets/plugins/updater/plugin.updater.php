@@ -89,32 +89,33 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
         $_SESSION['updatelink'] = md5(time());
 
         // if a GitHub commit feed
-        if ($type == 'commits') {
+        if ($type === 'commits') {
 
-            // include MagPieRSS
-            require_once('media/rss/rss_fetch.inc');
             $branchPath = 'https://github.com/'.$version.'/'.$type.'/'.$branch;
             $url = $branchPath.'.atom';
 
             // create Feed
             $updateButton = '';
-            $rss = @fetch_rss($url);
-                if (!$rss){
-                    $errorsMessage .= '-'.$_lang['error_failedtogetfeed'].':'.$url.'<br>';
-                    $errors += 1;
-                }
-                $updateButton .= '<div class="table-responsive" style="max-height:200px;"><table class="table data">';
-                $updateButton .= '<thead><tr><th>'.$_lang['table_commitdate'].'</th><th>'.$_lang['table_titleauthor'].'</th><th></th></tr></thead><tbody>';
+            $rss = fetchCacheableRss($url, null, function(SimpleXMLElement $item) {
+                return $item->getName() === 'entry' ? $item : null;
+            });
+            if (empty($rss)) {
+                $errorsMessage .= '-'.$_lang['error_failedtogetfeed'].':'.$url.'<br>';
+                $errors += 1;
+            }
+            $updateButton .= '<div class="table-responsive" style="max-height:200px;"><table class="table data">';
+            $updateButton .= '<thead><tr><th>'.$_lang['table_commitdate'].'</th><th>'.$_lang['table_titleauthor'].'</th><th></th></tr></thead><tbody>';
 
-            $items = array_slice($rss->items, 0, $commitCount);
+            $items = array_slice($rss, 0, $commitCount);
+            /** @var SimpleXMLElement $item */
             foreach ($items as $item) {
-                $commitid = $item['id'];
+                $commitid = $item->id->__toString();
                 $commit = substr($commitid, strpos($commitid, "Commit/") + 7);
-                $href = $item['link'];
-                $title = $item['title'];
-                $pubdate = $item['updated'];
+                $href = $item->link['href'];
+                $title = $item->title->__toString();
+                $pubdate = $item->updated->__toString();
                 $pubdate = $modx->toDateFormat(strtotime($pubdate));
-                $author = $item['author_name'];
+                $author = $item->author->name->__toString();
                 $updateButton .= '<tr><td><b>' . $pubdate . '</b></td><td><a href="' . $href . '" target="_blank">' . $title . '</a> (' . $author . ')</td>';
                 if (($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
                     $updateButton .= '<td></td></tr>';
@@ -146,7 +147,7 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
             }
 
             $output = '';
-            
+
             $currentVersion = $modx->getVersionData();
             $currentMajorVersion = array_shift(explode('.', $currentVersion['version']));
 
@@ -169,9 +170,9 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
 
                 foreach($info as $key => $val ) {
                     if( $currentMajorVersion == array_shift(explode('.', $val['name'])) ){
-                        
+
                         $git['version'] = $val['name'];
-                        
+
                         if(strpos($val['name'], 'alpha')) {
                             $git['alpha'] = $val['name'];
                             continue;
