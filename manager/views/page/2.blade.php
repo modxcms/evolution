@@ -439,5 +439,5 @@
     }
     $ph['widgets'] = $output;
     ?>
-    {!! ManagerTheme::makeTemplate('welcome', 'manager_welcome_tpl', $ph) !!}
+    {!! ManagerTheme::makeTemplate('welcome', 'manager_welcome_tpl', $ph, false) !!}
 @endsection
