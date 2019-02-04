@@ -45,7 +45,7 @@ class Database extends BaseDatabase implements Interfaces\DatabaseInterface
     /**
      * {@inheritDoc}
      */
-    public function query($sql)
+    public function query($sql, $watchError = true)
     {
         try {
             $out = [];
@@ -59,7 +59,9 @@ class Database extends BaseDatabase implements Interfaces\DatabaseInterface
 
             return $out;
         } catch (Exception $exception) {
-            evolutionCMS()->getService('ExceptionHandler')->messageQuit($exception->getMessage());
+            if ($watchError === true) {
+                evolutionCMS()->getService('ExceptionHandler')->messageQuit($exception->getMessage());
+            }
         }
     }
 
