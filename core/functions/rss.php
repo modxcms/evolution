@@ -1,29 +1,30 @@
 <?php
-if (! function_exists('fetchRssChannelItems')) {
-    function fetchRssChannelItems($url)
+if (! function_exists('fetchCacheableRss')) {
+    function fetchCacheableRss($url, $xpath = null, Closure $callback = null)
     {
         $items = [];
         $file = evolutionCMS()->getCachePath() . 'rss/' . md5($url);
         $loadPath = file_exists($file) ? $file : $url;
         $content = empty($loadPath) ? '' : file_get_contents($loadPath);
 
-        if (!empty($content)) {
-            $xml = (new SimpleXmlElement($content))
-                ->xpath('channel/item');
+        if (! empty($content)) {
+            $xml = new SimpleXmlElement($content);
 
-            foreach ($xml as $entry) {
-                if ($entry instanceof SimpleXMLElement) {
-                    $props = [];
-                    foreach ($entry as $prop) {
-                        if (mb_strtolower($prop->getName()) === 'pubdate' && ($time = @strtotime($prop->__toString())) > 0) {
-                            $props['date_timestamp'] = $time;
-                            $props['pubdate'] = $prop->__toString();
-                        } else {
-                            $props[$prop->getName()] = $prop->__toString();
+            if (! empty($xpath)) {
+                $xml = $xml->xpath($xpath);
+            }
+
+            if ($callback !== null) {
+                foreach ($xml as $entry) {
+                    if ($entry instanceof SimpleXMLElement) {
+                        $props = $callback($entry);
+                        if (!empty($props)) {
+                            $items[] = $props;
                         }
                     }
-                    $items[] = $props;
                 }
+            } else {
+                $items = $xml;
             }
 
             if (!empty($items) && $loadPath !== $file) {

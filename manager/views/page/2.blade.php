@@ -234,7 +234,19 @@
     // create Feed
     foreach ($urls as $section => $url) {
         $output = '';
-        $items = fetchRssChannelItems($url);
+        $items = fetchCacheableRss($url, 'channel/item', function(SimpleXMLElement $entry){
+            $props = [];
+            foreach ($entry as $prop) {
+                if (mb_strtolower($prop->getName()) === 'pubdate' && ($time = @strtotime($prop->__toString())) > 0) {
+                    $props['date_timestamp'] = $time;
+                    $props['pubdate'] = $prop->__toString();
+                } else {
+                    $props[$prop->getName()] = $prop->__toString();
+                }
+            }
+
+            return $props;
+        });
         if (empty($items)) {
             $feedData[$section] = 'Failed to retrieve ' . $url;
             continue;
