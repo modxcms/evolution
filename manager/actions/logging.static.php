@@ -28,7 +28,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                             // get all users currently in the log
                             $logs_user = record_sort(array_unique_multi($logs, 'internalKey'), 'username');
                             foreach ($logs_user as $row) {
-                                $selectedtext = $row['internalKey'] == $_REQUEST['searchuser'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['internalKey'] == get_by_key($_REQUEST, 'searchuser') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['internalKey'] . '"' . $selectedtext . '>' . $row['username'] . "</option>\n";
                             }
                             ?>
@@ -48,7 +48,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                                 if ($action == 'Idle') {
                                     continue;
                                 }
-                                $selectedtext = $row['action'] == $_REQUEST['action'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['action'] == get_by_key($_REQUEST, 'action') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['action'] . '"' . $selectedtext . '>' . $row['action'] . ' - ' . $action . "</option>\n";
                             }
                             ?>
@@ -64,7 +64,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                             // get all itemid currently in logging
                             $logs_items = record_sort(array_unique_multi($logs, 'itemid'), 'itemid');
                             foreach ($logs_items as $row) {
-                                $selectedtext = $row['itemid'] == $_REQUEST['itemid'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['itemid'] == get_by_key($_REQUEST, 'itemid') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['itemid'] . '"' . $selectedtext . '>' . $row['itemid'] . "</option>\n";
                             }
                             ?>
@@ -80,7 +80,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                             // get all itemname currently in logging
                             $logs_names = record_sort(array_unique_multi($logs, 'itemname'), 'itemname');
                             foreach ($logs_names as $row) {
-                                $selectedtext = $row['itemname'] == $_REQUEST['itemname'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['itemname'] == get_by_key($_REQUEST, 'itemname') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['itemname'] . '"' . $selectedtext . '>' . $row['itemname'] . "</option>\n";
                             }
                             ?>
@@ -90,7 +90,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_msg"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="message" class="form-control" value="<?= $_REQUEST['message'] ?>" />
+                        <input type="text" name="message" class="form-control" value="<?= get_by_key($_REQUEST, 'message') ?>" />
                     </div>
                 </div>
                 <div class="row form-row">
@@ -138,20 +138,20 @@ $logs = $modx->getDatabase()->makeArray($rs);
 if (isset($_REQUEST['log_submit'])) {
     // get the selections the user made.
     $sqladd = array();
-    if ($_REQUEST['searchuser'] != 0) {
-        $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
+    if (get_by_key($_REQUEST, 'searchuser') != 0) {
+        $sqladd[] = "internalKey='" . (int)get_by_key($_REQUEST, 'searchuser') . "'";
     }
-    if ($_REQUEST['action'] != 0) {
-        $sqladd[] = "action=" . (int)$_REQUEST['action'];
+    if (get_by_key($_REQUEST, 'action') != 0) {
+        $sqladd[] = "action=" . (int)get_by_key($_REQUEST, 'action');
     }
-    if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
-        $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";
+    if (get_by_key($_REQUEST, 'itemid') != 0 || get_by_key($_REQUEST, 'itemid') == "-") {
+        $sqladd[] = "itemid='" . get_by_key($_REQUEST, 'itemid') . "'";
     }
-    if ($_REQUEST['itemname'] != '0') {
-        $sqladd[] = "itemname='" . $modx->getDatabase()->escape($_REQUEST['itemname']) . "'";
+    if (get_by_key($_REQUEST, 'itemname') != '0') {
+        $sqladd[] = "itemname='" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'itemname')) . "'";
     }
-    if ($_REQUEST['message'] != "") {
-        $sqladd[] = "message LIKE '%" . $modx->getDatabase()->escape($_REQUEST['message']) . "%'";
+    if (get_by_key($_REQUEST, 'message') != "") {
+        $sqladd[] = "message LIKE '%" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'message')) . "%'";
     }
     // date stuff
     if ($_REQUEST['datefrom'] != "") {
@@ -171,7 +171,7 @@ if (isset($_REQUEST['log_submit'])) {
     // Number of result to display on the page, will be in the LIMIT of the sql query also
     $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs');
 
-    $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
+    $extargv = "&a=13&searchuser=" . get_by_key($_REQUEST, 'searchuser') . "&action=" . get_by_key($_REQUEST, 'action') . "&itemid=" . get_by_key($_REQUEST, 'itemid') . "&itemname=" . get_by_key($_REQUEST, 'itemname') . "&message=" . get_by_key($_REQUEST, 'message') . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
     // build the sql
     $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
