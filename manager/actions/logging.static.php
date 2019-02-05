@@ -114,7 +114,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_results"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs ?>" />
+                        <input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs') ?>" />
                     </div>
                 </div>
 
@@ -169,7 +169,7 @@ if (isset($_REQUEST['log_submit'])) {
     }
 
     // Number of result to display on the page, will be in the LIMIT of the sql query also
-    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs;
+    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs');
 
     $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
