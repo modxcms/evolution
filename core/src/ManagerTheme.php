@@ -525,7 +525,7 @@ class ManagerTheme implements ManagerThemeInterface
         $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
         $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
 
-        return $this->makeTemplate('manager.lockout', 'manager_lockout_tpl', $plh);
+        return $this->makeTemplate('manager.lockout', 'manager_lockout_tpl', $plh, false);
     }
 
     public function getTemplate($name, $config = null)
@@ -670,7 +670,7 @@ class ManagerTheme implements ManagerThemeInterface
         $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
         $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
 
-        return $this->makeTemplate('login', 'manager_login_tpl', $plh);
+        return $this->makeTemplate('login', 'manager_login_tpl', $plh, false);
     }
 
     public function saveAction($action)
