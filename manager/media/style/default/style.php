@@ -97,7 +97,7 @@ $_style['icons_move_document']      = 'fa fa-arrows';
 $_style['icons_publish_document']   = 'fa fa-check';
 $_style['icons_unpublish_resource'] = 'fa fa-close';
 $_style['icons_delete_resource']    = 'fa fa-trash';
-$_style['icons_undelete_resource']  = 'fa fa-refresh';
+$_style['icons_undelete_resource']  = 'fa fa-undo';
 $_style['icons_resource_overview']  = 'fa fa-info';
 $_style['icons_edit_resource']      = 'fa fa-pencil-square-o';
 //context menu
