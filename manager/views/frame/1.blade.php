@@ -433,7 +433,7 @@ if(!function_exists('constructLink')) {
         constructLink(9, 'fa fa-check', $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
         constructLink(10, 'fa fa-close', $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
         constructLink(4, 'fa fa-trash', $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
-        constructLink(8, 'fa fa-fa-refresh', $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
+        constructLink(8, 'fa fa-undo', $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
         ?>
         <div class="seperator"></div>
         <?php
