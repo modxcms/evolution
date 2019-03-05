@@ -67,7 +67,7 @@ while ($ph = $modx->getDatabase()->getRow($rs)) {
         if ($ph['deleted'] == 0) {
             $delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]" target="main"><i class="fa fa-trash fa-fw"></i></a> ';
         } else {
-            $delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]" target="main"><i class="fa fa-refresh fa-fw"></i></a> ';
+            $delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]" target="main"><i class="fa fa-undo fa-fw"></i></a> ';
         }
         $ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
     } else {
