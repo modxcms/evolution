@@ -45,6 +45,7 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|SiteContent $ancestor
+ * @property SiteTemplate|null $tpl
  *
  * HasMany
  * @property Eloquent\Collection $childrens
@@ -205,6 +206,26 @@ class SiteContent extends Eloquent\Model
         return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
 
+    /**
+     * @return Eloquent\Collection
+     */
+    public function getTvAttribute() : Eloquent\Collection
+    {
+        /** @var Eloquent\Collection $docTv */
+        if ($this->tpl->tvs === null) {
+            return new Eloquent\Collection;
+        }
+        $docTv = $this->templateValues->pluck('value', 'id');
+        return $this->tpl->tvs->map(function(SiteTmplvar $value) use ($docTv) {
+            $out = $value->default_text;
+            if ($docTv->has($value->getKey())) {
+                $out = $docTv->get($value->getKey());
+            }
+
+            return ['name' => $value->name, 'value' => $out];
+        });
+    }
+
     public function scopePublishDocuments(Eloquent\Builder $builder, $time)
     {
         return $builder->where('pub_date', '<=', $time)
@@ -242,5 +263,10 @@ class SiteContent extends Eloquent\Model
     public function documentGroups(): Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(DocumentgroupName::class, 'document_groups', 'document', 'document_group');
+    }
+
+    public function tpl() : Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(SiteTemplate::class, 'template', 'id');
     }
 }
