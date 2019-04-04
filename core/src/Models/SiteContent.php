@@ -260,7 +260,7 @@ class SiteContent extends Eloquent\Model
         if ($this->tpl->tvs === null) {
             return collect();
         }
-        $docTv = $this->templateValues->pluck('value', 'id');
+        $docTv = $this->templateValues->pluck('value', 'tmplvarid');
         return $this->tpl->tvs->map(function (SiteTmplvar $value) use ($docTv) {
             $out = $value->default_text;
             if ($docTv->has($value->getKey())) {
