@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Tracy\Bridges\Nette;
 
 use Nette;
@@ -25,7 +27,7 @@ class MailSender
 	private $fromEmail;
 
 
-	public function __construct(Nette\Mail\IMailer $mailer, $fromEmail = null)
+	public function __construct(Nette\Mail\IMailer $mailer, string $fromEmail = null)
 	{
 		$this->mailer = $mailer;
 		$this->fromEmail = $fromEmail;
@@ -34,12 +36,10 @@ class MailSender
 
 	/**
 	 * @param  mixed  $message
-	 * @param  string  $email
-	 * @return void
 	 */
-	public function send($message, $email)
+	public function send($message, string $email): void
 	{
-		$host = preg_replace('#[^\w.-]+#', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : php_uname('n'));
+		$host = preg_replace('#[^\w.-]+#', '', $_SERVER['HTTP_HOST'] ?? php_uname('n'));
 
 		$mail = new Nette\Mail\Message;
 		$mail->setHeader('X-Mailer', 'Tracy');
