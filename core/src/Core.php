@@ -3484,46 +3484,47 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $sendto = (!isset($p['to'])) ? $this->getConfig('emailsender') : $p['to'];
         $sendto = explode(',', $sendto);
+        $mail = $this->getMail();
         foreach ($sendto as $address) {
-            list($name, $address) = $this->getMail()->address_split($address);
-            $this->getMail()->AddAddress($address, $name);
+            list($name, $address) = $mail->address_split($address);
+            $mail->AddAddress($address, $name);
         }
         if (isset($p['cc'])) {
             $p['cc'] = explode(',', $p['cc']);
             foreach ($p['cc'] as $address) {
-                list($name, $address) = $this->getMail()->address_split($address);
-                $this->getMail()->AddCC($address, $name);
+                list($name, $address) = $mail->address_split($address);
+                $mail->AddCC($address, $name);
             }
         }
         if (isset($p['bcc'])) {
             $p['bcc'] = explode(',', $p['bcc']);
             foreach ($p['bcc'] as $address) {
-                list($name, $address) = $this->getMail()->address_split($address);
-                $this->getMail()->AddBCC($address, $name);
+                list($name, $address) = $mail->address_split($address);
+                $mail->AddBCC($address, $name);
             }
         }
         if (isset($p['from']) && strpos($p['from'], '<') !== false && substr($p['from'], -1) === '>') {
-            list($p['fromname'], $p['from']) = $this->getMail()->address_split($p['from']);
+            list($p['fromname'], $p['from']) = $mail->address_split($p['from']);
         }
-        $this->getMail()->setFrom(
+        $mail->setFrom(
             isset($p['from']) ? $p['from'] : $this->getConfig('emailsender'),
             isset($p['fromname']) ? $p['fromname'] : $this->getConfig('site_name')
         );
-        $this->getMail()->Subject = (!isset($p['subject'])) ? $this->getConfig('emailsubject') : $p['subject'];
-        $this->getMail()->Body = $p['body'];
+        $mail->Subject = (!isset($p['subject'])) ? $this->getConfig('emailsubject') : $p['subject'];
+        $mail->Body = $p['body'];
         if (isset($p['type']) && $p['type'] === 'text') {
-            $this->getMail()->IsHTML(false);
+            $mail->IsHTML(false);
         }
         if (!is_array($files)) {
             $files = array();
         }
         foreach ($files as $f) {
             if (file_exists(MODX_BASE_PATH . $f) && is_file(MODX_BASE_PATH . $f) && is_readable(MODX_BASE_PATH . $f)) {
-                $this->getMail()->AddAttachment(MODX_BASE_PATH . $f);
+                $mail->AddAttachment(MODX_BASE_PATH . $f);
             }
         }
 
-        return $this->getMail()->send();
+        return $mail->send();
     }
 
     /**
