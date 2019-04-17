@@ -18,7 +18,10 @@
  * @author      Many contributors since then
  * @lastupdate  26/11/2018
  */
-if (! defined('MODX_BASE_PATH')) {
+
+use WebPConvert\WebPConvert;
+
+if (!defined('MODX_BASE_PATH')) {
     die('What are you doing? Get out of here!');
 }
 
@@ -37,7 +40,7 @@ $phpThumbPath = isset($phpThumbPath) ? $phpThumbPath : 'assets/snippets/phpthumb
  * @see: https://github.com/kalessil/phpinspectionsea/blob/master/docs/probable-bugs.md#mkdir-race-condition
  */
 $path = MODX_BASE_PATH . $cacheFolder;
-if (! file_exists($path) && mkdir($path) && is_dir($path)) {
+if (!file_exists($path) && mkdir($path) && is_dir($path)) {
     chmod($path, $newFolderAccessMode);
 }
 
@@ -45,14 +48,14 @@ if (!empty($input)) {
     $input = rawurldecode($input);
 }
 
-if (empty($input) || ! file_exists(MODX_BASE_PATH . $input)) {
+if (empty($input) || !file_exists(MODX_BASE_PATH . $input)) {
     $input = isset($noImage) ? $noImage : $phpThumbPath . 'noimage.png';
 }
 
 /**
  * allow read in phpthumb cache folder
  */
-if (! file_exists(MODX_BASE_PATH . $cacheFolder . '/.htaccess') &&
+if (!file_exists(MODX_BASE_PATH . $cacheFolder . '/.htaccess') &&
     $cacheFolder !== $defaultCacheFolder &&
     strpos($cacheFolder, $defaultCacheFolder) === 0
 ) {
@@ -68,10 +71,10 @@ $options = 'f=' . (in_array($ext, array('png', 'gif', 'jpeg')) ? $ext : 'jpg&q=8
 
 parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
-    if (! empty($folder)) {
+    if (!empty($folder)) {
         $cacheFolder .= '/' . $folder;
         $path = MODX_BASE_PATH . $cacheFolder;
-        if (! file_exists($path) && mkdir($path) && is_dir($path)) {
+        if (!file_exists($path) && mkdir($path) && is_dir($path)) {
             chmod($path, $newFolderAccessMode);
         }
     }
@@ -80,13 +83,13 @@ foreach ($tmpImagesFolder as $folder) {
 $fNamePref = rtrim($cacheFolder, '/') . '/';
 $fName = $path_parts['filename'];
 $fNameSuf = '-' .
-    (isset($params['w']) ? $params['w'] : '') .'x' . (isset($params['h']) ? $params['h'] : '') . '-' .
+    (isset($params['w']) ? $params['w'] : '') . 'x' . (isset($params['h']) ? $params['h'] : '') . '-' .
     substr(md5(serialize($params) . filemtime(MODX_BASE_PATH . $input)), 0, 3) .
     '.' . $params['f'];
 
 $outputFilename = MODX_BASE_PATH . $fNamePref . $fName . $fNameSuf;
-if (! file_exists($outputFilename)) {
-    if (! class_exists('phpthumb')) {
+if (!file_exists($outputFilename)) {
+    if (!class_exists('phpthumb')) {
         require_once MODX_BASE_PATH . $phpThumbPath . '/phpthumb.class.php';
     }
     $phpThumb = new phpthumb();
@@ -101,6 +104,24 @@ if (! file_exists($outputFilename)) {
         $phpThumb->RenderToFile($outputFilename);
     } else {
         $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
+    }
+}
+
+if (isset($webp) && class_exists('\WebPConvert\WebPConvert')) {
+    $checkWebp = 1;
+    $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $iosDevice = array('iphone', 'ipod', 'ipad', 'macintosh', 'mac os', 'Edge', 'MSIE');
+
+    foreach ($iosDevice as $val) {
+        if (stripos($userAgent, $val) !== false) $checkWebp = 0;
+    }
+    if ($checkWebp === 1) {
+        if (file_exists($outputFilename . '.webp')) {
+            $fNameSuf .= '.webp';
+        } else {
+            WebPConvert::convert($outputFilename, $outputFilename . '.webp');
+            $fNameSuf .= '.webp';
+        }
     }
 }
 
