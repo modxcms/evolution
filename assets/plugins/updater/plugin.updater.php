@@ -170,7 +170,8 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
                 $info = json_decode($info, true);
 
                 foreach ($info as $key => $val) {
-                    if ($currentMajorVersion == array_shift(explode('.', $val['name']))) {
+                    $arrayVersion = explode('.', $val['name']);
+                    if ($currentMajorVersion == array_shift($arrayVersion)) {
 
                         $git['version'] = $val['name'];
 
