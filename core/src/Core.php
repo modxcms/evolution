@@ -151,6 +151,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $modxRTEbridge = [];
 
     /**
+     * @var array
+     */
+    private $dataForView = [];
+
+    /**
      * @param array $services
      */
     public function __construct()
@@ -2776,10 +2781,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->minParserPasses = -1;
                 $this->maxParserPasses = -1;
                 /** @var \Illuminate\View\View $tpl */
-                $tpl = $this['view']->make($template, [
+
+                $data = [
                     'modx'     => $this,
                     'documentObject' => isset($this->documentObject['id']) ? $this->makeDocumentObject($this->documentObject['id']) : []
-                ]);
+                ];
+
+                $data = array_merge($data, $this->dataForView);
+
+                $tpl = $this['view']->make($template, $data);
 
                 $templateCode = $tpl->render();
             } else {
@@ -6145,5 +6155,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $msg = $_SERVER['REQUEST_URI'];
         }
         $this->logEvent(0, $type, $msg, $title);
+    }
+
+    /**
+     * @param array $data
+     */
+    public function addDataToView($data = [])
+    {
+        $this->dataForView = array_merge($this->dataForView, $data);
     }
 }
