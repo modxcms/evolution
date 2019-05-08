@@ -267,7 +267,7 @@ if (! function_exists('getTVDisplayFormat')) {
             case 'delim':    // display as delimitted list
                 $value = parseInput($value, '||');
                 $p = $params['format'] ? $params['format'] : ' ';
-                if ($p == "\\n") {
+                if ($p === "\\n") {
                     $p = "\n";
                 }
                 $o = str_replace('||', $p, $value);
@@ -276,16 +276,16 @@ if (! function_exists('getTVDisplayFormat')) {
             case 'string':
                 $value = parseInput($value);
                 $format = strtolower($params['format']);
-                if ($format == 'upper case') {
+                if ($format === 'upper case') {
                     $o = strtoupper($value);
                 } else {
-                    if ($format == 'lower case') {
+                    if ($format === 'lower case') {
                         $o = strtolower($value);
                     } else {
-                        if ($format == 'sentence case') {
+                        if ($format === 'sentence case') {
                             $o = ucfirst($value);
                         } else {
-                            if ($format == 'capitalize') {
+                            if ($format === 'capitalize') {
                                 $o = ucwords($value);
                             } else {
                                 $o = $value;
@@ -416,14 +416,14 @@ if (! function_exists('getTVDisplayFormat')) {
                     $w = "100%";
                     $h = "100%";
                 }
-                if ($params['asize'] == 'Yes' || ($params['awidth'] == 'Yes' && $params['aheight'] == 'Yes')) {
+                if ($params['asize'] === 'Yes' || ($params['awidth'] === 'Yes' && $params['aheight'] == 'Yes')) {
                     $autoMode = "3";  //both
                 } else {
                     if ($params['awidth'] == 'Yes') {
-                        $autoMode = "1"; //width only
+                        $autoMode = '1'; //width only
                     } else {
                         if ($params['aheight'] == 'Yes') {
-                            $autoMode = "2";    //height only
+                            $autoMode = '2';    //height only
                         }
                     }
                 }
@@ -485,7 +485,7 @@ if (! function_exists('getTVDisplayFormat')) {
 
             case 'htmlentities':
                 $value = parseInput($value);
-                if ($tvtype == 'checkbox' || $tvtype == 'listbox-multiple') {
+                if ($tvtype === 'checkbox' || $tvtype === 'listbox-multiple') {
                     // remove delimiter from checkbox and listbox-multiple TVs
                     $value = str_replace('||', '', $value);
                 }
@@ -496,7 +496,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $widget_output = '';
                 $o = '';
                 /* If we are loading a file */
-                if (substr($params['output'], 0, 5) == "@FILE") {
+                if (substr($params['output'], 0, 5) === "@FILE") {
                     $file_name = MODX_BASE_PATH . trim(substr($params['output'], 6));
                     if (!file_exists($file_name)) {
                         $widget_output = $file_name . ' does not exist';
@@ -535,7 +535,7 @@ if (! function_exists('getTVDisplayFormat')) {
 
             default:
                 $value = parseInput($value);
-                if ($tvtype == 'checkbox' || $tvtype == 'listbox-multiple') {
+                if ($tvtype === 'checkbox' || $tvtype === 'listbox-multiple') {
                     // add separator
                     $value = explode('||', $value);
                     $value = implode($sep, $value);
@@ -581,10 +581,10 @@ if (! function_exists('parseInput')) {
                 $rows[] = ($columns) ? $cols : implode(' ', $cols);
             }
 
-            return ($type == "array") ? $rows : implode($delim, $rows);
+            return ($type === 'array') ? $rows : implode($delim, $rows);
         } else {
             // must be a text
-            if ($type == "array") {
+            if ($type === 'array') {
                 return explode($delim, $src);
             } else {
                 return $src;
@@ -661,26 +661,26 @@ if (! function_exists('renderFormElement')) {
         if ($cimode === false) {
             switch ($field_type) {
 
-                case "text": // handler for regular text boxes
-                case "rawtext"; // non-htmlentity converted text boxes
+                case 'text': // handler for regular text boxes
+                case 'rawtext'; // non-htmlentity converted text boxes
                     $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
                     break;
-                case "email": // handles email input fields
+                case 'email': // handles email input fields
                     $field_html .= '<input type="email" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%"/>';
                     break;
-                case "number": // handles the input of numbers
+                case 'number': // handles the input of numbers
                     $field_html .= '<input type="number" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
                     break;
-                case "textareamini": // handler for textarea mini boxes
+                case 'textareamini': // handler for textarea mini boxes
                     $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
                     break;
-                case "textarea": // handler for textarea boxes
-                case "rawtextarea": // non-htmlentity convertex textarea boxes
-                case "htmlarea": // handler for textarea boxes (deprecated)
-                case "richtext": // handler for textarea boxes
+                case 'textarea': // handler for textarea boxes
+                case 'rawtextarea': // non-htmlentity convertex textarea boxes
+                case 'htmlarea': // handler for textarea boxes (deprecated)
+                case 'richtext': // handler for textarea boxes
                     $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
                     break;
-                case "date":
+                case 'date':
                     $field_id = str_replace(array(
                         '-',
                         '.'
@@ -692,7 +692,7 @@ if (! function_exists('renderFormElement')) {
                     $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . ManagerTheme::getStyle('actions_calendar_delete') . '"></i></a>';
 
                     break;
-                case "dropdown": // handler for select boxes
+                case 'dropdown': // handler for select boxes
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
@@ -705,7 +705,7 @@ if (! function_exists('renderFormElement')) {
                     }
                     $field_html .= "</select>";
                     break;
-                case "listbox": // handler for select boxes
+                case 'listbox': // handler for select boxes
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
@@ -718,13 +718,13 @@ if (! function_exists('renderFormElement')) {
                     }
                     $field_html .= "</select>";
                     break;
-                case "listbox-multiple": // handler for select boxes where you can choose multiple items
+                case 'listbox-multiple': // handler for select boxes where you can choose multiple items
                     $field_value = explode("||", $field_value);
                     $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode('==', $itemvalue);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }

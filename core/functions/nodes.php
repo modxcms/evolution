@@ -78,7 +78,7 @@ if(!function_exists('makeHTML')) {
                 '<i class="fa fa-ban"></i>', $_lang['empty_folder']);
         }
 
-        $nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->getConfig('resource_tree_node_name') : $_SESSION['tree_nodename'];
+        $nodeNameSource = $_SESSION['tree_nodename'] === 'default' ? $modx->getConfig('resource_tree_node_name') : $_SESSION['tree_nodename'];
 
         while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
@@ -99,7 +99,7 @@ if(!function_exists('makeHTML')) {
                 $treeNodeClass .= ' current';
             }
 
-            $weblinkDisplay = $row['type'] == 'reference' ? sprintf('&nbsp;%s', $_style['tree_linkgo']) : '';
+            $weblinkDisplay = $row['type'] === 'reference' ? sprintf('&nbsp;%s', $_style['tree_linkgo']) : '';
             $pageIdDisplay = '<small>(' . ($modx_textdir ? '&rlm;' : '') . $row['id'] . ')</small>';
 
             // Prepare displaying user-locks

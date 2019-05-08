@@ -60,13 +60,13 @@ if (! function_exists('rel2abs')) {
             return $rel;
         }
         // queries and anchors
-        if ($rel[0] == '#' || $rel[0] == '?') {
+        if ($rel[0] === '#' || $rel[0] === '?') {
             return $base . $rel;
         }
         // remove non-directory element from path
         $path = preg_replace('#/[^/]*$#', '', $path);
         // destroy path if relative url points to root
-        if ($rel[0] == '/') {
+        if ($rel[0] === '/') {
             $path = '';
         }
         // dirty absolute URL
