@@ -41,7 +41,8 @@ class ExceptionHandler
      */
     public function handleShutdown()
     {
-        if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
+        $error = error_get_last();
+        if ($error !== null && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalExceptionFromError($error, 0));
         }
     }
@@ -295,11 +296,11 @@ class ExceptionHandler
         $totalTime = sprintf("%2.4f s", $totalTime);
         $phpTime = sprintf("%2.4f s", $phpTime);
 
-        $str = str_replace('[^q^]', $queries, $str);
-        $str = str_replace('[^qt^]', $queryTime, $str);
-        $str = str_replace('[^p^]', $phpTime, $str);
-        $str = str_replace('[^t^]', $totalTime, $str);
-        $str = str_replace('[^m^]', $total_mem, $str);
+        $str = str_replace(
+            array('[^q^]', '[^qt^]', '[^p^]', '[^t^]', '[^m^]')
+            , array($queries, $queryTime, $phpTime, $totalTime, $total_mem)
+            , $str
+        );
 
         $php_errormsg = error_get_last();
         if (!empty($php_errormsg) && isset($php_errormsg['message'])) {
@@ -355,8 +356,8 @@ class ExceptionHandler
         }
 
         // Display error
-        if ($this->shouldDisplay()) {
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
+        if (!$this->shouldDisplay()) {
+            echo '<!DOCTYPE html><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                  <link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . $this->container->getConfig('manager_theme',
                     'default') . '/style.css" />
@@ -392,7 +393,9 @@ class ExceptionHandler
             $key++;
             if (substr($val['function'], 0, 11) === 'messageQuit') {
                 break;
-            } elseif (substr($val['function'], 0, 8) === 'phpError') {
+            }
+
+            if (substr($val['function'], 0, 8) === 'phpError') {
                 break;
             }
             $path = str_replace('\\', '/', $val['file']);
@@ -415,7 +418,7 @@ class ExceptionHandler
             $args = preg_replace_callback('/\$var/', function () use ($modx, &$tmp, $val) {
                 $arg = $val['args'][$tmp - 1];
                 switch (true) {
-                    case is_null($arg):
+                    case $arg === null:
                         {
                             $out = 'NULL';
                             break;

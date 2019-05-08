@@ -270,7 +270,11 @@ class ManagerTheme implements ManagerThemeInterface
 
     public function getTextDir($notEmpty = null)
     {
-        return ($notEmpty === null) ? $this->textDir : (empty($this->textDir) ? '' : $notEmpty);
+        if (empty($this->textDir)) {
+            return ($notEmpty === null) ? $this->textDir : '';
+        }
+
+        return ($notEmpty === null) ? $this->textDir : $notEmpty;
     }
 
     public function setTextDir($textDir = 'rtl')
@@ -451,7 +455,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         $out = null;
 
-        if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype'] != 'manager') {
+        if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype'] !== 'manager') {
             //		if (isset($_COOKIE[session_name()])) {
             //			setcookie(session_name(), '', 0, MODX_BASE_URL);
             //		}
@@ -461,7 +465,7 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         // andrazk 20070416 - if installer is running, destroy active sessions
-        if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
+        if (is_file(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
             include_once(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
             if (isset($installStartTime)) {
                 if ((time() - $installStartTime) > 5 * 60) { // if install flag older than 5 minutes, discard
@@ -485,11 +489,11 @@ class ManagerTheme implements ManagerThemeInterface
             if (isset($_SESSION['mgrValidated'])) {
                 if (isset($_SESSION['modx.session.created.time'])) {
                     if ($_SESSION['modx.session.created.time'] < EVO_INSTALL_TIME) {
-                        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+                        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                             if (isset($_COOKIE[session_name()])) {
                                 session_unset();
                                 @session_destroy();
-                                //						setcookie(session_name(), '', 0, MODX_BASE_URL);
+                                // setcookie(session_name(), '', 0, MODX_BASE_URL);
                             }
                             header('HTTP/1.0 307 Redirect');
                             header('Location: ' . MODX_MANAGER_URL . 'index.php?installGoingOn=2');

@@ -190,8 +190,8 @@ class Parser
     {
         $tpl = '';
         $ext = null;
-        $this->twigEnabled = substr($name, 0, 3) == '@T_';
-        $this->bladeEnabled = substr($name, 0, 3) == '@B_';//(0 === strpos($name, '@B_'));
+        $this->twigEnabled = strpos($name, '@T_') === 0;
+        $this->bladeEnabled = strpos($name, '@B_') === 0;//(0 === strpos($name, '@B_'));
         if ($name != '' && ! array_key_exists($name, $this->modx->chunkCache)) {
             $mode = (preg_match(
                     '/^((@[A-Z_]+)[:]{0,1})(.*)/Asu',
@@ -337,7 +337,7 @@ class Parser
                 break;
             case is_string($tpl):
                 break;
-            case is_null($tpl):
+            case $tpl === null:
             default:
                 $tpl = $this->getTemplate($m->documentObject['template']);
         }
@@ -362,9 +362,15 @@ class Parser
         $tpl = null;
         $id = (int)$id;
         if ($id > 0) {
-            $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = {$id}");
+            $tpl = $this->modx->db->getValue(
+                sprintf(
+                    'SELECT `content` FROM %s WHERE `id` = %d'
+                    , $this->modx->getFullTableName('site_templates')
+                    , (int)$id
+                )
+            );
         }
-        if (is_null($tpl)) {
+        if ($tpl === null) {
             $tpl = '[*content*]';
         }
 
@@ -395,7 +401,7 @@ class Parser
                     $out = str_replace(array_keys($item), array_values($item), $out);
                 }
                 if (!$disablePHx && preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
-                    if (is_null($this->phx) || !($this->phx instanceof Phx)) {
+                    if ($this->phx === null || !($this->phx instanceof Phx)) {
                         $this->phx = $this->createPHx(0, 1000);
                     }
                     $this->phx->placeholders = array();
@@ -439,7 +445,7 @@ class Parser
      */
     protected function getTwig($name, $tpl)
     {
-        if (is_null($this->twig) && isset($this->modx->twig)) {
+        if ($this->twig === null && isset($this->modx->twig)) {
             $twig = clone $this->modx->twig;
             $this->twig = $twig;
         } else {

@@ -51,9 +51,6 @@ if(!function_exists('makeHTML')) {
             $orderby .= ', menuindex ASC, pagetitle';
         }
 
-        $tblsc = $modx->getDatabase()->getFullTableName('site_content');
-        $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
-        $tblst = $modx->getDatabase()->getFullTableName('site_templates');
         // get document groups for current user
         $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',',
             $_SESSION['mgrDocgroups']) : '';
@@ -67,18 +64,33 @@ if(!function_exists('makeHTML')) {
         } else {
             $access = '';
         }
-        $docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
-        $field = "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
-        MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess, GROUP_CONCAT(document_group SEPARATOR ',') AS roles";
-        $from = "{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id LEFT JOIN {$tblst} st on st.id = sc.template";
-        $where = "(parent={$parent}) {$access} GROUP BY sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr";
-        $result = $modx->getDatabase()->select($field, $from, $where, $orderby);
+        $docgrp_cond = $docgrp ? sprintf('OR dg.document_group IN (%s)', $docgrp) : '';
+
+        $result = $modx->getDatabase()->select(
+            "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+        MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess, GROUP_CONCAT(document_group SEPARATOR ',') AS roles"
+            , sprintf(
+                '%s AS sc LEFT JOIN %s dg on dg.document = sc.id LEFT JOIN %s st on st.id = sc.template'
+                , $modx->getDatabase()->getFullTableName('site_content')
+                , $modx->getDatabase()->getFullTableName('document_groups')
+                , $modx->getDatabase()->getFullTableName('site_templates')
+            )
+            , sprintf('(parent=%d) %s GROUP BY sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr'
+                , $parent
+                , $access
+            )
+            , $orderby
+        );
         if ($modx->getDatabase()->getRecordCount($result) == 0) {
             $output .= sprintf('<div><a class="empty">%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer,
                 '<i class="fa fa-ban"></i>', $_lang['empty_folder']);
         }
 
-        $nodeNameSource = $_SESSION['tree_nodename'] === 'default' ? $modx->getConfig('resource_tree_node_name') : $_SESSION['tree_nodename'];
+        if ($_SESSION['tree_nodename'] === 'default') {
+            $nodeNameSource = $modx->getConfig('resource_tree_node_name');
+        } else {
+            $nodeNameSource = $_SESSION['tree_nodename'];
+        }
 
         while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
@@ -99,7 +111,11 @@ if(!function_exists('makeHTML')) {
                 $treeNodeClass .= ' current';
             }
 
-            $weblinkDisplay = $row['type'] === 'reference' ? sprintf('&nbsp;%s', $_style['tree_linkgo']) : '';
+            if ($row['type'] === 'reference') {
+                $weblinkDisplay = sprintf('&nbsp;%s', $_style['tree_linkgo']);
+            } else {
+                $weblinkDisplay = '';
+            }
             $pageIdDisplay = '<small>(' . ($modx_textdir ? '&rlm;' : '') . $row['id'] . ')</small>';
 
             // Prepare displaying user-locks
@@ -563,7 +579,16 @@ if(!function_exists('checkIsFolder')) {
     {
         $modx = evolutionCMS();
 
-        return (int)$modx->getDatabase()->getValue($modx->getDatabase()->query('SELECT count(*) FROM ' . $modx->getDatabase()->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
+        return (int)$modx->getDatabase()->getValue(
+            $modx->getDatabase()->query(
+                sprintf(
+                    'SELECT count(*) FROM %s WHERE parent=%d AND isfolder=%d '
+                    , $modx->getDatabase()->getFullTableName('site_content')
+                    , $parent
+                    , $isfolder
+                )
+            )
+        );
     }
 }
 

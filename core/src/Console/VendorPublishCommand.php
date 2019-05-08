@@ -98,7 +98,7 @@ class VendorPublishCommand extends Command
             "Which provider or tag's files would you like to publish?",
             $choices = $this->publishableChoices()
         );
-        if ($choice == $choices[0] || is_null($choice)) {
+        if ($choice == $choices[0] || $choice === null) {
             return;
         }
         $this->parseChoice($choice);
@@ -111,9 +111,19 @@ class VendorPublishCommand extends Command
     protected function publishableChoices()
     {
         return array_merge(
-            ['<comment>Publish files from all providers and tags listed below</comment>'],
-            preg_filter('/^/', '<comment>Provider: </comment>', Arr::sort(ServiceProvider::publishableProviders())),
-            preg_filter('/^/', '<comment>Tag: </comment>', Arr::sort(ServiceProvider::publishableGroups()))
+            [
+                '<comment>Publish files from all providers and tags listed below</comment>'
+            ]
+            , preg_filter(
+                '/^/'
+                , '<comment>Provider: </comment>'
+                , Arr::sort(ServiceProvider::publishableProviders())
+            )
+            , preg_filter(
+                '/^/'
+                , '<comment>Tag: </comment>'
+                , Arr::sort(ServiceProvider::publishableGroups())
+            )
         );
     }
     /**
@@ -125,9 +135,9 @@ class VendorPublishCommand extends Command
     protected function parseChoice($choice)
     {
         list($type, $value) = explode(': ', strip_tags($choice));
-        if ($type == 'Provider') {
+        if ($type === 'Provider') {
             $this->provider = $value;
-        } elseif ($type == 'Tag') {
+        } elseif ($type === 'Tag') {
             $this->tags = [$value];
         }
     }
@@ -135,7 +145,7 @@ class VendorPublishCommand extends Command
      * Publishes the assets for a tag.
      *
      * @param  string  $tag
-     * @return mixed
+     * @return void
      */
     protected function publishTag($tag)
     {
@@ -165,9 +175,13 @@ class VendorPublishCommand extends Command
     protected function publishItem($from, $to)
     {
         if ($this->files->isFile($from)) {
-            return $this->publishFile($from, $to);
-        } elseif ($this->files->isDirectory($from)) {
-            return $this->publishDirectory($from, $to);
+            $this->publishFile($from, $to);
+            return;
+        }
+
+        if ($this->files->isDirectory($from)) {
+            $this->publishDirectory($from, $to);
+            return;
         }
         $this->error("Can't locate path: <{$from}>");
     }
@@ -195,10 +209,12 @@ class VendorPublishCommand extends Command
      */
     protected function publishDirectory($from, $to)
     {
-        $this->moveManagedFiles(new MountManager([
-            'from' => new Flysystem(new LocalAdapter($from)),
-            'to' => new Flysystem(new LocalAdapter($to)),
-        ]));
+        $this->moveManagedFiles(
+            new MountManager([
+                'from' => new Flysystem(new LocalAdapter($from)),
+                'to' => new Flysystem(new LocalAdapter($to)),
+            ])
+        );
         $this->status($from, $to, 'Directory');
     }
     /**
@@ -210,8 +226,14 @@ class VendorPublishCommand extends Command
     protected function moveManagedFiles($manager)
     {
         foreach ($manager->listContents('from://', true) as $file) {
-            if ($file['type'] === 'file' && (! $manager->has('to://'.$file['path']) || $this->option('force'))) {
-                $manager->put('to://'.$file['path'], $manager->read('from://'.$file['path']));
+            if($file['type'] !== 'file') {
+                continue;
+            }
+            if (! $manager->has('to://'.$file['path']) || $this->option('force')) {
+                $manager->put(
+                    'to://'.$file['path']
+                    , $manager->read('from://'.$file['path'])
+                );
             }
         }
     }
@@ -237,8 +259,13 @@ class VendorPublishCommand extends Command
      */
     protected function status($from, $to, $type)
     {
-        $from = str_replace(base_path(), '', realpath($from));
-        $to = str_replace(base_path(), '', realpath($to));
-        $this->line('<info>Copied '.$type.'</info> <comment>['.$from.']</comment> <info>To</info> <comment>['.$to.']</comment>');
+        $this->line(
+            sprintf(
+                '<info>Copied %s</info> <comment>[%s]</comment> <info>To</info> <comment>[%s]</comment>'
+                , $type
+                , str_replace(base_path(), '', realpath($from))
+                , str_replace(base_path(), '', realpath($to))
+            )
+        );
     }
 }

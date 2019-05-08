@@ -1,5 +1,8 @@
 <?php
 
+use EvolutionCMS\Models\SiteTmplvarAccess;
+use EvolutionCMS\Models\SiteTmplvarTemplate;
+
 if(!function_exists('duplicateDocument')) {
     /**
      * @param int $docid
@@ -23,21 +26,33 @@ if(!function_exists('duplicateDocument')) {
 
         $userID = $modx->getLoginUserID();
 
-        $tblsc = $modx->getDatabase()->getFullTableName('site_content');
-
         // Grab the original document
-        $rs = $modx->getDatabase()->select('*', $tblsc, "id='{$docid}'");
+        $rs = $modx->getDatabase()->select(
+            '*'
+            , $modx->getDatabase()->getFullTableName('site_content')
+            , sprintf('id=%d', (int)$docid)
+        );
         $content = $modx->getDatabase()->getRow($rs);
 
         // Handle incremental ID
         switch ($modx->getConfig('docid_incrmnt_method')) {
             case '1':
-                $from = "{$tblsc} AS T0 LEFT JOIN {$tblsc} AS T1 ON T0.id + 1 = T1.id";
-                $rs = $modx->getDatabase()->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
+                $rs = $modx->getDatabase()->select(
+                    'MIN(T0.id)+1'
+                    , sprintf(
+                        '%s AS T0 LEFT JOIN %s AS T1 ON T0.id + 1 = T1.id'
+                        , $modx->getDatabase()->getFullTableName('site_content')
+                        , $modx->getDatabase()->getFullTableName('site_content')
+                    )
+                    , 'T1.id IS NULL'
+                );
                 $content['id'] = $modx->getDatabase()->getValue($rs);
                 break;
             case '2':
-                $rs = $modx->getDatabase()->select('MAX(id)+1', $tblsc);
+                $rs = $modx->getDatabase()->select(
+                    'MAX(id)+1'
+                    , $modx->getDatabase()->getFullTableName('site_content')
+                );
                 $content['id'] = $modx->getDatabase()->getValue($rs);
                 break;
 
@@ -48,18 +63,32 @@ if(!function_exists('duplicateDocument')) {
         // Once we've grabbed the document object, start doing some modifications
         if ($_toplevel == 0) {
             // count duplicates
-            $pagetitle = $modx->getDatabase()->getValue($modx->getDatabase()->select('pagetitle', $modx->getDatabase()->getFullTableName('site_content'),
-                "id='{$docid}'"));
+            $pagetitle = $modx->getDatabase()->getValue(
+                $modx->getDatabase()->select(
+                    'pagetitle'
+                    , $modx->getDatabase()->getFullTableName('site_content')
+                    , sprintf('id=%d', (int)$docid)
+                )
+            );
             $pagetitle = $modx->getDatabase()->escape($pagetitle);
-            $count = $modx->getDatabase()->getRecordCount($modx->getDatabase()->select('pagetitle', $modx->getDatabase()->getFullTableName('site_content'),
-                "pagetitle LIKE '{$pagetitle} Duplicate%'"));
+            $count = $modx->getDatabase()->getRecordCount(
+                $modx->getDatabase()->select(
+                    'pagetitle'
+                    , $modx->getDatabase()->getFullTableName('site_content')
+                    , sprintf("pagetitle LIKE '%s Duplicate%%'", $pagetitle)
+                )
+            );
             if ($count >= 1) {
                 $count = ' ' . ($count + 1);
             } else {
                 $count = '';
             }
 
-            $content['pagetitle'] = $_lang['duplicated_el_suffix'] . $count . ' ' . $content['pagetitle'];
+            $content['pagetitle'] = sprintf(
+                '%s%s %s'
+                , $_lang['duplicated_el_suffix']
+                , $count, $content['pagetitle']
+            );
             $content['alias'] = null;
         } elseif ($modx->getConfig('friendly_urls') == 0 || $modx->getConfig('allow_duplicate_alias') == 0) {
             $content['alias'] = null;
@@ -76,16 +105,6 @@ if(!function_exists('duplicateDocument')) {
         // Remove other modification times
         $content['editedby'] = $content['editedon'] = $content['deleted'] = $content['deletedby'] = $content['deletedon'] = 0;
 
-        // [FS#922] Should the published status be honored? - sirlancelot
-//	if ($modx->hasPermission('publish_document')) {
-//		if ($modx->getConfig('publish_default'))
-//			$content['pub_date'] = $content['pub_date']; // should this be changed to 1?
-//		else	$content['pub_date'] = 0;
-//	} else {
-        // User can't publish documents
-//		$content['published'] = $content['pub_date'] = 0;
-//	}
-
         // Set the published status to unpublished by default (see above ... commit #3388)
         $content['published'] = $content['pub_date'] = 0;
 
@@ -93,7 +112,10 @@ if(!function_exists('duplicateDocument')) {
         $content = $modx->getDatabase()->escape($content);
 
         // Duplicate the Document
-        $newparent = $modx->getDatabase()->insert($content, $tblsc);
+        $newparent = $modx->getDatabase()->insert(
+            $content
+            , $modx->getDatabase()->getFullTableName('site_content')
+        );
 
         // duplicate document's TVs
         duplicateTVs($docid, $newparent);
@@ -107,7 +129,12 @@ if(!function_exists('duplicateDocument')) {
 
         // Start duplicating all the child documents that aren't deleted.
         $_toplevel++;
-        $rs = $modx->getDatabase()->select('id', $tblsc, "parent='{$docid}' AND deleted=0", 'id ASC');
+        $rs = $modx->getDatabase()->select(
+            'id'
+            , $modx->getDatabase()->getFullTableName('site_content')
+            , sprintf('parent=%d AND deleted=0', (int)$docid)
+            , 'id ASC'
+        );
         while ($row = $modx->getDatabase()->getRow($rs)) {
             duplicateDocument($row['id'], $newparent, $_toplevel);
         }
@@ -128,14 +155,16 @@ if(!function_exists('duplicateTVs')) {
     {
         $modx = evolutionCMS();
 
-        $tbltvc = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
-
-        $newid = (int)$newid;
-        $oldid = (int)$oldid;
-
         $modx->getDatabase()->insert(
-            array('contentid' => '', 'tmplvarid' => '', 'value' => ''), $tbltvc, // Insert into
-            "{$newid}, tmplvarid, value", $tbltvc, "contentid='{$oldid}'" // Copy from
+            array(
+                'contentid' => '',
+                'tmplvarid' => '',
+                'value' => ''
+            )
+            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
+            , sprintf('%d, tmplvarid, value', (int)$newid)
+            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
+            , sprintf('contentid=%d', (int)$oldid) // Copy from
         );
     }
 }
@@ -151,14 +180,15 @@ if(!function_exists('duplicateAccess')) {
     {
         $modx = evolutionCMS();
 
-        $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
-
-        $newid = (int)$newid;
-        $oldid = (int)$oldid;
-
         $modx->getDatabase()->insert(
-            array('document' => '', 'document_group' => ''), $tbldg, // Insert into
-            "{$newid}, document_group", $tbldg, "document='{$oldid}'" // Copy from
+            array(
+                'document'       => '',
+                'document_group' => ''
+            )
+            , $modx->getDatabase()->getFullTableName('document_groups')
+            , sprintf('%d, document_group', (int)$newid)
+            , $modx->getDatabase()->getFullTableName('document_groups')
+            , sprintf('document=%d', (int)$oldid) // Copy from
         );
     }
 }
@@ -198,9 +228,23 @@ if(!function_exists('evalModule')) {
                     $error_level = 99;
             }
             if ($modx->getConfig('error_reporting') >= 99 || 2 < $error_level) {
-                $modx->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'],
-                    $_SESSION['itemname'] . ' - Module', $error_info['message'], $error_info['line'], $msg);
-                $modx->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");
+                $modx->messageQuit(
+                    'PHP Parse Error'
+                    , ''
+                    , true
+                    , $error_info['type']
+                    , $error_info['file']
+                    , sprintf('%s - Module', $_SESSION['itemname'])
+                    , $error_info['message']
+                    , $error_info['line']
+                    , $msg
+                );
+                $modx->event->alert(
+                    sprintf(
+                        'An error occurred while loading. Please see the event log for more information<p>%s</p>'
+                        , $msg
+                    )
+                );
             }
         }
         unset($modx->event->params);
@@ -243,7 +287,11 @@ if(!function_exists('jsAlert')) {
     {
         $modx = evolutionCMS();
         if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
-            echo "<script>window.setTimeout(\"alert('" . addslashes($modx->getDatabase()->escape($msg)) . "')\",10);history.go(-1)</script>";
+            echo sprintf(
+                '<script>window.setTimeout("alert(\'%s\')",10);history.go(-1)</script>'
+                , addslashes($modx->getDatabase()->escape($msg)
+                )
+            );
         } else {
             echo $msg . "\n";
         }
@@ -333,7 +381,7 @@ if(!function_exists('updateNewHash')) {
         $modx->getDatabase()->update(
             $field,
             $modx->getDatabase()->getFullTableName('manager_users'),
-            "username='{$username}'"
+            sprintf("username='%s'", $username)
         );
     }
 }
@@ -360,7 +408,7 @@ if(!function_exists('incrementFailedLoginCount')) {
         $modx->getDatabase()->update(
             $fields,
             $modx->getDatabase()->getFullTableName('user_attributes'),
-            "internalKey='{$internalKey}'"
+            sprintf("internalKey='%d'", (int)$internalKey)
         );
 
         if ($failedlogins < $failed_allowed) {
@@ -396,13 +444,18 @@ if(!function_exists('saveUserGroupAccessPermissons')) {
         // check for permission update access
         if ($use_udperms == 1) {
             // delete old permissions on the module
-            $modx->getDatabase()->delete($modx->getDatabase()->getFullTableName("site_module_access"), "module='{$id}'");
+            $modx->getDatabase()->delete(
+                $modx->getDatabase()->getFullTableName('site_module_access')
+                , sprintf('module=%d', (int)$id)
+            );
             if (is_array($usrgroups)) {
                 foreach ($usrgroups as $value) {
-                    $modx->getDatabase()->insert(array(
-                        'module'    => $id,
-                        'usergroup' => stripslashes($value),
-                    ), $modx->getDatabase()->getFullTableName('site_module_access'));
+                    $modx->getDatabase()->insert(
+                        array(
+                            'module'    => (int)$id,
+                            'usergroup' => stripslashes($value),
+                        )
+                        , $modx->getDatabase()->getFullTableName('site_module_access'));
                 }
             }
         }
@@ -424,13 +477,13 @@ if(!function_exists('saveEventListeners')) {
                 $rs = $modx->getDatabase()->select(
                     'max(priority) as priority',
                     $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    "evtid='{$evtId}'"
+                    sprintf("evtid='%d'", (int)$evtId)
                 );
             } else {
                 $rs = $modx->getDatabase()->select(
                     'priority',
                     $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    "evtid='{$evtId}' and pluginid='{$id}'"
+                    sprintf("evtid='%d' and pluginid='%d'", (int)$evtId, (int)$id)
                 );
             }
             $prevPriority = $modx->getDatabase()->getValue($rs);
@@ -457,7 +510,7 @@ if(!function_exists('saveEventListeners')) {
         $rs = $modx->getDatabase()->select(
             '*',
             $modx->getDatabase()->getFullTableName('site_plugin_events'),
-            sprintf("pluginid='%s'", $id)
+            sprintf("pluginid='%d'", (int)$id)
         );
         $dbEventList = array();
         $del = array();
@@ -474,7 +527,7 @@ if(!function_exists('saveEventListeners')) {
         foreach ($del as $delid) {
             $modx->getDatabase()->delete(
                 $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                sprintf("evtid='%s' AND pluginid='%s'", $delid, $id)
+                sprintf("evtid='%d' AND pluginid='%d'", (int)$delid, (int)$id)
             );
         }
     }
@@ -517,7 +570,12 @@ if(!function_exists('saveTemplateAccess')) {
             $newAssignedTvs = isset($_POST['assignedTv']) ? $_POST['assignedTv'] : '';
 
             // Preserve rankings of already assigned TVs
-            $rs = $modx->getDatabase()->select("`tmplvarid`, `rank`", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "");
+            $rs = $modx->getDatabase()->select(
+                '`tmplvarid`, `rank`'
+                , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
+                , sprintf("templateid='%d'", (int)$id)
+                , ''
+            );
 
             $ranksArr = array();
             $highest = 0;
@@ -526,7 +584,10 @@ if(!function_exists('saveTemplateAccess')) {
                 $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
             };
 
-            $modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
+            $modx->getDatabase()->delete(
+                $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
+                , sprintf("templateid='%d'", (int)$id)
+            );
             if (empty($newAssignedTvs)) {
                 return;
             }
@@ -534,11 +595,14 @@ if(!function_exists('saveTemplateAccess')) {
                 if (!$id || !$tvid) {
                     continue;
                 }    // Dont link zeros
-                $modx->getDatabase()->insert(array(
-                    'templateid' => $id,
-                    'tmplvarid'  => $tvid,
-                    'rank'       => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
-                ), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'));
+                $modx->getDatabase()->insert(
+                    array(
+                        'templateid' => $id,
+                        'tmplvarid'  => $tvid,
+                        'rank'       => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+                    )
+                    , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
+                );
             }
         }
     }
@@ -553,9 +617,6 @@ if(!function_exists('saveTemplateVarAccess')) {
         $modx = evolutionCMS();
         $templates = isset($_POST['template']) ? $_POST['template'] : []; // get muli-templates based on S.BRENNAN mod
 
-        // update template selections
-        $getRankArray = array();
-
         $siteTmlvarTemplates = EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->get();
 
         $getRankArray = $siteTmlvarTemplates->pluck('rank', 'templateid')->toArray();
@@ -564,12 +625,16 @@ if(!function_exists('saveTemplateVarAccess')) {
         }*/
 
         EvolutionCMS\Models\SiteTmplvarTemplate::where('tmplvarid', '=', $id)->delete();
-        if (!empty($templates)) {
-            for ($i = 0; $i < count($templates); $i++) {
-                $setRank = get_by_key($getRankArray, $templates[$i], 0);
-                $field = ['tmplvarid'  => $id, 'templateid' => $templates[$i], 'rank' => $setRank];
-                EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
-            }
+        if (!$templates) {
+            return;
+        }
+        foreach ($templates as $i => $iValue) {
+            $field = [
+                'tmplvarid'  => $id,
+                'templateid' => $templates[$i],
+                'rank'       => get_by_key($getRankArray, $iValue, 0)
+            ];
+            EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
         }
     }
 }
@@ -582,14 +647,16 @@ if(!function_exists('saveDocumentAccessPermissons')) {
         $docgroups = isset($_POST['docgroups']) ? $_POST['docgroups'] : '';
 
         // check for permission update access
-        if($modx->getConfig('use_udperms') == 1) {
-            // delete old permissions on the tv
-            EvolutionCMS\Models\SiteTmplvarAccess::where('tmplvarid', '=', $id)->delete();
-            if (is_array($docgroups)) {
-                foreach ($docgroups as $value) {
-                    $field = ['tmplvarid' => $id, 'documentgroup' => stripslashes($value)];
-                    EvolutionCMS\Models\SiteTmplvarAccess::create($field);
-                }
+        if($modx->getConfig('use_udperms') != 1) {
+            return;
+        }
+
+        // delete old permissions on the tv
+        EvolutionCMS\Models\SiteTmplvarAccess::where('tmplvarid', '=', $id)->delete();
+        if (is_array($docgroups)) {
+            foreach ($docgroups as $value) {
+                $field = ['tmplvarid' => $id, 'documentgroup' => stripslashes($value)];
+                EvolutionCMS\Models\SiteTmplvarAccess::create($field);
             }
         }
     }
@@ -611,25 +678,23 @@ if (!function_exists('sendMailMessageForUser')) {
         global $emailsubject, $emailsender;
         $message = sprintf($message, $uid, $pwd); // use old method
         // replace placeholders
-        $message = str_replace("[+uid+]", $uid, $message);
-        $message = str_replace("[+pwd+]", $pwd, $message);
-        $message = str_replace("[+ufn+]", $ufn, $message);
-        $message = str_replace("[+sname+]", $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $message);
-        $message = str_replace("[+saddr+]", $emailsender, $message);
-        $message = str_replace("[+semail+]", $emailsender, $message);
-        $message = str_replace("[+surl+]", $url, $message);
+        $message = str_replace(
+            array('[+uid+]', '[+pwd+]', '[+ufn+]', '[+sname+]', '[+saddr+]', '[+semail+]', '[+surl+]')
+            , array($uid, $pwd, $ufn, $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $emailsender, $emailsender, $url)
+            , $message
+        );
 
         $param = array();
-        $param['from'] = $modx->getConfig('site_name')."<{$emailsender}>";
+        $param['from'] = sprintf('%s<%s>', $modx->getConfig('site_name'), $emailsender);
         $param['subject'] = $emailsubject;
         $param['body'] = $message;
         $param['to'] = $email;
         $param['type'] = 'text';
-        $rs = $modx->sendmail($param);
-        if (!$rs) {
-            $modx->getManagerApi()->saveFormValues();
-            $modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
+        if ($modx->sendmail($param)) {
+            return;
         }
+        $modx->getManagerApi()->saveFormValues();
+        $modx->messageQuit(sprintf('%s - %s', $email, $_lang['error_sending_email']));
     }
 }
 
@@ -646,7 +711,7 @@ if (!function_exists('saveWebUserSettings')) {
             'allowed_days'
         );
 
-        $modx->getDatabase()->delete($tbl_web_user_settings, "webuser='{$id}'");
+        $modx->getDatabase()->delete($tbl_web_user_settings, sprintf("webuser='%d'", (int)$id));
 
         foreach ($settings as $n) {
             $vl = $_POST[$n];
@@ -739,7 +804,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        $modx->getDatabase()->delete($tbl_user_settings, "user='{$id}'");
+        $modx->getDatabase()->delete($tbl_user_settings, sprintf("user='%d'", (int)$id));
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -768,6 +833,12 @@ if (!function_exists('webAlertAndQuit')) {
         global $id, $modx;
         $mode = $_POST['mode'];
         $modx->getManagerApi()->saveFormValues($mode);
-        $modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode === $action ? "&id={$id}" : ''));
+        $modx->webAlertAndQuit($msg,
+            sprintf(
+                "index.php?a=%s%s"
+                , $mode
+                , $mode === $action ? "&id=" . (int)$id : ''
+            )
+        );
     }
 }
