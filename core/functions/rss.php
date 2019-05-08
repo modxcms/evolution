@@ -52,7 +52,7 @@ if (! function_exists('rel2abs')) {
         // parse base URL  and convert to local variables: $scheme, $host,  $path
         $tmp = parse_url($base);
         extract($tmp);
-        if (strpos($rel, "//") === 0) {
+        if (strpos($rel, '//') === 0) {
             return $scheme . ':' . $rel;
         }
         // return if already absolute URL

@@ -641,9 +641,9 @@ if (!function_exists('saveWebUserSettings')) {
         $tbl_web_user_settings = $modx->getDatabase()->getFullTableName('web_user_settings');
 
         $settings = array(
-            "login_home",
-            "allowed_ip",
-            "allowed_days"
+            'login_home',
+            'allowed_ip',
+            'allowed_days'
         );
 
         $modx->getDatabase()->delete($tbl_web_user_settings, "webuser='{$id}'");
@@ -651,7 +651,7 @@ if (!function_exists('saveWebUserSettings')) {
         foreach ($settings as $n) {
             $vl = $_POST[$n];
             if (is_array($vl)) {
-                $vl = implode(",", $vl);
+                $vl = implode(',', $vl);
             }
             if ($vl != '') {
                 $f = array();
@@ -743,7 +743,7 @@ if (!function_exists('saveManagerUserSettings')) {
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
-                $vl = implode(",", $vl);
+                $vl = implode(',', $vl);
             }
             if ($vl != '') {
                 $f = array();

@@ -220,10 +220,10 @@ if (! function_exists('getTVDisplayFormat')) {
 
         $params = array();
         if ($paramstring) {
-            $cp = explode("&", $paramstring);
+            $cp = explode('&', $paramstring);
             foreach ($cp as $p => $v) {
                 $v = trim($v); // trim
-                $ar = explode("=", $v);
+                $ar = explode('=', $v);
                 if (is_array($ar) && count($ar) == 2) {
                     $params[$ar[0]] = decodeParamValue($ar[1]);
                 }
@@ -264,16 +264,16 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "delim":    // display as delimitted list
-                $value = parseInput($value, "||");
-                $p = $params['format'] ? $params['format'] : " ";
+            case 'delim':    // display as delimitted list
+                $value = parseInput($value, '||');
+                $p = $params['format'] ? $params['format'] : ' ';
                 if ($p == "\\n") {
                     $p = "\n";
                 }
-                $o = str_replace("||", $p, $value);
+                $o = str_replace('||', $p, $value);
                 break;
 
-            case "string":
+            case 'string':
                 $value = parseInput($value);
                 $format = strtolower($params['format']);
                 if ($format == 'upper case') {
@@ -295,25 +295,25 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "date":
-                if ($value != '' || $params['default'] == 'Yes') {
+            case 'date':
+                if ($value != '' || $params['default'] === 'Yes') {
                     if (empty($value)) {
                         $value = 'now';
                     }
                     $timestamp = getUnixtimeFromDateString($value);
-                    $p = $params['format'] ? $params['format'] : "%A %d, %B %Y";
+                    $p = $params['format'] ? $params['format'] : '%A %d, %B %Y';
                     $o = strftime($p, $timestamp);
                 } else {
                     $value = '';
                 }
                 break;
 
-            case "hyperlink":
-                $value = parseInput($value, "||", "array");
+            case 'hyperlink':
+                $value = parseInput($value, '||', 'array');
                 $o = '';
                 $countValue = count($value);
                 for ($i = 0; $i < $countValue; $i++) {
-                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
+                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode('==', $value[$i]);
                     if (!$url) {
                         $url = $name;
                     }
@@ -341,8 +341,8 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "htmltag":
-                $value = parseInput($value, "||", "array");
+            case 'htmltag':
+                $value = parseInput($value, '||', 'array');
                 $tagid = $params['tagid'];
                 $tagname = ($params['tagname']) ? $params['tagname'] : 'div';
                 $o = '';
@@ -371,7 +371,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "richtext":
+            case 'richtext':
                 $value = parseInput($value);
                 $w = $params['w'] ? $params['w'] : '100%';
                 $h = $params['h'] ? $params['h'] : '400px';
@@ -383,7 +383,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 // setup editors
                 if (!empty($replace_richtext) && !empty($richtexteditor)) {
                     // invoke OnRichTextEditorInit event
-                    $evtOut = $modx->invokeEvent("OnRichTextEditorInit", array(
+                    $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
                         'editor'      => $richtexteditor,
                         'elements'    => $replace_richtext,
                         'forfrontend' => 1,
@@ -391,17 +391,17 @@ if (! function_exists('getTVDisplayFormat')) {
                         'height'      => $h
                     ));
                     if (is_array($evtOut)) {
-                        $o .= implode("", $evtOut);
+                        $o .= implode('', $evtOut);
                     }
                 }
                 break;
 
-            case "unixtime":
+            case 'unixtime':
                 $value = parseInput($value);
                 $o = getUnixtimeFromDateString($value);
                 break;
 
-            case "viewport":
+            case 'viewport':
                 $value = parseInput($value);
                 $id = '_' . time();
                 if (!$params['vpid']) {
@@ -450,7 +450,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $o .= $eTag;
                 break;
 
-            case "datagrid":
+            case 'datagrid':
                 $grd = new \EvolutionCMS\Support\DataGrid('', $value);
 
                 $grd->noRecordMsg = $params['egmsg'];
@@ -571,14 +571,14 @@ if (! function_exists('parseInput')) {
      * @param bool $columns
      * @return array|string
      */
-    function parseInput($src, $delim = "||", $type = "string", $columns = true)
+    function parseInput($src, $delim = '||', $type = 'string', $columns = true)
     { // type can be: string, array
         $modx = evolutionCMS();
         if ($modx->getDatabase()->isResult($src)) {
             // must be a recordset
             $rows = array();
             while ($cols = $modx->getDatabase()->getRow($src, 'num')) {
-                $rows[] = ($columns) ? $cols : implode(" ", $cols);
+                $rows[] = ($columns) ? $cols : implode(' ', $cols);
             }
 
             return ($type == "array") ? $rows : implode($delim, $rows);
@@ -731,9 +731,9 @@ if (! function_exists('renderFormElement')) {
                         $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue,
                                 $field_value) ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
                     }
-                    $field_html .= "</select>";
+                    $field_html .= '</select>';
                     break;
-                case "url": // handles url input fields
+                case 'url': // handles url input fields
                     $urls = array(
                         ''         => '--',
                         'http://'  => 'http://',
@@ -797,7 +797,7 @@ if (! function_exists('renderFormElement')) {
                         $i++;
                     }
                     break;
-                case "image": // handles image fields using htmlarea image manager
+                case 'image': // handles image fields using htmlarea image manager
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
@@ -862,9 +862,17 @@ if (! function_exists('renderFormElement')) {
 						</script>";
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s"  value="%s" %s onchange="documentDirty=true;" /><input type="button" value="%s" onclick="BrowseServer(\'tv%s\')" />'
+                        , $field_id
+                        , $field_id
+                        , $field_value
+                        , $field_style
+                        , ManagerTheme::getLexicon('insert')
+                        , $field_id
+                    );
                     break;
-                case "file": // handles the input of file uploads
+                case 'file': // handles the input of file uploads
                     /* Modified by Timon for use with resource browser */
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;

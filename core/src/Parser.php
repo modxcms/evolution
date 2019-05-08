@@ -326,7 +326,7 @@ class Parser
         $m = clone $this->modx; //Чтобы была возможность вызывать события
         $m->documentIdentifier = $id;
         $m->documentObject = $m->getDocumentObject('id', (int)$id, $events ? 'prepareResponse' : null);
-        if ($m->documentObject['type'] == "reference") {
+        if ($m->documentObject['type'] === 'reference') {
             if (is_numeric($m->documentObject['content']) && $m->documentObject['content'] > 0) {
                 $m->documentObject['content'] = $this->renderDoc($m->documentObject['content'], $events);
             }

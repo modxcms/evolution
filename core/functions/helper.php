@@ -26,7 +26,7 @@ if (! function_exists('generate_password')) {
      */
     function generate_password($length = 10)
     {
-        $allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        $allowable_characters = 'abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $ps_len = strlen($allowable_characters);
         mt_srand((double)microtime() * 1000000);
         $pass = "";
