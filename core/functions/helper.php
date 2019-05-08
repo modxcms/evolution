@@ -8,12 +8,10 @@ if (! function_exists('createGUID')) {
      */
     function createGUID()
     {
-        srand((double)microtime() * 1000000);
-        $r = rand();
+        mt_srand((double)microtime() * 1000000);
+        $r = mt_rand();
         $u = uniqid(getmypid() . $r . (double)microtime() * 1000000, 1);
-        $m = md5($u);
-
-        return $m;
+        return md5($u);
     }
 }
 
