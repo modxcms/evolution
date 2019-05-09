@@ -125,22 +125,22 @@ class UrlProcessor
         return preg_replace_callback(
             $this->tagPattern,
             function ($match) use ($aliases, $isFolder, $isFriendly, $seoStrict, $pref, $suffix) {
-                if ($isFriendly && isset($aliases[$match[1]])) {
-                    $out = $this->makeFriendlyURL(
-                        $pref,
-                        $suffix,
-                        $aliases[$match[1]],
-                        $isFolder[$match[1]],
-                        $match[1]
-                    );
-
-                    //found friendly url
-                    if ($seoStrict) {
-                        $out = $this->toAlias($out);
-                    }
-                } else {
+                if (!$isFriendly || !isset($aliases[$match[1]])) {
                     //not found friendly url
-                    $out = $this->makeFriendlyURL($pref, $suffix, $match[1]);
+                    return $this->makeFriendlyURL($pref, $suffix, $match[1]);
+                }
+
+                $out = $this->makeFriendlyURL(
+                    $pref,
+                    $suffix,
+                    $aliases[$match[1]],
+                    $isFolder[$match[1]],
+                    $match[1]
+                );
+
+                //found friendly url
+                if ($seoStrict) {
+                    return $this->toAlias($out);
                 }
 
                 return $out;
@@ -288,18 +288,18 @@ class UrlProcessor
                         (
                             $this->virtualDir !== '' &&
                             !isset($this->documentListing[$this->virtualDir . '/' . $query])
-                        ) || (
-                            $this->virtualDir === '' && !isset($this->documentListing[$query])
-                        )
-                    //)
-                    && (
-                        (
-                            $this->virtualDir !== '' &&
-                            isset($this->documentListing[$this->virtualDir]) &&
-                            \in_array($query, $this->core->getChildIds($this->documentListing[$this->virtualDir], 1))
-                        ) ||
-                        ($this->virtualDir === '' && in_array($query, $this->core->getChildIds(0, 1)))
-                    )
+                        ) || ((
+                                $this->virtualDir === '' && !isset($this->documentListing[$query])
+                            )
+                            //)
+                            && (
+                                (
+                                    $this->virtualDir !== '' &&
+                                    isset($this->documentListing[$this->virtualDir]) &&
+                                    \in_array($query, $this->core->getChildIds($this->documentListing[$this->virtualDir], 1))
+                                ) ||
+                                ($this->virtualDir === '' && in_array($query, $this->core->getChildIds(0, 1)))
+                            ))
                 ) {
                     $documentMethod = 'id';
                 }
@@ -466,7 +466,9 @@ class UrlProcessor
                 if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
                     $out = $child['child_id'];
                     break;
-                } else if ($child['grandsons_count'] > 0 && ($id = $this->getHiddenIdFromAlias($child['child_id'], $alias))) {
+                }
+
+                if ($child['grandsons_count'] > 0 && ($id = $this->getHiddenIdFromAlias($child['child_id'], $alias))) {
                     $out = $id;
                     break;
                 }
@@ -546,7 +548,7 @@ class UrlProcessor
             }
 
             //TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host = $scheme == 'full' ? $this->core->getConfig('site_url') : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            $host = $scheme === 'full' ? $this->core->getConfig('site_url') : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
         //fix strictUrl by Bumkaka
@@ -584,7 +586,7 @@ class UrlProcessor
             return $out;
         }
 
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
         $len_base_url = strlen($this->core->getConfig('base_url'));
 
         $url_path = $query;//LANG

@@ -8,12 +8,10 @@ if (! function_exists('createGUID')) {
      */
     function createGUID()
     {
-        srand((double)microtime() * 1000000);
-        $r = rand();
+        mt_srand((double)microtime() * 1000000);
+        $r = mt_rand();
         $u = uniqid(getmypid() . $r . (double)microtime() * 1000000, 1);
-        $m = md5($u);
-
-        return $m;
+        return md5($u);
     }
 }
 
@@ -26,7 +24,7 @@ if (! function_exists('generate_password')) {
      */
     function generate_password($length = 10)
     {
-        $allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        $allowable_characters = 'abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $ps_len = strlen($allowable_characters);
         mt_srand((double)microtime() * 1000000);
         $pass = "";
@@ -102,8 +100,12 @@ if (! function_exists('get_by_key')) {
                 }
             }
         }
-        if ($found === true && ! empty($validate) && \is_callable($validate)) {
-            $out = (($validate($out) === true) ? $out : $default);
+
+        if ($found === true && $validate && \is_callable($validate)) {
+            if ($validate($out) === true) {
+                return $out;
+            }
+            return $default;
         }
 
         return $out;
@@ -145,9 +147,18 @@ if (! function_exists('data_is_json')) {
      */
     function data_is_json($string, $returnData = false)
     {
-        $data = is_scalar($string) ? json_decode($string, true) : false;
+        if (json_last_error() != JSON_ERROR_NONE) {
+            return false;
+        }
 
-        return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        if (!$returnData) {
+            return true;
+        }
+
+        if (is_scalar($string)) {
+            return json_decode($string, true);
+        }
+        return false;
     }
 }
 
@@ -174,27 +185,27 @@ if (! function_exists('rename_key_arr')) {
      */
     function rename_key_arr($data, $prefix = '', $suffix = '', $addPS = '.', $sep = '.')
     {
-        $out = array();
         if ($prefix === '' && $suffix === '') {
-            $out = $data;
-        } else {
-            $InsertPrefix = ($prefix !== '') ? ($prefix . $addPS) : '';
-            $InsertSuffix = ($suffix !== '') ? ($addPS . $suffix) : '';
-            foreach ($data as $key => $item) {
-                $key = $InsertPrefix . $key;
-                $val = null;
-                switch (true) {
-                    case is_scalar($item):
-                        $val = $item;
-                        break;
-                    case is_array($item):
-                        $val = rename_key_arr($item, $key . $sep, $InsertSuffix, '', $sep);
-                        $out = array_merge($out, $val);
-                        $val = '';
-                        break;
-                }
-                $out[$key . $InsertSuffix] = $val;
+            return $data;
+        }
+
+        $InsertPrefix = ($prefix !== '') ? $prefix . $addPS : '';
+        $InsertSuffix = ($suffix !== '') ? $addPS . $suffix : '';
+        $out = array();
+        foreach ($data as $key => $item) {
+            $key = $InsertPrefix . $key;
+            $val = null;
+            switch (true) {
+                case is_scalar($item):
+                    $val = $item;
+                    break;
+                case is_array($item):
+                    $val = rename_key_arr($item, $key . $sep, $InsertSuffix, '', $sep);
+                    $out = array_merge($out, $val);
+                    $val = '';
+                    break;
             }
+            $out[$key . $InsertSuffix] = $val;
         }
 
         return $out;

@@ -55,19 +55,31 @@ if (!function_exists('startCMSSession')) {
         session_name(SESSION_COOKIE_NAME);
         removeInvalidCmsSessionIds(SESSION_COOKIE_NAME);
         session_cache_limiter('');
-        $cookieExpiration = 0;
-        $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == HTTPS_PORT);
-        $cookiePath = !empty($session_cookie_path) ? $session_cookie_path : MODX_BASE_URL;
-        $cookieDomain = !empty($session_cookie_domain) ? $session_cookie_domain : '';
-        session_set_cookie_params($cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
+        if (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') {
+            $secure = true;
+        } else {
+            $secure = ($_SERVER['SERVER_PORT'] == HTTPS_PORT);
+        }
+        session_set_cookie_params(
+            0
+            , $session_cookie_path ? $session_cookie_path : MODX_BASE_URL
+            , $session_cookie_domain ? $session_cookie_domain : ''
+            , $secure
+            , true
+        );
         session_start();
         $key = "modx.mgr.session.cookie.lifetime";
+
         if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
-            $cookieLifetime = (int)$_SESSION[$key];
-            if ($cookieLifetime) {
-                $cookieExpiration = $_SERVER['REQUEST_TIME'] + $cookieLifetime;
-            }
-            setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
+            setcookie(
+                session_name()
+                , session_id()
+                , (int)$_SESSION[$key] ? $_SERVER['REQUEST_TIME'] + (int)$_SESSION[$key] : 0
+                , $session_cookie_path ? $session_cookie_path : MODX_BASE_URL
+                , $session_cookie_domain ? $session_cookie_domain : ''
+                , $secure
+                , true
+            );
         }
         if (!isset($_SESSION['modx.session.created.time'])) {
             $_SESSION['modx.session.created.time'] = $_SERVER['REQUEST_TIME'];
@@ -118,17 +130,18 @@ if (!function_exists('modx_sanitize_gpc')) {
         if (200 < $depth) {
             exit('GPC Array nested too deep!');
         }
-        if (is_array($values)) {
-            $depth++;
-            foreach ($values as $key => $value) {
-                if (is_array($value)) {
-                    modx_sanitize_gpc($value, $depth);
-                } else {
-                    $values[$key] = getSanitizedValue($value);
-                }
+
+        if (!is_array($values)) {
+            return getSanitizedValue($values);
+        }
+
+        $depth++;
+        foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                modx_sanitize_gpc($value, $depth);
+            } else {
+                $values[$key] = getSanitizedValue($value);
             }
-        } else {
-            $values = getSanitizedValue($values);
         }
 
         return $values;

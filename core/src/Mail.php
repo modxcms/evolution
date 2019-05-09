@@ -121,9 +121,9 @@ class Mail extends PHPMailer
 
         if ($this->encode_header_method == 'mb_encode_mimeheader') {
             return mb_encode_mimeheader($str, $this->CharSet, 'B', "\n");
-        } else {
-            return parent::EncodeHeader($str, $position);
         }
+
+        return parent::EncodeHeader($str, $position);
     }
 
     /**
@@ -203,12 +203,11 @@ class Mail extends PHPMailer
     {
         $rt = false;
         $to = '';
-        $countTo = count($this->to);
-        for ($i = 0; $i < $countTo; $i++) {
+        foreach ($this->to as $i => $iValue) {
             if ($i != 0) {
                 $to .= ', ';
             }
-            $to .= $this->AddrFormat($this->to[$i]);
+            $to .= $this->AddrFormat($iValue);
         }
 
         $toArr = array_filter(array_map('trim', explode(',', $to)));

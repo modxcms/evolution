@@ -12,108 +12,114 @@ if (! function_exists('ProcessTVCommand')) {
     function ProcessTVCommand($value, $name = '', $docid = '', $src = 'docform', $tvsArray = array())
     {
         $modx = evolutionCMS();
-        $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
-        $nvalue = trim($value);
-        if (substr($nvalue, 0, 1) != '@') {
-            return $value;
-        } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
-            return '@Bindings is disabled.';
-        } else {
-            list ($cmd, $param) = ParseCommand($nvalue);
-            $cmd = trim($cmd);
-            $param = parseTvValues($param, $tvsArray);
-            switch ($cmd) {
-                case "FILE" :
-                    $output = $modx->atBindFileContent($nvalue);
-                    break;
-
-                case "CHUNK" : // retrieve a chunk and process it's content
-                    $chunk = $modx->getChunk(trim($param));
-                    $output = $chunk;
-                    break;
-
-                case "DOCUMENT" : // retrieve a document and process it's content
-                    $rs = $modx->getDocument($param);
-                    if (is_array($rs)) {
-                        $output = $rs['content'];
-                    } else {
-                        $output = "Unable to locate document $param";
-                    }
-                    break;
-
-                case "SELECT" : // selects a record from the cms database
-                    $rt = array();
-                    $replacementVars = array(
-                        'DBASE'  => $modx->getDatabase()->getConfig('database'),
-                        'PREFIX' => $modx->getDatabase()->getConfig('prefix')
-                    );
-                    foreach ($replacementVars as $rvKey => $rvValue) {
-                        $modx->setPlaceholder($rvKey, $rvValue);
-                    }
-                    $param = $modx->mergePlaceholderContent($param);
-                    $rs = $modx->getDatabase()->query("SELECT $param;");
-                    $output = $rs;
-                    break;
-
-                case "EVAL" : // evaluates text as php codes return the results
-                    $output = eval ($param);
-                    break;
-
-                case "INHERIT" :
-                    $output = $param; // Default to param value if no content from parents
-                    $doc = $modx->getPageInfo($docid, 0, 'id,parent');
-
-                    while ($doc['parent'] != 0) {
-                        $parent_id = $doc['parent'];
-
-                        // Grab document regardless of publish status
-                        $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published');
-                        if ($doc['parent'] != 0 && !$doc['published']) {
-                            continue;
-                        } // hide unpublished docs if we're not at the top
-
-                        $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
-
-                        // if an inherited value is found and if there is content following the @INHERIT binding
-                        // remove @INHERIT and output that following content. This content could contain other
-                        // @ bindings, that are processed in the next step
-                        if ((string)$tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
-                            $output = trim(str_replace('@INHERIT', '', (string)$tv['value']));
-                            break 2;
-                        }
-                    }
-                    break;
-
-                case 'DIRECTORY' :
-                    $files = array();
-                    $path = MODX_BASE_PATH . $param;
-                    if (substr($path, -1, 1) != '/') {
-                        $path .= '/';
-                    }
-                    if (!is_dir($path)) {
-                        die($path);
-                        break;
-                    }
-                    $dir = dir($path);
-                    while (($file = $dir->read()) !== false) {
-                        if (substr($file, 0, 1) != '.') {
-                            $files[] = "{$file}=={$param}{$file}";
-                        }
-                    }
-                    asort($files);
-                    $output = implode('||', $files);
-                    break;
-
-                default :
-                    $output = $value;
-                    break;
-
-            }
-
-            // support for nested bindings
-            return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src,
-                $tvsArray) : $output;
+        $docid = (int)$docid;
+        if(!$docid) {
+            $docid = $modx->documentIdentifier;
         }
+        $nvalue = trim($value);
+        if (strpos($nvalue, '@') !== 0) {
+            return $value;
+        }
+
+        if (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
+            return '@Bindings is disabled.';
+        }
+
+        list ($cmd, $param) = ParseCommand($nvalue);
+        $cmd = trim($cmd);
+        $param = parseTvValues($param, $tvsArray);
+        switch ($cmd) {
+            case 'FILE' :
+                $output = $modx->atBindFileContent($nvalue);
+                break;
+
+            case 'CHUNK' : // retrieve a chunk and process it's content
+                $chunk = $modx->getChunk(trim($param));
+                $output = $chunk;
+                break;
+
+            case 'DOCUMENT' : // retrieve a document and process it's content
+                $rs = $modx->getDocument($param);
+                if (is_array($rs)) {
+                    $output = $rs['content'];
+                } else {
+                    $output = 'Unable to locate document ' . $param;
+                }
+                break;
+
+            case 'SELECT' : // selects a record from the cms database
+                $rt = array();
+                $replacementVars = array(
+                    'DBASE'  => $modx->getDatabase()->getConfig('database'),
+                    'PREFIX' => $modx->getDatabase()->getConfig('prefix')
+                );
+                foreach ($replacementVars as $rvKey => $rvValue) {
+                    $modx->setPlaceholder($rvKey, $rvValue);
+                }
+                $param = $modx->mergePlaceholderContent($param);
+                $rs = $modx->getDatabase()->query('SELECT ' . $param . ';');
+                $output = $rs;
+                break;
+
+            case 'EVAL' : // evaluates text as php codes return the results
+                $output = eval ($param);
+                break;
+
+            case 'INHERIT' :
+                $output = $param; // Default to param value if no content from parents
+                $doc = $modx->getPageInfo($docid, 0, 'id,parent');
+
+                while ($doc['parent'] != 0) {
+                    $parent_id = $doc['parent'];
+
+                    // Grab document regardless of publish status
+                    $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published');
+                    if ($doc['parent'] != 0 && !$doc['published']) {
+                        continue;
+                    } // hide unpublished docs if we're not at the top
+
+                    $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
+
+                    // if an inherited value is found and if there is content following the @INHERIT binding
+                    // remove @INHERIT and output that following content. This content could contain other
+                    // @ bindings, that are processed in the next step
+                    if ((string)$tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
+                        $output = trim(str_replace('@INHERIT', '', (string)$tv['value']));
+                        break 2;
+                    }
+                }
+                break;
+
+            case 'DIRECTORY' :
+                $files = array();
+                $path = rtrim(MODX_BASE_PATH . $param, '/') . '/';
+                if (!is_dir(rtrim($path, '/'))) {
+                    die($path);
+                    break;
+                }
+                $dir = dir($path);
+                while (($file = $dir->read()) !== false) {
+                    if (strpos($file, '.') !== 0) {
+                        $files[] = sprintf('%s==%s%s', $file, $param, $file);
+                    }
+                }
+                asort($files);
+                $output = implode('||', $files);
+                break;
+
+            default :
+                $output = $value;
+                break;
+
+        }
+
+        // support for nested bindings
+        if (is_string($output) && ($output != $value)) {
+            return ProcessTVCommand($output, $name, $docid, $src,
+                $tvsArray);
+        }
+
+        return $output;
     }
 }
 
@@ -127,7 +133,7 @@ if (! function_exists('ProcessFile')) {
         // get the file
         $buffer = @file_get_contents($file);
         if ($buffer === false) {
-            $buffer = " Could not retrieve document '$file'.";
+            return sprintf(" Could not retrieve document '%s'.", $file);
         }
 
         return $buffer;
@@ -176,23 +182,30 @@ if (! function_exists('parseTvValues')) {
      */
     function parseTvValues($param, $tvsArray)
     {
-        $modx = evolutionCMS();
-        $tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
-        if (strpos($param, '[*') !== false) {
-            $matches = $modx->getTagsFromContent($param, '[*', '*]');
-            foreach ($matches[0] as $i => $match) {
-                if (isset($tvsArray[$matches[1][$i]])) {
-                    if (is_array($tvsArray[$matches[1][$i]])) {
-                        $value = $tvsArray[$matches[1][$i]]['value'];
-                        $value = $value === '' ? $tvsArray[$matches[1][$i]]['default_text'] : $value;
-                    } else {
-                        $value = $tvsArray[$matches[1][$i]];
-                    }
-                    $param = str_replace($match, $value, $param);
-                }
-            }
+        if (strpos($param, '[*') === false) {
+            return $param;
         }
 
+        $modx = evolutionCMS();
+        if (is_array($modx->documentObject)) {
+            $tvsArray = array_merge($tvsArray, $modx->documentObject);
+        }
+        $matches = $modx->getTagsFromContent($param, '[*', '*]');
+        foreach ($matches[0] as $i => $match) {
+            if (!isset($tvsArray[$matches[1][$i]])) {
+                continue;
+            }
+            if (is_array($tvsArray[$matches[1][$i]])) {
+                if ($tvsArray[$matches[1][$i]]['value'] === '') {
+                    $value = $tvsArray[$matches[1][$i]]['default_text'];
+                } else {
+                    $value = $tvsArray[$matches[1][$i]]['value'];
+                }
+            } else {
+                $value = $tvsArray[$matches[1][$i]];
+            }
+            $param = str_replace($match, $value, $param);
+        }
         return $param;
     }
 }
@@ -208,29 +221,32 @@ if (! function_exists('getTVDisplayFormat')) {
      * @param string $sep
      * @return mixed|string
      */
-    function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype = "", $docid = "", $sep = '')
+    function getTVDisplayFormat($name, $value, $format, $paramstring = '', $tvtype = '', $docid = '', $sep = '')
     {
 
         $modx = evolutionCMS();
         $o = '';
 
         // process any TV commands in value
-        $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
+        $docid = (int)$docid;
+        if (!$docid) {
+            $docid = $modx->documentIdentifier;
+        }
         $value = ProcessTVCommand($value, $name, $docid);
 
         $params = array();
         if ($paramstring) {
-            $cp = explode("&", $paramstring);
+            $cp = explode('&', $paramstring);
             foreach ($cp as $p => $v) {
                 $v = trim($v); // trim
-                $ar = explode("=", $v);
+                $ar = explode('=', $v);
                 if (is_array($ar) && count($ar) == 2) {
                     $params[$ar[0]] = decodeParamValue($ar[1]);
                 }
             }
         }
 
-        $id = "tv$name";
+        $id = 'tv' . $name;
         switch ($format) {
             case 'image':
                 $images = parseInput($value, '||', 'array');
@@ -250,11 +266,11 @@ if (! function_exists('getTVDisplayFormat')) {
                             'alt'   => $modx->getPhpCompat()->htmlspecialchars($params['alttext']),
                             'style' => $params['style']
                         );
-                        if (isset($params['align']) && $params['align'] != 'none') {
+                        if (isset($params['align']) && $params['align'] !== 'none') {
                             $attr['align'] = $params['align'];
                         }
                         foreach ($attr as $k => $v) {
-                            $attributes .= ($v ? ' ' . $k . '="' . $v . '"' : '');
+                            $attributes .= ($v ? sprintf(' %d="%s"', $k, $v) : '');
                         }
                         $attributes .= ' ' . $params['attrib'];
 
@@ -264,28 +280,28 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "delim":    // display as delimitted list
-                $value = parseInput($value, "||");
-                $p = $params['format'] ? $params['format'] : " ";
-                if ($p == "\\n") {
+            case 'delim':    // display as delimitted list
+                $value = parseInput($value);
+                $p = $params['format'] ? $params['format'] : ' ';
+                if ($p === "\\n") {
                     $p = "\n";
                 }
-                $o = str_replace("||", $p, $value);
+                $o = str_replace('||', $p, $value);
                 break;
 
-            case "string":
+            case 'string':
                 $value = parseInput($value);
                 $format = strtolower($params['format']);
-                if ($format == 'upper case') {
+                if ($format === 'upper case') {
                     $o = strtoupper($value);
                 } else {
-                    if ($format == 'lower case') {
+                    if ($format === 'lower case') {
                         $o = strtolower($value);
                     } else {
-                        if ($format == 'sentence case') {
+                        if ($format === 'sentence case') {
                             $o = ucfirst($value);
                         } else {
-                            if ($format == 'capitalize') {
+                            if ($format === 'capitalize') {
                                 $o = ucwords($value);
                             } else {
                                 $o = $value;
@@ -295,25 +311,25 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "date":
-                if ($value != '' || $params['default'] == 'Yes') {
+            case 'date':
+                if ($value != '' || $params['default'] === 'Yes') {
                     if (empty($value)) {
                         $value = 'now';
                     }
                     $timestamp = getUnixtimeFromDateString($value);
-                    $p = $params['format'] ? $params['format'] : "%A %d, %B %Y";
+                    $p = $params['format'] ? $params['format'] : '%A %d, %B %Y';
                     $o = strftime($p, $timestamp);
                 } else {
                     $value = '';
                 }
                 break;
 
-            case "hyperlink":
-                $value = parseInput($value, "||", "array");
+            case 'hyperlink':
+                $value = parseInput($value, '||', 'array');
                 $o = '';
                 $countValue = count($value);
                 for ($i = 0; $i < $countValue; $i++) {
-                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
+                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode('==', $value[$i]);
                     if (!$url) {
                         $url = $name;
                     }
@@ -331,7 +347,7 @@ if (! function_exists('getTVDisplayFormat')) {
                             'target' => $params['target'],
                         );
                         foreach ($attr as $k => $v) {
-                            $attributes .= ($v ? ' ' . $k . '="' . $v . '"' : '');
+                            $attributes .= ($v ? sprintf(' %d="%s"', $k, $v) : '');
                         }
                         $attributes .= ' ' . $params['attrib']; // add extra
 
@@ -341,8 +357,8 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "htmltag":
-                $value = parseInput($value, "||", "array");
+            case 'htmltag':
+                $value = parseInput($value, '||', 'array');
                 $tagid = $params['tagid'];
                 $tagname = ($params['tagname']) ? $params['tagname'] : 'div';
                 $o = '';
@@ -362,7 +378,7 @@ if (! function_exists('getTVDisplayFormat')) {
                         'style' => $params['style'],
                     );
                     foreach ($attr as $k => $v) {
-                        $attributes .= ($v ? ' ' . $k . '="' . $v . '"' : '');
+                        $attributes .= ($v ? sprintf(' %d="%s"', $k, $v) : '');
                     }
                     $attributes .= ' ' . $params['attrib']; // add extra
 
@@ -371,19 +387,25 @@ if (! function_exists('getTVDisplayFormat')) {
                 }
                 break;
 
-            case "richtext":
+            case 'richtext':
                 $value = parseInput($value);
                 $w = $params['w'] ? $params['w'] : '100%';
                 $h = $params['h'] ? $params['h'] : '400px';
-                $richtexteditor = $params['edt'] ? $params['edt'] : "";
-                $o = '<div class="MODX_RichTextWidget"><textarea id="' . $id . '" name="' . $id . '" style="width:' . $w . '; height:' . $h . ';">';
+                $richtexteditor = $params['edt'] ? $params['edt'] : '';
+                $o = sprintf(
+                    '<div class="MODX_RichTextWidget"><textarea id="%s" name="%s" style="width:%s; height:%s;">'
+                    , $id
+                    , $id
+                    , $w
+                    , $h
+                );
                 $o .= $modx->getPhpCompat()->htmlspecialchars($value);
                 $o .= '</textarea></div>';
                 $replace_richtext = array($id);
                 // setup editors
                 if (!empty($replace_richtext) && !empty($richtexteditor)) {
                     // invoke OnRichTextEditorInit event
-                    $evtOut = $modx->invokeEvent("OnRichTextEditorInit", array(
+                    $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
                         'editor'      => $richtexteditor,
                         'elements'    => $replace_richtext,
                         'forfrontend' => 1,
@@ -391,66 +413,74 @@ if (! function_exists('getTVDisplayFormat')) {
                         'height'      => $h
                     ));
                     if (is_array($evtOut)) {
-                        $o .= implode("", $evtOut);
+                        $o .= implode('', $evtOut);
                     }
                 }
                 break;
 
-            case "unixtime":
+            case 'unixtime':
                 $value = parseInput($value);
                 $o = getUnixtimeFromDateString($value);
                 break;
 
-            case "viewport":
+            case 'viewport':
                 $value = parseInput($value);
                 $id = '_' . time();
                 if (!$params['vpid']) {
                     $params['vpid'] = $id;
                 }
-                $sTag = "<iframe";
-                $eTag = "</iframe>";
-                $autoMode = "0";
-                $w = $params['width'];
-                $h = $params['height'];
-                if ($params['stretch'] == 'Yes') {
-                    $w = "100%";
-                    $h = "100%";
+
+                if ($params['stretch'] === 'Yes') {
+                    $params['width'] = '100%';
+                    $params['height'] = '100%';
                 }
-                if ($params['asize'] == 'Yes' || ($params['awidth'] == 'Yes' && $params['aheight'] == 'Yes')) {
-                    $autoMode = "3";  //both
+                $autoMode = '0';
+                if ($params['asize'] === 'Yes') {
+                    $autoMode = '3';  //both
+                } elseif ($params['awidth'] === 'Yes' && $params['aheight'] === 'Yes') {
+                    $autoMode = '3';  //both
                 } else {
-                    if ($params['awidth'] == 'Yes') {
-                        $autoMode = "1"; //width only
-                    } else {
-                        if ($params['aheight'] == 'Yes') {
-                            $autoMode = "2";    //height only
-                        }
+                    if ($params['awidth'] === 'Yes') {
+                        $autoMode = '1'; //width only
+                    } elseif ($params['aheight'] === 'Yes') {
+                        $autoMode = '2';    //height only
                     }
                 }
 
-                $modx->regClientStartupScript(MODX_MANAGER_URL . "media/script/bin/viewport.js", array(
-                    'name'      => 'viewport',
-                    'version'   => '0',
-                    'plaintext' => false
-                ));
-                $o = $sTag . " id='" . $params['vpid'] . "' name='" . $params['vpid'] . "' ";
+                $modx->regClientStartupScript(MODX_MANAGER_URL . 'media/script/bin/viewport.js'
+                    , array(
+                        'name'      => 'viewport',
+                        'version'   => '0',
+                        'plaintext' => false
+                    )
+                );
+                $o = sprintf('<iframe id="%s" name="%s" ', $params['vpid'], $params['vpid']);
                 if ($params['class']) {
-                    $o .= " class='" . $params['class'] . "' ";
+                    $o .= sprintf(' class="%s" ', $params['class']);
                 }
                 if ($params['style']) {
-                    $o .= " style='" . $params['style'] . "' ";
+                    $o .= sprintf(' style="%s" ', $params['style']);
                 }
                 if ($params['attrib']) {
-                    $o .= $params['attrib'] . " ";
+                    $o .= $params['attrib'] . ' ';
                 }
-                $o .= "scrolling='" . ($params['sbar'] == 'No' ? "no" : ($params['sbar'] == 'Yes' ? "yes" : "auto")) . "' ";
-                $o .= "src='" . $value . "' frameborder='" . $params['borsize'] . "' ";
-                $o .= "onload=\"window.setTimeout('ResizeViewPort(\\'" . $params['vpid'] . "\\'," . $autoMode . ")',100);\" width='" . $w . "' height='" . $h . "' ";
-                $o .= ">";
-                $o .= $eTag;
+                if ($params['sbar'] === 'No') {
+                    $o .= 'scrolling="no" ';
+                } else {
+                    $o .= sprintf('scrolling="%s" ', $params['sbar'] === 'Yes' ? 'yes' : 'auto');
+                }
+                $o .= sprintf('src="%s" frameborder="%s" ', $value, $params['borsize']);
+                $o .= sprintf(
+                    'onload="window.setTimeout(\'ResizeViewPort(\\\'%s\\\',%s)\',100);" width="%s" height="%s" >'
+                    , $params['vpid']
+                    , $autoMode
+                    , $params['width']
+                    , $params['height']
+                );
+                $o .= '</iframe>';
                 break;
 
-            case "datagrid":
+            case 'datagrid':
                 $grd = new \EvolutionCMS\Support\DataGrid('', $value);
 
                 $grd->noRecordMsg = $params['egmsg'];
@@ -485,7 +515,7 @@ if (! function_exists('getTVDisplayFormat')) {
 
             case 'htmlentities':
                 $value = parseInput($value);
-                if ($tvtype == 'checkbox' || $tvtype == 'listbox-multiple') {
+                if ($tvtype === 'checkbox' || $tvtype === 'listbox-multiple') {
                     // remove delimiter from checkbox and listbox-multiple TVs
                     $value = str_replace('||', '', $value);
                 }
@@ -494,31 +524,32 @@ if (! function_exists('getTVDisplayFormat')) {
 
             case 'custom_widget':
                 $widget_output = '';
-                $o = '';
                 /* If we are loading a file */
-                if (substr($params['output'], 0, 5) == "@FILE") {
+                if (strpos($params['output'], '@FILE') === 0) {
                     $file_name = MODX_BASE_PATH . trim(substr($params['output'], 6));
-                    if (!file_exists($file_name)) {
+                    if (!is_file($file_name)) {
                         $widget_output = $file_name . ' does not exist';
                     } else {
                         $widget_output = file_get_contents($file_name);
                     }
-                } elseif (substr($params['output'], 0, 8) == '@INCLUDE') {
+                } elseif (strpos($params['output'], '@INCLUDE') === 0) {
                     $file_name = MODX_BASE_PATH . trim(substr($params['output'], 9));
-                    if (!file_exists($file_name)) {
+                    if (!is_file($file_name)) {
                         $widget_output = $file_name . ' does not exist';
                     } else {
                         /* The included file needs to set $widget_output. Can be string, array, object */
                         include $file_name;
                     }
-                } elseif (substr($params['output'], 0, 6) == '@CHUNK' && $value !== '') {
-                    $chunk_name = trim(substr($params['output'], 7));
-                    $widget_output = $modx->getChunk($chunk_name);
-                } elseif (substr($params['output'], 0, 5) == '@EVAL' && $value !== '') {
-                    $eval_str = trim(substr($params['output'], 6));
-                    $widget_output = eval($eval_str);
                 } elseif ($value !== '') {
-                    $widget_output = $params['output'];
+                    if (strpos($params['output'], '@CHUNK') === 0) {
+                        $chunk_name = trim(substr($params['output'], 7));
+                        $widget_output = $modx->getChunk($chunk_name);
+                    } elseif(strpos($params['output'], '@EVAL') === 0) {
+                        $eval_str = trim(substr($params['output'], 6));
+                        $widget_output = eval($eval_str);
+                    } else {
+                        $widget_output = $params['output'];
+                    }
                 } else {
                     $widget_output = '';
                 }
@@ -535,7 +566,7 @@ if (! function_exists('getTVDisplayFormat')) {
 
             default:
                 $value = parseInput($value);
-                if ($tvtype == 'checkbox' || $tvtype == 'listbox-multiple') {
+                if ($tvtype === 'checkbox' || $tvtype === 'listbox-multiple') {
                     // add separator
                     $value = explode('||', $value);
                     $value = implode($sep, $value);
@@ -555,9 +586,7 @@ if (! function_exists('decodeParamValue')) {
      */
     function decodeParamValue($s)
     {
-        $s = str_replace("%3D", '=', $s); // =
-
-        return str_replace("%26", '&', $s); // &
+        return str_replace(array('%3D', '%26'), array('=', '&'), $s); // &
     }
 }
 
@@ -571,25 +600,25 @@ if (! function_exists('parseInput')) {
      * @param bool $columns
      * @return array|string
      */
-    function parseInput($src, $delim = "||", $type = "string", $columns = true)
+    function parseInput($src, $delim = '||', $type = 'string', $columns = true)
     { // type can be: string, array
         $modx = evolutionCMS();
         if ($modx->getDatabase()->isResult($src)) {
             // must be a recordset
             $rows = array();
             while ($cols = $modx->getDatabase()->getRow($src, 'num')) {
-                $rows[] = ($columns) ? $cols : implode(" ", $cols);
+                $rows[] = ($columns) ? $cols : implode(' ', $cols);
             }
 
-            return ($type == "array") ? $rows : implode($delim, $rows);
-        } else {
-            // must be a text
-            if ($type == "array") {
-                return explode($delim, $src);
-            } else {
-                return $src;
-            }
+            return ($type === 'array') ? $rows : implode($delim, $rows);
         }
+
+// must be a text
+        if ($type === 'array') {
+            return explode($delim, $src);
+        }
+
+        return $src;
     }
 }
 
@@ -661,26 +690,57 @@ if (! function_exists('renderFormElement')) {
         if ($cimode === false) {
             switch ($field_type) {
 
-                case "text": // handler for regular text boxes
-                case "rawtext"; // non-htmlentity converted text boxes
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
+                case 'text': // handler for regular text boxes
+                case 'rawtext'; // non-htmlentity converted text boxes
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s" value="%s" %s tvtype="%s" onchange="documentDirty=true;" style="width:100%%" />'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                        , $field_style
+                        , $field_type
+                    );
                     break;
-                case "email": // handles email input fields
-                    $field_html .= '<input type="email" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%"/>';
+                case 'email': // handles email input fields
+                    $field_html .= sprintf(
+                        '<input type="email" id="tv%s" name="tv%s" value="%s" %s tvtype="%s" onchange="documentDirty=true;" style="width:100%%"/>'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                        , $field_style
+                        , $field_type
+                    );
                     break;
-                case "number": // handles the input of numbers
-                    $field_html .= '<input type="number" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
+                case 'number': // handles the input of numbers
+                    $field_html .= sprintf(
+                        '<input type="number" id="tv%s" name="tv%s" value="%s" %s tvtype="%s" onchange="documentDirty=true;" style="width:100%%" onkeyup="this.value=this.value.replace(/[^\\d-,.+]/,\'\')"/>'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                        , $field_style
+                        , $field_type
+                    );
                     break;
-                case "textareamini": // handler for textarea mini boxes
-                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
+                case 'textareamini': // handler for textarea mini boxes
+                    $field_html .= sprintf(
+                        '<textarea id="tv%s" name="tv%s" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%%">%s</textarea>'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                    );
                     break;
-                case "textarea": // handler for textarea boxes
-                case "rawtextarea": // non-htmlentity convertex textarea boxes
-                case "htmlarea": // handler for textarea boxes (deprecated)
-                case "richtext": // handler for textarea boxes
-                    $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
+                case 'textarea': // handler for textarea boxes
+                case 'rawtextarea': // non-htmlentity convertex textarea boxes
+                case 'htmlarea': // handler for textarea boxes (deprecated)
+                case 'richtext': // handler for textarea boxes
+                    $field_html .= sprintf(
+                        '<textarea id="tv%s" name="tv%s" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%%">%s</textarea>'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                    );
                     break;
-                case "date":
+                case 'date':
                     $field_id = str_replace(array(
                         '-',
                         '.'
@@ -688,52 +748,119 @@ if (! function_exists('renderFormElement')) {
                     if ($field_value == '') {
                         $field_value = 0;
                     }
-                    $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . ManagerTheme::getStyle('actions_calendar_delete') . '"></i></a>';
+                    $field_html .= sprintf(
+                        '<input id="tv%s" name="tv%s" class="DatePicker" type="text" value="%d" onblur="documentDirty=true;" />'
+                        , $field_id
+                        , $field_id
+                        , (!isset($field_value) || $field_value == 0) ? '' : $field_value
+                    );
+                    $field_html .= sprintf(
+                        ' <a onclick="document.forms[\'mutate\'].elements[\'tv%s\'].value=\'\';document.forms[\'mutate\'].elements[\'tv%s\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="%s"></i></a>'
+                        , $field_id
+                        , $field_id
+                        , ManagerTheme::getStyle('actions_calendar_delete')
+                    );
 
                     break;
-                case "dropdown": // handler for select boxes
-                    $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
-                    $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
-                        $tvsArray));
+                case 'dropdown': // handler for select boxes
+                    $field_html .= sprintf(
+                        '<select id="tv%s" name="tv%s" size="1" onchange="documentDirty=true;">'
+                        , $field_id
+                        , $field_id
+                    );
+                    $index_list = ParseIntputOptions(
+                        ProcessTVCommand(
+                            $field_elements
+                            , $field_id
+                            , ''
+                            , 'tvform'
+                            , $tvsArray
+                        )
+                    );
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
-                        if (strlen($itemvalue) == 0) {
+                        if ((is_array($itemvalue))) {
+                            list($item, $itemvalue) = $itemvalue;
+                        } else {
+                            list($item, $itemvalue) = explode('==', $itemvalue);
+                        }
+                        if ($itemvalue == '') {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
+                        $field_html .= sprintf(
+                            '<option value="%s"%s>%s</option>'
+                            , $modx->getPhpCompat()->htmlspecialchars($itemvalue)
+                            , $itemvalue == $field_value ? ' selected="selected"' : ''
+                            , $modx->getPhpCompat()->htmlspecialchars($item));
                     }
-                    $field_html .= "</select>";
+                    $field_html .= '</select>';
                     break;
-                case "listbox": // handler for select boxes
-                    $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
-                    $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
-                        $tvsArray));
+                case 'listbox': // handler for select boxes
+                    $field_html .= sprintf(
+                        '<select id="tv%s" name="tv%s" onchange="documentDirty=true;" size="8">'
+                        , $field_id
+                        , $field_id
+                    );
+                    $index_list = ParseIntputOptions(
+                        ProcessTVCommand(
+                            $field_elements
+                            , $field_id
+                            , ''
+                            , 'tvform'
+                            , $tvsArray
+                        )
+                    );
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
-                        if (strlen($itemvalue) == 0) {
+                        if (is_array($itemvalue)) {
+                            list($item, $itemvalue) = $itemvalue;
+                        } else {
+                            list($item, $itemvalue) = explode('==', $itemvalue);
+                        }
+                        if ($itemvalue == '') {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . ($itemvalue == $field_value ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
+                        $field_html .= sprintf(
+                            '<option value="%s"%s>%s</option>'
+                            , $modx->getPhpCompat()->htmlspecialchars($itemvalue)
+                            , $itemvalue == $field_value ? ' selected="selected"' : ''
+                            , $modx->getPhpCompat()->htmlspecialchars($item)
+                        );
                     }
-                    $field_html .= "</select>";
+                    $field_html .= '</select>';
                     break;
-                case "listbox-multiple": // handler for select boxes where you can choose multiple items
-                    $field_value = explode("||", $field_value);
-                    $field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
-                    $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
-                        $tvsArray));
+                case 'listbox-multiple': // handler for select boxes where you can choose multiple items
+                    $field_value = explode('||', $field_value);
+                    $field_html .= sprintf(
+                        '<select id="tv%s" name="tv%s[]" multiple="multiple" onchange="documentDirty=true;" size="8">'
+                        , $field_id
+                        , $field_id
+                    );
+                    $index_list = ParseIntputOptions(
+                        ProcessTVCommand(
+                            $field_elements
+                            , $field_id
+                            , ''
+                            , 'tvform',
+                        $tvsArray)
+                    );
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
-                        if (strlen($itemvalue) == 0) {
+                        if (is_array($itemvalue)) {
+                            list($item, $itemvalue) = $itemvalue;
+                        } else {
+                            list($item, $itemvalue) = explode('==', $itemvalue);
+                        }
+                        if ($itemvalue == '') {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<option value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '"' . (in_array($itemvalue,
-                                $field_value) ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($item) . '</option>';
+                        $field_html .= sprintf(
+                            '<option value="%s"%s>%s</option>'
+                            , $modx->getPhpCompat()->htmlspecialchars($itemvalue)
+                            , in_array($itemvalue, $field_value) ? ' selected="selected"' : ''
+                            , $modx->getPhpCompat()->htmlspecialchars($item)
+                        );
                     }
-                    $field_html .= "</select>";
+                    $field_html .= '</select>';
                     break;
-                case "url": // handles url input fields
+                case 'url': // handles url input fields
                     $urls = array(
                         ''         => '--',
                         'http://'  => 'http://',
@@ -741,22 +868,42 @@ if (! function_exists('renderFormElement')) {
                         'ftp://'   => 'ftp://',
                         'mailto:'  => 'mailto:'
                     );
-                    $field_html = '<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv' . $field_id . '_prefix" name="tv' . $field_id . '_prefix" onchange="documentDirty=true;">';
+                    $field_html = sprintf(
+                        '<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv%s_prefix" name="tv%s_prefix" onchange="documentDirty=true;">'
+                        , $field_id
+                        , $field_id
+                    );
                     foreach ($urls as $k => $v) {
                         if (strpos($field_value, $v) === false) {
-                            $field_html .= '<option value="' . $v . '">' . $k . '</option>';
+                            $field_html .= sprintf('<option value="%s">%d</option>', $v, $k);
                         } else {
                             $field_value = str_replace($v, '', $field_value);
-                            $field_html .= '<option value="' . $v . '" selected="selected">' . $k . '</option>';
+                            $field_html .= sprintf('<option value="%s" selected="selected">%d</option>', $v, $k);
                         }
                     }
                     $field_html .= '</select></td><td>';
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" width="100" ' . $field_style . ' onchange="documentDirty=true;" /></td></tr></table>';
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s" value="%s" width="100" %s onchange="documentDirty=true;" /></td></tr></table>'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                        , $field_style
+                    );
                     break;
                 case 'checkbox': // handles check boxes
-                    $values = !is_array($field_value) ? explode('||', $field_value) : $field_value;
-                    $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
-                        $tvsArray));
+                    if (!is_array($field_value)) {
+                        $values = explode('||', $field_value);
+                    } else {
+                        $values = $field_value;
+                    }
+                    $index_list = ParseIntputOptions(
+                        ProcessTVCommand(
+                            $field_elements
+                            , $field_id
+                            , ''
+                            , 'tvform'
+                            , $tvsArray)
+                    );
                     $tpl = '<label class="checkbox"><input type="checkbox" value="%s" id="tv_%s" name="tv%s[]" %s onchange="documentDirty=true;" />%s</label><br />';
                     static $i = 0;
                     $_ = array();
@@ -766,10 +913,11 @@ if (! function_exists('renderFormElement')) {
                             $value = isset($item[1]) ? $item[1] : $name;
                         } else {
                             $item = trim($item);
-                            list($name, $value) = (strpos($item, '==') !== false) ? explode('==', $item, 2) : array(
-                                $item,
-                                $item
-                            );
+                            if (strpos($item, '==') !== false) {
+                                list($name, $value) = explode('==', $item, 2);
+                            } else {
+                                list($name, $value) = array($item, $item);
+                            }
                         }
                         $checked = in_array($value, $values) ? ' checked="checked"' : '';
                         $param = array(
@@ -784,20 +932,39 @@ if (! function_exists('renderFormElement')) {
                     }
                     $field_html = implode("\n", $_);
                     break;
-                case "option": // handles radio buttons
-                    $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
-                        $tvsArray));
+                case 'option': // handles radio buttons
+                    $index_list = ParseIntputOptions(
+                        ProcessTVCommand(
+                            $field_elements
+                            , $field_id
+                            , ''
+                            , 'tvform'
+                            , $tvsArray
+                        )
+                    );
                     static $i = 0;
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        if (is_array($itemvalue)) {
+                            list($item, $itemvalue) = $itemvalue;
+                        } else {
+                            list($item, $itemvalue) = explode('==', $itemvalue);
+                        }
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
-                        $field_html .= '<input type="radio" value="' . $modx->getPhpCompat()->htmlspecialchars($itemvalue) . '" id="tv_' . $i . '" name="tv' . $field_id . '" ' . ($itemvalue == $field_value ? 'checked="checked"' : '') . ' onchange="documentDirty=true;" /><label for="tv_' . $i . '" class="radio">' . $item . '</label><br />';
+                        $field_html .= sprintf(
+                            '<input type="radio" value="%s" id="tv_%d" name="tv%s" %s onchange="documentDirty=true;" /><label for="tv_%d" class="radio">%s</label><br />'
+                            , $modx->getPhpCompat()->htmlspecialchars($itemvalue)
+                            , $i
+                            , $field_id
+                            , $itemvalue == $field_value ? 'checked="checked"' : ''
+                            , $i
+                            , $item
+                        );
                         $i++;
                     }
                     break;
-                case "image": // handles image fields using htmlarea image manager
+                case 'image': // handles image fields using htmlarea image manager
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
@@ -862,9 +1029,17 @@ if (! function_exists('renderFormElement')) {
 						</script>";
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s"  value="%s" %s onchange="documentDirty=true;" /><input type="button" value="%s" onclick="BrowseServer(\'tv%s\')" />'
+                        , $field_id
+                        , $field_id
+                        , $field_value
+                        , $field_style
+                        , ManagerTheme::getLexicon('insert')
+                        , $field_id
+                    );
                     break;
-                case "file": // handles the input of file uploads
+                case 'file': // handles the input of file uploads
                     /* Modified by Timon for use with resource browser */
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
@@ -931,39 +1106,50 @@ if (! function_exists('renderFormElement')) {
 						</script>";
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
-
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s"  value="%s" %s onchange="documentDirty=true;" /><input type="button" value="%s" onclick="BrowseFileServer(\'tv%s\')" />'
+                        , $field_id
+                        , $field_id
+                        , $field_value
+                        , $field_style
+                        , ManagerTheme::getLexicon('insert')
+                        , $field_id
+                    );
                     break;
 
                 case 'custom_tv':
                     $custom_output = '';
                     /* If we are loading a file */
-                    if (substr($field_elements, 0, 5) == "@FILE") {
+                    if (strpos($field_elements, '@FILE') === 0) {
                         $file_name = MODX_BASE_PATH . trim(substr($field_elements, 6));
                         if (!file_exists($file_name)) {
                             $custom_output = $file_name . ' does not exist';
                         } else {
                             $custom_output = file_get_contents($file_name);
                         }
-                    } elseif (substr($field_elements, 0, 8) == '@INCLUDE') {
+                    } elseif (strpos($field_elements, '@INCLUDE') === 0) {
                         $file_name = MODX_BASE_PATH . trim(substr($field_elements, 9));
                         if (!file_exists($file_name)) {
                             $custom_output = $file_name . ' does not exist';
                         } else {
                             ob_start();
                             include $file_name;
-                            $custom_output = ob_get_contents();
-                            ob_end_clean();
+                            $custom_output = ob_get_clean();
                         }
-                    } elseif (substr($field_elements, 0, 6) == "@CHUNK") {
+                    } elseif (strpos($field_elements, '@CHUNK') === 0) {
                         $chunk_name = trim(substr($field_elements, 7));
                         $chunk_body = $modx->getChunk($chunk_name);
                         if ($chunk_body == false) {
-                            $custom_output = ManagerTheme::getLexicon('chunk_no_exist') . '(' . ManagerTheme::getLexicon('htmlsnippet_name') . ':' . $chunk_name . ')';
+                            $custom_output = sprintf(
+                                '%s(%s:%s)'
+                                , ManagerTheme::getLexicon('chunk_no_exist')
+                                , ManagerTheme::getLexicon('htmlsnippet_name')
+                                , $chunk_name
+                            );
                         } else {
                             $custom_output = $chunk_body;
                         }
-                    } elseif (substr($field_elements, 0, 5) == "@EVAL") {
+                    } elseif (strpos($field_elements, '@EVAL') === 0) {
                         $eval_str = trim(substr($field_elements, 6));
                         $custom_output = eval($eval_str);
                     } else {
@@ -984,20 +1170,24 @@ if (! function_exists('renderFormElement')) {
                     break;
 
                 default: // the default handler -- for errors, mostly
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' onchange="documentDirty=true;" />';
+                    $field_html .= sprintf(
+                        '<input type="text" id="tv%s" name="tv%s" value="%s" %s onchange="documentDirty=true;" />'
+                        , $field_id
+                        , $field_id
+                        , $modx->getPhpCompat()->htmlspecialchars($field_value)
+                        , $field_style
+                    );
 
             } // end switch statement
         } else {
-            $custom = explode(":", $field_type);
-            $custom_output = '';
-            $file_name = MODX_BASE_PATH . 'assets/tvs/' . $custom['1'] . '/' . $custom['1'] . '.customtv.php';
-            if (!file_exists($file_name)) {
+            $custom = explode(':', $field_type);
+            $file_name = sprintf('%sassets/tvs/%s/%s.customtv.php', MODX_BASE_PATH, $custom['1'], $custom['1']);
+            if (!is_file($file_name)) {
                 $custom_output = $file_name . ' does not exist';
             } else {
                 ob_start();
                 include $file_name;
-                $custom_output = ob_get_contents();
-                ob_end_clean();
+                $custom_output = ob_get_clean();
             }
             $replacements = array(
                 '[+field_type+]'   => $field_type,
@@ -1024,20 +1214,17 @@ if (! function_exists('ParseIntputOptions')) {
     function ParseIntputOptions($v)
     {
         $modx = evolutionCMS();
-        $a = array();
         if (is_array($v)) {
             return $v;
-        } else {
-            if ($modx->getDatabase()->isResult($v)) {
-                /**
-                 * @todo May be, should use DBAPI::makeArray($v);
-                 */
-                while ($cols = $modx->getDatabase()->getRow($v, 'num')) {
-                    $a[] = $cols;
-                }
-            } else {
-                $a = explode("||", $v);
-            }
+        }
+
+        if (!$modx->getDatabase()->isResult($v)) {
+            return explode('||', $v);
+        }
+
+        $a = array();
+        while ($cols = $modx->getDatabase()->getRow($v, 'num')) {
+            $a[] = $cols;
         }
 
         return $a;
