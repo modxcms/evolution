@@ -1811,8 +1811,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             );
             if ($this->isBackend()) {
                 $this->event->alert(
-                    'An error occurred while loading. Please see the event log for more information.' .
-                    '<p>' . $msg . '</p>'
+                    sprintf(
+                        'An error occurred while loading. Please see the event log for more information.<p>%s</p>'
+                        , $msg
+                    )
                 );
             }
         } else {
@@ -2027,8 +2029,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $piece = str_replace("\t", '  ', $this->getPhpCompat()->htmlspecialchars($piece));
             $print_r_params = str_replace("\t", '  ',
                 $this->getPhpCompat()->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
-            $this->snippetsCode .= sprintf('<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>',
-                $snippetObject['name'], $eventtime, $piece, $print_r_params, $code);
+            $this->snippetsCode .= sprintf(
+                '<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>'
+                , $snippetObject['name']
+                , $eventtime
+                , $piece
+                , $print_r_params
+                , $code
+            );
             $this->snippetsTime[] = array('sname' => $key, 'time' => $eventtime);
         }
 
@@ -2264,17 +2272,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (array_key_exists($snip_name, $this->snippetCache)) {
             $snippetObject['name'] = $snip_name;
             $snippetObject['content'] = $this->snippetCache[$snip_name];
-            if (isset($this->snippetCache["{$snip_name}Props"])) {
-                if (!isset($this->snippetCache["{$snip_name}Props"])) {
-                    $this->snippetCache["{$snip_name}Props"] = '';
+            if (isset($this->snippetCache[$snip_name . 'Props'])) {
+                if (!isset($this->snippetCache[$snip_name . 'Props'])) {
+                    $this->snippetCache[$snip_name . 'Props'] = '';
                 }
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
         } elseif (strpos($snip_name, '@') === 0 && isset($this->pluginEvent[substr($snip_name, 1)])) {
             $snippetObject['name'] = substr($snip_name, 1);
             $snippetObject['content'] = sprintf(
-                '$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));',
-                $snippetObject['name']
+                '$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));'
+                , $snippetObject['name']
             );
             $snippetObject['properties'] = '';
         } else {
@@ -2393,7 +2401,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $docgrp = implode(",", $docgrp);
             }
             // get document
-            $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+            $access = ($this->isFrontend() ? 'sc.privateweb=0' : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
             $rs = $this->getDatabase()->select('sc.*', "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg ON dg.document = sc.id", "sc.{$method} = '{$identifier}' AND ({$access})", "", 1);
             if ($this->getDatabase()->getRecordCount($rs) < 1) {
@@ -2631,22 +2639,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                         if ($docId > 0) {
                             $this->documentIdentifier = $docId;
                         } else {
-                            /*
-                            $rs  = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
-                            if($this->getDatabase()->getRecordCount($rs)==0)
-                            {
-                                $rs  = $this->getDatabase()->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
-                            }
-                            $docId = $this->getDatabase()->getValue($rs);
-
-                            if ($docId > 0)
-                            {
-                                $this->documentIdentifier = $docId;
-
-                            }else{
-                            */
                             $this->sendErrorPage();
-                            //}
                         }
                     } else {
                         $this->sendErrorPage();
@@ -4695,8 +4688,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        for ($i = 0, $iMax = count($result); $i < $iMax; $i++) {
-            $row = $result[$i];
+        foreach ($result as $iValue) {
+            $row = $iValue;
 
             if (!isset($row['id']) or !$row['id']) {
                 $output[$row['name']] = $row['value'];
@@ -5179,7 +5172,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        if ($useThisVer && $plaintext != true && (strpos(strtolower($src), "<script") === false)) {
+        if ($useThisVer && $plaintext != true && (stripos($src, "<script") === false)) {
             $src = "\t" . '<script type="text/javascript" src="' . $src . '"></script>';
         }
         if ($startup) {
