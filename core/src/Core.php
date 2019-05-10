@@ -2374,11 +2374,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $tbldg = $this->getDatabase()->getFullTableName("document_groups");
 
         // allow alias to be full path
-        if ($method == 'alias') {
+        if ($method === 'alias') {
             $identifier = $this->cleanDocumentIdentifier($identifier);
             $method = $this->documentMethod;
         }
-        if ($method == 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
+        if ($method === 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
                 UrlProcessor::getFacadeRoot()->documentListing)) {
             $method = 'id';
             $identifier = UrlProcessor::getFacadeRoot()->documentListing[$identifier];
@@ -2590,7 +2590,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentIdentifier = $this->getConfig('site_unavailable_page');
         }
 
-        if ($this->documentMethod == "alias") {
+        if ($this->documentMethod === "alias") {
             $this->documentIdentifier = $this->cleanDocumentIdentifier($this->documentIdentifier);
 
             // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
@@ -2764,7 +2764,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             } // validation routines
             elseif ($this->documentObject['published'] == 0) {
                 $this->_sendErrorForUnpubPage();
-            } elseif ($this->documentObject['type'] == 'reference') {
+            } elseif ($this->documentObject['type'] === 'reference') {
                 $this->_sendRedirectForRefPage($this->documentObject['content']);
             }
 
@@ -4040,7 +4040,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             foreach ($type as $_) {
                 $this->clearCache($_, $report);
             }
-        } elseif ($type == 'full') {
+        } elseif ($type === 'full') {
             $sync = new Legacy\Cache();
             $sync->setCachepath($cache_dir);
             $sync->setReport($report);
@@ -4334,9 +4334,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (empty($mode)) {
             $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
-        } elseif ($mode == 'dateOnly') {
+        } elseif ($mode === 'dateOnly') {
             $strTime = strftime($dateFormat, $timestamp);
-        } elseif ($mode == 'formatOnly') {
+        } elseif ($mode === 'formatOnly') {
             $strTime = $dateFormat;
         }
         return $strTime;
@@ -4685,7 +4685,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $output = array();
-        $vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
+        $vars = ($idnames === '*' || is_array($idnames)) ? $idnames : array($idnames);
 
         $docid = (int)$docid > 0 ? (int)$docid : $this->documentIdentifier;
         // remove sort for speed
