@@ -161,7 +161,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function __construct()
     {
         $this->tstart = get_by_key($_SERVER, 'REQUEST_TIME_FLOAT', 0);
-
         $this->instance('path', $this->path());
         $this->instance('path.base', $this->basePath());
         $this->instance('path.lang', $this->langPath());
@@ -467,10 +466,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($id_) {
             if (preg_match('@^[1-9]\d*$@', $id_)) {
                 return $id_;
-            } else {
-                $this->sendErrorPage();
             }
-        } elseif (strpos($_SERVER['REQUEST_URI'], 'index.php/') !== false) {
+
+            $this->sendErrorPage();
+        } elseif (str_contains($_SERVER['REQUEST_URI'], 'index.php/')) {
             $this->sendErrorPage();
         } else {
             return $this->getConfig('site_start');
@@ -491,11 +490,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $_ = 'webValidated';
         }
 
-        if (is_cli() || (isset($_SESSION[$_]) && !empty($_SESSION[$_]))) {
-            return true;
-        } else {
-            return false;
-        }
+        return is_cli() || (isset($_SESSION[$_]) && !empty($_SESSION[$_]));
     }
 
     /**
@@ -515,15 +510,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function checkPreview()
     {
-        if ($this->isLoggedIn() == true) {
-            if (isset ($_REQUEST['z']) && $_REQUEST['z'] == 'manprev') {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        return ($this->isLoggedIn() == true) && isset ($_REQUEST['z']) && $_REQUEST['z'] === 'manprev';
     }
 
     /**
@@ -535,13 +522,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         if ($this->getConfig('site_status')) {
             return true;
-        }  // site online
-        elseif ($this->isLoggedin()) {
+        }
+
+        if ($this->isLoggedin()) {
             return true;
-        }  // site offline but launched via the manager
-        else {
-            return false;
-        } // site is offline
+        }  // site online
+        // site offline but launched via the manager
+
+        return false; // site is offline
     }
 
     /**
@@ -1894,9 +1882,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         unset($modx->event->params);
         if (is_array($return) || is_object($return)) {
             return $return;
-        } else {
-            return $echo . $return;
         }
+
+        return $echo . $return;
     }
 
     /**
@@ -2307,7 +2295,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             ->get();
         if ($snippetModelCollection->count() > 1) {
             exit('Error $modx->getSnippetObject()' . $snip_name);
-        } elseif ($snippetModelCollection->count() === 1) {
+        }
+
+        if ($snippetModelCollection->count() === 1) {
             /** @var Models\SiteSnippet $snippetModel */
             $snippetModel = $snippetModelCollection->first();
             $snip_content = $snippetModel->snippet;
@@ -2421,10 +2411,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     // match found but not publicly accessible, send the visitor to the unauthorized_page
                     $this->sendUnauthorizedPage();
                     exit; // stop here
-                } else {
-                    $this->sendErrorPage();
-                    exit;
                 }
+
+                $this->sendErrorPage();
+                exit;
             }
             # this is now the document :) #
             $documentObject = $this->getDatabase()->getRow($rs);
@@ -2591,11 +2581,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->documentContent = $this->getConfig('site_unavailable_message');
                 $this->outputContent();
                 exit; // stop processing here, as the site's offline
-            } else {
-                // setup offline page document settings
-                $this->documentMethod = 'id';
-                $this->documentIdentifier = $this->getConfig('site_unavailable_page');
             }
+
+            // setup offline page document settings
+            $this->documentMethod = 'id';
+            $this->documentIdentifier = $this->getConfig('site_unavailable_page');
         }
 
         if ($this->documentMethod == "alias") {
@@ -2899,9 +2889,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         );
         if ($this->getDatabase()->getRecordCount($rs) == 1) {
             return $this->getDatabase()->getValue($rs);
-        } else {
-            $this->getService('ExceptionHandler')->messageQuit('Incorrect number of templates returned from database');
         }
+
+        $this->getService('ExceptionHandler')->messageQuit('Incorrect number of templates returned from database');
     }
 
     /**
@@ -2995,39 +2985,37 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             return $children;
 
-        } else {
-
-            // Initialise a static array to index parents->children
-            static $documentMap_cache = array();
-            if (!count($documentMap_cache)) {
-                foreach ($this->documentMap as $document) {
-                    foreach ($document as $p => $c) {
-                        $documentMap_cache[$p][] = $c;
-                    }
-                }
-            }
-
-            // Get all the children for this parent node
-            if (isset($documentMap_cache[$id])) {
-                $depth--;
-
-                foreach ($documentMap_cache[$id] as $childId) {
-                    $pkey = (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']) ? "{UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']}/" : '') . UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
-                    if (!strlen($pkey)) {
-                        $pkey = "{$childId}";
-                    }
-                    $children[$pkey] = $childId;
-
-                    if ($depth && isset($documentMap_cache[$childId])) {
-                        $children += $this->getChildIds($childId, $depth);
-                    }
-                }
-            }
-            $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
-
-            return $children;
-
         }
+
+        // Initialise a static array to index parents->children
+        static $documentMap_cache = array();
+        if (!count($documentMap_cache)) {
+            foreach ($this->documentMap as $document) {
+                foreach ($document as $p => $c) {
+                    $documentMap_cache[$p][] = $c;
+                }
+            }
+        }
+
+        // Get all the children for this parent node
+        if (isset($documentMap_cache[$id])) {
+            $depth--;
+
+            foreach ($documentMap_cache[$id] as $childId) {
+                $pkey = (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']) ? "{UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']}/" : '') . UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
+                if (!strlen($pkey)) {
+                    $pkey = "{$childId}";
+                }
+                $children[$pkey] = $childId;
+
+                if ($depth && isset($documentMap_cache[$childId])) {
+                    $children += $this->getChildIds($childId, $depth);
+                }
+            }
+        }
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
+
+        return $children;
     }
 
     /**
@@ -3157,9 +3145,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (isset($this->lockedElements[$type][$id])) {
             return $this->lockedElements[$type][$id];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -3196,9 +3184,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $type = (int)$type;
         if (isset($lockedElements[$type])) {
             return $lockedElements[$type];
-        } else {
-            return array();
         }
+
+        return array();
     }
 
     /**
@@ -3799,38 +3787,38 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->tmpCache[__FUNCTION__][$cacheKey] = false;
 
             return false;
-        } else {
-            // modify field names to use sc. table reference
-            $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-            $sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
-            if ($where != '') {
-                $where = 'AND ' . $where;
-            }
-
-            $published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
-            $deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
-
-            // get document groups for current user
-            if ($docgrp = $this->getUserDocGroups()) {
-                $docgrp = implode(',', $docgrp);
-            }
-
-            $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
-
-            $tblsc = $this->getDatabase()->getFullTableName('site_content');
-            $tbldg = $this->getDatabase()->getFullTableName('document_groups');
-
-            $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
-                    LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',',
-                    $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
-                ($sort ? "{$sort} {$dir}" : ""), $limit);
-
-            $resourceArray = $this->getDatabase()->makeArray($result);
-
-            $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
-
-            return $resourceArray;
         }
+
+// modify field names to use sc. table reference
+        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        if ($where != '') {
+            $where = 'AND ' . $where;
+        }
+
+        $published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
+        $deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
+
+        // get document groups for current user
+        if ($docgrp = $this->getUserDocGroups()) {
+            $docgrp = implode(',', $docgrp);
+        }
+
+        $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
+
+        $tblsc = $this->getDatabase()->getFullTableName('site_content');
+        $tbldg = $this->getDatabase()->getFullTableName('document_groups');
+
+        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
+                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',',
+                $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+            ($sort ? "{$sort} {$dir}" : ""), $limit);
+
+        $resourceArray = $this->getDatabase()->makeArray($result);
+
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
+
+        return $resourceArray;
     }
 
     /**
@@ -3854,15 +3842,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         if ($id == 0) {
             return false;
-        } else {
-            $docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
-
-            if ($docs != false) {
-                return $docs[0];
-            } else {
-                return false;
-            }
         }
+
+        $docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
+
+        if ($docs != false) {
+            return $docs[0];
+        }
+
+        return false;
     }
 
     /**
@@ -3923,25 +3911,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($pageid == 0) {
             return false;
-        } else {
-            $tblsc = $this->getDatabase()->getFullTableName("site_content");
-            $tbldg = $this->getDatabase()->getFullTableName("document_groups");
-            $activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
-            // modify field names to use sc. table reference
-            $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-            // get document groups for current user
-            if ($docgrp = $this->getUserDocGroups()) {
-                $docgrp = implode(",", $docgrp);
-            }
-            $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $result = $this->getDatabase()->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-                "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
-            $pageInfo = $this->getDatabase()->getRow($result);
-
-            $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
-
-            return $pageInfo;
         }
+
+        $tblsc = $this->getDatabase()->getFullTableName("site_content");
+        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
+        $activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
+        // modify field names to use sc. table reference
+        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        // get document groups for current user
+        if ($docgrp = $this->getUserDocGroups()) {
+            $docgrp = implode(",", $docgrp);
+        }
+        $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+        $result = $this->getDatabase()->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+            "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
+        $pageInfo = $this->getDatabase()->getRow($result);
+
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
+
+        return $pageInfo;
     }
 
     /**
@@ -3962,18 +3950,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $pid = $this->documentObject['parent'];
 
             return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
-        } else {
-            if ($pid == 0) {
-                return false;
-            } else {
-                // first get the child document
-                $child = $this->getPageInfo($pid, $active, "parent");
-                // now return the child's parent
-                $pid = ($child['parent']) ? $child['parent'] : 0;
-
-                return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
-            }
         }
+
+        if ($pid == 0) {
+            return false;
+        }
+
+        // first get the child document
+        $child = $this->getPageInfo($pid, $active, "parent");
+        // now return the child's parent
+        $pid = ($child['parent']) ? $child['parent'] : 0;
+
+        return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
     }
 
     /**
@@ -4408,65 +4396,65 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $docs = $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
         if (!$docs) {
             return false;
-        } else {
-            $result = array();
-            // get user defined template variables
-            if ($tvfields) {
-                $_ = array_filter(array_map('trim', explode(',', $tvfields)));
-                foreach ($_ as $i => $v) {
-                    if ($v === 'value') {
-                        unset($_[$i]);
-                    } else {
-                        $_[$i] = 'tv.' . $v;
-                    }
-                }
-                $fields = implode(',', $_);
-            } else {
-                $fields = "tv.*";
-            }
-
-            if ($tvsort != '') {
-                $tvsort = 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
-            }
-            if ($tvidnames == "*") {
-                $query = "tv.id<>0";
-            } else {
-                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
-            }
-
-            $this->getUserDocGroups();
-
-            foreach ($docs as $doc) {
-
-                $docid = $doc['id'];
-
-                $rs = $this->getDatabase()->select(
-                    "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ",
-
-                    $this->getDatabase()->getFullTableName("site_tmplvars") .
-                    " tv INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") .
-                    " tvtpl ON tvtpl.tmplvarid = tv.id LEFT JOIN " .
-                    $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") .
-                    " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
-
-                    "{$query} AND tvtpl.templateid = '{$doc['template']}'",
-                    ($tvsort ? "{$tvsort} {$tvsortdir}" : "")
-                );
-                $tvs = $this->getDatabase()->makeArray($rs);
-
-                // get default/built-in template variables
-                ksort($doc);
-                foreach ($doc as $key => $value) {
-                    if ($tvidnames == '*' || in_array($key, $tvidnames)) {
-                        $tvs[] = array('name' => $key, 'value' => $value);
-                    }
-                }
-                if (is_array($tvs) && count($tvs)) {
-                    $result[] = $tvs;
-                }
-            }
-            return $result;
         }
+
+        $result = array();
+        // get user defined template variables
+        if ($tvfields) {
+            $_ = array_filter(array_map('trim', explode(',', $tvfields)));
+            foreach ($_ as $i => $v) {
+                if ($v === 'value') {
+                    unset($_[$i]);
+                } else {
+                    $_[$i] = 'tv.' . $v;
+                }
+            }
+            $fields = implode(',', $_);
+        } else {
+            $fields = "tv.*";
+        }
+
+        if ($tvsort != '') {
+            $tvsort = 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
+        }
+        if ($tvidnames == "*") {
+            $query = "tv.id<>0";
+        } else {
+            $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
+        }
+
+        $this->getUserDocGroups();
+
+        foreach ($docs as $doc) {
+
+            $docid = $doc['id'];
+
+            $rs = $this->getDatabase()->select(
+                "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ",
+
+                $this->getDatabase()->getFullTableName("site_tmplvars") .
+                " tv INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") .
+                " tvtpl ON tvtpl.tmplvarid = tv.id LEFT JOIN " .
+                $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") .
+                " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
+
+                "{$query} AND tvtpl.templateid = '{$doc['template']}'",
+                ($tvsort ? "{$tvsort} {$tvsortdir}" : "")
+            );
+            $tvs = $this->getDatabase()->makeArray($rs);
+
+            // get default/built-in template variables
+            ksort($doc);
+            foreach ($doc as $key => $value) {
+                if ($tvidnames == '*' || in_array($key, $tvidnames)) {
+                    $tvs[] = array('name' => $key, 'value' => $value);
+                }
+            }
+            if (is_array($tvs) && count($tvs)) {
+                $result[] = $tvs;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -4498,41 +4486,41 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (!$docs) {
             return false;
-        } else {
-            $result = array();
+        }
 
-            $unsetResultKey = false;
+        $result = array();
 
-            if ($resultKey !== false) {
-                if (is_array($tvidnames)) {
-                    if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)) {
-                        $tvidnames[] = $resultKey;
-                        $unsetResultKey = true;
-                    }
-                } else if ($tvidnames != '*' && $tvidnames != $resultKey) {
-                    $tvidnames = array($tvidnames, $resultKey);
+        $unsetResultKey = false;
+
+        if ($resultKey !== false) {
+            if (is_array($tvidnames)) {
+                if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)) {
+                    $tvidnames[] = $resultKey;
                     $unsetResultKey = true;
                 }
+            } else if ($tvidnames !== '*' && $tvidnames != $resultKey) {
+                $tvidnames = array($tvidnames, $resultKey);
+                $unsetResultKey = true;
             }
+        }
 
-            for ($i = 0, $iMax = count($docs); $i < $iMax; $i++) {
-                $tvs = $this->getTemplateVarOutput($tvidnames, $docs[$i]['id'], $published);
+        foreach ($docs as $iValue) {
+            $tvs = $this->getTemplateVarOutput($tvidnames, $iValue['id'], $published);
 
-                if ($tvs) {
-                    if ($resultKey !== false && array_key_exists($resultKey, $tvs)) {
-                        $result[$tvs[$resultKey]] = $tvs;
+            if ($tvs) {
+                if ($resultKey !== false && array_key_exists($resultKey, $tvs)) {
+                    $result[$tvs[$resultKey]] = $tvs;
 
-                        if ($unsetResultKey) {
-                            unset($result[$tvs[$resultKey]][$resultKey]);
-                        }
-                    } else {
-                        $result[] = $tvs;
+                    if ($unsetResultKey) {
+                        unset($result[$tvs[$resultKey]][$resultKey]);
                     }
+                } else {
+                    $result[] = $tvs;
                 }
             }
-
-            return $result;
         }
+
+        return $result;
     }
 
     /**
@@ -4554,10 +4542,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         if ($idname == "") {
             return false;
-        } else {
-            $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "", ""); //remove sorting for speed
-            return ($result != false) ? $result[0] : false;
         }
+
+        $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "", ""); //remove sorting for speed
+        return ($result != false) ? $result[0] : false;
     }
 
     /**
@@ -4586,66 +4574,65 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (($idnames !== '*' && !is_array($idnames)) || empty($idnames) ) {
             return false;
-        } else {
-
-            // get document record
-            if (empty($docid)) {
-                $docid = $this->documentIdentifier;
-                $docRow = $this->documentObject;
-            } else {
-                $docRow = $this->getDocument($docid, '*', $published);
-
-                if (!$docRow) {
-                    $this->tmpCache[__FUNCTION__][$cacheKey] = false;
-                    return false;
-                }
-            }
-
-            // get user defined template variables
-            if (!empty($fields) && (is_scalar($fields) || \is_array($fields))) {
-                if(\is_scalar($fields)) {
-                    $fields = explode(',', $fields);
-                }
-                $fields = array_filter(array_map('trim', $fields), function($value) {
-                    return $value !== 'value';
-                });
-                $fields = 'tv.' . implode(',tv.', $fields);
-            } else {
-                $fields = 'tv.*';
-            }
-            $sort = ($sort == '') ? '' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
-
-            if ($idnames === '*') {
-                $query = 'tv.id<>0';
-            } else {
-                $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
-            }
-
-            $rs = $this->getDatabase()->select(
-                "{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
-                $this->getDatabase()->getFullTableName('site_tmplvars') . ' tv ' .
-                'INNER JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . ' tvtpl ON tvtpl.tmplvarid = tv.id ' .
-                'LEFT JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid = tv.id AND tvc.contentid = '" . $docid . "'",
-                $query . " AND tvtpl.templateid = '" . $docRow['template'] . "'",
-                ($sort ? ($sort . ' ' . $dir) : '')
-            );
-            $result = $this->getDatabase()->makeArray($rs);
-
-            // get default/built-in template variables
-            if(is_array($docRow)){
-                ksort($docRow);
-
-                foreach ($docRow as $name => $value) {
-                    if ($idnames === '*' || \in_array($name, $idnames)) {
-                        $result[] = compact('name', 'value');
-                    }
-                }
-            }
-
-            $this->tmpCache[__FUNCTION__][$cacheKey] = $result;
-
-            return $result;
         }
+
+// get document record
+        if (empty($docid)) {
+            $docid = $this->documentIdentifier;
+            $docRow = $this->documentObject;
+        } else {
+            $docRow = $this->getDocument($docid, '*', $published);
+
+            if (!$docRow) {
+                $this->tmpCache[__FUNCTION__][$cacheKey] = false;
+                return false;
+            }
+        }
+
+        // get user defined template variables
+        if (!empty($fields) && (is_scalar($fields) || \is_array($fields))) {
+            if(\is_scalar($fields)) {
+                $fields = explode(',', $fields);
+            }
+            $fields = array_filter(array_map('trim', $fields), function($value) {
+                return $value !== 'value';
+            });
+            $fields = 'tv.' . implode(',tv.', $fields);
+        } else {
+            $fields = 'tv.*';
+        }
+        $sort = ($sort == '') ? '' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
+
+        if ($idnames === '*') {
+            $query = 'tv.id<>0';
+        } else {
+            $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
+        }
+
+        $rs = $this->getDatabase()->select(
+            "{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
+            $this->getDatabase()->getFullTableName('site_tmplvars') . ' tv ' .
+            'INNER JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . ' tvtpl ON tvtpl.tmplvarid = tv.id ' .
+            'LEFT JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid = tv.id AND tvc.contentid = '" . $docid . "'",
+            $query . " AND tvtpl.templateid = '" . $docRow['template'] . "'",
+            ($sort ? ($sort . ' ' . $dir) : '')
+        );
+        $result = $this->getDatabase()->makeArray($rs);
+
+        // get default/built-in template variables
+        if(is_array($docRow)){
+            ksort($docRow);
+
+            foreach ($docRow as $name => $value) {
+                if ($idnames === '*' || \in_array($name, $idnames)) {
+                    $result[] = compact('name', 'value');
+                }
+            }
+        }
+
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
