@@ -1427,7 +1427,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             $value = $ph[$key];
 
-            if (is_null($value)) {
+            if ($value === null) {
                 continue;
             }
 
@@ -1928,7 +1928,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 continue;
             }
             $value = $this->_get_snip_result($call);
-            if (is_null($value)) {
+            if ($value === null) {
                 continue;
             }
 
@@ -2001,7 +2001,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         list($key, $modifiers) = $this->splitKeyAndFilter($key);
         $snip_call['name'] = $key;
         $snippetObject = $this->getSnippetObject($key);
-        if (is_null($snippetObject['content'])) {
+        if ($snippetObject['content'] === null) {
             return null;
         }
 
@@ -3198,7 +3198,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function buildLockedElementsCache()
     {
-        if (is_null($this->lockedElements)) {
+        if ($this->lockedElements === null) {
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
