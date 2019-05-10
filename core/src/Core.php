@@ -484,7 +484,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function isLoggedIn($context = 'mgr')
     {
-        if (substr($context, 0, 1) == 'm') {
+        if (strpos($context, 'm') === 0) {
             $_ = 'mgrValidated';
         } else {
             $_ = 'webValidated';
@@ -2078,7 +2078,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
                     unset($null);
 
-                    if (substr(trim($_tmp), 0, 2) === '//') {
+                    if (strpos(trim($_tmp), '//') === 0) {
                         $_tmp = strstr(trim($_tmp), "\n");
                     }
                     $i = 0;
@@ -2125,7 +2125,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $value = $this->mergeSettingsContent($value);
                 $value = $this->mergeChunkContent($value);
                 $value = $this->evalSnippets($value);
-                if (substr($value, 0, 6) !== '@CODE:') {
+                if (strpos($value, '@CODE:') !== 0) {
                     $value = $this->mergePlaceholderContent($value);
                 }
 
@@ -2135,7 +2135,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $value = null;
 
                 $_tmp = ltrim($_tmp, " ,\t");
-                if (substr($_tmp, 0, 2) === '//') {
+                if (strpos($_tmp, '//') === 0) {
                     $_tmp = strstr($_tmp, "\n");
                 }
             }
@@ -2270,7 +2270,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
-        } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[substr($snip_name, 1)])) {
+        } elseif (strpos($snip_name, '@') === 0 && isset($this->pluginEvent[substr($snip_name, 1)])) {
             $snippetObject['name'] = substr($snip_name, 1);
             $snippetObject['content'] = sprintf(
                 '$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));',
@@ -2784,7 +2784,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     if (!$content) {
                         $content = $documentObject['content'];
                     }
-                    if (0 === strpos($content, '@FILE:')) {
+                    if (strpos($content, '@FILE:') === 0) {
                         $template = str_replace('@FILE:', '', trim($content));
                         if (!$this['view']->exists($template)) {
                             $this->documentObject['template'] = 0;
