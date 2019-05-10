@@ -3680,20 +3680,31 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getDocumentChildren
+     * @param int $parentid {integer}
+     * - The parent document identifier. Default: 0 (site root).
+     * @param int $published {0; 1; 'all'}
+     * - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+     * @param int $deleted {0; 1; 'all'}
+     * - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
+     * @param string $fields {comma separated string; '*'}
+     * - Comma separated list of document fields to get. Default: '*' (all fields).
+     * @param string $where {string}
+     * - Where condition in SQL style. Should include a leading 'AND '. Default: ''.
+     * @param string $sort {comma separated string}
+     * - Should be a comma-separated list of field names on which to sort. Default: 'menuindex'.
+     * @param string $dir {'ASC'; 'DESC'}
+     * - Sort direction, ASC and DESC is possible. Default: 'ASC'.
+     * @param string $limit {string}
+     * - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
+     *
+     * @return array|mixed {array; false} - Result array, or false. - Result array, or false.
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
      * @version 1.1.1 (2014-02-19)
      *
      * @desc Returns the children of the selected document/folder as an associative array.
      *
-     * @param $parentid {integer} - The parent document identifier. Default: 0 (site root).
-     * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
-     * @param $deleted {0; 1; 'all'} - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
-     * @param $fields {comma separated string; '*'} - Comma separated list of document fields to get. Default: '*' (all fields).
-     * @param $where {string} - Where condition in SQL style. Should include a leading 'AND '. Default: ''.
-     * @param $sort {comma separated string} - Should be a comma-separated list of field names on which to sort. Default: 'menuindex'.
-     * @param $dir {'ASC'; 'DESC'} - Sort direction, ASC and DESC is possible. Default: 'ASC'.
-     * @param $limit {string} - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
-     *
-     * @return {array; false} - Result array, or false.
      */
     public function getDocumentChildren(
         $parentid = 0,
@@ -3747,20 +3758,31 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getDocuments
+     * @param array $ids {array; comma separated string}
+     * - Documents Ids to get. @required
+     * @param int $published {0; 1; 'all'}
+     * - Documents publication status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are published or they are not. Default: 1.
+     * @param int $deleted {0; 1; 'all'}
+     * - Documents removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
+     * @param string $fields {comma separated string; '*'}
+     * - Documents fields to get. Default: '*'.
+     * @param string $where {string}
+     * - SQL WHERE clause. Default: ''.
+     * @param string $sort {comma separated string}
+     * - A comma-separated list of field names to sort by. Default: 'menuindex'.
+     * @param string $dir {'ASC'; 'DESC'}
+     * - Sorting direction. Default: 'ASC'.
+     * @param string $limit {string}
+     * - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
+     *
+     * @return array|bool|mixed {array; false} - Result array with documents, or false. - Result array with documents, or false.
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
      * @version 1.1.1 (2013-02-19)
      *
      * @desc Returns required documents (their fields).
      *
-     * @param $ids {array; comma separated string} - Documents Ids to get. @required
-     * @param $published {0; 1; 'all'} - Documents publication status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are published or they are not. Default: 1.
-     * @param $deleted {0; 1; 'all'} - Documents removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
-     * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
-     * @param $where {string} - SQL WHERE clause. Default: ''.
-     * @param $sort {comma separated string} - A comma-separated list of field names to sort by. Default: 'menuindex'.
-     * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
-     * @param $limit {string} - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
-     *
-     * @return {array; false} - Result array with documents, or false.
      */
     public function getDocuments(
         $ids = array(),
@@ -4461,10 +4483,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getDocumentChildrenTVarOutput
-     * @version 1.1 (2014-02-19)
-     *
-     * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
-     *
      * @param int $parentid {integer}
      * - Id of parent document. Default: 0 (site root).
      * @param array $tvidnames {array; '*'}
@@ -4479,8 +4497,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - SQL WHERE condition (use only document fields, not TV). Default: ''.
      * @param string $resultKey {string; false}
      * - Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
-     * @return array {array; false} - Result array, or false.
+     * @return array|bool
      * - Result array, or false.
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
+     * @version 1.1 (2014-02-19)
+     *
+     * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
      */
     public function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id')
     {
@@ -4639,10 +4663,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getTemplateVarOutput
-     * @version 1.0.1 (2014-02-19)
-     *
-     * @desc Returns an associative array containing TV rendered output values.
-     *
      * @param array $idnames {array; '*'}
      * - Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
      * @param string $docid {integer; ''}
@@ -4651,8 +4671,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
      * @param string $sep {string}
      * - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
-     * @return array {array; false} - Result array, or false.
+     * @return array|bool - Result array, or false.
      * - Result array, or false.
+     *@version 1.0.1 (2014-02-19)
+     *
+     * @desc Returns an associative array containing TV rendered output values.
+     *
      */
     public function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
