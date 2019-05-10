@@ -451,17 +451,24 @@ class UrlProcessor
     {
         $out = false;
         if ($alias !== '') {
-            $table = $this->core->getDatabase()->getFullTableName('site_content');
-            $query = $this->core->getDatabase()->query("SELECT 
-                `sc`.`id` AS `hidden_id`,
-                `children`.`id` AS `child_id`,
-                children.alias AS `child_alias`,
-                COUNT(`grandsons`.`id`) AS `grandsons_count`
-              FROM " . $table ." AS `sc`
-              JOIN " . $table . " AS `children` ON `children`.`parent` = `sc`.`id`
-              LEFT JOIN " . $table . " AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
-              WHERE `sc`.`parent` = '" . (int)$parentid . "' AND `sc`.`alias_visible` = '0'
-              GROUP BY `children`.`id`");
+            $query = $this->core->getDatabase()->query(
+                sprintf(
+                    "SELECT 
+                    `sc`.`id` AS `hidden_id`,
+                    `children`.`id` AS `child_id`,
+                    children.alias AS `child_alias`,
+                    COUNT(`grandsons`.`id`) AS `grandsons_count`
+                    FROM %s AS `sc`
+                    JOIN %s AS `children` ON `children`.`parent` = `sc`.`id`
+                    LEFT JOIN %s AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
+                    WHERE `sc`.`parent` = '%d' AND `sc`.`alias_visible` = '0'
+                    GROUP BY `children`.`id`"
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , (int)$parentid
+                )
+            );
             while ($child = $this->core->getDatabase()->getRow($query)) {
                 if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
                     $out = $child['child_id'];
