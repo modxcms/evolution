@@ -101,7 +101,7 @@ if (! function_exists('get_by_key')) {
             }
         }
 
-        if ($found === true && $validate && \is_callable($validate)) {
+        if ($found && $validate && \is_callable($validate)) {
             if ($validate($out) === true) {
                 return $out;
             }
@@ -130,7 +130,11 @@ if (! function_exists('nicesize')) {
         $precisions = count($sizes) - 1;
         foreach ($sizes as $unit => $bytes) {
             if ($size >= $bytes) {
-                return number_format($size / $bytes, $precisions) . ' ' . $unit;
+                return sprintf(
+                    '%s %s'
+                    , number_format($size / $bytes, $precisions)
+                    , $unit
+                );
             }
             $precisions--;
         }
@@ -168,7 +172,7 @@ if (! function_exists('is_ajax')) {
      */
     function is_ajax()
     {
-        return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH', null)) === 'xmlhttprequest');
+        return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest');
     }
 }
 

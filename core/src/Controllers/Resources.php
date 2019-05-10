@@ -48,7 +48,7 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
         return array_merge(compact('tabs'), parent::getParameters($params), compact('activeTab'));
     }
 
-    protected function makeTab($tabClass, int $index = 0) :? ManagerTheme\TabControllerInterface
+    protected function makeTab($tabClass, int $index = null) :? ManagerTheme\TabControllerInterface
     {
         $tabController = null;
         if (class_exists($tabClass) &&
@@ -70,20 +70,28 @@ class Resources extends AbstractResources implements ManagerTheme\PageController
      */
     public function render(array $params = []) : string
     {
-        if (is_ajax() && ($tab = $this->needTab()) !== null) {
-            $index = array_search($tab, $this->tabs, true);
-            return ($index !== false && ($tabController = $this->makeTab($this->tabs[$tab], $index)) !== null) ?
-                $tabController->render(
-                    $tabController->getParameters()
-                ) : '';
+        if (!is_ajax() || ($tab = $this->needTab()) === null) {
+            return parent::render($params);
         }
-        return parent::render($params);
+
+        $index = array_search($tab, $this->tabs, true);
+        $tabController = $this->makeTab($this->tabs[$tab], $index);
+        if (($index !== false && $tabController !== null)) {
+            return $tabController->render(
+                $tabController->getParameters()
+            );
+        }
+        return '';
     }
 
     protected function needTab()
     {
-        return get_by_key($_GET, 'tab', 0, function ($val) {
-            return is_numeric($val) && array_key_exists($val, $this->tabs);
-        });
+        return get_by_key(
+            $_GET
+            , 'tab'
+            , 0
+            , function ($val) {
+                return is_numeric($val) && array_key_exists($val, $this->tabs);
+            });
     }
 }

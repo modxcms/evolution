@@ -33,7 +33,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         $out = Models\ActiveUser::locked(17)
             ->first();
         if ($out !== null) {
-            $out = sprintf($this->managerTheme->getLexicon('lock_settings_msg'), $out->username);
+            return sprintf($this->managerTheme->getLexicon('lock_settings_msg'), $out->username);
         }
 
         return $out;
@@ -66,12 +66,14 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     {
         $database = $this->managerTheme->getCore()->getDatabase();
         // load templates
-        $rs = $database->query('
+        $rs = $database->query(sprintf('
             SELECT t.templatename, t.id, c.category
-            FROM ' . $database->getFullTableName('site_templates') . ' AS t
-            LEFT JOIN ' . $database->getFullTableName('categories') . ' AS c ON t.category=c.id
-            ORDER BY c.category, t.templatename ASC
-        ');
+            FROM %s AS t
+            LEFT JOIN %s AS c ON t.category=c.id
+            ORDER BY c.category, t.templatename ASC'
+            , $database->getFullTableName('site_templates')
+            , $database->getFullTableName('categories')
+        ));
 
         $templates = [];
         $currentCategory = '';
@@ -86,18 +88,18 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             if ($thisCategory != $currentCategory) {
                 $i++;
                 $templates['items'][$i] = [
-                    'optgroup' => [
-                        'name' => $thisCategory,
+                    'optgroup'    => [
+                        'name'    => $thisCategory,
                         'options' => []
                     ]
                 ];
             }
             if ($row['id'] == get_by_key($this->managerTheme->getCore()->config, 'default_template')) {
-                $templates['oldTmpId'] = $row['id'];
+                $templates['oldTmpId']   = $row['id'];
                 $templates['oldTmpName'] = $row['templatename'];
             }
             $templates['items'][$i]['optgroup']['options'][] = [
-                'text' => $row['templatename'],
+                'text'  => $row['templatename'],
                 'value' => $row['id']
             ];
             $currentCategory = $thisCategory;
@@ -146,13 +148,14 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         $themes = [];
         $dir = dir(MODX_MANAGER_PATH . 'media/style/');
         while ($file = $dir->read()) {
-            if ($file !== "." && $file !== ".." && is_dir(MODX_MANAGER_PATH . 'media/style/' . $file) && substr($file,
-                    0, 1) != '.') {
-                if ($file === 'common') {
-                    continue;
-                }
-                $themes[$file] = $file;
+            if (strpos($file, '.') === 0 || $file === 'common') {
+                continue;
             }
+            if (!is_dir(MODX_MANAGER_PATH . 'media/style/' . $file)) {
+                continue;
+            }
+
+            $themes[$file] = $file;
         }
         $dir->close();
 

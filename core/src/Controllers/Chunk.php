@@ -28,7 +28,7 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
         $out = Models\ActiveUser::locked(78, $this->getElementId())
             ->first();
         if ($out !== null) {
-            $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
+            return sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
         }
 
         return $out;
@@ -39,20 +39,13 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
      */
     public function canView(): bool
     {
-        switch ($this->getIndex()) {
-            case 77:
-                $out = $this->managerTheme->getCore()->hasPermission('new_chunk');
-                break;
-
-            case 78:
-                $out = $this->managerTheme->getCore()->hasPermission('edit_chunk');
-                break;
-
-            default:
-                $out = false;
+        if($this->getIndex() == 77) {
+            return $this->managerTheme->getCore()->hasPermission('new_chunk');
         }
-
-        return $out;
+        if($this->getIndex() == 78) {
+            return $this->managerTheme->getCore()->hasPermission('edit_chunk');
+        }
+        return false;
     }
 
     /**
@@ -62,11 +55,11 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
     {
         $this->object = $this->parameterData();
         $this->parameters = [
-            'data' => $this->object,
-            'categories' => $this->parameterCategories(),
-            'which_editor' => $this->which_editor,
-            'action' => $this->getIndex(),
-            'events' => $this->parameterEvents(),
+            'data'          => $this->object,
+            'categories'    => $this->parameterCategories(),
+            'which_editor'  => $this->which_editor,
+            'action'        => $this->getIndex(),
+            'events'        => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
 
@@ -102,7 +95,11 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
         if (!empty($values)) {
             $data->fill($values);
-            $this->which_editor = isset($values['which_editor']) ? $values['which_editor'] : 'none';
+            if (isset($values['which_editor'])) {
+                $this->which_editor = $values['which_editor'];
+            } else {
+                $this->which_editor = 'none';
+            }
         }
 
 
@@ -159,18 +156,22 @@ class Chunk extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function callEventOnRichTextEditorInit()
     {
-        if (!empty($this->which_editor)) {
-            $which_editor = $this->which_editor;
+        if ($this->which_editor) {
+            $editor = $this->which_editor;
+        } else if ($this->object->editor_name !== 'none') {
+            $editor = $this->object->editor_name;
         } else {
-            $which_editor = $this->object->editor_name != 'none' ? $this->object->editor_name : 'none';
+            $editor = 'none';
         }
+
         $out = $this->managerTheme->getCore()->invokeEvent('OnRichTextEditorInit', [
-            'editor' => $which_editor,
+            'editor' => $editor,
             'elements' => ['post'],
             'controller' => $this
         ]);
+
         if (\is_array($out)) {
-            $out = implode('', $out);
+            return implode('', $out);
         }
 
         return (string)$out;

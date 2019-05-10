@@ -37,8 +37,11 @@ if(!function_exists('makeHTML')) {
             case 'publishedon':
             case 'pub_date':
             case 'unpub_date':
-                $sortby = sprintf('CASE WHEN %s IS NULL THEN 1 ELSE 0 END, %s', 'sc.' . $_SESSION['tree_sortby'],
-                    'sc.' . $_SESSION['tree_sortby']);
+                $sortby = sprintf(
+                    'CASE WHEN sc.%s IS NULL THEN 1 ELSE 0 END, sc.%s'
+                    , $_SESSION['tree_sortby']
+                    , $_SESSION['tree_sortby']
+                );
                 break;
             default:
                 $sortby = 'sc.' . $_SESSION['tree_sortby'];
@@ -47,43 +50,68 @@ if(!function_exists('makeHTML')) {
         $orderby = $modx->getDatabase()->escape($sortby . ' ' . $_SESSION['tree_sortdir']);
 
         // Folder sorting gets special setup ;) Add menuindex and pagetitle
-        if ($_SESSION['tree_sortby'] == 'isfolder') {
+        if ($_SESSION['tree_sortby'] === 'isfolder') {
             $orderby .= ', menuindex ASC, pagetitle';
         }
 
         // get document groups for current user
-        $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',',
-            $_SESSION['mgrDocgroups']) : '';
-        $showProtected = false;
+        if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
+            $docgrp = implode(',', $_SESSION['mgrDocgroups']);
+        } else {
+            $docgrp = '';
+        }
+
         if ($modx->getConfig('tree_show_protected') !== null) {
             $showProtected = (boolean)$modx->getConfig('tree_show_protected');
+        } else {
+            $showProtected = false;
         }
         $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
-        if ($showProtected == false) {
-            $access = "AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
+        if (!$showProtected) {
+            if (!$docgrp) {
+                $access = sprintf('AND (1=%s OR sc.privatemgr=0)', $mgrRole);
+            } else {
+                $access = sprintf(
+                    'AND (1=%s OR sc.privatemgr=0 OR dg.document_group IN (%s))'
+                    , $mgrRole
+                    , $docgrp
+                );
+            }
         } else {
             $access = '';
         }
         $docgrp_cond = $docgrp ? sprintf('OR dg.document_group IN (%s)', $docgrp) : '';
 
         $result = $modx->getDatabase()->select(
-            "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
-        MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess, GROUP_CONCAT(document_group SEPARATOR ',') AS roles"
+            sprintf(
+                "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder
+                , published, pub_date, unpub_date, richtext, searchable, cacheable
+                , deleted, type, template, templatename, menuindex, donthit, hidemenu, alias
+                , contentType, privateweb, privatemgr
+                ,MAX(IF(1=%s OR sc.privatemgr=0 %s, 1, 0)) AS hasAccess
+                , GROUP_CONCAT(document_group SEPARATOR ',') AS roles"
+                , $mgrRole
+                , $docgrp_cond
+            )
             , sprintf(
                 '%s AS sc LEFT JOIN %s dg on dg.document = sc.id LEFT JOIN %s st on st.id = sc.template'
                 , $modx->getDatabase()->getFullTableName('site_content')
                 , $modx->getDatabase()->getFullTableName('document_groups')
                 , $modx->getDatabase()->getFullTableName('site_templates')
             )
-            , sprintf('(parent=%d) %s GROUP BY sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr'
+            , sprintf(
+                '(parent=%d) %s GROUP BY sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr'
                 , $parent
                 , $access
             )
             , $orderby
         );
-        if ($modx->getDatabase()->getRecordCount($result) == 0) {
-            $output .= sprintf('<div><a class="empty">%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer,
-                '<i class="fa fa-ban"></i>', $_lang['empty_folder']);
+        if (!$modx->getDatabase()->getRecordCount($result)) {
+            $output .= sprintf(
+                '<div><a class="empty">%s<i class="fa fa-ban"></i>&nbsp;<span class="empty">%s</span></a></div>'
+                , $spacer
+                , $_lang['empty_folder']
+            );
         }
 
         if ($_SESSION['tree_nodename'] === 'default') {
@@ -97,13 +125,15 @@ if(!function_exists('makeHTML')) {
             $nodetitle = getNodeTitle($nodeNameSource, $row);
             $nodetitleDisplay = $nodetitle;
             $treeNodeClass = 'node';
-            $treeNodeClass .= $row['hasAccess'] == 0 ? ' protected' : '';
+            if (!$row['hasAccess']) {
+                $treeNodeClass .= ' protected';
+            }
 
-            if ($row['deleted'] == 1) {
+            if ($row['deleted']) {
                 $treeNodeClass .= ' deleted';
-            } elseif ($row['published'] == 0) {
+            } elseif (!$row['published']) {
                 $treeNodeClass .= ' unpublished';
-            } elseif ($row['hidemenu'] == 1) {
+            } elseif ($row['hidemenu']) {
                 $treeNodeClass .= ' hidemenu';
             }
 
@@ -116,21 +146,32 @@ if(!function_exists('makeHTML')) {
             } else {
                 $weblinkDisplay = '';
             }
-            $pageIdDisplay = '<small>(' . ($modx_textdir ? '&rlm;' : '') . $row['id'] . ')</small>';
+            if ($modx_textdir) {
+                $pageIdDisplay = sprintf('<small>(&rlm;%s)</small>', $row['id']);
+            } else {
+                $pageIdDisplay = sprintf('<small>(%s)</small>', $row['id']);
+            }
 
             // Prepare displaying user-locks
             $lockedByUser = '';
             $rowLock = $modx->elementIsLocked(7, $row['id'], true);
             if ($rowLock && $modx->hasPermission('display_locks')) {
                 if ($rowLock['sid'] == $modx->sid) {
-                    $title = $modx->parseText($_lang["lock_element_editing"], array(
-                        'element_type' => $_lang["lock_element_type_7"],
-                        'lasthit_df'   => $rowLock['lasthit_df']
-                    ));
-                    $lockedByUser = '<span title="' . $title . '" class="editResource">' . $_style['tree_preview_resource'] . '</span>';
+                    $title = $modx->parseText(
+                        $_lang['lock_element_editing']
+                        , array(
+                            'element_type' => $_lang['lock_element_type_7'],
+                            'lasthit_df'   => $rowLock['lasthit_df']
+                        )
+                    );
+                    $lockedByUser = sprintf(
+                        '<span title="%s" class="editResource">%s</span>'
+                        , $title
+                        , $_style['tree_preview_resource']
+                    );
                 } else {
-                    $title = $modx->parseText($_lang["lock_element_locked_by"], array(
-                        'element_type' => $_lang["lock_element_type_7"],
+                    $title = $modx->parseText($_lang['lock_element_locked_by'], array(
+                        'element_type' => $_lang['lock_element_type_7'],
                         'username'     => $rowLock['username'],
                         'lasthit_df'   => $rowLock['lasthit_df']
                     ));
@@ -235,17 +276,20 @@ if(!function_exists('makeHTML')) {
                 $ph['icon'] = $icon;
 
                 // invoke OnManagerNodePrerender event
-                $prenode = $modx->invokeEvent("OnManagerNodePrerender", array('ph' => $ph));
+                $prenode = $modx->invokeEvent('OnManagerNodePrerender', array('ph' => $ph));
                 if (is_array($prenode)) {
                     $phnew = array();
                     foreach ($prenode as $pnode) {
-                        $phnew = array_merge($phnew, unserialize($pnode));
+                        $pnode = unserialize($pnode);
+                        foreach($pnode as $k=>$v) {
+                            $phnew[$k] = $v;
+                        }
                     }
                     $ph = (count($phnew) > 0) ? $phnew : $ph;
                 }
 
                 if ($ph['contextmenu']) {
-                    $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+                    $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
                 }
 
                 if ($_SESSION['tree_show_only_folders']) {
@@ -290,20 +334,25 @@ if(!function_exists('makeHTML')) {
                         }
 
                         // invoke OnManagerNodePrerender event
-                        $prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+                        $prenode = $modx->invokeEvent('OnManagerNodePrerender', array(
                             'ph'     => $ph,
                             'opened' => '1'
                         ));
                         if (is_array($prenode)) {
                             $phnew = array();
                             foreach ($prenode as $pnode) {
-                                $phnew = array_merge($phnew, unserialize($pnode));
+                                $pnode = unserialize($pnode);
+                                foreach ($pnode as $k=>$v) {
+                                    $phnew[$k] = $v;
+                                }
                             }
-                            $ph = (count($phnew) > 0) ? $phnew : $ph;
+                            if ($phnew) {
+                                $ph = $phnew;
+                            }
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -328,20 +377,23 @@ if(!function_exists('makeHTML')) {
                         }
 
                         // invoke OnManagerNodePrerender event
-                        $prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+                        $prenode = $modx->invokeEvent('OnManagerNodePrerender', array(
                             'ph'     => $ph,
                             'opened' => '0'
                         ));
                         if (is_array($prenode)) {
                             $phnew = array();
                             foreach ($prenode as $pnode) {
-                                $phnew = array_merge($phnew, unserialize($pnode));
+                                $pnode = unserialize($pnode);
+                                foreach ($pnode as $k=>$v) {
+                                    $phnew[$k] = $v;
+                                }
                             }
                             $ph = (count($phnew) > 0) ? $phnew : $ph;
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -367,14 +419,17 @@ if(!function_exists('makeHTML')) {
                         }
 
                         // invoke OnManagerNodePrerender event
-                        $prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+                        $prenode = $modx->invokeEvent('OnManagerNodePrerender', array(
                             'ph'     => $ph,
                             'opened' => '1'
                         ));
                         if (is_array($prenode)) {
                             $phnew = array();
                             foreach ($prenode as $pnode) {
-                                $phnew = array_merge($phnew, unserialize($pnode));
+                                $pnode = unserialize($pnode);
+                                foreach ($pnode as $k=>$v) {
+                                    $phnew[$k] = $v;
+                                }
                             }
                             $ph = (count($phnew) > 0) ? $phnew : $ph;
                             if ($ph['showChildren'] == 0) {
@@ -392,7 +447,7 @@ if(!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -414,14 +469,17 @@ if(!function_exists('makeHTML')) {
                         }
 
                         // invoke OnManagerNodePrerender event
-                        $prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+                        $prenode = $modx->invokeEvent('OnManagerNodePrerender', array(
                             'ph'     => $ph,
                             'opened' => '0'
                         ));
                         if (is_array($prenode)) {
                             $phnew = array();
                             foreach ($prenode as $pnode) {
-                                $phnew = array_merge($phnew, unserialize($pnode));
+                                $pnode = unserialize($pnode);
+                                foreach ($pnode as $k=>$v) {
+                                    $phnew[$k] = $v;
+                                }
                             }
                             $ph = (count($phnew) > 0) ? $phnew : $ph;
                         }
@@ -434,7 +492,7 @@ if(!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -584,8 +642,8 @@ if(!function_exists('checkIsFolder')) {
                 sprintf(
                     'SELECT count(*) FROM %s WHERE parent=%d AND isfolder=%d '
                     , $modx->getDatabase()->getFullTableName('site_content')
-                    , $parent
-                    , $isfolder
+                    , (int)$parent
+                    , (int)$isfolder
                 )
             )
         );

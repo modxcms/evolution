@@ -25,7 +25,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $out = Models\ActiveUser::locked(16, $this->getElementId())
             ->first();
         if ($out !== null) {
-            $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
+            return sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
         }
 
         return $out;
@@ -36,20 +36,13 @@ class Template extends AbstractController implements ManagerTheme\PageController
      */
     public function canView(): bool
     {
-        switch ($this->getIndex()) {
-            case 16:
-                $out = $this->managerTheme->getCore()->hasPermission('edit_template');
-                break;
-
-            case 19:
-                $out = $this->managerTheme->getCore()->hasPermission('new_template');
-                break;
-
-            default:
-                $out = false;
+        if($this->getIndex() == 16) {
+            return $this->managerTheme->getCore()->hasPermission('edit_template');
         }
-
-        return $out;
+        if($this->getIndex() == 19) {
+            return $this->managerTheme->getCore()->hasPermission('new_template');
+        }
+        return false;
     }
 
     /**
@@ -60,21 +53,23 @@ class Template extends AbstractController implements ManagerTheme\PageController
         $this->object = $this->parameterData();
         $this->parameters = [
             'data' => $this->object,
-            'categories' => $this->parameterCategories(),
-            'tvSelected' => $this->parameterTvSelected(),
+            'categories'       => $this->parameterCategories(),
+            'tvSelected'       => $this->parameterTvSelected(),
             'categoriesWithTv' => $this->parameterCategoriesWithTv(
-                $this->object->tvs->reject(function (Models\SiteTmplvar $item) {
-                    return $item->category === 0;
-                })->pluck('id')->toArray()
+                $this->object->tvs->reject(
+                    function (Models\SiteTmplvar $item) {
+                        return $item->category === 0;
+                    })->pluck('id')->toArray()
             ),
-            'tvOutCategory' => $this->parameterTvOutCategory(
-                $this->object->tvs->reject(function (Models\SiteTmplvar $item) {
-                    return $item->category !== 0;
-                })->pluck('id')->toArray()
+            'tvOutCategory'    => $this->parameterTvOutCategory(
+                $this->object->tvs->reject(
+                    function (Models\SiteTmplvar $item) {
+                        return $item->category !== 0;
+                    })->pluck('id')->toArray()
             ),
-            'action' => $this->getIndex(),
-            'events' => $this->parameterEvents(),
-            'actionButtons' => $this->parameterActionButtons()
+            'action'           => $this->getIndex(),
+            'events'           => $this->parameterEvents(),
+            'actionButtons'    => $this->parameterActionButtons()
         ];
 
         return true;
@@ -89,8 +84,8 @@ class Template extends AbstractController implements ManagerTheme\PageController
 
         /** @var Models\SiteTemplate $data */
         $data = Models\SiteTemplate::with('tvs')
-            ->firstOrNew(['id' => $id], [
-                    'category' => (int)get_by_key($_REQUEST, 'catid', 0),
+            ->firstOrNew(['id'   => $id], [
+                    'category'   => (int)get_by_key($_REQUEST, 'catid', 0),
                     'selectable' => 1
                 ]);
 
@@ -109,7 +104,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
 
         $values = $this->managerTheme->loadValuesFromSession($_POST);
 
-        if (!empty($values)) {
+        if ($values) {
             $data->fill($values);
         }
 
@@ -149,7 +144,10 @@ class Template extends AbstractController implements ManagerTheme\PageController
                 $ignore
             ) {
                 if (!empty($ignore)) {
-                    $builder = $builder->whereNotIn((new Models\SiteTmplvar)->getTable() . '.id', $ignore);
+                    $builder = $builder->whereNotIn(
+                        (new Models\SiteTmplvar)->getTable() . '.id'
+                        , $ignore
+                    );
                 }
                 return $builder;
             })
@@ -176,7 +174,7 @@ class Template extends AbstractController implements ManagerTheme\PageController
             'controller' => $this
         ]);
         if (\is_array($out)) {
-            $out = implode('', $out);
+            return implode('', $out);
         }
 
         return (string)$out;
@@ -185,12 +183,12 @@ class Template extends AbstractController implements ManagerTheme\PageController
     protected function parameterActionButtons()
     {
         return [
-            'select' => 1,
-            'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
-            'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
-            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
-            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
-            'cancel' => 1
+            'select'    => 1,
+            'save'      => $this->managerTheme->getCore()->hasPermission('save_template'),
+            'new'       => $this->managerTheme->getCore()->hasPermission('new_template'),
+            'duplicate' => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete'    => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('delete_template'),
+            'cancel'    => 1
         ];
     }
 }

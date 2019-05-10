@@ -52,7 +52,6 @@ class PluginPriority extends AbstractController implements ManagerTheme\PageCont
 
         if (isset($_POST['listSubmitted'])) {
             $updateMsg = true;
-            $tbl = $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_plugin_events');
 
             foreach ($_POST as $listName => $listValue) {
                 if ($listName === 'listSubmitted') {
@@ -69,8 +68,12 @@ class PluginPriority extends AbstractController implements ManagerTheme\PageCont
                         $this->managerTheme->getCore()->getDatabase()
                             ->update(
                                 array('priority' => $key),
-                                $tbl,
-                                "pluginid='{$pluginId}' AND evtid='{$listName}'"
+                                $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_plugin_events'),
+                                sprintf(
+                                    "pluginid='%s' AND evtid='%s'"
+                                    , $pluginId
+                                    , $listName
+                                )
                             );
                     }
                 }

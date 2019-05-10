@@ -59,12 +59,12 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
         $this->object = $this->parameterData();
 
         $this->parameters = [
-            'data' => $this->object,
-            'categories' => $this->parameterCategories(),
-            'action' => $this->getIndex(),
-            'importParams' => $this->parameterImportParams(),
-            'docBlockList' => $this->parameterDocBlockList(),
-            'events' => $this->parameterEvents(),
+            'data'          => $this->object,
+            'categories'    => $this->parameterCategories(),
+            'action'        => $this->getIndex(),
+            'importParams'  => $this->parameterImportParams(),
+            'docBlockList'  => $this->parameterDocBlockList(),
+            'events'        => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
 
@@ -116,27 +116,23 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     {
         $out = [];
 
-        // Get table Names (alphabetical)
-        $tbl_site_module_depobj = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->getFullTableName('site_module_depobj');
-        $tbl_site_modules = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->getFullTableName('site_modules');
-        $tbl_site_snippets = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->getFullTableName('site_snippets');
-
         $ds = $this->managerTheme->getCore()
             ->getDatabase()
-            ->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm
-            INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
-            INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd
-            .resource='{$this->object->getKey()}' AND sm.enable_sharedparams=1", 'sm.name');
+            ->select('sm.id,sm.name,sm.guid', sprintf(
+                '%s AS sm
+                INNER JOIN %s AS smd ON smd.module=sm.id AND smd.type=40 
+                INNER JOIN %s AS ss ON ss.id=smd.resource'
+                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
+                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_depobj')
+                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_snippets')
+            )
+                , sprintf(
+                    "smd.resource='%s' AND sm.enable_sharedparams=1"
+                    , $this->object->getKey())
+                , 'sm.name'
+            );
 
-        while ($row = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->getRow($ds)) {
+        while ($row = $this->managerTheme->getCore()->getDatabase()->getRow($ds)) {
             $out[$row['guid']] = $row['name'];
         }
 
@@ -145,16 +141,17 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
 
     protected function parameterDocBlockList()
     {
-        $out = '';
-        if (isset($this->object->snippet)) {
-            $snippetcode = $this->managerTheme->getCore()
-                ->getDatabase()
-                ->escape($this->object->snippet);
-            $parsed = $this->managerTheme->getCore()->parseDocBlockFromString($snippetcode);
-            $out = $this->managerTheme->getCore()->convertDocBlockIntoList($parsed);
+        if (!isset($this->object->snippet)) {
+            return '';
         }
 
-        return $out;
+        return $this->managerTheme->getCore()->convertDocBlockIntoList(
+            $this->managerTheme->getCore()->parseDocBlockFromString(
+                $this->managerTheme->getCore()->getDatabase()->escape(
+                    $this->object->snippet
+                )
+            )
+        );
     }
 
     protected function parameterEvents(): array
@@ -171,25 +168,25 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     private function callEvent($name): string
     {
         $out = $this->managerTheme->getCore()->invokeEvent($name, [
-            'id' => $this->getElementId(),
+            'id'         => $this->getElementId(),
             'controller' => $this
         ]);
         if (\is_array($out)) {
-            $out = implode('', $out);
+            return implode('', $out);
         }
 
-        return (string)$out;
+        return $out;
     }
 
     protected function parameterActionButtons()
     {
         return [
-            'select' => 1,
-            'save' => $this->managerTheme->getCore()->hasPermission('save_snippet'),
-            'new' => $this->managerTheme->getCore()->hasPermission('new_snippet'),
-            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_snippet'),
-            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
-            'cancel' => 1
+            'select'    => 1,
+            'save'      => $this->managerTheme->getCore()->hasPermission('save_snippet'),
+            'new'       => $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'duplicate' => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'delete'    => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
+            'cancel'    => 1
         ];
     }
 }
