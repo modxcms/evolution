@@ -355,38 +355,46 @@ class UrlProcessor
      */
     public function getAliasListing($id) : ?array
     {
-        $out = null;
         if (isset($this->aliasListing[$id])) {
-            $out = $this->aliasListing[$id];
-        } else {
-            /** @var Models\SiteContent|null $query */
-            $query = Models\SiteContent::where('id', '=', (int)$id)->first();
-            if ($query !== null) {
-                $this->aliasListing[$id] = array(
-                    'id'       => $query->getKey(),
-                    'alias'    => $query->alias === '' ? $query->getKey() : $query->alias,
-                    'parent'   => $query->parent,
-                    'isfolder' => $query->isfolder,
-                    'alias_visible' => $query->alias_visible,
-                );
-                if ($query->parent > 0) {
-                    if ((bool)$this->core->getConfig('use_alias_path')) {
-                        $tmp = $this->getAliasListing($query->parent);
-                        if ($tmp['alias_visible']) {
-                            $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent'] > 0 && $tmp['path'] !== '') ? '/' : '') . $tmp['alias'];
-                        } else {
-                            $this->aliasListing[$id]['path'] = $tmp['path'];
-                        }
-                    } else {
-                        $this->aliasListing[$id]['path'] = '';
-                    }
-                }
-
-                $out = $this->aliasListing[$id];
-            }
+            return $this->aliasListing[$id];
         }
 
-        return $out;
+        /** @var Models\SiteContent|null $query */
+        $query = Models\SiteContent::where('id', '=', (int)$id)->first();
+        if ($query === null) {
+            return null;
+        }
+
+        $this->aliasListing[$id] = array(
+            'id'            => $query->getKey(),
+            'alias'         => $query->alias === '' ? $query->getKey() : $query->alias,
+            'parent'        => $query->parent,
+            'isfolder'      => $query->isfolder,
+            'alias_visible' => $query->alias_visible,
+        );
+
+        if ($query->parent <= 0) {
+            return $this->aliasListing[$id];
+        }
+
+        if (!((bool)$this->core->getConfig('use_alias_path'))) {
+            $this->aliasListing[$id]['path'] = '';
+            return $this->aliasListing[$id];
+        }
+
+        $tmp = $this->getAliasListing($query->parent);
+
+        if (!$tmp['alias_visible']) {
+            $this->aliasListing[$id]['path'] = $tmp['path'];
+            return $this->aliasListing[$id];
+        }
+
+        if ($tmp['parent'] > 0 && $tmp['path'] !== '') {
+            $this->aliasListing[$id]['path'] = $tmp['path'] . '/' . $tmp['alias'];
+        } else {
+            $this->aliasListing[$id]['path'] = $tmp['path'] . '' . $tmp['alias'];
+        }
+        return $this->aliasListing[$id];
     }
 
     /**
