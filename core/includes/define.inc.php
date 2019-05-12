@@ -83,20 +83,19 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
 
     $url = implode($separator, $items);
     unset($separator);
+    
+    $base_url = str_finish(implode($separator, $items),'/');
 
     reset($items);
     $items = explode(MGR_DIR, str_replace('\\', '/', dirname(__DIR__, 2)));
     if (count($items) > 1) {
         array_pop($items);
     }
-    $pth = implode(MGR_DIR, $items);
-    unset($items);
 
-    $base_url = $url . (substr($url, -1) !== '/' ? '/' : '');
-    unset($url);
-
-    $base_path = $pth . (substr($pth, -1) !== '/' && substr($pth, -1) !== '\\' ? '/' : '');
-    unset($pth);
+    $base_path = str_finish(
+        str_replace('\\', '/', implode(MGR_DIR, $items))
+        , '/'
+    );
 
     if (!defined('MODX_BASE_PATH')) {
         define('MODX_BASE_PATH', env('MODX_BASE_PATH', $base_path));
