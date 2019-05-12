@@ -4916,10 +4916,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC')
     {
+        static $cached = array();
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
-            return $this->tmpCache[__FUNCTION__][$cacheKey];
+        if (isset($cached[$cacheKey])) {
+            return $cached[$cacheKey];
         }
+        $cached[$cacheKey] = false;
 
         if (($idnames !== '*' && !is_array($idnames)) || empty($idnames) ) {
             return false;
@@ -4933,7 +4935,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $docRow = $this->getDocument($docid, '*', $published);
 
             if (!$docRow) {
-                $this->tmpCache[__FUNCTION__][$cacheKey] = false;
+                $cached[$cacheKey] = false;
                 return false;
             }
         }
@@ -4979,7 +4981,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        $this->tmpCache[__FUNCTION__][$cacheKey] = $result;
+        $cached[$cacheKey] = $result;
 
         return $result;
     }
