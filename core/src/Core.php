@@ -1,5 +1,9 @@
 <?php namespace EvolutionCMS;
 
+use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
+use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
+use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use PHPMailer\PHPMailer\Exception;
 use UrlProcessor;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
@@ -156,7 +160,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     private $dataForView = [];
 
     /**
-     * @param array $services
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -210,6 +214,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * @return self
+     * @throws \Exception
      */
     public static function getInstance()
     {
@@ -2369,6 +2374,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param mixed $identifier
      * @param bool $isPrepareResponse
      * @return array
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
@@ -3767,6 +3775,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $target
      * @param int $limit
      * @param int $trim
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
      */
     public function rotate_log($target = 'event_log', $limit = 3000, $trim = 100)
     {
@@ -4068,9 +4078,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
      *
      * @return array|bool|mixed {array; false} - Result array with documents, or false. - Result array with documents, or false.
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
      * @version 1.1.1 (2013-02-19)
      *
      * @desc Returns required documents (their fields).
@@ -4139,10 +4149,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getDocument
-     * @version 1.0.1 (2014-02-19)
-     *
-     * @desc Returns required fields of a document.
-     *
      * @param int $id {integer}
      * - Id of a document which data has to be gained. @required
      * @param string $fields {comma separated string; '*'}
@@ -4153,6 +4159,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
      * @return bool {array; false} - Result array with fields or false.
      * - Result array with fields or false.
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
+     * @version 1.0.1 (2014-02-19)
+     *
+     * @desc Returns required fields of a document.
+     *
      */
     public function getDocument($id = 0, $fields = '*', $published = 1, $deleted = 0)
     {
@@ -4173,6 +4186,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $field
      * @param string $docid
      * @return bool|mixed
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getField($field = 'content', $docid = '')
     {
@@ -4216,6 +4232,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $fields List of fields
      *                       Default: id, pagetitle, description, alias
      * @return boolean|array
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getPageInfo($pageid = -1, $active = 1, $fields = 'id, pagetitle, description, alias')
     {
@@ -4259,6 +4278,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $fields List of fields
      *                       Default: id, pagetitle, description, alias
      * @return boolean|array
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getParent($pid = -1, $active = 1, $fields = 'id, pagetitle, description, alias, parent')
     {
@@ -4284,6 +4306,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * Returns the id of the current snippet.
      *
      * @return int
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getSnippetId()
     {
@@ -4314,7 +4339,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $type
      * @param bool $report
-     * @return bool
+     * @return void
      */
     public function clearCache($type = '', $report = false)
     {
@@ -4559,6 +4584,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * get template for snippets
      * @param $tpl {string}
      * @return bool|string {string}
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getTpl($tpl)
     {
@@ -4706,6 +4735,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $tvsortdir How to sort each element of the result array i.e. how to sort the TVs (direction)
      *                      Default: ASC
      * @return array|bool
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
      */
     public function getDocumentChildrenTVars($parentid = 0, $tvidnames = array(), $published = 1, $docsort = "menuindex", $docsortdir = "ASC", $tvfields = "*", $tvsort = "rank", $tvsortdir = "ASC")
     {
@@ -4791,9 +4823,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
      * @return array|bool
      * - Result array, or false.
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
      * @version 1.1 (2014-02-19)
      *
      * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
@@ -4868,12 +4900,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     /**
      * getTemplateVars
-     * @version 1.0.1 (2014-02-19)
-     *
-     * @desc Returns an array of site_content field fields and/or TV records from the db.
-     * Elements representing a site content field consist of an associative array of 'name' and 'value'.
-     * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
-     *
      * @param string|array $idnames {array; '*'} - Which TVs to fetch. Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
      * @param string|array $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'
      * @param int|string $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
@@ -4882,6 +4908,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
      *
      * @return array|bool Result array, or false.
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
+     * @version 1.0.1 (2014-02-19)
+     *
+     * @desc Returns an array of site_content field fields and/or TV records from the db.
+     * Elements representing a site content field consist of an associative array of 'name' and 'value'.
+     * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
+     *
      */
     public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC')
     {
@@ -4965,10 +5000,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
      * @return array|bool - Result array, or false.
      * - Result array, or false.
-     *@version 1.0.1 (2014-02-19)
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
+     * @version 1.0.1 (2014-02-19)
      *
      * @desc Returns an associative array containing TV rendered output values.
-     *
      */
     public function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
@@ -5078,6 +5115,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $msg The message body
      * @param int $private Whether it is a private message, or not
      *                     Default : 0
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\GetDataException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TooManyLoopsException
      */
     public function sendAlert($type, $to, $from, $subject, $msg, $private = 0)
     {
@@ -5191,6 +5232,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param int $uid
      * @return boolean|string
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getUserInfo($uid)
     {
@@ -5222,6 +5266,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param int $uid
      * @return boolean|string
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getWebUserInfo($uid)
     {
@@ -5248,6 +5295,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param boolean $resolveIds Set to true to return the document group names
      *                            Default: false
      * @return string|array
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getUserDocGroups($resolveIds = false)
     {
@@ -5288,11 +5338,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * Change current web user's password
      *
-     * @todo Make password length configurable, allow rules for passwords and translation of messages
      * @param string $oldPwd
      * @param string $newPwd
      * @return string|boolean Returns true if successful, oterhwise return error
      *                        message
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @todo Make password length configurable, allow rules for passwords and translation of messages
      */
     public function changeWebUserPassword($oldPwd, $newPwd)
     {
@@ -5339,6 +5392,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param array $groupNames
      * @return boolean
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
      */
     public function isMemberOfWebGroup($groupNames = array())
     {
@@ -5696,6 +5751,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $pluginName
      * @return array Associative array consisting of 'code' and 'props'
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
     public function getPluginCode($pluginName)
     {
@@ -6522,6 +6580,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $title
      * @param string $msg
      * @param int $type
+     * @throws Exception
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\GetDataException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TooManyLoopsException
      */
     public function addLog($title = 'no title', $msg = '', $type = 1)
     {
