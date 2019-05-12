@@ -3389,24 +3389,33 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function cleanupExpiredLocks()
     {
         // Clean-up active_user_sessions first
-        $timeout = (int)$this->getConfig('session_timeout') < 2 ? 120 : $this->getConfig('session_timeout') * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        if ((int)$this->getConfig('session_timeout') < 2) {
+            $timeout = 120;
+        } else {
+            $timeout = $this->getConfig('session_timeout') * 60;
+        }
+        // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
-        $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_sessions'),
-            "lasthit < {$validSessionTimeLimit}");
+        $this->getDatabase()->delete(
+            $this->getDatabase()->getFullTableName('active_user_sessions')
+            , sprintf('lasthit < %d', (int)$validSessionTimeLimit)
+        );
 
         // Clean-up active_user_locks
-        $rs = $this->getDatabase()->select('sid,internalKey',
-            $this->getDatabase()->getFullTableName('active_user_sessions'));
-        $count = $this->getDatabase()->getRecordCount($rs);
-        if ($count) {
+        $rs = $this->getDatabase()->select(
+            'sid,internalKey'
+            , $this->getDatabase()->getFullTableName('active_user_sessions')
+        );
+        if ($this->getDatabase()->getRecordCount($rs)) {
             $rs = $this->getDatabase()->makeArray($rs);
             $userSids = array();
             foreach ($rs as $row) {
                 $userSids[] = $row['sid'];
             }
-            $userSids = "'" . implode("','", $userSids) . "'";
-            $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'),
-                "sid NOT IN({$userSids})");
+            $this->getDatabase()->delete(
+                $this->getDatabase()->getFullTableName('active_user_locks')
+                , sprintf("sid NOT IN('%s')", implode("','", $userSids))
+            );
         } else {
             $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'));
         }
