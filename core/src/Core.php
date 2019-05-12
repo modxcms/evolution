@@ -2823,11 +2823,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $k = array_keys($_GET);
-        unset ($_GET[$k[0]]);
-        unset ($_REQUEST[$k[0]]); // remove 404,405 entry
+        unset($_GET[$k[0]], $_REQUEST[$k[0]]);
+        // remove 404,405 entry
         $qp = parse_url(str_replace(MODX_SITE_URL, '', substr($url, 4)));
         $_SERVER['QUERY_STRING'] = $qp['query'];
-        if (!empty ($qp['query'])) {
+        if ($qp['query']) {
             parse_str($qp['query'], $qv);
             foreach ($qv as $n => $v) {
                 $_REQUEST[$n] = $_GET[$n] = $v;
@@ -2835,8 +2835,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $_SERVER['PHP_SELF'] = MODX_BASE_URL . $qp['path'];
         $this->q = $qp['path'];
-
-        return $qp['path'];
     }
 
     /**
