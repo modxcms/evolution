@@ -3511,6 +3511,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
      * @param int $id Element- / Resource-id
      * @return bool
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws TableNotDefinedException
      */
     public function lockElement($type, $id)
     {
@@ -3521,10 +3523,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
-                VALUES (%d, %d, %d, %d, \'%s\')', $this->getDatabase()->getFullTableName('active_user_locks'), $userId,
-            $type, $id, $this->time, $this->sid);
-        $this->getDatabase()->query($sql);
+        return $this->getDatabase()->query(
+            sprintf(
+                "REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
+                    VALUES (%d, %d, %d, %d, '%s')"
+                , $this->getDatabase()->getFullTableName('active_user_locks')
+                , $userId
+                , $type
+                , $id
+                , $this->time
+                , $this->sid
+            )
+        );
     }
 
     /**
