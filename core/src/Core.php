@@ -3195,67 +3195,63 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function webAlertAndQuit($msg, $url = '')
     {
-        global $modx_manager_charset, $modx_lang_attribute, $modx_textdir, $lastInstallTime;
+        $manager_charset = array_get($GLOBALS, 'modx_manager_charset', $this->getConfig('modx_charset'));
+        $lang_attribute  = array_get($GLOBALS, 'modx_lang_attribute', $this->getConfig('lang_code'));
 
-        if(empty($modx_manager_charset)) {
-            $modx_manager_charset = $this->getConfig('modx_charset');
+        if(array_get($GLOBALS, 'modx_textdir', $this->getConfig('manager_direction'))==='rtl') {
+            $textdir = 'rtl';
+        } else {
+            $textdir = 'ltr';
         }
 
-        if(empty($modx_lang_attribute)) {
-            $modx_lang_attribute = $this->getConfig('lang_code');
-        }
-
-        if(empty($modx_textdir)) {
-            $modx_textdir = $this->getConfig('manager_direction');
-        }
-        $textdir = $modx_textdir === 'rtl' ? 'rtl' : 'ltr';
-
-        switch (true) {
-            case (0 === stripos($url, 'javascript:')):
-                $fnc = substr($url, 11);
-                break;
-            case $url === '#':
-                $fnc = '';
-                break;
-            case empty($url):
-                $fnc = 'history.back(-1);';
-                break;
-            default:
-                $fnc = "window.location.href='" . addslashes($url) . "';";
+        if (stripos($url, 'javascript:') === 0) {
+            $fnc = substr($url, 11);
+        } elseif ($url === '#') {
+            $fnc = '';
+        } elseif (!$url) {
+            $fnc = 'history.back(-1);';
+        } else {
+            $fnc = "window.location.href='" . addslashes($url) . "';";
         }
 
         $style = '';
         if (IN_MANAGER_MODE) {
-            if (empty($lastInstallTime)) {
-                $lastInstallTime = time();
+            $path = sprintf('media/style/%s/', $this->getConfig('manager_theme'));
+            if (is_file(MODX_MANAGER_PATH . $path . '/css/styles.min.css')) {
+                $file_name = '/css/styles.min.css';
+            } else {
+                $file_name = 'style.css';
             }
-
-            $path =  'media/style/' . $this->getConfig('manager_theme') . '/';
-            $css = file_exists(MODX_MANAGER_PATH .  $path . '/css/styles.min.css') ? '/css/styles.min.css' : 'style.css';
-            $style = '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . $path . $css . '?v=' . $lastInstallTime . '"/>';
+            $style = sprintf(
+                '<link rel="stylesheet" type="text/css" href="%s%s%s?v=%s"/>'
+                , MODX_MANAGER_URL
+                , $path
+                , $file_name
+                , array_get($GLOBALS, 'lastInstallTime', time())
+            );
         }
 
         ob_get_clean();
-        echo "<!DOCTYPE html>
-            <html lang=\"{$modx_lang_attribute}\" dir=\"{$textdir}\">
+        echo '<!DOCTYPE html>
+            <html lang="' . $lang_attribute . '" dir="' . $textdir . '">
                 <head>
                 <title>MODX :: Alert</title>
-                <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
-                {$style}
+                <meta http-equiv="Content-Type" content="text/html; charset=' . $manager_charset . ';">
+                ' . $style . "
                 <script>
                     function __alertQuit() {
                         var el = document.querySelector('p');
                         alert(el.innerHTML);
                         el.remove();
-                        {$fnc}
+                        " . $fnc . "
                     }
                     window.setTimeout('__alertQuit();',100);
                 </script>
             </head>
             <body>
-                <p>{$msg}</p>
+                <p>" . $msg . '</p>
             </body>
-        </html>";
+        </html>';
         exit;
     }
 
