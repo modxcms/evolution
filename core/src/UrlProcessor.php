@@ -573,7 +573,11 @@ class UrlProcessor
             }
 
             //TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host = $scheme === 'full' ? $this->core->getConfig('site_url') : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            if ($scheme === 'full') {
+                $host = $this->core->getConfig('site_url');
+            } else {
+                $host = $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            }
         }
 
         //fix strictUrl by Bumkaka
@@ -582,7 +586,7 @@ class UrlProcessor
         }
 
         if ($this->core->getConfig('xhtml_urls')) {
-            $url = preg_replace("/&(?!amp;)/", "&amp;", $host . $virtualDir . $url);
+            $url = preg_replace('/&(?!amp;)/', "&amp;", $host . $virtualDir . $url);
         } else {
             $url = $host . $virtualDir . $url;
         }
@@ -592,7 +596,7 @@ class UrlProcessor
             'url' => $url
         ));
 
-        if (is_array($evtOut) && count($evtOut) > 0) {
+        if (is_array($evtOut) && $evtOut) {
             $url = array_pop($evtOut);
         }
 
@@ -601,64 +605,76 @@ class UrlProcessor
 
     public function strictURI(string $query, int $id) :? string
     {
-        $out = null;
-        // FIX URLs
-        if (empty($id) ||
-            $this->core->getConfig('seostrict') === false ||
-            $this->core->getConfig('friendly_urls') === false ||
-            $this->core->getConfig('site_status') === false
-        ) {
-            return $out;
+        if (!$id) {
+            return null;
         }
 
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-        $len_base_url = strlen($this->core->getConfig('base_url'));
-
-        $url_path = $query;//LANG
-
-        if (substr($url_path, 0, $len_base_url) === $this->core->getConfig('base_url')) {
-            $url_path = substr($url_path, $len_base_url);
+        if (!$this->core->getConfig('site_status')) {
+            return null;
+        }
+        if (!$this->core->getConfig('seostrict') || !$this->core->getConfig('friendly_urls')) {
+            return null;
         }
 
-        $strictURL = $this->makeUrl($id);
-        $strictURL = $this->toAlias($strictURL);
-
-        if (substr($strictURL, 0, $len_base_url) === $this->core->getConfig('base_url')) {
-            $strictURL = substr($strictURL, $len_base_url);
-        }
-        $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . '/' . $query; //LANG
-
-        $url_query_string = explode('?', $_SERVER['REQUEST_URI']);
         // Strip conflicting id/q from query string
-        $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
+        if (str_contains($_SERVER['REQUEST_URI'], '?')) {
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', str_after($_SERVER['REQUEST_URI'],'?'));
+        } else {
+            $qstring = '';
+        }
 
         if ($id === (int)$this->core->getConfig('site_start')) {
-            if ($requestedURL !== $this->core->getConfig('site_url')) {
-                $url = $this->core->getConfig('site_url');
-                if ($qstring) {
-                     $url .= '?' . $qstring;
-                }
+            $requestedURL = sprintf(
+                '%s://%s/%s'
+                , isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'
+                , $_SERVER['HTTP_HOST']
+                , $query
+            ); //LANG
+            if ($requestedURL === $this->core->getConfig('site_url')) {
+                return null;
+            }
+            if ($this->core->getConfig('base_url') === $_SERVER['REQUEST_URI']) {
+                return null;
+            }
+            if ($_POST) {
+                return null;
+            }
 
-                if ($this->core->getConfig('base_url') != $_SERVER['REQUEST_URI']) {
-                    if (empty($_POST)) {
-                        if (($this->core->getConfig('base_url') . '?' . $qstring) != $_SERVER['REQUEST_URI']) {
-                            $out = $url;
-                        }
-                    }
-                }
+            if ($this->core->getConfig('base_url') . '?' . $qstring === $_SERVER['REQUEST_URI']) {
+                return null;
             }
-        } elseif (preg_match('#/\?q\=' . $strictURL . '#i', $_SERVER['REQUEST_URI']) ||
-            ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))
-        ) {
-            if (!empty($qstring)) {
-                $url = $this->core->getConfig('site_url') . $strictURL . '?' . $qstring;
-            } else {
-                $url = $this->core->getConfig('site_url') . $strictURL;
+            $url = $this->core->getConfig('site_url');
+            if ($qstring) {
+                return $url . '?' . $qstring;
             }
-            $out = $url;
+            return $url;
         }
 
-        return $out;
+        $strictURL = $this->toAlias($this->makeUrl($id));
+        if (strpos($strictURL, $this->core->getConfig('base_url')) === 0) {
+            $strictURL = substr(
+                $strictURL
+                , strlen($this->core->getConfig('base_url'))
+            );
+        }
+
+        $url_path = $query;
+        if (strpos($url_path, $this->core->getConfig('base_url')) === 0) {
+            $url_path = substr(
+                $url_path
+                , strlen($this->core->getConfig('base_url'))
+            );
+        }
+
+        if (stripos($_SERVER['REQUEST_URI'], '/?q=' . $strictURL)!==false
+            ||
+            ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))) {
+            if ($qstring) {
+                return $this->core->getConfig('site_url') . $strictURL . '?' . $qstring;
+            }
+            return $this->core->getConfig('site_url') . $strictURL;
+        }
+
+        return null;
     }
 }
