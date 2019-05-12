@@ -3431,7 +3431,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $validSessionTimeLimit = $this->time - $timeout;
 
         $activeUserSids = array();
-        $rs = $this->getDatabase()->select('sid', $this->getDatabase()->getFullTableName('active_user_sessions'));
+        $rs = $this->getDatabase()->select(
+            'sid'
+            , $this->getDatabase()->getFullTableName('active_user_sessions')
+        );
         $count = $this->getDatabase()->getRecordCount($rs);
         if ($count) {
             $rs = $this->getDatabase()->makeArray($rs);
@@ -3440,8 +3443,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        $rs = $this->getDatabase()->select("sid,internalKey,lasthit",
-            "{$this->getDatabase()->getFullTableName('active_users')}", "", "lasthit DESC");
+        $rs = $this->getDatabase()->select(
+            'sid,internalKey,lasthit'
+            , $this->getDatabase()->getFullTableName('active_users')
+            , ''
+            , 'lasthit DESC'
+        );
         if ($this->getDatabase()->getRecordCount($rs)) {
             $rs = $this->getDatabase()->makeArray($rs);
             $internalKeyCount = array();
@@ -3452,16 +3459,24 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
                 $internalKeyCount[$row['internalKey']]++;
 
-                if ($internalKeyCount[$row['internalKey']] > 1 && !in_array($row['sid'],
-                        $activeUserSids) && $row['lasthit'] < $validSessionTimeLimit) {
-                    $deleteSids .= $deleteSids == '' ? '' : ' OR ';
-                    $deleteSids .= "sid='{$row['sid']}'";
+                if ($internalKeyCount[$row['internalKey']] > 1
+                    && !in_array($row['sid'], $activeUserSids)
+                    && $row['lasthit'] < $validSessionTimeLimit) {
+                    if ($deleteSids != '') {
+                        $deleteSids .= ' OR ';
+                    }
+                    $deleteSids .= sprintf("sid='%s'", $row['sid']);
                 };
+            }
 
+            if (!$deleteSids) {
+                return;
             }
-            if ($deleteSids) {
-                $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_users'), $deleteSids);
-            }
+
+            $this->getDatabase()->delete(
+                $this->getDatabase()->getFullTableName('active_users')
+                , $deleteSids
+            );
         }
 
     }
