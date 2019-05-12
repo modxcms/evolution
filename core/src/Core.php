@@ -368,13 +368,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
         }
-        if ($type == 'REDIRECT_REFRESH') {
+        if ($type === 'REDIRECT_REFRESH') {
             $header = 'Refresh: 0;URL=' . $url;
-        } elseif ($type == 'REDIRECT_META') {
+        } elseif ($type === 'REDIRECT_META') {
             $header = '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=' . $url . '" />';
             echo $header;
             exit;
-        } elseif ($type == 'REDIRECT_HEADER' || empty ($type)) {
+        } elseif ($type === 'REDIRECT_HEADER' || empty ($type)) {
             // check if url has /$base_url
             if (substr($url, 0, strlen(MODX_BASE_URL)) == MODX_BASE_URL) {
                 // append $site_url to make it work with Location:
@@ -414,11 +414,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             $this->prepareResponse();
             exit();
-        } else {
-            $this->getService('ExceptionHandler')->messageQuit("Internal Server Error id={$id}");
-            header('HTTP/1.0 500 Internal Server Error');
-            die('<h1>ERROR: Too many forward attempts!</h1><p>The request could not be completed due to too many unsuccessful forward attempts.</p>');
         }
+
+        $this->getService('ExceptionHandler')->messageQuit("Internal Server Error id={$id}");
+        header('HTTP/1.0 500 Internal Server Error');
+        die('<h1>ERROR: Too many forward attempts!</h1><p>The request could not be completed due to too many unsuccessful forward attempts.</p>');
     }
 
     /**
@@ -4765,7 +4765,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($tvsort != '') {
             $tvsort = 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
         }
-        if ($tvidnames == "*") {
+        if ($tvidnames === "*") {
             $query = "tv.id<>0";
         } else {
             $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
@@ -4794,7 +4794,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // get default/built-in template variables
             ksort($doc);
             foreach ($doc as $key => $value) {
-                if ($tvidnames == '*' || in_array($key, $tvidnames)) {
+                if ($tvidnames === '*' || in_array($key, $tvidnames)) {
                     $tvs[] = array('name' => $key, 'value' => $value);
                 }
             }
@@ -5016,7 +5016,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $output = array();
         $vars = ($idnames === '*' || is_array($idnames)) ? $idnames : array($idnames);
 
-        $docid = (int)$docid > 0 ? (int)$docid : $this->documentIdentifier;
+        if ((int)$docid > 0) {
+            $docid = (int)$docid;
+        } else {
+            $docid = $this->documentIdentifier;
+        }
         // remove sort for speed
         $result = $this->getTemplateVars($vars, '*', $docid, $published, '', '');
 
@@ -6141,8 +6145,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function atBindFileContent($str = '')
     {
 
-        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->getConfig('rb_base_url') . 'files/', '');
-
         if (stripos($str, '@FILE') !== 0) {
             return $str;
         }
@@ -6163,6 +6165,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $errorMsg = sprintf("Could not retrieve string '%s'.", $str);
 
+        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->getConfig('rb_base_url') . 'files/', '');
         foreach ($search_path as $path) {
             $file_path = MODX_BASE_PATH . $path . $str;
             if (strpos($file_path, MODX_MANAGER_PATH) === 0) {
