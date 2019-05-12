@@ -3000,9 +3000,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // check whether it's a reference
         if (preg_match('@^[1-9]\d*$@', $url)) {
-            $url = $this->makeUrl($url); // if it's a bare document id
+            $url = UrlProcessor::makeUrl($url); // if it's a bare document id
         } elseif (str_contains($url, '[~')) {
-            $url = $this->rewriteUrls($url); // if it's an internal docid tag, process it
+            $url = UrlProcessor::rewriteUrls($url); // if it's an internal docid tag, process it
         }
         $this->sendRedirect($url, 0, '', 'HTTP/1.0 301 Moved Permanently');
         exit;
