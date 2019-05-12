@@ -2612,8 +2612,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function parseDocumentSource($source)
     {
         // set the number of times we are to parse the document source
-        $this->minParserPasses = empty ($this->minParserPasses) ? 2 : $this->minParserPasses;
-        $this->maxParserPasses = empty ($this->maxParserPasses) ? 10 : $this->maxParserPasses;
+        $this->minParserPasses = !$this->minParserPasses ? 2 : $this->minParserPasses;
+        $this->maxParserPasses = !$this->maxParserPasses ? 10 : $this->maxParserPasses;
         $passes = $this->minParserPasses;
         for ($i = 0; $i < $passes; $i++) {
             // get source length if this is the final pass
@@ -2621,12 +2621,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $st = md5($source);
             }
             if ($this->dumpSnippets == 1) {
-                $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i + 1) . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
+                $this->snippetsCode .= sprintf(
+                    "<fieldset><legend><b style='color: #821517;'>PARSE PASS %d</b></legend><p>The following snippets (if any) were parsed during this pass.</p>"
+                    , $i + 1);
             }
 
             // invoke OnParseDocument event
             $this->documentOutput = $source; // store source code so plugins can
-            $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
+            $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
             if ($this->getConfig('enable_at_syntax')) {
@@ -2641,7 +2643,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $source = $this->mergePlaceholderContent($source);
 
             if ($this->dumpSnippets == 1) {
-                $this->snippetsCode .= "</fieldset><br />";
+                $this->snippetsCode .= '</fieldset><br />';
             }
             if ($i == ($passes - 1) && $i < ($this->maxParserPasses - 1)) {
                 // check if source content was changed
