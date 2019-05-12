@@ -2696,72 +2696,97 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentIdentifier = $this->getConfig('site_unavailable_page');
         }
 
-        if ($this->documentMethod === "alias") {
-            $this->documentIdentifier = $this->cleanDocumentIdentifier($this->documentIdentifier);
+        if ($this->documentMethod !== 'alias') {
+            //$this->_fixURI();
+            // invoke OnWebPageInit event
+            $this->invokeEvent("OnWebPageInit");
+            // invoke OnLogPageView event
+            if ($this->getConfig('track_visitors') == 1) {
+                $this->invokeEvent("OnLogPageHit");
+            }
+            if ($this->getConfig('seostrict') == '1') {
+                $this->sendStrictURI();
+            }
+            $this->prepareResponse();
+            return;
+        }
 
-            // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
-            if ($this->getConfig('use_alias_path') == 1) {
-                $virtualDir = UrlProcessor::getFacadeRoot()->virtualDir;
-                $alias = (strlen($virtualDir) > 0 ? $virtualDir . '/' : '') . $this->documentIdentifier;
-                if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
-                    $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
-                } else {
-                    //@TODO: check new $alias;
-                    if ($this->getConfig('aliaslistingfolder') == 1) {
-                        $tbl_site_content = $this->getDatabase()->getFullTableName('site_content');
+        $this->documentIdentifier = $this->cleanDocumentIdentifier($this->documentIdentifier);
 
-                        $parentId = empty($virtualDir) ? 0 : UrlProcessor::getIdFromAlias($virtualDir);
-                        $parentId = ($parentId > 0) ? $parentId : '0';
+        // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
+        if ($this->getConfig('use_alias_path') == 1) {
+            $virtualDir = UrlProcessor::getFacadeRoot()->virtualDir;
+            $alias = sprintf(
+                '%s%s'
+                , $virtualDir != '' ? $virtualDir . '/' : ''
+                , $this->documentIdentifier
+            );
+            if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
+                $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
+            } else {
+                //@TODO: check new $alias;
+                if ($this->getConfig('aliaslistingfolder') == 1) {
+                    $rs = $this->getDatabase()->select(
+                        'id'
+                        , $this->getDatabase()->getFullTableName('site_content')
+                        , sprintf(
+                            "deleted=0 and parent='%d' and alias='%s'"
+                            , $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0
+                            , $this->getDatabase()->escape($this->documentIdentifier)
+                        )
+                    );
+                    if (!$this->getDatabase()->getRecordCount($rs)) {
+                        $this->sendErrorPage();
+                    }
 
-                        $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
+                    $docId = $this->getDatabase()->getValue($rs);
+                    if (!$docId) {
+                        $alias = $this->q;
+                        if ((int)$this->getConfig('friendly_url_suffix') !== 0) {
+                            $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
 
-                        $rs = $this->getDatabase()->select('id', $tbl_site_content,
-                            "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
-                        if ($this->getDatabase()->getRecordCount($rs) == 0) {
-                            $this->sendErrorPage();
-                        }
-                        $docId = $this->getDatabase()->getValue($rs);
-
-                        if (!$docId) {
-                            $alias = $this->q;
-                            if ((int)$this->getConfig('friendly_url_suffix') !== 0) {
-                                $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
-
-                                if ($pos !== false) {
-                                    $alias = substr($alias, 0, $pos);
-                                }
+                            if ($pos !== false) {
+                                $alias = substr($alias, 0, $pos);
                             }
-                            $docId = UrlProcessor::getIdFromAlias($alias);
                         }
+                        $docId = UrlProcessor::getIdFromAlias($alias);
+                    }
 
-                        if ($docId > 0) {
-                            $this->documentIdentifier = $docId;
-                        } else {
-                            $this->sendErrorPage();
-                        }
+                    if ($docId > 0) {
+                        $this->documentIdentifier = $docId;
                     } else {
                         $this->sendErrorPage();
                     }
-                }
-            } else {
-                if (isset(UrlProcessor::getFacadeRoot()->documentListing[$this->documentIdentifier])) {
-                    $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$this->documentIdentifier];
                 } else {
-                    $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
-                    $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName('site_content'),
-                        "deleted=0 and alias='{$docAlias}'");
-                    $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
+                    $this->sendErrorPage();
                 }
             }
-            $this->documentMethod = 'id';
+        } else {
+            if (isset(UrlProcessor::getFacadeRoot()
+                    ->documentListing[$this->documentIdentifier])) {
+                $this->documentIdentifier = UrlProcessor::getFacadeRoot()
+                    ->documentListing[$this->documentIdentifier];
+            } else {
+                $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
+                $rs = $this->getDatabase()->select(
+                    'id'
+                    , $this->getDatabase()->getFullTableName('site_content')
+                    , sprintf(
+                        "deleted=0 and alias='%s'"
+                        , $docAlias
+                    )
+                );
+                $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
+            }
         }
+        $this->documentMethod = 'id';
 
         //$this->_fixURI();
         // invoke OnWebPageInit event
-        $this->invokeEvent("OnWebPageInit");
+        $this->invokeEvent('OnWebPageInit');
         // invoke OnLogPageView event
         if ($this->getConfig('track_visitors') == 1) {
-            $this->invokeEvent("OnLogPageHit");
+            $this->invokeEvent('OnLogPageHit');
         }
         if ($this->getConfig('seostrict') == '1') {
             $this->sendStrictURI();
