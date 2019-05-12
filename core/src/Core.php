@@ -3088,39 +3088,53 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param int $depth How many levels deep to search for children, default: 10
      * @param array $children Optional array of docids to merge with the result.
      * @return array Contains the document Listing (tree) like the sitemap
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
      */
     public function getChildIds($id, $depth = 10, $children = array())
     {
+        static $cached = array();
 
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
-            return $this->tmpCache[__FUNCTION__][$cacheKey];
+        if (isset($cached[$cacheKey])) {
+            return $cached[$cacheKey];
         }
+        $cached[$cacheKey] = array();
 
         if ($this->getConfig('aliaslistingfolder') == 1) {
 
-            $res = $this->getDatabase()->select("id,alias,isfolder,parent",
-                $this->getDatabase()->getFullTableName('site_content'), "parent IN (" . $id . ") AND deleted = '0'");
+            $res = $this->getDatabase()->select(
+                'id,alias,isfolder,parent'
+                , $this->getDatabase()->getFullTableName('site_content')
+                , sprintf(
+                    "parent IN (%d) AND deleted = '0'"
+                    , $id
+                )
+            );
+
             $idx = array();
             while ($row = $this->getDatabase()->getRow($res)) {
                 $pAlias = '';
                 if (isset(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']])) {
-                    $pAlias .= !empty(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path']) ? UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path'] . '/' : '';
-                    $pAlias .= !empty(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias']) ? UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias'] . '/' : '';
+                    if (UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path']) {
+                        $pAlias .= UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path'] . '/';
+                    }
+                    if (UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias']) {
+                        $pAlias .= UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['alias'] . '/';
+                    }
                 };
                 $children[$pAlias . $row['alias']] = $row['id'];
-                if ($row['isfolder'] == 1) {
+                if ($row['isfolder']) {
                     $idx[] = $row['id'];
                 }
             }
             $depth--;
             $idx = implode(',', $idx);
-            if (!empty($idx)) {
-                if ($depth) {
-                    $children = $this->getChildIds($idx, $depth, $children);
-                }
+            if ($idx && $depth) {
+                $children = $this->getChildIds($idx, $depth, $children);
             }
-            $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
+            $cached[$cacheKey] = $children;
 
             return $children;
 
@@ -3128,7 +3142,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // Initialise a static array to index parents->children
         static $documentMap_cache = array();
-        if (!count($documentMap_cache)) {
+        if (!$documentMap_cache) {
             foreach ($this->documentMap as $document) {
                 foreach ($document as $p => $c) {
                     $documentMap_cache[$p][] = $c;
@@ -3139,11 +3153,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // Get all the children for this parent node
         if (isset($documentMap_cache[$id])) {
             $depth--;
-
             foreach ($documentMap_cache[$id] as $childId) {
-                $pkey = (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']) ? "{UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path']}/" : '') . UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
-                if (!strlen($pkey)) {
-                    $pkey = "{$childId}";
+                if (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path'])) {
+                    $pkey = sprintf(
+                        "{UrlProcessor::getFacadeRoot()->aliasListing[%s]['path']}/%s"
+                        , $childId
+                        , UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias']
+                    );
+                } else {
+                    $pkey = UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
+                }
+                if ($pkey == '') {
+                    $pkey = (string)$childId;
                 }
                 $children[$pkey] = $childId;
 
@@ -3152,7 +3173,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
         }
-        $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
+
+        $cached[$cacheKey] = $children;
 
         return $children;
     }
