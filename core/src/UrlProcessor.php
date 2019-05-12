@@ -34,7 +34,7 @@ class UrlProcessor
         if (\is_array($this->documentListing)) {
             foreach ($this->documentListing as $path => $docid) { // This is big Loop on large site!
                 $this->aliases[$docid] = $path;
-                $this->isfolder[$docid] = !empty($this->aliasListing[$docid]['isfolder']);
+                $this->isfolder[$docid] = $this->aliasListing[$docid]['isfolder'];
             }
         }
     }
@@ -151,7 +151,7 @@ class UrlProcessor
     protected function generateAliasListingFolder(array $ids, &$aliases, &$isFolder) : void
     {
         $ids = array_unique($ids);
-        if (empty($ids)) {
+        if (!$ids) {
             return;
         }
 
@@ -332,7 +332,7 @@ class UrlProcessor
 
         switch (true) {
             /** If we have a string, return it */
-            case \is_string($query) && !empty($query):
+            case \is_string($query) && $query:
                 $out = $query;
                 break;
             /** If we have an array, return the first element */
@@ -342,7 +342,7 @@ class UrlProcessor
         }
 
         /** Return null if the query doesn't exist */
-        if (empty($query)) {
+        if (!$query) {
             $out = '';
         }
 
@@ -528,7 +528,9 @@ class UrlProcessor
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
-                        $alPath = !empty($al['path']) ? $al['path'] . '/' : '';
+                        if ($al['path']) {
+                            $alPath = $al['path'] . '/';
+                        }
 
                         if (isset($al['alias'])) {
                             $alias = $al['alias'];
@@ -537,9 +539,9 @@ class UrlProcessor
                 }
 
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = "{$alias}{$args}";
+                $url = $alias . $args;
             } else {
-                $url = "index.php?id={$id}{$args}";
+                $url = 'index.php?id=' . $id . $args;
             }
         } else {
             $url = $args;
