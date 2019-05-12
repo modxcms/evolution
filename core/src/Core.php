@@ -3587,27 +3587,26 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return;
         }
 
+        // Get user IP
+        if (getenv('HTTP_CLIENT_IP')) {
+            $_SESSION['ip'] = getenv('HTTP_CLIENT_IP');
+        } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+            $_SESSION['ip'] = getenv('HTTP_X_FORWARDED_FOR');
+        } elseif (getenv('REMOTE_ADDR')) {
+            $_SESSION['ip'] = getenv('REMOTE_ADDR');
+        } else {
+            $_SESSION['ip'] = 'UNKNOWN';
+        }
+
         // web users are stored with negative keys
         $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
 
-        // Get user IP
-        if ($cip = getenv("HTTP_CLIENT_IP")) {
-            $ip = $cip;
-        } elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) {
-            $ip = $cip;
-        } elseif ($cip = getenv("REMOTE_ADDR")) {
-            $ip = $cip;
-        } else {
-            $ip = "UNKNOWN";
-        }
-        $_SESSION['ip'] = $ip;
-
         Models\ActiveUserSession::updateOrCreate([
             'internalKey' => $userId,
-            'sid' => $this->sid,
+            'sid'         => $this->sid,
         ], [
             'lasthit' => $this->time,
-            'ip' => $ip,
+            'ip'      => $_SESSION['ip'],
         ]);
     }
 
