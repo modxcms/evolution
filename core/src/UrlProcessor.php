@@ -407,45 +407,53 @@ class UrlProcessor
             return $this->documentListing[$alias];
         }
 
-        if ($this->core->getConfig('use_alias_path')) {
-            if ($alias === '.') {
-                return 0;
-            }
-
-            if (strpos($alias, '/') !== false) {
-                $aliases = explode('/', $alias);
-            } else {
-                $aliases = [$alias];
-            }
-            $id = 0;
-
-            foreach ($aliases as $tmp) {
-                if ($id === null) {
-                    break;
-                }
-                /** @var Models\SiteContent $query */
-                $query = Models\SiteContent::where('deleted', '=', 0)
-                    ->where('parent', '=', $id)
-                    ->where('alias', '=', $tmp)
-                    ->first();
-
-                if ($query === null) {
-                    /** @var Models\SiteContent $query */
-                    $query = Models\SiteContent::where('deleted', '=', 0)
-                        ->where('parent', '=', $id)
-                        ->where('id', '=', $tmp)
-                        ->first();
-                }
-
-                $id = ($query === null) ? $this->getHiddenIdFromAlias($id, $tmp) : $query->getKey();
-            }
-        } else {
+        if (!$this->core->getConfig('use_alias_path')) {
             /** @var Models\SiteContent $query */
             $query = Models\SiteContent::where('deleted', '=', 0)
                 ->where('alias', '=', $alias)
                 ->first();
 
-            $id = ($query !== null) ? $query->getKey() : null;
+            if ($query === null) {
+                return null;
+            }
+            return $query->getKey();
+        }
+
+        if ($alias === '.') {
+            return 0;
+        }
+
+        if (strpos($alias, '/') !== false) {
+            $aliases = explode('/', $alias);
+        } else {
+            $aliases = [$alias];
+        }
+
+        $id = 0;
+
+        foreach ($aliases as $tmp) {
+            if ($id === null) {
+                break;
+            }
+            /** @var Models\SiteContent $query */
+            $query = Models\SiteContent::where('deleted', '=', 0)
+                ->where('parent', '=', $id)
+                ->where('alias', '=', $tmp)
+                ->first();
+
+            if ($query === null) {
+                /** @var Models\SiteContent $query */
+                $query = Models\SiteContent::where('deleted', '=', 0)
+                    ->where('parent', '=', $id)
+                    ->where('id', '=', $tmp)
+                    ->first();
+            }
+
+            if ($query === null) {
+                $id = $this->getHiddenIdFromAlias($id, $tmp);
+            } else {
+                $id = $query->getKey();
+            }
         }
         return $id;
     }
