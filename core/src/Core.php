@@ -3618,26 +3618,29 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $msg Message to be logged
      * @param string $source source of the event (module, snippet name, etc.)
      *                       Default: Parser
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\GetDataException
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TooManyLoopsException
+     * @throws Exception
      */
     public function logEvent($evtid, $type, $msg, $source = 'Parser')
     {
         if (!$this->getDatabase()->getDriver()->isConnected()) {
             return;
         }
-        $msg = $this->getDatabase()->escape($msg);
         if (strpos($this['config']->get('database.connections.default.charset'), 'utf8') === 0 && extension_loaded('mbstring')) {
-            $esc_source = mb_substr($source, 0, 50, "UTF-8");
+            $esc_source = mb_substr($source, 0, 50, 'UTF-8');
         } else {
             $esc_source = substr($source, 0, 50);
         }
-        $esc_source = $this->getDatabase()->escape($esc_source);
 
         $LoginUserID = $this->getLoginUserID();
         if ($LoginUserID == '') {
             $LoginUserID = 0;
         }
 
-        $usertype = $this->isFrontend() ? 1 : 0;
         $evtid = (int)$evtid;
         $type = (int)$type;
 
@@ -3649,13 +3652,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $this->getDatabase()->insert(array(
-            'eventid'     => $evtid,
+            'eventid'     => (int)$evtid,
             'type'        => $type,
             'createdon'   => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
-            'source'      => $esc_source,
-            'description' => $msg,
+            'source'      => $this->getDatabase()->escape($esc_source),
+            'description' => $this->getDatabase()->escape($msg),
             'user'        => $LoginUserID,
-            'usertype'    => $usertype
+            'usertype'    => $this->isFrontend() ? 1 : 0
         ), $this->getDatabase()->getFullTableName("event_log"));
 
         if ($this->getConfig('send_errormail', '0') != '0') {
