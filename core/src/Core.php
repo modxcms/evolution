@@ -3039,9 +3039,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $parents = array();
         while ($id && $height--) {
-            $thisid = $id;
-            $aliasListing = get_by_key(UrlProcessor::getFacadeRoot()->aliasListing, $id, [], 'is_array');
+            $aliasListing = get_by_key(
+                UrlProcessor::getFacadeRoot()->aliasListing
+                , $id
+                , []
+                , 'is_array'
+            );
             $tmp = get_by_key($aliasListing, 'parent');
+            $cerrent_id = $id;
             if ($this->getConfig('aliaslistingfolder')) {
                 $id = $tmp ?? (int)Models\SiteContent::findOrNew($id)->parent;
             } else {
@@ -3051,7 +3056,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ((int)$id === 0) {
                 break;
             }
-            $parents[$thisid] = (int)$id;
+            $parents[$cerrent_id] = (int)$id;
         }
 
         return $parents;
