@@ -3544,6 +3544,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param int $id Element- / Resource-id
      * @param bool $includeAllUsers true = Deletes not only own user-locks
      * @return bool
+     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
+     * @throws TableNotDefinedException
      */
     public function unlockElement($type, $id, $includeAllUsers = false)
     {
@@ -3555,13 +3557,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (!$includeAllUsers) {
-            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;',
-                $this->getDatabase()->getFullTableName('active_user_locks'), $userId, $type, $id);
-        } else {
-            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;',
-                $this->getDatabase()->getFullTableName('active_user_locks'), $type, $id);
+            return $this->getDatabase()->query(
+                sprintf(
+                    'DELETE FROM %s WHERE internalKey=%d AND elementType=%d AND elementId=%d'
+                    , $this->getDatabase()->getFullTableName('active_user_locks')
+                    , $userId
+                    , $type
+                    , $id
+                )
+            );
         }
-        $this->getDatabase()->query($sql);
+
+        return $this->getDatabase()->query(
+            sprintf(
+                'DELETE FROM %s WHERE elementType=%d AND elementId=%d'
+                , $this->getDatabase()->getFullTableName('active_user_locks')
+                , $type
+                , $id
+            )
+        );
     }
 
     /**
