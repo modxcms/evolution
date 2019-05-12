@@ -2980,15 +2980,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // Can't view unpublished pages !$this->checkPreview()
         if (!$this->hasPermission('view_unpublished')) {
             $this->sendErrorPage();
-        } else {
-            $udperms = new Legacy\Permissions();
-            $udperms->user = $this->getLoginUserID();
-            $udperms->document = $this->documentIdentifier;
-            $udperms->role = $_SESSION['mgrRole'];
-            // Doesn't have access to this document
-            if (!$udperms->checkPermissions()) {
-                $this->sendErrorPage();
-            }
+            return;
+        }
+
+        $udperms = new Legacy\Permissions();
+        $udperms->user     = $this->getLoginUserID();
+        $udperms->document = $this->documentIdentifier;
+        $udperms->role     = $_SESSION['mgrRole'];
+        // Doesn't have access to this document
+        if (!$udperms->checkPermissions()) {
+            $this->sendErrorPage();
         }
     }
 
