@@ -3677,7 +3677,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $msg
      * @param array $files
      * @return bool
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function sendmail($params = array(), $msg = '', $files = array())
     {
@@ -3698,7 +3698,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         } else {
             $p = $params;
-            unset($params);
         }
         if (isset($p['sendto'])) {
             $p['to'] = $p['sendto'];
@@ -3719,7 +3718,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $p['body'] = $msg;
         }
 
-        $sendto = (!isset($p['to'])) ? $this->getConfig('emailsender') : $p['to'];
+        $sendto = !isset($p['to']) ? $this->getConfig('emailsender') : $p['to'];
         $sendto = explode(',', $sendto);
         $mail = $this->getMail();
         foreach ($sendto as $address) {
