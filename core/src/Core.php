@@ -3359,9 +3359,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
-            $rs = $this->getDatabase()->select('sid,internalKey,elementType,elementId,lasthit,username',
-                $this->getDatabase()->getFullTableName('active_user_locks') . " ul
-                LEFT JOIN {$this->getDatabase()->getFullTableName('manager_users')} mu on ul.internalKey = mu.id");
+            $rs = $this->getDatabase()->select(
+                'sid,internalKey,elementType,elementId,lasthit,username'
+                , sprintf(
+                    '%s ul
+                    LEFT JOIN %s mu on ul.internalKey = mu.id'
+                    , $this->getDatabase()->getFullTableName('active_user_locks')
+                    , $this->getDatabase()->getFullTableName('manager_users')
+                )
+            );
             while ($row = $this->getDatabase()->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'sid'         => $row['sid'],
