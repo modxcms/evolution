@@ -3011,13 +3011,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @param $templateID
      * @return mixed
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
      */
     public function _getTemplateCodeFromDB($templateID)
     {
         $rs = $this->getDatabase()->select(
             'content',
             $this->getDatabase()->getFullTableName('site_templates'),
-            "id = '{$templateID}'"
+            sprintf("id='%s'", $templateID)
         );
         if ($this->getDatabase()->getRecordCount($rs) == 1) {
             return $this->getDatabase()->getValue($rs);
