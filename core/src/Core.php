@@ -3970,9 +3970,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
      *
      * @return array|mixed {array; false} - Result array, or false. - Result array, or false.
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
      * @version 1.1.1 (2014-02-19)
      *
      * @desc Returns the children of the selected document/folder as an associative array.
@@ -3994,8 +3994,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $published = ($published !== 'all') ? 'AND sc.published = ' . $published : '';
-        $deleted = ($deleted !== 'all') ? 'AND sc.deleted = ' . $deleted : '';
+        if ($published === 'all') {
+            $published = '';
+        } else {
+            $published = 'AND sc.published = ' . $published;
+        }
+        if ($deleted === 'all') {
+            $deleted = '';
+        } else {
+            $deleted = 'AND sc.deleted = ' . $deleted;
+        }
 
         if ($where != '') {
             $where = 'AND ' . $where;
@@ -4003,7 +4011,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // modify field names to use sc. table reference
         $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        $sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        if ($sort == '') {
+            $sort = '';
+        } else {
+            $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        }
 
         // get document groups for current user
         if ($docgrp = $this->getUserDocGroups()) {
@@ -4011,7 +4023,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // build query
-        $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
+        if ($this->isFrontend()) {
+            if (!$docgrp) {
+                $access = ('sc.privateweb=0');
+            } else {
+                $access = sprintf('sc.privateweb=0 OR dg.document_group IN (%s)', $docgrp);
+            }
+        } else {
+            $access = ('1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
+        }
 
         $tblsc = $this->getDatabase()->getFullTableName('site_content');
         $tbldg = $this->getDatabase()->getFullTableName('document_groups');
