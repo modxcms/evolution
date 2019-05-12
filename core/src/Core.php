@@ -3886,36 +3886,66 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *                    Default: ASC
      * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
      * @return array
+     * @throws InvalidFieldException
+     * @throws TableNotDefinedException
+     * @throws UnknownFetchTypeException
      */
-    public function getActiveChildren(
-        $id = 0,
-        $sort = 'menuindex',
-        $dir = 'ASC',
-        $fields = 'id, pagetitle, description, parent, alias, menutitle'
-    ) {
+    public function getActiveChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle') {
+        static $cached = array();
+
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
-            return $this->tmpCache[__FUNCTION__][$cacheKey];
+        if (isset($cached[$cacheKey])) {
+            return $cached[$cacheKey];
         }
+        $cached[$cacheKey] = false;
 
-        $tblsc = $this->getDatabase()->getFullTableName("site_content");
-        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
-
-        // modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(",", $docgrp);
-        }
+        $docgrp = $this->getUserDocGroups();
+
         // build query
-        $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-            "sc.parent = '{$id}' AND sc.published=1 AND sc.deleted=0 AND ({$access}) GROUP BY sc.id", "{$sort} {$dir}");
+        if ($this->isFrontend()) {
+            if ($docgrp) {
+                $access = sprintf(
+                    'sc.privateweb=0 OR dg.document_group IN (%s)'
+                    , $docgrp = implode(',', $docgrp)
+                );
+            } else {
+                $access = 'sc.privateweb=0';
+            }
+        } else {
+            if ($docgrp) {
+                $access = sprintf(
+                    "1='%s' OR sc.privatemgr=0 OR dg.document_group IN (%s)"
+                    , $_SESSION['mgrRole']
+                    , $docgrp = implode(',', $docgrp)
+                );
+            } else {
+                $access = sprintf(
+                    "1='%s' OR sc.privatemgr=0"
+                    , $_SESSION['mgrRole']
+                );
+            }
+        }
+
+        $result = $this->getDatabase()->select(
+            'DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))))
+            , sprintf(
+                '%s sc
+                LEFT JOIN %s dg on dg.document = sc.id'
+                , $this->getDatabase()->getFullTableName('site_content')
+                , $this->getDatabase()->getFullTableName('document_groups')
+            )
+            , sprintf(
+                "sc.parent = '%d' AND sc.published=1 AND sc.deleted=0 AND (%s) GROUP BY sc.id"
+                , $id
+                , $access
+            )
+            , 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort)))) . ' ' . $dir
+        );
+
         $resourceArray = $this->getDatabase()->makeArray($result);
 
-        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
+        $cached[$cacheKey] = $resourceArray;
 
         return $resourceArray;
     }
