@@ -3490,20 +3490,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function determineLockState($sid)
     {
-        $state = 0;
-        if ($this->hasPermission('display_locks')) {
-            if ($sid == $this->sid) {
-                $state = 1;
-            } else {
-                if ($this->hasPermission('remove_locks')) {
-                    $state = 3;
-                } else {
-                    $state = 2;
-                }
-            }
+        if (!$this->hasPermission('display_locks')) {
+            return 0;
         }
 
-        return $state;
+        if ($sid == $this->sid) {
+            return 1;
+        }
+
+        if ($this->hasPermission('remove_locks')) {
+            return 3;
+        }
+
+        return 2;
     }
 
     /**
