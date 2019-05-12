@@ -2862,8 +2862,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->documentContent == '') {
             // get document object from DB
-            $this->documentObject = $this->getDocumentObject($this->documentMethod, $this->documentIdentifier,
-                'prepareResponse');
+            $this->documentObject = $this->getDocumentObject(
+                $this->documentMethod
+                , $this->documentIdentifier
+                , 'prepareResponse'
+            );
 
             // write the documentName to the object
             $this->documentName = &$this->documentObject['pagetitle'];
@@ -2882,39 +2885,49 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->_sendRedirectForRefPage($this->documentObject['content']);
             }
 
-            $documentObject = $this->documentObject;
-            switch (true) {
-                case $this['view']->exists('tpl-' . $documentObject['template'] . '_doc-' . $documentObject['id']):
-                    $template = 'tpl-' . $documentObject['template'] . '_doc-' . $documentObject['id'];
-                    break;
-                case $this['view']->exists('doc-' . $documentObject['id']):
-                    $template = 'doc-' . $documentObject['id'];
-                    break;
-                case $this['view']->exists('tpl-' . $documentObject['template']):
-                    $template = 'tpl-' . $documentObject['template'];
-                    break;
-                default:
-                    $content = $documentObject['template'] ? $this->documentContent : $documentObject['content'];
-                    if (!$content) {
-                        $content = $documentObject['content'];
-                    }
-                    if (strpos($content, '@FILE:') === 0) {
-                        $template = str_replace('@FILE:', '', trim($content));
-                        if (!$this['view']->exists($template)) {
-                            $this->documentObject['template'] = 0;
-                            $this->documentContent = $documentObject['content'];
-                        }
-                    }
+            $doc = $this->documentObject;
+            if ( $this['view']->exists(sprintf('tpl-%s_doc-%s', $doc['template'], $doc['id']))) {
+                $template = sprintf('tpl-%s_doc-%s', $doc['template'], $doc['id']);
             }
-            if (!empty($template)) {
+            elseif ($this['view']->exists(sprintf('doc-%s', $doc['id']))) {
+                $template = sprintf('doc-%s', $doc['id']);
+            }
+            elseif ($this['view']->exists(sprintf('tpl-%s', $doc['template']))) {
+                $template = 'tpl-' . $doc['template'];
+            }
+            else {
+                if ($doc['template']) {
+                    $content = $this->documentContent;
+                } else {
+                    $content = $doc['content'];
+                }
+                if (!$content) {
+                    $content = $doc['content'];
+                }
+                if (strpos($content, '@FILE:') === 0) {
+                    $template = str_replace('@FILE:', '', trim($content));
+                    if (!$this['view']->exists($template)) {
+                        $this->documentObject['template'] = 0;
+                        $this->documentContent = $doc['content'];
+                    }
+                }
+            }
+            if ($template) {
                 $this->minParserPasses = -1;
                 $this->maxParserPasses = -1;
                 /** @var \Illuminate\View\View $tpl */
 
-                $data = [
-                    'modx'     => $this,
-                    'documentObject' => isset($this->documentObject['id']) ? $this->makeDocumentObject($this->documentObject['id']) : []
-                ];
+                if (isset($this->documentObject['id'])) {
+                    $data = [
+                        'modx' => $this,
+                        'documentObject' => $this->makeDocumentObject($this->documentObject['id'])
+                    ];
+                } else {
+                    $data = [
+                        'modx' => $this,
+                        'documentObject' => []
+                    ];
+                }
 
                 $data = array_merge($data, $this->dataForView);
 
@@ -2930,7 +2943,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
                 }
 
-                if (substr($templateCode, 0, 8) === '@INCLUDE') {
+                if (strpos($templateCode, '@INCLUDE') === 0) {
                     $templateCode = $this->atBindInclude($templateCode);
                 }
             }
@@ -2948,8 +2961,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentGenerated = 0;
         }
 
-        if ($this->getConfig('error_page') == $this->documentIdentifier && $this->getConfig('error_page') != $this->getConfig('site_start')) {
-            header('HTTP/1.0 404 Not Found');
+        if ($this->getConfig('error_page') == $this->documentIdentifier) {
+            if($this->getConfig('error_page') != $this->getConfig('site_start')) {
+                header('HTTP/1.0 404 Not Found');
+            }
         }
 
         register_shutdown_function(array(
