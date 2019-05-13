@@ -54,9 +54,17 @@ class Event implements Interfaces\EventInterface
         if (is_array($SystemAlertMsgQueque)) {
             $title = '';
             if ($this->name && $this->activePlugin) {
-                $title = "<div><b>" . $this->activePlugin . "</b> - <span style='color:maroon;'>" . $this->name . "</span></div>";
+                $title = sprintf(
+                    '<div><b>%s</b> - <span style="color:maroon;">%s</span></div>'
+                    , $this->activePlugin
+                    , $this->name
+                );
             }
-            $SystemAlertMsgQueque[] = "$title<div style='margin-left:10px;margin-top:3px;'>$msg</div>";
+            $SystemAlertMsgQueque[] = sprintf(
+                '%s<div style="margin-left:10px;margin-top:3px;">%s</div>'
+                , $title
+                , $msg
+            );
         }
     }
 
@@ -108,7 +116,7 @@ class Event implements Interfaces\EventInterface
     public function _resetEventObject()
     {
         unset ($this->returnedValues);
-        $this->name = "";
+        $this->name = '';
         $this->setOutput(null);
         $this->_propagate = true;
         $this->activated = false;

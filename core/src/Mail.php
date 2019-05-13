@@ -119,7 +119,7 @@ class Mail extends PHPMailer
     {
         $str = removeSanitizeSeed($str);
 
-        if ($this->encode_header_method == 'mb_encode_mimeheader') {
+        if ($this->encode_header_method === 'mb_encode_mimeheader') {
             return mb_encode_mimeheader($str, $this->CharSet, 'B', "\n");
         }
 

@@ -34,7 +34,7 @@ class UrlProcessor
         if (\is_array($this->documentListing)) {
             foreach ($this->documentListing as $path => $docid) { // This is big Loop on large site!
                 $this->aliases[$docid] = $path;
-                $this->isfolder[$docid] = !empty($this->aliasListing[$docid]['isfolder']);
+                $this->isfolder[$docid] = $this->aliasListing[$docid]['isfolder'];
             }
         }
     }
@@ -151,7 +151,7 @@ class UrlProcessor
     protected function generateAliasListingFolder(array $ids, &$aliases, &$isFolder) : void
     {
         $ids = array_unique($ids);
-        if (empty($ids)) {
+        if (!$ids) {
             return;
         }
 
@@ -332,7 +332,7 @@ class UrlProcessor
 
         switch (true) {
             /** If we have a string, return it */
-            case \is_string($query) && !empty($query):
+            case \is_string($query) && $query:
                 $out = $query;
                 break;
             /** If we have an array, return the first element */
@@ -342,7 +342,7 @@ class UrlProcessor
         }
 
         /** Return null if the query doesn't exist */
-        if (empty($query)) {
+        if (!$query) {
             $out = '';
         }
 
@@ -355,38 +355,46 @@ class UrlProcessor
      */
     public function getAliasListing($id) : ?array
     {
-        $out = null;
         if (isset($this->aliasListing[$id])) {
-            $out = $this->aliasListing[$id];
-        } else {
-            /** @var Models\SiteContent|null $query */
-            $query = Models\SiteContent::where('id', '=', (int)$id)->first();
-            if ($query !== null) {
-                $this->aliasListing[$id] = array(
-                    'id'       => $query->getKey(),
-                    'alias'    => $query->alias === '' ? $query->getKey() : $query->alias,
-                    'parent'   => $query->parent,
-                    'isfolder' => $query->isfolder,
-                    'alias_visible' => $query->alias_visible,
-                );
-                if ($query->parent > 0) {
-                    if ((bool)$this->core->getConfig('use_alias_path')) {
-                        $tmp = $this->getAliasListing($query->parent);
-                        if ($tmp['alias_visible']) {
-                            $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent'] > 0 && $tmp['path'] !== '') ? '/' : '') . $tmp['alias'];
-                        } else {
-                            $this->aliasListing[$id]['path'] = $tmp['path'];
-                        }
-                    } else {
-                        $this->aliasListing[$id]['path'] = '';
-                    }
-                }
-
-                $out = $this->aliasListing[$id];
-            }
+            return $this->aliasListing[$id];
         }
 
-        return $out;
+        /** @var Models\SiteContent|null $query */
+        $query = Models\SiteContent::where('id', '=', (int)$id)->first();
+        if ($query === null) {
+            return null;
+        }
+
+        $this->aliasListing[$id] = array(
+            'id'            => $query->getKey(),
+            'alias'         => $query->alias === '' ? $query->getKey() : $query->alias,
+            'parent'        => $query->parent,
+            'isfolder'      => $query->isfolder,
+            'alias_visible' => $query->alias_visible,
+        );
+
+        if ($query->parent <= 0) {
+            return $this->aliasListing[$id];
+        }
+
+        if (!((bool)$this->core->getConfig('use_alias_path'))) {
+            $this->aliasListing[$id]['path'] = '';
+            return $this->aliasListing[$id];
+        }
+
+        $tmp = $this->getAliasListing($query->parent);
+
+        if (!$tmp['alias_visible']) {
+            $this->aliasListing[$id]['path'] = $tmp['path'];
+            return $this->aliasListing[$id];
+        }
+
+        if ($tmp['parent'] > 0 && $tmp['path'] !== '') {
+            $this->aliasListing[$id]['path'] = $tmp['path'] . '/' . $tmp['alias'];
+        } else {
+            $this->aliasListing[$id]['path'] = $tmp['path'] . '' . $tmp['alias'];
+        }
+        return $this->aliasListing[$id];
     }
 
     /**
@@ -399,45 +407,53 @@ class UrlProcessor
             return $this->documentListing[$alias];
         }
 
-        if ($this->core->getConfig('use_alias_path')) {
-            if ($alias === '.') {
-                return 0;
-            }
-
-            if (strpos($alias, '/') !== false) {
-                $aliases = explode('/', $alias);
-            } else {
-                $aliases = [$alias];
-            }
-            $id = 0;
-
-            foreach ($aliases as $tmp) {
-                if ($id === null) {
-                    break;
-                }
-                /** @var Models\SiteContent $query */
-                $query = Models\SiteContent::where('deleted', '=', 0)
-                    ->where('parent', '=', $id)
-                    ->where('alias', '=', $tmp)
-                    ->first();
-
-                if ($query === null) {
-                    /** @var Models\SiteContent $query */
-                    $query = Models\SiteContent::where('deleted', '=', 0)
-                        ->where('parent', '=', $id)
-                        ->where('id', '=', $tmp)
-                        ->first();
-                }
-
-                $id = ($query === null) ? $this->getHiddenIdFromAlias($id, $tmp) : $query->getKey();
-            }
-        } else {
+        if (!$this->core->getConfig('use_alias_path')) {
             /** @var Models\SiteContent $query */
             $query = Models\SiteContent::where('deleted', '=', 0)
                 ->where('alias', '=', $alias)
                 ->first();
 
-            $id = ($query !== null) ? $query->getKey() : null;
+            if ($query === null) {
+                return null;
+            }
+            return $query->getKey();
+        }
+
+        if ($alias === '.') {
+            return 0;
+        }
+
+        if (strpos($alias, '/') !== false) {
+            $aliases = explode('/', $alias);
+        } else {
+            $aliases = [$alias];
+        }
+
+        $id = 0;
+
+        foreach ($aliases as $tmp) {
+            if ($id === null) {
+                break;
+            }
+            /** @var Models\SiteContent $query */
+            $query = Models\SiteContent::where('deleted', '=', 0)
+                ->where('parent', '=', $id)
+                ->where('alias', '=', $tmp)
+                ->first();
+
+            if ($query === null) {
+                /** @var Models\SiteContent $query */
+                $query = Models\SiteContent::where('deleted', '=', 0)
+                    ->where('parent', '=', $id)
+                    ->where('id', '=', $tmp)
+                    ->first();
+            }
+
+            if ($query === null) {
+                $id = $this->getHiddenIdFromAlias($id, $tmp);
+            } else {
+                $id = $query->getKey();
+            }
         }
         return $id;
     }
@@ -451,17 +467,24 @@ class UrlProcessor
     {
         $out = false;
         if ($alias !== '') {
-            $table = $this->core->getDatabase()->getFullTableName('site_content');
-            $query = $this->core->getDatabase()->query("SELECT 
-                `sc`.`id` AS `hidden_id`,
-                `children`.`id` AS `child_id`,
-                children.alias AS `child_alias`,
-                COUNT(`grandsons`.`id`) AS `grandsons_count`
-              FROM " . $table ." AS `sc`
-              JOIN " . $table . " AS `children` ON `children`.`parent` = `sc`.`id`
-              LEFT JOIN " . $table . " AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
-              WHERE `sc`.`parent` = '" . (int)$parentid . "' AND `sc`.`alias_visible` = '0'
-              GROUP BY `children`.`id`");
+            $query = $this->core->getDatabase()->query(
+                sprintf(
+                    "SELECT 
+                    `sc`.`id` AS `hidden_id`,
+                    `children`.`id` AS `child_id`,
+                    children.alias AS `child_alias`,
+                    COUNT(`grandsons`.`id`) AS `grandsons_count`
+                    FROM %s AS `sc`
+                    JOIN %s AS `children` ON `children`.`parent` = `sc`.`id`
+                    LEFT JOIN %s AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
+                    WHERE `sc`.`parent` = '%d' AND `sc`.`alias_visible` = '0'
+                    GROUP BY `children`.`id`"
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , $this->core->getDatabase()->getFullTableName('site_content')
+                    , (int)$parentid
+                )
+            );
             while ($child = $this->core->getDatabase()->getRow($query)) {
                 if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
                     $out = $child['child_id'];
@@ -521,7 +544,9 @@ class UrlProcessor
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
-                        $alPath = !empty($al['path']) ? $al['path'] . '/' : '';
+                        if ($al['path']) {
+                            $alPath = $al['path'] . '/';
+                        }
 
                         if (isset($al['alias'])) {
                             $alias = $al['alias'];
@@ -530,9 +555,9 @@ class UrlProcessor
                 }
 
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = "{$alias}{$args}";
+                $url = $alias . $args;
             } else {
-                $url = "index.php?id={$id}{$args}";
+                $url = 'index.php?id=' . $id . $args;
             }
         } else {
             $url = $args;
@@ -548,7 +573,11 @@ class UrlProcessor
             }
 
             //TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host = $scheme === 'full' ? $this->core->getConfig('site_url') : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            if ($scheme === 'full') {
+                $host = $this->core->getConfig('site_url');
+            } else {
+                $host = $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
+            }
         }
 
         //fix strictUrl by Bumkaka
@@ -557,7 +586,7 @@ class UrlProcessor
         }
 
         if ($this->core->getConfig('xhtml_urls')) {
-            $url = preg_replace("/&(?!amp;)/", "&amp;", $host . $virtualDir . $url);
+            $url = preg_replace('/&(?!amp;)/', "&amp;", $host . $virtualDir . $url);
         } else {
             $url = $host . $virtualDir . $url;
         }
@@ -567,7 +596,7 @@ class UrlProcessor
             'url' => $url
         ));
 
-        if (is_array($evtOut) && count($evtOut) > 0) {
+        if (is_array($evtOut) && $evtOut) {
             $url = array_pop($evtOut);
         }
 
@@ -576,64 +605,76 @@ class UrlProcessor
 
     public function strictURI(string $query, int $id) :? string
     {
-        $out = null;
-        // FIX URLs
-        if (empty($id) ||
-            $this->core->getConfig('seostrict') === false ||
-            $this->core->getConfig('friendly_urls') === false ||
-            $this->core->getConfig('site_status') === false
-        ) {
-            return $out;
+        if (!$id) {
+            return null;
         }
 
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-        $len_base_url = strlen($this->core->getConfig('base_url'));
-
-        $url_path = $query;//LANG
-
-        if (substr($url_path, 0, $len_base_url) === $this->core->getConfig('base_url')) {
-            $url_path = substr($url_path, $len_base_url);
+        if (!$this->core->getConfig('site_status')) {
+            return null;
+        }
+        if (!$this->core->getConfig('seostrict') || !$this->core->getConfig('friendly_urls')) {
+            return null;
         }
 
-        $strictURL = $this->makeUrl($id);
-        $strictURL = $this->toAlias($strictURL);
-
-        if (substr($strictURL, 0, $len_base_url) === $this->core->getConfig('base_url')) {
-            $strictURL = substr($strictURL, $len_base_url);
-        }
-        $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . '/' . $query; //LANG
-
-        $url_query_string = explode('?', $_SERVER['REQUEST_URI']);
         // Strip conflicting id/q from query string
-        $qstring = !empty($url_query_string[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string[1]) : '';
+        if (str_contains($_SERVER['REQUEST_URI'], '?')) {
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', str_after($_SERVER['REQUEST_URI'],'?'));
+        } else {
+            $qstring = '';
+        }
 
         if ($id === (int)$this->core->getConfig('site_start')) {
-            if ($requestedURL !== $this->core->getConfig('site_url')) {
-                $url = $this->core->getConfig('site_url');
-                if ($qstring) {
-                     $url .= '?' . $qstring;
-                }
+            $requestedURL = sprintf(
+                '%s://%s/%s'
+                , isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'
+                , $_SERVER['HTTP_HOST']
+                , $query
+            ); //LANG
+            if ($requestedURL === $this->core->getConfig('site_url')) {
+                return null;
+            }
+            if ($this->core->getConfig('base_url') === $_SERVER['REQUEST_URI']) {
+                return null;
+            }
+            if ($_POST) {
+                return null;
+            }
 
-                if ($this->core->getConfig('base_url') != $_SERVER['REQUEST_URI']) {
-                    if (empty($_POST)) {
-                        if (($this->core->getConfig('base_url') . '?' . $qstring) != $_SERVER['REQUEST_URI']) {
-                            $out = $url;
-                        }
-                    }
-                }
+            if ($this->core->getConfig('base_url') . '?' . $qstring === $_SERVER['REQUEST_URI']) {
+                return null;
             }
-        } elseif (preg_match('#/\?q\=' . $strictURL . '#i', $_SERVER['REQUEST_URI']) ||
-            ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))
-        ) {
-            if (!empty($qstring)) {
-                $url = $this->core->getConfig('site_url') . $strictURL . '?' . $qstring;
-            } else {
-                $url = $this->core->getConfig('site_url') . $strictURL;
+            $url = $this->core->getConfig('site_url');
+            if ($qstring) {
+                return $url . '?' . $qstring;
             }
-            $out = $url;
+            return $url;
         }
 
-        return $out;
+        $strictURL = $this->toAlias($this->makeUrl($id));
+        if (strpos($strictURL, $this->core->getConfig('base_url')) === 0) {
+            $strictURL = substr(
+                $strictURL
+                , strlen($this->core->getConfig('base_url'))
+            );
+        }
+
+        $url_path = $query;
+        if (strpos($url_path, $this->core->getConfig('base_url')) === 0) {
+            $url_path = substr(
+                $url_path
+                , strlen($this->core->getConfig('base_url'))
+            );
+        }
+
+        if (stripos($_SERVER['REQUEST_URI'], '/?q=' . $strictURL)!==false
+            ||
+            ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))) {
+            if ($qstring) {
+                return $this->core->getConfig('site_url') . $strictURL . '?' . $qstring;
+            }
+            return $this->core->getConfig('site_url') . $strictURL;
+        }
+
+        return null;
     }
 }

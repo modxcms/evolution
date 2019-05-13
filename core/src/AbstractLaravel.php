@@ -125,6 +125,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
     /**
      * @param array $classes
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -464,12 +465,12 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      * Boot the given service provider.
      *
      * @param  \Illuminate\Support\ServiceProvider  $provider
-     * @return mixed
+     * @return void
      */
     protected function bootProvider(ServiceProvider $provider)
     {
         if (method_exists($provider, 'boot')) {
-            return $this->call([$provider, 'boot']);
+            $this->call([$provider, 'boot']);
         }
     }
 
