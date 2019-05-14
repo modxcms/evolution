@@ -1146,11 +1146,11 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
-            } else {
-                $row = mysqli_fetch_assoc($ds);
-                $moduleId = $row["id"];
-                $moduleGuid = $row["guid"];
             }
+
+            $row = mysqli_fetch_assoc($ds);
+            $moduleId = $row["id"];
+            $moduleGuid = $row["guid"];
             // get extra id
             $query = sprintf(
                 "SELECT id FROM %s`%s` WHERE %s='%s'"
@@ -1167,10 +1167,10 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
-            } else {
-                $row = mysqli_fetch_assoc($ds);
-                $extraId = $row["id"];
             }
+
+            $row = mysqli_fetch_assoc($ds);
+            $extraId = $row["id"];
             // setup extra as module dependency
             $query = sprintf(
                 'SELECT module FROM %s`%s` WHERE module=%s AND resource=%s AND type=%s LIMIT 1'
@@ -1188,65 +1188,65 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
+            }
+
+            if (mysqli_num_rows($ds) === 0) {
+                $query = sprintf(
+                    'INSERT INTO %s`%s` (module, resource, type) VALUES(%s,%s,%s)'
+                    , $dbase
+                    , table_prefix('site_module_depobj')
+                    , $moduleId
+                    , $extraId
+                    , $dependency['type']
+                );
+                mysqli_query($sqlParser->conn, $query);
+                $installDependencyLevel[$dependency['module']]['type'] = 'create';
             } else {
-                if (mysqli_num_rows($ds) === 0) {
-                    $query = sprintf(
-                        'INSERT INTO %s`%s` (module, resource, type) VALUES(%s,%s,%s)'
-                        , $dbase
-                        , table_prefix('site_module_depobj')
-                        , $moduleId
-                        , $extraId
-                        , $dependency['type']
+                $query = sprintf(
+                    "UPDATE %s`%s` SET module = %s, resource = %s, type = %s WHERE module=%s AND resource=%s AND type=%s"
+                    , $dbase
+                    , $table_prefix('site_module_depobj')
+                    , $moduleId
+                    , $extraId
+                    , $dependency['type']
+                    , $moduleId
+                    , $extraId
+                    , $dependency['type']
+                );
+                mysqli_query($sqlParser->conn, $query);
+                $installDependencyLevel[$dependency['module']]['type'] = 'update';
+            }
+            if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+                // set extra guid for plugins and snippets
+                $query = sprintf(
+                    'SELECT id FROM %s`%s` WHERE id=%s LIMIT 1'
+                    , $dbase
+                    , table_prefix('site_'.$dependency['table'])
+                    , $extraId
+                );
+                $ds = mysqli_query($sqlParser->conn, $query);
+                if (!$ds) {
+                    $installDependencyLevel[$dependency['module']]['extra'] = array(
+                        'type' => 'error',
+                        'content' => mysqli_error($sqlParser->conn)
                     );
-                    mysqli_query($sqlParser->conn, $query);
-                    $installDependencyLevel[$dependency['module']]['type'] = 'create';
-                } else {
-                    $query = sprintf(
-                        "UPDATE %s`%s` SET module = %s, resource = %s, type = %s WHERE module=%s AND resource=%s AND type=%s"
-                        , $dbase
-                        , $table_prefix('site_module_depobj')
-                        , $moduleId
-                        , $extraId
-                        , $dependency['type']
-                        , $moduleId
-                        , $extraId
-                        , $dependency['type']
-                    );
-                    mysqli_query($sqlParser->conn, $query);
-                    $installDependencyLevel[$dependency['module']]['type'] = 'update';
+                    $errorInstall = true;
+                    break;
                 }
-                if ($dependency['type'] == 30 || $dependency['type'] == 40) {
-                    // set extra guid for plugins and snippets
+
+                if (mysqli_num_rows($ds) != 0) {
                     $query = sprintf(
-                        'SELECT id FROM %s`%s` WHERE id=%s LIMIT 1'
+                        "UPDATE %s`%s` SET moduleguid = %s WHERE id=%s"
                         , $dbase
                         , table_prefix('site_'.$dependency['table'])
+                        , $moduleGuid
                         , $extraId
                     );
-                    $ds = mysqli_query($sqlParser->conn, $query);
-                    if (!$ds) {
-                        $installDependencyLevel[$dependency['module']]['extra'] = array(
-                            'type' => 'error',
-                            'content' => mysqli_error($sqlParser->conn)
-                        );
-                        $errorInstall = true;
-                        break;
-                    } else {
-                        if (mysqli_num_rows($ds) != 0) {
-                            $query = sprintf(
-                                "UPDATE %s`%s` SET moduleguid = %s WHERE id=%s"
-                                , $dbase
-                                , table_prefix('site_'.$dependency['table'])
-                                , $moduleGuid
-                                , $extraId
-                            );
-                            $ds= mysqli_query($sqlParser->conn, $query);
-                            $installDependencyLevel[$dependency['module']]['extra'] = array(
-                                'type' => 'done',
-                                'content' => $dependency['name']
-                            );
-                        }
-                    }
+                    $ds= mysqli_query($sqlParser->conn, $query);
+                    $installDependencyLevel[$dependency['module']]['extra'] = array(
+                        'type' => 'done',
+                        'content' => $dependency['name']
+                    );
                 }
             }
         }
