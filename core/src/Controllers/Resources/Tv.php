@@ -16,7 +16,11 @@ class Tv extends AbstractResources implements TabControllerInterface
      */
     public function getTabName($withIndex = true): string
     {
-        return 'tabVariables' . ($withIndex ? '-' . $this->getIndex() : '');
+        if ($withIndex) {
+            return sprintf('tabVariables-%s', $this->getIndex());
+        }
+
+        return 'tabVariables';
     }
 
     /**
@@ -35,7 +39,7 @@ class Tv extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName' => $this->getTabName(false),
+                'tabPageName'      => $this->getTabName(false),
                 'tabIndexPageName' => $this->getTabName()
             ]
         );
@@ -48,7 +52,11 @@ class Tv extends AbstractResources implements TabControllerInterface
     {
         $params = array_merge($this->getBaseParams(), $params);
 
-        return $this->isNoData() ? $params : array_merge([
+        if ($this->isNoData()) {
+            return $params;
+        }
+
+        return array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ], $params);

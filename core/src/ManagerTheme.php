@@ -213,23 +213,23 @@ class ManagerTheme implements ManagerThemeInterface
         $modx_manager_charset = $this->getCharset();
         $modx_textdir = $this->getTextDir();
 
-        include_once MODX_MANAGER_PATH . "includes/lang/english.inc.php";
+        include_once MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
 
         // now include_once different language file as english
-        if (!isset($lang) || !file_exists(MODX_MANAGER_PATH . "includes/lang/" . $lang . ".inc.php")) {
+        if (!isset($lang) || !file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
             $lang = 'english'; // if not set, get the english language file.
         }
 
         // $length_eng_lang = count($_lang);
         //// Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
-        if ($lang !== "english" && file_exists(MODX_MANAGER_PATH . "includes/lang/" . $lang . ".inc.php")) {
-            include_once MODX_MANAGER_PATH . "includes/lang/" . $lang . ".inc.php";
+        if ($lang !== 'english' && file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
+            include_once MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php';
         }
 
         // allow custom language overrides not altered by future EVO-updates
-        if (file_exists(MODX_MANAGER_PATH . "includes/lang/override/" . $lang . ".inc.php")) {
-            include_once MODX_MANAGER_PATH . "includes/lang/override/" . $lang . ".inc.php";
+        if (file_exists(MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php')) {
+            include_once MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php';
         }
 
         foreach ($_lang as $k => $v) {
@@ -270,7 +270,11 @@ class ManagerTheme implements ManagerThemeInterface
 
     public function getTextDir($notEmpty = null)
     {
-        return ($notEmpty === null) ? $this->textDir : (empty($this->textDir) ? '' : $notEmpty);
+        if (empty($this->textDir)) {
+            return ($notEmpty === null) ? $this->textDir : '';
+        }
+
+        return ($notEmpty === null) ? $this->textDir : $notEmpty;
     }
 
     public function setTextDir($textDir = 'rtl')
@@ -362,8 +366,8 @@ class ManagerTheme implements ManagerThemeInterface
             $theme = $this->getTheme();
         }
 
-        if (is_file(MODX_MANAGER_PATH . "/media/style/" . $theme . "/" . $filepath)) {
-            $element = MODX_MANAGER_PATH . "/media/style/" . $theme . "/" . $filepath;
+        if (is_file(MODX_MANAGER_PATH . '/media/style/' . $theme . '/' . $filepath)) {
+            $element = MODX_MANAGER_PATH . '/media/style/' . $theme . '/' . $filepath;
         } else {
             $element = MODX_MANAGER_PATH . ltrim($filepath, '/');
         }
@@ -451,7 +455,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         $out = null;
 
-        if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype'] != 'manager') {
+        if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype'] !== 'manager') {
             //		if (isset($_COOKIE[session_name()])) {
             //			setcookie(session_name(), '', 0, MODX_BASE_URL);
             //		}
@@ -461,7 +465,7 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         // andrazk 20070416 - if installer is running, destroy active sessions
-        if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
+        if (is_file(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
             include_once(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
             if (isset($installStartTime)) {
                 if ((time() - $installStartTime) > 5 * 60) { // if install flag older than 5 minutes, discard
@@ -485,11 +489,11 @@ class ManagerTheme implements ManagerThemeInterface
             if (isset($_SESSION['mgrValidated'])) {
                 if (isset($_SESSION['modx.session.created.time'])) {
                     if ($_SESSION['modx.session.created.time'] < EVO_INSTALL_TIME) {
-                        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+                        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                             if (isset($_COOKIE[session_name()])) {
                                 session_unset();
                                 @session_destroy();
-                                //						setcookie(session_name(), '', 0, MODX_BASE_URL);
+                                // setcookie(session_name(), '', 0, MODX_BASE_URL);
                             }
                             header('HTTP/1.0 307 Redirect');
                             header('Location: ' . MODX_MANAGER_URL . 'index.php?installGoingOn=2');
@@ -648,11 +652,17 @@ class ManagerTheme implements ManagerThemeInterface
 
         if ($this->getCore()->getConfig('use_captcha')) {
             $plh['login_captcha_message'] = $this->getLexicon("login_captcha_message");
-            $plh['captcha_image'] = '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha">' .
-                '<img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon("login_captcha_message") . '" />' .
-                '</a>';
-            $plh['captcha_input'] = '<label>' . $this->getLexicon("captcha_code") . '</label>' .
-                '<input type="text" name="captcha_code" tabindex="3" value="" />';
+            $plh['captcha_image'] = sprintf(
+                '<a href="%s" class="loginCaptcha"><img id="captcha_image" src="%scaptcha.php?rand=%s" alt="%s" /></a>'
+                , MODX_MANAGER_URL
+                , MODX_MANAGER_URL
+                , rand()
+                , $this->getLexicon('login_captcha_message')
+            );
+            $plh['captcha_input'] = sprintf(
+                '<label>%s</label><input type="text" name="captcha_code" tabindex="3" value="" />'
+                , $this->getLexicon('captcha_code')
+            );
         }
 
         // login info
@@ -664,11 +674,20 @@ class ManagerTheme implements ManagerThemeInterface
 
         // invoke OnManagerLoginFormRender event
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
-        $html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">' . implode('', $evtOut) . '</div>' : '';
+        $html = is_array($evtOut) ? sprintf(
+            '<div id="onManagerLoginFormRender">%s</div>'
+            , implode('', $evtOut)) : ''
+        ;
         $plh['OnManagerLoginFormRender'] = $html;
 
-        $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
-        $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
+        $plh['login_form_position_class'] = sprintf(
+            'loginbox-%s'
+            , $this->getCore()->getConfig('login_form_position')
+        );
+        $plh['login_form_style_class'] = sprintf(
+            'loginbox-%s'
+            , $this->getCore()->getConfig('login_form_style')
+        );
 
         return $this->makeTemplate('login', 'manager_login_tpl', $plh, false);
     }

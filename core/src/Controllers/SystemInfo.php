@@ -41,8 +41,8 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
     public function getParameters(array $params = []): array
     {
         return [
-            'serverArr' => $this->parameterServerArr(),
-            'tables' => $this->parameterTablesInfo(),
+            'serverArr'    => $this->parameterServerArr(),
+            'tables'       => $this->parameterTablesInfo(),
             'truncateable' => $this->parameterTruncateableTables()
         ];
     }

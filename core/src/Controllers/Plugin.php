@@ -121,17 +121,21 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
 
         $ds = $this->managerTheme->getCore()
             ->getDatabase()
-            ->select('sm.id,sm.name,sm.guid', $this->managerTheme->getCore()
-                    ->getDatabase()
-                    ->getFullTableName("site_modules") . " sm
-					INNER JOIN " . $this->managerTheme->getCore()
-                    ->getDatabase()
-                    ->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
-					INNER JOIN " . $this->managerTheme->getCore()
-                    ->getDatabase()
-                    ->getFullTableName("site_plugins") . " 
-                    sp ON sp.id=smd.resource", "smd.resource='{$this->object->getKey()}' AND sm.enable_sharedparams='1'",
-                'sm.name');
+            ->select('sm.id,sm.name,sm.guid',
+                sprintf(
+                    '%s sm
+                        INNER JOIN %s smd ON smd.module=sm.id AND smd.type=30
+                        INNER JOIN %s sp ON sp.id=smd.resource'
+                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
+                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_depobj')
+                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_plugins')
+                )
+                , sprintf(
+                    "smd.resource='%s' AND sm.enable_sharedparams='1'"
+                    , $this->object->getKey()
+                )
+                , 'sm.name'
+            );
         while ($row = $this->managerTheme->getCore()
             ->getDatabase()
             ->getRow($ds)) {
@@ -186,12 +190,12 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
     protected function parameterActionButtons()
     {
         return [
-            'select' => 1,
-            'save' => $this->managerTheme->getCore()->hasPermission('save_plugin'),
-            'new' => $this->managerTheme->getCore()->hasPermission('new_plugin'),
+            'select'    => 1,
+            'save'      => $this->managerTheme->getCore()->hasPermission('save_plugin'),
+            'new'       => $this->managerTheme->getCore()->hasPermission('new_plugin'),
             'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_plugin'),
-            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_plugin'),
-            'cancel' => 1
+            'delete'    => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_plugin'),
+            'cancel'    => 1
         ];
     }
 }

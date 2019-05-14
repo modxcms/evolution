@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Tracy\Bridges\Nette;
 
 use Nette;
@@ -43,7 +45,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	private $cliMode;
 
 
-	public function __construct($debugMode = false, $cliMode = false)
+	public function __construct(bool $debugMode = false, bool $cliMode = false)
 	{
 		$this->debugMode = $debugMode;
 		$this->cliMode = $cliMode;
@@ -56,14 +58,14 @@ class TracyExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('logger'))
-			->setClass('Tracy\ILogger')
-			->setFactory('Tracy\Debugger::getLogger');
+			->setClass(Tracy\ILogger::class)
+			->setFactory([Tracy\Debugger::class, 'getLogger']);
 
 		$builder->addDefinition($this->prefix('blueScreen'))
-			->setFactory('Tracy\Debugger::getBlueScreen');
+			->setFactory([Tracy\Debugger::class, 'getBlueScreen']);
 
 		$builder->addDefinition($this->prefix('bar'))
-			->setFactory('Tracy\Debugger::getBar');
+			->setFactory([Tracy\Debugger::class, 'getBar']);
 	}
 
 
@@ -71,7 +73,6 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	{
 		$initialize = $class->getMethod('initialize');
 		$builder = $this->getContainerBuilder();
-		$class = method_exists('Nette\DI\Helpers', 'filterArguments') ? 'Nette\DI\Helpers' : 'Nette\DI\Compiler';
 
 		$options = $this->config;
 		unset($options['bar'], $options['blueScreen'], $options['netteMailer']);
@@ -87,19 +88,18 @@ class TracyExtension extends Nette\DI\CompilerExtension
 				$key = ($key === 'fromEmail' ? 'getLogger()->' : '$') . $key;
 				$initialize->addBody($builder->formatPhp(
 					'Tracy\Debugger::' . $key . ' = ?;',
-					$class::filterArguments([$value])
+					Nette\DI\Helpers::filterArguments([$value])
 				));
 			}
 		}
 
 		$logger = $builder->getDefinition($this->prefix('logger'));
-		if ($logger->getFactory()->getEntity() !== ['Tracy\Debugger', 'getLogger']) {
+		if ($logger->getFactory()->getEntity() !== [Tracy\Debugger::class, 'getLogger']) {
 			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$logger]));
 		}
-		if ($this->config['netteMailer'] && $builder->getByType('Nette\Mail\IMailer')) {
-			$initialize->addBody($builder->formatPhp('Tracy\Debugger::getLogger(?)->mailer = ?;', [
-				$logger,
-				[new Nette\DI\Statement('Tracy\Bridges\Nette\MailSender', ['fromEmail' => $this->config['fromEmail']]), 'send'],
+		if ($this->config['netteMailer'] && $builder->getByType(Nette\Mail\IMailer::class)) {
+			$initialize->addBody($builder->formatPhp('Tracy\Debugger::getLogger()->mailer = ?;', [
+				[new Nette\DI\Statement(Tracy\Bridges\Nette\MailSender::class, ['fromEmail' => $this->config['fromEmail']]), 'send'],
 			]));
 		}
 
@@ -112,19 +112,20 @@ class TracyExtension extends Nette\DI\CompilerExtension
 				}
 				$initialize->addBody($builder->formatPhp(
 					'$this->getService(?)->addPanel(?);',
-					$class::filterArguments([$this->prefix('bar'), $item])
+					Nette\DI\Helpers::filterArguments([$this->prefix('bar'), $item])
 				));
 			}
 
-			if (!$this->cliMode) {
-				$initialize->addBody('if ($tmp = $this->getByType("Nette\Http\Session", false)) { $tmp->start(); Tracy\Debugger::dispatch(); };');
+			if (!$this->cliMode && ($name = $builder->getByType(Nette\Http\Session::class))) {
+				$initialize->addBody('$this->getService(?)->start();', [$name]);
+				$initialize->addBody('Tracy\Debugger::dispatch();');
 			}
 		}
 
 		foreach ((array) $this->config['blueScreen'] as $item) {
 			$initialize->addBody($builder->formatPhp(
 				'$this->getService(?)->addPanel(?);',
-				$class::filterArguments([$this->prefix('blueScreen'), $item])
+				Nette\DI\Helpers::filterArguments([$this->prefix('blueScreen'), $item])
 			));
 		}
 

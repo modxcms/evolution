@@ -10,13 +10,16 @@ use Illuminate\Database\Eloquent;
 class Modules extends AbstractResources implements TabControllerInterface
 {
     protected $view = 'page.resources.modules';
-
     /**
      * {@inheritdoc}
      */
     public function getTabName($withIndex = true): string
     {
-        return 'tabModules' . ($withIndex ? '-' . $this->getIndex() : '');
+        if ($withIndex) {
+            return sprintf('tabModules-%s', $this->getIndex());
+        }
+
+        return 'tabModules';
     }
 
     /**
@@ -51,7 +54,11 @@ class Modules extends AbstractResources implements TabControllerInterface
     {
         $params = array_merge($this->getBaseParams(), $params);
 
-        return $this->isNoData() ? $params : array_merge([
+        if ($this->isNoData()) {
+            return $params;
+        }
+
+        return array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory(),
             'action' => $this->parameterActionName()
@@ -77,16 +84,12 @@ class Modules extends AbstractResources implements TabControllerInterface
 
     protected function parameterActionName() : string
     {
-        switch (true) {
-            case $this->managerTheme->getCore()->hasPermission('edit_module'):
-                $action = 'actions.edit';
-                break;
-            case $this->managerTheme->getCore()->hasPermission('exec_module'):
-                $action = 'actions.run';
-                break;
-            default:
-                $action = '';
+        if ($this->managerTheme->getCore()->hasPermission('edit_module')) {
+            return 'actions.edit';
         }
-        return $action;
+        if ($this->managerTheme->getCore()->hasPermission('exec_module')) {
+            return 'actions.run';
+        }
+        return '';
     }
 }

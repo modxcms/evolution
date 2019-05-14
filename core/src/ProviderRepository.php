@@ -93,7 +93,7 @@ class ProviderRepository
      */
     public function shouldRecompile($manifest, $providers)
     {
-        return is_null($manifest) || $manifest['providers'] != $providers;
+        return $manifest === null || $manifest['providers'] != $providers;
     }
     /**
      * Register the load events for the given provider.

@@ -64,7 +64,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         $out = Models\ActiveUser::locked(301, $this->getElementId())
             ->first();
         if ($out !== null) {
-            $out = sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
+            return sprintf($this->managerTheme->getLexicon('error_no_privileges'), $out->username);
         }
 
         return $out;
@@ -75,20 +75,14 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
      */
     public function canView(): bool
     {
-        switch ($this->getIndex()) {
-            case 300:
-                $out = $this->managerTheme->getCore()->hasPermission('new_template');
-                break;
-
-            case 301:
-                $out = $this->managerTheme->getCore()->hasPermission('edit_template');
-                break;
-
-            default:
-                $out = false;
+        if($this->getIndex() == 300) {
+            return $this->managerTheme->getCore()->hasPermission('new_template');
+        }
+        if($this->getIndex() == 301) {
+            return $this->managerTheme->getCore()->hasPermission('edit_template');
         }
 
-        return $out;
+        return false;
     }
 
     /**
@@ -98,18 +92,18 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     {
         $this->object = $this->parameterData();
         $this->parameters = [
-            'data' => $this->object,
-            'categories' => $this->parameterCategories(),
-            'types' => $this->parameterTypes(),
-            'display' => $this->parameterDisplay(),
+            'data'              => $this->object,
+            'categories'        => $this->parameterCategories(),
+            'types'             => $this->parameterTypes(),
+            'display'           => $this->parameterDisplay(),
             'categoriesWithTpl' => $this->parameterCategoriesWithTpl(),
-            'tplOutCategory' => $this->parameterTplOutCategory(),
-            'action' => $this->getIndex(),
-            'events' => $this->parameterEvents(),
-            'actionButtons' => $this->parameterActionButtons(),
+            'tplOutCategory'    => $this->parameterTplOutCategory(),
+            'action'            => $this->getIndex(),
+            'events'            => $this->parameterEvents(),
+            'actionButtons'     => $this->parameterActionButtons(),
             // :TODO delete
-            'origin' => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
-            'originId' => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
+            'origin'            => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
+            'originId'          => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
         ];
 
         return true;
@@ -136,12 +130,12 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         } elseif (isset($_REQUEST['itemname'])) {
             $data->name = $_REQUEST['itemname'];
         } else {
-            $_SESSION['itemname'] = $this->managerTheme->getLexicon("new_template");
+            $_SESSION['itemname'] = $this->managerTheme->getLexicon('new_template');
             $data->category = isset($_REQUEST['catid']) ? (int)$_REQUEST['catid'] : 0;
         }
 
         $values = $this->managerTheme->loadValuesFromSession($_POST);
-        if (!empty($values)) {
+        if ($values) {
             $data->fill($values);
         }
 
@@ -166,7 +160,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterStandartTypes(): array
     {
         return [
-            'name' => 'Standard Type',
+            'name'    => 'Standard Type',
             'options' => $this->standartTypes
         ];
     }
@@ -206,7 +200,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterDisplayWidgets(): array
     {
         return [
-            'name' => 'Widgets',
+            'name'    => 'Widgets',
             'options' => $this->displayWidgets
         ];
     }
@@ -214,7 +208,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterDisplayFormats(): array
     {
         return [
-            'name' => 'Formats',
+            'name'    => 'Formats',
             'options' => $this->displayFormats
         ];
     }
@@ -249,8 +243,8 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     private function callEvent($name): string
     {
         $out = $this->managerTheme->getCore()->invokeEvent($name, [
-            'id' => $this->getElementId(),
-            'controller' => $this,
+            'id'          => $this->getElementId(),
+            'controller'  => $this,
             'forfrontend' => 1
         ]);
         if (\is_array($out)) {
@@ -263,12 +257,12 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterActionButtons()
     {
         return [
-            'select' => 1,
-            'save' => $this->managerTheme->getCore()->hasPermission('save_template'),
-            'new' => $this->managerTheme->getCore()->hasPermission('new_template'),
-            'duplicate' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('new_template'),
-            'delete' => !empty($this->object->getKey()) && $this->managerTheme->getCore()->hasPermission('delete_template'),
-            'cancel' => 1
+            'select'    => 1,
+            'save'      => $this->managerTheme->getCore()->hasPermission('save_template'),
+            'new'       => $this->managerTheme->getCore()->hasPermission('new_template'),
+            'duplicate' => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('new_template'),
+            'delete'    => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('delete_template'),
+            'cancel'    => 1
         ];
     }
 
@@ -279,7 +273,12 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
 
     public function isSelectedTemplate(Models\SiteTemplate $item)
     {
-        return ($this->object->templates->contains('id', $item->getKey()) || \in_array($item->getKey(),
-                $this->getSelectedTplFromRequest(), true));
+        return (
+            $this->object->templates->contains('id', $item->getKey())
+            || \in_array(
+                $item->getKey(),
+                $this->getSelectedTplFromRequest(), true
+            )
+        );
     }
 }

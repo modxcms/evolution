@@ -16,7 +16,11 @@ class Plugins extends AbstractResources implements TabControllerInterface
      */
     public function getTabName($withIndex = true): string
     {
-        return 'tabPlugins' . ($withIndex ? '-' . $this->getIndex() : '');
+        if ($withIndex) {
+            return sprintf('tabPlugins-%s', $this->getIndex());
+        }
+
+        return 'tabPlugins';
     }
 
     /**
@@ -35,9 +39,9 @@ class Plugins extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName' => $this->getTabName(false),
+                'tabPageName'      => $this->getTabName(false),
                 'tabIndexPageName' => $this->getTabName(),
-                'checkOldPlugins' => $this->checkOldPlugins()
+                'checkOldPlugins'  => $this->checkOldPlugins()
             ]
         );
     }
@@ -49,7 +53,11 @@ class Plugins extends AbstractResources implements TabControllerInterface
     {
         $params = array_merge($this->getBaseParams(), $params);
 
-        return $this->isNoData() ? $params : array_merge([
+        if ($this->isNoData()) {
+            return $params;
+        }
+
+        return array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ], $params);
@@ -75,8 +83,9 @@ class Plugins extends AbstractResources implements TabControllerInterface
     protected function checkOldPlugins(): bool
     {
         $p = Models\SitePlugin::disabledAlternative()->get();
-        return (bool)$p->count(function($alternative){
-            return (int)($alternative->count() > 0);
-        });
+        return (bool)$p->count(
+            function($alternative){
+                return (int)($alternative->count() > 0);
+            });
     }
 }

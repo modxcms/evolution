@@ -16,7 +16,11 @@ class Snippets extends AbstractResources implements TabControllerInterface
      */
     public function getTabName($withIndex = true): string
     {
-        return 'tabSnippets' . ($withIndex ? '-' . $this->getIndex() : '');
+        if ($withIndex) {
+            return sprintf('tabSnippets-%s', $this->getIndex());
+        }
+
+        return 'tabSnippets';
     }
 
     /**
@@ -48,7 +52,11 @@ class Snippets extends AbstractResources implements TabControllerInterface
     {
         $params = array_merge($this->getBaseParams(), $params);
 
-        return $this->isNoData() ? $params : array_merge([
+        if ($this->isNoData()) {
+            return $params;
+        }
+
+        return array_merge([
             'categories' => $this->parameterCategories(),
             'outCategory' => $this->parameterOutCategory()
         ], $params);

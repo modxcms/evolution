@@ -22,7 +22,11 @@ class Help extends AbstractController implements ManagerTheme\PageControllerInte
      */
     public function canView(): bool
     {
-        return $_SESSION['mgrRole'] != 1 ? $this->managerTheme->getCore()->hasPermission('help') : true;
+        if ($_SESSION['mgrRole'] != 1) {
+            return $this->managerTheme->getCore()->hasPermission('help');
+        }
+
+        return true;
     }
 
     /**

@@ -29,13 +29,11 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
     {
         if ((int)$this->getIndex() === 52) {
             $this->handle();
-            $flag = false;
-        } else {
-            $this->processDisplay();
-            $flag = true;
+            return false;
         }
 
-        return $flag;
+        $this->processDisplay();
+        return true;
     }
 
     protected function handle()
@@ -100,10 +98,10 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
         // Set the item name for logger
         $_SESSION['itemname'] = $document->pagetitle;
 
-        $this->managerTheme->getCore()->invokeEvent("onAfterMoveDocument", [
-            "id_document" => $document->getKey(),
-            "old_parent" => $document->parent,
-            "new_parent" => $parentDocument->getKey()
+        $this->managerTheme->getCore()->invokeEvent('onAfterMoveDocument', [
+            'id_document' => $document->getKey(),
+            'old_parent'  => $document->parent,
+            'new_parent'  => $parentDocument->getKey()
         ]);
 
         // empty cache & sync site
@@ -119,9 +117,9 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
 
         // check permissions on the document
         $udperms = new Permissions();
-        $udperms->user = $this->managerTheme->getCore()->getLoginUserID('mgr');
+        $udperms->user     = $this->managerTheme->getCore()->getLoginUserID('mgr');
         $udperms->document = $document->getKey();
-        $udperms->role = $_SESSION['mgrRole'];
+        $udperms->role     = $_SESSION['mgrRole'];
 
         if (!$udperms->checkPermissions()) {
             $this->managerTheme->alertAndQuit('access_permission_denied');
@@ -155,13 +153,15 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
 
     protected function checkNewParentPermission($id)
     {
-        $udperms = new Permissions;
-        $udperms->user = $this->managerTheme->getCore()->getLoginUserID('mgr');
+        $udperms           = new Permissions;
+        $udperms->user     = $this->managerTheme->getCore()->getLoginUserID('mgr');
         $udperms->document = $id;
-        $udperms->role = $_SESSION['mgrRole'];
+        $udperms->role     = $_SESSION['mgrRole'];
 
-        if (! $udperms->checkPermissions()) {
-            $this->managerTheme->alertAndQuit('access_permission_parent_denied');
+        if ($udperms->checkPermissions()) {
+            return;
         }
+
+        $this->managerTheme->alertAndQuit('access_permission_parent_denied');
     }
 }
