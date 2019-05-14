@@ -178,12 +178,12 @@ if (!function_exists('getLangs')) {
      */
     function getLangs($install_language)
     {
-        if ($install_language !== "english" &&
-            is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR, $install_language))
+        if ($install_language !== 'english' &&
+            is_file(sprintf('../%s/includes/lang/%s.inc.php', MGR_DIR, $install_language))
         ) {
             $manager_language = $install_language;
         } else {
-            $manager_language = "english";
+            $manager_language = 'english';
         }
         $langs = array();
         if ($handle = opendir(MODX_MANAGER_PATH . 'includes/lang')) {
@@ -421,7 +421,7 @@ if (!function_exists('clean_up')) {
 
         // secure web documents - privateweb
         mysqli_query($sqlParser->conn,
-            "UPDATE `" . $sqlParser->prefix . "site_content` SET privateweb = 0 WHERE privateweb = 1");
+            'UPDATE `' . $sqlParser->prefix . "site_content` SET privateweb = 0 WHERE privateweb = 1");
         $sql = "SELECT DISTINCT sc.id
              FROM `" . $sqlParser->prefix . "site_content` sc
              LEFT JOIN `" . $sqlParser->prefix . "document_groups` dg ON dg.document = sc.id
@@ -429,15 +429,15 @@ if (!function_exists('clean_up')) {
              WHERE wga.id>0";
         $ds = mysqli_query($sqlParser->conn, $sql);
         if (!$ds) {
-            echo "An error occurred while executing a query: " . mysqli_error($sqlParser->conn);
+            echo 'An error occurred while executing a query: ' . mysqli_error($sqlParser->conn);
         } else {
             while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r["id"];
+                $ids[] = $r['id'];
             }
             if (count($ids) > 0) {
                 mysqli_query($sqlParser->conn,
                     "UPDATE `" . $sqlParser->prefix . "site_content` SET privateweb = 1 WHERE id IN (" . implode(", ",
-                        $ids) . ")");
+                        $ids) . ')');
                 unset($ids);
             }
         }
@@ -452,10 +452,10 @@ if (!function_exists('clean_up')) {
              WHERE mga.id>0";
         $ds = mysqli_query($sqlParser->conn, $sql);
         if (!$ds) {
-            echo "An error occurred while executing a query: " . mysqli_error($sqlParser->conn);
+            echo 'An error occurred while executing a query: ' . mysqli_error($sqlParser->conn);
         } else {
             while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r["id"];
+                $ids[] = $r['id'];
             }
             if (count($ids) > 0) {
                 mysqli_query($sqlParser->conn,
@@ -473,7 +473,7 @@ if (!function_exists('parse_docblock')) {
         $params = array();
         $fullpath = $element_dir . '/' . $filename;
         if (is_readable($fullpath)) {
-            $tpl = @fopen($fullpath, "r");
+            $tpl = @fopen($fullpath, 'r');
             if ($tpl) {
                 $params['filename'] = $filename;
                 $docblock_start_found = false;
@@ -548,17 +548,17 @@ if (!function_exists('propertiesNameValue')) {
     {
         $parameter = array();
         if (!empty ($propertyString)) {
-            $tmpParams = explode("&", $propertyString);
+            $tmpParams = explode('&', $propertyString);
             $countParams = count($tmpParams);
             for ($x = 0; $x < $countParams; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp = explode("=", $tmpParams[$x]);
-                    $pvTmp = explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "") {
+                    $pTmp = explode('=', $tmpParams[$x]);
+                    $pvTmp = explode(';', trim($pTmp[1]));
+                    if ($pvTmp[1] == 'list' && $pvTmp[3] != '') {
                         $parameter[trim($pTmp[0])] = $pvTmp[3];
                     } //list default
                     else {
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "") {
+                        if ($pvTmp[1] != 'list' && $pvTmp[2] != '') {
                             $parameter[trim($pTmp[0])] = $pvTmp[2];
                         }
                     }
@@ -767,7 +767,7 @@ if (!function_exists('removeFolder')) {
         $files = new RecursiveIteratorIterator($it,
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($files as $file) {
-            if ($file->getFilename() === "." || $file->getFilename() === "..") {
+            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
                 continue;
             }
             if ($file->isDir()) {

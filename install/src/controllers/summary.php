@@ -169,7 +169,7 @@ if (!is_writable("../assets/export")) {
 
 // config.inc.php writable?
 echo '<p>'.$_lang['checking_if_config_exist_and_writable'];
-$tmp = "../".MGR_DIR."/includes/config.inc.php";
+$tmp = '../' .MGR_DIR. '/includes/config.inc.php';
 if (!is_file($tmp)) {
     f_owc($tmp, "<?php //EVO configuration file ?>", 0666);
 } else {
@@ -220,7 +220,7 @@ if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', iss
 // make sure we can use the database
 if ($installMode > 0 && !mysqli_query($conn, "USE {$dbase}")) {
     $errors++;
-    echo '<span class="notok">'.$_lang['database_use_failed'].'</span><p />'.$_lang["database_use_failed_note"].'</p>';
+    echo '<span class="notok">'.$_lang['database_use_failed'].'</span><p />'.$_lang['database_use_failed_note'].'</p>';
 }
 
 // check the database collation if not specified in the configuration

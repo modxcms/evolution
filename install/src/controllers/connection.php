@@ -71,17 +71,17 @@ $ph['show#connection_method'] = (($installMode == 0) || ($installMode == 2)) ? '
 $ph['database_collation'] = isset($_POST['database_collation']) ? $_POST['database_collation'] : $database_collation;
 $ph['show#AUH'] = ($installMode == 0) ? 'block' : 'none';
 $ph['cmsadmin'] = isset($_POST['cmsadmin']) ? $_POST['cmsadmin'] : 'admin';
-$ph['cmsadminemail'] = isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail'] : "";
-$ph['cmspassword'] = isset($_POST['cmspassword']) ? $_POST['cmspassword'] : "";
-$ph['cmspasswordconfirm'] = isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm'] : "";
+$ph['cmsadminemail'] = isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail'] : '';
+$ph['cmspassword'] = isset($_POST['cmspassword']) ? $_POST['cmspassword'] : '';
+$ph['cmspasswordconfirm'] = isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm'] : '';
 $ph['managerLangs'] = getLangs($install_language);
 $ph['install_language'] = $install_language;
 $ph['installMode'] = $installMode;
-$ph['checkedChkagree'] = isset($_POST['chkagree']) ? 'checked' : "";
+$ph['checkedChkagree'] = isset($_POST['chkagree']) ? 'checked' : '';
 $ph['database_connection_method'] = isset($database_connection_method) ? $database_connection_method : '';
 $ph['databasehost'] = isset($_POST['databasehost']) ? $_POST['databasehost'] : $database_server;
 $ph['databaseloginname'] = isset($_SESSION['databaseloginname']) ? $_SESSION['databaseloginname'] : '';
-$ph['databaseloginpassword'] = isset($_SESSION['databaseloginpassword']) ? $_SESSION['databaseloginpassword'] : "";
+$ph['databaseloginpassword'] = isset($_SESSION['databaseloginpassword']) ? $_SESSION['databaseloginpassword'] : '';
 $ph['MGR_DIR'] = MGR_DIR;
 
 $content = file_get_contents(dirname(__DIR__) . '/template/actions/connection.tpl');

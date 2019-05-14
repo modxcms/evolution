@@ -52,9 +52,9 @@ class SqlParser {
 		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
 
 		$this->dbVersion = 3.23; // assume version 3.23
-		if(function_exists("mysqli_get_server_info")) {
+		if(function_exists('mysqli_get_server_info')) {
 			$ver = mysqli_get_server_info($this->conn);
-			$this->dbMODx 	 = version_compare($ver,"4.0.2");
+			$this->dbMODx 	 = version_compare($ver, '4.0.2');
 			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
 		}
 
@@ -66,7 +66,7 @@ class SqlParser {
 
 		// check to make sure file exists
 		if (!file_exists($filename)) {
-			$this->mysqlErrors[] = array("error" => "File '$filename' not found");
+			$this->mysqlErrors[] = array('error' => "File '$filename' not found");
 			$this->installFailed = true ;
 			return false;
 		}
@@ -135,7 +135,7 @@ class SqlParser {
 					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1062 ||mysqli_errno($this->conn) == 1091) continue;
 				}
 				// End Ignore duplicate
-				$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
+				$this->mysqlErrors[] = array('error' => mysqli_error($this->conn), 'sql' => $sql_do);
 				$this->installFailed = true;
 			}
 		}

@@ -1,6 +1,6 @@
 <?php
-if (file_exists(dirname(__DIR__, 3) . "/assets/cache/siteManager.php")) {
-    include_once dirname(__DIR__, 3) . "/assets/cache/siteManager.php";
+if (file_exists(dirname(__DIR__, 3) . '/assets/cache/siteManager.php')) {
+    include_once dirname(__DIR__, 3) . '/assets/cache/siteManager.php';
 } else {
     define('MGR_DIR', 'manager');
 }
@@ -35,7 +35,7 @@ $database_collation = $_POST['database_collation'];
 $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
 $database_connection_charset = $_POST['database_connection_charset'];
 $database_connection_method = $_POST['database_connection_method'];
-$dbase = "`" . $_POST['database_name'] . "`";
+$dbase = '`' . $_POST['database_name'] . '`';
 $table_prefix = $_POST['tableprefix'];
 $adminname = $_POST['cmsadmin'];
 $adminemail = $_POST['cmsadminemail'];
@@ -92,7 +92,7 @@ if ($conn) {
     if ($installLevel === 1) {
         // check table prefix
         if ($installMode === 0) {
-            $query = "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`";
+            $query = 'SELECT COUNT(*) FROM $dbase.`' . $table_prefix . 'site_content`';
             if (@mysqli_query($conn, $query)) {
                 $errors += 1;
             } else {
@@ -107,7 +107,7 @@ if ($conn) {
         // check status of Inherit Parent Template plugin
         $auto_template_logic = 'parent';
         if ($installMode !== 0) {
-            $query = "SELECT properties, disabled FROM " . $dbase . ".`" . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'";
+            $query = 'SELECT properties, disabled FROM ' . $dbase . '.`' . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'";
             $rs = mysqli_query($conn, $query);
             $row = mysqli_fetch_row($rs);
             if (!$row) {
@@ -136,7 +136,7 @@ if ($conn) {
             $database_server,
             $database_user,
             $database_password,
-            str_replace("`", "", $dbase),
+            str_replace('`', '', $dbase),
             $table_prefix,
             $adminname,
             $adminemail,
@@ -640,7 +640,7 @@ if ($conn) {
                 $desc = mysqli_real_escape_string($conn, $modulePlugin[1]);
                 $filecontent = $modulePlugin[2];
                 $properties = $modulePlugin[3];
-                $events = explode(",", $modulePlugin[4]);
+                $events = explode(',', $modulePlugin[4]);
                 $guid = mysqli_real_escape_string($conn, $modulePlugin[5]);
                 $category = mysqli_real_escape_string($conn, $modulePlugin[6]);
                 $leg_names = '';
