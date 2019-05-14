@@ -2894,31 +2894,28 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             $doc = $this->documentObject;
-            if ( $this['view']->exists(sprintf('tpl-%s_doc-%s', $doc['template'], $doc['id']))) {
-                $template = sprintf('tpl-%s_doc-%s', $doc['template'], $doc['id']);
-            }
-            elseif ($this['view']->exists(sprintf('doc-%s', $doc['id']))) {
-                $template = sprintf('doc-%s', $doc['id']);
-            }
-            elseif ($this['view']->exists(sprintf('tpl-%s', $doc['template']))) {
-                $template = 'tpl-' . $doc['template'];
-            }
-            else {
-                if ($doc['template']) {
-                    $content = $this->documentContent;
-                } else {
-                    $content = $doc['content'];
-                }
-                if (!$content) {
-                    $content = $doc['content'];
-                }
-                if (strpos($content, '@FILE:') === 0) {
-                    $template = str_replace('@FILE:', '', trim($content));
-                    if (!$this['view']->exists($template)) {
-                        $this->documentObject['template'] = 0;
-                        $this->documentContent = $doc['content'];
+            switch (true) {
+                case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
+                    $template = 'tpl-' . $doc['template'] . '_doc-' . $doc['id'];
+                    break;
+                case $this['view']->exists('doc-' . $doc['id']):
+                    $template = 'doc-' . $doc['id'];
+                    break;
+                case $this['view']->exists('tpl-' . $doc['template']):
+                    $template = 'tpl-' . $doc['template'];
+                    break;
+                default:
+                    $content = $doc['template'] ? $this->documentContent : $doc['content'];
+                    if (!$content) {
+                        $content = $doc['content'];
                     }
-                }
+                    if (strpos($content, '@FILE:') === 0) {
+                        $template = str_replace('@FILE:', '', trim($content));
+                        if (!$this['view']->exists($template)) {
+                            $this->documentObject['template'] = 0;
+                            $this->documentContent = $doc['content'];
+                        }
+                    }
             }
             if ($template) {
                 $this->minParserPasses = -1;
