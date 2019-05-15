@@ -333,8 +333,8 @@ if ($conn) {
                             , table_prefix('site_templates')
                             , $template
                             , $desc
-                            , $category_id
-                            , $locked
+                            , (int) $category_id
+                            , (int) $locked
                             , $name
                         );
                         if (!mysqli_query($sqlParser->conn, $query)) {
@@ -369,8 +369,8 @@ if ($conn) {
                             , $name
                             , $desc
                             , $template
-                            , $category_id
-                            , $locked
+                            , (int) $category_id
+                            , (int) $locked
                         );
                         if (!@mysqli_query($sqlParser->conn, $query)) {
                             $errors += 1;
@@ -453,8 +453,8 @@ if ($conn) {
                             , $input_type
                             , $caption
                             , $desc
-                            , $category
-                            , $locked
+                            , (int) $category
+                            , (int) $locked
                             , $input_options
                             , $output_widget
                             , $output_widget_params
@@ -481,8 +481,8 @@ if ($conn) {
                         , $name
                         , $caption
                         , $desc
-                        , $category
-                        , $locked
+                        , (int) $category
+                        , (int) $locked
                         , $input_options
                         , $output_widget
                         , $output_widget_params
@@ -539,8 +539,8 @@ if ($conn) {
                                 "INSERT INTO %s.`%s` (tmplvarid, templateid) VALUES(%s, %s)"
                                 , $dbase
                                 , table_prefix('site_tmplvar_templates')
-                                , $id
-                                , $templateId
+                                , (int) $id
+                                , (int) $templateId
                             );
                             mysqli_query($sqlParser->conn,$query);
                         }
@@ -624,7 +624,7 @@ if ($conn) {
                                 , table_prefix('site_htmlsnippets')
                                 , $chunk
                                 , $desc
-                                , $category_id
+                                , (int) $category_id
                                 , $name
                             )
                         )) {
@@ -651,7 +651,7 @@ if ($conn) {
                             , $name
                             , $desc
                             , $chunk
-                            , $category_id
+                            , (int) $category_id
                         );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $errors += 1;
@@ -734,7 +734,7 @@ if ($conn) {
                                 , $module
                                 , $desc
                                 , $props
-                                , $shared
+                                , (int) $shared
                                 , $name
                             )
                         )) {
@@ -759,7 +759,7 @@ if ($conn) {
                                 , $module
                                 , $properties
                                 , $guid
-                                , $shared
+                                , (int) $shared
                                 , $category
                             )
                         )) {
@@ -863,7 +863,7 @@ if ($conn) {
                                     , $plugin
                                     , $desc
                                     , $props
-                                    , $row['id']
+                                    , (int) $row['id']
                                 );
                                 if (!mysqli_query($sqlParser->conn, $query)) {
                                     $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
@@ -879,7 +879,7 @@ if ($conn) {
                                     "UPDATE %s.`%s` SET disabled='1' WHERE id=%s"
                                     , $dbase
                                     , table_prefix('site_plugins')
-                                    , $row['id']
+                                    , (int) $row['id']
                                 );
                                 if (!mysqli_query($sqlParser->conn, $query)) {
                                     $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
@@ -903,7 +903,7 @@ if ($conn) {
                                     , $plugin
                                     , $props
                                     , $guid
-                                    , $category
+                                    , (int) $category
                                 )
                             )) {
                                 $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
@@ -926,8 +926,8 @@ if ($conn) {
                             , $plugin
                             , $properties
                             , $guid
-                            , $category
-                            , $disabled
+                            , (int) $category
+                            , (int) $disabled
                         );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
@@ -969,7 +969,7 @@ if ($conn) {
                                 , $dbase
                                 , table_prefix('system_eventnames')
                                 , $_events
-                                , $id
+                                , (int) $id
                             );
                             mysqli_query($sqlParser->conn, $sql);
                         }
@@ -1059,7 +1059,7 @@ if ($conn) {
                                 , $desc
                                 , $snippet
                                 , $properties
-                                , $category
+                                , (int) $category
                             ))) {
                             $installDataLevel['snippets'][$moduleSnippet[0]]['error'] = array(
                                 'type' => 'sql',
@@ -1104,7 +1104,7 @@ if ($conn) {
                 $sql = sprintf(
                     "UPDATE `%s` SET template=%s WHERE template=4"
                     , table_prefix('site_content')
-                    , $row['id']
+                    , (int) $row['id']
                 );
                 mysqli_query($sqlParser->conn, $sql);
             }
@@ -1176,9 +1176,9 @@ if ($conn) {
                 'SELECT module FROM %s`%s` WHERE module=%s AND resource=%s AND type=%s LIMIT 1'
                 , $dbase
                 , table_prefix('site_module_depobj')
-                , $moduleId
-                , $extraId
-                , $dependency['type']
+                , (int) $moduleId
+                , (int) $extraId
+                , (int) $dependency['type']
             );
             $ds = mysqli_query($sqlParser->conn, $query);
             if (!$ds) {
@@ -1195,9 +1195,9 @@ if ($conn) {
                     'INSERT INTO %s`%s` (module, resource, type) VALUES(%s,%s,%s)'
                     , $dbase
                     , table_prefix('site_module_depobj')
-                    , $moduleId
-                    , $extraId
-                    , $dependency['type']
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
                 );
                 mysqli_query($sqlParser->conn, $query);
                 $installDependencyLevel[$dependency['module']]['type'] = 'create';
@@ -1206,12 +1206,12 @@ if ($conn) {
                     "UPDATE %s`%s` SET module = %s, resource = %s, type = %s WHERE module=%s AND resource=%s AND type=%s"
                     , $dbase
                     , $table_prefix('site_module_depobj')
-                    , $moduleId
-                    , $extraId
-                    , $dependency['type']
-                    , $moduleId
-                    , $extraId
-                    , $dependency['type']
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
                 );
                 mysqli_query($sqlParser->conn, $query);
                 $installDependencyLevel[$dependency['module']]['type'] = 'update';
@@ -1222,7 +1222,7 @@ if ($conn) {
                     'SELECT id FROM %s`%s` WHERE id=%s LIMIT 1'
                     , $dbase
                     , table_prefix('site_'.$dependency['table'])
-                    , $extraId
+                    , (int) $extraId
                 );
                 $ds = mysqli_query($sqlParser->conn, $query);
                 if (!$ds) {
@@ -1239,8 +1239,8 @@ if ($conn) {
                         "UPDATE %s`%s` SET moduleguid = %s WHERE id=%s"
                         , $dbase
                         , table_prefix('site_'.$dependency['table'])
-                        , $moduleGuid
-                        , $extraId
+                        , (int) $moduleGuid
+                        , (int) $extraId
                     );
                     $ds= mysqli_query($sqlParser->conn, $query);
                     $installDependencyLevel[$dependency['module']]['extra'] = array(
