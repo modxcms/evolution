@@ -107,7 +107,7 @@ if ( count($moduleTemplates )>0) {
     echo "<h3>" . $_lang['templates'] . ":</h3> ";
     $selTemplates = $_POST['template'];
     foreach ($moduleTemplates as $k=>$moduleTemplate) {
-        $installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
       //  if(in_array($k, $selTemplates) || $installSample) {
             $name = $modx->db->escape($moduleTemplate[0]);
             $desc = $modx->db->escape($moduleTemplate[1]);
@@ -152,7 +152,7 @@ if (count($moduleTVs )>0) {
     echo "<h3>" . $_lang['tvs'] . ":</h3> ";
     $selTVs = $_POST['tv'];
     foreach ($moduleTVs as $k=>$moduleTV) {
-        $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
         //if(in_array($k, $selTVs) || $installSample) {
             $name = $modx->db->escape($moduleTV[0]);
             $caption = $modx->db->escape($moduleTV[1]);
@@ -226,7 +226,7 @@ if (count($moduleChunks )>0) {
     echo "<h3>" . $_lang['chunks'] . ":</h3> ";
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
-        $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
         //if(in_array($k, $selChunks) || $installSample) {
 
             $name = $modx->db->escape($moduleChunk[0]);
@@ -280,7 +280,7 @@ if (count($moduleModules )>0) {
     echo "<h3>" . $_lang['modules'] . ":</h3> ";
     $selModules = $_POST['module'];
     foreach ($moduleModules as $k=>$moduleModule) {
-        $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
         //if(in_array($k, $selModules) || $installSample) {
             $name = $modx->db->escape($moduleModule[0]);
             $desc = $modx->db->escape($moduleModule[1]);
@@ -327,7 +327,7 @@ if (count($modulePlugins )>0) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
     $selPlugs = $_POST['plugin'];
     foreach ($modulePlugins as $k=>$modulePlugin) {
-        $installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
+        //$installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
        // if(in_array($k, $selPlugs) || $installSample) {
             $name = $modx->db->escape($modulePlugin[0]);
             $desc = $modx->db->escape($modulePlugin[1]);
@@ -418,7 +418,7 @@ if (count($moduleSnippets ) > 0) {
     $selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k=>$moduleSnippet) {
 
-        $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         //if(in_array($k, $selSnips) || $installSample) {
             $name = $modx->db->escape($moduleSnippet[0]);
             $desc = $modx->db->escape($moduleSnippet[1]);
