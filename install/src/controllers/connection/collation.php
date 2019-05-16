@@ -15,7 +15,7 @@ if (function_exists('mysqli_connect')) {
 }
 
 // get collation
-$rs = mysqli_query($conn, "SHOW COLLATION");
+$rs = mysqli_query($conn, 'SHOW COLLATION');
 if (mysqli_num_rows($rs) > 0) {
     $output = '<select id="database_collation" name="database_collation">';
     $_ = array();

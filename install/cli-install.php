@@ -175,7 +175,7 @@ echo PHP_EOL . $_lang['checking_php_version'];
 if (version_compare(phpversion(), PHP_MIN_VERSION) < 0) {
     $errors++;
     $tmp = $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', PHP_MIN_VERSION,
-            $_lang["modx_requires_php"]);
+            $_lang['modx_requires_php']);
     echo $_lang['failed'] . ' ' . $tmp . PHP_EOL;
 } else {
     echo $_lang['ok'] . PHP_EOL;
@@ -184,7 +184,7 @@ if (version_compare(phpversion(), PHP_MIN_VERSION) < 0) {
 // check directories
 // cache exists?
 echo strip_tags($_lang['checking_if_cache_exist']);
-if (!file_exists($path . "../assets/cache")) {
+if (!file_exists($path . '../assets/cache')) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -194,7 +194,7 @@ if (!file_exists($path . "../assets/cache")) {
 
 // cache writable?
 echo strip_tags($_lang['checking_if_cache_writable']);
-if (!is_writable($path . "../assets/cache")) {
+if (!is_writable($path . '../assets/cache')) {
     $errors++;
     echo $_lang['failed'] . PHP_EOL;
 } else {
@@ -204,9 +204,9 @@ if (!is_writable($path . "../assets/cache")) {
 
 // cache files writable?
 echo strip_tags($_lang['checking_if_cache_file_writable']);
-$tmp = $path . "../assets/cache/siteCache.idx.php";
+$tmp = $path . '../assets/cache/siteCache.idx.php';
 if (!file_exists($tmp)) {
-    f_owc($tmp, "<?php //EVO site cache file ?>");
+    f_owc($tmp, '<?php //EVO site cache file ?>');
 }
 if (!is_writable($tmp)) {
     $errors++;
@@ -220,9 +220,9 @@ if (!is_writable($tmp)) {
 // File Browser directories exists?
 echo strip_tags($_lang['checking_if_images_exist']);
 switch (true) {
-    case !file_exists($path . "../assets/images"):
-    case !file_exists($path . "../assets/files"):
-    case !file_exists($path . "../assets/backup"):
+    case !file_exists($path . '../assets/images'):
+    case !file_exists($path . '../assets/files'):
+    case !file_exists($path . '../assets/backup'):
         //case !file_exists("../assets/.thumbs"):
         $errors++;
         echo $_lang['failed'] . PHP_EOL;
@@ -235,9 +235,9 @@ switch (true) {
 // File Browser directories writable?
 echo strip_tags($_lang['checking_if_images_writable']);
 switch (true) {
-    case !is_writable($path . "../assets/images"):
-    case !is_writable($path . "../assets/files"):
-    case !is_writable($path . "../assets/backup"):
+    case !is_writable($path . '../assets/images'):
+    case !is_writable($path . '../assets/files'):
+    case !is_writable($path . '../assets/backup'):
         //case !is_writable("../assets/.thumbs"):
         $errors++;
         echo $_lang['failed'] . PHP_EOL;
@@ -249,7 +249,7 @@ switch (true) {
 
 // export exists?
 echo strip_tags($_lang['checking_if_export_exists']);
-if (!file_exists($path . "../assets/export")) {
+if (!file_exists($path . '../assets/export')) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -259,7 +259,7 @@ if (!file_exists($path . "../assets/export")) {
 
 // export writable?
 echo strip_tags($_lang['checking_if_export_writable']);
-if (!is_writable($path . "../assets/export")) {
+if (!is_writable($path . '../assets/export')) {
     echo $_lang['failed'] . PHP_EOL;
     $errors++;
 } else {
@@ -269,9 +269,9 @@ if (!is_writable($path . "../assets/export")) {
 
 // config.inc.php writable?
 echo strip_tags($_lang['checking_if_config_exist_and_writable']);
-$tmp = $path . "../" . MGR_DIR . "/includes/config.inc.php";
+$tmp = $path . '../' . MGR_DIR . '/includes/config.inc.php';
 if (!is_file($tmp)) {
-    f_owc($tmp, "<?php //EVO configuration file ?>", 0666);
+    f_owc($tmp, '<?php //EVO configuration file ?>', 0666);
 } else {
     @chmod($tmp, 0666);
 }
@@ -286,7 +286,7 @@ if (!$isWriteable) {
 
 // connect to the database
 if ($installMode == 1) {
-    include $path . "../" . MGR_DIR . "/includes/config.inc.php";
+    include $path . '../' . MGR_DIR . '/includes/config.inc.php';
 } else {
     // get db info from post
     $database_server = $databasehost;
@@ -392,16 +392,16 @@ if ($conn) {
 
 // andrazk 20070416 - add install flag and disable manager login
 // assets/cache writable?
-if (is_writable($path . "../assets/cache")) {
+if (is_writable($path . '../assets/cache')) {
     if (file_exists($path . '../assets/cache/installProc.inc.php')) {
         @chmod($path . '../assets/cache/installProc.inc.php', 0755);
         unlink($path . '../assets/cache/installProc.inc.php');
     }
 
-    f_owc($path . "../assets/cache/installProc.inc.php", '<?php $installStartTime = ' . time() . '; ?>');
+    f_owc($path . '../assets/cache/installProc.inc.php', '<?php $installStartTime = ' . time() . '; ?>');
 }
 
-if ($installMode > 0 && $_POST['installdata'] == "1") {
+if ($installMode > 0 && $_POST['installdata'] == '1') {
     echo $_lang['sample_web_site'] . ': ' . $_lang['sample_web_site_note'] . PHP_EOL;
 }
 
@@ -409,7 +409,7 @@ if ($errors > 0) {
     echo $_lang['setup_cannot_continue'] . ' ';
 
     if ($errors > 1) {
-        echo $errors . " " . $_lang['errors'] . $_lang['please_correct_errors'] . $_lang['and_try_again_plural'];
+        echo $errors . ' ' . $_lang['errors'] . $_lang['please_correct_errors'] . $_lang['and_try_again_plural'];
     } else {
         echo $_lang['error'] . $_lang['please_correct_error'] . $_lang['and_try_again'] . PHP_EOL;
     }
@@ -428,7 +428,7 @@ $create = false;
 
 
 if ($installMode == 1) {
-    include $path . "../" . MGR_DIR . "/includes/config.inc.php";
+    include $path . '../' . MGR_DIR . '/includes/config.inc.php';
 } else {
     // get db info from post
     $database_server = $databasehost;
@@ -438,7 +438,7 @@ if ($installMode == 1) {
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
     $database_connection_charset = $database_charset;
     $database_connection_method = $database_connection_method;
-    $dbase = "`" . $database_name . "`";
+    $dbase = '`' . $database_name . '`';
     $table_prefix = $tableprefix;
     $adminname = $cmsadmin;
     $adminemail = $cmsadminemail;
@@ -453,26 +453,26 @@ if (!isset ($site_sessionname)) {
 }
 
 // get base path and url
-$a = explode("install", str_replace("\\", "/", dirname($_SERVER["PHP_SELF"])));
+$a = explode('install', str_replace("\\", '/', dirname($_SERVER['PHP_SELF'])));
 if (count($a) > 1) {
     array_pop($a);
 }
-$url = implode("install", $a);
+$url = implode('install', $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", realpath(__DIR__)));
+$a = explode('install', str_replace("\\", '/', realpath(__DIR__)));
 if (count($a) > 1) {
     array_pop($a);
 }
-$pth = implode("install", $a);
+$pth = implode('install', $a);
 unset ($a);
-$base_url = $url . (substr($url, -1) != "/" ? "/" : "");
-$base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
+$base_url = $url . (substr($url, -1) != '/' ? '/' : '');
+$base_path = $pth . (substr($pth, -1) != '/' ? '/' : '');
 
 // connect to the database
 echo $_lang['setup_database_create_connection'] . ': ';
 $host = explode(':', $database_server, 2);
 if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
-    echo $_lang["setup_database_create_connection_failed"] . " " . $_lang['setup_database_create_connection_failed_note'] . PHP_EOL;
+    echo $_lang['setup_database_create_connection_failed'] . ' ' . $_lang['setup_database_create_connection_failed_note'] . PHP_EOL;
 
     return;
 } else {
@@ -480,9 +480,9 @@ if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', iss
 }
 
 // select database
-echo $_lang['setup_database_selection'] . str_replace("`", "", $dbase) . "`: ";
-if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
-    echo $_lang['setup_database_selection_failed'] . " " . $_lang['setup_database_selection_failed_note'] . PHP_EOL;
+echo $_lang['setup_database_selection'] . str_replace('`', '', $dbase) . '`: ';
+if (!mysqli_select_db($conn, str_replace('`', '', $dbase))) {
+    echo $_lang['setup_database_selection_failed'] . ' ' . $_lang['setup_database_selection_failed_note'] . PHP_EOL;
     $create = true;
 } else {
     if (function_exists('mysqli_set_charset')) {
@@ -494,11 +494,11 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
 
 // try to create the database
 if ($create) {
-    echo $_lang['setup_database_creation'] . str_replace("`", "", $dbase) . "`: ";
+    echo $_lang['setup_database_creation'] . str_replace('`', '', $dbase) . '`: ';
     //  if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
     if (!mysqli_query($conn,
         "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-        echo $_lang['setup_database_creation_failed'] . " " . $_lang['setup_database_creation_failed_note'] . PHP_EOL;
+        echo $_lang['setup_database_creation_failed'] . ' ' . $_lang['setup_database_creation_failed_note'] . PHP_EOL;
         $errors += 1;
 
         echo 'database charset: ' . $database_charset . PHP_EOL;
@@ -515,7 +515,7 @@ if ($create) {
 
 // check table prefix
 if ($installMode == 0) {
-    echo $_lang['checking_table_prefix'] . $table_prefix . "`: ";
+    echo $_lang['checking_table_prefix'] . $table_prefix . '`: ';
     if (@ $rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
         echo $_lang['failed'] . " " . $_lang['table_prefix_already_inuse'] . PHP_EOL;
         $errors += 1;
@@ -539,17 +539,17 @@ if (!function_exists('propertiesNameValue')) {
     {
         $parameter = array();
         if (!empty ($propertyString)) {
-            $tmpParams = explode("&", $propertyString);
+            $tmpParams = explode('&', $propertyString);
             $countParams = count($tmpParams);
             for ($x = 0; $x < $countParams; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp = explode("=", $tmpParams[$x]);
-                    $pvTmp = explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "") {
+                    $pTmp = explode('=', $tmpParams[$x]);
+                    $pvTmp = explode(';', trim($pTmp[1]));
+                    if ($pvTmp[1] == 'list' && $pvTmp[3] != '') {
                         $parameter[trim($pTmp[0])] = $pvTmp[3];
                     } //list default
                     else {
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "") {
+                        if ($pvTmp[1] != 'list' && $pvTmp[2] != '') {
                             $parameter[trim($pTmp[0])] = $pvTmp[2];
                         }
                     }
@@ -828,13 +828,13 @@ if (is_dir($modulePath) && is_readable($modulePath)) {
 }
 
 // setup callback function
-$callBackFnc = "clean_up";
+$callBackFnc = 'clean_up';
 
-include $path . "src/sqlParser.class.php";
+include $path . 'src/sqlParser.class.php';
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase),
     $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage,
     $database_connection_method, $auto_template_logic);
-$sqlParser->mode = ($installMode < 1) ? "new" : "upd";
+$sqlParser->mode = ($installMode < 1) ? 'new' : 'upd';
 /* image and file manager paths now handled via settings screen in Manager
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imageUrl = "assets/";

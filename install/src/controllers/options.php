@@ -18,7 +18,7 @@ switch($installMode){
         $database_connection_charset = $db_config['charset'];
         if (@ $conn = mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'], '', isset
         ($db_config['port']) ? $db_config['port'] : null)) {
-            if (@ mysqli_query($conn, "USE " . $db_config['database'])) {
+            if (@ mysqli_query($conn, 'USE ' . $db_config['database'])) {
                 if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
                     $rs = mysqli_query($conn, "show session variables like 'collation_server'");
                 }
@@ -68,7 +68,7 @@ $ph['cmsadminemail'] = trim($_POST['cmsadminemail']);
 $ph['cmspassword'] = trim($_POST['cmspassword']);
 $ph['cmspasswordconfirm'] = trim($_POST['cmspasswordconfirm']);
 
-$ph['checked'] = isset ($_POST['installdata']) && $_POST['installdata'] == "1" ? 'checked' : '';
+$ph['checked'] = isset ($_POST['installdata']) && $_POST['installdata'] == '1' ? 'checked' : '';
 
 # load setup information file
 include_once dirname(__DIR__) . '/processor/result.php';

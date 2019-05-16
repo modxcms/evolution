@@ -5,13 +5,13 @@ $uid = $_POST['uid'];
 $pwd = $_POST['pwd'];
 $installMode = $_POST['installMode'];
 
-$output = $_lang["status_checking_database"];
+$output = $_lang['status_checking_database'];
 $h = explode(':', $host, 2);
 if (!$conn = mysqli_connect($h[0], $uid, $pwd,'', isset($h[1]) ? $h[1] : null)) {
     $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed'] . '</span>';
 } else {
     $database_name = mysqli_real_escape_string($conn, $_POST['database_name']);
-    $database_name = str_replace("`", "", $database_name);
+    $database_name = str_replace('`', '', $database_name);
     $tableprefix = mysqli_real_escape_string($conn, $_POST['tableprefix']);
     $database_collation = mysqli_real_escape_string($conn, $_POST['database_collation']);
     $database_connection_method = mysqli_real_escape_string($conn, $_POST['database_connection_method']);
@@ -19,7 +19,7 @@ if (!$conn = mysqli_connect($h[0], $uid, $pwd,'', isset($h[1]) ? $h[1] : null)) 
     if (!@ mysqli_select_db($conn, $database_name)) {
         // create database
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
-        $query = "CREATE DATABASE `" . $database_name . "` CHARACTER SET " . $database_charset . " COLLATE " . $database_collation . ";";
+        $query = 'CREATE DATABASE `' . $database_name . '` CHARACTER SET ' . $database_charset . ' COLLATE ' . $database_collation . ";";
 
         if (!mysqli_query($conn, $query)) {
             $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_could_not_create_database'] . '</span>';

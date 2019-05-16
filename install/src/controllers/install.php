@@ -1,6 +1,6 @@
 <?php
-if (file_exists(dirname(__DIR__, 3) . "/assets/cache/siteManager.php")) {
-    include_once dirname(__DIR__, 3) . "/assets/cache/siteManager.php";
+if (file_exists(dirname(__DIR__, 3) . '/assets/cache/siteManager.php')) {
+    include_once dirname(__DIR__, 3) . '/assets/cache/siteManager.php';
 } else {
     define('MGR_DIR', 'manager');
 }
@@ -28,20 +28,20 @@ $installMode = (int)$_POST['installmode'];
 $installData = (int)!empty($_POST['installdata']);
 
 // get db info from post
-$database_server = $_POST['databasehost'];
-$database_user = $_SESSION['databaseloginname'];
-$database_password = $_SESSION['databaseloginpassword'];
-$database_collation = $_POST['database_collation'];
-$database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
+$database_server             = $_POST['databasehost'];
+$database_user               = $_SESSION['databaseloginname'];
+$database_password           = $_SESSION['databaseloginpassword'];
+$database_collation          = $_POST['database_collation'];
+$database_charset            = substr($database_collation, 0, strpos($database_collation, '_'));
 $database_connection_charset = $_POST['database_connection_charset'];
-$database_connection_method = $_POST['database_connection_method'];
-$dbase = "`" . $_POST['database_name'] . "`";
-$table_prefix = $_POST['tableprefix'];
-$adminname = $_POST['cmsadmin'];
-$adminemail = $_POST['cmsadminemail'];
-$adminpass = $_POST['cmspassword'];
-$managerlanguage = $_POST['managerlanguage'];
-$custom_placeholders = array();
+$database_connection_method  = $_POST['database_connection_method'];
+$dbase                       = '`' . $_POST['database_name'] . '`';
+$table_prefix                = table_prefix();
+$adminname                   = $_POST['cmsadmin'];
+$adminemail                  = $_POST['cmsadminemail'];
+$adminpass                   = $_POST['cmspassword'];
+$managerlanguage             = $_POST['managerlanguage'];
+$custom_placeholders         = array();
 
 // set session name variable
 if (!isset ($site_sessionname)) {
@@ -61,11 +61,12 @@ if (count($a) > 1) {
 }
 $pth = implode('install', $a);
 unset ($a);
-$base_url = $url . (substr($url, -1) != '/' ? '/' : '');
-$base_path = $pth . (substr($pth, -1) != '/' ? '/' : '');
+$base_url = $url . (substr($url, -1) !== '/' ? '/' : '');
+$base_path = $pth . (substr($pth, -1) !== '/' ? '/' : '');
 
 // connect to the database
 $host = explode(':', $database_server, 2);
+global $conn;
 $conn = @mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null);
 $installLevel = 0;
 if ($conn) {
@@ -76,11 +77,16 @@ if ($conn) {
         if (function_exists('mysqli_set_charset')) {
             mysqli_set_charset($conn, $database_charset);
         }
-        mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
+        mysqli_query($conn, sprintf('%s %s', $database_connection_method, $database_connection_charset));
         $installLevel = 1;
     } else {
         // try to create the database
-        $query = "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation";
+        $query = sprintf(
+            'CREATE DATABASE %s DEFAULT CHARACTER SET %s COLLATE %s'
+            , $dbase
+            , $database_charset
+            , $database_collation
+        );
         $createDatabase = mysqli_query($conn, $query);
         if ($createDatabase === false) {
             $errors += 1;
@@ -92,7 +98,11 @@ if ($conn) {
     if ($installLevel === 1) {
         // check table prefix
         if ($installMode === 0) {
-            $query = "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`";
+            $query = sprintf(
+                'SELECT COUNT(*) FROM %s.`%s`'
+                , $dbase
+                , table_prefix('site_content')
+            );
             if (@mysqli_query($conn, $query)) {
                 $errors += 1;
             } else {
@@ -107,7 +117,11 @@ if ($conn) {
         // check status of Inherit Parent Template plugin
         $auto_template_logic = 'parent';
         if ($installMode !== 0) {
-            $query = "SELECT properties, disabled FROM " . $dbase . ".`" . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'";
+            $query = sprintf(
+                "SELECT properties, disabled FROM %s.`%s` WHERE name='Inherit Parent Template'"
+                , $dbase
+                , table_prefix('site_plugins')
+            );
             $rs = mysqli_query($conn, $query);
             $row = mysqli_fetch_row($rs);
             if (!$row) {
@@ -136,8 +150,8 @@ if ($conn) {
             $database_server,
             $database_user,
             $database_password,
-            str_replace("`", "", $dbase),
-            $table_prefix,
+            str_replace('`', '', $dbase),
+            table_prefix(),
             $adminname,
             $adminemail,
             $adminpass,
@@ -168,16 +182,16 @@ if ($conn) {
     if ($installLevel === 3) {
         // write the config.inc.php file if new installation
         $confph = array();
-        $confph['database_server'] = $database_server;
-        $confph['user_name'] = mysqli_real_escape_string($conn, $database_user);
-        $confph['password'] = mysqli_real_escape_string($conn, $database_password);
-        $confph['connection_charset'] = $database_connection_charset;
+        $confph['database_server']      = $database_server;
+        $confph['user_name']            = sql_escape($database_user);
+        $confph['password']             = sql_escape($database_password);
+        $confph['connection_charset']   = $database_connection_charset;
         $confph['connection_collation'] = $database_collation;
-        $confph['connection_method'] = $database_connection_method;
-        $confph['dbase'] = str_replace('`', '', $dbase);
-        $confph['table_prefix'] = $table_prefix;
-        $confph['lastInstallTime'] = time();
-        $confph['site_sessionname'] = $site_sessionname;
+        $confph['connection_method']    = $database_connection_method;
+        $confph['dbase']                = str_replace('`', '', $dbase);
+        $confph['table_prefix']         = table_prefix();
+        $confph['lastInstallTime']      = time();
+        $confph['site_sessionname']     = $site_sessionname;
 
         $configString = file_get_contents(dirname(__DIR__, 2) . '/stubs/files/config/database/connections/default.tpl');
         $configString = parse($configString, $confph);
@@ -210,13 +224,22 @@ if ($conn) {
             $siteid = uniqid('');
             mysqli_query(
                     $sqlParser->conn,
-                "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')"
+                sprintf(
+                    "REPLACE INTO %s.`%s` (setting_name,setting_value) VALUES('site_id','%s'),('manager_theme','default')"
+                    , $dbase
+                    , table_prefix('system_settings')
+                    , $siteid
+                )
             );
         } else {
             // update site_id if missing
             $ds = mysqli_query(
                     $sqlParser->conn,
-                "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'"
+                sprintf(
+                    "SELECT setting_name,setting_value FROM %s.`%s` WHERE setting_name='site_id'"
+                    , $dbase
+                    , table_prefix('system_settings')
+                )
             );
             if ($ds) {
                 $r = mysqli_fetch_assoc($ds);
@@ -225,7 +248,12 @@ if ($conn) {
                     $siteid = uniqid('');
                     mysqli_query(
                             $sqlParser->conn,
-                        "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid')"
+                        sprintf(
+                            "REPLACE INTO %s.`%s` (setting_name,setting_value) VALUES('site_id','%s')"
+                            , $dbase
+                            , table_prefix('system_settings')
+                            , $siteid
+                        )
                     );
                 }
             }
@@ -256,11 +284,11 @@ if ($conn) {
             }
             $installDataLevel['templates'][$moduleTemplate[0]] = array(
                 'data' => array(
-                    'desc' =>    $moduleTemplate[1],
+                    'desc'     => $moduleTemplate[1],
                     'category' => $moduleTemplate[4],
-                    'locked' => $moduleTemplate[5],
-                    'file' => $moduleTemplate[3],
-                    'id' => $moduleTemplate[7],
+                    'locked'   => $moduleTemplate[5],
+                    'file'     => $moduleTemplate[3],
+                    'id'       => $moduleTemplate[7],
                 ),
                 'type' => '', // update, create
                 /*'error' => array(
@@ -270,11 +298,11 @@ if ($conn) {
             );
             $installSample = in_array('sample', $moduleTemplate[6]) && $installData === 1;
             if ($installSample || in_array($k, $selTemplates)) {
-                $name = mysqli_real_escape_string($conn, $moduleTemplate[0]);
-                $desc = mysqli_real_escape_string($conn, $moduleTemplate[1]);
-                $category = mysqli_real_escape_string($conn, $moduleTemplate[4]);
-                $locked = mysqli_real_escape_string($conn, $moduleTemplate[5]);
-                $filecontent = $moduleTemplate[3];
+                $name           = sql_escape($moduleTemplate[0]);
+                $desc           = sql_escape($moduleTemplate[1]);
+                $category       = sql_escape($moduleTemplate[4]);
+                $locked         = sql_escape($moduleTemplate[5]);
+                $filecontent    = $moduleTemplate[3];
                 $save_sql_id_as = $moduleTemplate[7]; // Nessecary for demo-site
                 if (!file_exists($filecontent)) {
                     $installDataLevel['templates'][$moduleTemplate[0]]['error'] = array(
@@ -286,15 +314,29 @@ if ($conn) {
 
                     // Strip the first comment up top
                     $template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                    $template = mysqli_real_escape_string($conn, $template);
+                    $template = sql_escape($template);
 
                     // See if the template already exists
-                    $query = "SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'";
+                    $query = sprintf(
+                        "SELECT * FROM %s.`%s` WHERE templatename='%s'"
+                        , $dbase
+                        , table_prefix('site_templates')
+                        , $name
+                    );
                     $rs = mysqli_query($sqlParser->conn, $query);
 
                     if (mysqli_num_rows($rs)) {
                         $installDataLevel['templates'][$moduleTemplate[0]]['type'] = 'update';
-                        $query = "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name' LIMIT 1;";
+                        $query = sprintf(
+                            "UPDATE %s.`%s` SET content='%s', description='%s', category=%s, locked='%s'  WHERE templatename='%s' LIMIT 1"
+                            , $dbase
+                            , table_prefix('site_templates')
+                            , $template
+                            , $desc
+                            , (int) $category_id
+                            , (int) $locked
+                            , $name
+                        );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $errors += 1;
                             $installDataLevel['templates'][$moduleTemplate[0]]['error'] = array(
@@ -304,10 +346,15 @@ if ($conn) {
                             $errorData = true;
                             break;
                         }
-                        if (!is_null($save_sql_id_as)) {
+                        if ($save_sql_id_as !== null) {
                             $sql_id = @mysqli_insert_id($sqlParser->conn);
                             if (!$sql_id) {
-                                $query = "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name' LIMIT 1;";
+                                $query = sprintf(
+                                    "SELECT id FROM %s.`%s` WHERE templatename='%s' LIMIT 1"
+                                    , $dbase
+                                    , table_prefix('site_templates')
+                                    , $name
+                                );
                                 $idQuery = mysqli_fetch_assoc(mysqli_query($sqlParser->conn, $query));
                                 $sql_id = $idQuery['id'];
                             }
@@ -315,7 +362,16 @@ if ($conn) {
                         }
                     } else {
                         $installDataLevel['templates'][$moduleTemplate[0]]['type'] = 'create';
-                        $query = "INSERT INTO $dbase.`" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template',$category_id,'$locked');";
+                        $query = sprintf(
+                            "INSERT INTO %s.`%s` (templatename,description,content,category,locked) VALUES('%s','%s','%s',%s,'%s')"
+                            , $dbase
+                            , table_prefix('site_templates')
+                            , $name
+                            , $desc
+                            , $template
+                            , (int) $category_id
+                            , (int) $locked
+                        );
                         if (!@mysqli_query($sqlParser->conn, $query)) {
                             $errors += 1;
                             $installDataLevel['templates'][$moduleTemplate[0]]['error'] = array(
@@ -342,17 +398,17 @@ if ($conn) {
         foreach ($moduleTVs as $k => $moduleTV) {
             $installDataLevel['tvs'][$moduleTV[0]] = array(
                 'data' => array(
-                    'desc' =>    $moduleTV[2],
-                    'caption' => $moduleTV[1],
-                    'category' => $moduleTV[10],
-                    'locked' => $moduleTV[11],
-                    'file' => $moduleTV[8],
-                    'input_type' => $moduleTV[3],
-                    'input_options' => $moduleTV[4],
-                    'input_default' => $moduleTV[5],
-                    'output_widget' => $moduleTV[6],
+                    'desc'                 => $moduleTV[2],
+                    'caption'              => $moduleTV[1],
+                    'category'             => $moduleTV[10],
+                    'locked'               => $moduleTV[11],
+                    'file'                 => $moduleTV[8],
+                    'input_type'           => $moduleTV[3],
+                    'input_options'        => $moduleTV[4],
+                    'input_default'        => $moduleTV[5],
+                    'output_widget'        => $moduleTV[6],
                     'output_widget_params' => $moduleTV[7],
-                    'assignments' => $moduleTV[9]
+                    'assignments'          => $moduleTV[9]
                 ),
                 'type' => '', // update, create
                 /*'error' => array(
@@ -363,29 +419,48 @@ if ($conn) {
 
             $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
             if ($installSample || in_array($k, $selTVs)) {
-                $name = mysqli_real_escape_string($conn, $moduleTV[0]);
-                $caption = mysqli_real_escape_string($conn, $moduleTV[1]);
-                $desc = mysqli_real_escape_string($conn, $moduleTV[2]);
-                $input_type = mysqli_real_escape_string($conn, $moduleTV[3]);
-                $input_options = mysqli_real_escape_string($conn, $moduleTV[4]);
-                $input_default = mysqli_real_escape_string($conn, $moduleTV[5]);
-                $output_widget = mysqli_real_escape_string($conn, $moduleTV[6]);
-                $output_widget_params = mysqli_real_escape_string($conn, $moduleTV[7]);
-                $filecontent = $moduleTV[8];
-                $assignments = $moduleTV[9];
-                $category = mysqli_real_escape_string($conn, $moduleTV[10]);
-                $locked = mysqli_real_escape_string($conn, $moduleTV[11]);
+                $name                 = sql_escape($moduleTV[0]);
+                $caption              = sql_escape($moduleTV[1]);
+                $desc                 = sql_escape($moduleTV[2]);
+                $input_type           = sql_escape($moduleTV[3]);
+                $input_options        = sql_escape($moduleTV[4]);
+                $input_default        = sql_escape($moduleTV[5]);
+                $output_widget        = sql_escape($moduleTV[6]);
+                $output_widget_params = sql_escape($moduleTV[7]);
+                $filecontent          = $moduleTV[8];
+                $assignments          = $moduleTV[9];
+                $category             = sql_escape($moduleTV[10]);
+                $locked               = sql_escape($moduleTV[11]);
 
 
                 // Create the category if it does not already exist
                 $category = getCreateDbCategory($category, $sqlParser);
 
-                $query = "SELECT * FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name'";
+                $query = sprintf(
+                    "SELECT * FROM %s.`%s` WHERE name='%s'"
+                    , $dbase
+                    , table_prefix('site_tmplvars')
+                    , $name
+                );
                 $rs = mysqli_query($sqlParser->conn,$query);
                 if (mysqli_num_rows($rs)) {
                     $installDataLevel['tvs'][$moduleTV[0]]['type'] = 'update';
                     while ($row = mysqli_fetch_assoc($rs)) {
-                        $query = "UPDATE $dbase.`" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category=$category, locked=$locked, elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id={$row['id']};";
+                        $query = sprintf(
+                            "UPDATE %s.`%s` SET type='%s', caption='%s', description='%s', category=%s, locked=%s, elements='%s', display='%s', display_params='%s', default_text='%s' WHERE id=%s"
+                            , $dbase
+                            , table_prefix('site_tmplvars')
+                            , $input_type
+                            , $caption
+                            , $desc
+                            , (int) $category
+                            , (int) $locked
+                            , $input_options
+                            , $output_widget
+                            , $output_widget_params
+                            , $input_default
+                            , $row['id']
+                        );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $installDataLevel['tvs'][$moduleTV[0]]['error'] = array(
                                 'type' => 'sql',
@@ -398,7 +473,21 @@ if ($conn) {
                     }
                 } else {
                     $installDataLevel['tvs'][$moduleTV[0]]['type'] = 'create';
-                    $q = "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',$category,$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
+                    $q = sprintf(
+                        "INSERT INTO %s.`%s` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('%s','%s','%s','%s',%s,%s,'%s','%s','%s','%s')"
+                        , $dbase
+                        , table_prefix('site_tmplvars')
+                        , $input_type
+                        , $name
+                        , $caption
+                        , $desc
+                        , (int) $category
+                        , (int) $locked
+                        , $input_options
+                        , $output_widget
+                        , $output_widget_params
+                        , $input_default
+                    );
                     if (!mysqli_query($sqlParser->conn, $q)) {
                         $installDataLevel['tvs'][$moduleTV[0]]['error'] = array(
                             'type' => 'sql',
@@ -415,22 +504,44 @@ if ($conn) {
                 if (count($assignments) > 0) {
 
                     // remove existing tv -> template assignments
-                    $query = "SELECT id FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name' AND description='$desc';";
+                    $query = sprintf(
+                        "SELECT id FROM %s.`%s` WHERE name='%s' AND description='%s'"
+                        , $dbase
+                        , table_prefix('site_tmplvars')
+                        , $name
+                        , $desc
+                    );
                     $ds = mysqli_query($sqlParser->conn, $query);
                     $row = mysqli_fetch_assoc($ds);
                     $id = $row["id"];
-                    $query = 'DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'';
+                    $query = sprintf(
+                        "DELETE FROM %s.`%s` WHERE tmplvarid = '%s'"
+                        , $dbase
+                        , table_prefix('site_tmplvar_templates')
+                        , $id
+                    );
                     mysqli_query($sqlParser->conn, $query);
 
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
-                        $template = mysqli_real_escape_string($conn, $assignment);
-                        $query = "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$template';";
+                        $template = sql_escape($assignment);
+                        $query = sprintf(
+                            "SELECT id FROM %s.`%s` WHERE templatename='%s'"
+                            , $dbase
+                            , table_prefix('site_templates')
+                            , $template
+                        );
                         $ts = mysqli_query($sqlParser->conn, $query);
                         if ($ds && $ts) {
                             $tRow = mysqli_fetch_assoc($ts);
                             $templateId = $tRow['id'];
-                            $query = "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)";
+                            $query = sprintf(
+                                "INSERT INTO %s.`%s` (tmplvarid, templateid) VALUES(%s, %s)"
+                                , $dbase
+                                , table_prefix('site_tmplvar_templates')
+                                , (int) $id
+                                , (int) $templateId
+                            );
                             mysqli_query($sqlParser->conn,$query);
                         }
                     }
@@ -448,10 +559,10 @@ if ($conn) {
             }
             $installDataLevel['chunks'][$moduleChunk[0]] = array(
                 'data' => array(
-                    'desc' =>    $moduleChunk[1],
-                    'category' => $moduleChunk[3],
-                    'overwrite' => $moduleChunk[4],
-                    'file' => $moduleChunk[2],
+                    'desc'       => $moduleChunk[1],
+                    'category'   => $moduleChunk[3],
+                    'overwrite'  => $moduleChunk[4],
+                    'file'       => $moduleChunk[2],
                     'installset' => $moduleChunk[5]
                 ),
                 'type' => '', // update, create, overwrite, skip
@@ -463,10 +574,10 @@ if ($conn) {
             $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
             $count_new_name = 0;
             if ($installSample || in_array($k, $selChunks)) {
-                $name = mysqli_real_escape_string($conn, $moduleChunk[0]);
-                $desc = mysqli_real_escape_string($conn, $moduleChunk[1]);
-                $category = mysqli_real_escape_string($conn, $moduleChunk[3]);
-                $overwrite = mysqli_real_escape_string($conn, $moduleChunk[4]);
+                $name        = sql_escape($moduleChunk[0]);
+                $desc        = sql_escape($moduleChunk[1]);
+                $category    = sql_escape($moduleChunk[3]);
+                $overwrite   = sql_escape($moduleChunk[4]);
                 $filecontent = $moduleChunk[2];
 
                 if (!file_exists($filecontent)) {
@@ -478,25 +589,45 @@ if ($conn) {
                     $category_id = getCreateDbCategory($category, $sqlParser);
 
                     $chunk = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                    $chunk = mysqli_real_escape_string($conn, $chunk);
+                    $chunk = sql_escape($chunk);
                     $rs = mysqli_query(
                         $sqlParser->conn,
-                        "SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'"
+                        sprintf(
+                            "SELECT * FROM %s.`%s` WHERE name='%s'"
+                            , $dbase
+                            , table_prefix('site_htmlsnippets')
+                            , $name
+                        )
                     );
                     $count_original_name = mysqli_num_rows($rs);
                     if ($overwrite == 'false') {
                         $newname = $name . '-' . str_replace('.', '_', $modx_version);
                         $rs = mysqli_query(
                             $sqlParser->conn,
-                            "SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'"
+                            sprintf(
+                                "SELECT * FROM %s.`%s` WHERE name='%s'"
+                                , $dbase
+                                , table_prefix('site_htmlsnippets')
+                                , $newname
+                            )
                         );
                         $count_new_name = mysqli_num_rows($rs);
                     }
                     $update = $count_original_name > 0 && $overwrite === 'true';
                     if ($update) {
                         $installDataLevel['chunks'][$moduleChunk[0]]['type'] = 'update';
-                        if (!mysqli_query($sqlParser->conn,
-                            "UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category=$category_id WHERE name='$name';")) {
+                        if (!mysqli_query(
+                            $sqlParser->conn
+                            , sprintf(
+                                "UPDATE %s.`%s` SET snippet='%s', description='%s', category=%s WHERE name='%s'"
+                                , $dbase
+                                , table_prefix('site_htmlsnippets')
+                                , $chunk
+                                , $desc
+                                , (int) $category_id
+                                , $name
+                            )
+                        )) {
                             $errors += 1;
                             $installDataLevel['chunks'][$moduleChunk[0]]['error'] = array(
                                 'type' => 'sql',
@@ -507,13 +638,21 @@ if ($conn) {
                         }
                     } elseif ($count_new_name == 0) {
                         if ($count_original_name > 0 && $overwrite == 'false') {
-                            $installDataLevel['chunks'][$moduleChunk[0]]['type'] = 'overwrite';
+                            $installDataLevel['chunks'][$moduleChunk[0]]['type']    = 'overwrite';
                             $installDataLevel['chunks'][$moduleChunk[0]]['newname'] = $newname;
                             $name = $newname;
                         } else {
                             $installDataLevel['chunks'][$moduleChunk[0]]['type'] = 'create';
                         }
-                        $query = "INSERT INTO $dbase.`" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk',$category_id);";
+                        $query = sprintf(
+                            "INSERT INTO %s.`%s` (name,description,snippet,category) VALUES('%s','%s','%s',%s)"
+                            , $dbase
+                            , table_prefix('site_htmlsnippets')
+                            , $name
+                            , $desc
+                            , $chunk
+                            , (int) $category_id
+                        );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $errors += 1;
                             $installDataLevel['chunks'][$moduleChunk[0]]['error'] = array(
@@ -541,12 +680,12 @@ if ($conn) {
             }
             $installDataLevel['modules'][$moduleModule[0]] = array(
                 'data' => array(
-                    'desc' =>    $moduleModule[1],
+                    'desc'     => $moduleModule[1],
                     'category' => $moduleModule[6],
-                    'file' => $moduleModule[2],
-                    'guid' => $moduleModule[4],
-                    'props' => $moduleModule[3],
-                    'shared' => $moduleModule[5],
+                    'file'     => $moduleModule[2],
+                    'guid'     => $moduleModule[4],
+                    'props'    => $moduleModule[3],
+                    'shared'   => $moduleModule[5],
                 ),
                 'type' => '', // update, create
                 /*'error' => array(
@@ -556,13 +695,13 @@ if ($conn) {
             );
             $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
             if ($installSample || in_array($k, $selModules)) {
-                $name = mysqli_real_escape_string($conn, $moduleModule[0]);
-                $desc = mysqli_real_escape_string($conn, $moduleModule[1]);
+                $name        = sql_escape($moduleModule[0]);
+                $desc        = sql_escape($moduleModule[1]);
                 $filecontent = $moduleModule[2];
-                $properties = $moduleModule[3];
-                $guid = mysqli_real_escape_string($conn, $moduleModule[4]);
-                $shared = mysqli_real_escape_string($conn, $moduleModule[5]);
-                $category = mysqli_real_escape_string($conn, $moduleModule[6]);
+                $properties  = $moduleModule[3];
+                $guid        = sql_escape($moduleModule[4]);
+                $shared      = sql_escape($moduleModule[5]);
+                $category    = sql_escape($moduleModule[6]);
                 if (!file_exists($filecontent)) {
                     $installDataLevel['modules'][$moduleModule[0]]['error'] = array(
                         'type' => 'file_not_found'
@@ -573,15 +712,32 @@ if ($conn) {
 
                     $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                     // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
-                    $module = mysqli_real_escape_string($conn, $module);
-                    $rs = mysqli_query($sqlParser->conn,
-                        "SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'");
+                    $module = sql_escape($module);
+                    $rs = mysqli_query(
+                        $sqlParser->conn
+                        , sprintf(
+                            "SELECT * FROM %s.`%s` WHERE name='%s'"
+                            , $dbase
+                            , table_prefix('site_modules')
+                            , $name
+                        ));
                     if (mysqli_num_rows($rs)) {
                         $installDataLevel['modules'][$moduleModule[0]]['type'] = 'update';
                         $row = mysqli_fetch_assoc($rs);
-                        $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
-                        if (!mysqli_query($sqlParser->conn,
-                            "UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
+                        $props = sql_escape( propUpdate($properties, $row['properties']));
+                        if (!mysqli_query(
+                            $sqlParser->conn
+                            , sprintf(
+                                "UPDATE %s.`%s` SET modulecode='%s', description='%s', properties='%s', enable_sharedparams='%s' WHERE name='%s'"
+                                , $dbase
+                                , table_prefix('site_modules')
+                                , $module
+                                , $desc
+                                , $props
+                                , (int) $shared
+                                , $name
+                            )
+                        )) {
                             $installDataLevel['modules'][$moduleModule[0]]['error'] = array(
                                 'type' => 'sql',
                                 'content' => mysqli_error($sqlParser->conn)
@@ -591,9 +747,22 @@ if ($conn) {
                         }
                     } else {
                         $installDataLevel['modules'][$moduleModule[0]]['type'] = 'create';
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
-                        if (!mysqli_query($sqlParser->conn,
-                            "INSERT INTO $dbase.`" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', $category);")) {
+                        $properties = sql_escape(parseProperties($properties, true));
+                        if (!mysqli_query(
+                            $sqlParser->conn
+                            , sprintf(
+                                "INSERT INTO %s.`%s` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('%s','%s','%s','%s','%s','%s', %s)"
+                                , $dbase
+                                , table_prefix('site_modules')
+                                , $name
+                                , $desc
+                                , $module
+                                , $properties
+                                , $guid
+                                , (int) $shared
+                                , $category
+                            )
+                        )) {
                             $installDataLevel['modules'][$moduleModule[0]]['error'] = array(
                                 'type' => 'sql',
                                 'content' => mysqli_error($sqlParser->conn)
@@ -618,13 +787,13 @@ if ($conn) {
             }
             $installDataLevel['plugins'][$modulePlugin[0]] = array(
                 'data' => array(
-                    'desc' =>    $modulePlugin[1],
-                    'file' => $modulePlugin[2],
+                    'desc'     => $modulePlugin[1],
+                    'file'     => $modulePlugin[2],
                     'category' => $modulePlugin[6],
-                    'guid' => $modulePlugin[5],
+                    'guid'     => $modulePlugin[5],
                     'disabled' => $modulePlugin[9],
-                    'events' => explode(',', $modulePlugin[4]),
-                    'props' => $modulePlugin[3]
+                    'events'   => explode(',', $modulePlugin[4]),
+                    'props'    => $modulePlugin[3]
                 ),
                 'type' => '', // update, create
                 /*'error' => array(
@@ -636,20 +805,20 @@ if ($conn) {
             $installSample = is_array($modulePlugin[8]) && in_array('sample', $modulePlugin[8]) && $installData == 1;
 
             if ($installSample || in_array($k, $selPlugs)) {
-                $name = mysqli_real_escape_string($conn, $modulePlugin[0]);
-                $desc = mysqli_real_escape_string($conn, $modulePlugin[1]);
+                $name = sql_escape($modulePlugin[0]);
+                $desc = sql_escape($modulePlugin[1]);
                 $filecontent = $modulePlugin[2];
                 $properties = $modulePlugin[3];
-                $events = explode(",", $modulePlugin[4]);
-                $guid = mysqli_real_escape_string($conn, $modulePlugin[5]);
-                $category = mysqli_real_escape_string($conn, $modulePlugin[6]);
+                $events = explode(',', $modulePlugin[4]);
+                $guid = sql_escape($modulePlugin[5]);
+                $category = sql_escape($modulePlugin[6]);
                 $leg_names = '';
                 $disabled = $modulePlugin[9];
                 if (array_key_exists(7, $modulePlugin)) {
                     // parse comma-separated legacy names and prepare them for sql IN clause
                     $leg_names = "'" . implode(
                             "','",
-                            preg_split('/\s*,\s*/', mysqli_real_escape_string($conn, $modulePlugin[7]))
+                            preg_split('/\s*,\s*/', sql_escape($modulePlugin[7]))
                         ) . "'";
                 }
                 if (! file_exists($filecontent)) {
@@ -660,7 +829,11 @@ if ($conn) {
 
                     // disable legacy versions based on legacy_names provided
                     if (!empty($leg_names)) {
-                        $update_query = "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);";
+                        $update_query = sprintf(
+                            "UPDATE %s.`%s` SET disabled='1' WHERE name IN ($leg_names)"
+                            , $dbase
+                            , table_prefix('site_plugins')
+                        );
                         $rs = mysqli_query($sqlParser->conn, $update_query);
                     }
 
@@ -669,16 +842,29 @@ if ($conn) {
 
                     $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                     $plugin = removeDocblock($plugin, 'plugin');
-                    $plugin = mysqli_real_escape_string($conn, $plugin);
-                    $query = "SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'";
+                    $plugin = sql_escape($plugin);
+                    $query = sprintf(
+                        "SELECT * FROM %s.`%s` WHERE name='%s'"
+                        , $dbase
+                        , table_prefix('site_plugins')
+                        , $name
+                    );
                     $rs = mysqli_query($sqlParser->conn, $query);
                     if (mysqli_num_rows($rs)) {
                         $installDataLevel['plugins'][$modulePlugin[0]]['type'] = 'update';
                         $insert = true;
                         while ($row = mysqli_fetch_assoc($rs)) {
-                            $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
+                            $props = sql_escape( propUpdate($properties, $row['properties']));
                             if ($row['description'] == $desc) {
-                                $query = "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id={$row['id']};";
+                                $query = sprintf(
+                                    "UPDATE %s.`%s` SET plugincode='%s', description='%s', properties='%s' WHERE id=%s"
+                                    , $dbase
+                                    , table_prefix('site_plugins')
+                                    , $plugin
+                                    , $desc
+                                    , $props
+                                    , (int) $row['id']
+                                );
                                 if (!mysqli_query($sqlParser->conn, $query)) {
                                     $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
                                         'type' => 'sql',
@@ -689,7 +875,12 @@ if ($conn) {
                                 }
                                 $insert = false;
                             } else {
-                                $query = "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE id={$row['id']};";
+                                $query = sprintf(
+                                    "UPDATE %s.`%s` SET disabled='1' WHERE id=%s"
+                                    , $dbase
+                                    , table_prefix('site_plugins')
+                                    , (int) $row['id']
+                                );
                                 if (!mysqli_query($sqlParser->conn, $query)) {
                                     $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
                                         'type' => 'sql',
@@ -701,7 +892,20 @@ if ($conn) {
                             }
                         }
                         if ($insert === true) {
-                            if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0',$category);")) {
+                            if(!mysqli_query(
+                                $sqlParser->conn
+                                , sprintf(
+                                    "INSERT INTO %s.`%s` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('%s','%s','%s','%s','%s','0',%s)"
+                                    , $dbase
+                                    , table_prefix('site_plugins')
+                                    , $name
+                                    , $desc
+                                    , $plugin
+                                    , $props
+                                    , $guid
+                                    , (int) $category
+                                )
+                            )) {
                                 $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
                                     'type' => 'sql',
                                     'content' => mysqli_error($sqlParser->conn)
@@ -712,8 +916,19 @@ if ($conn) {
                         }
                     } else {
                         $installDataLevel['plugins'][$modulePlugin[0]]['type'] = 'create';
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
-                        $query = "INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category,disabled) VALUES('$name','$desc','$plugin','$properties','$guid',$category,$disabled);";
+                        $properties = sql_escape( parseProperties($properties, true));
+                        $query = sprintf(
+                            "INSERT INTO %s.`%s` (name,description,plugincode,properties,moduleguid,category,disabled) VALUES('%s','%s','%s','%s','%s',%s,%s)"
+                            , $dbase
+                            , table_prefix('site_plugins')
+                            , $name
+                            , $desc
+                            , $plugin
+                            , $properties
+                            , $guid
+                            , (int) $category
+                            , (int) $disabled
+                        );
                         if (!mysqli_query($sqlParser->conn, $query)) {
                             $installDataLevel['plugins'][$modulePlugin[0]]['error'] = array(
                                 'type' => 'sql',
@@ -725,17 +940,37 @@ if ($conn) {
                     }
                     // add system events
                     if (count($events) > 0) {
-                        $query = "SELECT id FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name' AND description='$desc';";
+                        $query = sprintf(
+                            "SELECT id FROM %s.`%s` WHERE name='%s' AND description='%s'"
+                            , $dbase
+                            , table_prefix('site_plugins')
+                            , $name
+                            , $desc
+                        );
                         $ds = mysqli_query($sqlParser->conn, $query);
                         if ($ds) {
                             $row = mysqli_fetch_assoc($ds);
                             $id = $row["id"];
                             $_events = implode("','", $events);
                             // add new events
-                            $sql = "INSERT IGNORE INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`" . $table_prefix . "system_eventnames` se WHERE name IN ('{$_events}')";
+                            $sql = sprintf(
+                                "INSERT IGNORE INTO %s.`%s` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`%s` se WHERE name IN ('%s')"
+                                , $dbase
+                                , table_prefix('site_plugin_events')
+                                , table_prefix('system_eventnames')
+                                , $_events
+                            );
                             mysqli_query($sqlParser->conn, $sql);
                             // remove absent events
-                            $sql = "DELETE `pe` FROM {$dbase}.`{$table_prefix}site_plugin_events` `pe` LEFT JOIN {$dbase}.`{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}";
+                            $sql = sprintf(
+                                "DELETE `pe` FROM %s.`%s` `pe` LEFT JOIN %s.`%s` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('%s') WHERE ISNULL(`name`) AND `pluginid`=%s"
+                                , $dbase
+                                , table_prefix('site_plugin_events')
+                                , $dbase
+                                , table_prefix('system_eventnames')
+                                , $_events
+                                , (int) $id
+                            );
                             mysqli_query($sqlParser->conn, $sql);
                         }
                     }
@@ -755,10 +990,10 @@ if ($conn) {
             }
             $installDataLevel['snippets'][$moduleSnippet[0]] = array(
                 'data' => array(
-                    'desc' =>    $moduleSnippet[1],
+                    'desc'     => $moduleSnippet[1],
                     'category' => $moduleSnippet[4],
-                    'props' => $moduleSnippet[3],
-                    'file' => $moduleSnippet[2]
+                    'props'    => $moduleSnippet[3],
+                    'file'     => $moduleSnippet[2]
                 ),
                 'type' => '', // update, create, skip
                 /*'error' => array(
@@ -768,11 +1003,11 @@ if ($conn) {
             );
             $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
             if ($installSample || in_array($k, $selSnips)) {
-                $name = mysqli_real_escape_string($conn, $moduleSnippet[0]);
-                $desc = mysqli_real_escape_string($conn, $moduleSnippet[1]);
+                $name        = sql_escape($moduleSnippet[0]);
+                $desc        = sql_escape($moduleSnippet[1]);
                 $filecontent = $moduleSnippet[2];
-                $properties = $moduleSnippet[3];
-                $category = mysqli_real_escape_string($conn, $moduleSnippet[4]);
+                $properties  = $moduleSnippet[3];
+                $category    = sql_escape($moduleSnippet[4]);
                 if (!file_exists($filecontent)) {
                     $installDataLevel['snippets'][$moduleSnippet[0]]['error'] = array(
                         'type' => 'file_not_found'
@@ -783,15 +1018,28 @@ if ($conn) {
 
                     $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
                     $snippet = removeDocblock($snippet, 'snippet');
-                    $snippet = mysqli_real_escape_string($conn, $snippet);
+                    $snippet = sql_escape($snippet);
                     $rs = mysqli_query($sqlParser->conn,
-                        "SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'");
+                        sprintf(
+                            "SELECT * FROM %s.`%s` WHERE name='%s'"
+                            , $dbase
+                            , table_prefix('site_snippets')
+                            , $name
+                        ));
                     if (mysqli_num_rows($rs)) {
                         $installDataLevel['snippets'][$moduleSnippet[0]]['type'] = 'update';
                         $row = mysqli_fetch_assoc($rs);
-                        $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
+                        $props = sql_escape( propUpdate($properties, $row['properties']));
                         if (!mysqli_query($sqlParser->conn,
-                            "UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
+                            sprintf(
+                                "UPDATE %s.`%s` SET snippet='%s', description='%s', properties='%s' WHERE name='%s'"
+                                , $dbase
+                                , table_prefix('site_snippets')
+                                , $snippet
+                                , $desc
+                                , $props
+                                , $name
+                            ))) {
                             $installDataLevel['snippets'][$moduleSnippet[0]]['error'] = array(
                                 'type' => 'sql',
                                 'content' => mysqli_error($sqlParser->conn)
@@ -801,9 +1049,18 @@ if ($conn) {
                         }
                     } else {
                         $installDataLevel['snippets'][$moduleSnippet[0]]['type'] = 'create';
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
+                        $properties = sql_escape( parseProperties($properties, true));
                         if (!mysqli_query($sqlParser->conn,
-                            "INSERT INTO $dbase.`" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
+                            sprintf(
+                                "INSERT INTO %s.`%s` (name,description,snippet,properties,category) VALUES('%s','%s','%s','%s',%s)"
+                                , $dbase
+                                , table_prefix('site_snippets')
+                                , $name
+                                , $desc
+                                , $snippet
+                                , $properties
+                                , (int) $category
+                            ))) {
                             $installDataLevel['snippets'][$moduleSnippet[0]]['error'] = array(
                                 'type' => 'sql',
                                 'content' => mysqli_error($sqlParser->conn)
@@ -831,19 +1088,24 @@ if ($conn) {
             for ($i = 0; $i < $sqlErrors; $i++) {
                 $installDataLevel['demo']['error'][] = array(
                     'content' => $sqlParser->mysqlErrors[$i]['error'],
-                    'sql' => $sqlParser->mysqlErrors[$i]['sql']
+                    'sql'     => $sqlParser->mysqlErrors[$i]['sql']
                 );
             }
             $errorData = true;
         } else {
             $installLevel = 6;
-            $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'",
-                $sqlParser->prefix);
+            $sql = sprintf(
+                "SELECT id FROM `%s` WHERE templatename='EVO startup - Bootstrap'"
+                , table_prefix('site_templates')
+            );
             $rs = mysqli_query($sqlParser->conn, $sql);
             if (mysqli_num_rows($rs)) {
                 $row = mysqli_fetch_assoc($rs);
-                $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix,
-                    $row['id']);
+                $sql = sprintf(
+                    "UPDATE `%s` SET template=%s WHERE template=4"
+                    , table_prefix('site_content')
+                    , (int) $row['id']
+                );
                 mysqli_query($sqlParser->conn, $sql);
             }
         }
@@ -870,7 +1132,12 @@ if ($conn) {
                     'content' => '' //dependency name or error message
                 )*/
             );
-            $query = 'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"';
+            $query = sprintf(
+                "SELECT id, guid FROM %s`%s` WHERE name='%s'"
+                , $dbase
+                , table_prefix('site_modules')
+                , $dependency['module']
+            );
             $ds = mysqli_query($sqlParser->conn, $query);
             if (!$ds) {
                 $installDependencyLevel[$dependency['module']]['error'] = array(
@@ -879,13 +1146,19 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
-            } else {
-                $row = mysqli_fetch_assoc($ds);
-                $moduleId = $row["id"];
-                $moduleGuid = $row["guid"];
             }
+
+            $row = mysqli_fetch_assoc($ds);
+            $moduleId = $row["id"];
+            $moduleGuid = $row["guid"];
             // get extra id
-            $query = 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"';
+            $query = sprintf(
+                "SELECT id FROM %s`%s` WHERE %s='%s'"
+                , $dbase
+                , table_prefix('site_'.$dependency['table'])
+                , $dependency['column']
+                , $dependency['name']
+            );
             $ds = mysqli_query($sqlParser->conn, $query);
             if (!$ds) {
                 $installDependencyLevel[$dependency['module']]['error'] = array(
@@ -894,12 +1167,19 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
-            } else {
-                $row = mysqli_fetch_assoc($ds);
-                $extraId = $row["id"];
             }
+
+            $row = mysqli_fetch_assoc($ds);
+            $extraId = $row["id"];
             // setup extra as module dependency
-            $query = 'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1';
+            $query = sprintf(
+                'SELECT module FROM %s`%s` WHERE module=%s AND resource=%s AND type=%s LIMIT 1'
+                , $dbase
+                , table_prefix('site_module_depobj')
+                , (int) $moduleId
+                , (int) $extraId
+                , (int) $dependency['type']
+            );
             $ds = mysqli_query($sqlParser->conn, $query);
             if (!$ds) {
                 $installDependencyLevel[$dependency['module']]['error'] = array(
@@ -908,37 +1188,65 @@ if ($conn) {
                 );
                 $errorInstall = true;
                 break;
+            }
+
+            if (mysqli_num_rows($ds) === 0) {
+                $query = sprintf(
+                    'INSERT INTO %s`%s` (module, resource, type) VALUES(%s,%s,%s)'
+                    , $dbase
+                    , table_prefix('site_module_depobj')
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
+                );
+                mysqli_query($sqlParser->conn, $query);
+                $installDependencyLevel[$dependency['module']]['type'] = 'create';
             } else {
-                if (mysqli_num_rows($ds) === 0) {
-                    $query = 'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')';
-                    mysqli_query($sqlParser->conn, $query);
-                    $installDependencyLevel[$dependency['module']]['type'] = 'create';
-                } else {
-                    $query = 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'];
-                    mysqli_query($sqlParser->conn, $query);
-                    $installDependencyLevel[$dependency['module']]['type'] = 'update';
+                $query = sprintf(
+                    "UPDATE %s`%s` SET module = %s, resource = %s, type = %s WHERE module=%s AND resource=%s AND type=%s"
+                    , $dbase
+                    , $table_prefix('site_module_depobj')
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
+                    , (int) $moduleId
+                    , (int) $extraId
+                    , (int) $dependency['type']
+                );
+                mysqli_query($sqlParser->conn, $query);
+                $installDependencyLevel[$dependency['module']]['type'] = 'update';
+            }
+            if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+                // set extra guid for plugins and snippets
+                $query = sprintf(
+                    'SELECT id FROM %s`%s` WHERE id=%s LIMIT 1'
+                    , $dbase
+                    , table_prefix('site_'.$dependency['table'])
+                    , (int) $extraId
+                );
+                $ds = mysqli_query($sqlParser->conn, $query);
+                if (!$ds) {
+                    $installDependencyLevel[$dependency['module']]['extra'] = array(
+                        'type' => 'error',
+                        'content' => mysqli_error($sqlParser->conn)
+                    );
+                    $errorInstall = true;
+                    break;
                 }
-                if ($dependency['type'] == 30 || $dependency['type'] == 40) {
-                    // set extra guid for plugins and snippets
-                    $query = 'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1';
-                    $ds = mysqli_query($sqlParser->conn, $query);
-                    if (!$ds) {
-                        $installDependencyLevel[$dependency['module']]['extra'] = array(
-                            'type' => 'error',
-                            'content' => mysqli_error($sqlParser->conn)
-                        );
-                        $errorInstall = true;
-                        break;
-                    } else {
-                        if (mysqli_num_rows($ds) != 0) {
-                            $query = 'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId;
-                            $ds= mysqli_query($sqlParser->conn, $query);
-                            $installDependencyLevel[$dependency['module']]['extra'] = array(
-                                'type' => 'done',
-                                'content' => $dependency['name']
-                            );
-                        }
-                    }
+
+                if (mysqli_num_rows($ds) != 0) {
+                    $query = sprintf(
+                        "UPDATE %s`%s` SET moduleguid = %s WHERE id=%s"
+                        , $dbase
+                        , table_prefix('site_'.$dependency['table'])
+                        , (int) $moduleGuid
+                        , (int) $extraId
+                    );
+                    $ds= mysqli_query($sqlParser->conn, $query);
+                    $installDependencyLevel[$dependency['module']]['extra'] = array(
+                        'type' => 'done',
+                        'content' => $dependency['name']
+                    );
                 }
             }
         }
@@ -990,7 +1298,7 @@ if ($conn) {
         @chmod(dirname(__DIR__, 3) . '/assets/cache/sitePublishing.idx.php', 0600);
 
         // remove any locks on the manager functions so initial manager login is not blocked
-        mysqli_query($conn, "TRUNCATE TABLE `" . $table_prefix . "active_users`");
+        mysqli_query($conn, sprintf('TRUNCATE TABLE `%s`', table_prefix('active_users')));
 
         // close db connection
 //        $sqlParser->close();
@@ -1003,3 +1311,12 @@ if ($conn) {
     }
 }
 include_once dirname(__DIR__) . '/template/actions/install.php';
+
+function table_prefix($table_name='') {
+    return $_POST['tableprefix'] . $table_name;
+}
+
+function sql_escape($string) {
+    global $conn;
+    return mysqli_real_escape_string($conn, $string);
+}
