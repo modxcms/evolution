@@ -871,6 +871,8 @@ ALTER TABLE `{PREFIX}manager_log`
 ALTER TABLE `{PREFIX}manager_log`
 	CHANGE COLUMN `ip` `ip` VARCHAR(46) NULL DEFAULT NULL AFTER `message`;
 
+ALTER TABLE `{PREFIX}site_templates` ADD `templatealias` VARCHAR(255) NOT NULL AFTER `templatename`;
+
 # ]]upgrade-able
 
 

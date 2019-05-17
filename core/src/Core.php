@@ -2894,6 +2894,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             $doc = $this->documentObject;
+            $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
             switch (true) {
                 case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
                     $template = 'tpl-' . $doc['template'] . '_doc-' . $doc['id'];
@@ -2903,6 +2904,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     break;
                 case $this['view']->exists('tpl-' . $doc['template']):
                     $template = 'tpl-' . $doc['template'];
+                    break;
+                case $this['view']->exists('tpl-' . $templateAlias):
+                    $template = 'tpl-' . $templateAlias;
                     break;
                 default:
                     $content = $doc['template'] ? $this->documentContent : $doc['content'];

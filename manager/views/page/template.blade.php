@@ -101,6 +101,14 @@
                         ])
 
                         @include('manager::form.input', [
+                            'name' => 'templatealias',
+                            'id' => 'templatealias',
+                            'label' => ManagerTheme::getLexicon('alias'),
+                            'value' => $data->templatealias,
+                            'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
+                        ])
+
+                        @include('manager::form.input', [
                             'name' => 'description',
                             'id' => 'description',
                             'label' => ManagerTheme::getLexicon('template_desc'),
