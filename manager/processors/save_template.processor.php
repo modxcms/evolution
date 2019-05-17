@@ -9,6 +9,7 @@ if (!$modx->hasPermission('save_template')) {
 $id = (int)$_POST['id'];
 $template = $modx->getDatabase()->escape($_POST['post']);
 $templatename = $modx->getDatabase()->escape(trim($_POST['templatename']));
+$templatealias = $modx->getDatabase()->escape(trim($_POST['templatealias']));
 $description = $modx->getDatabase()->escape($_POST['description']);
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $selectable = $id == $modx->config['default_template'] ? 1 :    // Force selectable
@@ -49,9 +50,20 @@ switch ($_POST['mode']) {
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=19");
         }
 
+        if($templatealias == '')
+            $templatealias = $templatename;
+        $templatealias = strtolower($modx->stripAlias(trim($templatealias)));
+
+        $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_templates'), "templatealias='$templatealias'", '', 1));
+
+        if ($docid > 0) {
+            $modx->getManagerApi()->saveFormValues(19);
+            $modx->webAlertAndQuit(sprintf($_lang["duplicate_template_alias_found"], $docid, $templatealias), "index.php?a=19");
+        }
         //do stuff to save the new doc
         $newid = $modx->getDatabase()->insert(array(
             'templatename' => $templatename,
+            'templatealias' => $templatealias,
             'description' => $description,
             'content' => $template,
             'locked' => $locked,
@@ -102,9 +114,20 @@ switch ($_POST['mode']) {
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=16&id={$id}");
         }
 
+        if($templatealias == '')
+            $templatealias = $templatename;
+        $templatealias = strtolower($modx->stripAlias(trim($templatealias)));
+
+        $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_templates'), "id<>'$id' AND templatealias='$templatealias'", '', 1));
+
+        if ($docid > 0) {
+            $modx->getManagerApi()->saveFormValues(16);
+            $modx->webAlertAndQuit(sprintf($_lang["duplicate_template_alias_found"], $docid, $templatealias), "index.php?a=16&id={$id}");
+        }
         //do stuff to save the edited doc
         $modx->getDatabase()->update(array(
             'templatename' => $templatename,
+            'templatealias' => $templatealias,
             'description' => $description,
             'content' => $template,
             'locked' => $locked,

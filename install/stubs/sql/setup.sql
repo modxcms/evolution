@@ -264,6 +264,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `id` int(10) NOT NULL auto_increment,
   `templatename` varchar(100) NOT NULL default '',
+  `templatealias` varchar(255) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Template',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
@@ -870,6 +871,8 @@ ALTER TABLE `{PREFIX}manager_log`
 
 ALTER TABLE `{PREFIX}manager_log`
 	CHANGE COLUMN `ip` `ip` VARCHAR(46) NULL DEFAULT NULL AFTER `message`;
+
+ALTER TABLE `{PREFIX}site_templates` ADD COLUMN `templatealias` VARCHAR(255) NOT NULL AFTER `templatename`;
 
 # ]]upgrade-able
 

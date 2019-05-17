@@ -249,6 +249,7 @@ $_lang["doc_data_title"] = 'View Resource data';
 $_lang["documentation"] = 'Documentation';
 $_lang["duplicate"] = 'Duplicate';
 $_lang["duplicate_alias_found"] = 'Resource \'%s\' is already using the URL alias \'%s\'. Please enter a unique URL alias.';
+$_lang["duplicate_template_alias_found"] = 'Template \'%s\' is already using the URL alias \'%s\'. Please enter a unique alias.';
 $_lang["duplicate_alias_message"] = 'Select \'yes\' to allow duplicate URL aliases to be saved. <b>NOTE: This option should be used with \'Friendly URL alias path\' option set to \'Yes\' in order to avoid problems when referencing a Resource.</b>';
 $_lang["duplicate_alias_title"] = 'Allow duplicate URL aliases';
 $_lang["duplicate_name_found_general"] = 'There is already a %s named \'%s\'. Please enter a unique name.';
