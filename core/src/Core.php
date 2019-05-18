@@ -4,6 +4,7 @@ use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
 use PHPMailer\PHPMailer\Exception;
+use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
@@ -2895,6 +2896,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $doc = $this->documentObject;
             $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+            $fileController = MODX_BASE_PATH . 'core/custom/Controllers/' . ucfirst($templateAlias) . 'Controller.php';
+            if (file_exists($fileController)) {
+                $className = ucfirst($templateAlias) . 'Controller';
+                include_once $fileController;
+                $data = new $className(EvolutionCMS());
+                $data->render();
+            }
             switch (true) {
                 case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
                     $template = 'tpl-' . $doc['template'] . '_doc-' . $doc['id'];
