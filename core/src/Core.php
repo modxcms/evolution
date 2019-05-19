@@ -3,6 +3,7 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use Evolution\Custom\Controllers\TestController;
 use PHPMailer\PHPMailer\Exception;
 use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
@@ -2896,13 +2897,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $doc = $this->documentObject;
             $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
-            $fileController = MODX_BASE_PATH . 'core/custom/Controllers/' . ucfirst($templateAlias) . 'Controller.php';
-            if (file_exists($fileController)) {
-                $className = ucfirst($templateAlias) . 'Controller';
-                include_once $fileController;
-                $data = new $className(EvolutionCMS());
-                $data->render();
+            $className = 'Evolution\\Custom\\Controllers\\' . ucfirst($templateAlias) . 'Controller';
+            if (class_exists($className)) {
+                $customClass = new $className();
+                $customClass->render();
             }
+
             switch (true) {
                 case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
                     $template = 'tpl-' . $doc['template'] . '_doc-' . $doc['id'];
@@ -2913,8 +2913,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 case $this['view']->exists('tpl-' . $doc['template']):
                     $template = 'tpl-' . $doc['template'];
                     break;
-                case $this['view']->exists('tpl-' . $templateAlias):
-                    $template = 'tpl-' . $templateAlias;
+                case $this['view']->exists($templateAlias):
+                    $template = $templateAlias;
                     break;
                 default:
                     $content = $doc['template'] ? $this->documentContent : $doc['content'];
