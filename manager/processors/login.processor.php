@@ -218,7 +218,7 @@ if($modx->config['use_captcha'] == 1) {
 $modx->cleanupExpiredLocks();
 $modx->cleanupMultipleActiveUsers();
 
-$currentsessionid = session_id();
+$currentsessionid = session_regenerate_id();
 
 $_SESSION['usertype'] = 'manager'; // user is a backend user
 
