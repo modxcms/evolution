@@ -145,7 +145,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
 
         $this->loadConfiguration($config, EVO_CORE_PATH . 'config');
         $this->loadConfiguration($config, EVO_CORE_PATH . 'custom/config');
-        $this->loadControllers(EVO_CORE_PATH . 'custom/Controllers');
 
         if (null === $this['config']->get('app')) {
             throw new \Exception('Unable to load the "app" configuration file.');
@@ -193,14 +192,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
             foreach ($files as $key => $path) {
                 $config->set($key, require $path);
             }
-        }
-    }
-
-    protected function loadControllers($dir)
-    {
-        $configPath = realpath($dir);
-        foreach (Finder::create()->files()->name('*.php')->in($configPath) as $file) {
-            include_once  $file->getRealPath();
         }
     }
 

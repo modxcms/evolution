@@ -2897,11 +2897,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $doc = $this->documentObject;
             $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
-            $className = 'Evolution\\Custom\\Controllers\\' . ucfirst($templateAlias) . 'Controller';
-            if (class_exists($className)) {
-                $customClass = new $className();
-                $customClass->render();
-            }
 
             switch (true) {
                 case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
