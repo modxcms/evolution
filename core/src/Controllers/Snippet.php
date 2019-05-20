@@ -171,11 +171,12 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
             'id'         => $this->getElementId(),
             'controller' => $this
         ]);
+
         if (\is_array($out)) {
             return implode('', $out);
         }
 
-        return $out;
+        return (string)$out;
     }
 
     protected function parameterActionButtons()
