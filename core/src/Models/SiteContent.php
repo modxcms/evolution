@@ -337,6 +337,6 @@ class SiteContent extends Eloquent\Model
      */
     public function tpl(): Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(SiteTemplate::class, 'template', 'id');
+        return $this->belongsTo(SiteTemplate::class, 'template', 'id')->withDefault();
     }
 }

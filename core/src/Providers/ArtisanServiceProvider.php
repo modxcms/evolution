@@ -15,6 +15,7 @@ use Illuminate\Database\Console\Migrations\RollbackCommand as MigrateRollbackCom
 use EvolutionCMS\Console\ClearCompiledCommand;
 use EvolutionCMS\Console\VendorPublishCommand;
 use EvolutionCMS\Console\ViewClearCommand;
+use EvolutionCMS\Console\Lists;
 
 /** @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Providers/ArtisanServiceProvider.php */
 class ArtisanServiceProvider extends ServiceProvider
@@ -44,6 +45,9 @@ class ArtisanServiceProvider extends ServiceProvider
         'MigrateStatus' => 'command.migrate.status',
         'Seed' => 'command.seed',
         'ViewClear' => 'command.view.clear',
+        'ListsDoc' => 'command.lists.doc',
+        'ListsTv' => 'command.lists.tv',
+        'ListsTemplate' => 'command.lists.tpl',
     ];
 
     /**
@@ -238,6 +242,41 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerListsDocCommand()
+    {
+        $this->app->singleton('command.lists.doc', function () {
+            return new Lists\DocCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerListsTvCommand()
+    {
+        $this->app->singleton('command.lists.tv', function () {
+            return new Lists\TvCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerListsTemplateCommand()
+    {
+        $this->app->singleton('command.lists.tpl', function () {
+            return new Lists\TemplateCommand;
+        });
+    }
     /**
      * Get the services provided by the provider.
      *
