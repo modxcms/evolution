@@ -37,11 +37,11 @@ return [
         'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
         'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
-        'Laravel_Pagination' => Illuminate\Pagination\PaginationServiceProvider::class,
         'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
         'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
+        'Evolution_Pagination' => EvolutionCMS\Providers\PaginationServiceProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
         'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseServiceProvider::class,
         'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreServiceProvider::class,
