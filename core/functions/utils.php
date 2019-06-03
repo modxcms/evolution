@@ -33,7 +33,7 @@ if (! function_exists('evo_parser')) {
 if (! function_exists('evo_raw_config_settings')) {
     function evo_raw_config_settings() : array
     {
-        $configFile = config_path('cms/settings.php');
+        $configFile = config_path('cms/settings.php', ! app()->isProduction());
 
         /** @var Illuminate\Filesystem\Filesystem $files */
         $files = app('files');
@@ -53,7 +53,7 @@ if (! function_exists('evo_save_config_settings')) {
         $files = app('files');
 
         $data = $files->put(
-            config_path('cms/settings.php'),
+            config_path('cms/settings.php', ! app()->isProduction()),
             '<?php ' . var_export($config, true) . ';'
         );
 
