@@ -29,3 +29,43 @@ if (! function_exists('evo_parser')) {
         return $out;
     }
 }
+
+if (! function_exists('evo_raw_config_settings')) {
+    function evo_raw_config_settings() : array
+    {
+        $configFile = config_path('cms/settings.php');
+
+        /** @var Illuminate\Filesystem\Filesystem $files */
+        $files = app('files');
+
+        if ($files->isFile($configFile)) {
+            $config = $files->getRequire($configFile);
+        }
+
+        return isset($config) && is_array($config) ? $config : [];
+    }
+}
+
+if (! function_exists('evo_save_config_settings')) {
+    function evo_save_config_settings(array $config = []) : bool
+    {
+        /** @var Illuminate\Filesystem\Filesystem $files */
+        $files = app('files');
+
+        $data = $files->put(
+            config_path('cms/settings.php'),
+            '<?php ' . var_export($config, true) . ';'
+        );
+
+        return is_bool($data) ? $data : true;
+    }
+}
+
+if (! function_exists('evo_update_config_settings')) {
+    function evo_update_config_settings(string $key, $data = null) : bool
+    {
+        $config = evo_raw_config_settings();
+        $config[$key] = $data;
+        return evo_save_config_settings($config);
+    }
+}
