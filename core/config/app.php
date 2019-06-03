@@ -33,6 +33,7 @@ return [
 
         'Console_Artisan' => EvolutionCMS\Providers\ArtisanServiceProvider::class,
         'Console_Migration' => Illuminate\Database\MigrationServiceProvider::class,
+        'Console_Composer' => EvolutionCMS\Providers\ComposerServiceProvider::class,
 
         'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,

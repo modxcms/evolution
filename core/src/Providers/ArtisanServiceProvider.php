@@ -11,6 +11,7 @@ use Illuminate\Database\Console\Migrations\StatusCommand as MigrateStatusCommand
 use Illuminate\Database\Console\Migrations\InstallCommand as MigrateInstallCommand;
 use Illuminate\Database\Console\Migrations\RefreshCommand as MigrateRefreshCommand;
 use Illuminate\Database\Console\Migrations\RollbackCommand as MigrateRollbackCommand;
+use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 
 use EvolutionCMS\Console\ClearCompiledCommand;
 use EvolutionCMS\Console\VendorPublishCommand;
@@ -57,6 +58,7 @@ class ArtisanServiceProvider extends ServiceProvider
      */
     protected $devCommands = [
         'VendorPublish' => 'command.vendor.publish',
+        'MigrateMake' => 'command.migrate.make',
     ];
 
     /**
@@ -277,6 +279,26 @@ class ArtisanServiceProvider extends ServiceProvider
             return new Lists\TemplateCommand;
         });
     }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerMigrateMakeCommand()
+    {
+        $this->app->singleton('command.migrate.make', function ($app) {
+            // Once we have the migration creator registered, we will create the command
+            // and inject the creator. The creator is responsible for the actual file
+            // creation of the migrations, and may be extended by these developers.
+            $creator = $app['migration.creator'];
+
+            $composer = $app['composer'];
+
+            return new MigrateMakeCommand($creator, $composer);
+        });
+    }
+
     /**
      * Get the services provided by the provider.
      *

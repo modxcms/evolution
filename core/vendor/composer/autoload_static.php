@@ -40,6 +40,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Contracts\\' => 18,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Debug\\' => 24,
             'Symfony\\Component\\Console\\' => 26,
@@ -112,6 +113,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
         ),
         'Symfony\\Component\\Finder\\' => 
         array (
@@ -232,6 +237,8 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
     );
 
     public static $classMap = array (
+        'Asd' => __DIR__ . '/../..' . '/database/migrations/2019_06_03_130754_asd.php',
+        'Qwe' => __DIR__ . '/../..' . '/database/migrations/2019_06_03_131900_qwe.php',
         'Tracy\\Bar' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Bar/Bar.php',
         'Tracy\\BlueScreen' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/BlueScreen/BlueScreen.php',
         'Tracy\\Bridges\\Nette\\Bridge' => __DIR__ . '/..' . '/tracy/tracy/src/Bridges/Nette/Bridge.php',
@@ -248,6 +255,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Tracy\\ILogger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Logger/ILogger.php',
         'Tracy\\Logger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Logger/Logger.php',
         'Tracy\\OutputDebugger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
+        'Zx' => __DIR__ . '/../..' . '/database/migrations/2019_06_03_131740_zx.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

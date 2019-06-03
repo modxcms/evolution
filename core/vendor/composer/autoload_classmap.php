@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Asd' => $baseDir . '/database/migrations/2019_06_03_130754_asd.php',
+    'Qwe' => $baseDir . '/database/migrations/2019_06_03_131900_qwe.php',
     'Tracy\\Bar' => $vendorDir . '/tracy/tracy/src/Tracy/Bar/Bar.php',
     'Tracy\\BlueScreen' => $vendorDir . '/tracy/tracy/src/Tracy/BlueScreen/BlueScreen.php',
     'Tracy\\Bridges\\Nette\\Bridge' => $vendorDir . '/tracy/tracy/src/Bridges/Nette/Bridge.php',
@@ -22,4 +24,5 @@ return array(
     'Tracy\\ILogger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/ILogger.php',
     'Tracy\\Logger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/Logger.php',
     'Tracy\\OutputDebugger' => $vendorDir . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
+    'Zx' => $baseDir . '/database/migrations/2019_06_03_131740_zx.php',
 );
