@@ -1,7 +1,7 @@
 {
   "name": "evolutioncms/core",
-  "description": "Evolution CMS is a Content Management System, ex MODX Evolution",
   "type": "project",
+  "description": "Evolution CMS is a Content Management System, ex MODX Evolution",
   "keywords": [
     "content",
     "CMS",
@@ -25,35 +25,22 @@
       "role": "Developer"
     }
   ],
-  "support": {
-    "docs": "http://docs.evo.im",
-    "email": "dmi3yy@evo.im",
-    "telegram": "https://t.me/evolutioncms",
-    "issues": "https://github.com/evolution-cms/evolution/issues/",
-    "source": "https://github.com/evolution-cms/evolution/"
-  },
-  "config": {
-    "vendor-dir": "vendor",
-    "preferred-install": "dist",
-    "prestissimo": {
-      "maxConnections": 6,
-      "minConnections": 3
-    }
-  },
   "require": {
     "php": ">=7.1.3",
     "ext-SimpleXML": "*",
     "ext-dom": "*",
     "ext-iconv": "*",
+    "ext-json": "*",
     "ext-libxml": "*",
     "ext-mbstring": "*",
-    "ext-json": "*",
     "lib-iconv": "*",
     "lib-libxml": "*",
     "agelxnash/modx-evo-database": "~1.4",
+    "doctrine/dbal": "~2.3",
     "illuminate/cache": "5.6.*",
     "illuminate/config": "5.6.*",
     "illuminate/console": "5.6.*",
+    "illuminate/container": "5.6.*",
     "illuminate/database": "5.6.*",
     "illuminate/events": "5.6.*",
     "illuminate/filesystem": "5.6.*",
@@ -64,15 +51,33 @@
     "illuminate/view": "5.6.*",
     "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.0.6",
-    "illuminate/container": "5.6.*",
-    "wikimedia/composer-merge-plugin": "dev-master",
     "tracy/tracy": "~2.5",
-    "doctrine/dbal": "~2.3"
+    "wikimedia/composer-merge-plugin": "dev-master"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
   },
-  "autoload":{
+  "config": {
+    "preferred-install": "dist",
+    "prestissimo": {
+      "maxConnections": 6,
+      "minConnections": 3
+    },
+    "vendor-dir": "vendor"
+  },
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "custom/composer.json"
+      ],
+      "recurse": true,
+      "replace": true,
+      "merge-dev": false,
+      "merge-extra": true,
+      "merge-scripts": false
+    }
+  },
+  "autoload": {
     "psr-4": {
       "EvolutionCMS\\": "src/"
     },
@@ -97,24 +102,19 @@
       "functions/utils.php"
     ]
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "scripts": {
     "upd": "composer update --lock --ansi"
   },
   "scripts-descriptions": {
     "upd": "Updating sub-levels composer.json files"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "extra": {
-    "merge-plugin": {
-      "include": [
-        "custom/composer.json"
-      ],
-      "recurse": true,
-      "replace": true,
-      "merge-dev": false,
-      "merge-extra": true,
-      "merge-scripts": false
-    }
+  "support": {
+    "email": "dmi3yy@evo.im",
+    "issues": "https://github.com/evolution-cms/evolution/issues/",
+    "source": "https://github.com/evolution-cms/evolution/",
+    "docs": "http://docs.evo.im",
+    "telegram": "https://t.me/evolutioncms"
   }
 }
