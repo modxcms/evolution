@@ -12,7 +12,7 @@ class DocCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'doc:list' .
+    protected $signature = 'doc:list ' .
                         '{--parent-id=* : Parents ID}' .
                         '{--P|published : Only published}' .
                         '{--D|deleted : With deleted}';
