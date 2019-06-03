@@ -17,11 +17,13 @@ if (! function_exists('config_path')) {
      * Get the configuration path.
      *
      * @param  string  $path
+     * @param bool $custom
      * @return string
      */
-    function config_path($path = '')
+    function config_path($path = '', $custom = false)
     {
-        return app()->make('path.config').($path ? DIRECTORY_SEPARATOR.$path : $path);
+        $prefix = ($custom ? implode(['', '..', 'custom', 'config'], DIRECTORY_SEPARATOR) : '');
+        return app()->make('path.config') . $prefix . ($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }
 
