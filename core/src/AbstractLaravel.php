@@ -150,6 +150,8 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
             throw new \Exception('Unable to load the "app" configuration file.');
         }
 
+        $this['env'] = $this['config']->get('app.env', 'production');
+
         date_default_timezone_set($config->get('app.timezone', 'UTC'));
         mb_internal_encoding('UTF-8');
 
@@ -208,7 +210,15 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function environment()
     {
-        return 'production';
+        return $this['env'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProduction() : bool
+    {
+        return $this->environment() === 'production';
     }
 
     /**
