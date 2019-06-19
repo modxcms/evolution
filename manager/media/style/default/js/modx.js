@@ -1192,7 +1192,7 @@
         }
         var f = d.getElementById('nameHolder');
         f.innerHTML = this.selectedObjectName;
-        el.style.left = a + (modx.config.textdir ? '-190' : '') + 'px';
+        el.style.left = a + (modx.config.textdir === 'rtl' ? '-190' : '') + 'px';
         el.style.top = b + 'px';
         el.classList.add('show');
       },
