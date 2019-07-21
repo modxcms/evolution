@@ -7,6 +7,7 @@ use Evolution\Custom\Controllers\TestController;
 use PHPMailer\PHPMailer\Exception;
 use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
+use TemplateProcessor;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
  * @property Mail $mail
@@ -206,6 +207,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getService('ExceptionHandler');
         $this->getSettings();
         $this->getService('UrlProcessor');
+        $this->getService('TemplateProcessor');
         $this->getService('DLTemplate');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }

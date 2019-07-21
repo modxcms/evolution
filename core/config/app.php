@@ -57,6 +57,7 @@ return [
         'Evolution_DocBlock' => EvolutionCMS\Providers\DocBlockServiceProvider::class,
         'Evolution_ManagerTheme' => EvolutionCMS\Providers\ManagerThemeServiceProvider::class,
         'Evolution_UrlProcessor' => EvolutionCMS\Providers\UrlProcessorServiceProvider::class,
+        'Evolution_TemplateProcessor' => EvolutionCMS\Providers\TemplateProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
@@ -86,6 +87,7 @@ return [
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
         'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
-        'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class
+        'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class,
+        'TemplateProcessor' => EvolutionCMS\Facades\TemplateProcessor::class
     ]
 ];
