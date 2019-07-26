@@ -7,6 +7,7 @@ use Evolution\Custom\Controllers\TestController;
 use PHPMailer\PHPMailer\Exception;
 use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
+use TemplateProcessor;
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
  * @property Mail $mail
@@ -206,6 +207,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getService('ExceptionHandler');
         $this->getSettings();
         $this->getService('UrlProcessor');
+        $this->getService('TemplateProcessor');
         $this->getService('DLTemplate');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
@@ -2871,6 +2873,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if ($this->documentContent == '') {
+
             // get document object from DB
             $this->documentObject = $this->getDocumentObject(
                 $this->documentMethod
@@ -2895,35 +2898,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->_sendRedirectForRefPage($this->documentObject['content']);
             }
 
-            $doc = $this->documentObject;
-            $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+            $template = TemplateProcessor::getBladeDocumentContent();
 
-            switch (true) {
-                case $this['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):
-                    $template = 'tpl-' . $doc['template'] . '_doc-' . $doc['id'];
-                    break;
-                case $this['view']->exists('doc-' . $doc['id']):
-                    $template = 'doc-' . $doc['id'];
-                    break;
-                case $this['view']->exists('tpl-' . $doc['template']):
-                    $template = 'tpl-' . $doc['template'];
-                    break;
-                case $this['view']->exists($templateAlias):
-                    $template = $templateAlias;
-                    break;
-                default:
-                    $content = $doc['template'] ? $this->documentContent : $doc['content'];
-                    if (!$content) {
-                        $content = $doc['content'];
-                    }
-                    if (strpos($content, '@FILE:') === 0) {
-                        $template = str_replace('@FILE:', '', trim($content));
-                        if (!$this['view']->exists($template)) {
-                            $this->documentObject['template'] = 0;
-                            $this->documentContent = $doc['content'];
-                        }
-                    }
-            }
             if ($template) {
                 $this->minParserPasses = -1;
                 $this->maxParserPasses = -1;
