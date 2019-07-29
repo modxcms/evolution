@@ -725,7 +725,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'manager_permissions',
                 'users',
                 sprintf(
-                    '<i class="fa fa-male"></i>%s'
+                    '<i class="fa fa-universal-access"></i>%s'
                     , $this->managerTheme->getLexicon('manager_permissions')
                 ),
                 'index.php?a=40',
@@ -751,7 +751,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['web_permissions'] = [
             'web_permissions',
             'users',
-            '<i class="fa fa-universal-access"></i>' . $this->managerTheme->getLexicon('web_permissions'),
+            '<i class="fa fa-male"></i>' . $this->managerTheme->getLexicon('web_permissions'),
             'index.php?a=91',
             $this->managerTheme->getLexicon('web_permissions'),
             '',
