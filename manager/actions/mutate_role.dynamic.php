@@ -30,7 +30,7 @@ if ($lockedEl = $modx->elementIsLocked(8, $role)) {
 
 // Lock snippet for other users to edit
 $modx->lockElement(8, $role);
-
+global $roledata;
 if ($modx->getManagerApi()->action == '35') {
     $rs = $modx->getDatabase()->select('*', $tbl_user_roles, "id='{$role}'");
     $roledata = $modx->getDatabase()->getRow($rs);
