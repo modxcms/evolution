@@ -180,12 +180,12 @@ class ExceptionHandler
         $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES,
             $this->container->getConfig('modx_charset'));
         if ($is_error) {
-            $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
+            $str = '<h2 style="color:red">&laquo; Evolution CMS Parse Error &raquo;</h2>';
             if ($msg != 'PHP Parse Error') {
                 $str .= '<h3 style="color:red">' . $msg . '</h3>';
             }
         } else {
-            $str = '<h2 style="color:#003399">&laquo; Evo Debug/ stop message &raquo;</h2>';
+            $str = '<h2 style="color:#003399">&laquo; Evolution CMS Debug/ stop message &raquo;</h2>';
             $str .= '<h3 style="color:#003399">' . $msg . '</h3>';
         }
 
@@ -357,7 +357,7 @@ class ExceptionHandler
 
         // Display error
         if (!$this->shouldDisplay()) {
-            echo '<!DOCTYPE html><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
+            echo '<!DOCTYPE html><html><head><title>Evolution CMS Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                  <link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . $this->container->getConfig('manager_theme',
                     'default') . '/style.css" />

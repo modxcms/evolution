@@ -6,7 +6,7 @@ return [
     '4'   => 'Creating a resource', //ok == 27, 72, 85, 4
     '5'   => 'Saving resource', //ok
     '6'   => 'Deleting resource', //ok
-    '7'   => 'Waiting while EVO cleans up', //ok
+    '7'   => 'Waiting while Evolution CMS cleans up', //ok
     '8'   => 'Logged out', //ok
     '9'   => 'Viewing help', //ok
     '10'  => 'Viewing/ composing messages', //ok
@@ -57,7 +57,7 @@ return [
     '56'  => 'Refresh resource tree', //ok
     '57'  => 'Refresh menu', //not found
     '58'  => 'Logged in', //not found
-    '59'  => 'About EVO', //ok
+    '59'  => 'About Evolution CMS', //ok
     '60'  => 'Emptying Recycle Bin', //not found
     '61'  => 'Publishing a resource', //ok
     '62'  => 'Un-publishing a resource', //ok

@@ -34,7 +34,7 @@
 		<hr style="overflow:hidden;[+displayUpg+]" />
 	</div>
 	<div style="overflow:hidden;[+displayAdvUpg+]">
-		<div class="installImg"><img src="img/install_adv.png" alt="advanced EVO upgrade" /></div>
+		<div class="installImg"><img src="img/install_adv.png" alt="advanced Evolution CMS upgrade" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode3" value="2" [+disabledAdvUpg+] [+checkedAdvUpg+] />
 			<label for="installmode3" class="nofloat">[%installation_upgrade_advanced%]</label></h3>

@@ -1,7 +1,7 @@
 <?php
 /*
 *************************************************************************
-	EVO Content Management System and PHP Application Framework ("EVO")
+	Evolution CMS Content Management System and PHP Application Framework ("EVO")
 	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
 	EVO is an opensource PHP/MySQL content management system and content
@@ -68,7 +68,7 @@ if (! file_exists($config['core'] . '/.install')) {
         readfile($path);
     } else {
         echo '<h3>Unable to load configuration settings</h3>';
-        echo 'Please run the EVO install utility';
+        echo 'Please run the Evolution CMS install utility';
     }
 
     exit;
