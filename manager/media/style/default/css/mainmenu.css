@@ -208,7 +208,7 @@ body.light #mainMenu #nav #site::before, body.dark #mainMenu #nav #site::before,
 .navbar-left #tree { padding-left: 5rem; }
 .navbar-left.sidebar-closed #main { left: 5rem !important; }
 .navbar-left #mainMenu, .navbar-left #mainMenu #nav.nav > #bars, .navbar-left #mainMenu #settings.nav > #account, .navbar-left #mainMenu #settings.nav > #system { width: 5rem; }
-.navbar-left #mainMenu #nav #site::before { display: none; }
+.navbar-left #mainMenu #nav #site::before { display: none !important; }
 .navbar-left #mainMenu #nav #site a { margin-left: 0; }
 .navbar-left #mainMenu #nav > li > a > .fa, .navbar-left #mainMenu #searchform .fa, .navbar-left #mainMenu #preview .fa, .navbar-left #mainMenu #nav > li > .fa, .navbar-left #mainMenu #nav > li > a > .fa, .navbar-left #mainMenu #system > a > .fa { font-size: 1.125rem; }
 .navbar-left #mainMenu .menu-item-text, .navbar-left #mainMenu .username { display: block; font-size: 0.6875rem; line-height: 1em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 0.3125rem .5rem; }
