@@ -87,7 +87,7 @@ border: none !important; border-left: 1px solid rgba(0, 0, 0, 0.05) !important; 
 @media (min-width: 1200px) {
 #searchresult { top: 2.5rem; }
 #mainMenu #nav #site a { margin-left: 9.25rem; }
-body.lightness #mainMenu #nav #site::before { content: ""; display: block; overflow: hidden; position: absolute; left: 0; top: 0; width: 9rem; height: 100%; background: url("../images/misc/logo-navbar-black.png") 0 50% no-repeat; background-size: 8rem; }
+body.lightness #mainMenu #nav #site::before { content: ""; display: block; overflow: hidden; position: absolute; left: 0; top: 0; width: 9rem; height: 100%; background: url("../images/misc/logo-navbar.png") 0 50% no-repeat; background-size: 8rem; }
 body.light #mainMenu #nav #site::before, body.dark #mainMenu #nav #site::before, body.darkness #mainMenu #nav #site::before { content: ""; display: block; overflow: hidden; position: absolute; left: 0; top: 0; width: 9rem; height: 100%; background: url("../images/misc/logo-navbar-white.png") 0 50% no-repeat; background-size: 8rem; }
 #mainMenu, #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li > a .icon, #mainMenu #searchform .mask, #mainMenu #nav #site::before { height: 2.5rem; }
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid, #mainMenu .nav > li .fa, #mainMenu .nav > li > a .icon { line-height: 2.5rem; }
