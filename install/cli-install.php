@@ -29,7 +29,7 @@ if (!defined('MGR_DIR') && is_dir($base_path . "manager")) {
 require_once 'src/lang.php';
 require_once($base_path . MGR_DIR . '/includes/version.inc.php');
 
-$moduleName = "EVO";
+$moduleName = "Evolution CMS";
 $moduleVersion = $modx_branch . ' ' . $modx_version;
 $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = $path . 'stubs/sql/setup.sql';
@@ -1394,7 +1394,7 @@ if ($installData == 1 && $moduleSQLDataFile) {
 
         return;
     } else {
-        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'",
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='Evolution CMS startup - Bootstrap'",
             $sqlParser->prefix);
         $rs = mysqli_query($sqlParser->conn, $sql);
         if (mysqli_num_rows($rs)) {

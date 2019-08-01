@@ -36,7 +36,7 @@ if (empty($_GET['self'])) {
     $_SESSION['test'] = 1;
     install_sessionCheck();
 
-    $moduleName = 'EVO';
+    $moduleName = 'Evolution CMS';
     $moduleVersion = $modx_branch . ' ' . $modx_version;
     $moduleRelease = $modx_release_date;
     $moduleSQLBaseFile = 'stubs/sql/setup.sql';
