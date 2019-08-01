@@ -1095,7 +1095,7 @@ if ($conn) {
         } else {
             $installLevel = 6;
             $sql = sprintf(
-                "SELECT id FROM `%s` WHERE templatename='EVO startup - Bootstrap'"
+                "SELECT id FROM `%s` WHERE templatename='Evolution CMS startup - Bootstrap'"
                 , table_prefix('site_templates')
             );
             $rs = mysqli_query($sqlParser->conn, $sql);

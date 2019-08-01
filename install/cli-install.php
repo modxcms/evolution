@@ -1394,7 +1394,7 @@ if ($installData == 1 && $moduleSQLDataFile) {
 
         return;
     } else {
-        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'",
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='Evolution CMS startup - Bootstrap'",
             $sqlParser->prefix);
         $rs = mysqli_query($sqlParser->conn, $sql);
         if (mysqli_num_rows($rs)) {
