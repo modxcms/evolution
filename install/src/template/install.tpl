@@ -20,7 +20,7 @@
 
 <div id="mainheader">
 	<div class="container_10">
-    <img id="logo" src="img/logo.png" alt="EVO CMS">
+    <img id="logo" src="img/logo.png" alt="Evolution CMS">
   </div>
 </div>
 

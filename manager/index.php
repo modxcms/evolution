@@ -1,7 +1,7 @@
 <?php
 /*
 *************************************************************************
-	EVO Content Management System and PHP Application Framework ("EVO")
+	Evolution CMS Content Management System and PHP Application Framework ("EVO")
 	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
 	EVO is an opensource PHP/MySQL content management system and content
@@ -80,7 +80,7 @@ if (!empty($config['core']) && file_exists($config['core'] . '/.install')) {
     header('Retry-After: 3600');
 
     echo '<h3>Unable to load configuration settings</h3>';
-    echo 'Please run the EVO install utility';
+    echo 'Please run the Evolution CMS install utility';
 
     exit;
 }
@@ -103,7 +103,7 @@ header('X-XSS-Protection: 0');
 $php_ver_comp = version_compare(phpversion(), "7.1.3");
 // -1 if left is less, 0 if equal, +1 if left is higher
 if ($php_ver_comp < 0) {
-    echo sprintf('EVO Evolution is compatible with PHP version 7.1.3 and higher. This server is using version %s%. Please upgrade your PHP installation!', phpversion());
+    echo sprintf('Evolution CMS is compatible with PHP version 7.1.3 and higher. This server is using version %s%. Please upgrade your PHP installation!', phpversion());
     exit;
 }
 
