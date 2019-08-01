@@ -1,9 +1,13 @@
 <?php
+global $id, $newid;
+global $use_udperms;
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_module')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+}else {
+    $use_udperms = 1;
 }
 
 $id = (int)$_POST['id'];
