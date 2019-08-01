@@ -12,7 +12,7 @@ $tpl = '<tr>
     <td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle:htmlentities+]</a></td>
     <td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+edit_date+]</td>
     <td data-toggle="collapse" data-target=".collapse[+id+]">[+username:htmlentities+]</td>
-    <td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+publish_btn+][+delete_btn+][+info_btn+]</td>
+    <td style="text-align: right;" class="actions">[+edit_btn+][+publish_btn+][+delete_btn+][+info_btn+][+preview_btn+]</td>
 </tr>
 <tr class="resource-overview-accordian collapse collapse[+id+]">
     <td colspan="6">

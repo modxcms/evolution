@@ -19,7 +19,7 @@ if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
     header('Retry-After: 3600');
 
     echo '<h3>Unable to load configuration settings</h3>';
-    echo 'Please run the EVO install utility';
+    echo 'Please run the Evolution CMS install utility';
 
     exit;
 }
