@@ -225,9 +225,15 @@ class modUsers extends MODxAPI
                     $value = $this->getPassword($value);
                     break;
                 case 'sessionid':
+                    //short bug fix when authoring a web user if the manager is logged in
+                    $oldSessionId  =  session_id();
                     session_regenerate_id(false);
                     $value = session_id();
                     if ($mid = $this->modx->getLoginUserID('mgr')) {
+                        //short bug fix when authoring a web user if the manager is logged in
+                        $this->modx->db->delete($this->makeTable('active_users'),"`internalKey`={$mid} and `sid` != '{$oldSessionId}'  " );
+                        $this->modx->db->delete($this->makeTable('active_user_sessions'),"`internalKey`={$mid} and `sid` != '{$oldSessionId}'  " );
+
                         $this->modx->db->query("UPDATE {$this->makeTable('active_user_locks')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
                         $this->modx->db->query("UPDATE {$this->makeTable('active_user_sessions')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
                         $this->modx->db->query("UPDATE {$this->makeTable('active_users')} SET `sid`='{$value}' WHERE `internalKey`={$mid}");
