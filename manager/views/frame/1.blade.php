@@ -74,25 +74,25 @@
                 paging_prev: "{{ ManagerTheme::getLexicon('paging_prev') }}"
             },
             style: {
-                actions_file: '<?= addslashes($_style['actions_file']) ?>',
-                actions_pencil: '<?= addslashes($_style['actions_pencil']) ?>',
-                actions_plus: '<?= addslashes($_style['actions_plus']) ?>',
-                actions_reply: '<?= addslashes($_style['actions_reply']) ?>',
-                collapse_tree: '<?= addslashes('<i class="fa fa-arrow-circle-up"></i>') ?>',
-                email: '<?= addslashes('<i class="fa fa-envelope"></i>') ?>',
-                empty_recycle_bin: '<?= addslashes('<i class="fa fa-trash"></i>') ?>',
-                empty_recycle_bin_empty: '<?= addslashes('<i class="fa fa-trash-o"></i>') ?>',
-                expand_tree: '<?= addslashes('<i class="fa fa-arrow-circle-down"></i>') ?>',
-                icons_external_link: '<?= addslashes('<i class="fa fa-external-link"></i>') ?>',
-                icons_working: '<?= addslashes($_style['tree_working']) ?>',
-                tree_info: '<?= addslashes($_style['tree_info']) ?>',
-                tree_folder: '<?= addslashes($_style['tree_folder_new']) ?>',
-                tree_folder_secure: '<?= addslashes($_style['tree_folder_secure']) ?>',
-                tree_folderopen: '<?= addslashes($_style['tree_folderopen_new']) ?>',
-                tree_folderopen_secure: '<?= addslashes($_style['tree_folderopen_secure']) ?>',
-                tree_minusnode: '<?= addslashes($_style["tree_minusnode"]) ?>',
-                tree_plusnode: '<?= addslashes($_style['tree_plusnode']) ?>',
-                tree_preview_resource: '<?= addslashes($_style['tree_preview_resource']) ?>'
+                actions_file:              '<?= addslashes('<i class="' . $_style['icon_file'] . '"></i>') ?>',
+                actions_pencil:            '<?= addslashes('<i class="' . $_style['icon_pencil'] . '"></i>') ?>',
+                actions_plus:              '<?= addslashes('<i class="' . $_style['icon_plus'] . '"></i>') ?>',
+                actions_reply:             '<?= addslashes('<i class="' . $_style['icon_reply'] . '"></i>') ?>',
+                collapse_tree:             '<?= addslashes('<i class="' . $_style['icon_arrow_up_circle'] . '"></i>') ?>',
+                email:                     '<?= addslashes('<i class="' . $_style['icon_mail'] . '"></i>') ?>',
+                empty_recycle_bin:         '<?= addslashes('<i class="' . $_style['icon_trash'] . '"></i>') ?>',
+                empty_recycle_bin_empty:   '<?= addslashes('<i class="' . $_style['icon_trash_alt'] . '"></i>') ?>',
+                expand_tree:               '<?= addslashes('<i class="' . $_style['icon_arrow_down_circle'] . '"></i>') ?>',
+                icons_external_link:       '<?= addslashes('<i class="' . $_style['icon_external_link'] . '"></i>') ?>',
+                icons_working:             '<?= addslashes('<i class="' . $_style['icon_info_triangle'] . '"></i>') ?>',
+                tree_info:                 '<?= addslashes('<i class="' . $_style['icon_info_circle'] . '"></i>') ?>',
+                tree_folder:               '<?= addslashes('<i class="' . $_style['icon_folder'] . '"></i>') ?>',
+                tree_folder_secure:        '<?= addslashes('<i class="' . $_style['icon_folder'] . '"></i>') ?>',
+                tree_folderopen:           '<?= addslashes('<i class="' . $_style['icon_folder_open'] . '"></i>') ?>',
+                tree_folderopen_secure:    '<?= addslashes('<i class="' . $_style['icon_folder_open'] . '"></i>') ?>',
+                tree_minusnode:            '<?= addslashes('<i class="' . $_style["icon_angle_down"] . '"></i>') ?>',
+                tree_plusnode:             '<?= addslashes('<i class="' . $_style['icon_angle_right']  . '"></i>') ?>',
+                tree_preview_resource:     '<?= addslashes('<i class="' . $_style['icon_eye'] . '"></i>') ?>'
             },
             permission: {
                 assets_images: <?= $modx->hasPermission('assets_images') ? 1 : 0 ?>,
@@ -173,7 +173,7 @@
                             <form action="index.php?a=71" method="post" target="main">
                                 <input type="hidden" value="Search" name="submitok" />
                                 <label for="searchid" class="label_searchid">
-                                    <i class="{{ $_style['actions_search'] }}"></i>
+                                    <i class="{{ $_style['icon_search'] }}"></i>
                                 </label>
                                 <input type="text" id="searchid" name="searchid" size="25" />
                                 <div class="mask"></div>
@@ -181,31 +181,31 @@
                         </li>
                         @if($modx->getConfig('show_newresource_btn') && $modx->hasPermission('new_document'))
                             <li id="newresource" class="dropdown newresource">
-                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="{{ ManagerTheme::getLexicon('add_resource') }}"><i class="{{ $_style['actions_plus'] }}"></i></a>
+                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="{{ ManagerTheme::getLexicon('add_resource') }}"><i class="{{ $_style['icon_plus'] }}"></i></a>
                                 <ul class="dropdown-menu">
                                     @if($modx->hasPermission('new_document'))
                                     <li>
                                         <a onclick="" href="index.php?a=4" target="main">
-                                            <i class="{{ $_style['icons_new_document'] }}"></i>{{ ManagerTheme::getLexicon('add_resource') }}
+                                            <i class="{{ $_style['icon_document'] }}"></i>{{ ManagerTheme::getLexicon('add_resource') }}
                                         </a>
                                     </li>
                                     <li>
                                         <a onclick="" href="index.php?a=72" target="main">
-                                            <i class="{{ $_style['icons_new_weblink'] }}"></i>{{ ManagerTheme::getLexicon('add_weblink') }}
+                                            <i class="{{ $_style['icon_chain'] }}"></i>{{ ManagerTheme::getLexicon('add_weblink') }}
                                         </a>
                                     </li>
                                     @endif
                                     @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
                                         <li>
                                             <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=images" target="main">
-                                                <i class="{{ $_style['files_img'] }}"></i>{{ ManagerTheme::getLexicon('images_management') }}
+                                                <i class="{{ $_style['icon_camera'] }}"></i>{{ ManagerTheme::getLexicon('images_management') }}
                                             </a>
                                         </li>
                                     @endif
                                     @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
                                         <li>
                                             <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=files" target="main">
-                                                <i class="{{ $_style['files_files'] }}"></i>{{ ManagerTheme::getLexicon('files_management') }}
+                                                <i class="{{ $_style['icon_files'] }}"></i>{{ ManagerTheme::getLexicon('files_management') }}
                                             </a>
                                         </li>
                                     @endif
@@ -214,7 +214,7 @@
                         @endif
                         <li id="preview">
                             <a href="../" target="_blank" title="{{ ManagerTheme::getLexicon('preview') }}">
-                                <i class="{{ $_style['actions_site_preview'] }}"></i>
+                                <i class="{{ $_style['icon_desktop'] }}"></i>
                             </a>
                         </li>
                         <li id="account" class="dropdown account">
@@ -223,7 +223,7 @@
                                 @if($user['photo'])
                                 <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . entities($user['photo'], $modx->getConfig('modx_charset')) ?>);"></span>
                                 @else
-                                <span class="icon"><i class="{{ $_style['icons_user'] }}"></i></span>
+                                <span class="icon"><i class="{{ $_style['icon_user'] }}"></i></span>
                                 @endif
                                 <i id="msgCounter"></i>
                             </a>
@@ -234,58 +234,58 @@
                                 @if($modx->hasPermission('change_password'))
                                 <li>
                                     <a onclick="" href="index.php?a=28" target="main">
-                                        <i class="{{ $_style['icons_lock'] }}"></i>{{ ManagerTheme::getLexicon('change_password') }}
+                                        <i class="{{ $_style['icon_lock'] }}"></i>{{ ManagerTheme::getLexicon('change_password') }}
                                     </a>
                                 </li>
                                 @endif
                                 <li>
                                     <a href="index.php?a=8">
-                                        <i class="{{ $_style['actions_logout'] }}"></i>{{ ManagerTheme::getLexicon('logout') }}
+                                        <i class="{{ $_style['icon_logout'] }}"></i>{{ ManagerTheme::getLexicon('logout') }}
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         @if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help'))
                         <li id="system" class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" title="{{ ManagerTheme::getLexicon('system') }}" onclick="return false;"><i class="{{ $_style['icons_cogs'] }}"></i></a>
+                            <a href="javascript:;" class="dropdown-toggle" title="{{ ManagerTheme::getLexicon('system') }}" onclick="return false;"><i class="{{ $_style['icon_cogs'] }}"></i></a>
                             <ul class="dropdown-menu">
                                 @if($modx->hasPermission('settings'))
                                 <li>
                                     <a href="index.php?a=17" target="main">
-                                        <i class="{{ $_style['icons_sliders'] }}"></i>{{ ManagerTheme::getLexicon('edit_settings') }}
+                                        <i class="{{ $_style['icon_sliders'] }}"></i>{{ ManagerTheme::getLexicon('edit_settings') }}
                                     </a>
                                 </li>
                                 @endif
                                 @if($modx->hasPermission('view_eventlog'))
                                 <li>
                                     <a href="index.php?a=70" target="main">
-                                        <i class="{{ $_style['actions_calendar'] }}"></i>{{ ManagerTheme::getLexicon('site_schedule') }}
+                                        <i class="{{ $_style['icon_calendar'] }}"></i>{{ ManagerTheme::getLexicon('site_schedule') }}
                                     </a>
                                 </li>
                                 @endif
                                 @if($modx->hasPermission('view_eventlog'))
                                 <li>
                                     <a href="index.php?a=114" target="main">
-                                        <i class="{{ $_style['actions_triangle'] }}"></i>{{ ManagerTheme::getLexicon('eventlog_viewer') }}
+                                        <i class="{{ $_style['icon_info_triangle'] }}"></i>{{ ManagerTheme::getLexicon('eventlog_viewer') }}
                                     </a>
                                 </li>
                                 @endif
                                 @if($modx->hasPermission('logs'))
                                 <li>
                                     <a href="index.php?a=13" target="main">
-                                        <i class="{{ $_style['icons_user_secret'] }}"></i>{{ ManagerTheme::getLexicon('view_logging') }}
+                                        <i class="{{ $_style['icon_user_secret'] }}"></i>{{ ManagerTheme::getLexicon('view_logging') }}
                                     </a>
                                 </li>
                                 <li>
                                     <a href="index.php?a=53" target="main">
-                                        <i class="{{ $_style['actions_info'] }}"></i>{{ ManagerTheme::getLexicon('view_sysinfo') }}
+                                        <i class="{{ $_style['icon_info_circle'] }}"></i>{{ ManagerTheme::getLexicon('view_sysinfo') }}
                                     </a>
                                 </li>
                                 @endif
                                 @if($modx->hasPermission('help'))
                                 <li>
                                     <a href="index.php?a=9" target="main">
-                                        <i class="{{ $_style['icons_tooltip'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
+                                        <i class="{{ $_style['icon_question_circle'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
                                     </a>
                                 </li>
                                 @endif
@@ -301,7 +301,7 @@
                         @if($modx->getConfig('show_fullscreen_btn'))
                             <li id="fullscreen">
                                 <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="{{ ManagerTheme::getLexicon('toggle_fullscreen') }}">
-                                    <i class="{{ $_style['actions_expand'] }}"></i>
+                                    <i class="{{ $_style['icon_expand'] }}"></i>
                                 </a>
                             </li>
                         @endif
@@ -314,7 +314,7 @@
     <div id="main">
         @if($modx->getConfig('global_tabs'))
             <div class="tab-row-container evo-tab-row">
-                <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="{{ $_style['icons_home'] }}"></i></h2></div>
+                <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="{{ $_style['icon_home'] }}"></i></h2></div>
             </div>
             <div id="evo-tab-page-home" class="evo-tab-page show iframe-scroller">
                 <iframe id="mainframe" src="index.php?a={{ $initMainframeAction }}" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
@@ -420,27 +420,27 @@ if(!function_exists('constructLink')) {
     <div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
         <div id="nameHolder">&nbsp;</div>
         <?php
-        constructLink(3, $_style['icons_new_document'], ManagerTheme::getLexicon('create_resource_here'), $modx->hasPermission('new_document')); // new Resource
-        constructLink(2, $_style['icons_edit_resource'] , ManagerTheme::getLexicon('edit_resource'), $modx->hasPermission('edit_document')); // edit
-        constructLink(5, $_style['icons_move_document'], ManagerTheme::getLexicon('move_resource'), $modx->hasPermission('save_document')); // move
-        constructLink(7, $_style['icons_clone_document'], ManagerTheme::getLexicon('resource_duplicate'), $modx->hasPermission('new_document')); // duplicate
-        constructLink(11, $_style['actions_sort_num_asc'], ManagerTheme::getLexicon('sort_menuindex'), !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
+        constructLink(3, $_style['icon_document'], ManagerTheme::getLexicon('create_resource_here'), $modx->hasPermission('new_document')); // new Resource
+        constructLink(2, $_style['icon_edit'] , ManagerTheme::getLexicon('edit_resource'), $modx->hasPermission('edit_document')); // edit
+        constructLink(5, $_style['icon_move'], ManagerTheme::getLexicon('move_resource'), $modx->hasPermission('save_document')); // move
+        constructLink(7, $_style['icon_clone'], ManagerTheme::getLexicon('resource_duplicate'), $modx->hasPermission('new_document')); // duplicate
+        constructLink(11, $_style['icon_sort_num_asc'], ManagerTheme::getLexicon('sort_menuindex'), !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(9, $_style['icons_publish_document'], ManagerTheme::getLexicon('publish_resource'), $modx->hasPermission('publish_document')); // publish
-        constructLink(10, $_style['icons_unpublish_resource'], ManagerTheme::getLexicon('unpublish_resource'), $modx->hasPermission('publish_document')); // unpublish
-        constructLink(4, $_style['icons_delete_resource'], ManagerTheme::getLexicon('delete_resource'), $modx->hasPermission('delete_document')); // delete
-        constructLink(8, $_style['icons_undelete_resource'], ManagerTheme::getLexicon('undelete_resource'), $modx->hasPermission('delete_document')); // undelete
+        constructLink(9, $_style['icon_check'], ManagerTheme::getLexicon('publish_resource'), $modx->hasPermission('publish_document')); // publish
+        constructLink(10, $_style['icon_close'], ManagerTheme::getLexicon('unpublish_resource'), $modx->hasPermission('publish_document')); // unpublish
+        constructLink(4, $_style['icon_trash'], ManagerTheme::getLexicon('delete_resource'), $modx->hasPermission('delete_document')); // delete
+        constructLink(8, $_style['icon_undo'], ManagerTheme::getLexicon('undelete_resource'), $modx->hasPermission('delete_document')); // undelete
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(6, $_style['icons_new_weblink'], ManagerTheme::getLexicon('create_weblink_here'), $modx->hasPermission('new_document')); // new Weblink
+        constructLink(6, $_style['icon_chain'], ManagerTheme::getLexicon('create_weblink_here'), $modx->hasPermission('new_document')); // new Weblink
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(1, $_style['icons_resource_overview'], ManagerTheme::getLexicon('resource_overview'), $modx->hasPermission('view_document')); // view
-        constructLink(12, $_style['actions_preview'], ManagerTheme::getLexicon('preview_resource'), 1); // preview
+        constructLink(1, $_style['icon_info'], ManagerTheme::getLexicon('resource_overview'), $modx->hasPermission('view_document')); // view
+        constructLink(12, $_style['icon_eye'], ManagerTheme::getLexicon('preview_resource'), 1); // preview
         ?>
 
     </div>
@@ -532,7 +532,7 @@ if(!function_exists('constructLink')) {
 
             $('#toggleFullScreen').click(function() {
                 var icon = $(this).find('i');
-                icon.toggleClass('{{ $_style['actions_expand'] }} {{ $_style['actions_compress'] }}');
+                icon.toggleClass('{{ $_style['icon_expand'] }} {{ $_style['icon_compress'] }}');
             });
         </script>
     @endif
@@ -540,12 +540,12 @@ if(!function_exists('constructLink')) {
 </div>
 @if($modx->getConfig('show_picker'))
     <div class="evocp-box">
-        <div class="evocp-icon"><i class="evocpicon {{ $_style['icons_brush'] }}" aria-hidden="true" ></i></div>
+        <div class="evocp-icon"><i class="evocpicon {{ $_style['icon_brush'] }}" aria-hidden="true" ></i></div>
         <div class="evocp-frame">
             <h2>COLOR SWITCHER</h2>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 data-toggle="collapse" data-target=".bgmcolors"><i class="togglearrow {{ $_style['icons_chevron_down'] }}" aria-hidden="true"></i> <i class="{{ $_style['icons_bars'] }}" aria-hidden="true"></i> Menu Background</h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadAll('my_evo_bgmcolor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['actions_refresh'] }}"></i></a>
+                    <h3 data-toggle="collapse" data-target=".bgmcolors"><i class="togglearrow {{ $_style['icon_chevron_down'] }}" aria-hidden="true"></i> <i class="{{ $_style['icon_bars'] }}" aria-hidden="true"></i> Menu Background</h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadAll('my_evo_bgmcolor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['icon_refresh'] }}"></i></a>
                 </div>
                 <div class="panel-body collapse in bgmcolors">
                     <div class="evocp-bgmcolors">
@@ -569,7 +569,7 @@ if(!function_exists('constructLink')) {
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 span data-toggle="collapse" data-target=".menuColors"><i class="togglearrow {{ $_style['icons_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icons_bars'] }}" aria-hidden="true"></i> Menu links</h3> <a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuColor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['actions_refresh'] }}"></i></a>
+                    <h3 span data-toggle="collapse" data-target=".menuColors"><i class="togglearrow {{ $_style['icon_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icon_bars'] }}" aria-hidden="true"></i> Menu links</h3> <a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuColor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['icon_refresh'] }}"></i></a>
                 </div>
                 <div class="panel-body collapse menuColors">
                     <div class="evocp-menuColors">
@@ -594,7 +594,7 @@ if(!function_exists('constructLink')) {
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 data-toggle="collapse" data-target=".menuHColors"><i class="togglearrow {{ $_style['icons_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icons_bars'] }}" aria-hidden="true"></i> Menu links:hover </h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuHColor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['actions_refresh'] }}"></i></a>
+                    <h3 data-toggle="collapse" data-target=".menuHColors"><i class="togglearrow {{ $_style['icon_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icon_bars'] }}" aria-hidden="true"></i> Menu links:hover </h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuHColor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['icon_refresh'] }}"></i></a>
                 </div>
                 <div class="panel-body collapse menuHColors">
                     <div class="evocp-menuHColors">
@@ -618,7 +618,7 @@ if(!function_exists('constructLink')) {
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 data-toggle="collapse" data-target=".cpcolors"><i class="togglearrow {{ $_style['icons_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icons_font'] }}" aria-hidden="true"></i> Text color </h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_color')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['actions_refresh'] }}"></i></a>
+                    <h3 data-toggle="collapse" data-target=".cpcolors"><i class="togglearrow {{ $_style['icon_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icon_font'] }}" aria-hidden="true"></i> Text color </h3><a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_color')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['icon_refresh'] }}"></i></a>
                 </div>
                 <div class="panel-body collapse cpcolors">
                     <div class="evocp-colors">
@@ -642,7 +642,7 @@ if(!function_exists('constructLink')) {
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 data-toggle="collapse" data-target=".alinkcolors"><i class="togglearrow {{ $_style['icons_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icons_link'] }}" aria-hidden="true"></i> Links Color</h3> <a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_alinkcolor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['actions_refresh'] }}"></i></a>
+                    <h3 data-toggle="collapse" data-target=".alinkcolors"><i class="togglearrow {{ $_style['icon_chevron_right'] }}" aria-hidden="true"></i> <i class="{{ $_style['icon_chain'] }}" aria-hidden="true"></i> Links Color</h3> <a title="{{ ManagerTheme::getLexicon('reset') }}" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_alinkcolor')" class="pull-right resetcolor btn btn-secondary"><i class="{{ $_style['icon_refresh'] }}"></i></a>
                 </div>
                 <div class="panel-body collapse alinkcolors">
                     <div class="evocp-alinkcolors">

@@ -132,18 +132,18 @@
         $add_path = $sd . $sb . $pg;
 
         $icons = array(
-            'text/html' => $_style['tree_page_html'],
-            'text/plain' => $_style['tree_page'],
-            'text/xml' => $_style['tree_page_xml'],
-            'text/css' => $_style['tree_page_css'],
-            'text/javascript' => $_style['tree_page_js'],
-            'application/rss+xml' => $_style['tree_page_rss'],
-            'application/pdf' => $_style['tree_page_pdf'],
-            'application/vnd.ms-word' => $_style['tree_page_word'],
-            'application/vnd.ms-excel' => $_style['tree_page_excel'],
-            'image/gif' => $_style['tree_page_gif'],
-            'image/jpg' => $_style['tree_page_jpg'],
-            'image/png' => $_style['tree_page_png']
+            'text/plain'                 => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/html'                  => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/xml'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/css'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/javascript'            => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'image/gif'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/jpg'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/png'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'application/pdf'            => '<i class="' . $_style['icon_pdf'] . '"></i>',
+            'application/rss+xml'        => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'application/vnd.ms-word'    => '<i class="' . $_style['icon_word'] . '"></i>',
+            'application/vnd.ms-excel'   => '<i class="' . $_style['icon_exel'] . '"></i>',
         );
 
         $listDocs = array();
@@ -151,25 +151,25 @@
 
             switch($children['id']) {
                 case $modx->getConfig('site_start')            :
-                    $icon = $_style['tree_page_home'];
+                    $icon = '<i class="' . $_style['icon_home'] . '"></i>';
                     break;
                 case $modx->getConfig('error_page')            :
-                    $icon = $_style['tree_page_404'];
+                    $icon = '<i class="' . $_style['icon_info_triangle'] . '"></i>';
                     break;
                 case $modx->getConfig('site_unavailable_page') :
-                    $icon = $_style['tree_page_hourglass'];
+                    $icon = '<i class="' . $_style['icon_clock'] . '"></i>';
                     break;
                 case $modx->getConfig('unauthorized_page')     :
-                    $icon = $_style['tree_page_info'];
+                    $icon = '<i class="' . $_style['icon_info'] . '"></i>';
                     break;
                 default:
                     if($children['isfolder']) {
-                        $icon = $_style['tree_folder_new'];
+                        $icon = '<i class="' . $_style['icon_folder'] . '"></i>';
                     } else {
                         if(isset($icons[$children['contentType']])) {
                             $icon = $icons[$children['contentType']];
                         } else {
-                            $icon = $_style['tree_page'];
+                            $icon = '<i class="' . $_style['icon_document'] . '"></i>';
                         }
                     }
             }
@@ -187,9 +187,9 @@
                 $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></span>';
             }
 
-            $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('publish_resource') . '"><i class="' . $_style['icons_publish_document'] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('unpublish_resource') . '"><i class="' . $_style['icons_unpublish_resource'] . '" ></i></a>';
+            $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('publish_resource') . '"><i class="' . $_style['icon_check'] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('unpublish_resource') . '"><i class="' . $_style['icon_close'] . '" ></i></a>';
 
-            $icon_del_undel = (!$children['deleted']) ? '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_delete_resource') . '\')" href="index.php?a=6&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('delete_resource') . '"><i class="' . $_style['icons_delete_resource'] . '"></i></a>' : '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_undelete') . '\')" href="index.php?a=63&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('undelete_resource') . '"><i class="' . $_style['icons_undelete_resource'] . '"></i></a>';
+            $icon_del_undel = (!$children['deleted']) ? '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_delete_resource') . '\')" href="index.php?a=6&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('delete_resource') . '"><i class="' . $_style['icon_trash'] . '"></i></a>' : '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_undelete') . '\')" href="index.php?a=63&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('undelete_resource') . '"><i class="' . $_style['icon_undo'] . '"></i></a>';
 
             $listDocs[] = array(
                 'docid' => '<div class="text-right">' . $children['id'] . '</div>',
@@ -197,8 +197,8 @@
                 'createdon' => '<div class="text-right">' . ($modx->toDateFormat($children['createdon'] + $modx->timestamp(0), 'dateOnly')) . '</div>',
                 'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? ($modx->toDateFormat($children['pub_date'] + $modx->timestamp(0), 'dateOnly')) : '') . '</div>',
                 'status' => '<div class="text-nowrap">' . ($children['published'] == 0 ? '<span class="unpublishedDoc">' . ManagerTheme::getLexicon('page_data_unpublished') . '</span>' : '<span class="publishedDoc">' . ManagerTheme::getLexicon('page_data_published') . '</span>') . '</div>',
-                'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('edit') . '"><i class="' . $_style['icons_edit_resource'] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('move') . '"><i
-				class="' . $_style['icons_move_document'] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
+                'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('edit') . '"><i class="' . $_style['icon_edit'] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('move') . '"><i
+				class="' . $_style['icon_move'] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
             );
         }
 
@@ -252,7 +252,7 @@
     <script type="text/javascript" src="media/script/tablesort.js"></script>
 
     <h1>
-        <i class="{{ $_style['icons_resource_overview'] }}"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
+        <i class="{{ $_style['icon_info'] }}"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
     </h1>
 
     <?= $_style['actionbuttons']['static']['document'] ?>
@@ -352,11 +352,11 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_web_access') }}:</td>
-                        <td><?= $content['privateweb'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b> ' . $_style['icons_secured'] ?></td>
+                        <td><?= $content['privateweb'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b><i class="' . $_style['icon_lock'] . '"></i>' ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_mgr_access') }}:</td>
-                        <td><?= $content['privatemgr'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b> ' . $_style['icons_secured'] ?></td>
+                        <td><?= $content['privatemgr'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b><i class="' . $_style['icon_lock'] . '"></i>' ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>

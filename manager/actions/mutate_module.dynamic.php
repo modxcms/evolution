@@ -601,7 +601,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<p><?= $_lang['module_viewdepend_msg'] ?></p>
 					<div class="form-group clearfix">
 						<a class="btn btn-primary" href="javascript:;" onclick="loadDependencies();return false;">
-							<i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
+							<i class="<?= $_style["icon_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
 					$ds = $modx->getDatabase()->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 

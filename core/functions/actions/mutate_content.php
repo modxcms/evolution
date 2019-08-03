@@ -741,7 +741,7 @@ if (! function_exists('renderFormElement')) {
                         $field_value = 0;
                     }
                     $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . $_style["actions_calendar_delete"] . '"></i></a>';
+                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . $_style["icon_calendar_close"] . '"></i></a>';
 
                     break;
                 case "dropdown": // handler for select boxes

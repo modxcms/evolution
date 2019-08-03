@@ -1,7 +1,7 @@
 @extends('manager::template.page')
 @section('content')
     <h1>
-        <i class="{{ $_style['actions_info'] }}"></i>{{ ManagerTheme::getLexicon('view_sysinfo') }}
+        <i class="{{ $_style['icon_info_circle'] }}"></i>{{ ManagerTheme::getLexicon('view_sysinfo') }}
     </h1>
 
     <!-- server -->
@@ -64,7 +64,7 @@
                                 <td class="text-primary"><b>{{ $table['Name'] }}</b></td>
                                 <td class="text-xs-center">
                                     @if(!empty($table['Comment']))
-                                        <i class="{{ $_style['icons_tooltip'] }}" data-tooltip="{{ $table['Comment'] }}"></i>
+                                        <i class="{{ $_style['icon_question_circle'] }}" data-tooltip="{{ $table['Comment'] }}"></i>
                                     @endif
                                 </td>
                                 <td class="text-xs-right">{{ $table['Rows'] }}</td>

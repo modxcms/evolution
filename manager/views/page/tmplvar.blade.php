@@ -239,14 +239,14 @@
         <input type="hidden" name="params" value="{{ $data->display_params }}">
 
         <h1>
-            <i class="{{ $_style['icons_template'] }}"></i>
+            <i class="{{ $_style['icon_template'] }}"></i>
             @if($data->name)
                 {{ $data->name }}
                 <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_tmplvars') }}
             @endif
-            <i class="{{ $_style['icons_tooltip'] }} help"></i>
+            <i class="{{ $_style['icon_question_circle'] }} help"></i>
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
@@ -282,7 +282,7 @@
                                 'name' => 'locked',
                                 'checked' => ($data->locked == 1)
                              ]) .
-                             '<i class="'. $_style['icons_lock'] .'"></i>
+                             '<i class="'. $_style['icon_lock'] .'"></i>
                              </label>
                              <small class="form-text text-danger hide" id="savingMessage"></small>
                              <script>if (!document.getElementsByName(\'name\')[0].value) document.getElementsByName(\'name\')[0].focus();</script>'
@@ -368,7 +368,7 @@
                     <div class="row form-row" id="displayparamrow">
                         <label class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('tmplvars_widget_prop') }}<br />
                             <a href="javascript:;" onclick="resetParameters(); return false">
-                                <i class="<?= $_style['actions_refresh'] ?>"
+                                <i class="<?= $_style['icon_refresh'] ?>"
                                     data-tooltip="{{ ManagerTheme::getLexicon('tmplvars_reset_params') }}"></i>
                             </a>
                         </label>

@@ -13,7 +13,7 @@
 
 @section('content')
     <h1>
-        <i class="{{ $_style['icons_elements'] }}"></i>{{ ManagerTheme::getLexicon('element_management') }}
+        <i class="{{ $_style['icon_elements'] }}"></i>{{ ManagerTheme::getLexicon('element_management') }}
     </h1>
 
     <div class="sectionBody">

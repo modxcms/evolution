@@ -99,7 +99,7 @@ if(!function_exists('ls')) {
                 if ($file === '..' || $file === '.') {
                     continue;
                 } elseif (!in_array($file, $excludes) && !in_array($newpath, $protected_path)) {
-                    $dirs_array[$dircounter]['text'] = '<i class="' . $_style['files_folder'] . ' FilesFolder"></i> <a href="index.php?a=31&mode=drill&path=' . urlencode($newpath) . '"><b>' . $file . '</b></a>';
+                    $dirs_array[$dircounter]['text'] = '<i class="' . $_style['icon_folder'] . ' FilesFolder"></i> <a href="index.php?a=31&mode=drill&path=' . urlencode($newpath) . '"><b>' . $file . '</b></a>';
 
                     $dfiles = scandir($newpath);
                     foreach ($dfiles as $i => $infile) {
@@ -112,13 +112,13 @@ if(!function_exists('ls')) {
                     }
                     $file_exists = (0 < count($dfiles)) ? 'file_exists' : '';
 
-                    $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<a href="javascript: deleteFolder(\'' . urlencode($file) . '\',\'' . $file_exists . '\');"><i class="' . $_style['files_delete'] . '" title="' . $_lang['file_delete_folder'] . '"></i></a>' : '';
+                    $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<a href="javascript: deleteFolder(\'' . urlencode($file) . '\',\'' . $file_exists . '\');"><i class="' . $_style['icon_trash'] . '" title="' . $_lang['file_delete_folder'] . '"></i></a>' : '';
                 } else {
-                    $dirs_array[$dircounter]['text'] = '<span><i class="' . $_style['files_deleted_folder'] . ' FilesDeletedFolder"></i> ' . $file . '</span>';
-                    $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span class="disabled"><i class="' . $_style['files_delete'] . '" title="' . $_lang['file_delete_folder'] . '"></i></span>' : '';
+                    $dirs_array[$dircounter]['text'] = '<span><i class="' . $_style['icon_folder'] . ' FilesDeletedFolder"></i> ' . $file . '</span>';
+                    $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span class="disabled"><i class="' . $_style['icon_trash'] . '" title="' . $_lang['file_delete_folder'] . '"></i></span>' : '';
                 }
 
-                $dirs_array[$dircounter]['rename'] = is_writable($curpath) ? '<a href="javascript:renameFolder(\'' . urlencode($file) . '\');"><i class="' . $_style['files_rename'] . '" title="' . $_lang['rename'] . '"></i></a> ' : '';
+                $dirs_array[$dircounter]['rename'] = is_writable($curpath) ? '<a href="javascript:renameFolder(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_i_cursor'] . '" title="' . $_lang['rename'] . '"></i></a> ' : '';
 
                 // increment the counter
                 $dircounter++;
@@ -130,20 +130,20 @@ if(!function_exists('ls')) {
                 $files_array[$filecounter]['view'] = (in_array($type,
                     $viewablefiles)) ? '<a href="javascript:;" onclick="viewfile(\'' . $webstart_path . substr($newpath,
                         $len,
-                        strlen($newpath)) . '\');"><i class="' . $_style['files_view'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : (($enablefiledownload && in_array($type,
+                        strlen($newpath)) . '\');"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : (($enablefiledownload && in_array($type,
                         $uploadablefiles)) ? '<a href="' . $webstart_path . implode('/', array_map('rawurlencode',
                         explode('/', substr($newpath, $len,
-                            strlen($newpath))))) . '" style="cursor:pointer;"><i class="' . $_style['files_download'] . '" title="' . $_lang['file_download_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['files_view'] . '" title="' . $_lang['files_viewfile'] . '"></i></span>');
+                            strlen($newpath))))) . '" style="cursor:pointer;"><i class="' . $_style['icon_download'] . '" title="' . $_lang['file_download_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></span>');
                 $files_array[$filecounter]['view'] = (in_array($type,
-                    $inlineviewablefiles)) ? '<a href="index.php?a=31&mode=view&path=' . urlencode($newpath) . '"><i class="' . $_style['files_view'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : $files_array[$filecounter]['view'];
-                $files_array[$filecounter]['unzip'] = ($enablefileunzip && $type == '.zip') ? '<a href="javascript:unzipFile(\'' . urlencode($file) . '\');"><i class="' . $_style['files_unzip'] . '" title="' . $_lang['file_download_unzip'] . '"></i></a>' : '';
+                    $inlineviewablefiles)) ? '<a href="index.php?a=31&mode=view&path=' . urlencode($newpath) . '"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : $files_array[$filecounter]['view'];
+                $files_array[$filecounter]['unzip'] = ($enablefileunzip && $type == '.zip') ? '<a href="javascript:unzipFile(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_archive'] . '" title="' . $_lang['file_download_unzip'] . '"></i></a>' : '';
                 $files_array[$filecounter]['edit'] = (in_array($type,
-                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="index.php?a=31&mode=edit&path=' . urlencode($newpath) . '#file_editfile"><i class="' . $_style['files_edit'] . '" title="' . $_lang['files_editfile'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['files_edit'] . '" title="' . $_lang['files_editfile'] . '"></i></span>';
+                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="index.php?a=31&mode=edit&path=' . urlencode($newpath) . '#file_editfile"><i class="' . $_style['icon_edit'] . '" title="' . $_lang['files_editfile'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_edit'] . '" title="' . $_lang['files_editfile'] . '"></i></span>';
                 $files_array[$filecounter]['duplicate'] = (in_array($type,
-                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="javascript:duplicateFile(\'' . urlencode($file) . '\');"><i class="' . $_style['files_duplicate'] . '" title="' . $_lang['duplicate'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['files_duplicate'] . '" align="absmiddle" title="' . $_lang['duplicate'] . '"></i></span>';
+                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="javascript:duplicateFile(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_clone'] . '" title="' . $_lang['duplicate'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_clone'] . '" align="absmiddle" title="' . $_lang['duplicate'] . '"></i></span>';
                 $files_array[$filecounter]['rename'] = (in_array($type,
-                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="javascript:renameFile(\'' . urlencode($file) . '\');"><i class="' . $_style['files_rename'] . '" align="absmiddle" title="' . $_lang['rename'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['files_rename'] . '" align="absmiddle" title="' . $_lang['rename'] . '"></i></span>';
-                $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<a href="javascript:deleteFile(\'' . urlencode($file) . '\');"><i class="' . $_style['files_delete'] . '" title="' . $_lang['file_delete_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['files_delete'] . '" title="' . $_lang['file_delete_file'] . '"></i></span>';
+                        $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<a href="javascript:renameFile(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_i_cursor'] . '" align="absmiddle" title="' . $_lang['rename'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_i_cursor'] . '" align="absmiddle" title="' . $_lang['rename'] . '"></i></span>';
+                $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<a href="javascript:deleteFile(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_trash'] . '" title="' . $_lang['file_delete_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_trash'] . '" title="' . $_lang['file_delete_file'] . '"></i></span>';
 
                 // increment the counter
                 $filecounter++;

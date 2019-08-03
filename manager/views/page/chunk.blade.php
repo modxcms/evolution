@@ -63,14 +63,14 @@
         <input type="hidden" name="mode" value="{{ $action }}" />
 
         <h1>
-            <i class="{{ $_style['icons_chunk'] }}"></i>
+            <i class="{{ $_style['icon_chunk'] }}"></i>
             @if($data->name)
                 {{ $data->name }}
                 <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_htmlsnippet') }}
             @endif
-            <i class="{{ $_style['icons_tooltip'] }} help"></i>
+            <i class="{{ $_style['icon_question_circle'] }} help"></i>
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
@@ -106,7 +106,7 @@
                                 'name' => 'locked',
                                 'checked' => ($data->locked == 1)
                             ]) .
-                            '<i class="' . $_style['actions_lock'] . '"></i>
+                            '<i class="' . $_style['icon_lock'] . '"></i>
                             </label>
                             <small class="form-text text-danger hide" id="savingMessage"></small>
                             <script>if (!document.getElementsByName(\'name\')[0].value) document.getElementsByName(\'name\')[0].focus();</script>'

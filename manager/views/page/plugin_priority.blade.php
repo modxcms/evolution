@@ -21,7 +21,7 @@
     @endpush
 
     <h1>
-        <i class="{{ $_style['actions_sort_num_asc'] }}"></i>{{ ManagerTheme::getLexicon('plugin_priority_title') }}
+        <i class="{{ $_style['icon_sort_num_asc'] }}"></i>{{ ManagerTheme::getLexicon('plugin_priority_title') }}
     </h1>
 
     {!! ManagerTheme::getStyle('actionbuttons.dynamic.save') !!}
@@ -43,7 +43,7 @@
                     <ul id="{{ $event->getKey() }}" class="sortableList">
                         @foreach($event->plugins as $plugin)
                             <li id="item_{{ $plugin->getKey() }}"@if($plugin->disabled) class="disabledPlugin"@endif>
-                                <i class="{{ $_style['icons_plugin'] }}"></i> {{ $plugin->name }}@if($plugin->disabled) (hide) @endif
+                                <i class="{{ $_style['icon_plugin'] }}"></i> {{ $plugin->name }}@if($plugin->disabled) (hide) @endif
                             </li>
                         @endforeach
                     </ul>

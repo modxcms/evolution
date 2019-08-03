@@ -327,7 +327,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['modules'] = [
             'modules',
             'main',
-            '<i class="' . $this->managerTheme->getStyle('icons_modules') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('modules') . '</span>',
+            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('modules') . '</span>',
             'javascript:;',
             $this->managerTheme->getLexicon('modules'),
             ' return false;',
@@ -584,7 +584,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['new_module'] = [
             'new_module',
             'modules',
-            '<i class="' . $this->managerTheme->getStyle('icons_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
+            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
             'index.php?a=106',
             $this->managerTheme->getLexicon('module_management'),
             '',

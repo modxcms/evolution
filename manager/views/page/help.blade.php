@@ -1,7 +1,7 @@
 @extends('manager::template.page')
 @section('content')
     <h1>
-        <i class="{{ $_style['icons_tooltip'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
+        <i class="{{ $_style['icon_question_circle'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
     </h1>
 
     <div class="sectionBody">

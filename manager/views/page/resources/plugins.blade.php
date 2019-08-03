@@ -1,6 +1,6 @@
 <div class="tab-page {{ $tabPageName }}" id="{{ $tabIndexPageName }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $index }}"><i class="{{ $_style['icons_plugin'] }}"></i>{{ ManagerTheme::getLexicon('manage_plugins') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="{{ $_style['icon_plugin'] }}"></i>{{ ManagerTheme::getLexicon('manage_plugins') }}</a>
     </h2>
 
     <script>tpResources.addTabPage(document.getElementById('{{ $tabIndexPageName }}'));</script>
@@ -16,11 +16,11 @@
                 <input class="form-control filterElements-form" type="text" id="{{ $tabIndexPageName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
                     <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SitePlugin)->makeUrl('actions.new') }}">
-                        <i class="{{ $_style['actions_add'] }}"></i>
+                        <i class="{{ $_style['icon_add'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('new_plugin') }}</span>
                     </a>
                     <a class="btn btn-secondary" href="{{ (new EvolutionCMS\Models\SitePlugin)->makeUrl('actions.sort') }}">
-                        <i class="{{ $_style['actions_sort'] }}"></i>
+                        <i class="{{ $_style['icon_sort'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('plugin_priority') }}</span>
                     </a>
                     @if(!empty($checkOldPlugins))
@@ -29,11 +29,11 @@
                         </a>
                     @endif
                     <a class="btn btn-secondary" href="javascript:;" id="{{ $tabIndexPageName }}-help">
-                        <i class="{{ $_style['icons_tooltip'] }}"></i>
+                        <i class="{{ $_style['icon_question_circle'] }}"></i>
                         <span>{!! ManagerTheme::getLexicon('help') !!}</span>
                     </a>
                     <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_{{ $tabIndexPageName }}">
-                        <i class="{{ $_style['icons_bars'] }}"></i>
+                        <i class="{{ $_style['icon_bars'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('btn_view_options') }}</span>
                     </a>
                 </div>

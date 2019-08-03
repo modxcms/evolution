@@ -21,7 +21,7 @@
         </script>
     @endpush
     <h1>
-        <i class="{{ $_style['icons_user_access'] }}"></i>{{ ManagerTheme::getLexicon('mgr_access_permissions') }}<i class="{{ $_style['icons_tooltip'] }} help"></i>
+        <i class="{{ $_style['icon_user_access'] }}"></i>{{ ManagerTheme::getLexicon('mgr_access_permissions') }}<i class="{{ $_style['icon_question_circle'] }} help"></i>
     </h1>
 
     <div class="container element-edit-message">

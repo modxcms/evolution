@@ -282,11 +282,11 @@ function document_onload() {
   if (actionButtons !== null && actionSelect !== null) {
     var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a');
     actionPlus.classList.add('dropdown-toggle');
-    actionStay['stay1'] = '<i class="' + evo.style.actions_file + '"></i>';
-    actionStay['stay2'] = '<i class="' + evo.style.actions_pencil + '"></i>';
-    actionStay['stay3'] = '<i class="' + evo.style.actions_reply + '"></i>';
+    actionStay['stay1'] = '<i class="' + evo.style.icon_file + '"></i>';
+    actionStay['stay2'] = '<i class="' + evo.style.icon_pencil + '"></i>';
+    actionStay['stay3'] = '<i class="' + evo.style.icon_reply + '"></i>';
     if (actionSelect.value) {
-      actionSaveButton.innerHTML += '<i class="' + evo.style.actions_plus + '"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
+      actionSaveButton.innerHTML += '<i class="' + evo.style.icon_plus + '"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
     }
     var actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
     div.className = 'dropdown-menu';

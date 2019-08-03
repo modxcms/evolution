@@ -758,7 +758,7 @@ if (! function_exists('renderFormElement')) {
                         ' <a onclick="document.forms[\'mutate\'].elements[\'tv%s\'].value=\'\';document.forms[\'mutate\'].elements[\'tv%s\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="%s"></i></a>'
                         , $field_id
                         , $field_id
-                        , ManagerTheme::getStyle('actions_calendar_delete')
+                        , ManagerTheme::getStyle('icon_calendar_close')
                     );
 
                     break;

@@ -157,7 +157,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?>
+                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["icon_save"] ?>"></i> <?php echo $_lang['edit']; ?>
                     </a>
                 </div>
 			</div>
@@ -293,7 +293,7 @@ switch ($input['mode']) {
 
             <div id="actions">
                 <div class="btn-group">
-                    <a href="<?php echo $stayUrl ?>" class="btn"><i class="<?php echo $_style["actions_save"] ?>"></i>
+                    <a href="<?php echo $stayUrl ?>" class="btn"><i class="<?php echo $_style["icon_save"] ?>"></i>
                         <?php echo $_lang['edit']; ?></a>
                 </div>
             </div>

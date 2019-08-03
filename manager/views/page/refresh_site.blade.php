@@ -4,7 +4,7 @@
     <div id="actions">
         <div class="btn-group">
             <a id="Button1" class="btn btn-success" href="index.php?a=26">
-                <i class="{{ $_style['icons_recycle'] }}"></i>{{ ManagerTheme::getLexicon('refresh_site') }}
+                <i class="{{ $_style['icon_recycle'] }}"></i>{{ ManagerTheme::getLexicon('refresh_site') }}
             </a>
         </div>
     </div>
