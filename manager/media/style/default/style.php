@@ -24,7 +24,7 @@ if(!empty($_GET['a']) && $_GET['a'] == 2) {
     $code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"];';
     $modx->addSnippet('getMessageCount',$code);
 
-// Large Icons
+	// Large Icons
     $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
     $_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
     $_style['icons_modules_large']      = 'fa fa-cubes fa-fw fa-2x';
@@ -90,7 +90,7 @@ $_style['tree_page_pdf_secure']     = "<i class='fa fa-file-pdf-o'><i class='fa 
 $_style['tree_page_word_secure']    = "<i class='fa fa-file-word-o'><i class='fa fa-lock'></i></i>";
 $_style['tree_page_excel_secure']   = "<i class='fa fa-file-excel-o'><i class='fa fa-lock'></i></i>";
 
-//View Resource data
+// View Resource data
 $_style['icons_new_document']       = 'fa fa-file-o';
 $_style['icons_new_weblink']        = 'fa fa-link';
 $_style['icons_move_document']      = 'fa fa-arrows';
@@ -100,15 +100,9 @@ $_style['icons_delete_resource']    = 'fa fa-trash';
 $_style['icons_undelete_resource']  = 'fa fa-undo';
 $_style['icons_resource_overview']  = 'fa fa-info';
 $_style['icons_edit_resource']      = 'fa fa-pencil-square-o';
-//context menu
-$_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
-$_style['icons_edit_document']      = $style_path.'icons/save.png';
-$_style['icons_delete_document']    = $style_path.'icons/trash.png';
-//locks
-$_style['icons_preview_resource']   = $style_path.'icons/eye.png';//$style_path.'icons/eye.png';
-$_style['icons_secured']            = "<i class='fa fa-lock'></i>";//$style_path.'icons/lock.png';
+$_style['icons_clone_document']     = 'fa fa-clone';
 
-//file manager icons
+// File manager icons
 $_style['files_save']               = 'fa fa-floppy-o';
 $_style['files_folder']             = 'fa fa-folder-o';
 $_style['files_deleted_folder']     = 'fa fa-folder-o';
@@ -126,8 +120,11 @@ $_style['files_view']               = 'fa fa-eye';
 $_style['files_download']           = 'fa fa-download';
 $_style['files_unzip']              = 'fa fa-file-archive-o';
 $_style['files_edit']               = 'fa fa-pencil-square-o';
+$_style['files_img']                = 'fa fa-camera';
+$_style['files_files']              = 'fa fa-files-o';
 
-//Action buttons
+// Action buttons
+$_style['actions_edit']             = 'fa fa-edit';
 $_style['actions_save']             = 'fa fa-floppy-o';
 $_style['actions_duplicate']        = 'fa fa-clone';
 $_style['actions_delete']           = 'fa fa-trash';
@@ -150,7 +147,6 @@ $_style['actions_angle_left']       = 'fa fa-angle-left';
 $_style['actions_angle_right']      = 'fa fa-angle-right';
 $_style['actions_chain']            = 'fa fa-chain';
 $_style['actions_chain_broken']     = 'fa fa-chain-broken';
-$_style['actions_edit']             = 'fa fa-edit';
 $_style['actions_move']             = 'fa fa-arrows';
 $_style['actions_pencil']           = 'fa fa-pencil';
 $_style['actions_reply']            = 'fa fa-reply';
@@ -160,63 +156,100 @@ $_style['actions_error']            = 'fa fa-times-circle';
 $_style['actions_info']             = 'fa fa-info-circle';
 $_style['actions_triangle']         = 'fa fa-exclamation-triangle';
 $_style['actions_table']            = 'fa fa-table';
-
-//for back compatibility
-
-$_style['icons_save']               = $style_path.'icons/save.png';
-$_style['icons_delete']             = $style_path.'icons/trash.png';
-$_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
-$_style['icons_unzip']              = $style_path.'icons/download-alt.png';
-
-
-// Indicators
-$_style['icons_tooltip']            = 'fa fa-question-circle';
-$_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
-$_style['icons_cal']                = $style_path.'icons/calendar.png';
-$_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
-$_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
-
-//modules
-$_style['icons_module']            = 'fa fa-cube';
-$_style['icons_modules']            = 'fa fa-cubes'; //$style_path.'icons/modules.png';
-$_style['icons_run']                = $style_path.'icons/play.png';
-
-//users and webusers
-$_style['icons_user']               = 'fa fa-user-circle-o'; //$style_path.'icons/user.png';
-$_style['icons_web_user']               = 'fa fa-user'; //$style_path.'icons/user.png';
-
-//Messages
-$_style['icons_message_unread']     = $style_path.'icons/email.png';
-$_style['icons_message_forward']    = $style_path.'icons/forward.png';
-$_style['icons_message_reply']      = $style_path.'icons/reply.png';
+$_style['actions_download']         = 'fa fa-download';
+$_style['actions_lock']             = 'fa fa-lock';
+$_style['actions_sort']             = 'fa fa-sort';
+$_style['actions_sort_num_asc']     = 'fa fa-sort-numeric-asc';
+$_style['actions_circle_up']        = 'fa fa-arrow-circle-up';
+$_style['actions_circle_down']      = 'fa fa-arrow-circle-down';
+$_style['actions_site_preview']     = 'fa fa-desktop';
+$_style['actions_logout']           = 'fa fa-sign-out';
+$_style['actions_expand']           = 'fa fa-expand';
+$_style['actions_compress']         = 'fa fa-compress';
 
 // Icons
+$_style['icons_tooltip']            = 'fa fa-question-circle';
+$_style['icons_cogs']               = 'fa fa-cogs';
+$_style['icons_cog']                = 'fa fa-cog';
+$_style['icons_sliders']            = 'fa fa-sliders';
+$_style['icons_home']               = 'fa fa-home';
+$_style['icons_brush']              = 'fa-paint-brush';
+$_style['icons_chevron_down']       = 'fa fa-chevron-down';
+$_style['icons_chevron_right']      = 'fa fa-chevron-right';
+$_style['icons_bars']               = 'fa fa-bars';
+$_style['icons_font']               = 'fa fa-font';
+$_style['icons_link']               = 'fa fa-link';
+$_style['icons_elements']           = 'fa fa-th';
+$_style['icons_chunk']              = 'fa fa-th-large';
+$_style['icons_plugin']             = 'fa fa-plug';
+$_style['icons_modules']            = 'fa fa-cubes'; //$style_path.'icons/modules.png';
+$_style['icons_module']             = 'fa fa-cube';
+$_style['icons_theme']              = 'fa fa-adjust';
+$_style['icons_recycle']            = 'fa fa-recycle';
+$_style['icons_code']               = 'fa fa-code';
+$_style['icons_template']           = 'fa fa-newspaper-o';
+$_style['icons_tv']                 = 'fa fa-list-alt';
+$_style['icons_role']               = 'fa fa-legal';
+
+
+// Users and webusers
+$_style['icons_user']               = 'fa fa-user-circle-o'; //$style_path.'icons/user.png';
+$_style['icons_user_access']        = 'fa fa-universal-access';
+$_style['icons_user_secret']        = 'fa fa-user-secret';
+$_style['icons_web_user']           = 'fa fa-user';
+$_style['icons_web_user_access']    = 'fa fa-male';
+
+// Locks
+$_style['icons_preview_resource']   = $style_path.'icons/eye.png';//$style_path.'icons/eye.png';
+$_style['icons_lock']               = 'fa fa-lock';
+$_style['icons_secured']            = "<i class='fa fa-lock'></i>";//$style_path.'icons/lock.png';
+
 $_style['icons_add']                = $style_path.'icons/add.png';
 $_style['icons_cancel']             = $style_path.'icons/cancel.png';
 $_style['icons_close']              = $style_path.'icons/stop.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png';
 $_style['icons_table']              = $style_path.'icons/table.png';
+$_style['icons_run']                = $style_path.'icons/play.png';
 
-// top bar
+// Context menu
+$_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
+$_style['icons_edit_document']      = $style_path.'icons/save.png';
+$_style['icons_delete_document']    = $style_path.'icons/trash.png';
+
+// For back compatibility
+$_style['icons_save']               = $style_path.'icons/save.png';
+$_style['icons_delete']             = $style_path.'icons/trash.png';
+$_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
+$_style['icons_unzip']              = $style_path.'icons/download-alt.png';
+
+// Indicators
+$_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
+$_style['icons_cal']                = $style_path.'icons/calendar.png';
+$_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
+$_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
+
+// Messages
+$_style['icons_message_unread']     = $style_path.'icons/email.png';
+$_style['icons_message_forward']    = $style_path.'icons/forward.png';
+$_style['icons_message_reply']      = $style_path.'icons/reply.png';
+
+// Top bar
 $_style['icons_loading_doc_tree']   = $style_path.'icons/info-sign.png';
 $_style['icons_mail']               = $style_path.'icons/email.png';
 $_style['icons_working']            = $style_path.'icons/exclamation.png';
 
-//event log
+// Event log
 $_style['icons_event1']             = $style_path.'icons/event1.png';
 $_style['icons_event2']             = $style_path.'icons/event2.png';
 $_style['icons_event3']             = $style_path.'icons/event3.png';
 
-
-//nowhere in the manager
+// Nowhere in the manager
 $_style['icons_folder']             = $style_path.'icons/folder.png';
 $_style['icons_email']              = $style_path.'icons/email.png';
-$_style['icons_home']               = $style_path.'icons/home.png';
 $_style['icons_sort_menuindex']     = $style_path.'icons/sort_index.png';
 $_style['icons_weblink']            = $style_path.'icons/world_link.png';
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png'; // Tabs
 $_style['icons_information']        = $style_path.'icons/info-sign.png';
-
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><i class="fa fa-spinner fa-spin"></i></p>';

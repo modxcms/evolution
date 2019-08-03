@@ -201,7 +201,7 @@
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? '<a title="{{ ManagerTheme::getLexicon('set_default') }}" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+                sd = defaultVal != undefined ? '<a title="{{ ManagerTheme::getLexicon('set_default') }}" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="{{ $_style['actions_refresh'] }}"></i></a>' : '';
 
                 t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
               }
@@ -359,14 +359,14 @@
         <input type="hidden" name="mode" value="{{ $action }}">
 
         <h1>
-            <i class="fa fa-code"></i>
+            <i class="{{ $_style['icons_code'] }}"></i>
             @if($data->name)
                 {{ $data->name }}
                 <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_snippet') }}
             @endif
-            <i class="fa fa-question-circle help"></i>
+            <i class="{{ $_style['icons_tooltip'] }} help"></i>
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
@@ -403,7 +403,7 @@
                                 'name' => 'locked',
                                 'checked' => ($data->locked == 1)
                              ]) .
-                             '<i class="fa fa-lock"></i>
+                             '<i class="' . $_style['icons_lock'] . '"></i>
                              </label>
                              <small class="form-text text-danger hide" id="savingMessage"></small>
                              <script>if (!document.getElementsByName(\'name\')[0].value) document.getElementsByName(\'name\')[0].focus();</script>'

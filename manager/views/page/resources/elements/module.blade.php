@@ -6,7 +6,7 @@
                 <div class="lockCell">
                     <?php $rowLock = $item->alreadyEditInfo; ?>
                     <span title="{{ str_replace(['[+lasthit_df+]', '[+element_type+]'], [$rowLock['lasthit_df'], ManagerTheme::getLexicon('lock_element_type_2')], ManagerTheme::getLexicon('lock_element_editing')) }}" class="editResource" style="cursor:context-menu;">
-                        <i class="fa fa-eye"></i>
+                        <i class="{{ $_style['actions_preview'] }}"></i>
                     </span>&nbsp;
                 </div>
             @endif
@@ -18,12 +18,12 @@
                         <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
                     @endif
                         @if(empty($item->icon))
-                            <i class="fa fa-cube"></i>
+                            <i class="{{ $_style['icons_module'] }}"></i>
                         @else
                             <i class="{{ $item->icon }}"></i>
                         @endif
                         @if($item->locked)
-                            <i class="fa fa-lock"></i>
+                            <i class="{{ $_style['icons_lock'] }}"></i>
                         @endif
                         {{ $item->name }}
                         <small>({{ $item->id }})</small>
@@ -46,28 +46,28 @@
                     @if(evolutionCMS()->hasPermission('exec_module'))
                         <li>
                             <a href="{{ $item->makeUrl('actions.run') }}" title="{{ ManagerTheme::getLexicon('run_module') }}">
-                                <i class="fa fa-play fa-fw"></i>
+                                <i class="{{ $_style['actions_run'] }}"></i>
                             </a>
                         </li>
                     @endif
                     @if(evolutionCMS()->hasPermission('edit_module'))
                         <li>
                             <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
-                                <i class="fa fa-edit fa-fw"></i>
+                                <i class="{{ $_style['actions_edit'] }}"></i>
                             </a>
                         </li>
                     @endif
                     @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
                         <li>
                             <a href="{{ $item->makeUrl('actions.duplicate') }}" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
-                                <i class="fa fa-clone fa-fw"></i>
+                                <i class="{{ $_style['actions_duplicate'] }}"></i>
                             </a>
                         </li>
                     @endif
                     @if(evolutionCMS()->hasPermission('delete_module'))
                         <li>
                             <a href="{{ $item->makeUrl('actions.delete') }}" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete') }}')">
-                                <i class="fa fa-trash fa-fw"></i>
+                                <i class="{{ $_style['actions_delete'] }}"></i>
                             </a>
                         </li>
                     @endif

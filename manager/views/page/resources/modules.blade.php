@@ -1,7 +1,8 @@
 <div class="tab-page {{ $tabPageName }}" id="{{ $tabIndexPageName }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $index }}"><i class="fa fa-cubes"></i> {{ ManagerTheme::getLexicon('modules') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="{{ $_style['icons_modules'] }}"></i>{{ ManagerTheme::getLexicon('modules') }}</a>
     </h2>
+
     <script>tpResources.addTabPage(document.getElementById('{{ $tabIndexPageName }}'));</script>
 
     <div id="{{ $tabIndexPageName }}-info" class="msg-container" style="display:none">
@@ -16,16 +17,16 @@
                 <div class="input-group-btn">
                     @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
                         <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteModule)->makeUrl('actions.new') }}">
-                            <i class="fa fa-plus-circle"></i>
+                            <i class="{{ $_style['actions_add'] }}"></i>
                             <span>{{ ManagerTheme::getLexicon('new_module') }}</span>
                         </a>
                     @endif
                     <a class="btn btn-secondary" href="javascript:;" id="{{ $tabIndexPageName }}-help">
-                        <i class="fa fa-question-circle"></i>
+                        <i class="{{ $_style['icons_tooltip'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('help') }}</span>
                     </a>
                     <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_{{ $tabIndexPageName }}">
-                        <i class="fa fa-bars"></i>
+                        <i class="{{ $_style['icons_bars']  }}"></i>
                         <span>{{ ManagerTheme::getLexicon('btn_view_options') }}</span>
                     </a>
                 </div>

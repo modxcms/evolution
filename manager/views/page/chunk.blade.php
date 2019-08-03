@@ -63,14 +63,14 @@
         <input type="hidden" name="mode" value="{{ $action }}" />
 
         <h1>
-            <i class="fa fa-th-large"></i>
+            <i class="{{ $_style['icons_chunk'] }}"></i>
             @if($data->name)
                 {{ $data->name }}
                 <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_htmlsnippet') }}
             @endif
-            <i class="fa fa-question-circle help"></i>
+            <i class="{{ $_style['icons_tooltip'] }} help"></i>
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
@@ -101,15 +101,15 @@
                             ]) .
                             ($modx->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_htmlsnippet') . "\n" . ManagerTheme::getLexicon('lock_htmlsnippet_msg') .'">' .
-                             ManagerTheme::view('form.inputElement', [
+                            ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
                                 'name' => 'locked',
                                 'checked' => ($data->locked == 1)
-                             ]) .
-                             '<i class="fa fa-lock"></i>
-                             </label>
-                             <small class="form-text text-danger hide" id="savingMessage"></small>
-                             <script>if (!document.getElementsByName(\'name\')[0].value) document.getElementsByName(\'name\')[0].focus();</script>'
+                            ]) .
+                            '<i class="' . $_style['actions_lock'] . '"></i>
+                            </label>
+                            <small class="form-text text-danger hide" id="savingMessage"></small>
+                            <script>if (!document.getElementsByName(\'name\')[0].value) document.getElementsByName(\'name\')[0].focus();</script>'
                             : '') .
                             '</div>'
                     ])
