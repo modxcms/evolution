@@ -74,10 +74,10 @@
                 paging_prev: "{{ ManagerTheme::getLexicon('paging_prev') }}"
             },
             style: {
-                actions_file:              '<?= addslashes('<i class="' . $_style['icon_file'] . '"></i>') ?>',
-                actions_pencil:            '<?= addslashes('<i class="' . $_style['icon_pencil'] . '"></i>') ?>',
-                actions_plus:              '<?= addslashes('<i class="' . $_style['icon_plus'] . '"></i>') ?>',
-                actions_reply:             '<?= addslashes('<i class="' . $_style['icon_reply'] . '"></i>') ?>',
+                actions_file:              '<?= addslashes($_style['icon_file']) ?>',
+                actions_pencil:            '<?= addslashes($_style['icon_pencil']) ?>',
+                actions_plus:              '<?= addslashes($_style['icon_plus']) ?>',
+                actions_reply:             '<?= addslashes($_style['icon_reply']) ?>',
                 collapse_tree:             '<?= addslashes('<i class="' . $_style['icon_arrow_up_circle'] . '"></i>') ?>',
                 email:                     '<?= addslashes('<i class="' . $_style['icon_mail'] . '"></i>') ?>',
                 empty_recycle_bin:         '<?= addslashes('<i class="' . $_style['icon_trash'] . '"></i>') ?>',
@@ -91,7 +91,7 @@
                 tree_folderopen:           '<?= addslashes('<i class="' . $_style['icon_folder_open'] . '"></i>') ?>',
                 tree_folderopen_secure:    '<?= addslashes('<i class="' . $_style['icon_folder_open'] . '"></i>') ?>',
                 tree_minusnode:            '<?= addslashes('<i class="' . $_style["icon_angle_down"] . '"></i>') ?>',
-                tree_plusnode:             '<?= addslashes('<i class="' . $_style['icon_angle_right']  . '"></i>') ?>',
+                tree_plusnode:             '<?= addslashes('<i class="' . $_style['icon_angle_right'] . '"></i>') ?>',
                 tree_preview_resource:     '<?= addslashes('<i class="' . $_style['icon_eye'] . '"></i>') ?>'
             },
             permission: {

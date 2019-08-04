@@ -236,8 +236,10 @@ if(!function_exists('makeHTML')) {
                 'showChildren'     => 1,
                 'openFolder'       => 1,
                 'contextmenu'      => '',
-                'tree_minusnode'   => '<i class="' . $_style['icon_angle_down'] . '"></i>',
-                'tree_plusnode'    => '<i class="' . $_style['icon_angle_right'] . '"></i>',
+                'tree_minusnode'   => '<i class=\'' . $_style['icon_angle_down'] . '\'></i>',
+                'tree_plusnode'    => '<i class=\'' . $_style['icon_angle_right'] . '\'></i>',
+                'icon_folder_open'  => '<i class=\'' . $_style['icon_folder_open'] . '\'></i>',
+                'icon_folder_close' => '<i class=\'' . $_style['icon_folder'] . '\'></i>',
                 'spacer'           => $spacer,
                 'subMenuState'     => '',
                 'level'            => $level,
@@ -303,9 +305,6 @@ if(!function_exists('makeHTML')) {
                 }
 
             } else {
-                $ph['icon_folder_open'] = $_style['icon_folder_open'];
-                $ph['icon_folder_close'] = $_style['icon_folder'];
-
                 if ($_SESSION['tree_show_only_folders']) {
                     $tpl = getTplFolderNodeNotChildren();
                     $checkFolders = checkIsFolder($row['id'], 1) ? 1 : 0; // folders
