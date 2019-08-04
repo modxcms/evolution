@@ -584,7 +584,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['new_module'] = [
             'new_module',
             'modules',
-            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
+            '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
             'index.php?a=106',
             $this->managerTheme->getLexicon('module_management'),
             '',
