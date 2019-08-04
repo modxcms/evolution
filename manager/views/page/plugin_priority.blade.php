@@ -17,26 +17,25 @@
                     window.location.href = 'index.php?a=76';
                 },
             };
-
         </script>
     @endpush
 
     <h1>
-        <i class="fa fa-sort-numeric-asc"></i>{{ $_lang['plugin_priority_title'] }}
+        <i class="{{ $_style['icon_sort_num_asc'] }}"></i>{{ ManagerTheme::getLexicon('plugin_priority_title') }}
     </h1>
 
     {!! ManagerTheme::getStyle('actionbuttons.dynamic.save') !!}
 
     <div class="tab-page">
         <div class="container container-body">
-            <b>{{ $_lang['plugin_priority'] }}</b>
-            <p>{{ $_lang['plugin_priority_instructions'] }}</p>
+            <b>{{ ManagerTheme::getLexicon('plugin_priority') }}</b>
+            <p>{{ ManagerTheme::getLexicon('plugin_priority_instructions') }}</p>
 
             @if($updateMsg)
-                <span class="text-success" id="updated">{{ $_lang['sort_updated'] }}</span>
+                <span class="text-success" id="updated">{{ ManagerTheme::getLexicon('sort_updated') }}</span>
             @endif
 
-            <span class="text-danger" style="display:none;" id="updating">{{ $_lang['sort_updating'] }}</span>
+            <span class="text-danger" style="display:none;" id="updating">{{ ManagerTheme::getLexicon('sort_updating') }}</span>
 
             @foreach($events as $event)
                 <div class="form-group clearfix">
@@ -44,7 +43,7 @@
                     <ul id="{{ $event->getKey() }}" class="sortableList">
                         @foreach($event->plugins as $plugin)
                             <li id="item_{{ $plugin->getKey() }}"@if($plugin->disabled) class="disabledPlugin"@endif>
-                                <i class="fa fa-plug"></i> {{ $plugin->name }}@if($plugin->disabled) (hide) @endif
+                                <i class="{{ $_style['icon_plugin'] }}"></i> {{ $plugin->name }}@if($plugin->disabled) (hide) @endif
                             </li>
                         @endforeach
                     </ul>
@@ -61,7 +60,6 @@
     </form>
 
     <script type="text/javascript">
-
         evo.sortable('.sortableList > li', {
             complete: function(a) {
                 let list = [];
@@ -71,7 +69,6 @@
                 document.getElementById('list_' + a.parentNode.id).value = list.join(',');
             },
         });
-
     </script>
 
 @endsection

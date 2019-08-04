@@ -98,7 +98,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
                             <input type="text" id="datefrom" name="datefrom" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ?>" />
-                            <i onClick="document.logging.datefrom.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <i onClick="document.logging.datefrom.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ $logs = $modx->getDatabase()->makeArray($rs);
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
                             <input type="text" id="dateto" name="dateto" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ?>" />
-                            <i onClick="document.logging.dateto.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <i onClick="document.logging.dateto.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
@@ -118,8 +118,8 @@ $logs = $modx->getDatabase()->makeArray($rs);
                     </div>
                 </div>
 
-                <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["actions_search"] ?>"></i> <?= $_lang['search'] ?></a>
-                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+                <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["icon_search"] ?>"></i> <?= $_lang['search'] ?></a>
+                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
 
                 <input type="submit" name="log_submit" value="<?= $_lang["mgrlog_searchlogs"] ?>" style="display:none;" />
             </form>

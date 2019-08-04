@@ -1,13 +1,13 @@
 @extends('manager::template.page')
 @section('content')
     <h1>
-        <i class="fa fa-question-circle"></i> {{ ManagerTheme::getLexicon('help') }}
+        <i class="{{ $_style['icon_question_circle'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
     </h1>
 
     <div class="sectionBody">
         <div class="tab-pane" id="helpPane">
             <script>
-              var tp = new WebFXTabPane(document.getElementById('helpPane'), {{ (int)$modx->getConfig('remember_last_tab', 0) }});
+                var tp = new WebFXTabPane(document.getElementById('helpPane'), {{ (int)$modx->getConfig('remember_last_tab', 0) }});
             </script>
 
             @foreach($pages as $k => $v)
@@ -21,7 +21,7 @@
     </div>
     @push('scripts.bot')
         <script>
-          if (window.location.hash === '#version_notices') tp.setSelectedIndex(1);
+            if (window.location.hash === '#version_notices') tp.setSelectedIndex(1);
         </script>
     @endpush
 @endsection

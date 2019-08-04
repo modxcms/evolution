@@ -23,7 +23,7 @@
         <input type="hidden" name="site_id" value="{{ get_by_key($modx->config, 'site_id') }}" />
         <input type="hidden" name="settings_version" value="{{ $modx->getVersionData('version') }}" />
         <h1>
-            <i class="fa fa-sliders fw"></i>{{ ManagerTheme::getLexicon('settings_title') }}
+            <i class="{{ $_style['icon_sliders'] }}"></i>{{ ManagerTheme::getLexicon('settings_title') }}
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)

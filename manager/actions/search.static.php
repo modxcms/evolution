@@ -71,9 +71,9 @@ if (isset($_REQUEST['searchid'])) {
                     </div>
                 </div>
 
-                <a class="btn btn-success" href="javascript:;" onClick="document.searchform.submitok.click();"><i class="<?= $_style["actions_search"] ?>"></i> <?= $_lang['search'] ?>
+                <a class="btn btn-success" href="javascript:;" onClick="document.searchform.submitok.click();"><i class="<?= $_style["icon_search"] ?>"></i> <?= $_lang['search'] ?>
                 </a>
-                <a class="btn btn-secondary" href="index.php?a=2"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+                <a class="btn btn-secondary" href="index.php?a=2"><i class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
                 <input type="submit" value="Search" name="submitok" style="display:none" />
             </form>
         </div>
@@ -226,21 +226,22 @@ if (isset($_REQUEST['submitok'])) {
                         </tr>
                         </thead>
                         <tbody>
+
                         <?php
                         // icons by content type
                         $icons = array(
-                            'application/rss+xml' => $_style["tree_page_rss"],
-                            'application/pdf' => $_style["tree_page_pdf"],
-                            'application/vnd.ms-word' => $_style["tree_page_word"],
-                            'application/vnd.ms-excel' => $_style["tree_page_excel"],
-                            'text/css' => $_style["tree_page_css"],
-                            'text/html' => $_style["tree_page_html"],
-                            'text/plain' => $_style["tree_page"],
-                            'text/xml' => $_style["tree_page_xml"],
-                            'text/javascript' => $_style["tree_page_js"],
-                            'image/gif' => $_style["tree_page_gif"],
-                            'image/jpg' => $_style["tree_page_jpg"],
-                            'image/png' => $_style["tree_page_png"]
+                            'text/plain'                 => $_style["tree_page"],
+                            'text/html'                  => '<i class="' . $_style['icon_document'] . '"></i>',
+                            'text/xml'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+                            'text/css'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+                            'text/javascript'            => '<i class="' . $_style['icon_code_file'] . '"></i>',
+                            'image/gif'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+                            'image/jpg'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+                            'image/png'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+                            'application/pdf'            => '<i class="' . $_style['icon_pdf'] . '"></i>',
+                            'application/rss+xml'        => '<i class="' . $_style['icon_code_file'] . '"></i>',
+                            'application/vnd.ms-word'    => '<i class="' . $_style['icon_word'] . '"></i>',
+                            'application/vnd.ms-excel'   => '<i class="' . $_style['icon_exel'] . '"></i>',
                         );
 
                         while ($row = $modx->getDatabase()->getRow($rs)) {
@@ -249,9 +250,9 @@ if (isset($_REQUEST['submitok'])) {
                             if ($row['type'] == 'reference') {
                                 $icon .= $_style["tree_linkgo"];
                             } elseif ($row['isfolder'] == 0) {
-                                $icon .= isset($icons[$row['contenttype']]) ? $icons[$row['contenttype']] : $_style["tree_page_html"];
+                                $icon .= isset($icons[$row['contenttype']]) ? $icons[$row['contenttype']] : '<i class="' . $_style['icon_document'] . '"></i>';
                             } else {
-                                $icon .= $_style['tree_folder_new'];
+                                $icon .= '<i class="' . $_style['icon_folder'] . '"></i>';
                             }
 
                             $tdClass = "";
@@ -264,7 +265,7 @@ if (isset($_REQUEST['submitok'])) {
                             ?>
                             <tr>
                                 <td class="text-center">
-                                    <a href="index.php?a=3&id=<?= $row['id'] ?>" title="<?= $_lang['search_view_docdata'] ?>"><i class="<?= $_style['icons_resource_overview'] ?>" /></i></a>
+                                    <a href="index.php?a=3&id=<?= $row['id'] ?>" title="<?= $_lang['search_view_docdata'] ?>"><i class="<?= $_style['icon_info'] ?>" /></i></a>
                                 </td>
                                 <td class="text-right"><?= $row['id'] ?></td>
                                 <td class="text-center"><?= $icon ?></td>

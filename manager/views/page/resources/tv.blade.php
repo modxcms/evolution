@@ -1,7 +1,8 @@
 <div class="tab-page {{ $tabPageName }}" id="{{ $tabIndexPageName }}">
     <h2 class="tab">
-        <a href="?a=76&tab={{ $index }}"><i class="fa fa-list-alt"></i> {{ ManagerTheme::getLexicon('tmplvars') }}</a>
+        <a href="?a=76&tab={{ $index }}"><i class="{{ $_style['icon_tv'] }}"></i>{{ ManagerTheme::getLexicon('tmplvars') }}</a>
     </h2>
+
     <script>tpResources.addTabPage(document.getElementById('{{ $tabIndexPageName }}'));</script>
 
     <div id="{{ $tabIndexPageName }}-info" class="msg-container" style="display:none">
@@ -15,19 +16,19 @@
                 <input type="text" class="form-control filterElements-form" id="{{ $tabIndexPageName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
                     <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteTmplvar)->makeUrl('actions.new') }}">
-                        <i class="fa fa-plus-circle"></i>
+                        <i class="{{ $_style['icon_add'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('new_tmplvars') }}</span>
                     </a>
                     <a class="btn btn-secondary" href="{{ (new EvolutionCMS\Models\SiteTmplvar)->makeUrl('actions.sort') }}">
-                        <i class="fa fa-sort"></i>
+                        <i class="{{ $_style['icon_sort'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('template_tv_edit') }}</span>
                     </a>
                     <a class="btn btn-secondary" href="javascript:;" id="{{ $tabIndexPageName }}-help">
-                        <i class="fa fa-question-circle"></i>
+                        <i class="{{ $_style['icon_question_circle'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('help') }}</span>
                     </a>
                     <a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_{{ $tabIndexPageName }}">
-                        <i class="fa fa-bars"></i>
+                        <i class="{{ $_style['icon_bars'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('btn_view_options') }}</span>
                     </a>
                 </div>

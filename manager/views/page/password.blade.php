@@ -16,7 +16,7 @@
     @endpush
 
     <h1>
-        <i class="fa fa-lock"></i>{{ ManagerTheme::getLexicon('change_password') }}
+        <i class="{{ $_style['icon_lock'] }}"></i>{{ ManagerTheme::getLexicon('change_password') }}
     </h1>
 
     @include('manager::partials.actionButtons', $actionButtons)

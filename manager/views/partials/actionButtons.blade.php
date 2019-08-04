@@ -16,7 +16,7 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
         @if(!empty($select) && !empty($save))
             <div class="btn-group">
                 <a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-                    <i class="fa fa-floppy-o"></i>
+                    <i class="{{ $_style['icon_save'] }}"></i>
                     <span>{{ ManagerTheme::getLexicon('save') }}</span>
                 </a>
                 <span class="btn btn-success plus dropdown-toggle"></span>
@@ -30,31 +30,31 @@ $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
             </div>
         @elseif(!empty($save))
             <a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-                <i class="fa fa-floppy-o"></i>
+                <i class="{{ $_style['icon_save'] }}"></i>
                 <span>{{ ManagerTheme::getLexicon('save') }}</span>
             </a>
         @endif
         @if(!empty($duplicate))
             <a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
-                <i class="fa fa-clone"></i>
+                <i class="{{ $_style['icon_clone'] }}"></i>
                 <span>{{ ManagerTheme::getLexicon('duplicate') }}</span>
             </a>
         @endif
         @if(!empty($delete))
             <a id="Button3" class="btn btn-secondary" href="javascript:;" onclick="actions.delete();">
-                <i class="fa fa-trash"></i>
+                <i class="{{ $_style['icon_trash'] }}"></i>
                 <span>{{ ManagerTheme::getLexicon('delete') }}</span>
             </a>
         @endif
         @if(!empty($cancel))
             <a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-                <i class="fa fa-times-circle"></i>
+                <i class="{{ $_style['icon_cancel'] }}"></i>
                 <span>{{ ManagerTheme::getLexicon('cancel') }}</span>
             </a>
         @endif
         @if(!empty($preview))
             <a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
-                <i class="fa fa-eye"></i>
+                <i class="{{ $_style['icon_eye'] }}"></i>
                 <span>{{ ManagerTheme::getLexicon('preview') }}</span>
             </a>
         @endif

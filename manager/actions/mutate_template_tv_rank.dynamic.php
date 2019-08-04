@@ -142,7 +142,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
         <p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
         <p>
             <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="fa fa-sort"></i> <?= $_lang['sort_alphabetically'] ?></a>
-            <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+            <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
         </p>
         <?= $updateMsg ?>
         <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>

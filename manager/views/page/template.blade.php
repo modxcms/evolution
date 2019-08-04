@@ -47,14 +47,14 @@
         <input type="hidden" name="mode" value="{{ $action }}">
 
         <h1>
-            <i class="fa fa-newspaper-o"></i>
+            <i class="{{ $_style['icon_template'] }}"></i>
             @if($data->templatename)
                 {{ $data->templatename }}
                 <small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_template') }}
             @endif
-            <i class="fa fa-question-circle help"></i>
+            <i class="{{ $_style['icon_question_circle'] }} help"></i>
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
@@ -92,7 +92,7 @@
                                     'name' => 'locked',
                                     'checked' => ($data->locked == 1)
                                  ]) .
-                                 '<i class="fa fa-lock"></i>
+                                 '<i class="' . $_style['icon_lock'] . '"></i>
                                  </label>
                                  <small class="form-text text-danger hide" id="savingMessage"></small>
                                  <script>if (!document.getElementsByName(\'templatename\')[0].value) document.getElementsByName(\'templatename\')[0].focus();</script>'

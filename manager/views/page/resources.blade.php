@@ -13,13 +13,13 @@
 
 @section('content')
     <h1>
-        <i class="fa fa-th"></i>{{ ManagerTheme::getLexicon('element_management') }}
+        <i class="{{ $_style['icon_elements'] }}"></i>{{ ManagerTheme::getLexicon('element_management') }}
     </h1>
 
     <div class="sectionBody">
         <div class="tab-pane" id="resourcesPane">
             <script type="text/javascript">
-              tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), false);
+                tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), false);
             </script>
 
             @foreach($tabs as $tab)

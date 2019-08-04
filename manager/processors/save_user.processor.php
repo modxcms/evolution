@@ -164,7 +164,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a class="btn" href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?>
+                    <a class="btn" href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["icon_save"] ?>"></i> <?php echo $_lang['edit']; ?>
                     </a>
 			</div>
             </div>
@@ -304,7 +304,7 @@ switch ($input['mode']) {
                 <div class="btn-group">
                     <a class="btn" href="<?php echo ($id == $modx->getLoginUserID('mgr')) ? 'index.php?a=8' : $stayUrl;
                     ?>"><i
-                            class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID('mgr')) ? $_lang['logout'] : $_lang['edit']; ?>
+                            class="<?php echo $_style["icon_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID('mgr')) ? $_lang['logout'] : $_lang['edit']; ?>
                     </a>
 			</div>
 			</div>

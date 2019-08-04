@@ -196,12 +196,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         var llock = document.getElementById('llock');
         if(b) {
           parent.tree.ca = "link";
-          llock.className = "<?= $_style["actions_chain_broken"] ?>";
+          llock.className = "<?= $_style["icon_chain_broken"] ?>";
           allowLinkSelection = true;
         }
         else {
           parent.tree.ca = "open";
-          llock.className = "<?= $_style["actions_chain"] ?>";
+          llock.className = "<?= $_style["icon_chain"] ?>";
           allowLinkSelection = false;
         }
       }
@@ -220,12 +220,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         var plock = document.getElementById('plock');
         if(b) {
           parent.tree.ca = "parent";
-          plock.className = "<?= $_style["actions_folder_open"] ?>";
+          plock.className = "<?= $_style["icon_folder_open"] ?>";
           allowParentSelection = true;
         }
         else {
           parent.tree.ca = "open";
-          plock.className = "<?= $_style["actions_folder"] ?>";
+          plock.className = "<?= $_style["icon_folder"] ?>";
           allowParentSelection = false;
         }
       }
@@ -698,7 +698,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             <i class="<?= $_style["icons_tooltip"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_weblink_help');?>"></i>
                                         </td>
                                         <td>
-                                            <i id="llock" class="<?= $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
+                                            <i id="llock" class="<?= $_style["icon_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
                                             <input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? entities(stripslashes($content['content']), $modx->getConfig('modx_charset')) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?=ManagerTheme::getLexicon('insert');?>" onclick="BrowseFileServer('ta')" />
                                         </td>
                                     </tr>
@@ -773,8 +773,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     </td>
                                     <td>
                                         <input name="menuindex" type="text" maxlength="6" value="<?= $content['menuindex'] ?>" class="inputBox" onchange="documentDirty=true;" />
-                                        <a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['actions_angle_left'] ?>"></i></a>
-                                        <a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['actions_angle_right'] ?>"></i></a>
+                                        <a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['icon_angle_left'] ?>"></i></a>
+                                        <a href="javascript:;" class="btn btn-secondary" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;return false;"><i class="<?= $_style['icon_angle_right'] ?>"></i></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -824,7 +824,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             }
                                         }
                                         ?>
-                                        <i id="plock" class="<?= $_style["actions_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
+                                        <i id="plock" class="<?= $_style["icon_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);"></i>
                                         <b><span id="parentName"><?= (isset($_REQUEST['pid']) ? entities($_REQUEST['pid']) : $content['parent']) ?> (<?= entities($parentname) ?>)</span></b>
                                         <input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? entities($_REQUEST['pid']) : $content['parent']) ?>" onchange="documentDirty=true;" />
                                     </td>
@@ -1194,7 +1194,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     <td>
                                         <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'pub_date', 0, 'is_scalar') === 0 || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
-                                            <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
+                                            <i class="<?= $_style["icon_calendar_close"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1210,7 +1210,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     <td>
                                         <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'unpub_date', 0, 'is_scalar') === 0 || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
-                                            <i class="<?= $_style["actions_calendar_delete"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
+                                            <i class="<?= $_style["icon_calendar_close"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
                                 </tr>
                                 <tr>

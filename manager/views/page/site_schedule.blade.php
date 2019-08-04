@@ -4,7 +4,7 @@
         <script src="media/script/tablesort.js"></script>
     @endpush
     <h1>
-        <i class="fa fa-calendar"></i>{{ ManagerTheme::getLexicon('site_schedule') }}
+        <i class="{{ $_style['icon_calendar'] }}"></i>{{ ManagerTheme::getLexicon('site_schedule') }}
     </h1>
 
     <div class="tab-page">
