@@ -536,7 +536,7 @@ if(!function_exists('getIconInfo')) {
             'application/pdf'          => '<i class="' . $_style['icon_pdf'] . '"></i>',
             'application/rss+xml'      => '<i class="' . $_style['icon_code_file'] . '"></i>',
             'application/vnd.ms-word'  => '<i class="' . $_style['icon_word'] . '"></i>',
-            'application/vnd.ms-excel' => '<i class="' . $_style['icon_exel'] . '"></i>',
+            'application/vnd.ms-excel' => '<i class="' . $_style['icon_excel'] . '"></i>',
         );
     }
 }
