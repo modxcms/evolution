@@ -87,7 +87,7 @@ while ($ph = $modx->getDatabase()->getRow($rs)) {
 
     $ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-    $ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="'. $_style['icon_undo'] . $_style['icon_size_fix'] . '"></i></a>');
+    $ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="'. $_style['icon_info'] . $_style['icon_size_fix'] . '"></i></a>');
 
     $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['longtitle']);
     $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['description']);
