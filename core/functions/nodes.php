@@ -108,7 +108,7 @@ if(!function_exists('makeHTML')) {
         );
         if (!$modx->getDatabase()->getRecordCount($result)) {
             $output .= sprintf(
-                '<div><a class="empty">%s<i class="fa fa-ban"></i>&nbsp;<span class="empty">%s</span></a></div>'
+                '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
                 , $spacer
                 , $_lang['empty_folder']
             );
