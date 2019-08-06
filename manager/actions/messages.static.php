@@ -11,7 +11,7 @@ $messagetext = '';
 ?>
 
 <h1>
-    <i class="fa fa-envelope"></i><?= $_lang['messages_title'] ?>
+    <i class="<?= $_style['icon_mail'] ?>"></i><?= $_lang['messages_title'] ?>
 </h1>
 
 <?php if (isset($_REQUEST['id']) && $_REQUEST['m'] == 'r') { ?>
@@ -38,8 +38,8 @@ $messagetext = '';
                     }
                     ?>
                     <div class="btn-group float-xs-right">
-                        <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="fa fa-reply"></i> <?= $_lang['messages_reply'] ?></a>
-                        <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="fa fa-forward"></i> <?= $_lang['messages_forward'] ?></a>
+                        <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_reply'] ?>"></i> <?= $_lang['messages_reply'] ?></a>
+                        <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_forward'] ?>></i> <?= $_lang['messages_forward'] ?></a>
                         <a id="Button3" class="btn btn-outline-danger btn-sm" href="index.php?a=65&id=<?= $message['id'] ?>"><i class="<?= $_style["icon_trash"] ?>"></i> <?= $_lang['delete'] ?></a>
                     </div>
                     <p class="clearfix"></p>
@@ -167,7 +167,7 @@ $messagetext = '';
                             $messagestyle = $message['messageread'] == 0 ? "text-primary" : "";
                             ?>
                             <tr>
-                                <td><?= $message['messageread'] == 0 ? '<i class="fa fa-envelope"></i>' : "" ?></td>
+                                <td><?= $message['messageread'] == 0 ? '<i class="'. $_style['icon_mail'] .'"></i>' : "" ?></td>
                                 <td class="<?= $messagestyle ?>" style="cursor: pointer;" onClick="window.location.href='index.php?a=10&id=<?= $message['id'] ?>&m=r';"><?= $message['subject'] ?></td>
                                 <td><?= $sendername ?></td>
                                 <td><?= $message['private'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>

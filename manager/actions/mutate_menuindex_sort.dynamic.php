@@ -148,7 +148,7 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
+    <i class="<?= $_style['icon_sort_num_asc'] ?>"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
@@ -161,7 +161,7 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
             ?>
             <p><?= $_lang["sort_elements_msg"] ?></p>
             <p>
-                <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="fa fa-sort"></i> <?= $_lang['sort_alphabetically'] ?></a>
+                <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['icon_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
                 <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
             </p>
             <?= $updateMsg ?>

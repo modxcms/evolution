@@ -204,7 +204,7 @@ if (substr($webstart_path, 0, 1) == '/') {
     </script>
 
     <h1>
-        <i class="fa fa-folder-open-o"></i><?= $_lang['manage_files'] ?>
+        <i class="<?= $_style['icon_category'] ?>"></i><?= $_lang['manage_files'] ?>
     </h1>
 
     <div id="actions">

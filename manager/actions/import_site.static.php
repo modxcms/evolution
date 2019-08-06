@@ -35,7 +35,7 @@ $allowedfiles = array(
 </script>
 
 <h1>
-    <i class="fa fa-upload"></i><?= $_lang['import_site_html'] ?>
+    <i class="<?= $_style['icon_upload'] ?>"></i><?= $_lang['import_site_html'] ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>

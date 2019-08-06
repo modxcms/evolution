@@ -57,7 +57,7 @@ if(is_array($evtOut)) {
         ?>
 
         <div id="node0" class="rootNode"><a class="node" onclick="modx.tree.treeAction(event, 0)" data-id="0" data-title-esc="{{ $siteName }}"><span class="icon"><i class="{{ $_style['icon_sitemap'] }}"></i></span><span class="title">{{ $siteName }}</span></a>
-            <div id="treeloader"><i class="{{ $_style['icon_cog'] }} fa-spin"></i></div>
+            <div id="treeloader"><i class="{{ $_style['icon_cog'] }} {{ $_style['icon_spin'] }}"></i></div>
         </div>
         <div id="treeRoot"></div>
 

@@ -20,7 +20,7 @@ if (isset($_REQUEST['searchid'])) {
     </script>
 
     <h1>
-        <i class="fa fa-search"></i><?= $_lang['search_criteria'] ?>
+        <i class="<?= $_style['icon_search'] ?>"></i><?= $_lang['search_criteria'] ?>
     </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
@@ -230,7 +230,7 @@ if (isset($_REQUEST['submitok'])) {
                         <?php
                         // icons by content type
                         $icons = array(
-                            'text/plain'                 => $_style["tree_page"],
+                            'text/plain'                 => '<i class="' . $_style['icon_document'] . '"></i>',
                             'text/html'                  => '<i class="' . $_style['icon_document'] . '"></i>',
                             'text/xml'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
                             'text/css'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
@@ -300,11 +300,11 @@ if (isset($_REQUEST['submitok'])) {
                 if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
                     $docscounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($docscounts > 0) {
-                        $output .= '<li><b><i class="fa fa-sitemap"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_sitemap'] . '"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
                             $output .= '<li' . addClassForItemList('', !$row['published'], $row['deleted']) . '>
                                 <a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' .
-                                    highlightingCoincidence($row['pagetitle'], $_REQUEST['searchfields']) . ' <small>(' . highlightingCoincidence($row['id'], $_REQUEST['searchfields']) . ')</small>' . '<i class="fa fa-external-link"></i>
+                                    highlightingCoincidence($row['pagetitle'], $_REQUEST['searchfields']) . ' <small>(' . highlightingCoincidence($row['id'], $_REQUEST['searchfields']) . ')</small>' . '<i class="' . $_style['icon_external_link'] . '"></i>
                                 </a>
                             </li>';
                         }
@@ -319,9 +319,9 @@ if (isset($_REQUEST['submitok'])) {
 					OR `content` like '%" . $searchfields . "%'");
                     $templatecounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($templatecounts > 0) {
-                        $output .= '<li><b><i class="fa fa-newspaper-o"></i> ' . $_lang["manage_templates"] . ' (' . $templatecounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_template'] . '"></i> ' . $_lang["manage_templates"] . ' (' . $templatecounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked']) . '><a href="index.php?a=16&id=' . $row['id'] . '" id="templates_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['templatename'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked']) . '><a href="index.php?a=16&id=' . $row['id'] . '" id="templates_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['templatename'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }
@@ -341,9 +341,9 @@ if (isset($_REQUEST['submitok'])) {
 					OR `default_text` like '%" . $searchfields . "%'");
                     $tvscounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($tvscounts > 0) {
-                        $output .= '<li><b><i class="fa fa-list-alt"></i> ' . $_lang["settings_templvars"] . ' (' . $tvscounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_tv'] . '"></i> ' . $_lang["settings_templvars"] . ' (' . $tvscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked']) . '><a href="index.php?a=301&id=' . $row['id'] . '" id="tmplvars_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked']) . '><a href="index.php?a=301&id=' . $row['id'] . '" id="tmplvars_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }
@@ -359,9 +359,9 @@ if (isset($_REQUEST['submitok'])) {
 					OR `snippet` like '%" . $searchfields . "%'");
                     $chunkscounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($chunkscounts > 0) {
-                        $output .= '<li><b><i class="fa fa-th-large"></i> ' . $_lang["manage_htmlsnippets"] . ' (' . $chunkscounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_chunk'] . '"></i> ' . $_lang["manage_htmlsnippets"] . ' (' . $chunkscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=78&id=' . $row['id'] . '" id="htmlsnippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=78&id=' . $row['id'] . '" id="htmlsnippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }
@@ -379,9 +379,9 @@ if (isset($_REQUEST['submitok'])) {
 					OR `moduleguid` like '%" . $searchfields . "%'");
                     $snippetscounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($snippetscounts > 0) {
-                        $output .= '<li><b><i class="fa fa-code"></i> ' . $_lang["manage_snippets"] . ' (' . $snippetscounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_code'] . '"></i> ' . $_lang["manage_snippets"] . ' (' . $snippetscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=22&id=' . $row['id'] . '" id="snippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=22&id=' . $row['id'] . '" id="snippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }
@@ -399,9 +399,9 @@ if (isset($_REQUEST['submitok'])) {
 					OR `moduleguid` like '%" . $searchfields . "%'");
                     $pluginscounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($pluginscounts > 0) {
-                        $output .= '<li><b><i class="fa fa-plug"></i> ' . $_lang["manage_plugins"] . ' (' . $pluginscounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_plugin'] . '"></i> ' . $_lang["manage_plugins"] . ' (' . $pluginscounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=102&id=' . $row['id'] . '" id="plugins_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=102&id=' . $row['id'] . '" id="plugins_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }
@@ -420,9 +420,9 @@ if (isset($_REQUEST['submitok'])) {
                     OR `resourcefile` like '%" . $searchfields . "%'");
                     $modulescounts = $modx->getDatabase()->getRecordCount($rs);
                     if ($modulescounts > 0) {
-                        $output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
+                        $output .= '<li><b><i class="' . $_style['icon_cogs'] . '"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
                         while ($row = $modx->getDatabase()->getRow($rs)) {
-                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="fa fa-external-link"></i></a></li>';
+                            $output .= '<li' . addClassForItemList($row['locked'], $row['disabled']) . '><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '<i class="' . $_style['icon_external_link'] . '"></i></a></li>';
                         }
                     }
                 }

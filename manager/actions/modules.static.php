@@ -96,7 +96,7 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="fa fa-cubes"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
+    <i class="<?= $_style['icon_modules'] ?>"></i><?= $_lang['module_management'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.newmodule') ?>

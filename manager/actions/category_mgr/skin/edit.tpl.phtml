@@ -1,8 +1,8 @@
 <form id="category-edit-form" action="<?php echo $view->get('url'); ?>" method="post">
     <input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
     <div class="form-group">
-        <a class="btn btn-success btn-sm" href="javascript:;" onclick="document.getElementById('category-edit-form').submit();return false;"><i class="fa fa-refresh"></i> <?php echo $view->txt('cm_update_categories'); ?></a>
-        <a class="btn btn-secondary btn-sm" href="javascript:;" id="edit-help" onclick="document.querySelector('#edit-info').classList.toggle('show')"><i class="fa fa-question-circle"></i> <?php echo $_lang['help']; ?></a>
+        <a class="btn btn-success btn-sm" href="javascript:;" onclick="document.getElementById('category-edit-form').submit();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?php echo $view->txt('cm_update_categories'); ?></a>
+        <a class="btn btn-secondary btn-sm" href="javascript:;" id="edit-help" onclick="document.querySelector('#edit-info').classList.toggle('show')"><i class="<?= $_style['icon_question_circle'] ?>"></i> <?php echo $_lang['help']; ?></a>
     </div>
     <p id="edit-info" class="element-edit-message">
         Change category name or delete category from the Manager.
@@ -24,7 +24,7 @@
                     <tr>
                         <td>
                             <button class="btn btn-secondary collapsed" type="button" data-toggle="collapse" data-target="#collapse-edit-<?php echo $i; ?>" aria-expanded="false" aria-controls="#collapse-edit-<?php echo $i; ?>" data-tooltip="#assigned-elements-<?php echo $category['id']; ?>">
-                                <i class="fa fa-info-circle"></i>
+                                <i class="<?= $_style['icon_info_circle'] ?>"></i>
                             </button>
                             <div id="assigned-elements-<?php echo $category['id']; ?>" class="hide"><?php $view->renderView('chunks/edit/assigned_elements', $view->getAllAssignedElements($category['id'])); ?></div>
                         </td>
@@ -37,7 +37,7 @@
                             <input type="checkbox" name="<?php echo $view->get('request_key'); ?>[edit][data][<?php echo $category['id'] ?>][delete]" value="1" />
                         </td>
                         <td class="text-xs-center">
-                            <a class="btn btn-outline-danger" onclick="return confirm('<?php echo $view->txt('are_you_sure'); ?>');" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" data-tooltip="<?php echo htmlspecialchars($category['category']) ?>::<?php echo sprintf($view->txt('cm_delete_element_x_now'), htmlspecialchars($category['category'])); ?>"><i class="fa fa-exclamation-triangle"></i> <?php echo $view->txt('delete'); ?></a>
+                            <a class="btn btn-outline-danger" onclick="return confirm('<?php echo $view->txt('are_you_sure'); ?>');" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" data-tooltip="<?php echo htmlspecialchars($category['category']) ?>::<?php echo sprintf($view->txt('cm_delete_element_x_now'), htmlspecialchars($category['category'])); ?>"><i class="<?= $_style['icon_info_triangle'] ?>"></i> <?php echo $view->txt('delete'); ?></a>
                         </td>
                     </tr>
                     <tr class="collapse" id="collapse-edit-<?php echo $i; ?>">
