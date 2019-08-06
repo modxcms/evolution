@@ -29,8 +29,9 @@ if(!empty($_GET['a']) && $_GET['a'] == 2) {
 $_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . ManagerTheme::getTheme() . '/images/favicon.ico');
 
 // Icons
-$_style['icon_size_2x']           = 'fa-2x';
-$_style['icon_size_fix']          = 'fa-fw';
+$_style['icon_size_2x']           = ' fa-2x';
+$_style['icon_size_fix']          = ' fa-fw';
+$_style['icon_spin']              = ' fa-spin';
 
 $_style['icon_add']               = 'fa fa-plus-circle';
 $_style['icon_angle_down']        = 'fa fa-angle-down';
@@ -45,6 +46,7 @@ $_style['icon_bars']              = 'fa fa-bars';
 $_style['icon_brush']             = 'fa fa-paint-brush';
 $_style['icon_calendar']          = 'fa fa-calendar';
 $_style['icon_calendar_close']    = 'fa fa-calendar-times-o';
+$_style['icon_category']          = 'fa fa-object-group';
 $_style['icon_camera']            = 'fa fa-camera';
 $_style['icon_cancel']            = 'fa fa-times-circle';
 $_style['icon_chain']             = 'fa fa-link';
@@ -54,6 +56,7 @@ $_style['icon_check_square']      = 'fa fa-check-square';
 $_style['icon_chevron_down']      = 'fa fa-chevron-down';
 $_style['icon_chevron_right']     = 'fa fa-chevron-right';
 $_style['icon_chunk']             = 'fa fa-th-large';
+$_style['icon_circle']            = 'fa fa-circle';
 $_style['icon_clock']             = 'fa fa-clock-o';
 $_style['icon_clone']             = 'fa fa-clone';
 $_style['icon_close']             = 'fa fa-close';
@@ -77,9 +80,10 @@ $_style['icon_files']             = 'fa fa-files-o';
 $_style['icon_folder']            = 'fa fa-folder';
 $_style['icon_folder_open']       = 'fa fa-folder-open';
 $_style['icon_font']              = 'fa fa-font';
+$_style['icon_forward']           = 'fa fa-forward';
 $_style['icon_globe']             = 'fa fa-globe';
 $_style['icon_home']              = 'fa fa-home';
-$_style['icon_home']              = 'fa fa-home';
+$_style['icon_hourglass']         = 'fa fa-hourglass-end';
 $_style['icon_i_cursor']          = 'fa fa-i-cursor';
 $_style['icon_image']             = 'fa fa-file-image-o';
 $_style['icon_info']              = 'fa fa-info';
@@ -110,6 +114,7 @@ $_style['icon_sort']              = 'fa fa-sort';
 $_style['icon_sort_num_asc']      = 'fa fa-sort-numeric-asc';
 $_style['icon_stop']              = 'fa fa-stop';
 $_style['icon_table']             = 'fa fa-table';
+$_style['icon_tachometer']        = 'fa fa-tachometer';
 $_style['icon_template']          = 'fa fa-newspaper-o';
 $_style['icon_theme']             = 'fa fa-adjust';
 $_style['icon_trash']             = 'fa fa-trash';
@@ -118,11 +123,13 @@ $_style['icon_tv']                = 'fa fa-list-alt';
 $_style['icon_undo']              = 'fa fa-undo';
 $_style['icon_upload']            = 'fa fa-upload';
 $_style['icon_user']              = 'fa fa-user-circle-o';
+$_style['icon_users']             = 'fa fa-users';
 $_style['icon_user_access']       = 'fa fa-universal-access';
 $_style['icon_user_secret']       = 'fa fa-user-secret';
 $_style['icon_web_user']          = 'fa fa-user';
 $_style['icon_web_user_access']   = 'fa fa-male';
 $_style['icon_word']              = 'fa fa-file-word-o';
+$_style['icon_wrench']            = 'fa fa-wrench';
 
 $_style['tx']                     = $style_path.'misc/_tx_.gif';
 
@@ -289,7 +296,7 @@ $_style['actionbuttons'] = array(
 		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-					<i class="fa fa-plus-circle"></i><span>' . $_lang['new_module'] . '</span>
+					<i class="' . $_style["icon_add"] . '"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
 			</div>
 		</div>' : ''),
