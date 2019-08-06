@@ -1438,7 +1438,7 @@
             if (c[1] > 0) {
               el = d.getElementById('newMail');
               if (el) {
-                el.innerHTML = '<a href="javascript:;" onclick="modx.tabs({url:\'' + modx.MODX_MANAGER_URL + '?a=10\'' + ',title:\'' + modx.lang.inbox + '\'' + '});">' + modx.style.mail + modx.lang.inbox + ' (' + c[0] + ' / ' + c[1] + ')</a>';
+                el.innerHTML = '<a href="javascript:;" onclick="modx.tabs({url:\'' + modx.MODX_MANAGER_URL + '?a=10\'' + ',title:\'' + modx.lang.inbox + '\'' + '});">' + modx.style.email + modx.lang.inbox + ' (' + c[0] + ' / ' + c[1] + ')</a>';
                 el.style.display = 'block';
               }
             }

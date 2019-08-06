@@ -39,7 +39,7 @@ if(is_array($evtOut)) {
         @endif
 
         @if($modx->hasPermission('empty_trash'))
-        <a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="{{ ManagerTheme::getLexicon('empty_recycle_bin_empty') }}"><i class="{{ $_style['icon_delete'] }}"></i></a>
+        <a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="{{ ManagerTheme::getLexicon('empty_recycle_bin_empty') }}"><i class="{{ $_style['icon_trash'] }}"></i></a>
         @endif
 
         <a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)" title="{{ ManagerTheme::getLexicon('manager_theme_mode_title') }}"><i class="{{ $_style['icon_theme'] }}"></i></a>

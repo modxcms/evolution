@@ -28,7 +28,7 @@ $_style = ManagerTheme::getStyle();
             </script>
 
             <div id="tab-add-category" class="tab-page">
-                <h2 id="tab-header-add" class="tab"><i class="<?= $_style['icon_edit'] ?>"></i> <?= $view->txt('cm_add_new_category') ?></h2>
+                <h2 id="tab-header-add" class="tab"><i class="<?= $_style['icon_add'] ?>"></i> <?= $view->txt('cm_add_new_category') ?></h2>
                 <script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-add-category'));</script>
                 <div class="container container-body">
                     <?php $view->renderView('chunks/messages', $view->getMessages('add')) ?>
