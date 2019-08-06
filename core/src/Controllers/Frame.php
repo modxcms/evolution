@@ -677,7 +677,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'web_user_management_title',
                 'users',
                 sprintf(
-                    '<i class="' . $this->managerTheme->getStyle('icon_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
+                    '<i class="' . $this->managerTheme->getStyle('icon_web_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
                     , $this->managerTheme->getLexicon('web_user_management_title')
                 ),
                 'index.php?a=99',
