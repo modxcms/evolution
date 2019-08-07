@@ -3215,7 +3215,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         echo '<!DOCTYPE html>
             <html lang="' . $lang_attribute . '" dir="' . $textdir . '">
                 <head>
-                <title>MODX :: Alert</title>
+                <title>Evolution CMS :: Alert</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=' . $manager_charset . ';">
                 ' . $style . "
                 <script>

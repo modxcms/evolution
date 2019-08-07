@@ -343,6 +343,14 @@
                     </a>
                 </span>
                 ' : '') .
+                ($modx->hasPermission("bk_manager") ? '
+                <span class="wm_button">
+                    <a target="main" href="index.php?a=93">
+                        <i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
+                        <span>[%bk_manager%]</span>
+                    </a>
+                </span>
+                ' : '') .
                 ($modx->hasPermission("change_password") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=28">

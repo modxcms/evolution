@@ -1595,7 +1595,7 @@
             };
             modx.popup({
               type: 'warning',
-              title: 'MODX :: Alert',
+              title: 'Evolution CMS :: Alert',
               position: 'top center alertQuit',
               content: message,
               wrap: 'body'
@@ -1985,7 +1985,7 @@
                 if (!!e.target.contentWindow.__alertQuit) {
                   modx.popup({
                     type: 'warning',
-                    title: 'MODX :: Alert',
+                    title: 'Evolution CMS :: Alert',
                     position: 'top center alertQuit',
                     content: e.target.contentWindow.document.body.querySelector('p').innerHTML
                   });
