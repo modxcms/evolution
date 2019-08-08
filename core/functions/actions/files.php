@@ -24,6 +24,8 @@ if(!function_exists('determineIcon')) {
      */
     function determineIcon($file, $selFile, $mode)
     {
+        $_style = ManagerTheme::getStyle();
+
         $icons = array(
             'default' => $_style['icon_file'],
             'edit'    => $_style['icon_edit'],
