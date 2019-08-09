@@ -39,7 +39,7 @@ if(is_array($evtOut)) {
         @endif
 
         @if($modx->hasPermission('empty_trash'))
-        <a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="{{ ManagerTheme::getLexicon('empty_recycle_bin_empty') }}"><i class="{{ $_style['icon_delete'] }}"></i></a>
+        <a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="{{ ManagerTheme::getLexicon('empty_recycle_bin_empty') }}"><i class="{{ $_style['icon_trash'] }}"></i></a>
         @endif
 
         <a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)" title="{{ ManagerTheme::getLexicon('manager_theme_mode_title') }}"><i class="{{ $_style['icon_theme'] }}"></i></a>
@@ -57,7 +57,7 @@ if(is_array($evtOut)) {
         ?>
 
         <div id="node0" class="rootNode"><a class="node" onclick="modx.tree.treeAction(event, 0)" data-id="0" data-title-esc="{{ $siteName }}"><span class="icon"><i class="{{ $_style['icon_sitemap'] }}"></i></span><span class="title">{{ $siteName }}</span></a>
-            <div id="treeloader"><i class="{{ $_style['icon_cog'] }} fa-spin"></i></div>
+            <div id="treeloader"><i class="{{ $_style['icon_cog'] }} {{ $_style['icon_spin'] }}"></i></div>
         </div>
         <div id="treeRoot"></div>
 

@@ -94,7 +94,7 @@ echo $cm->render();
 	<input type="hidden" name="op" value="" />
 
 	<h1>
-		<i class="fa fa-user"></i><?= $_lang['web_user_management_title'] ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= $_style['icon_web_user'] ?>"></i><?= $_lang['web_user_management_title'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
 	<div class="container element-edit-message">
@@ -106,7 +106,7 @@ echo $cm->render();
             <div class="searchbar form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <a class="btn btn-success btn-sm" href="index.php?a=87"><i class="fa fa-plus-circle"></i> <?= $_lang['new_web_user'] ?></a>
+                        <a class="btn btn-success btn-sm" href="index.php?a=87"><i class="<?= $_style['icon_add'] ?>"></i> <?= $_lang['new_web_user'] ?></a>
                     </div>
                     <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
                     <div class="input-group-btn">

@@ -239,7 +239,7 @@
         <input type="hidden" name="params" value="{{ $data->display_params }}">
 
         <h1>
-            <i class="{{ $_style['icon_template'] }}"></i>
+            <i class="{{ $_style['icon_tv'] }}"></i>
             @if($data->name)
                 {{ $data->name }}
                 <small>({{ $data->getKey() }})</small>

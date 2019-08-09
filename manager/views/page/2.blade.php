@@ -33,49 +33,49 @@
     $iconTpl = $modx->getChunk('manager#welcome\WrapIcon');
     // setup icons
     if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-        $icon = '<i class="'. $_style['icon_user'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%user_management_title%]"> </i>[%user_management_title%]';
+        $icon = '<i class="'. $_style['icon_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%user_management_title%]"> </i>[%user_management_title%]';
         $ph['SecurityIcon'] = sprintf($iconTpl,$icon, 75);
     }
     if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-        $icon = '<i class="'. $_style['icon_web_user'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
+        $icon = '<i class="'. $_style['icon_web_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
         $ph['WebUserIcon'] = sprintf($iconTpl,$icon, 99);
     }
     if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-        $icon = '<i class="'. $_style['icon_modules'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%manage_modules%]"> </i>[%modules%]';
+        $icon = '<i class="'. $_style['icon_modules'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%manage_modules%]"> </i>[%modules%]';
         $ph['ModulesIcon'] = sprintf($iconTpl,$icon, 106);
     }
     if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-        $icon = '<i class="'. $_style['icon_elements'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%element_management%]"> </i>[%elements%]';
+        $icon = '<i class="'. $_style['icon_elements'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%element_management%]"> </i>[%elements%]';
         $ph['ResourcesIcon'] = sprintf($iconTpl,$icon, 76);
     }
     if($modx->hasPermission('bk_manager')) {
-        $icon = '<i class="'. $_style['icon_database'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%bk_manager%]"> </i>[%backup%]';
+        $icon = '<i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%bk_manager%]"> </i>[%backup%]';
         $ph['BackupIcon'] = sprintf($iconTpl,$icon, 93);
     }
     if($modx->hasPermission('help')) {
-        $icon = '<i class="'. $_style['icon_question_circle'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '" alt="[%help%]" /> </i>[%help%]';
+        $icon = '<i class="'. $_style['icon_question_circle'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%help%]" /> </i>[%help%]';
         $ph['HelpIcon'] = sprintf($iconTpl,$icon, 9);
     }
 
     if($modx->hasPermission('new_document')) {
-        $icon = '<i class="'. $_style['icon_document'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%add_resource%]';
+        $icon = '<i class="'. $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%add_resource%]';
         $ph['ResourceIcon'] = sprintf($iconTpl,$icon, 4);
-        $icon = '<i class="'. $_style['icon_chain'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%add_weblink%]';
+        $icon = '<i class="'. $_style['icon_chain'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%add_weblink%]';
         $ph['WeblinkIcon'] = sprintf($iconTpl,$icon, 72);
     }
     if($modx->hasPermission('assets_images')) {
-        $icon = '<i class="'. $_style['icon_camera'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%images_management%]';
+        $icon = '<i class="'. $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%images_management%]';
         $ph['ImagesIcon'] = sprintf($iconTpl,$icon, 72);
     }
     if($modx->hasPermission('assets_files')) {
-        $icon = '<i class="'. $_style['icon_files'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%files_management%]';
+        $icon = '<i class="'. $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%files_management%]';
         $ph['FilesIcon'] = sprintf($iconTpl,$icon, 72);
     }
     if($modx->hasPermission('change_password')) {
-        $icon = '<i class="'. $_style['icon_lock'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%change_password%]';
+        $icon = '<i class="'. $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%change_password%]';
         $ph['PasswordIcon'] = sprintf($iconTpl,$icon, 28);
     }
-    $icon = '<i class="'. $_style['icon_logout'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>[%logout%]';
+    $icon = '<i class="'. $_style['icon_logout'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%logout%]';
     $ph['LogoutIcon'] = sprintf($iconTpl,$icon, 8);
 
     // do some config checks
@@ -316,13 +316,13 @@
                 ($modx->hasPermission("new_document") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=4">
-                        <i class="'. $_style['icon_document'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%add_resource%]</span>
                     </a>
                 </span>
                 <span class="wm_button">
                     <a target="main" href="index.php?a=72">
-                        <i class="'. $_style['icon_chain'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_chain'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%add_weblink%]</span>
                     </a>
                 </span>
@@ -330,7 +330,7 @@
                 ($modx->hasPermission("assets_images") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
-                        <i class="'. $_style['icon_camera'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%images_management%]</span>
                     </a>
                 </span>
@@ -338,22 +338,30 @@
                 ($modx->hasPermission("assets_files") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
-                        <i class="'. $_style['icon_files'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%files_management%]</span>
+                    </a>
+                </span>
+                ' : '') .
+                ($modx->hasPermission("bk_manager") ? '
+                <span class="wm_button">
+                    <a target="main" href="index.php?a=93">
+                        <i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
+                        <span>[%bk_manager%]</span>
                     </a>
                 </span>
                 ' : '') .
                 ($modx->hasPermission("change_password") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=28">
-                        <i class="'. $_style['icon_lock'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%change_password%]</span>
                     </a>
                 </span>
                 ' : '') . '
                 <span class="wm_button">
                     <a target="_top" href="index.php?a=8">
-                        <i class="'. $_style['icon_logout'] . ' ' . $_style['icon_size_2x'] . ' ' . $_style['icon_size_fix'] . '"></i>
+                        <i class="'. $_style['icon_logout'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
                         <span>[%logout%]</span>
                     </a>
                 </span>

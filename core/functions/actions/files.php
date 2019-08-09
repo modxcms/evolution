@@ -24,10 +24,12 @@ if(!function_exists('determineIcon')) {
      */
     function determineIcon($file, $selFile, $mode)
     {
+        $_style = ManagerTheme::getStyle();
+
         $icons = array(
-            'default' => 'fa fa-file-o',
-            'edit'    => 'fa fa-pencil-square-o',
-            'view'    => 'fa fa-eye'
+            'default' => $_style['icon_file'],
+            'edit'    => $_style['icon_edit'],
+            'view'    => $_style['icon_eye']
         );
         $icon = $icons['default'];
         if ($file == $selFile) {

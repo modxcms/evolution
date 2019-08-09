@@ -108,7 +108,7 @@ if(!function_exists('makeHTML')) {
         );
         if (!$modx->getDatabase()->getRecordCount($result)) {
             $output .= sprintf(
-                '<div><a class="empty">%s<i class="fa fa-ban"></i>&nbsp;<span class="empty">%s</span></a></div>'
+                '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
                 , $spacer
                 , $_lang['empty_folder']
             );
@@ -536,7 +536,7 @@ if(!function_exists('getIconInfo')) {
             'application/pdf'          => '<i class="' . $_style['icon_pdf'] . '"></i>',
             'application/rss+xml'      => '<i class="' . $_style['icon_code_file'] . '"></i>',
             'application/vnd.ms-word'  => '<i class="' . $_style['icon_word'] . '"></i>',
-            'application/vnd.ms-excel' => '<i class="' . $_style['icon_exel'] . '"></i>',
+            'application/vnd.ms-excel' => '<i class="' . $_style['icon_excel'] . '"></i>',
         );
     }
 }

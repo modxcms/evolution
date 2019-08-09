@@ -189,7 +189,7 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 	<input type="hidden" name="id" value="<?php echo $content['id']; ?>" />
 
 	<h1>
-		<i class="fa fa-cogs"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['module_resource_title']) ?>
+		<i class="<?= $_style['icon_cogs'] ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['module_resource_title']) ?>
 	</h1>
 
 	<?php echo ManagerTheme::getStyle('actionbuttons.dynamic.close') ?>

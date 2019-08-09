@@ -265,7 +265,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="<?= $_style['icon_refresh'] ?>"></i></a>' : '';
 
 				t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
 			});
@@ -445,7 +445,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
 	<h1>
-		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
 	<?= ManagerTheme::getStyle('actionbuttons.dynamic.element') ?>
@@ -473,7 +473,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
-										<i class="fa fa-lock"></i>
+										<i class="<?= $_style['icon_lock'] ?>"></i>
 									</label>
 								<?php endif; ?>
 							</div>

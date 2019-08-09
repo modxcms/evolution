@@ -138,7 +138,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 </script>
 
 <h1>
-    <?= $title . " - " . $_lang['element_selector_title'] ?><i class="fa fa-question-circle help"></i>
+    <?= $title . " - " . $_lang['element_selector_title'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
 <div id="actions">

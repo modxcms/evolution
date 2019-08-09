@@ -571,7 +571,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         <fieldset id="create_edit">
 
             <h1>
-                <i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
+                <i class="<?= $_style['icon_edit'] ?>"></i><?php if(isset($_REQUEST['id'])) {
                     echo entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . '<small>(' . (int)$_REQUEST['id'] . ')</small>';
                 } else {
                     if ($modx->getManagerApi()->action == '4') {
