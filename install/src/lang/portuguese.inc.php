@@ -38,7 +38,7 @@ $_lang["checking_if_cache_exist"] = 'Checando se o diretórios <span class=\"mon
 $_lang["checking_if_cache_file_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/siteCache.idx.php</span> está liberado pra escrita: ';
 $_lang["checking_if_cache_file2_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> está liberado pra escrita: ';
 $_lang["checking_if_cache_writable"] = 'Checando se o diretórios <span class=\"mono\">assets/cache</span> e <span class="mono">/assets/cache/rss</span> está liberado para escrita: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Checando se o arquivo <span class=\"mono\">manager/includes/config.inc.php</span> existe e está liberado pra escrita: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Checando se o arquivo <span class=\"mono\">/core/config/database/connections/default.php</span> existe e está liberado pra escrita: ';
 $_lang["checking_if_export_exists"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> está liberado pra escrita: ';
 $_lang["checking_if_images_exist"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> existir: ';
