@@ -7,7 +7,7 @@ if (! function_exists('fetchCacheableRss')) {
         $loadPath = is_file($file) ? $file : $url;
         $content = !$loadPath ? '' : file_get_contents($loadPath);
 
-        if ($content) {
+        if (!$content) {
             return $items;
         }
 
