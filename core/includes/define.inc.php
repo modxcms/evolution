@@ -82,9 +82,9 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     }
 
     $url = implode($separator, $items);
-    unset($separator);
-    
+
     $base_url = str_finish(implode($separator, $items),'/');
+    unset($separator);
 
     reset($items);
     $items = explode(MGR_DIR, str_replace('\\', '/', dirname(__DIR__, 2)));
