@@ -135,7 +135,7 @@ if(!function_exists('ls')) {
                         strlen($newpath)) . '\');"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : (($enablefiledownload && in_array($type,
                         $uploadablefiles)) ? '<a href="' . $webstart_path . implode('/', array_map('rawurlencode',
                         explode('/', substr($newpath, $len,
-                            strlen($newpath))))) . '" style="cursor:pointer;"><i class="' . $_style['icon_download'] . '" title="' . $_lang['file_download_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></span>');
+                            strlen($newpath))))) . '" style="cursor:pointer;" download><i class="' . $_style['icon_download'] . '" title="' . $_lang['file_download_file'] . '"></i></a>' : '<span class="disabled"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></span>');
                 $files_array[$filecounter]['view'] = (in_array($type,
                     $inlineviewablefiles)) ? '<a href="index.php?a=31&mode=view&path=' . urlencode($newpath) . '"><i class="' . $_style['icon_eye'] . '" title="' . $_lang['files_viewfile'] . '"></i></a>' : $files_array[$filecounter]['view'];
                 $files_array[$filecounter]['unzip'] = ($enablefileunzip && $type == '.zip') ? '<a href="javascript:unzipFile(\'' . urlencode($file) . '\');"><i class="' . $_style['icon_archive'] . '" title="' . $_lang['file_download_unzip'] . '"></i></a>' : '';
