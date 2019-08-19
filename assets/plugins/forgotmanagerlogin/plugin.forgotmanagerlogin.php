@@ -90,7 +90,7 @@ EOD;
 
                 $param = array();
                 $param['from']    = "{$modx->config['site_name']}<{$modx->config['emailsender']}>";
-                $param['to']      = "{$user['username']}<{$to}>";
+                $param['to']      = $to;
                 $param['subject'] = $_lang['password_change_request'];
                 $param['body']    = $body;
                 $rs = $modx->sendmail($param); //ignore mail errors in this case
