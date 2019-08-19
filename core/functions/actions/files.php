@@ -238,7 +238,14 @@ if(!function_exists('checkExtension')) {
      */
     function checkExtension($path = '')
     {
-        global $uploadablefiles;
+
+        $upload_files = explode(',', evolutionCMS()->getConfig('upload_files', ''));
+        $upload_images = explode(',', evolutionCMS()->getConfig('upload_images', ''));
+        $upload_media = explode(',', evolutionCMS()->getConfig('upload_media', ''));
+        $upload_flash = explode(',', evolutionCMS()->getConfig('upload_flash', ''));
+        // now merge them
+        $uploadablefiles = array_merge($upload_files, $upload_images, $upload_media, $upload_flash);
+        $uploadablefiles = add_dot($uploadablefiles);
 
         if (in_array(getExtension($path), $uploadablefiles)) {
             return true;
