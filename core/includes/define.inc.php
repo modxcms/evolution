@@ -36,16 +36,6 @@ if (! defined('EVO_STORAGE_PATH')) {
     define('EVO_STORAGE_PATH', env('EVO_STORAGE_PATH', EVO_CORE_PATH . 'storage/'));
 }
 
-if (is_cli()) {
-    if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
-        throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');
-    }
-
-    if (! defined('MODX_SITE_URL')) {
-        throw new RuntimeException('Please, define MODX_SITE_URL on cli mode');
-    }
-}
-
 if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     // automatically assign base_path and base_url
     $script_name = str_replace(
@@ -173,4 +163,14 @@ if (! defined('MODX_MANAGER_URL')) {
 
 if (! defined('MODX_SANITIZE_SEED')) {
     define('MODX_SANITIZE_SEED', 'sanitize_seed_' . base_convert(md5(__FILE__), 16, 36));
+}
+
+if (is_cli()) {
+    if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
+        throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');
+    }
+
+    if (! defined('MODX_SITE_URL')) {
+        throw new RuntimeException('Please, define MODX_SITE_URL on cli mode');
+    }
 }
