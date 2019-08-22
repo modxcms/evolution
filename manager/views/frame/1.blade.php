@@ -74,6 +74,7 @@
                 paging_prev: "{{ ManagerTheme::getLexicon('paging_prev') }}"
             },
             style: {
+                actions_file:             '<?= addslashes($_style['icon_file']) ?>',
                 actions_pencil:           '<?= addslashes($_style['icon_pencil']) ?>',
                 actions_plus:             '<?= addslashes($_style['icon_plus']) ?>',
                 actions_reply:            '<?= addslashes($_style['icon_reply']) ?>',
@@ -107,7 +108,6 @@
                 tree_minusnode:           '<?= addslashes('<i class="' . $_style["icon_angle_down"] . '"></i>') ?>',
                 tree_plusnode:            '<?= addslashes('<i class="' . $_style['icon_angle_right'] . '"></i>') ?>',
                 tree_preview_resource:    '<?= addslashes('<i class="' . $_style['icon_eye'] . '"></i>') ?>'
-                actions_file:             '<?= addslashes($_style['icon_file']) ?>',
             },
             permission: {
                 assets_images: <?= $modx->hasPermission('assets_images') ? 1 : 0 ?>,
