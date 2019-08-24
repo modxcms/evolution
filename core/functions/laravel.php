@@ -27,6 +27,19 @@ if (! function_exists('config_path')) {
     }
 }
 
+if (! function_exists('storage_path'))
+{
+  /**
+   * Get the path to the storage folder.
+   *
+   * @return  string
+   */
+  function storage_path($path = '')
+  {
+    return app('path.storage').($path ? '/'.$path : $path);
+  }
+}
+
 if (! function_exists('base_path')) {
     /**
      * Get the path to the base of the install.
