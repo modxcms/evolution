@@ -109,7 +109,10 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "upd": "composer update --lock --ansi"
+    "upd": "composer update --lock --ansi",
+    "post-autoload-dump": [
+      "@php artisan package:discover"
+    ]
   },
   "scripts-descriptions": {
     "upd": "Updating sub-levels composer.json files"
