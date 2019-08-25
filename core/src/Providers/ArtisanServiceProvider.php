@@ -49,6 +49,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'ListsDoc' => 'command.lists.doc',
         'ListsTv' => 'command.lists.tv',
         'ListsTemplate' => 'command.lists.tpl',
+        'Package' => 'command.lists.package',
     ];
 
     /**
@@ -280,6 +281,12 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
+    protected function registerPackageCommand()
+    {
+        $this->app->singleton('command.lists.package', function () {
+            return new Lists\PackageCommand();
+        });
+    }
     /**
      * Register the command.
      *
