@@ -91,8 +91,11 @@ class PackageCommand extends Command
     {
         $fileName = end(explode('\\', $value)) . '.php';
         $fileContent = "<?php \nreturn " . $value . "::class;";
-        file_put_contents($this->configDir . $fileName, $fileContent);
-        $this->getOutput()->write('<info>' . $value . '</info>');
+        if (file_put_contents($this->configDir . $fileName, $fileContent)) {
+            $this->getOutput()->write('<info>' . $value . '</info>');
+        } else {
+            $this->getOutput()->write('<error>Error create config for: ' . $value . '</error>');
+        }
         $this->line('');
     }
 }
