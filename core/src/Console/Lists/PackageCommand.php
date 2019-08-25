@@ -36,7 +36,7 @@ class PackageCommand extends Command
     public function handle()
     {
         if (!is_dir($this->configDir)) {
-            mkdir($this->configDir, 'rwxrwxr-x', true);
+            mkdir($this->configDir, 0775, true);
         }
         if (!is_dir($this->configDir)) {
             $this->getOutput()->write('<error>ERROR CREATE CONFIG DIR</error>');
@@ -92,12 +92,7 @@ class PackageCommand extends Command
         $fileName = end(explode('\\', $value)) . '.php';
         $fileContent = "<?php \nreturn " . $value . "::class;";
         file_put_contents($this->configDir . $fileName, $fileContent);
-        /*$this->getOutput()->write(
-            sprintf(
-                '<info>%s</info>',
-                $value
-            )
-        );*/
-
+        $this->getOutput()->write('<info>' . $value . '</info>');
+        $this->line('');
     }
 }
