@@ -544,7 +544,7 @@ class UrlProcessor
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
-                        if (isset($al['path'])) {
+                        if (isset($al['path']) && $al['path']!='') {
                             $alPath = $al['path'] . '/';
                         }
 
