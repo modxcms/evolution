@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerTheme;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
+use EvolutionCMS\Models\SiteModule;
 
 class Frame extends AbstractController implements ManagerTheme\PageControllerInterface
 {
@@ -93,7 +94,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->parameters['body_class'] = $body_class;
 
         $unlockTranslations = [
-            'msg'   => $this->managerTheme->getLexicon('unlock_element_id_warning'),
+            'msg' => $this->managerTheme->getLexicon('unlock_element_id_warning'),
             'type1' => $this->managerTheme->getLexicon('lock_element_type_1'),
             'type2' => $this->managerTheme->getLexicon('lock_element_type_2'),
             'type3' => $this->managerTheme->getLexicon('lock_element_type_3'),
@@ -225,7 +226,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             foreach ($menu as $item) {
                 $data = unserialize($item, ['allowed_classes' => false]);
                 if (\is_array($data)) {
-                    foreach($data as $k=>$v) {
+                    foreach ($data as $k => $v) {
                         $newmenu[$k] = $v;
                     }
                 }
@@ -239,12 +240,12 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->Build(
                 $this->sitemenu,
                 [
-                    'outerClass'      => 'nav',
-                    'innerClass'      => 'dropdown-menu',
-                    'parentClass'     => 'dropdown',
+                    'outerClass' => 'nav',
+                    'innerClass' => 'dropdown-menu',
+                    'parentClass' => 'dropdown',
                     'parentLinkClass' => 'dropdown-toggle',
-                    'parentLinkAttr'  => '',
-                    'parentLinkIn'    => ''
+                    'parentLinkAttr' => '',
+                    'parentLinkIn' => ''
                 ],
                 false
             );
@@ -602,30 +603,22 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
     {
         if ($this->managerTheme->getCore()->hasPermission('exec_module')) {
             if ($_SESSION['mgrRole'] != 1 && $this->managerTheme->getCore()->getConfig('use_udperms') === true) {
-                $rs = $this->managerTheme->getCore()->getDatabase()->query(
-                    sprintf(
-                        'SELECT DISTINCT sm.id, sm.name, sm.icon, mg.member
-                        FROM %s AS sm
-                        LEFT JOIN %s AS sma ON sma.module = sm.id
-                        LEFT JOIN %s AS mg ON sma.usergroup = mg.user_group
-                        WHERE (mg.member IS NULL OR mg.member = %s) AND sm.disabled != 1 AND sm.locked != 1
-                        ORDER BY sm.name'
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_access')
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('member_groups')
-                        , $this->managerTheme->getCore()->getLoginUserID('mgr')
-                    )
-                );
+                $modules = SiteModule::select('site_modules.id', 'site_modules.name', 'site_modules.icon', 'member_groups.member')
+                    ->leftjoin('site_module_access', 'site_modules.id', '=', 'site_module_access.module')
+                    ->leftjoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
+                    ->where(function ($query) {
+                        $query->whereNull('member_groups.member')
+                            ->orWhere('member_groups.member', '=', $this->managerTheme->getCore()->getLoginUserID('mgr'));
+                    })
+                    ->where('site_modules.disabled', '!=', 1)
+                    ->where('site_modules.locked', '!=', 1)
+                    ->orderBy('site_modules.name')->get()->toArray();
+
             } else {
-                $rs = $this->managerTheme->getCore()->getDatabase()->select(
-                    '*',
-                    $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules'),
-                    'disabled != 1',
-                    'name'
-                );
+                $modules = SiteModule::where('disabled', '!=', 1)->orderBy('name')->get()->toArray();
             }
-            if ($this->managerTheme->getCore()->getDatabase()->getRecordCount($rs)) {
-                while ($row = $this->managerTheme->getCore()->getDatabase()->getRow($rs)) {
+            if (count($modules) > 0) {
+                foreach ($modules as $row) {
                     $this->sitemenu['module' . $row['id']] = [
                         'module' . $row['id'],
                         'modules',
@@ -640,6 +633,21 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                         ''
                     ];
                 }
+            }
+            foreach ($this->managerTheme->getCore()->modulesFromFile as $module) {
+                $this->sitemenu['module' . $module['id']] = [
+                    'module' . $module['id'],
+                    'modules',
+                    ($module['icon'] != '' ? '<i class="' . $module['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $module['name'],
+                    'index.php?a=112&id=' . $module['id'],
+                    $module['name'],
+                    '',
+                    '',
+                    'main',
+                    0,
+                    1,
+                    ''
+                ];
             }
         }
 
