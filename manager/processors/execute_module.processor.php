@@ -8,10 +8,10 @@ if (!$modx->hasPermission('exec_module')) {
 if (isset($_GET['id'])) {
     if (is_numeric($_GET['id'])) {
         $id = (int)$_GET['id'];
-    }else {
+    } else {
         $id = $_GET['id'];
     }
-}else {
+} else {
     $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 // check if user has access permission, except admins
@@ -44,11 +44,11 @@ if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
 }
 if (is_numeric($id)) {
     // get module data
-    $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName("site_modules"), "id='{$id}'");
-    $content = $modx->getDatabase()->getRow($rs);
-    if (!$content) {
+    $content = \EvolutionCMS\Models\SiteModule::find($id);
+    if (is_null($content)) {
         $modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
     }
+    $content = $content->toArray();
     if ($content['disabled']) {
         $modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
     }
