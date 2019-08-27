@@ -6592,6 +6592,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     public function registerModule($name, $file, $icon ='fa fa-cube', $params = [])
     {
-        $this->modulesFromFile[] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'params' => $params];
+        $this->modulesFromFile[md5($name)] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'properties' => $params];
     }
 }
