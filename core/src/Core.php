@@ -6590,6 +6590,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->dataForView = array_merge($this->dataForView, $data);
     }
 
+    /**
+     * @param string $name
+     * @param string $file
+     * @param string $icon
+     * @param array $params
+     */
     public function registerModule($name, $file, $icon ='fa fa-cube', $params = [])
     {
         $this->modulesFromFile[md5($name)] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'properties' => $params];
