@@ -134,9 +134,6 @@ switch ($_POST['mode']) {
         // empty cache
         $modx->clearCache('full');
 
-        if (isset($_POST['runsnippet'])) {
-            run_snippet($snippet);
-        }
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
             $a = ($_POST['stay'] == '2') ? "22&id=$id" : "23";

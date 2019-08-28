@@ -94,6 +94,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $snippetsTime = array();
     public $chunkCache;
     public $snippetCache;
+    public $modulesFromFile = array();
     public $contentTypes;
     public $dumpSQL = false;
     public $queryCode;
@@ -6587,5 +6588,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function addDataToView($data = [])
     {
         $this->dataForView = array_merge($this->dataForView, $data);
+    }
+
+    /**
+     * @param string $name
+     * @param string $file
+     * @param string $icon
+     * @param array $params
+     */
+    public function registerModule($name, $file, $icon ='fa fa-cube', $params = [])
+    {
+        $this->modulesFromFile[md5($name)] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'properties' => $params];
     }
 }
