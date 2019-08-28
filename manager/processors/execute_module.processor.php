@@ -55,7 +55,7 @@ if (is_numeric($id)) {
 } else {
     $content = $modx->modulesFromFile[$id];
     $content['modulecode'] = file_get_contents($content['file']);
-    $content['modulecode'] = str_replace('<?php', '', $content['modulecode']);
+    $content["guid"] = '';
 }
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
@@ -66,6 +66,8 @@ $parameter = $modx->parseProperties($content["properties"], $content["guid"], 'm
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
 
-
+if (substr($content["modulecode"], 0, 5) === '<?php') {
+    $content["modulecode"] = substr($content["modulecode"], 5);
+}
 echo evalModule($content["modulecode"], $parameter);
 include MODX_MANAGER_PATH . "includes/sysalert.display.inc.php";
