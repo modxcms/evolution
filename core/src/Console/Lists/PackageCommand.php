@@ -89,7 +89,8 @@ class PackageCommand extends Command
 
     protected function process($value)
     {
-        $fileName = end(explode('\\', $value)) . '.php';
+        $arrNamespace = explode('\\', $value);
+        $fileName = end($arrNamespace) . '.php';
         $fileContent = "<?php \nreturn " . $value . "::class;";
         if (file_put_contents($this->configDir . $fileName, $fileContent)) {
             $this->getOutput()->write('<info>' . $value . '</info>');
