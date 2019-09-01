@@ -69,3 +69,12 @@ if (! function_exists('evo_update_config_settings')) {
         return evo_save_config_settings($config);
     }
 }
+
+if (! function_exists('evo_delete_config_settings')) {
+    function evo_delete_config_settings(string $key)
+    {
+        $config = evo_raw_config_settings();
+        unset($config[$key]);
+        return evo_save_config_settings($config);
+    }
+}
