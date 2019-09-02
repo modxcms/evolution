@@ -115,6 +115,30 @@ class SiteContent extends Eloquent\Model
         'alias_visible' => 'int'
     ];
 
+    // adjust boot function
+    public static function boot()
+    {
+        // run parent
+        parent::boot();
+
+        // add in custom deleting
+        static::deleting(function($model)
+        {
+            // save custom delete value
+            $model->deleted = 1;
+            $model->save();
+        });
+
+        // add in custom restoring
+        static::restoring(function($model)
+        {
+            // save custom delete value
+            $model->deleted = 0;
+            $model->save();
+        });
+
+    }
+
     protected $fillable = [
         'type',
         'contentType',
