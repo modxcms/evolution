@@ -99,10 +99,9 @@
             'text-center',
             'text-center'
         );
-
-
-        $modx->getMakeTable()->setTableClass($tableClass);
-        $modx->getMakeTable()->setColumnHeaderClass($columnHeaderClass);
+        $this->table = new \EvolutionCMS\Support\MakeTable();
+        $this->table->setTableClass($tableClass);
+        $this->table->setColumnHeaderClass($columnHeaderClass);
         //	$modx->getMakeTable()->setRowHeaderClass($rowHeaderClass);
         //	$modx->getMakeTable()->setRowRegularClass($rowRegularClass);
         //	$modx->getMakeTable()->setRowAlternateClass($rowAlternateClass);
@@ -124,7 +123,7 @@
             '1%',
             '1%'
         );
-        $modx->getMakeTable()->setColumnWidths($tbWidth);
+        $this->table->setColumnWidths($tbWidth);
 
         $sd = isset($_REQUEST['dir']) ? '&amp;dir=' . $_REQUEST['dir'] : '&amp;dir=DESC';
         $sb = isset($_REQUEST['sort']) ? '&amp;sort=' . $_REQUEST['sort'] : '&amp;sort=createdon';
@@ -202,8 +201,8 @@
             );
         }
 
-        $modx->getMakeTable()->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
-        $children_output = $modx->getMakeTable()->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
+        $this->table->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
+        $children_output = $this->table->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
     } else {
         // No Child documents
         $children_output = '<div class="container"><p>' . ManagerTheme::getLexicon('resources_in_container_no') . '</p></div>';
