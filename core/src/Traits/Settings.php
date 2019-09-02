@@ -165,10 +165,6 @@ trait Settings
     public function getFactorySettings() : array
     {
         $out = include EVO_CORE_PATH . 'factory/settings.php';
-        if(file_exists(EVO_CORE_PATH . 'config/cms/settings.php')) {
-            $migrateSettings = include EVO_CORE_PATH . 'config/cms/settings.php';
-            $out = array_merge($out, $migrateSettings);
-        }
         return \is_array($out) ? $out : [];
     }
 
