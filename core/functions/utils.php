@@ -54,7 +54,7 @@ if (! function_exists('evo_save_config_settings')) {
 
         $data = $files->put(
             config_path('cms/settings.php', ! app()->isProduction()),
-            '<?php ' . var_export($config, true) . ';'
+            '<?php return ' . var_export($config, true) . ';'
         );
 
         return is_bool($data) ? $data : true;
