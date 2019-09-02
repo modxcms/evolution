@@ -83,6 +83,7 @@ class APIhelpers
         if (! empty($validate) && is_callable($validate)) {
             $out = (($validate($out) === true) ? $out : $default);
         }
+
         return $out;
     }
 
@@ -244,7 +245,6 @@ class APIhelpers
     }
 
     /**
-     * @deprecated use replace_array()
      * @param $data
      * @param string $charset
      * @param array $chars
@@ -266,11 +266,29 @@ class APIhelpers
             '%60' => '&#96;'
         )
     ) {
-        return replace_array($data, $chars);
+        switch (true) {
+            case is_scalar($data):
+                $out = str_replace(
+                    array_keys($chars),
+                    array_values($chars),
+                    $charset === null ? $data : self::e($data, $charset)
+                );
+                break;
+            case is_array($data):
+                $out = array();
+                foreach ($data as $key => $val) {
+                    $key = self::sanitarTag($key, $charset, $chars);
+                    $out[$key] = self::sanitarTag($val, $charset, $chars);
+                }
+                break;
+            default:
+                $out = '';
+        }
+
+        return $out;
     }
 
     /**
-     * @deprecated use e()
      * @param $text
      * @param string $charset
      * @return string
@@ -397,8 +415,39 @@ class APIhelpers
     }
 
     /**
+     * Предварительная обработка данных перед вставкой в SQL запрос вида IN
+     * Если данные в виде строки, то происходит попытка сформировать массив из этой строки по разделителю $sep
+     * Точно по тому, по которому потом данные будут собраны обратно
+     *
+     * @param integer|string|array $data данные для обработки
+     * @param string $sep разделитель
+     * @param boolean $quote заключать ли данные на выходе в кавычки
+     * @return string обработанная строка
+     */
+    public static function sanitarIn($data, $sep = ',', $quote = true)
+    {
+        $modx = evolutionCMS();
+        if (is_scalar($data)) {
+            $data = explode($sep, $data);
+        }
+        if (!is_array($data)) {
+            $data = array(); //@TODO: throw
+        }
+
+        $out = array();
+        foreach ($data as $item) {
+            if ($item !== '') {
+                $out[] = $modx->db->escape($item);
+            }
+        }
+        $q = $quote ? "'" : "";
+        $out = $q . implode($q . "," . $q, $out) . $q;
+
+        return $out;
+    }
+
+    /**
      * Переменовывание элементов массива
-     * @deprecated use rename_key_arr()
      *
      * @param array $data массив с данными
      * @param string $prefix префикс ключей
@@ -409,6 +458,29 @@ class APIhelpers
      */
     public static function renameKeyArr($data, $prefix = '', $suffix = '', $addPS = '.', $sep = '.')
     {
-        return rename_key_arr($data, $prefix, $suffix, $addPS, $sep);
+        $out = array();
+        if ($prefix == '' && $suffix == '') {
+            $out = $data;
+        } else {
+            $InsertPrefix = ($prefix != '') ? ($prefix . $addPS) : '';
+            $InsertSuffix = ($suffix != '') ? ($addPS . $suffix) : '';
+            foreach ($data as $key => $item) {
+                $key = $InsertPrefix . $key;
+                $val = null;
+                switch (true) {
+                    case is_scalar($item):
+                        $val = $item;
+                        break;
+                    case is_array($item):
+                        $val = self::renameKeyArr($item, $key . $sep, $InsertSuffix, '', $sep);
+                        $out = array_merge($out, $val);
+                        $val = '';
+                        break;
+                }
+                $out[$key . $InsertSuffix] = $val;
+            }
+        }
+
+        return $out;
     }
 }

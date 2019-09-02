@@ -21,7 +21,7 @@
  *
  */
 
-include_once(__DIR__ . "/site_content.php");
+include_once(dirname(__FILE__) . "/site_content.php");
 
 /**
  * Class site_content_filtersDocLister

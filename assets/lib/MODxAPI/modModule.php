@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__ . "/autoTable.abstract.php");
+include_once(dirname(__FILE__) . "/autoTable.abstract.php");
 
 /**
  * Class modModule

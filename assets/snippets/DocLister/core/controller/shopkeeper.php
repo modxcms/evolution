@@ -7,7 +7,7 @@
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>, kabachello <kabachnik@hotmail.com>
  */
-include_once(__DIR__ . "/site_content.php");
+include_once(dirname(__FILE__) . "/site_content.php");
 
 /**
  * Class shopkeeperDocLister

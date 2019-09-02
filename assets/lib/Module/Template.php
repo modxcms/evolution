@@ -55,7 +55,7 @@ abstract class Template
         self::$_ajax = (boolean)$ajax;
         $this->loadVars();
         if (is_null($tplFolder)) {
-            $tplFolder = dirname(__DIR__);
+            $tplFolder = dirname(dirname(__FILE__));
         }
         $FS = \Helpers\FS::getInstance();
         $tplFolder = $FS->relativePath($tplFolder);
@@ -196,7 +196,7 @@ abstract class Template
                 'id'     => empty($module) ? self::getParam('id', $content, 0) : (int)$module
             )
         );
-        $out = implode("?", array(MODX_MANAGER_URL, http_build_query($data)));
+        $out = implode("?", array($this->_modx->getManagerPath(), http_build_query($data)));
         if ($full) {
             $out = $this->_modx->getConfig('site_url') . ltrim($out, '/');
         }
