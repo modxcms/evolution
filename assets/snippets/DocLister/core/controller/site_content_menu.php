@@ -295,6 +295,7 @@ class site_content_menuDocLister extends site_contentDocLister
         } else {
             $out = $this->_render($tpl);
         }
+
         if ($out) {
             $this->outData = DLTemplate::getInstance($this->modx)->parseDocumentSource($out);
         }
@@ -388,7 +389,7 @@ class site_content_menuDocLister extends site_contentDocLister
          * @var e_DL_Extender $extE
          */
         $extE = $this->getExtender('e', true, true);
-        $id = empty($data['id']) ? 0 : $data['id'];
+        $id = $data['id'];
         if (isset($this->docTvs[$id])) {
             $data = array_merge($data, $this->docTvs[$id]);
         }
@@ -597,11 +598,14 @@ class site_content_menuDocLister extends site_contentDocLister
     }
 
     /**
-     * @return array
+     * @param array $data
+     * @param mixed $fields
+     * @param array $array
+     * @return string
      */
-    protected function getMenuData()
+    public function getJSON($data, $fields, $array = array())
     {
-        $key = 'raw' . $this->getBranchCacheKey();
+        $key = $this->getBranchCacheKey();
         $out = $this->extCache->load($key);
         if ($out === false) {
             $currentLevel = &$this->currentLevel;
@@ -659,30 +663,12 @@ class site_content_menuDocLister extends site_contentDocLister
                     }
                 }
                 unset($docs);
+                $out = json_encode($out, JSON_UNESCAPED_UNICODE);
             }
             $this->extCache->save($out, $key);
         }
 
         return $out;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMenu() {
-        $this->getDocs();
-
-        return $this->getMenuData();
-    }
-
-    /**
-     * @param array $data
-     * @param mixed $fields
-     * @param array $array
-     * @return string
-     */
-    public function getJSON($data = array(), $fields = array(), $array = array()) {
-        return json_encode($this->getMenuData(), JSON_UNESCAPED_UNICODE);
     }
 
     /**

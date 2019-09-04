@@ -340,30 +340,28 @@ class modManagers extends MODxAPI
     }
 
     /**
-     * @param string|int $ids
+     * @param $ids
      * @param bool $fire_events
-     * @return bool
+     * @return bool|null|void
      */
     public function delete($ids, $fire_events = false)
     {
-        $flag = false;
         if ($this->edit($ids)) {
-            $q = $this->query("
+            $flag = $this->query("
           DELETE user,attribute FROM {$this->makeTable('user_attributes')} as attribute
             LEFT JOIN {$this->makeTable('manager_users')} as user ON user.id=attribute.internalKey
             WHERE attribute.internalKey='{$this->escape($this->getID())}'");
-            if ($this->modx->db->getAffectedRows($q)) {
-                $flag = true;
-                $this->query("DELETE FROM {$this->makeTable('user_settings')} WHERE user='{$this->getID()}'");
-                $this->query("DELETE FROM {$this->makeTable('member_groups')} WHERE member='{$this->getID()}'");
-                $this->invokeEvent('OnManagerDeleteUser', array(
-                    'userObj'     => $this,
-                    'userid'      => $this->getID(),
-                    'internalKey' => $this->getID(),
-                    'username'    => $this->get('username'),
-                    'timestamp'   => time()
-                ), $fire_events);
-            }
+            $this->query("DELETE FROM {$this->makeTable('user_settings')} WHERE user='{$this->getID()}'");
+            $this->query("DELETE FROM {$this->makeTable('member_groups')} WHERE member='{$this->getID()}'");
+            $this->invokeEvent('OnManagerDeleteUser', array(
+                'userObj'     => $this,
+                'userid'      => $this->getID(),
+                'internalKey' => $this->getID(),
+                'username'    => $this->get('username'),
+                'timestamp'   => time()
+            ), $fire_events);
+        } else {
+            $flag = false;
         }
         $this->close();
 

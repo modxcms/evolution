@@ -224,7 +224,7 @@ abstract class Plugin
      */
     public function checkTable()
     {
-        $sql = "SHOW TABLES LIKE '{$this->_table}'";
+        $sql = "SHOW TABLES LIKE '{$this->modx->getDatabase()->getTableName($this->table, false)}'";
 
         return $this->modx->db->getRecordCount($this->modx->db->query($sql));
     }
