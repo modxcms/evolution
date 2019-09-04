@@ -19,7 +19,7 @@ class DLTemplate
      */
     protected static $instance;
 
-    protected $templatePath = 'views/';
+    protected $templatePath = 'assets/templates/';
 
     protected $templateExtension = 'html';
 
