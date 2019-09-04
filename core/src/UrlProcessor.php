@@ -115,7 +115,7 @@ class UrlProcessor
         return $output;
     }
 
-    protected function replaceUrl(string $input, array $aliases, array $isFolder) : string
+    protected function replaceUrl($input, array $aliases, array $isFolder) : string
     {
         $isFriendly = $this->core->getConfig('friendly_alias_urls');
         $pref = $this->core->getConfig('friendly_url_prefix');
