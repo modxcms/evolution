@@ -218,19 +218,32 @@ trait Path
         return $this->bootstrapPath();
     }
 
+    /**
+     * @return string
+     */
     public function getSiteCacheFilePath()
     {
         return $this->bootstrapPath('siteCache.idx.php');
     }
 
+    /**
+     * @return string
+     */
     public function getSitePublishingFilePath()
     {
         return $this->bootstrapPath('sitePublishing.idx.php');
     }
 
+    /**
+     * @param array $bootstrappers
+     * @return array
+     */
     public function bootstrapWith(array $bootstrappers)
     {
-        return $bootstrappers;
+        return [
+            'EvolutionCMS\\Console\\ViewClearCommand',
+            'EvolutionCMS\\Console\\Lists\\PackageCommand',
+        ];
     }
 
     /**
@@ -240,7 +253,7 @@ trait Path
      */
     public function configurationIsCached()
     {
-        return $this->getConfig('configurationIsCached');
+        return false;
     }
 
     /**
@@ -251,7 +264,7 @@ trait Path
      */
     public function detectEnvironment(Closure $callback)
     {
-        return $callback;
+        return '';
     }
 
     /**
