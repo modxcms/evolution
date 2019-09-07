@@ -390,7 +390,7 @@
                         <span class="publishedDoc"><?= $numRecords . ' ' . ManagerTheme::getLexicon('resources_in_container') ?> (<strong><?= entities($content['pagetitle'], $modx->getConfig('modx_charset')) ?></strong>)</span>
                     </div>
                     <?php endif; ?>
-                    <div class="float-xs-right">
+                    <div class="float-right">
                         <?= $filter_sort . ' ' . $filter_dir ?>
                     </div>
 

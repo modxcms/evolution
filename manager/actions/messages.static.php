@@ -37,7 +37,7 @@ $messagetext = '';
                         $sendername = $modx->getDatabase()->getValue($rs2);
                     }
                     ?>
-                    <div class="btn-group float-xs-right">
+                    <div class="btn-group float-right">
                         <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_reply'] ?>"></i> <?= $_lang['messages_reply'] ?></a>
                         <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_forward'] ?>></i> <?= $_lang['messages_forward'] ?></a>
                         <a id="Button3" class="btn btn-outline-danger btn-sm" href="index.php?a=65&id=<?= $message['id'] ?>"><i class="<?= $_style["icon_trash"] ?>"></i> <?= $_lang['delete'] ?></a>

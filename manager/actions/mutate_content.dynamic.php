@@ -868,7 +868,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             <!-- Content -->
                                             <div class="clearfix">
                                                 <span id="content_header"><?=ManagerTheme::getLexicon('resource_content');?></span>
-                                                <label class="float-xs-right"><?=ManagerTheme::getLexicon('which_editor_title');?>
+                                                <label class="float-right"><?=ManagerTheme::getLexicon('which_editor_title');?>
                                                     <select id="which_editor" class="form-control form-control-sm" size="1" name="which_editor" onchange="changeRTE();">
                                                         <option value="none"><?=ManagerTheme::getLexicon('none');?></option>
                                                         <?php

@@ -165,7 +165,7 @@
                 <div class="navbar navbar-editor">
                     <span>{{ ManagerTheme::getLexicon('chunk_code') }}</span>
                     @if(get_by_key($modx->config, 'use_editor') == 1)
-                        <span class="float-xs-right">
+                        <span class="float-right">
                             {{ ManagerTheme::getLexicon('which_editor_title') }}
                             @include('manager::form.selectElement', [
                                 'name' => 'which_editor',

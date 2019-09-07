@@ -79,7 +79,7 @@ select:not([size]):not([multiple]) { text-indent: -2px }
 .darkness #actions .dropdown-menu .btn:hover { background-color: #3c424e; color: #fff }
 .darkness optgroup { background-color: #202329 }
 .darkness optgroup option { background-color: #1a1c21 }
-.darkness .float-xs-right > select { width: auto }
+.darkness .float-right > select { width: auto }
 .darkness input[type=checkbox], .darkness input[type=radio] { border: 1px solid #414449; background-color: #202329 }
 .darkness input[type=checkbox]:checked, .darkness input[type=radio]:checked { background-color: #ffc107; border-color: #ffc107 !important }
 .darkness input[type=checkbox]:checked:hover, .darkness input[type=radio]:checked:hover { box-shadow: 0 0 .5em #ffc107 }

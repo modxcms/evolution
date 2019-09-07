@@ -116,16 +116,20 @@
         <div class="tab-page">
             <!-- load modules -->
             <div class="container container-body">
-                <div class="searchbar form-group">
-                    <div class="input-group">
+                <div class="row searchbar form-group">
+                    <div class="col-sm-6 input-group">
                         <div class="input-group-btn">
                             <a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="{{ $_style['icon_trash'] }}"></i> {{ ManagerTheme::getLexicon('clear_log') }}</a>
                         </div>
-                        <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="{{ ManagerTheme::getLexicon('search') }}" />
-                        <div class="input-group-btn">
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('search') }}" onclick="searchResource();return false;"><i class="{{ $_style['icon_search'] }}"></i></a>
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('reset') }}" onclick="resetSearch();return false;"><i class="{{ $_style['icon_refresh'] }}"></i></a>
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('list_mode') }}" onclick="changeListMode();return false;"><i class="{{ $_style['icon_table'] }}"></i></a>
+                    </div>
+                    <div class="col-sm-6 ">
+                        <div class="input-group float-right w-auto">
+                            <input class="form-control form-control-sm" name="search" type="text" value="<?= $query ?>" placeholder="{{ ManagerTheme::getLexicon('search') }}" />
+                            <div class="input-group-append">
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('search') }}" onclick="searchResource();return false;"><i class="{{ $_style['icon_search'] }}"></i></a>
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('reset') }}" onclick="resetSearch();return false;"><i class="{{ $_style['icon_refresh'] }}"></i></a>
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('list_mode') }}" onclick="changeListMode();return false;"><i class="{{ $_style['icon_table'] }}"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>

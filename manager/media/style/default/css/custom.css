@@ -1,8 +1,16 @@
 /* [ COLS ] */
 .row { margin-left: -1.25rem; margin-right: -1.25rem }
-.container { padding-left: 1.25rem; padding-right: 1.25rem; width: 100% }
+.container { padding-left: 1.25rem; padding-right: 1.25rem; width: 100%; min-width:100%}
 /* :TODO .container-body need remove and replace .tab-content */
 .container-body { padding: 1.25rem }
+
+/*Collapce old*/
+.collapse { display: none}
+.collapse.in {display: block}
+tr.collapse.in {display: table-row}
+tbody.collapse.in { display: table-row-group}
+
+
 /* [ FORMS ] */
 .form-row { margin-bottom: 0.25rem; }
 .form-row.row { margin-left: 0; margin-right: -1rem }
@@ -26,7 +34,6 @@ select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 #settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype] { border-top-right-radius: 0; border-bottom-right-radius: 0 }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button], #range input#pids + input[name=fsubmit], input[name="ta"].inputBox + input[type=button], input[name="ta"].inputBox + .CodeMirror + input[type=button], #documentPane input[name^=tv]:not([class*=mtv]) + input[type=button] { z-index: 5; float: right; margin-top: -2.30769em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
-#settingsPane [name=site_name], #settingsPane [name=txt_custom_contenttype], #settingsPane [name=filemanager_path], #settingsPane [name=rb_base_dir], input[name=photo], #range input#pids, input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
 #range::after { content: ""; display: table; width: 100% }
 /* [ Editor ] */
 .navbar.navbar-editor {
@@ -61,7 +68,9 @@ border-top: none; border-radius: 0 0 0.1em 0.1em; overflow: hidden; }
 @media (max-width: 840px) {
 #actions { right: 0 }
 #actions .btn-group .btn span, #actions .btn-group select#stay, #_actions .btn-group .btn span { display: none }
+
 #actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: inline-block }
+
 #actions .btn-group .dropdown-menu { width: 2rem }
 #actions .btn-group .dropdown-menu span { padding-left: 0; padding-right: 0; text-align: center }
 #_actions .btn-group .input-group-btn .btn { margin-left: -1px }
@@ -197,7 +206,7 @@ line-height: 1.7; border: 1px solid #ddd; text-decoration: none; color: #333; }
 /* [ SEARCHBAR ] */
 .searchbar input[type=text] { max-width: 10rem }
 /* [ WIDGETS ] */
-.widgets .card { margin-bottom: 1rem; border-width: 0; border-radius: 0; background-color: #fff; -webkit-transition: box-shadow .35s; transition: box-shadow .35s; box-shadow: 0 0.1rem 0.3rem 0 rgba(0, 0, 0, 0.075); }
+.widgets .card { margin-bottom: 1rem; margin-right: 0.6rem; border-width: 0; border-radius: 0; background-color: #fff; -webkit-transition: box-shadow .35s; transition: box-shadow .35s; box-shadow: 0 0.1rem 0.3rem 0 rgba(0, 0, 0, 0.075); }
 .widgets .card:hover { box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.07); }
 .widgets .card-header { padding: .5rem 1rem; font-size: .9rem; color: #616a73; font-weight: 700; border-radius: 0; border: none; border-bottom: 1px solid rgba(0, 0, 0, .05); text-transform: none; background-color: transparent; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
 .widgets .card-header .fa { font-size: .9rem }
@@ -216,8 +225,11 @@ line-height: 1.7; border: 1px solid #ddd; text-decoration: none; color: #333; }
 .widgets #welcome .wm_button a { display: block; height: 100%; padding: 1rem 1rem .5rem;
 text-decoration: none; color: #646b7b; box-shadow: none; transition-duration: .5s }
 .widgets #welcome .wm_button a:hover { color: #373b46; background-color: rgba(93, 109, 202, 0.16) }
+
 .widgets #welcome .wm_button a .fa { display: inline-block; }
+
 .widgets #welcome .wm_button a .fa + span { display: block; padding: .5em 0; line-height: 1em; font-size: .7rem; }
+
 .widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
@@ -490,7 +502,7 @@ to { opacity: 1; transform: translateY(0); }
 .table.data > tbody > tr:hover { background-color: rgba(0, 0, 0, 0.03) !important; }
 ul.breadcrumbs { margin: 0 0 1rem 0; padding: .5rem 0.8rem; line-height: normal; font-size: .675rem; color: #888; border-width: 0; background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04), transparent 60%); }
 ul.breadcrumbs a { color: #333; }
-#settingsPane [name="site_name"], #settingsPane [name="emailsender"], #settingsPane [name="emailsubject"], #settingsPane [name="datepicker_offset"], #settingsPane [name="editor_css_path"], #settingsPane [name="safe_functions_at_eval"], #settingsPane [name="valid_hostnames"], #settingsPane [name="upload_files"], #settingsPane [name="upload_images"], #settingsPane [name="upload_media"], #settingsPane [name="upload_flash"], #settingsPane [name="txt_custom_contenttype"], #settingsPane [name="filemanager_path"], #settingsPane [name="rb_base_url"], #settingsPane [name="rb_base_dir"], #settingsPane [name="thumbsDir"], input[name="photo"], #range input#pids, input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important; }
+
 #news .card-block > div, #security .card-block > div { padding: 0 !important; }
 #news .card-block ul, #security .card-block ul { padding: 0; margin: 0; }
 #news .card-block ul li, #security .card-block ul li { padding: 0.75rem 1rem; border-bottom: 1px solid #ebebeb; }
