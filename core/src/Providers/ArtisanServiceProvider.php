@@ -17,6 +17,7 @@ use EvolutionCMS\Console\ClearCompiledCommand;
 use EvolutionCMS\Console\VendorPublishCommand;
 use EvolutionCMS\Console\ViewClearCommand;
 use EvolutionCMS\Console\Lists;
+use EvolutionCMS\Console\Packages;
 
 /** @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Providers/ArtisanServiceProvider.php */
 class ArtisanServiceProvider extends ServiceProvider
@@ -49,7 +50,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'ListsDoc' => 'command.lists.doc',
         'ListsTv' => 'command.lists.tv',
         'ListsTemplate' => 'command.lists.tpl',
-        'Package' => 'command.lists.package',
+        'Package' => 'command.packages.package',
     ];
 
     /**
@@ -283,8 +284,8 @@ class ArtisanServiceProvider extends ServiceProvider
 
     protected function registerPackageCommand()
     {
-        $this->app->singleton('command.lists.package', function () {
-            return new Lists\PackageCommand();
+        $this->app->singleton('command.packages.package', function () {
+            return new Packages\PackageCommand();
         });
     }
     /**
