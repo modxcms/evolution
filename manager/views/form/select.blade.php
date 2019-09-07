@@ -1,6 +1,6 @@
 <div class="row form-row form-element-select">
-    <label for="{{ $for or $name }}" class="control-label col-5 col-md-3 col-lg-2">
-        {!! $label or '' !!}
+    <label for="{{ $for ?? $name }}" class="control-label col-5 col-md-3 col-lg-2">
+        {!! $label ?? '' !!}
         @if(!empty($required))
             <span class="form-element-required">*</span>
         @endif
@@ -11,16 +11,16 @@
     <div class="col-7 col-md-9 col-lg-10">
         @if(!empty($options) || !empty($first))
             <div class="clearfix">
-                <select class="form-control" name="{{ $name }}" id="{{ $id or $name }}"
-                    {!! $attributes or '' !!}
+                <select class="form-control" name="{{ $name }}" id="{{ $id ?? $name }}"
+                    {!! $attributes ?? '' !!}
                 >
                     @if(!empty($first))
-                        <option value="{{ $first['value'] or '' }}">{{ $first['text'] or '' }}</option>
+                        <option value="{{ $first['value'] ?? '' }}">{{ $first['text'] ?? '' }}</option>
                     @endif
                     @if(!empty($options))
                         @foreach ($options as $key => $option)
                             @if(isset($option['optgroup']) && !empty($option['optgroup']['options']))
-                                <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
+                                <optgroup label="{{ $option['optgroup']['name'] ?? 'optgroup' }}">
                                     @foreach($option['optgroup']['options'] as $k => $opt)
                                         @if(is_string($opt))
                                             <option value="{{ $k }}"
@@ -29,11 +29,11 @@
                                                 @endif
                                             >{{ $opt }}</option>
                                         @else
-                                            <option value="{{ $opt['value'] or $k }}"
+                                            <option value="{{ $opt['value'] ?? $k }}"
                                                 @if(isset($value) && $value == $opt['value'])
                                                 selected="selected"
                                                 @endif
-                                            >{{ $opt['text'] or $opt['value'] }}</option>
+                                            >{{ $opt['text'] ?? $opt['value'] }}</option>
                                         @endif
                                     @endforeach
                                 </optgroup>
@@ -64,7 +64,7 @@
                                     @if(isset($value) && $value == $option['value'])
                                     selected="selected"
                                     @endif
-                                >{{ $option['text'] or $option['value'] }}</option>
+                                >{{ $option['text'] ?? $option['value'] }}</option>
                             @endif
                         @endforeach
                     @endif

@@ -355,7 +355,7 @@ trait Path
      */
     public function loadEnvironmentFrom($file)
     {
-        return $file;
+        return $this;
     }
 
     /**
@@ -376,7 +376,7 @@ trait Path
      */
     public function setLocale($locale)
     {
-        return $locale;
+        //return $locale;
     }
 
     /**

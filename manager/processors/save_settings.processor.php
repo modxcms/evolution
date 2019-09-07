@@ -6,6 +6,7 @@ if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $data = $_POST;
+
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 unset($_POST);
 

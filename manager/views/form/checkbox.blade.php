@@ -1,6 +1,6 @@
 <div class="row form-row form-element-checkbox">
-    <label for="{{ $for or $name }}" class="control-label col-5 col-md-3 col-lg-2">
-        {!! $label or '' !!}
+    <label for="{{ $for ?? $name }}" class="control-label col-5 col-md-3 col-lg-2">
+        {!! $label ?? '' !!}
         @if(!empty($required))
             <span class="form-element-required">*</span>
         @endif
@@ -14,17 +14,17 @@
                 <div class="checkbox">
                     <label>
                         @if(is_string($option))
-                            <input type="checkbox" name="{{ $name }}" value="{{ $key or '' }}"
+                            <input type="checkbox" name="{{ $name }}" value="{{ $key ?? '' }}"
                                 @if(isset($value) && $value == $key) checked="checked" @endif
                             />
-                            {!! $option or '' !!}
+                            {!! $option ?? '' !!}
                         @else
-                            <input type="checkbox" name="{{ $name }}[]" value="{{ $option['value'] or $key }}"
-                                {!! $option['attributes'] or '' !!}
+                            <input type="checkbox" name="{{ $name }}[]" value="{{ $option['value'] ?? $key }}"
+                                {!! $option['attributes'] ?? '' !!}
                                 @if(isset($value) && ((isset($option['value']) && $value == $option['value']) || ($value == $key))) checked="checked" @endif
                             @if(!empty($disabled) || !empty($option['disabled'])) disabled @endif
                             />
-                            {!! $option['text'] or '' !!}
+                            {!! $option['text'] ?? '' !!}
                         @endif
                     </label>
                 </div>
