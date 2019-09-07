@@ -51,6 +51,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'ListsTv' => 'command.lists.tv',
         'ListsTemplate' => 'command.lists.tpl',
         'Package' => 'command.packages.package',
+        'RunPackageConsole' => 'command.packages.runconsole',
     ];
 
     /**
@@ -282,10 +283,26 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
     protected function registerPackageCommand()
     {
         $this->app->singleton('command.packages.package', function () {
             return new Packages\PackageCommand();
+        });
+    }
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerRunPackageConsoleCommand()
+    {
+        $this->app->singleton('command.packages.runconsole', function () {
+            return new Packages\RunPackageConsoleCommand();
         });
     }
     /**
