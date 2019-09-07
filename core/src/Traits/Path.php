@@ -240,10 +240,7 @@ trait Path
      */
     public function bootstrapWith(array $bootstrappers)
     {
-        return [
-            'EvolutionCMS\\Console\\ViewClearCommand',
-            'EvolutionCMS\\Console\\Lists\\PackageCommand',
-        ];
+        return [ ];
     }
 
     /**
