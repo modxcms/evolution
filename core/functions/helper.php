@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('createGUID')) {
+if (!function_exists('createGUID')) {
     /**
      * create globally unique identifiers (guid)
      *
@@ -15,7 +15,7 @@ if (! function_exists('createGUID')) {
     }
 }
 
-if (! function_exists('generate_password')) {
+if (!function_exists('generate_password')) {
     /**
      * Generate password
      *
@@ -38,8 +38,8 @@ if (! function_exists('generate_password')) {
 
 if (!function_exists('entities')) {
     /**
-     * @param  string $string
-     * @param  string $charset
+     * @param string $string
+     * @param string $charset
      * @return string
      */
     function entities($string, $charset = 'UTF-8')
@@ -48,7 +48,7 @@ if (!function_exists('entities')) {
     }
 }
 
-if (! function_exists('html_escape')) {
+if (!function_exists('html_escape')) {
     /**
      * @param $str
      * @param string $charset
@@ -61,7 +61,7 @@ if (! function_exists('html_escape')) {
     }
 }
 
-if (! function_exists('get_by_key')) {
+if (!function_exists('get_by_key')) {
     /**
      * @param mixed $data
      * @param string|int $key
@@ -112,14 +112,14 @@ if (! function_exists('get_by_key')) {
     }
 }
 
-if (! function_exists('is_cli')) {
+if (!function_exists('is_cli')) {
     function is_cli()
     {
         return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
     }
 }
 
-if (! function_exists('nicesize')) {
+if (!function_exists('nicesize')) {
     /**
      * @param $size
      * @return string
@@ -143,7 +143,7 @@ if (! function_exists('nicesize')) {
     }
 }
 
-if (! function_exists('data_is_json')) {
+if (!function_exists('data_is_json')) {
     /**
      * @param $string
      * @param bool $returnData
@@ -166,7 +166,7 @@ if (! function_exists('data_is_json')) {
     }
 }
 
-if (! function_exists('is_ajax')) {
+if (!function_exists('is_ajax')) {
     /**
      * @return bool
      */
@@ -176,7 +176,7 @@ if (! function_exists('is_ajax')) {
     }
 }
 
-if (! function_exists('rename_key_arr')) {
+if (!function_exists('rename_key_arr')) {
     /**
      * Renaming array elements
      *
@@ -216,7 +216,7 @@ if (! function_exists('rename_key_arr')) {
     }
 }
 
-if (! function_exists('replace_array')) {
+if (!function_exists('replace_array')) {
     /**
      * @param $data
      * @param array $chars
@@ -226,12 +226,13 @@ if (! function_exists('replace_array')) {
     function replace_array(
         $data,
         array $chars = [
-            '['   => '&#91;', ']'   => '&#93;',
-            '{'   => '&#123;', '}'   => '&#125;',
-            '`'   => '&#96;',
+            '[' => '&#91;', ']' => '&#93;',
+            '{' => '&#123;', '}' => '&#125;',
+            '`' => '&#96;',
         ],
         $withKey = true
-    ) {
+    )
+    {
         switch (true) {
             case is_scalar($data):
                 $out = str_replace(array_keys($chars), array_values($chars), $data);

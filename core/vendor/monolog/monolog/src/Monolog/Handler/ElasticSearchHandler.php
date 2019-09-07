@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,29 +11,37 @@
 
 namespace Monolog\Handler;
 
+use Elasticsearch\Client;
+use Elasticsearch\Common\Exceptions\RuntimeException as ElasticsearchRuntimeException;
+use InvalidArgumentException;
+use Monolog\Formatter\ElasticsearchFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Logger;
-use Elastica\Client;
-use Elastica\Exception\ExceptionInterface;
+use RuntimeException;
+use Throwable;
 
 /**
- * Elastic Search handler
+ * Elasticsearch handler
  *
- * Usage example:
+ * @link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
  *
- *    $client = new \Elastica\Client();
+ * Simple usage example:
+ *
+ *    $client = \Elasticsearch\ClientBuilder::create()
+ *        ->setHosts($hosts)
+ *        ->build();
+ *
  *    $options = array(
  *        'index' => 'elastic_index_name',
- *        'type' => 'elastic_doc_type',
+ *        'type'  => 'elastic_doc_type',
  *    );
- *    $handler = new ElasticSearchHandler($client, $options);
+ *    $handler = new ElasticsearchHandler($client, $options);
  *    $log = new Logger('application');
  *    $log->pushHandler($handler);
  *
- * @author Jelle Vink <jelle.vink@gmail.com>
+ * @author Avtandil Kikabidze <akalongman@gmail.com>
  */
-class ElasticSearchHandler extends AbstractProcessingHandler
+class ElasticsearchHandler extends AbstractProcessingHandler
 {
     /**
      * @var Client
@@ -43,24 +51,24 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     /**
      * @var array Handler config options
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
-     * @param Client $client  Elastica Client object
-     * @param array  $options Handler configuration
-     * @param int    $level   The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param Client     $client  Elasticsearch Client object
+     * @param array      $options Handler configuration
+     * @param string|int $level   The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
-            array(
-                'index'          => 'monolog',      // Elastic index name
-                'type'           => 'record',       // Elastic document type
-                'ignore_error'   => false,          // Suppress Elastica exceptions
-            ),
+            [
+                'index'        => 'monolog', // Elastic index name
+                'type'         => '_doc',    // Elastic document type
+                'ignore_error' => false,     // Suppress Elasticsearch exceptions
+            ],
             $options
         );
     }
@@ -68,27 +76,29 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
-        $this->bulkSend(array($record['formatted']));
+        $this->bulkSend([$record['formatted']]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
-        if ($formatter instanceof ElasticaFormatter) {
+        if ($formatter instanceof ElasticsearchFormatter) {
             return parent::setFormatter($formatter);
         }
-        throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
+
+        throw new InvalidArgumentException('ElasticsearchHandler is only compatible with ElasticsearchFormatter');
     }
 
     /**
      * Getter options
+     *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -96,15 +106,15 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
-        return new ElasticaFormatter($this->options['index'], $this->options['type']);
+        return new ElasticsearchFormatter($this->options['index'], $this->options['type']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         $documents = $this->getFormatter()->formatBatch($records);
         $this->bulkSend($documents);
@@ -112,16 +122,37 @@ class ElasticSearchHandler extends AbstractProcessingHandler
 
     /**
      * Use Elasticsearch bulk API to send list of documents
-     * @param  array             $documents
+     *
+     * @param  array             $records
      * @throws \RuntimeException
      */
-    protected function bulkSend(array $documents)
+    protected function bulkSend(array $records): void
     {
         try {
-            $this->client->addDocuments($documents);
-        } catch (ExceptionInterface $e) {
-            if (!$this->options['ignore_error']) {
-                throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
+            $params = [
+                'body' => [],
+            ];
+
+            foreach ($records as $record) {
+                $params['body'][] = [
+                    'index' => [
+                        '_index' => $record['_index'],
+                        '_type'  => $record['_type'],
+                    ],
+                ];
+                unset($record['_index'], $record['_type']);
+
+                $params['body'][] = $record;
+            }
+
+            $responses = $this->client->bulk($params);
+
+            if ($responses['errors'] === true) {
+                throw new ElasticsearchRuntimeException('Elasticsearch returned error for one of the records');
+            }
+        } catch (Throwable $e) {
+            if (! $this->options['ignore_error']) {
+                throw new RuntimeException('Error sending messages to Elasticsearch', 0, $e);
             }
         }
     }

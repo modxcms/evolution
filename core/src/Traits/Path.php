@@ -1,5 +1,8 @@
 <?php namespace EvolutionCMS\Traits;
 
+use Closure;
+use Illuminate\Contracts\Foundation\Application;
+
 trait Path
 {
     /**
@@ -19,7 +22,7 @@ trait Path
     /**
      * Get the path to the core directory.
      *
-     * @param  string  $path Optionally, a path to append to the core path
+     * @param string $path Optionally, a path to append to the core path
      * @return string
      */
     public function path($path = '')
@@ -30,7 +33,7 @@ trait Path
     /**
      * {@inheritdoc}
      */
-    public function basePath()
+    public function basePath($path = '')
     {
         return EVO_CORE_PATH;
     }
@@ -48,12 +51,34 @@ trait Path
     /**
      * Get the path to the application configuration files.
      *
-     * @param  string  $path Optionally, a path to append to the config path
+     * @param string $path Optionally, a path to append to the config path
      * @return string
      */
     public function configPath($path = '')
     {
         return $this->path('config');
+    }
+
+
+    /**
+     * Get the path to the environment file directory.
+     *
+     * @return string
+     */
+    public function environmentPath()
+    {
+        return '';
+    }
+
+    /**
+     * Get or check the current application environment.
+     *
+     * @param string|array $environments
+     * @return string|bool
+     */
+    public function environment(...$environments)
+    {
+
     }
 
     /**
@@ -79,7 +104,7 @@ trait Path
     /**
      * Set the storage directory.
      *
-     * @param  string  $path
+     * @param string $path
      * @return $this
      */
     public function useStoragePath($path)
@@ -92,18 +117,18 @@ trait Path
     /**
      * Get the path to the database directory.
      *
-     * @param  string  $path Optionally, a path to append to the database path
+     * @param string $path Optionally, a path to append to the database path
      * @return string
      */
     public function databasePath($path = '')
     {
-        return $this->databasePath ?: $this->path('database' . ($path ? DIRECTORY_SEPARATOR.$path : $path));
+        return $this->databasePath ?: $this->path('database' . ($path ? DIRECTORY_SEPARATOR . $path : $path));
     }
 
     /**
      * Set the database directory.
      *
-     * @param  string  $path
+     * @param string $path
      * @return $this
      */
     public function useDatabasePath($path)
@@ -118,23 +143,23 @@ trait Path
     /**
      * Get the path to the resources directory.
      *
-     * @param  string  $path
+     * @param string $path
      * @return string
      */
     public function resourcePath($path = '')
     {
-        return $this->publicPath() . DIRECTORY_SEPARATOR . 'assets' . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return $this->publicPath() . DIRECTORY_SEPARATOR . 'assets' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
      * Get the path to the bootstrap directory.
      *
-     * @param  string  $path Optionally, a path to append to the bootstrap path
+     * @param string $path Optionally, a path to append to the bootstrap path
      * @return string
      */
     public function bootstrapPath($path = '')
     {
-        return $this->storagePath() . 'bootstrap' . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return $this->storagePath() . 'bootstrap' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
@@ -165,8 +190,8 @@ trait Path
     /**
      * Returns the manager relative URL/path with respect to the site root.
      *
-     * @global string $base_url
      * @return string The complete URL to the manager folder
+     * @global string $base_url
      */
     public function getManagerUrl()
     {
@@ -176,8 +201,8 @@ trait Path
     /**
      * Returns the cache relative URL/path with respect to the site root.
      *
-     * @global string $base_url
      * @return string The complete URL to the cache folder
+     * @global string $base_url
      */
     public function getCachePath()
     {
@@ -193,13 +218,195 @@ trait Path
         return $this->bootstrapPath();
     }
 
+    /**
+     * @return string
+     */
     public function getSiteCacheFilePath()
     {
         return $this->bootstrapPath('siteCache.idx.php');
     }
 
+    /**
+     * @return string
+     */
     public function getSitePublishingFilePath()
     {
         return $this->bootstrapPath('sitePublishing.idx.php');
     }
+
+    /**
+     * @param array $bootstrappers
+     * @return array
+     */
+    public function bootstrapWith(array $bootstrappers)
+    {
+        return [ ];
+    }
+
+    /**
+     * Determine if the application configuration is cached.
+     *
+     * @return bool
+     */
+    public function configurationIsCached()
+    {
+        return false;
+    }
+
+    /**
+     * Detect the application's current environment.
+     *
+     * @param \Closure $callback
+     * @return string
+     */
+    public function detectEnvironment(Closure $callback)
+    {
+        return '';
+    }
+
+    /**
+     * Get the environment file the application is using.
+     *
+     * @return string
+     */
+    public function environmentFile()
+    {
+        return '';
+    }
+
+    /**
+     * Get the fully qualified path to the environment file.
+     *
+     * @return string
+     */
+    public function environmentFilePath()
+    {
+        return '';
+    }
+
+    /**
+     * Get the path to the configuration cache file.
+     *
+     * @return string
+     */
+    public function getCachedConfigPath()
+    {
+        return '';
+    }
+
+    /**
+     * Get the path to the routes cache file.
+     *
+     * @return string
+     */
+    public function getCachedRoutesPath()
+    {
+        return '';
+    }
+
+    /**
+     * Get the current application locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return '';
+    }
+
+    /**
+     * Get the application namespace.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getNamespace()
+    {
+        return 'EvolutionCMS';
+    }
+
+    /**
+     * Get the registered service provider instances if any exist.
+     *
+     * @param \Illuminate\Support\ServiceProvider|string $provider
+     * @return array
+     */
+    public function getProviders($provider)
+    {
+        return [];
+    }
+
+    /**
+     * Determine if the application has been bootstrapped before.
+     *
+     * @return bool
+     */
+    public function hasBeenBootstrapped()
+    {
+        return true;
+    }
+
+    /**
+     * Load and boot all of the remaining deferred providers.
+     *
+     * @return void
+     */
+    public function loadDeferredProviders()
+    {
+
+    }
+
+    /**
+     * Set the environment file to be loaded during bootstrapping.
+     *
+     * @param string $file
+     * @return $this
+     */
+    public function loadEnvironmentFrom($file)
+    {
+        return $this;
+    }
+
+    /**
+     * Determine if the application routes are cached.
+     *
+     * @return bool
+     */
+    public function routesAreCached()
+    {
+        return true;
+    }
+
+    /**
+     * Set the current application locale.
+     *
+     * @param string $locale
+     * @return void
+     */
+    public function setLocale($locale)
+    {
+        //return $locale;
+    }
+
+    /**
+     * Determine if middleware has been disabled for the application.
+     *
+     * @return bool
+     */
+    public function shouldSkipMiddleware()
+    {
+        return true;
+    }
+
+    /**
+     * Terminate the application.
+     *
+     * @return void
+     */
+    public function terminate()
+    {
+
+    }
+
 }

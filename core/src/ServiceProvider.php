@@ -45,7 +45,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     protected function loadPluginsFrom($path)
     {
-        foreach (glob($path.'*.php') as $file) {
+        foreach (glob($path . '*.php') as $file) {
             include $file;
         }
     }

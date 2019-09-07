@@ -1,14 +1,14 @@
 @if(!empty($options) || !empty($first))
-    <select class="form-control {{ $class or '' }}" name="{{ $name }}" id="{{ $id or $name }}"
-        {!! $attributes or '' !!}
+    <select class="form-control {{ $class ?? '' }}" name="{{ $name }}" id="{{ $id ??  $name }}"
+        {!! $attributes ?? '' !!}
     >
         @if(!empty($first))
-            <option value="{{ $first['value'] or '' }}">{{ $first['text'] or '' }}</option>
+            <option value="{{ $first['value'] ?? '' }}">{{ $first['text'] ?? '' }}</option>
         @endif
         @if(!empty($options))
             @foreach ($options as $key => $option)
                 @if(isset($option['optgroup']) && !empty($option['optgroup']['options']))
-                    <optgroup label="{{ $option['optgroup']['name'] or 'optgroup' }}">
+                    <optgroup label="{{ $option['optgroup']['name'] ??  'optgroup' }}">
                         @foreach($option['optgroup']['options'] as $opt)
                             <option value="{{ $opt['value'] }}" @if(isset($value) && $value == $opt['value'])selected="selected"@endif>{{ $opt['text'] }}</option>
                         @endforeach
@@ -36,11 +36,11 @@
                         >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
                     @endif
                 @else
-                    <option value="{{ $option['value'] or ''}}"
+                    <option value="{{ $option['value'] ?? ''}}"
                         @if(isset($value) && $value == $option['value'])
                         selected="selected"
                         @endif
-                    >{{ $option['text'] or $option['value'] }}</option>
+                    >{{ $option['text'] ?? $option['value'] }}</option>
                 @endif
             @endforeach
         @endif
