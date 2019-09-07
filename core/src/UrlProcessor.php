@@ -620,7 +620,7 @@ class UrlProcessor
 
         // Strip conflicting id/q from query string
         if (Str::contains($_SERVER['REQUEST_URI'], '?')) {
-            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', str_after($_SERVER['REQUEST_URI'],'?'));
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', Str::after($_SERVER['REQUEST_URI'],'?'));
         } else {
             $qstring = '';
         }
