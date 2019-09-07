@@ -1,6 +1,8 @@
 <?php namespace EvolutionCMS\Console\Lists;
 
 use Illuminate\Console\Command;
+use \EvolutionCMS;
+use Illuminate\Support\Facades\File;
 
 class PackageCommand extends Command
 {
@@ -27,6 +29,30 @@ class PackageCommand extends Command
      * @var string
      */
     protected $composer = EVO_CORE_PATH . 'custom/composer.json';
+    /**
+     * @var string
+     */
+    public $packagePath = '';
+
+    /**
+     * @var mixed|string
+     */
+    public $load_dir = '';
+
+    /**
+     * @var \DocumentParser|string
+     */
+    public $evo = '';
+
+    /**
+     * PackageCommand constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->evo = EvolutionCMS();
+        $this->load_dir = $this->evo->getConfig('rb_base_dir');
+    }
 
     /**
      * Execute the console command.
@@ -48,7 +74,10 @@ class PackageCommand extends Command
         }
     }
 
-    public function parseComposer($composer)
+    /**
+     * @param string $composer
+     */
+    public function parseComposer(string $composer)
     {
         $data = json_decode(file_get_contents($composer), true);
         if (isset($data['extra']['laravel']['providers'])) {
@@ -59,7 +88,7 @@ class PackageCommand extends Command
         if (isset($data['require'])) {
             foreach ($data['require'] as $key => $value) {
                 $composer = EVO_CORE_PATH . 'vendor/' . $key . '/composer.json';
-
+                $this->packagePath = EVO_CORE_PATH . 'vendor/' . $key . '/';
                 if (file_exists($composer)) {
                     $this->parseComposerServiceProvider($composer);
                 }
@@ -68,6 +97,7 @@ class PackageCommand extends Command
         if (isset($data['autoload']['psr-4'])) {
             foreach ($data['autoload']['psr-4'] as $key => $value) {
                 $composer = EVO_CORE_PATH . 'custom/' . $value . '/composer.json';
+                $this->packagePath = EVO_CORE_PATH . 'custom/' . $value . '/';
                 if (file_exists($composer)) {
                     $this->parseComposerServiceProvider($composer);
                 }
@@ -76,18 +106,28 @@ class PackageCommand extends Command
         }
     }
 
-    public function parseComposerServiceProvider($composer)
+    /**
+     * @param string $composer
+     */
+    public function parseComposerServiceProvider(string $composer)
     {
-
         $data = json_decode(file_get_contents($composer), true);
         if (isset($data['extra']['laravel']['providers'])) {
             foreach ($data['extra']['laravel']['providers'] as $value) {
                 $this->process($value);
             }
         }
+        if (isset($data['extra']['laravel']['files'])) {
+            foreach ($data['extra']['laravel']['files'] as $copyArray) {
+                $this->copyFiles($copyArray);
+            }
+        }
     }
 
-    protected function process($value)
+    /**
+     * @param string $value
+     */
+    protected function process(string $value)
     {
         $arrNamespace = explode('\\', $value);
         $fileName = end($arrNamespace) . '.php';
@@ -98,5 +138,13 @@ class PackageCommand extends Command
             $this->getOutput()->write('<error>Error create config for: ' . $value . '</error>');
         }
         $this->line('');
+    }
+
+    /**
+     * @param array $copyArray
+     */
+    protected function copyFiles(array $copyArray)
+    {
+        File::copyDirectory($this->packagePath . $copyArray['source'], $this->load_dir . $copyArray['destination']);
     }
 }
