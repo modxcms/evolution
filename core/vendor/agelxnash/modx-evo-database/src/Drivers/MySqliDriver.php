@@ -249,4 +249,28 @@ class MySqliDriver extends AbstractDriver
     {
         return $this->isResult($result) ? $result->data_seek($position) : false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function begin ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->begin_transaction($flag, $name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function commit ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->commit($flag, $name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rollback ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->rollback($flag, $name);
+    }
 }

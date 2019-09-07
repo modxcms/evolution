@@ -105,6 +105,21 @@ abstract class AbstractDriver implements DriverInterface
     /**
      * {@inheritDoc}
      */
+    abstract public function begin($flag = 0, $name = null);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function commit($flag = 0, $name = null);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function rollback($flag = 0, $name = null);
+
+    /**
+     * {@inheritDoc}
+     */
     abstract public function getAffectedRows();
 
     /**
