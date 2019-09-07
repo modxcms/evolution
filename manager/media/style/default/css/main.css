@@ -118,7 +118,7 @@ table th { font-weight: 500; }
 .no-events { pointer-events: none; }
 /* Required for Bootstrap3 Collapse */
 .panel-title > a::before { content: "\f107"; /* fa-angle-down */
-font-family: "FontAwesome"; }
+font-family: "Font Awesome 5 Free"; }
 .panel-title > a.collapsed::before { content: "\f105"; /* fa-angle-right */
 padding: 0 1px 0 3px; }
 .panel-title > a { font-size: 1.1em; color: #657587; display: block; padding: 3px 0; }
@@ -126,7 +126,7 @@ padding: 0 1px 0 3px; }
 /* category icons in manage elements */
 #site_templates, #site_tmplvars, #site_htmlsnippets, #site_snippets, #site_plugins { padding-left: 0; }
 #site_templates li, #site_tmplvars li, #site_htmlsnippets li, #site_snippets li, #site_modules li, #site_plugins li, #categories_list li { list-style: none; margin-left: -21px; }
-#site_templates li strong:before, #site_tmplvars li strong:before, #site_htmlsnippets li strong:before, #site_snippets li strong:before, #site_modules li strong:before, #site_plugins li strong:before, #categories_list li strong:before { font-family: "FontAwesome"; font-style: normal; font-weight: normal; color: #5b6f7a; padding: 0 5px 0 5px; content: '\f105'; }
+#site_templates li strong:before, #site_tmplvars li strong:before, #site_htmlsnippets li strong:before, #site_snippets li strong:before, #site_modules li strong:before, #site_plugins li strong:before, #categories_list li strong:before { font-family: "Font Awesome 5 Free"; font-style: normal; font-weight: normal; color: #5b6f7a; padding: 0 5px 0 5px; content: '\f105'; }
 .tab-pane ul li ul li strong:before { content: ''; }
 /* elements icons in manage elements */
 div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
@@ -191,4 +191,4 @@ break-inside: avoid-column; -webkit-column-break-inside: avoid; -moz-column-brea
 .modx-alert { display: block; margin: 60px 10px 10px 10px; padding: 1em; }
 .modx-alert.alert-error { background-color: #ffd0d0; border: 1px solid #f00; color: #000; }
 tr.userIdle td { color: #aaa; }
-tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; font-weight: normal; color: #aaa; padding: 0 5px 0 0; content: '\f017'; }
+tr.userIdle td strong:before { font-family: "Font Awesome 5 Free"; font-style: normal; font-weight: normal; color: #aaa; padding: 0 5px 0 0; content: '\f017'; }
