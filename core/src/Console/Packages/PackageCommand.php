@@ -1,4 +1,4 @@
-<?php namespace EvolutionCMS\Console\Lists;
+<?php namespace EvolutionCMS\Console\Packages;
 
 use Illuminate\Console\Command;
 use \EvolutionCMS;
