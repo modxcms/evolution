@@ -1,16 +1,18 @@
 <?php namespace EvolutionCMS\Controllers;
 
+use Illuminate\Support\Arr;
+
 abstract class AbstractResources extends AbstractController
 {
     protected $noData = false;
 
-    public function setNoData() : self
+    public function setNoData(): self
     {
         $this->noData = true;
         return $this;
     }
 
-    public function isNoData() : bool
+    public function isNoData(): bool
     {
         return $this->noData;
     }
@@ -18,12 +20,12 @@ abstract class AbstractResources extends AbstractController
     /**
      * {@inheritdoc}
      */
-    public function checkLocked() : ?string
+    public function checkLocked(): ?string
     {
         return null;
     }
 
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         return array_merge([
             'index' => $this->getIndex(),
@@ -32,7 +34,7 @@ abstract class AbstractResources extends AbstractController
         ], $params);
     }
 
-    protected function parameterMraTranslations() : array
+    protected function parameterMraTranslations(): array
     {
         return $this->makeTranslations([
             'create_new', 'edit', 'duplicate', 'remove', 'confirm_duplicate_record', 'confirm_delete_template',
@@ -41,7 +43,7 @@ abstract class AbstractResources extends AbstractController
         ]);
     }
 
-    protected function parameterUnLockTranslations() : array
+    protected function parameterUnLockTranslations(): array
     {
         $out = $this->makeTranslations([
             'unlock_element_id_warning', 'lock_element_type_1', 'lock_element_type_2', 'lock_element_type_3',
@@ -63,7 +65,7 @@ abstract class AbstractResources extends AbstractController
 
     private function makeTranslations(array $keys)
     {
-        $out = array_only($this->managerTheme->getLexicon(), $keys);
+        $out = Arr::only($this->managerTheme->getLexicon(), $keys);
 
         foreach ($out as &$value) {
             $value = iconv(
