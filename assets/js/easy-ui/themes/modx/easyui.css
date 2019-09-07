@@ -2348,7 +2348,7 @@
 .datagrid-row-collapse:before
 {
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 'Font Awesome 5 Free';
     font-size: 14px;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;

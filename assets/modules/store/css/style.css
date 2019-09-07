@@ -29,7 +29,7 @@ body {
 }
 .github::before {
   display: inline-block;
-  font-family: 'FontAwesome';
+  font-family: 'Font Awesome 5 Free';
   font-size: 28px;
   content: "\f09b";
 }
@@ -319,7 +319,7 @@ nav ul li {
 }
 
 .info .version:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
@@ -328,7 +328,7 @@ nav ul li {
 }
 
 .info .autor:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
@@ -337,7 +337,7 @@ nav ul li {
 }
 
 .info .date:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
@@ -346,7 +346,7 @@ nav ul li {
 }
 
 .info .download:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
@@ -523,7 +523,7 @@ body,
 }
 
 .catalog_item.liststyle .row-category h3:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: normal;
   color: #444;
