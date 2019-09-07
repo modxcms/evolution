@@ -2,18 +2,9 @@
 
 namespace Illuminate\Cache;
 
-use Illuminate\Contracts\Cache\Store;
-
-class NullStore extends TaggableStore implements Store
+class NullStore extends TaggableStore
 {
     use RetrievesMultipleKeys;
-
-    /**
-     * The array of stored values.
-     *
-     * @var array
-     */
-    protected $storage = [];
 
     /**
      * Retrieve an item from the cache by key.
@@ -27,16 +18,16 @@ class NullStore extends TaggableStore implements Store
     }
 
     /**
-     * Store an item in the cache for a given number of minutes.
+     * Store an item in the cache for a given number of seconds.
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @param  float|int  $minutes
-     * @return void
+     * @param  int  $seconds
+     * @return bool
      */
-    public function put($key, $value, $minutes)
+    public function put($key, $value, $seconds)
     {
-        //
+        return false;
     }
 
     /**
@@ -44,11 +35,11 @@ class NullStore extends TaggableStore implements Store
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return int
+     * @return int|bool
      */
     public function increment($key, $value = 1)
     {
-        //
+        return false;
     }
 
     /**
@@ -56,11 +47,11 @@ class NullStore extends TaggableStore implements Store
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return int
+     * @return int|bool
      */
     public function decrement($key, $value = 1)
     {
-        //
+        return false;
     }
 
     /**
@@ -68,22 +59,22 @@ class NullStore extends TaggableStore implements Store
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return bool
      */
     public function forever($key, $value)
     {
-        //
+        return false;
     }
 
     /**
      * Remove an item from the cache.
      *
      * @param  string  $key
-     * @return void
+     * @return bool
      */
     public function forget($key)
     {
-        //
+        return true;
     }
 
     /**

@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Str;
+
 if (! defined('HTTPS_PORT')) {
     define('HTTPS_PORT', env('HTTPS_PORT', '443')); //$https_port
 }
@@ -73,7 +75,7 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
 
     $url = implode($separator, $items);
 
-    $base_url = str_finish(implode($separator, $items),'/');
+    $base_url = Str::finish(implode($separator, $items),'/');
     unset($separator);
 
     reset($items);
@@ -82,7 +84,7 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
         array_pop($items);
     }
 
-    $base_path = str_finish(
+    $base_path = Str::finish(
         str_replace('\\', '/', implode(MGR_DIR, $items))
         , '/'
     );

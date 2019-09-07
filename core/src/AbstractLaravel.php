@@ -208,7 +208,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     /**
      * {@inheritdoc}
      */
-    public function environment()
+    public function environment(...$environments)
     {
         return $this['env'];
     }

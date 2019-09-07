@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,15 +11,24 @@
 
 namespace Monolog;
 
-class Utils
+final class Utils
 {
     /**
      * @internal
      */
-    public static function getClass($object)
+    public static function getClass($object): string
     {
         $class = \get_class($object);
 
         return 'c' === $class[0] && 0 === strpos($class, "class@anonymous\0") ? get_parent_class($class).'@anonymous' : $class;
+    }
+
+    public static function substr(string $string, int $start, ?int $length = null)
+    {
+        if (extension_loaded('mbstring')) {
+            return mb_strcut($string, $start, $length);
+        }
+
+        return substr($string, $start, $length);
     }
 }

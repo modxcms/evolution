@@ -10,6 +10,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
         '151a7554673bf152d8415507113eb8bd' => __DIR__ . '/../..' . '/functions/actions/bkmanager.php',
         '2e022a7f691ec661a7e3ad68fbbba284' => __DIR__ . '/../..' . '/functions/actions/files.php',
@@ -40,6 +41,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         array (
             'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
@@ -85,6 +87,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         ),
         'D' => 
         array (
+            'Dotenv\\' => 7,
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Inflector\\' => 26,
             'Doctrine\\Common\\Cache\\' => 22,
@@ -112,6 +115,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
@@ -221,6 +228,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
+        'Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
         'Doctrine\\DBAL\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
@@ -248,11 +259,11 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
     );
 
     public static $prefixesPsr0 = array (
-        'U' => 
+        'P' => 
         array (
-            'UpdateHelper\\' => 
+            'PhpOption\\' => 
             array (
-                0 => __DIR__ . '/..' . '/kylekatarnls/update-helper/src',
+                0 => __DIR__ . '/..' . '/phpoption/phpoption/src',
             ),
         ),
     );

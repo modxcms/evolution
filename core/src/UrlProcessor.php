@@ -1,5 +1,7 @@
 <?php namespace EvolutionCMS;
 
+use Illuminate\Support\Str;
+
 class UrlProcessor
 {
     /**
@@ -617,7 +619,7 @@ class UrlProcessor
         }
 
         // Strip conflicting id/q from query string
-        if (str_contains($_SERVER['REQUEST_URI'], '?')) {
+        if (Str::contains($_SERVER['REQUEST_URI'], '?')) {
             $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', str_after($_SERVER['REQUEST_URI'],'?'));
         } else {
             $qstring = '';

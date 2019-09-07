@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -30,12 +30,12 @@ class IFTTTHandler extends AbstractProcessingHandler
     private $secretKey;
 
     /**
-     * @param string $eventName The name of the IFTTT Maker event that should be triggered
-     * @param string $secretKey A valid IFTTT secret key
-     * @param int    $level     The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param string     $eventName The name of the IFTTT Maker event that should be triggered
+     * @param string     $secretKey A valid IFTTT secret key
+     * @param string|int $level     The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($eventName, $secretKey, $level = Logger::ERROR, $bubble = true)
+    public function __construct(string $eventName, string $secretKey, $level = Logger::ERROR, bool $bubble = true)
     {
         $this->eventName = $eventName;
         $this->secretKey = $secretKey;
@@ -46,13 +46,13 @@ class IFTTTHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
+    public function write(array $record): void
     {
-        $postData = array(
+        $postData = [
             "value1" => $record["channel"],
             "value2" => $record["level_name"],
             "value3" => $record["message"],
-        );
+        ];
         $postString = json_encode($postData);
 
         $ch = curl_init();
@@ -60,9 +60,9 @@ class IFTTTHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
-        ));
+        ]);
 
         Curl\Util::execute($ch);
     }
