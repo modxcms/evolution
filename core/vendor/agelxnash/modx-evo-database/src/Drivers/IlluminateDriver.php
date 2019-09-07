@@ -440,4 +440,28 @@ class IlluminateDriver extends AbstractDriver
     {
         return 0 === mb_stripos(trim($query), 'SELECT');
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function begin ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->getPdo()->beginTransaction();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function commit ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->getPdo()->commit();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rollback ($flag = 0, $name = null)
+    {
+        return $this->getConnect()->getPdo()->rollback();
+    }
 }

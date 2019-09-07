@@ -131,4 +131,25 @@ interface ProxyInterface extends ConfigInterface
      * @return mixed
      */
     public function getTableMetaData($result);
+
+    /**
+     * @param int $flag
+     * @param string $name
+     * @return bool
+     */
+    public function begin($flag = 0, $name = null);
+
+    /**
+     * @param int $flag
+     * @param string $name
+     * @return bool
+     */
+    public function commit($flag = 0, $name = null);
+
+    /**
+     * @param int $flag
+     * @param string $name
+     * @return bool
+     */
+    public function rollback($flag = 0, $name = null);
 }

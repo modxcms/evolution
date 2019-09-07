@@ -523,4 +523,30 @@ abstract class AbstractDatabase implements Interfaces\DatabaseInterface, Interfa
             $this->getTableName($table)
         ]);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function begin ($flag = 0, $name = null)
+    {
+        return $this->getDriver()->begin($flag, $name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function commit ($flag = 0, $name = null)
+    {
+        return $this->getDriver()->commit($flag, $name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rollback ($flag = 0, $name = null)
+    {
+        return $this->getDriver()->rollback($flag, $name);
+    }
+
+
 }

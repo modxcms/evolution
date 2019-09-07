@@ -72,16 +72,14 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
     protected $systemType;
 
     /**
+     * @var bool
+     */
+    protected $alternativeRecursion = false;
+
+    /**
      * @var SafeStorage
      */
     protected $safeStorage;
-
-    /**
-     * True to enable timestamps for FTP servers that return unix-style listings
-     *
-     * @var bool
-     */
-    protected $enableTimestampsOnUnixListings = false;
 
     /**
      * Constructor.
@@ -317,18 +315,6 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
     }
 
     /**
-     * True to enable timestamps for FTP servers that return unix-style listings
-     *
-     * @param bool $bool
-     * @return $this
-     */
-    public function setEnableTimestampsOnUnixListings($bool = false) {
-        $this->enableTimestampsOnUnixListings = $bool;
-
-        return $this;
-    }
-
-    /**
      * @inheritdoc
      */
     public function listContents($directory = '', $recursive = false)
@@ -408,18 +394,6 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
     /**
      * Normalize a Unix file entry.
      *
-     * Given $item contains:
-     *    '-rw-r--r--   1 ftp      ftp           409 Aug 19 09:01 file1.txt'
-     *
-     * This function will return:
-     * [
-     *   'type' => 'file',
-     *   'path' => 'file1.txt',
-     *   'visibility' => 'public',
-     *   'size' => 409,
-     *   'timestamp' => 1566205260
-     * ]
-     *
      * @param string $item
      * @param string $base
      *
@@ -433,7 +407,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
             throw new RuntimeException("Metadata can't be parsed from item '$item' , not enough parts.");
         }
 
-        list($permissions, /* $number */, /* $owner */, /* $group */, $size, $month, $day, $timeOrYear, $name) = explode(' ', $item, 9);
+        list($permissions, /* $number */, /* $owner */, /* $group */, $size, /* $month */, /* $day */, /* $time*/, $name) = explode(' ', $item, 9);
         $type = $this->detectType($permissions);
         $path = $base === '' ? $name : $base . $this->separator . $name;
 
@@ -445,41 +419,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
         $visibility = $permissions & 0044 ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
         $size = (int) $size;
 
-        $result = compact('type', 'path', 'visibility', 'size');
-        if ($this->enableTimestampsOnUnixListings) {
-            $timestamp = $this->normalizeUnixTimestamp($month, $day, $timeOrYear);
-            $result += compact('timestamp');
-        }
-        return $result;
-    }
-
-    /**
-     * Only accurate to the minute (current year), or to the day
-     *
-     * Inadequacies in timestamp accuracy are due to limitations of the FTP 'LIST' command
-     *
-     * Note: The 'MLSD' command is a machine-readable replacement for 'LIST'
-     * but many FTP servers do not support it :(
-     *
-     * @param string $month e.g. 'Aug'
-     * @param string $day e.g. '19'
-     * @param string $timeOrYear e.g. '09:01' OR '2015'
-     * @return int
-     */
-    protected function normalizeUnixTimestamp($month, $day, $timeOrYear) {
-        if (is_numeric($timeOrYear)) {
-            $year = $timeOrYear;
-            $hour = '00';
-            $minute = '00';
-            $seconds = '00';
-        }
-        else {
-            $year = date('Y');
-            list($hour, $minute) = explode(':', $timeOrYear);
-            $seconds = '00';
-        }
-        $dateTime = DateTime::createFromFormat('Y-M-j-G:i:s', "{$year}-{$month}-{$day}-{$hour}:{$minute}:{$seconds}");
-        return $dateTime->getTimestamp();
+        return compact('type', 'path', 'visibility', 'size');
     }
 
     /**
