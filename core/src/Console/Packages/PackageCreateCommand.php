@@ -38,7 +38,7 @@ class PackageCreateCommand extends Command
     /**
      * @var string
      */
-    protected $file = 'https://github.com/Ser1ous/evoPackage/archive/master.zip';
+    protected $file = 'https://github.com/evolution-cms/evoPackage/archive/master.zip';
 
     /**
      * Execute the console command.
