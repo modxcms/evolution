@@ -39,6 +39,7 @@
     "doctrine/dbal": "~2.3",
     "phpoption/phpoption": "*",
     "vlucas/phpdotenv": "*",
+    "symfony/console": "*",
     "illuminate/cache": "6.0.*",
     "illuminate/config": "6.0.*",
     "illuminate/console": "6.0.*",

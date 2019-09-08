@@ -51,6 +51,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'ListsTv' => 'command.lists.tv',
         'ListsTemplate' => 'command.lists.tpl',
         'Package' => 'command.packages.package',
+        'PackageCreate' => 'command.packages.create',
         'RunPackageConsole' => 'command.packages.runconsole',
         'InstallPackageRequire' => 'command.packages.installrequire',
         'InstallPackageAutoload' => 'command.packages.installautoload',
@@ -294,6 +295,17 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.packages.package', function () {
             return new Packages\PackageCommand();
+        });
+    }
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerPackageCreateCommand()
+    {
+        $this->app->singleton('command.packages.create', function () {
+            return new Packages\PackageCreateCommand();
         });
     }
     /**
