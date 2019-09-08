@@ -1,8 +1,9 @@
 <?php namespace EvolutionCMS\Console\Packages;
 
+
+use Composer\Console\Application;
 use Illuminate\Console\Command;
 use \EvolutionCMS;
-use Composer\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 
 class InstallPackageRequireCommand extends Command
@@ -74,7 +75,7 @@ class InstallPackageRequireCommand extends Command
     public function runComposer()
     {
         putenv('COMPOSER_HOME=' . EVO_CORE_PATH . 'composer');
-        $input = new ArrayInput(array('command' => 'upd'));
+        $input = new ArrayInput(array('command' => 'update'));
         $application = new Application();
         $application->setAutoExit(false);
         $application->run($input);
