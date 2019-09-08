@@ -19,7 +19,7 @@ class InstallPackageRequireCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Run console command from custom packages';
+    protected $description = 'Install composer package';
 
     /**
      * Custom composer.json
