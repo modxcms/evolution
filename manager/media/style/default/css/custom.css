@@ -228,7 +228,7 @@ text-decoration: none; color: #646b7b; box-shadow: none; transition-duration: .5
 
 .widgets #welcome .wm_button a .fa { display: inline-block; }
 
-.widgets #welcome .wm_button a .fa + span { display: block; padding: .5em 0; line-height: 1em; font-size: .7rem; }
+.widgets #welcome .wm_button a .fa + span { display: block; padding: .5em 0; line-height: 1em; font-size: .7rem; word-wrap:normal; }
 
 .widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
