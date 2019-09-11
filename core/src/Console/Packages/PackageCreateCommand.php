@@ -11,7 +11,7 @@ class PackageCreateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'package:create';
+    protected $signature = 'package:create {packagename?}';
 
     /**
      * The console command description.
@@ -47,8 +47,12 @@ class PackageCreateCommand extends Command
      */
     public function handle()
     {
-        $this->enterName();
-
+        if ($this->argument('packagename') != '') {
+            $this->namePackage = $this->argument('packagename');
+            $this->checkPath();
+        } else {
+            $this->enterName();
+        }
         $data = file_get_contents($this->file);
         file_put_contents($this->directory . '/temp.zip', $data);
         $zip = new \ZipArchive;
@@ -69,9 +73,9 @@ class PackageCreateCommand extends Command
             file_put_contents($this->directory . '/src/composer.json', $composer);
 
             unlink($this->directory . '/src/ExampleServiceProvider.php');
-            $dirForComposer = 'packages/'.$this->namePackage.'/src/';
-            $namespaceForComposer = 'EvolutionCMS\\'.ucfirst($this->namePackage).'\\';
-            $this->call('package:installautoload', ['key'=>$namespaceForComposer, 'value'=>$dirForComposer]);
+            $dirForComposer = 'packages/' . $this->namePackage . '/src/';
+            $namespaceForComposer = 'EvolutionCMS\\' . ucfirst($this->namePackage) . '\\';
+            $this->call('package:installautoload', ['key' => $namespaceForComposer, 'value' => $dirForComposer]);
         }
     }
 
