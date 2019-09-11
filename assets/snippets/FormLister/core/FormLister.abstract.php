@@ -359,18 +359,20 @@ abstract class Core
      */
     public function setRequestParams ()
     {
-        if (!is_null($this->gpc)) {
-            $this->gpc->removeGpc($this->_rq);
-        }
-        $this->setFields($this->_rq);
-        if ($emptyFields = $this->emptyFormControls) {
-            foreach ($emptyFields as $field => $value) {
-                if (!isset($this->_rq[$field])) {
-                    $this->setField($field, $value);
+        if ($this->isSubmitted()) {
+            if (!is_null($this->gpc)) {
+                $this->gpc->removeGpc($this->_rq);
+            }
+            $this->setFields($this->_rq);
+            if ($emptyFields = $this->emptyFormControls) {
+                foreach ($emptyFields as $field => $value) {
+                    if (!isset($this->_rq[$field])) {
+                        $this->setField($field, $value);
+                    }
                 }
             }
+            $this->log('Set fields from $_REQUEST', $this->_rq);
         }
-        $this->log('Set fields from $_REQUEST', $this->_rq);
 
         return $this;
     }
@@ -403,7 +405,7 @@ abstract class Core
      */
     public function isSubmitted ()
     {
-        return $this->formid && ($this->getField('formid') === $this->formid);
+        return $this->formid && (APIhelpers::getkey($this->_rq, 'formid') === $this->formid);
     }
 
     /**
@@ -618,18 +620,17 @@ abstract class Core
                     $rule = substr($rule, 1);
                 }
                 $result = true;
+                $params = array($value);
                 if (is_array($description)) {
                     if (isset($description['params'])) {
                         if (is_array($description['params'])) {
-                            $params = $description['params'];
-                            $params = array_merge(array($value), $params);
+                            $params = array_merge($params, $description['params']);
                         } else {
-                            $params = array($value, $description['params']);
+                            $params[] = $description['params'];
                         }
                     }
                     $message = isset($description['message']) ? $description['message'] : '';
                 } else {
-                    $params = array($value, $description);
                     $message = $description;
                 }
                 if (method_exists($validator, $rule)) {
