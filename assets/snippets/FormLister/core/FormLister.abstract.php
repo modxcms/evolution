@@ -178,11 +178,11 @@ abstract class Core
         if ($lexicon) {
             $_lexicon = $this->config->loadArray($lexicon);
             if (isset($_lexicon[0])) {
-                $this->lexicon->fromFile(
-                    $_lexicon[0],
-                    $this->getCFGDef('lang', $this->modx->getConfig('lang_code')),
-                    $this->getCFGDef('langDir', 'assets/snippets/FormLister/core/lang/')
-                );
+                $lang = $this->getCFGDef('lang', $this->modx->getConfig('lang_code'));
+                $langDir = $this->getCFGDef('langDir', 'assets/snippets/FormLister/core/lang/');
+                foreach ($_lexicon as $item) {
+                    $this->lexicon->fromFile($item, $lang, $langDir);
+                }
             } else {
                 $this->lexicon->fromArray($_lexicon);
             }
