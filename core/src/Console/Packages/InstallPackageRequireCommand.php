@@ -50,7 +50,6 @@ class InstallPackageRequireCommand extends Command
         $this->putComposer();
         if ($this->argument('composer_run') == 1) {
             $this->runComposer();
-            $this->call('package:runconsoles');
         }
     }
 
