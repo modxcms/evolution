@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
+use EvolutionCMS\Models\ActiveUser;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -699,17 +700,15 @@ class ManagerTheme implements ManagerThemeInterface
         $this->getCore()->getManagerApi()->action = $action;
 
         if ((int)$action > 1) {
-            $sql = sprintf(
-                "REPLACE INTO %s (sid, internalKey, username, lasthit, action, id) VALUES ('%s', %d, '%s', %d, '%s', %s)",
-                $this->getCore()->getDatabase()->getFullTableName('active_users'),
-                session_id(),
-                $this->getCore()->getLoginUserID(),
-                $_SESSION['mgrShortname'],
-                $this->getCore()->tstart,
-                (string)$action,
-                $this->getItemId() ?? var_export(null, true)
-            );
-            $this->getCore()->getDatabase()->query($sql);
+            ActiveUser::where('internalKey', $this->getCore()->getLoginUserID('mgr'))->forceDelete();
+            $activeUser = new ActiveUser;
+            $activeUser->sid = session_id();
+            $activeUser->internalKey = $this->getCore()->getLoginUserID('mgr');
+            $activeUser->username = $_SESSION['mgrShortname'];
+            $activeUser->lasthit = $this->getCore()->tstart;
+            $activeUser->action = $action;
+            $activeUser->id = $this->getItemId() ?? var_export(null, true);
+            $activeUser->save();
             $flag = true;
         }
 
