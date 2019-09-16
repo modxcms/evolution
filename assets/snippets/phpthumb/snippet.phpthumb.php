@@ -19,6 +19,13 @@
  * @lastupdate  26/11/2018
  */
 
+
+/**
+ * if $webp = 1 use webp for images
+ * if $filemtime = 1 check filemtime in md5-cache file
+ **/
+
+
 use WebPConvert\WebPConvert;
 
 if (!defined('MODX_BASE_PATH')) {
@@ -69,6 +76,9 @@ $ext = strtolower($path_parts['extension']);
 $options = 'f=' . (in_array($ext, array('png', 'gif', 'jpeg')) ? $ext : 'jpg&q=85') . '&' .
     strtr($options, array(',' => '&', '_' => '=', '{' => '[', '}' => ']'));
 
+
+
+
 parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {
@@ -80,11 +90,16 @@ foreach ($tmpImagesFolder as $folder) {
     }
 }
 
+$fmtime = '';
+if(isset($filemtime)){
+    $fmtime = filemtime(MODX_BASE_PATH . $input);
+}
+
 $fNamePref = rtrim($cacheFolder, '/') . '/';
 $fName = $path_parts['filename'];
 $fNameSuf = '-' .
     (isset($params['w']) ? $params['w'] : '') . 'x' . (isset($params['h']) ? $params['h'] : '') . '-' .
-    substr(md5(serialize($params) . filemtime(MODX_BASE_PATH . $input)), 0, 3) .
+    substr(md5(serialize($params) . $fmtime), 0, 3) .
     '.' . $params['f'];
 
 $outputFilename = MODX_BASE_PATH . $fNamePref . $fName . $fNameSuf;
