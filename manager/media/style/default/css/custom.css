@@ -52,7 +52,7 @@ font-size: .6772rem; height: 2.4em; line-height: 1.4 }
 #actions .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-success:hover { box-shadow: none }
 #actions .btn-group .plus { z-index: 2; float: right; margin: -2.4em 0 0 0; width: 2rem; padding-left: 0; padding-right: 0; text-align: center; cursor: default; }
-#actions .btn-group .plus::before { content: "\f107"; font-family: 'Font Awesome 5 Free' }
+#actions .btn-group .plus::before { content: "\f107"; font-weight: 900; font-family: 'Font Awesome 5 Free' }
 #actions .btn-group .show .plus::before { content: "\f106"; }
 #actions .btn-group select#stay { display: block; position: relative; z-index: -1; clear: both; width: auto; height: 0; margin: -100% 0 -2rem 0; font-size: 0.675rem; opacity: 0; visibility: hidden; }
 #actions .btn-group .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 2rem; margin: 0; padding: 0; text-align: left; font-size: .6772rem;
