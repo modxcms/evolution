@@ -671,7 +671,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<p><?= $_lang['module_group_access_msg'] ?></p>
 						<?php
 					}
-					$chk = '';
+                    $chks = '';
 					$rs = $modx->getDatabase()->select('name, id', $tbl_membergroup_names, '', 'name');
 					while($row = $modx->getDatabase()->getRow($rs)) {
 						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
