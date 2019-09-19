@@ -445,7 +445,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
 	<h1>
-		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icon_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
 	<?= ManagerTheme::getStyle('actionbuttons.dynamic.element') ?>

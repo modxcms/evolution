@@ -45,7 +45,7 @@ echo $cm->render();
     function showContentMenu(id, e)
     {
         selectedItem = id;
-        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('-190') ?>+ 'px'; //offset menu if RTL is selected
+        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('+10') ?>+ 'px'; //offset menu if RTL is selected
         contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop))) + 'px';
         contextm.style.visibility = 'visible';
         e.cancelBubble = true;
@@ -123,7 +123,7 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icon_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         $grd = new \EvolutionCMS\Support\DataGrid('', $rs, 0); // set page size to 0 t show all items
