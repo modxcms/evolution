@@ -188,6 +188,7 @@ class modUsers extends MODxAPI
                 $this->userIdCache['attribute.internalKey'] = $this->getID();
                 $this->userIdCache['attribute.email'] = $this->get('email');
                 $this->userIdCache['user.username'] = $this->get('username');
+                $this->loadUserSettings();
                 $this->store($this->toArray());
                 unset($this->field['id']);
                 unset($this->field['internalKey']);
@@ -195,6 +196,16 @@ class modUsers extends MODxAPI
         }
 
         return $this;
+    }
+
+    protected function loadUserSettings()
+    {
+        $webUser = $this->getID();
+
+        if (!empty($webUser)) {
+            $settings = $this->modx->db->makeArray($this->modx->db->select('*', $this->makeTable('web_user_settings'), "webuser = {$webUser}"));
+            $this->fromArray(array_column($settings,'setting_value','setting_name'));
+        }
     }
 
     /**
