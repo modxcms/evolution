@@ -102,9 +102,7 @@ $fNameSuf = '-' .
     substr(md5(serialize($params) . $fmtime), 0, 3) .
     '.' . $params['f'];
 
-if(strpos($fNameSuf,"ad")){
-    $fNameSuf = str_replace("ad", "abc", $fNameSuf);
-}
+$fNameSuf = str_replace("ad", "at", $fNameSuf);
 
 $outputFilename = MODX_BASE_PATH . $fNamePref . $fName . $fNameSuf;
 if (!file_exists($outputFilename)) {
