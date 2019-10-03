@@ -50,34 +50,27 @@ class PluginPriority extends AbstractController implements ManagerTheme\PageCont
     {
         $updateMsg = false;
 
-        if (isset($_POST['listSubmitted'])) {
+        if (isset($_POST['priority']) && is_array($_POST['priority'])) {
             $updateMsg = true;
+            $db        = $this->managerTheme->getCore()->getDatabase();
+            $tableName = $db->getFullTableName('site_plugin_events');
 
-            foreach ($_POST as $listName => $listValue) {
-                if ($listName === 'listSubmitted') {
+            foreach ($_POST['priority'] as $eventId => $pluginsOrder) {
+                if (!is_numeric($eventId) || !is_array($pluginsOrder)) {
                     continue;
                 }
-                $orderArray = explode(',', $listValue);
-                $listName = ltrim($listName, 'list_');
-                if (\count($orderArray) > 0) {
-                    foreach ($orderArray as $key => $item) {
-                        if ($item == '') {
-                            continue;
-                        }
-                        $pluginId = ltrim($item, 'item_');
-                        $this->managerTheme->getCore()->getDatabase()
-                            ->update(
-                                array('priority' => $key),
-                                $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_plugin_events'),
-                                sprintf(
-                                    "pluginid='%s' AND evtid='%s'"
-                                    , $pluginId
-                                    , $listName
-                                )
-                            );
+
+                if (\count($pluginsOrder) > 0) {
+                    foreach ($pluginsOrder as $priority => $pluginId) {
+                        $db->update(
+                            ['priority' => intval($priority)],
+                            $tableName,
+                            sprintf("pluginid='%s' AND evtid='%s'", intval($pluginId), intval($eventId))
+                        );
                     }
                 }
             }
+
             // empty cache
             $this->managerTheme->getCore()->clearCache('full');
         }
