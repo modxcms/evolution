@@ -2584,7 +2584,7 @@
     color:yellow;
 }
 .tree-expanded:before {
-    content:"\f147";
+    content:"\f146";
     background: #fff;
     font-size:15px;
 }
@@ -2594,7 +2594,7 @@
     font-size:15px;
 }
 .tree-collapsed:before {
-    content:"\f196";
+    content:"\f0fe";
     background: #fff;font-size:15px;
 }
 .tree-collapsed-hover:before {
