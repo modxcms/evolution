@@ -124,21 +124,23 @@ class ProviderRepository
         // and determine if the manifest should be recompiled or is current.
         $manifest = $this->freshManifest($providers);
         foreach ($providers as $provider) {
-            $instance = $this->createProvider($provider);
-            // When recompiling the service manifest, we will spin through each of the
-            // providers and check if it's a deferred provider or not. If so we'll
-            // add it's provided services to the manifest and note the provider.
-            if ($instance->isDeferred()) {
-                foreach ($instance->provides() as $service) {
-                    $manifest['deferred'][$service] = $provider;
+            if (class_exists($provider)) {
+                $instance = $this->createProvider($provider);
+                // When recompiling the service manifest, we will spin through each of the
+                // providers and check if it's a deferred provider or not. If so we'll
+                // add it's provided services to the manifest and note the provider.
+                if ($instance->isDeferred()) {
+                    foreach ($instance->provides() as $service) {
+                        $manifest['deferred'][$service] = $provider;
+                    }
+                    $manifest['when'][$provider] = $instance->when();
                 }
-                $manifest['when'][$provider] = $instance->when();
-            }
-            // If the service providers are not deferred, we will simply add it to an
-            // array of eagerly loaded providers that will get registered on every
-            // request to this application instead of "lazy" loading every time.
-            else {
-                $manifest['eager'][] = $provider;
+                // If the service providers are not deferred, we will simply add it to an
+                // array of eagerly loaded providers that will get registered on every
+                // request to this application instead of "lazy" loading every time.
+                else {
+                    $manifest['eager'][] = $provider;
+                }
             }
         }
         return $this->writeManifest($manifest);
