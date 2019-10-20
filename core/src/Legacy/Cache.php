@@ -415,7 +415,7 @@ class Cache
         $modx->invokeEvent('OnBeforeCacheUpdate');
 
         if (@file_put_contents($filename, $content) === false) {
-            exit("Cannot write main Evolution CMS cache file! Make sure the assets/cache directory is writable!");
+            exit("Cannot write $filename! Make sure file or its directory is writable!");
         }
 
         if (!is_file($this->cachePath . '/.htaccess')) {
