@@ -50,4 +50,13 @@ class TemplateProcessor
         }
         return $template;
     }
+
+    /**
+     * @param $templateID
+     * @return mixed
+     */
+    public function getTemplateCodeFromDB($templateID)
+    {
+        return SiteTemplate::findOrFail($templateID)->content;
+    }
 }
