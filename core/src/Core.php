@@ -2906,7 +2906,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $templateCode = '[*content*]';
                 } // use blank template
                 else {
-                    $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
+                    $templateCode = TemplateProcessor::getTemplateCodeFromDB($this->documentObject['template']);
                 }
 
                 if (strpos($templateCode, '@INCLUDE') === 0) {
@@ -2975,23 +2975,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * @param $templateID
-     * @return mixed
-     * @throws InvalidFieldException
-     * @throws TableNotDefinedException
+     * @deprecated use TemplateProcessor::getTemplateCodeFromDB()
      */
     public function _getTemplateCodeFromDB($templateID)
     {
-        $rs = $this->getDatabase()->select(
-            'content',
-            $this->getDatabase()->getFullTableName('site_templates'),
-            sprintf("id='%s'", $templateID)
-        );
-        if ($this->getDatabase()->getRecordCount($rs) == 1) {
-            return $this->getDatabase()->getValue($rs);
-        }
-
-        $this->getService('ExceptionHandler')->messageQuit('Incorrect number of templates returned from database');
+        return TemplateProcessor::getTemplateCodeFromDB($templateID);
     }
 
     /**
