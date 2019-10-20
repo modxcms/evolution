@@ -4,8 +4,8 @@ use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
 use Evolution\Custom\Controllers\TestController;
+use EvolutionCMS\Models\SiteContent;
 use PHPMailer\PHPMailer\Exception;
-use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
 use TemplateProcessor;
 use Illuminate\Support\Str;
@@ -2740,39 +2740,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
             } else {
-                //@TODO: check new $alias;
                 if ($this->getConfig('aliaslistingfolder') == 1) {
-                    $rs = $this->getDatabase()->select(
-                        'id'
-                        , $this->getDatabase()->getFullTableName('site_content')
-                        , sprintf(
-                            "deleted=0 and parent='%d' and alias='%s'"
-                            , $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0
-                            , $this->getDatabase()->escape($this->documentIdentifier)
-                        )
-                    );
-                    if (!$this->getDatabase()->getRecordCount($rs)) {
+                    $parent = $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0;
+                    $doc = SiteContent::select('id')
+                        ->where('deleted', 0)
+                        ->where('parent', $parent)
+                        ->where('alias', $this->documentIdentifier)->first();
+                    if (is_null($doc)) {
                         $this->sendErrorPage();
                     }
-
-                    $docId = $this->getDatabase()->getValue($rs);
-                    if (!$docId) {
-                        $alias = $this->q;
-                        if ((int)$this->getConfig('friendly_url_suffix') !== 0) {
-                            $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
-
-                            if ($pos !== false) {
-                                $alias = substr($alias, 0, $pos);
-                            }
-                        }
-                        $docId = UrlProcessor::getIdFromAlias($alias);
-                    }
-
-                    if ($docId > 0) {
-                        $this->documentIdentifier = $docId;
-                    } else {
-                        $this->sendErrorPage();
-                    }
+                    $this->documentIdentifier = $doc->getKey();
                 } else {
                     $this->sendErrorPage();
                 }
@@ -2783,16 +2760,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()
                     ->documentListing[$this->documentIdentifier];
             } else {
-                $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
-                $rs = $this->getDatabase()->select(
-                    'id'
-                    , $this->getDatabase()->getFullTableName('site_content')
-                    , sprintf(
-                        "deleted=0 and alias='%s'"
-                        , $docAlias
-                    )
-                );
-                $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
+                $doc = SiteContent::select('id')
+                    ->where('deleted', 0)
+                    ->where('alias', $this->documentIdentifier)->first();
+                if (is_null($doc)) {
+                    $this->sendErrorPage();
+                }
+                $this->documentIdentifier = $doc->getKey();
             }
         }
         $this->documentMethod = 'id';
