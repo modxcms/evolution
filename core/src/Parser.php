@@ -1,6 +1,10 @@
 <?php namespace EvolutionCMS;
 
 use EvolutionCMS\Legacy\Phx;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\FileViewFinder;
+use Twig_Loader_Filesystem;
+
 /**
  */
 class Parser
@@ -27,7 +31,7 @@ class Parser
     protected $twig;
 
     protected $twigEnabled = false;
-    protected $bladeEnabled = false;
+    protected $bladeEnabled = true;
 
     protected $templateData = array();
 
@@ -38,7 +42,7 @@ class Parser
      *
      * @return self
      */
-    public static function getInstance(Core $modx)
+    public static function getInstance (Core $modx)
     {
 
         if (null === self::$instance) {
@@ -52,9 +56,10 @@ class Parser
      * is not allowed to call from outside: private!
      *
      */
-    private function __construct(Core $modx)
+    private function __construct (Core $modx)
     {
         $this->modx = $modx;
+        $this->loadBlade();
     }
 
     /**
@@ -62,7 +67,7 @@ class Parser
      *
      * @return void
      */
-    private function __clone()
+    private function __clone ()
     {
     }
 
@@ -71,11 +76,14 @@ class Parser
      *
      * @return void
      */
-    private function __wakeup()
+    private function __wakeup ()
     {
     }
 
-    public function getTemplatePath()
+    /**
+     * @return string
+     */
+    public function getTemplatePath ()
     {
         return $this->templatePath;
     }
@@ -87,7 +95,7 @@ class Parser
      * @param bool $supRoot
      * @return $this
      */
-    public function setTemplatePath($path, $supRoot = false)
+    public function setTemplatePath ($path, $supRoot = false)
     {
         $path = trim($path);
         if ($supRoot === false) {
@@ -96,6 +104,14 @@ class Parser
 
         if (!empty($path)) {
             $this->templatePath = $path;
+            if ($this->twigEnabled) {
+                $this->twig->setLoader(new Twig_Loader_Filesystem(MODX_BASE_PATH . $path));
+            }
+            if ($this->bladeEnabled) {
+                $filesystem = new Filesystem;
+                $viewFinder = new FileViewFinder($filesystem, [MODX_BASE_PATH . $path]);
+                $this->blade->setFinder($viewFinder);
+            }
         }
 
         return $this;
@@ -105,12 +121,12 @@ class Parser
      * @param string $path
      * @return string
      */
-    protected function cleanPath($path)
+    protected function cleanPath ($path)
     {
         return preg_replace(array('/\.*[\/|\\\]/i', '/[\/|\\\]+/i'), array('/', '/'), $path);
     }
 
-    public function getTemplateExtension()
+    public function getTemplateExtension ()
     {
         return $this->templateExtension;
     }
@@ -121,7 +137,7 @@ class Parser
      * @param $ext
      * @return $this
      */
-    public function setTemplateExtension($ext)
+    public function setTemplateExtension ($ext)
     {
         $ext = $this->cleanPath(trim($ext, ". \t\n\r\0\x0B"));
 
@@ -138,7 +154,7 @@ class Parser
      * @param array $data
      * @return $this
      */
-    public function setTemplateData($data = array())
+    public function setTemplateData ($data = array())
     {
         if (is_array($data)) {
             $this->templateData = $data;
@@ -151,11 +167,12 @@ class Parser
      * @param array $data
      * @return array
      */
-    public function getTemplateData($data = array())
+    public function getTemplateData ($data = array())
     {
         $plh = $this->templateData;
         $plh['data'] = $data;
         $plh['modx'] = $this->modx;
+
         return $plh;
     }
 
@@ -168,7 +185,7 @@ class Parser
      * @param string $prefix префикс для ключей массива
      * @return string
      */
-    public function toPlaceholders($data, $set = 0, $key = 'contentPlaceholder', $prefix = '')
+    public function toPlaceholders ($data, $set = 0, $key = 'contentPlaceholder', $prefix = '')
     {
         $out = '';
         if ($set != 0) {
@@ -186,27 +203,61 @@ class Parser
      * @param string $name Template: chunk name || @CODE: template || @FILE: file with template
      * @return string html template with placeholders without data
      */
-    public function getChunk($name)
+    public function getChunk ($name)
     {
         $tpl = '';
         $ext = null;
-        $this->twigEnabled = strpos($name, '@T_') === 0;
-        $this->bladeEnabled = strpos($name, '@B_') === 0;//(0 === strpos($name, '@B_'));
-        if ($name != '' && ! array_key_exists($name, $this->modx->chunkCache)) {
+        $this->bladeEnabled = substr($name, 0, 3) == '@B_';//(0 === strpos($name, '@B_'));
+        if ($name != '' && !isset($this->modx->chunkCache[$name])) {
             $mode = (preg_match(
                     '/^((@[A-Z_]+)[:]{0,1})(.*)/Asu',
                     trim($name),
                     $tmp
                 ) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
-            if ($this->twigEnabled) {
-                $mode = '@' . substr($mode, 3);
-            } elseif ($this->bladeEnabled) {
-                $mode = '@' . substr($mode, 3);
+            if ($this->bladeEnabled) {
                 $ext = $this->getTemplateExtension();
                 $this->setTemplateExtension('blade.php');
             }
             switch ($mode) {
+                case '@T_FILE':
+                    if ($subTmp != '' && $this->twigEnabled) {
+                        $real = realpath(MODX_BASE_PATH . $this->templatePath);
+                        $path = realpath(MODX_BASE_PATH . $this->templatePath . $this->cleanPath($subTmp) . '.' . $this->templateExtension);
+                        if (basename($path, '.' . $this->templateExtension) !== '' &&
+                            0 === strpos($path, $real) &&
+                            file_exists($path)
+                        ) {
+                            $tpl = $this->twig->loadTemplate($this->cleanPath($subTmp) . '.' . $this->templateExtension);
+                        }
+                    }
+                    break;
+                case '@T_CODE':
+                    if ($this->twigEnabled) {
+                        $tpl = $tmp[3];
+                        $tpl = $this->twig->createTemplate($tpl);
+                    }
+                    break;
+                case '@B_FILE':
+                    if ($subTmp != '' && $this->bladeEnabled) {
+                        $real = realpath(MODX_BASE_PATH . $this->templatePath);
+                        $path = realpath(MODX_BASE_PATH . $this->templatePath . $this->cleanPath($subTmp) . '.' . $this->templateExtension);
+                        if (basename($path, '.' . $this->templateExtension) !== '' &&
+                            0 === strpos($path, $real) &&
+                            file_exists($path)
+                        ) {
+                            $tpl = $this->cleanPath($subTmp);
+                        }
+                    }
+                    break;
+                case '@B_CODE':
+                    $cache = md5($name) . '-' . sha1($subTmp);
+                    $filesystem = $this->modx['filesystem']->drive('storage');
+                    if (!$filesystem->exists('blade/' . $cache . '.blade.php')) {
+                        $filesystem->put('blade/' . $cache . '.blade.php', $tpl);
+                    }
+                    $tpl = 'cache::' . $cache;
+                    break;
                 case '@FILE':
                     if ($subTmp != '') {
                         $real = realpath(MODX_BASE_PATH . $this->templatePath);
@@ -274,13 +325,14 @@ class Parser
             $tpl = $this->getBaseChunk($name);
         }
 
-        if($ext !== null) {
+        if ($ext !== null) {
             $this->setTemplateExtension($ext);
         }
+
         return $tpl;
     }
 
-    public function getBaseChunk($name)
+    public function getBaseChunk ($name)
     {
         if (empty($name)) {
             return null;
@@ -316,7 +368,7 @@ class Parser
      *       - с источиком от куда произошел вызов события
      *       - оригинальный экземпляр класса Core
      */
-    public function renderDoc($id, $events = false, $tpl = null)
+    public function renderDoc ($id, $events = false, $tpl = null)
     {
         $id = (int)$id;
         if ($id <= 0) {
@@ -357,7 +409,7 @@ class Parser
      * @param int $id Номер шаблона
      * @return string HTML код шаблона
      */
-    public function getTemplate($id)
+    public function getTemplate ($id)
     {
         $tpl = null;
         $id = (int)$id;
@@ -385,15 +437,17 @@ class Parser
      * @param bool $parseDocumentSource render html template via Core::parseDocumentSource()
      * @return string html template with data without placeholders
      */
-    public function parseChunk($name, $data = array(), $parseDocumentSource = false, $disablePHx = false)
+    public function parseChunk ($name, $data = array(), $parseDocumentSource = false, $disablePHx = false)
     {
         $out = $this->getChunk($name);
+        $twig = strpos($name, '@T_') === 0 && $this->twigEnabled;
+        $blade = strpos($name, '@B_') === 0 && $this->bladeEnabled;
         switch (true) {
-            case $this->twigEnabled && $out !== '' && ($twig = $this->getTwig($name, $out)):
-                $out = $twig->render(md5($name), $this->getTemplateData($data));
+            case $twig:
+                $out = $out->render($this->getTemplateData($data));
                 break;
-            case $this->bladeEnabled && $out !== '' && ($blade = $this->getBlade($name, $out)):
-                $out = $blade->with($this->getTemplateData($data))->render();
+            case $blade:
+                $out = $this->blade->make($out)->with($this->getTemplateData($data))->render();
                 break;
             case is_array($data) && ($out != ''):
                 if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
@@ -401,7 +455,7 @@ class Parser
                     $out = str_replace(array_keys($item), array_values($item), $out);
                 }
                 if (!$disablePHx && preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
-                    if ($this->phx === null || !($this->phx instanceof Phx)) {
+                    if (is_null($this->phx) || !($this->phx instanceof Phx)) {
                         $this->phx = $this->createPHx(0, 1000);
                     }
                     $this->phx->placeholders = array();
@@ -410,7 +464,7 @@ class Parser
                 }
                 break;
         }
-        if ($parseDocumentSource) {
+        if ($parseDocumentSource && !$twig && !$blade) {
             $out = $this->parseDocumentSource($out);
         }
 
@@ -423,7 +477,7 @@ class Parser
      * @param string $key
      * @param string $path
      */
-    public function setPHxPlaceholders($value = '', $key = '', $path = '')
+    public function setPHxPlaceholders ($value = '', $key = '', $path = '')
     {
         $keypath = !empty($path) ? $path . "." . $key : $key;
         $this->phx->curPass = 0;
@@ -436,57 +490,24 @@ class Parser
         }
     }
 
-    /**
-     * Return clone of twig
-     *
-     * @param string $name
-     * @param string $tpl
-     * @return null
-     */
-    protected function getTwig($name, $tpl)
+    public function loadTwig ()
     {
-        if ($this->twig === null && isset($this->modx->twig)) {
-            $twig = clone $this->modx->twig;
-            $this->twig = $twig;
-        } else {
-            $twig = $this->twig;
+        if (is_null($this->twig) && isset($this->modx->twig)) {
+            $this->twig = clone $this->modx->twig;
+            $this->twigEnabled = true;
         }
-        if ($twig && class_exists('Twig_Loader_Array')) {
-            $twig->getLoader()->addLoader(
-                new Twig_Loader_Array(array(
-                    md5($name) => $tpl
-                ))
-            );
-        }
-
-        return $twig;
     }
 
     /**
-     * Return clone of blade
      *
-     * @param string $name
-     * @param string $tpl
-     * @return Illuminate\View\Factory
      */
-    protected function getBlade($name, $tpl)
+    protected function loadBlade ()
     {
-        $out = null;
         try {
-            $blade = $this->modx['view'];
-            $cache = md5($name). '-'. sha1($tpl);
-            /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
-            $filesystem = $this->modx['filesystem']->drive('storage');
-            if (! $filesystem->exists('blade/' . $cache . '.blade.php')) {
-                $filesystem->put('blade/' . $cache . '.blade.php', $tpl);
-            }
-            $this->modx['view']->addNamespace('cache', $filesystem->path('blade/'));
-            $out = $blade->make('cache::' . $cache);
+            $this->blade = clone $this->modx['view'];
         } catch (\Exception $exception) {
             $this->modx->messageQuit($exception->getMessage());
         }
-
-        return $out;
     }
 
     /**
@@ -494,7 +515,7 @@ class Parser
      * @param string $string
      * @return string
      */
-    public function cleanPHx($string)
+    public function cleanPHx ($string)
     {
         preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s', $string, $matches);
         if ($matches[0]) {
@@ -509,7 +530,7 @@ class Parser
      * @param int $maxpass
      * @return Phx
      */
-    public function createPHx($debug = 0, $maxpass = 50)
+    public function createPHx ($debug = 0, $maxpass = 50)
     {
         return new Phx($this->modx, $debug, $maxpass);
     }
@@ -523,7 +544,7 @@ class Parser
      * @param string $sep разделитель суффиксов, префиксов и ключей массива
      * @return array массив с переименованными ключами
      */
-    public function renameKeyArr($data, $prefix = '', $suffix = '', $sep = '.')
+    public function renameKeyArr ($data, $prefix = '', $suffix = '', $sep = '.')
     {
         return rename_key_arr($data, $prefix, $suffix, $sep);
     }
@@ -533,7 +554,7 @@ class Parser
      * @param Core|null $modx
      * @return mixed|string
      */
-    public function parseDocumentSource($out, $modx = null)
+    public function parseDocumentSource ($out, $modx = null)
     {
         if (!is_object($modx)) {
             $modx = $this->modx;
