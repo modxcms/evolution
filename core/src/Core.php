@@ -2413,7 +2413,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
-            $cached[$cacheKey] = $documentObject;
+            Cache::forever($cacheKey, $documentObject);
             return $documentObject;
         }
 
