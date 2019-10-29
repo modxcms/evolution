@@ -5,6 +5,7 @@ use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
 use Evolution\Custom\Controllers\TestController;
 use EvolutionCMS\Models\SiteContent;
+use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
 use UrlProcessor;
 use TemplateProcessor;
@@ -2388,13 +2389,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
-        static $cached = array();
-
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($cached[$cacheKey])) {
-            return $cached[$cacheKey];
+        $cachedData = Cache::get($cacheKey);
+        if (!is_null($cachedData)) {
+            return $cachedData;
         }
-        $cached[$cacheKey] = false;
 
         // allow alias to be full path
         if ($method === 'alias') {
@@ -2548,7 +2547,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentObject = $out[0];
         }
 
-        $cached[$cacheKey] = $documentObject;
+        Cache::forever($cacheKey, $documentObject);
 
         return $documentObject;
     }

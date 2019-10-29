@@ -124,6 +124,7 @@ class Cache
         if (!isset($this->cachePath)) {
             $modx->getService('ExceptionHandler')->messageQuit("Cache path not set.");
         }
+        \Illuminate\Support\Facades\Cache::flush();
 
         $files = glob(realpath($this->cachePath) . '/*.pageCache.php');
         $filesincache = count($files);
@@ -269,7 +270,7 @@ class Cache
             $config[$key] = $value;
         }
 
-        if ($config['enable_filter']) {
+        if (isset($config['enable_filter']) && $config['enable_filter'] == 1) {
             if (Models\SitePlugin::activePhx()->count()) {
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
