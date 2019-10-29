@@ -12,7 +12,7 @@ class EvoBabelLexiconHandler extends AbstractLexiconHandler
      */
     public function get ($key, $default = '')
     {
-        $out = $this->modx->runSnippet('EvoBabel', array('a' => $key));
+        $out = $this->modx->runSnippet('lang', array('a' => $key));
         if (empty($out)) {
             $out = $default;
         }

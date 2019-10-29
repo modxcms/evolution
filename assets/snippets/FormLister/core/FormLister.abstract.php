@@ -127,7 +127,7 @@ abstract class Core
         $this->lexicon = new Lexicon($modx, array(
             'langDir' => 'assets/snippets/FormLister/core/lang/',
             'lang'    => $this->getCFGDef('lang', $this->modx->getConfig('lang_code')),
-            'handler' => $this->getCFGDef('lexiconHandler')
+            'handler' => $this->getCFGDef('lexiconHandler', '\\Helpers\\Lexicon\\EvoBabelLexiconHandler')
         ));
         $this->DLTemplate = DLTemplate::getInstance($modx);
         $this->DLTemplate->setTemplatePath($this->getCFGDef('templatePath'));
@@ -1111,7 +1111,7 @@ abstract class Core
     {
         $this->setValid(!count($this->getFormData('errors')));
 
-        return $this->valid;
+        return (bool)$this->valid;
     }
 
     /**
