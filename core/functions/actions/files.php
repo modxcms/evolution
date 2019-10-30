@@ -517,12 +517,12 @@ if(!function_exists('delete_file')) {
      */
     function delete_file()
     {
-        global $_lang, $token_check;
+        global $_lang;
 
         $msg = sprintf($_lang['deleting_file'], str_replace('\\', '/', $_REQUEST['path']));
 
         $file = $_REQUEST['path'];
-        if (!$token_check || !@unlink($file)) {
+        if (!evolutionCMS()->hasPermission('file_manager') || !@unlink($file)) {
             $msg .= '<span class="warning"><b>' . $_lang['file_not_deleted'] . '</b></span><br /><br />';
         } else {
             $msg .= '<span class="success"><b>' . $_lang['file_deleted'] . '</b></span><br /><br />';
