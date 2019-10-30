@@ -97,7 +97,7 @@ code { font-size: inherit; font-family: Consolas, 'Courier New', 'Courier', mono
 .table, #documentPane #tv_body table, #documentPane .tmplvars table, #documentPane [id*="table-"], #documentPane [id*="table-tv"] { width: 100%; }
 #documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
-#documentPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1rem); }
+#documentPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1.1rem); }
 #documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { margin-top: 0.3rem; vertical-align: top }
 .table--edit { margin-bottom: 1rem; }
 .table th, .table td { text-align: left; vertical-align: middle; }
