@@ -394,7 +394,10 @@ if(!function_exists('fileupload')) {
     function fileupload()
     {
         $modx = evolutionCMS();
-        global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
+        $startpath = is_dir($_REQUEST['path']) ? $_REQUEST['path'] : removeLastPath($_REQUEST['path']);
+        $filemanager_path = evolutionCMS()->getConfig('filemanager_path', MODX_BASE_PATH);
+        $new_file_permissions = octdec(evolutionCMS()->getConfig('new_file_permissions', '0666'));
+        global $_lang, $uploadablefiles;
         $msg = '';
         foreach ($_FILES['userfile']['name'] as $i => $name) {
             if (empty($_FILES['userfile']['tmp_name'][$i])) {
