@@ -82,8 +82,9 @@ EOD;
             if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
 
             if($user['username']) {
+                $managerurl = MODX_MANAGER_URL;
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{MODX_MANAGER_URL}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$managerurl}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
