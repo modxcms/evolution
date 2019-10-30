@@ -356,7 +356,8 @@ class ExceptionHandler
         }
 
         // Display error
-        if (!$this->shouldDisplay()) {
+        if ($this->shouldDisplay()) {
+
             echo '<!DOCTYPE html><html><head><title>Evolution CMS Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                  <link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . 'media/style/' . $this->container->getConfig('manager_theme',
