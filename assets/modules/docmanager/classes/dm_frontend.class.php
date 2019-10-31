@@ -80,7 +80,7 @@ class DocManagerFrontend {
 	
 	function renderMisc() {
 		$this->dm->ph['view.misc'] = $this->dm->parseTemplate('misc.tpl', $this->dm->ph);
-        $this->dm->ph['view.tab'] = (is_numeric($_GET['tab'])) ? '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['tab'].' );</script>' : '';
+        $this->dm->ph['view.tab'] = (isset($_GET['tab']) && is_numeric($_GET['tab'])) ? '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['tab'].' );</script>' : '';
 	}
 	
 	function renderChangeAuthors() {
