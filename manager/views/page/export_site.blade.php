@@ -12,10 +12,10 @@
     @endpush
 
     <h1>
-        <i class="{{ $_style['icon_download'] }}"></i>{{ ManagerTheme::getLexicon('export_site_html') }}
+        <i class="{{ ManagerTheme::getStyle('icon_download') }}"></i>{{ ManagerTheme::getLexicon('export_site_html') }}
     </h1>
 
-    {!! $_style[('actionbuttons.static.cancel')] !!}
+    {!! ManagerTheme::getStyle('actionbuttons.static.cancel') !!}
 
     <div class="tab-pane" id="exportPane">
         <script type="text/javascript">
@@ -63,10 +63,10 @@
                                 </td>
                             </tr>
                         </table>
-                        <a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="{{ $_style['icon_save'] }}"></i> {{ ManagerTheme::getLexicon('export_site_start') }}</a>
+                        <a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="{{ ManagerTheme::getStyle('icon_save') }}"></i> {{ ManagerTheme::getLexicon('export_site_start') }}</a>
                         <script>
                             jQuery('#exportButton a').click(function() {
-                                jQuery(this).parent().html('<i class="' + {{ $_style['ajax_loader'] }} + '"></i>');
+                                jQuery(this).parent().html('<i class="' + {{ ManagerTheme::getStyle('ajax_loader') }} + '"></i>');
                             });
                         </script>
                     </form>
