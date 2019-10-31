@@ -18,7 +18,7 @@
                         <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
                     @endif
                         @if(empty($item->icon))
-                            <i class="{{ $_style['icons_module'] }}"></i>
+                            <i class="{{ $_style['icon_module'] }}"></i>
                         @else
                             <i class="{{ $item->icon }}"></i>
                         @endif
