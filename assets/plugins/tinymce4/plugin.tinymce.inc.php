@@ -9,6 +9,10 @@ require_once(MODX_BASE_PATH."assets/plugins/tinymce4/bridge.tinymce4.inc.php");
 
 $e = &$modx->event;
 
+if (!isset($inlineMode)) {
+    $inlineMode = '';
+}
+
 if($e->name == 'OnWebPagePrerender' && $inlineMode == 'enabled') {
     $options = array('editable'=>array(
         'theme'=>isset($inlineTheme) ? $inlineTheme : 'inline'
