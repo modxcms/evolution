@@ -4375,12 +4375,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function runSnippet($snippetName, $params = array(), $cacheTime = 0)
     {
-        if($cacheTime > 0){
+        if ($cacheTime > 0) {
             $arrPlaceholderCheck = $this->placeholders;
-            $cacheKey = md5(implode(',', $_GET) . $snippetName . implode(',', $params));
+            $getParams = $_GET;
+            ksort($getParams);
+            $cacheKey = md5(implode(',', $getParams) . $snippetName . implode(',', $params));
             $return = Cache::get($cacheKey);
-            if(!is_null($return)){
-                $arrPlaceholderFromSnippet = Cache::get($cacheKey.'_placeholders');
+            if (!is_null($return)) {
+                $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
                 $this->placeholders = array_merge($this->placeholders, $arrPlaceholderFromSnippet);
                 return $return;
             }
@@ -4400,11 +4402,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // run snippet
         $result = $this->evalSnippet($snippet, $parameters);
-        if($cacheTime > 0){
+        if ($cacheTime > 0) {
             Cache::put($cacheKey, $result, $cacheTime);
             $arrPlaceholderCheckAfterSnippet = $this->placeholders;
             $arrPlaceholderFromSnippet = array_diff($arrPlaceholderCheckAfterSnippet, $arrPlaceholderCheck);
-            Cache::put($cacheKey.'_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
+            Cache::put($cacheKey . '_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
         }
         return $result;
     }
