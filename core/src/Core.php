@@ -4379,7 +4379,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $arrPlaceholderCheck = $this->placeholders;
             $getParams = $_GET;
             ksort($getParams);
-            $cacheKey = md5(implode(',', $getParams) . $snippetName . implode(',', $params));
+            ksort($params);
+            $cacheKey = md5(json_encode($getParams) . $snippetName . json_encode($params));
             $return = Cache::get($cacheKey);
             if (!is_null($return)) {
                 $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
