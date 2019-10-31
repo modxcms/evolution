@@ -4370,10 +4370,24 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $snippetName
      * @param array $params Default: Empty array
+     * @param int $cacheTime
      * @return string
      */
-    public function runSnippet($snippetName, $params = array())
+    public function runSnippet($snippetName, $params = array(), $cacheTime = 0)
     {
+        if ($cacheTime > 0) {
+            $arrPlaceholderCheck = $this->placeholders;
+            $getParams = $_GET;
+            ksort($getParams);
+            ksort($params);
+            $cacheKey = md5(json_encode($getParams) . $snippetName . json_encode($params));
+            $return = Cache::get($cacheKey);
+            if (!is_null($return)) {
+                $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
+                $this->placeholders = array_merge($this->placeholders, $arrPlaceholderFromSnippet);
+                return $return;
+            }
+        }
         if (array_key_exists($snippetName, $this->snippetCache)) {
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
@@ -4388,7 +4402,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $parameters = array_merge($parameters, $params);
 
         // run snippet
-        return $this->evalSnippet($snippet, $parameters);
+        $result = $this->evalSnippet($snippet, $parameters);
+        if ($cacheTime > 0) {
+            Cache::put($cacheKey, $result, $cacheTime);
+            $arrPlaceholderCheckAfterSnippet = $this->placeholders;
+            $arrPlaceholderFromSnippet = array_diff($arrPlaceholderCheckAfterSnippet, $arrPlaceholderCheck);
+            Cache::put($cacheKey . '_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
+        }
+        return $result;
     }
 
     /**
