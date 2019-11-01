@@ -165,6 +165,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
       }
 
       var actions = {
+          new: function() {
+              document.location.href = "index.php?pid=<?= isset($_REQUEST['id']) ? $_REQUEST['id'] : '' ?>&a=4";
+          },
+          newlink: function() {
+              document.location.href = "index.php?pid=<?= isset($_REQUEST['id']) ? $_REQUEST['id'] : '' ?>&a=72";
+          },
         save: function() {
           documentDirty = false;
           form_save = true;

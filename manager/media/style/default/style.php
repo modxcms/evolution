@@ -208,6 +208,14 @@ $_style['actionbuttons'] = array(
 	'dynamic' => array(
 		'document' => '<div id="actions">
 			<div class="btn-group">
+			'. (isset($_REQUEST['id']) ? '
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
+						<i class="' . $_style["icon_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
+					</a>
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.newlink();">
+						<i class="' . $_style["icon_chain"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
+					</a>
+				' : '') . '
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
 						<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
