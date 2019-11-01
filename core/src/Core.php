@@ -4369,7 +4369,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $snippetName
      * @param array $params Default: Empty array
-     * @param string $cacheTime
+     * @param int $cacheTime
      * @param string $cacheKey
      * @return string
      */
