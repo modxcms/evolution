@@ -2711,6 +2711,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if ($this->documentMethod !== 'alias') {
+            $DLTemplate = \DLTemplate::getInstance(EvolutionCMS());
+            $DLTemplate->setTemplatePath('views/');
             //$this->_fixURI();
             // invoke OnWebPageInit event
             $this->invokeEvent("OnWebPageInit");
@@ -2768,6 +2770,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         $this->documentMethod = 'id';
+        $DLTemplate = \DLTemplate::getInstance(EvolutionCMS());
+        $DLTemplate->setTemplatePath('views/');
 
         //$this->_fixURI();
         // invoke OnWebPageInit event
