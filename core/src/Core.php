@@ -2877,6 +2877,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $template = TemplateProcessor::getBladeDocumentContent();
 
             if ($template) {
+                $this->documentObject['cacheable'] = 0;
                 $this->minParserPasses = -1;
                 $this->maxParserPasses = -1;
                 /** @var \Illuminate\View\View $tpl */
