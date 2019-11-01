@@ -3,7 +3,6 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
-use Evolution\Custom\Controllers\TestController;
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
@@ -4370,17 +4369,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $snippetName
      * @param array $params Default: Empty array
-     * @param int $cacheTime
+     * @param string $cacheTime
+     * @param string $cacheKey
      * @return string
      */
-    public function runSnippet($snippetName, $params = array(), $cacheTime = 0)
+    public function runSnippet($snippetName, $params = array(), $cacheTime = false, $cacheKey = false)
     {
-        if ($cacheTime > 0) {
+        if (is_numeric($cacheTime)) {
             $arrPlaceholderCheck = $this->placeholders;
-            $getParams = $_GET;
-            ksort($getParams);
-            ksort($params);
-            $cacheKey = md5(json_encode($getParams) . $snippetName . json_encode($params));
+            if (!is_string($cacheKey)) {
+                $getParams = $_GET;
+                ksort($getParams);
+                ksort($params);
+                $cacheKey = md5(json_encode($getParams) . $snippetName . json_encode($params));
+            }
             $return = Cache::get($cacheKey);
             if (!is_null($return)) {
                 $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
@@ -4403,11 +4405,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // run snippet
         $result = $this->evalSnippet($snippet, $parameters);
-        if ($cacheTime > 0) {
-            Cache::put($cacheKey, $result, $cacheTime);
+        if (is_numeric($cacheTime)) {
             $arrPlaceholderCheckAfterSnippet = $this->placeholders;
             $arrPlaceholderFromSnippet = array_diff($arrPlaceholderCheckAfterSnippet, $arrPlaceholderCheck);
-            Cache::put($cacheKey . '_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
+            if ($cacheTime != 0) {
+                Cache::put($cacheKey, $result, $cacheTime);
+                Cache::put($cacheKey . '_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
+            }else {
+                Cache::forever($cacheKey, $result);
+                Cache::forever($cacheKey . '_placeholders', $arrPlaceholderFromSnippet);
+            }
         }
         return $result;
     }
