@@ -37,6 +37,7 @@ $gender = !empty($input['gender']) ? $input['gender'] : 0;
 $photo = $input['photo'];
 $comment = $input['comment'];
 $role = !empty($input['role']) ? $input['role'] : 0;
+$verified = !empty($input['verified']) ? (int)!!$input['verified'] : 0;
 $failedlogincount = !empty($input['failedlogincount']) ? $input['failedlogincount'] : 0;
 $blocked = !empty($input['blocked']) ? $input['blocked'] : 0;
 $blockeduntil = !empty($input['blockeduntil']) ? $modx->toTimeStamp($input['blockeduntil']) : 0;

@@ -29,6 +29,7 @@ if($username = $modx->getDatabase()->getValue($rs)) {
 
 $userdata = [
     'fullname' => '',
+    'verified' => 1,
     'blocked' => 0,
     'blockeduntil' => 0,
     'blockedafter' => 0,
@@ -264,14 +265,15 @@ if($usersettings['which_browser'] === 'default') {
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabGeneral"));</script>
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
+					<?php if($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || $userdata['failedlogins'] > 3) { ?>
 					<tr>
 						<td colspan="3"><span id="blocked" class="warning">
-							<?php if($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || $userdata['failedlogins'] > 3) { ?>
 								<?php echo $_lang['user_is_blocked']; ?>
-							<?php } ?>
 							</span>
-							<br /></td>
+							<br />
+						</td>
 					</tr>
+					<?php } ?>
 					<?php if(!empty($userdata['id'])) { ?>
 						<tr id="showname" style="display: <?php echo ($modx->getManagerApi()->action == '12' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
                             <th><?php echo $_lang['username']; ?>:</th>
@@ -426,6 +428,11 @@ if($usersettings['which_browser'] === 'default') {
 						<th><?php echo $_lang['comment']; ?>:</th>
 						<td>&nbsp;</td>
 						<td><textarea type="text" name="comment" class="inputBox" rows="5" onChange="documentDirty=true;"><?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['comment']); ?></textarea></td>
+					</tr>
+					<tr>
+						<th><?php echo $_lang['user_verification']; ?>:</th>
+						<td>&nbsp;</td>
+						<td><input type="checkbox" name="verified" value="1" <?php echo ($userdata['verified'] == 1 || $modx->getManagerApi()->action == 11 ? 'checked ' : ''); ?><?php echo ($modx->getManagerApi()->action == 11 ? 'disabled' : ''); ?>></td>
 					</tr>
 					<?php if($modx->getManagerApi()->action == '12') { ?>
 						<tr>
