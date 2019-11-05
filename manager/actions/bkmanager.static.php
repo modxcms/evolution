@@ -184,10 +184,10 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
     </script>
 
     <h1>
-        <i class="fa fa-database"></i><?= $_lang['bk_manager'] ?>
+        <i class="<?= $_style['icon_database'] ?>"></i><?= $_lang['bk_manager'] ?>
     </h1>
 
-<?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
+    <?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
 
     <div class="tab-pane" id="dbmPane">
         <script type="text/javascript">
@@ -202,7 +202,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                 <form name="frmdb" method="post">
                     <input type="hidden" name="mode" value="" />
                     <p>
-                        <a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang['database_table_clickbackup'] ?></a>
+                        <a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?= $_style['icon_save'] ?>"></i> <?= $_lang['database_table_clickbackup'] ?></a>
                         <label><input type="checkbox" name="droptables" checked="checked" /><?= $_lang['database_table_droptablestatements'] ?></label>
                     </p>
                     <div class="row">
@@ -236,7 +236,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                     }
 
                                     echo '<tr>' . "\n" . '<td><label class="form-check form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n";
-                                    echo '<td class="text-xs-center">' . (!empty($db_status['Comment']) ? '<i class="' . $_style['actions_info'] . '" data-tooltip="' . $db_status['Comment'] . '"></i>' : '') . '</td>' . "\n";
+                                    echo '<td class="text-xs-center">' . (!empty($db_status['Comment']) ? '<i class="' . $_style['icon_info_circle'] . '" data-tooltip="' . $db_status['Comment'] . '"></i>' : '') . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Collation'] . '</td>' . "\n";
 
@@ -353,7 +353,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <div id="textarea" style="display:<?= $t_display ?>;">
                         <textarea name="textarea" rows="10"><?= $value ?></textarea>
                     </div>
-                    <a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_run_sql_submit"] ?></a>
+                    <a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?= $_style['icon_save'] ?>"></i> <?= $_lang["bkmgr_run_sql_submit"] ?></a>
                     <input type="submit" name="save" style="display:none;" />
                 </form>
                 <?php if (isset($result)): ?>
@@ -381,7 +381,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <div class="form-group input-group">
                         <input type="text" name="backup_title" class="form-control" maxlength="350" />
                         <div class="input-group-btn">
-                            <a href="javascript:;" class="btn btn-success" onclick="document.snapshot.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_snapshot_submit"] ?></a>
+                            <a href="javascript:;" class="btn btn-success" onclick="document.snapshot.save.click();"> <i class="<?= $_style['icon_save'] ?>"></i> <?= $_lang["bkmgr_snapshot_submit"] ?></a>
                         </div>
                     </div>
                     <input type="submit" name="save" style="display:none;" />
@@ -455,7 +455,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         ?>
                                         <tr>
                                             <td><?= $filename ?></td>
-                                            <td><i class="fa fa-question-circle" data-tooltip="<?= $tooltip ?>"></i></td>
+                                            <td><i class="<?= $_style['icon_question_circle'] ?>" data-tooltip="<?= $tooltip ?>"></i></td>
                                             <td><?= $filesize ?></td>
                                             <td><?= $details['Description'] ?></td>
                                             <td><?= $details['MODX Version'] ?></td>

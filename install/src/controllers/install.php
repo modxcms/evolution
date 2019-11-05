@@ -954,10 +954,11 @@ if ($conn) {
                             $_events = implode("','", $events);
                             // add new events
                             $sql = sprintf(
-                                "INSERT IGNORE INTO %s.`%s` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`%s` se WHERE name IN ('%s')"
+                                "INSERT IGNORE INTO %s.`%s` (pluginid, evtid, priority) SELECT '$id' as 'pluginid', se.id as 'evtid', IF(spe.priority IS NULL, 0, MAX(spe.priority) + 1) as 'priority' FROM $dbase.`%s` se LEFT JOIN $dbase.`%s` spe ON spe.evtid = se.id WHERE name IN ('%s') GROUP BY se.id"
                                 , $dbase
                                 , table_prefix('site_plugin_events')
                                 , table_prefix('system_eventnames')
+                                , table_prefix('site_plugin_events')
                                 , $_events
                             );
                             mysqli_query($sqlParser->conn, $sql);

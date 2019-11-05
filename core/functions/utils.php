@@ -54,7 +54,7 @@ if (! function_exists('evo_save_config_settings')) {
 
         $data = $files->put(
             config_path('cms/settings.php', ! app()->isProduction()),
-            '<?php ' . var_export($config, true) . ';'
+            '<?php return ' . var_export($config, true) . ';'
         );
 
         return is_bool($data) ? $data : true;
@@ -66,6 +66,15 @@ if (! function_exists('evo_update_config_settings')) {
     {
         $config = evo_raw_config_settings();
         $config[$key] = $data;
+        return evo_save_config_settings($config);
+    }
+}
+
+if (! function_exists('evo_delete_config_settings')) {
+    function evo_delete_config_settings(string $key)
+    {
+        $config = evo_raw_config_settings();
+        unset($config[$key]);
         return evo_save_config_settings($config);
     }
 }

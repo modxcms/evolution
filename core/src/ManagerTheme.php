@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
+use EvolutionCMS\Models\ActiveUser;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -213,7 +214,7 @@ class ManagerTheme implements ManagerThemeInterface
         $modx_manager_charset = $this->getCharset();
         $modx_textdir = $this->getTextDir();
 
-        include_once MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
+        include MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
 
         // now include_once different language file as english
         if (!isset($lang) || !file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
@@ -224,12 +225,12 @@ class ManagerTheme implements ManagerThemeInterface
         //// Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
         if ($lang !== 'english' && file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
-            include_once MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php';
+            include MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php';
         }
 
         // allow custom language overrides not altered by future EVO-updates
         if (file_exists(MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php')) {
-            include_once MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php';
+            include MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php';
         }
 
         foreach ($_lang as $k => $v) {
@@ -246,19 +247,18 @@ class ManagerTheme implements ManagerThemeInterface
         $this->lang = $modx_lang_attribute;
         $this->setTextDir($modx_textdir);
         $this->setCharset($modx_manager_charset);
-
         $this->getCore()->setConfig('lang_code', $this->getLang());
         $this->getCore()->setConfig('manager_language', $this->getLangName());
 
         return $lang;
     }
 
-    public function getTheme() : string
+    public function getTheme(): string
     {
         return $this->theme;
     }
 
-    public function getLang() : string
+    public function getLang(): string
     {
         return $this->lang;
     }
@@ -284,6 +284,7 @@ class ManagerTheme implements ManagerThemeInterface
 
     public function getLexicon($key = null, $default = '')
     {
+
         return $key === null ? $this->lexicon : get_by_key($this->lexicon, $key, $default);
     }
 
@@ -318,12 +319,12 @@ class ManagerTheme implements ManagerThemeInterface
      * @param bool $full
      * @return string
      */
-    public function getThemeDir($full = true) : string
+    public function getThemeDir($full = true): string
     {
         return ($full ? MODX_MANAGER_PATH : '') . 'media/style/' . $this->getTheme() . '/';
     }
 
-    public function getThemeUrl() : string
+    public function getThemeUrl(): string
     {
         return MODX_MANAGER_URL . $this->getThemeDir(false);
     }
@@ -347,14 +348,14 @@ class ManagerTheme implements ManagerThemeInterface
     public function getViewAttributes(array $params = [])
     {
         $baseParams = [
-            'modx'                 => $this->getCore(),
-            'modx_lang_attribute'  => $this->getLang(),
+            'modx' => $this->getCore(),
+            'modx_lang_attribute' => $this->getLang(),
             'modx_manager_charset' => $this->getCharset(),
-            'manager_theme'        => $this->getTheme(),
-            'modx_textdir'         => $this->getTextDir(),
-            'manager_language'     => $this->getLangName(),
-            '_lang'                => $this->getLexicon(),
-            '_style'               => $this->getStyle()
+            'manager_theme' => $this->getTheme(),
+            'modx_textdir' => $this->getTextDir(),
+            'manager_language' => $this->getLangName(),
+            '_lang' => $this->getLexicon(),
+            '_style' => $this->getStyle()
         ];
 
         return array_merge($baseParams, $params);
@@ -396,7 +397,7 @@ class ManagerTheme implements ManagerThemeInterface
             /** @var Interfaces\ManagerTheme\PageControllerInterface $controller */
             $controller = new $controllerName($this, $data);
             $controller->setIndex($action);
-            if (! $controller->canView()) {
+            if (!$controller->canView()) {
                 $this->alertAndQuit('error_no_privileges');
             } elseif (($out = $controller->checkLocked()) !== null) {
                 $this->alertAndQuit($out, false);
@@ -427,7 +428,7 @@ class ManagerTheme implements ManagerThemeInterface
     {
         $out = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
         if ($out <= 0) {
-           $out = null;
+            $out = null;
         }
 
         return $out;
@@ -522,7 +523,7 @@ class ManagerTheme implements ManagerThemeInterface
         return $homeId;
     }
 
-    public function renderAccessPage() : string
+    public function renderAccessPage(): string
     {
         $plh = [];
 
@@ -534,7 +535,7 @@ class ManagerTheme implements ManagerThemeInterface
 
     public function getTemplate($name, $config = null)
     {
-        if(!empty($config) && empty($this->getCore()->getConfig($config))) {
+        if (!empty($config) && empty($this->getCore()->getConfig($config))) {
             $this->getCore()->setConfig($config, MODX_MANAGER_PATH . 'media/style/common/' . $name . '.tpl');
         }
 
@@ -565,7 +566,7 @@ class ManagerTheme implements ManagerThemeInterface
         return $content;
     }
 
-    public function makeTemplate($name, $config = null, array $placeholders = [], $clean = true) : string
+    public function makeTemplate($name, $config = null, array $placeholders = [], $clean = true): string
     {
         $content = $this->getTemplate($name, $config);
         // merge placeholders
@@ -585,13 +586,13 @@ class ManagerTheme implements ManagerThemeInterface
         return $content;
     }
 
-    public function getTemplatePlaceholders() : array
+    public function getTemplatePlaceholders(): array
     {
         $plh = [
             'modx_charset' => $this->getCharset(),
             'favicon' => (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL : $this->getThemeUrl() . 'images/') . 'favicon.ico',
             'homeurl' => $this->getCore()->makeUrl($this->getManagerStartupPageId()),
-            'logouturl' => MODX_MANAGER_URL.'index.php?a=8',
+            'logouturl' => MODX_MANAGER_URL . 'index.php?a=8',
             'year' => date('Y'),
             'theme' => $this->getTheme(),
             'manager_theme_url' => $this->getThemeUrl(),
@@ -643,7 +644,7 @@ class ManagerTheme implements ManagerThemeInterface
                 case 2:
                     $this->getCore()->setPlaceholder(
                         'login_message',
-                        '<p><span class="fail">' . $this->getLexicon('login_cancelled_site_was_updated') . '</p>'.
+                        '<p><span class="fail">' . $this->getLexicon('login_cancelled_site_was_updated') . '</p>' .
                         '<p>' . $this->getLexicon('login_message') . '</p>'
                     );
                     break;
@@ -676,8 +677,7 @@ class ManagerTheme implements ManagerThemeInterface
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
         $html = is_array($evtOut) ? sprintf(
             '<div id="onManagerLoginFormRender">%s</div>'
-            , implode('', $evtOut)) : ''
-        ;
+            , implode('', $evtOut)) : '';
         $plh['OnManagerLoginFormRender'] = $html;
 
         $plh['login_form_position_class'] = sprintf(
@@ -700,17 +700,15 @@ class ManagerTheme implements ManagerThemeInterface
         $this->getCore()->getManagerApi()->action = $action;
 
         if ((int)$action > 1) {
-            $sql = sprintf(
-                "REPLACE INTO %s (sid, internalKey, username, lasthit, action, id) VALUES ('%s', %d, '%s', %d, '%s', %s)",
-                $this->getCore()->getDatabase()->getFullTableName('active_users'),
-                session_id(),
-                $this->getCore()->getLoginUserID(),
-                $_SESSION['mgrShortname'],
-                $this->getCore()->tstart,
-                (string)$action,
-                $this->getItemId() ?? var_export(null, true)
-            );
-            $this->getCore()->getDatabase()->query($sql);
+            ActiveUser::where('internalKey', $this->getCore()->getLoginUserID('mgr'))->forceDelete();
+            $activeUser = new ActiveUser;
+            $activeUser->sid = session_id();
+            $activeUser->internalKey = $this->getCore()->getLoginUserID('mgr');
+            $activeUser->username = $_SESSION['mgrShortname'];
+            $activeUser->lasthit = $this->getCore()->tstart;
+            $activeUser->action = $action;
+            $activeUser->id = $this->getItemId() ?? var_export(null, true);
+            $activeUser->save();
             $flag = true;
         }
 
@@ -729,7 +727,7 @@ class ManagerTheme implements ManagerThemeInterface
     /**
      * @return CoreInterface
      */
-    public function getCore() : CoreInterface
+    public function getCore(): CoreInterface
     {
         return $this->core;
     }
@@ -737,7 +735,7 @@ class ManagerTheme implements ManagerThemeInterface
     /**
      * @inheritdoc
      */
-    public function alertAndQuit(string $message, $lexicon = true) : void
+    public function alertAndQuit(string $message, $lexicon = true): void
     {
         if ($lexicon) {
             $message = $this->getLexicon($message);
@@ -745,7 +743,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->getCore()->webAlertAndQuit($message);
     }
 
-    public function isLoadDatePicker() : bool
+    public function isLoadDatePicker(): bool
     {
         $actions = [85, 27, 4, 72, 13, 11, 12, 87, 88];
         return \in_array($this->getCore()->getManagerApi()->action, $actions, true);
@@ -773,7 +771,7 @@ class ManagerTheme implements ManagerThemeInterface
         $css = $this->getThemeUrl() . 'style.css';
         $minCssName = 'css/styles.min.css';
 
-        if (!file_exists($this->getThemeDir(). $minCssName) && is_writable($this->getThemeDir() . 'css')) {
+        if (!file_exists($this->getThemeDir() . $minCssName) && is_writable($this->getThemeDir() . 'css')) {
             $files = $this->getCssFiles();
             $evtOut = $this->getCore()->invokeEvent('OnBeforeMinifyCss', array(
                 'files' => $files,
@@ -796,24 +794,24 @@ class ManagerTheme implements ManagerThemeInterface
             $minifier = new \Formatter\CSSMinify($files);
             $css = $minifier->minify();
             file_put_contents(
-                $this->getThemeDir(). $minCssName,
+                $this->getThemeDir() . $minCssName,
                 $css
             );
         }
-        if (file_exists($this->getThemeDir(). $minCssName)) {
+        if (file_exists($this->getThemeDir() . $minCssName)) {
             $css = $this->getThemeUrl() . $minCssName;
         }
 
         return $css . '?v=' . EVO_INSTALL_TIME;
     }
 
-    public function getMainFrameHeaderHTMLBlock() : string
+    public function getMainFrameHeaderHTMLBlock(): string
     {
         $evtOut = $this->getCore()->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
         return \is_array($evtOut) ? implode("\n", $evtOut) : '';
     }
 
-    public function getThemeStyle() : string
+    public function getThemeStyle(): string
     {
         $default = 'dark';
         $modes = array('', 'lightness', 'light', 'dark', 'darkness');

@@ -28,13 +28,13 @@ $_PAGE['vs']['lm'] = $listmode;
 
 // context menu
 $cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
-$cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['actions_run'], (!$modx->hasPermission('exec_module') ? 1 : 0));
+$cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['icon_play'], (!$modx->hasPermission('exec_module') ? 1 : 0));
 if ($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') || $modx->hasPermission('delete_module')) {
     $cm->addSeparator();
 }
-$cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['actions_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
-$cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['actions_duplicate'], (!$modx->hasPermission('new_module') ? 1 : 0));
-$cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['actions_delete'], (!$modx->hasPermission('delete_module') ? 1 : 0));
+$cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['icon_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
+$cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['icon_clone'], (!$modx->hasPermission('new_module') ? 1 : 0));
+$cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['icon_trash'], (!$modx->hasPermission('delete_module') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -45,7 +45,7 @@ echo $cm->render();
     function showContentMenu(id, e)
     {
         selectedItem = id;
-        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('-190') ?>+ 'px'; //offset menu if RTL is selected
+        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('+10') ?>+ 'px'; //offset menu if RTL is selected
         contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop))) + 'px';
         contextm.style.visibility = 'visible';
         e.cancelBubble = true;
@@ -96,7 +96,7 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="fa fa-cubes"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
+    <i class="<?= $_style['icon_modules'] ?>"></i><?= $_lang['module_management'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.newmodule') ?>
@@ -109,7 +109,7 @@ echo $cm->render();
     <div class="table-responsive">
         <?php
         if ($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-            $rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icons_modules'] . '") as icon
+            $rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icon_modules'] . '") as icon
 				FROM ' . $modx->getDatabase()->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
@@ -123,7 +123,7 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icon_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         $grd = new \EvolutionCMS\Support\DataGrid('', $rs, 0); // set page size to 0 t show all items

@@ -8,7 +8,7 @@
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  */
 
-include_once(__DIR__ . "/site_content.php");
+include_once(dirname(__FILE__) . "/site_content.php");
 
 /**
  * Class site_content_tagsDocLister

@@ -13,4 +13,7 @@ return [
     'method' => env('DB_METHOD', '[+connection_method+]'), //$database_connection_method
     'strict' => env('DB_STRICT', false),
     'engine' => env('DB_ENGINE'),
+    'options' => [
+        PDO::ATTR_STRINGIFY_FETCHES => true,
+    ]
 ];

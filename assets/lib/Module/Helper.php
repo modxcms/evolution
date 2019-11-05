@@ -1,6 +1,6 @@
 <?php namespace Module;
 
-include_once(dirname(__DIR__) . '/APIHelpers.class.php');
+include_once(dirname(dirname(__FILE__)) . '/APIHelpers.class.php');
 
 /**
  * Class Helper

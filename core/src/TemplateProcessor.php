@@ -43,11 +43,20 @@ class TemplateProcessor
                 if (strpos($content, '@FILE:') === 0) {
                     $template = str_replace('@FILE:', '', trim($content));
                     if (!$this->core['view']->exists($template)) {
-                        $this->core->§documentObject['template'] = 0;
+                        $this->core->documentObject['template'] = 0;
                         $this->core->documentContent = $doc['content'];
                     }
                 }
         }
         return $template;
+    }
+
+    /**
+     * @param $templateID
+     * @return mixed
+     */
+    public function getTemplateCodeFromDB($templateID)
+    {
+        return SiteTemplate::findOrFail($templateID)->content;
     }
 }

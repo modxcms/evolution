@@ -35,7 +35,7 @@
         )) !!};
         evo.style = {!! json_encode(Illuminate\Support\Arr::only(
             ManagerTheme::getStyle(),
-            ['actions_file', 'actions_pencil', 'actions_reply', 'actions_plus']
+            ['icon_file', 'icon_pencil', 'icon_reply', 'icon_plus']
         )) !!};
         evo.urlCheckConnectionToServer = '{{  MODX_MANAGER_URL }}';
     </script>

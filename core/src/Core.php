@@ -3,11 +3,14 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
-use Evolution\Custom\Controllers\TestController;
+use EvolutionCMS\Models\SiteContent;
+use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
-use EvolutionCMS\Models\SiteTemplate;
 use UrlProcessor;
 use TemplateProcessor;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
  * @property Mail $mail
@@ -94,6 +97,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $snippetsTime = array();
     public $chunkCache;
     public $snippetCache;
+    public $modulesFromFile = array();
     public $contentTypes;
     public $dumpSQL = false;
     public $queryCode;
@@ -365,7 +369,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 );
             } else {
                 $currentNumberOfRedirects += 1;
-                if (str_contains($url, '?')) {
+                if (Str::contains($url, '?')) {
                     $url .= "&err=$currentNumberOfRedirects";
                 } else {
                     $url .= "?err=$currentNumberOfRedirects";
@@ -384,13 +388,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 // append $site_url to make it work with Location:
                 $url = MODX_SITE_URL . substr($url, strlen(MODX_BASE_URL));
             }
-            if (!str_contains($url, "\n")) {
+            if (!Str::contains($url, "\n")) {
                 $header = 'Location: ' . $url;
             } else {
                 $this->getService('ExceptionHandler')->messageQuit('No newline allowed in redirect url.');
             }
         }
-        if ($responseCode && (str_contains($responseCode, '30'))) {
+        if ($responseCode && (Str::contains($responseCode, '30'))) {
             header($responseCode);
         }
 
@@ -478,7 +482,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             $this->sendErrorPage();
-        } elseif (str_contains($_SERVER['REQUEST_URI'], 'index.php/')) {
+        } elseif (Str::contains($_SERVER['REQUEST_URI'], 'index.php/')) {
             $this->sendErrorPage();
         } else {
             return $this->getConfig('site_start');
@@ -709,7 +713,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // check for non-cached snippet output
-        if (str_contains($this->documentOutput, '[!')) {
+        if (Str::contains($this->documentOutput, '[!')) {
             $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time', 0);
 
             $this->documentOutput = str_replace('[!', '[[', $this->documentOutput);
@@ -767,7 +771,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $stats = $this->getTimerStats($this->tstart);
 
         $out =& $this->documentOutput;
-        if (str_contains($out, '[^')) {
+        if (Str::contains($out, '[^')) {
             $out = str_replace(
                 array('[^q^]', '[^qt^]', '[^p^]', '[^t^]', '[^s^]', '[^m^]')
                 , array($stats['queries'], $stats['queryTime'], $stats['phpTime'], $stats['totalTime'], $stats['source'], $stats['phpMemory'])
@@ -789,9 +793,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->documentOutput = removeSanitizeSeed($this->documentOutput);
 
-        if (str_contains($this->documentOutput, '\{')) {
+        if (Str::contains($this->documentOutput, '\{')) {
             $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
-        } elseif (str_contains($this->documentOutput, '\[')) {
+        } elseif (Str::contains($this->documentOutput, '\[')) {
             $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
         }
 
@@ -904,7 +908,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $HTTP_IF_NONE_MATCH = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : false;
         header('Pragma: no-cache');
 
-        if ($HTTP_IF_MODIFIED_SINCE == $last_modified || str_contains($HTTP_IF_NONE_MATCH, $etag)) {
+        if ($HTTP_IF_MODIFIED_SINCE == $last_modified || Str::contains($HTTP_IF_NONE_MATCH, $etag)) {
             header('HTTP/1.1 304 Not Modified');
             header('Content-Length: 0');
             exit;
@@ -1045,20 +1049,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function _getTagsFromContent($content, $left = '[+', $right = '+]')
     {
-        if (!str_contains($content, $left)) {
+        if (!Str::contains($content, $left)) {
             return array();
         }
         $spacer = md5('<<<EVO>>>');
-        if ($left === '{{' && str_contains($content, ';}}')) {
+        if ($left === '{{' && Str::contains($content, ';}}')) {
             $content = str_replace(';}}', sprintf(';}%s}', $spacer), $content);
         }
-        if ($left === '{{' && str_contains($content, '{{}}')) {
+        if ($left === '{{' && Str::contains($content, '{{}}')) {
             $content = str_replace('{{}}', sprintf('{%$1s{}%$1s}', $spacer), $content);
         }
-        if ($left === '[[' && str_contains($content, ']]]]')) {
+        if ($left === '[[' && Str::contains($content, ']]]]')) {
             $content = str_replace(']]]]', sprintf(']]%s]]', $spacer), $content);
         }
-        if ($left === '[[' && str_contains($content, ']]]')) {
+        if ($left === '[[' && Str::contains($content, ']]]')) {
             $content = str_replace(']]]', sprintf(']%s]]', $spacer), $content);
         }
 
@@ -1075,7 +1079,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($lc !== 0) {
                 $piece[] = $left;
             }
-            if (!str_contains($lv, $right)) {
+            if (!Str::contains($lv, $right)) {
                 $piece[] = $lv;
             } else {
                 $rp = explode($right, $lv);
@@ -1105,7 +1109,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if ($lc === $rc) {
                     // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
                     if ($this->config['enable_filter'] == 1) {
-                        if (str_contains($fetch, $left)) {
+                        if (Str::contains($fetch, $left)) {
                             $nested = $this->_getTagsFromContent($fetch, $left, $right);
                             foreach ($nested as $tag) {
                                 if (!in_array($tag, $tags)) {
@@ -1133,7 +1137,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         foreach ($tags as $i => $tag) {
-            if (str_contains($tag, $spacer)) {
+            if (Str::contains($tag, $spacer)) {
                 $tags[$i] = str_replace($spacer, '', $tag);
             }
         }
@@ -1156,7 +1160,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = $this->escapeLiteralTagsContent($content);
             }
         }
-        if (!str_contains($content, '[*')) {
+        if (!Str::contains($content, '[*')) {
             return $content;
         }
         if (!isset($this->documentIdentifier)) {
@@ -1176,7 +1180,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         foreach ($matches[1] as $i => $key) {
-            if (str_contains($key, '[+')) {
+            if (Str::contains($key, '[+')) {
                 continue;
             } // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
             if (strpos($key, '#') === 0) {
@@ -1184,7 +1188,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             } // remove # for QuickEdit format
 
             list($key, $modifiers) = $this->splitKeyAndFilter($key);
-            if (str_contains($key, '@')) {
+            if (Str::contains($key, '@')) {
                 list($key, $context) = explode('@', $key, 2);
             } else {
                 $context = false;
@@ -1206,7 +1210,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $value = $this->applyFilter($value, $modifiers, $key);
             }
 
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('mergeDocumentContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1228,7 +1232,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         list($key, $str) = explode('@', $key, 2);
 
-        if (str_contains($str, '(')) {
+        if (Str::contains($str, '(')) {
             list($context, $option) = explode('(', $str, 2);
         } else {
             list($context, $option) = array($str, false);
@@ -1253,7 +1257,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             case 'uparent':
             case 'up':
             case 'u':
-                if (str_contains($str, '(')) {
+                if (Str::contains($str, '(')) {
                     $top = substr($str, strpos($str, '('));
                     $top = trim($top, '()"\'');
                 } else {
@@ -1269,7 +1273,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             case 'prev':
                 if (!$option) {
                     $option = 'menuindex,ASC';
-                } elseif (!str_contains($option, ',')) {
+                } elseif (!Str::contains($option, ',')) {
                     $option .= ',ASC';
                 }
                 list($by, $dir) = explode(',', $option, 2);
@@ -1295,7 +1299,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             case 'next':
                 if (!$option) {
                     $option = 'menuindex,ASC';
-                } elseif (!str_contains($option, ',')) {
+                } elseif (!Str::contains($option, ',')) {
                     $option .= ',ASC';
                 }
                 list($by, $dir) = explode(',', $option, 2);
@@ -1347,7 +1351,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = $this->escapeLiteralTagsContent($content);
             }
         }
-        if (!str_contains($content, '[(')) {
+        if (!Str::contains($content, '[(')) {
             return $content;
         }
 
@@ -1384,7 +1388,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $value = $this->applyFilter($value, $modifiers, $key);
             }
             $s = &$matches[0][$i];
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('mergeSettingsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1404,14 +1408,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function mergeChunkContent($content, $ph = false)
     {
         if ($this->getConfig('enable_at_syntax')) {
-            if (str_contains($content, '{{ ')) {
+            if (Str::contains($content, '{{ ')) {
                 $content = str_replace(array('{{ ', ' }}'), array('\{\{ ', ' \}\}'), $content);
             }
             if (stripos($content, '<@LITERAL>') !== false) {
                 $content = $this->escapeLiteralTagsContent($content);
             }
         }
-        if (!str_contains($content, '{{')) {
+        if (!Str::contains($content, '{{')) {
             return $content;
         }
 
@@ -1454,7 +1458,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             $s = &$matches[0][$i];
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('mergeChunkContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1479,7 +1483,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = $this->escapeLiteralTagsContent($content);
             }
         }
-        if (!str_contains($content, '[+')) {
+        if (!Str::contains($content, '[+')) {
             return $content;
         }
 
@@ -1514,7 +1518,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $value = $this->applyFilter($value, $modifiers, $key);
             }
             $s = &$matches[0][$i];
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('mergePlaceholderContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1539,11 +1543,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $elsetag = '<@ELSE>',
         $endiftag = '<@ENDIF>'
     ) {
-        if (str_contains($content, '@IF')) {
+        if (Str::contains($content, '@IF')) {
             $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
         }
 
-        if (!str_contains($content, $iftag)) {
+        if (!Str::contains($content, $iftag)) {
             return $content;
         }
 
@@ -1599,25 +1603,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $elsetag = '<@ELSE>',
         $endiftag = '<@ENDIF>'
     ) {
-        if (str_contains($content, '<!--@IF ')) {
+        if (Str::contains($content, '<!--@IF ')) {
             $content = str_replace('<!--@IF ', $iftag, $content);
         } // for jp
-        if (str_contains($content, '<!--@IF:')) {
+        if (Str::contains($content, '<!--@IF:')) {
             $content = str_replace('<!--@IF:', $iftag, $content);
         }
-        if (!str_contains($content, $iftag)) {
+        if (!Str::contains($content, $iftag)) {
             return $content;
         }
-        if (str_contains($content, '<!--@ELSEIF:')) {
+        if (Str::contains($content, '<!--@ELSEIF:')) {
             $content = str_replace('<!--@ELSEIF:', $elseiftag, $content);
         } // for jp
-        if (str_contains($content, '<!--@ELSE-->')) {
+        if (Str::contains($content, '<!--@ELSE-->')) {
             $content = str_replace('<!--@ELSE-->', $elsetag, $content);
         }  // for jp
-        if (str_contains($content, '<!--@ENDIF-->')) {
+        if (Str::contains($content, '<!--@ENDIF-->')) {
             $content = str_replace('<!--@ENDIF-->', $endiftag, $content);
         }    // for jp
-        if (str_contains($content, '<@ENDIF-->')) {
+        if (Str::contains($content, '<@ENDIF-->')) {
             $content = str_replace('<@ENDIF-->', $endiftag, $content);
         }
         $tags = array($iftag, $elseiftag, $elsetag, $endiftag);
@@ -1637,25 +1641,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($reverse) {
             $cmd = ltrim($cmd, '!');
         }
-        if (str_contains($cmd, '[!')) {
+        if (Str::contains($cmd, '[!')) {
             $cmd = str_replace(array('[!', '!]'), array('[[', ']]'), $cmd);
         }
         $safe = 0;
         while ($safe < 20) {
             $bt = md5($cmd);
-            if (str_contains($cmd, '[*')) {
+            if (Str::contains($cmd, '[*')) {
                 $cmd = $this->mergeDocumentContent($cmd);
             }
-            if (str_contains($cmd, '[(')) {
+            if (Str::contains($cmd, '[(')) {
                 $cmd = $this->mergeSettingsContent($cmd);
             }
-            if (str_contains($cmd, '{{')) {
+            if (Str::contains($cmd, '{{')) {
                 $cmd = $this->mergeChunkContent($cmd);
             }
-            if (str_contains($cmd, '[[')) {
+            if (Str::contains($cmd, '[[')) {
                 $cmd = $this->evalSnippets($cmd);
             }
-            if (str_contains($cmd, '[+') && !str_contains($cmd, '[[')) {
+            if (Str::contains($cmd, '[+') && !Str::contains($cmd, '[[')) {
                 $cmd = $this->mergePlaceholderContent($cmd);
             }
             if ($bt === md5($cmd)) {
@@ -1672,7 +1676,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else {
             $_ = explode(',', '[*,[(,{{,[[,[!,[+');
             foreach ($_ as $left) {
-                if (str_contains($cmd, $left)) {
+                if (Str::contains($cmd, $left)) {
                     $cmd = 0;
                     break;
                 }
@@ -1701,7 +1705,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     function ignoreCommentedTagsContent($content, $left = '<!--@-', $right = '-@-->')
     {
-        if (!str_contains($content, $left)) {
+        if (!Str::contains($content, $left)) {
             return $content;
         }
 
@@ -1711,7 +1715,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $addBreakMatches[$i] = $v . "\n";
             }
             $content = str_replace($addBreakMatches, '', $content);
-            if (str_contains($content, $left)) {
+            if (Str::contains($content, $left)) {
                 $content = str_replace($matches[0], '', $content);
             }
         }
@@ -1740,7 +1744,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         foreach ($matches[1] as $i => $v) {
             $v = str_ireplace($sTags, $rTags, $v);
             $s = &$matches[0][$i];
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $v, $content);
             } elseif ($this->debug) {
                 $this->addLog('ignoreCommentedTagsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1856,7 +1860,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        if (is_scalar($phpcode) && str_contains($phpcode, ';')) {
+        if (is_scalar($phpcode) && Str::contains($phpcode, ';')) {
             if (substr($phpcode, 0, 5) === '<?php') {
                 $phpcode = substr($phpcode, 5);
             }
@@ -1905,7 +1909,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function evalSnippets($content)
     {
-        if (!str_contains($content, '[[')) {
+        if (!Str::contains($content, '[[')) {
             return $content;
         }
 
@@ -1924,12 +1928,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         foreach ($matches[1] as $i => $call) {
             $s = &$matches[0][$i];
             if (substr($call, 0, 2) === '$_') {
-                if (!str_contains($content, '_PHX_INTERNAL_')) {
+                if (!Str::contains($content, '_PHX_INTERNAL_')) {
                     $value = $this->_getSGVar($call);
                 } else {
                     $value = $s;
                 }
-                if (str_contains($content, $s)) {
+                if (Str::contains($content, $s)) {
                     $content = str_replace($s, $value, $content);
                 } elseif ($this->debug) {
                     $this->addLog('evalSnippetsSGVar parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1941,7 +1945,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 continue;
             }
 
-            if (str_contains($content, $s)) {
+            if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -1968,7 +1972,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->setConfig('enable_filter', $_);
         $key = str_replace(array('(', ')'), array("['", "']"), $key);
         $key = rtrim($key, ';');
-        if (str_contains($key, '$_SESSION')) {
+        if (Str::contains($key, '$_SESSION')) {
             $_ = $_SESSION;
             $key = str_replace('$_SESSION', '$_', $key);
             if (isset($_['mgrFormValues'])) {
@@ -1978,7 +1982,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 unset($_['token']);
             }
         }
-        if (str_contains($key, '[')) {
+        if (Str::contains($key, '[')) {
             $value = $key ? eval("return {$key};") : '';
         } elseif (0 < eval("return count({$key});")) {
             $value = eval("return print_r({$key},true);");
@@ -2062,7 +2066,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return array();
         }
 
-        if (str_contains($string, '&_PHX_INTERNAL_')) {
+        if (Str::contains($string, '&_PHX_INTERNAL_')) {
             $string = str_replace(
                 array('&_PHX_INTERNAL_091_&', '&_PHX_INTERNAL_093_&')
                 , array('[', ']')
@@ -2110,7 +2114,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     if ($i && $delim === '`') {
                         $value = rtrim($value, '`');
                     }
-                } elseif (str_contains($_tmp, '&')) {
+                } elseif (Str::contains($_tmp, '&')) {
                     list($value, $_tmp) = explode('&', $_tmp, 2);
                     $value = trim($value);
                 } else {
@@ -2131,11 +2135,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             if (isset($value) && $value !== null) {
-                if (str_contains($key, 'amp;')) {
+                if (Str::contains($key, 'amp;')) {
                     $key = str_replace('amp;', '', $key);
                 }
                 $key = trim($key);
-                if (str_contains($value, '[!')) {
+                if (Str::contains($value, '[!')) {
                     $value = str_replace(array('[!', '!]'), array('[[', ']]'), $value);
                 }
                 $value = $this->mergeDocumentContent($value);
@@ -2171,7 +2175,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (substr($k, -2) === '[]') {
                 $k = substr($k, 0, -2);
                 $params[$k][] = current($p);
-            } elseif (str_contains($k, '[') && substr($k, -1) === ']') {
+            } elseif (Str::contains($k, '[') && substr($k, -1) === ']') {
                 list($k, $subk) = explode('[', $k, 2);
                 $subk = substr($subk, 0, -1);
                 $params[$k][$subk] = current($p);
@@ -2228,7 +2232,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $closeOpt = ')';
                 } elseif ($c === '?') {
                     $pos = $i;
-                } elseif ($c === ' ' && !str_contains($str, '?')) {
+                } elseif ($c === ' ' && !Str::contains($str, '?')) {
                     $pos = $i;
                 } else {
                     $pos = false;
@@ -2249,7 +2253,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     private function _split_snip_call($call)
     {
         $spacer = md5('dummy');
-        if (str_contains($call, ']]>')) {
+        if (Str::contains($call, ']]>')) {
             $call = str_replace(']]>', "]{$spacer}]>", $call);
         }
 
@@ -2264,7 +2268,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $snip['name'] = trim($name);
-        if (str_contains($params, $spacer)) {
+        if (Str::contains($params, $spacer)) {
             $params = str_replace("]{$spacer}]>", ']]>', $params);
         }
         $snip['params'] = ltrim($params, "?& \t\n");
@@ -2384,13 +2388,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
-        static $cached = array();
-
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($cached[$cacheKey])) {
-            return $cached[$cacheKey];
+        $cachedData = Cache::get($cacheKey);
+        if (!is_null($cachedData)) {
+            return $cachedData;
         }
-        $cached[$cacheKey] = false;
 
         // allow alias to be full path
         if ($method === 'alias') {
@@ -2410,7 +2412,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
-            $cached[$cacheKey] = $documentObject;
+            Cache::forever($cacheKey, $documentObject);
             return $documentObject;
         }
 
@@ -2544,7 +2546,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentObject = $out[0];
         }
 
-        $cached[$cacheKey] = $documentObject;
+        Cache::forever($cacheKey, $documentObject);
 
         return $documentObject;
     }
@@ -2709,6 +2711,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if ($this->documentMethod !== 'alias') {
+            $DLTemplate = \DLTemplate::getInstance(EvolutionCMS());
+            $DLTemplate->setTemplatePath('views/');
             //$this->_fixURI();
             // invoke OnWebPageInit event
             $this->invokeEvent("OnWebPageInit");
@@ -2736,39 +2740,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
             } else {
-                //@TODO: check new $alias;
                 if ($this->getConfig('aliaslistingfolder') == 1) {
-                    $rs = $this->getDatabase()->select(
-                        'id'
-                        , $this->getDatabase()->getFullTableName('site_content')
-                        , sprintf(
-                            "deleted=0 and parent='%d' and alias='%s'"
-                            , $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0
-                            , $this->getDatabase()->escape($this->documentIdentifier)
-                        )
-                    );
-                    if (!$this->getDatabase()->getRecordCount($rs)) {
+                    $parent = $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0;
+                    $doc = SiteContent::select('id')
+                        ->where('deleted', 0)
+                        ->where('parent', $parent)
+                        ->where('alias', $this->documentIdentifier)->first();
+                    if (is_null($doc)) {
                         $this->sendErrorPage();
                     }
-
-                    $docId = $this->getDatabase()->getValue($rs);
-                    if (!$docId) {
-                        $alias = $this->q;
-                        if ((int)$this->getConfig('friendly_url_suffix') !== 0) {
-                            $pos = strrpos($alias, $this->getConfig('friendly_url_suffix'));
-
-                            if ($pos !== false) {
-                                $alias = substr($alias, 0, $pos);
-                            }
-                        }
-                        $docId = UrlProcessor::getIdFromAlias($alias);
-                    }
-
-                    if ($docId > 0) {
-                        $this->documentIdentifier = $docId;
-                    } else {
-                        $this->sendErrorPage();
-                    }
+                    $this->documentIdentifier = $doc->getKey();
                 } else {
                     $this->sendErrorPage();
                 }
@@ -2779,19 +2760,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()
                     ->documentListing[$this->documentIdentifier];
             } else {
-                $docAlias = $this->getDatabase()->escape($this->documentIdentifier);
-                $rs = $this->getDatabase()->select(
-                    'id'
-                    , $this->getDatabase()->getFullTableName('site_content')
-                    , sprintf(
-                        "deleted=0 and alias='%s'"
-                        , $docAlias
-                    )
-                );
-                $this->documentIdentifier = (int)$this->getDatabase()->getValue($rs);
+                $doc = SiteContent::select('id')
+                    ->where('deleted', 0)
+                    ->where('alias', $this->documentIdentifier)->first();
+                if (is_null($doc)) {
+                    $this->sendErrorPage();
+                }
+                $this->documentIdentifier = $doc->getKey();
             }
         }
         $this->documentMethod = 'id';
+        $DLTemplate = \DLTemplate::getInstance(EvolutionCMS());
+        $DLTemplate->setTemplatePath('views/');
 
         //$this->_fixURI();
         // invoke OnWebPageInit event
@@ -2824,7 +2804,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return;
         }
 
-        if (!str_contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS')) {
+        if (!Str::contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS')) {
             return;
         }
 
@@ -2901,6 +2881,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $template = TemplateProcessor::getBladeDocumentContent();
 
             if ($template) {
+                $this->documentObject['cacheable'] = 0;
                 $this->minParserPasses = -1;
                 $this->maxParserPasses = -1;
                 /** @var \Illuminate\View\View $tpl */
@@ -2928,7 +2909,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $templateCode = '[*content*]';
                 } // use blank template
                 else {
-                    $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
+                    $templateCode = TemplateProcessor::getTemplateCodeFromDB($this->documentObject['template']);
                 }
 
                 if (strpos($templateCode, '@INCLUDE') === 0) {
@@ -2989,7 +2970,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // check whether it's a reference
         if (preg_match('@^[1-9]\d*$@', $url)) {
             $url = UrlProcessor::makeUrl($url); // if it's a bare document id
-        } elseif (str_contains($url, '[~')) {
+        } elseif (Str::contains($url, '[~')) {
             $url = UrlProcessor::rewriteUrls($url); // if it's an internal docid tag, process it
         }
         $this->sendRedirect($url, 0, '', 'HTTP/1.0 301 Moved Permanently');
@@ -2997,23 +2978,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * @param $templateID
-     * @return mixed
-     * @throws InvalidFieldException
-     * @throws TableNotDefinedException
+     * @deprecated use TemplateProcessor::getTemplateCodeFromDB()
      */
     public function _getTemplateCodeFromDB($templateID)
     {
-        $rs = $this->getDatabase()->select(
-            'content',
-            $this->getDatabase()->getFullTableName('site_templates'),
-            sprintf("id='%s'", $templateID)
-        );
-        if ($this->getDatabase()->getRecordCount($rs) == 1) {
-            return $this->getDatabase()->getValue($rs);
-        }
-
-        $this->getService('ExceptionHandler')->messageQuit('Incorrect number of templates returned from database');
+        return TemplateProcessor::getTemplateCodeFromDB($templateID);
     }
 
     /**
@@ -3175,10 +3144,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function webAlertAndQuit($msg, $url = '')
     {
-        $manager_charset = array_get($GLOBALS, 'modx_manager_charset', $this->getConfig('modx_charset'));
-        $lang_attribute  = array_get($GLOBALS, 'modx_lang_attribute', $this->getConfig('lang_code'));
+        $manager_charset = Arr::get($GLOBALS, 'modx_manager_charset', $this->getConfig('modx_charset'));
+        $lang_attribute  = Arr::get($GLOBALS, 'modx_lang_attribute', $this->getConfig('lang_code'));
 
-        if(array_get($GLOBALS, 'modx_textdir', $this->getConfig('manager_direction'))==='rtl') {
+        if(Arr::get($GLOBALS, 'modx_textdir', $this->getConfig('manager_direction'))==='rtl') {
             $textdir = 'rtl';
         } else {
             $textdir = 'ltr';
@@ -3207,7 +3176,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 , MODX_MANAGER_URL
                 , $path
                 , $file_name
-                , array_get($GLOBALS, 'lastInstallTime', time())
+                , Arr::get($GLOBALS, 'lastInstallTime', time())
             );
         }
 
@@ -3215,7 +3184,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         echo '<!DOCTYPE html>
             <html lang="' . $lang_attribute . '" dir="' . $textdir . '">
                 <head>
-                <title>MODX :: Alert</title>
+                <title>Evolution CMS :: Alert</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=' . $manager_charset . ';">
                 ' . $style . "
                 <script>
@@ -3584,7 +3553,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // web users are stored with negative keys
         $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
-
+        Models\ActiveUserSession::where('internalKey', $userId)->forceDelete();
         Models\ActiveUserSession::updateOrCreate([
             'internalKey' => $userId,
             'sid'         => $this->sid,
@@ -3666,8 +3635,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function sendmail($params = array(), $msg = '', $files = array())
     {
         if (\is_scalar($params)) {
-            if (!str_contains($params, '=')) {
-                if (str_contains($params, '@')) {
+            if (!Str::contains($params, '=')) {
+                if (Str::contains($params, '@')) {
                     $p['to'] = $params;
                 } else {
                     $p['subject'] = $params;
@@ -3723,7 +3692,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $mail->AddBCC($address, $name);
             }
         }
-        if (isset($p['from']) && str_contains($p['from'], '<') && substr($p['from'], -1) === '>') {
+        if (isset($p['from']) && Str::contains($p['from'], '<') && substr($p['from'], -1) === '>') {
             list($p['fromname'], $p['from']) = $mail->address_split($p['from']);
         }
         $mail->setFrom(
@@ -4405,10 +4374,30 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @param string $snippetName
      * @param array $params Default: Empty array
+     * @param int $cacheTime
+     * @param string $cacheKey
      * @return string
      */
-    public function runSnippet($snippetName, $params = array())
+    public function runSnippet($snippetName, $params = array(), $cacheTime = false, $cacheKey = false)
     {
+        if (
+            is_numeric($cacheTime)
+            && $this->getConfig('enable_cache')
+        ){
+            $arrPlaceholderCheck = $this->placeholders;
+            if (!is_string($cacheKey)) {
+                $getParams = $_GET;
+                ksort($getParams);
+                ksort($params);
+                $cacheKey = md5(json_encode($getParams) . $snippetName . json_encode($params));
+            }
+            $return = Cache::get($cacheKey);
+            if (!is_null($return)) {
+                $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
+                $this->toPlaceholders($arrPlaceholderFromSnippet);
+                return $return;
+            }
+        }
         if (array_key_exists($snippetName, $this->snippetCache)) {
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
@@ -4423,7 +4412,22 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $parameters = array_merge($parameters, $params);
 
         // run snippet
-        return $this->evalSnippet($snippet, $parameters);
+        $result = $this->evalSnippet($snippet, $parameters);
+        if (
+            is_numeric($cacheTime)
+            && $this->getConfig('enable_cache')
+        ){
+            $arrPlaceholderCheckAfterSnippet = $this->placeholders;
+            $arrPlaceholderFromSnippet = array_diff($arrPlaceholderCheckAfterSnippet, $arrPlaceholderCheck);
+            if ($cacheTime != 0) {
+                Cache::put($cacheKey, $result, $cacheTime);
+                Cache::put($cacheKey . '_placeholders', $arrPlaceholderFromSnippet, $cacheTime);
+            }else {
+                Cache::forever($cacheKey, $result);
+                Cache::forever($cacheKey . '_placeholders', $arrPlaceholderFromSnippet);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -6587,5 +6591,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function addDataToView($data = [])
     {
         $this->dataForView = array_merge($this->dataForView, $data);
+    }
+
+    /**
+     * @param string $name
+     * @param string $file
+     * @param string $icon
+     * @param array $params
+     */
+    public function registerModule($name, $file, $icon ='fa fa-cube', $params = [])
+    {
+        $this->modulesFromFile[md5($name)] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'properties' => $params];
     }
 }

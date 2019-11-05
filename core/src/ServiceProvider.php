@@ -38,6 +38,20 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
+     * Массовая регистрация виртуальных плагинов
+     *
+     * @param $path
+     * @throws \Exception
+     */
+    protected function loadPluginsFrom($path)
+    {
+        foreach (glob($path . '*.php') as $file) {
+            include $file;
+        }
+    }
+
+
+    /**
      * Регистрация виртуального сниппета с использованием неймспейса
      *
      * @param $name

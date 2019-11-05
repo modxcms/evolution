@@ -606,6 +606,9 @@ ALTER TABLE `{PREFIX}user_attributes`
 ALTER TABLE `{PREFIX}user_attributes`
   ADD COLUMN `createdon` integer NOT NULL DEFAULT '0';
 
+ALTER TABLE `{PREFIX}user_attributes`
+  ADD COLUMN `verified` int(1) NOT NULL DEFAULT 1;
+
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `edit_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`;
 
@@ -665,6 +668,9 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 
 ALTER TABLE `{PREFIX}web_user_attributes`
   ADD COLUMN `createdon` integer NOT NULL DEFAULT '0';
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+  ADD COLUMN `verified` int(1) NOT NULL DEFAULT 0;
 
 ALTER TABLE `{PREFIX}site_snippets`
   ADD COLUMN `createdon` integer NOT NULL DEFAULT '0';
@@ -833,6 +839,8 @@ ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
 ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
 
 ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
+
+ALTER TABLE `{PREFIX}system_eventnames` DROP INDEX `name`;
 
 ALTER TABLE `{PREFIX}system_eventnames` ADD UNIQUE INDEX `name` (`name`);
 

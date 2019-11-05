@@ -69,7 +69,7 @@ class Process implements \IteratorAggregate
     private $status = self::STATUS_READY;
     private $incrementalOutputOffset = 0;
     private $incrementalErrorOutputOffset = 0;
-    private $tty;
+    private $tty = false;
     private $pty;
 
     private $useFileHandles = false;
@@ -152,8 +152,8 @@ class Process implements \IteratorAggregate
 
         // on Windows, if the cwd changed via chdir(), proc_open defaults to the dir where PHP was started
         // on Gnu/Linux, PHP builds with --enable-maintainer-zts are also affected
-        // @see : https://bugs.php.net/bug.php?id=51800
-        // @see : https://bugs.php.net/bug.php?id=50524
+        // @see : https://bugs.php.net/51800
+        // @see : https://bugs.php.net/50524
         if (null === $this->cwd && (\defined('ZEND_THREAD_SAFE') || '\\' === \DIRECTORY_SEPARATOR)) {
             $this->cwd = getcwd();
         }
@@ -185,6 +185,8 @@ class Process implements \IteratorAggregate
      * @param array|null     $env     The environment variables or null to use the same environment as the current PHP process
      * @param mixed|null     $input   The input as stream resource, scalar or \Traversable, or null for no input
      * @param int|float|null $timeout The timeout in seconds or null to disable
+     *
+     * @return static
      *
      * @throws RuntimeException When proc_open is not installed
      */
@@ -218,7 +220,6 @@ class Process implements \IteratorAggregate
      *
      * @param callable|null $callback A PHP callback to run whenever there is some
      *                                output available on STDOUT or STDERR
-     * @param array         $env      An array of additional env vars to set when running the process
      *
      * @return int The exit status code
      *
@@ -241,10 +242,7 @@ class Process implements \IteratorAggregate
      * This is identical to run() except that an exception is thrown if the process
      * exits with a non-zero exit code.
      *
-     * @param callable|null $callback
-     * @param array         $env      An array of additional env vars to set when running the process
-     *
-     * @return self
+     * @return $this
      *
      * @throws ProcessFailedException if the process didn't terminate successfully
      *
@@ -273,7 +271,6 @@ class Process implements \IteratorAggregate
      *
      * @param callable|null $callback A PHP callback to run whenever there is some
      *                                output available on STDOUT or STDERR
-     * @param array         $env      An array of additional env vars to set when running the process
      *
      * @throws RuntimeException When process can't be launched
      * @throws RuntimeException When process is already running
@@ -360,7 +357,6 @@ class Process implements \IteratorAggregate
      *
      * @param callable|null $callback A PHP callback to run whenever there is some
      *                                output available on STDOUT or STDERR
-     * @param array         $env      An array of additional env vars to set when running the process
      *
      * @return $this
      *
@@ -488,7 +484,7 @@ class Process implements \IteratorAggregate
     /**
      * Sends a POSIX signal to the process.
      *
-     * @param int $signal A valid POSIX signal (see http://www.php.net/manual/en/pcntl.constants.php)
+     * @param int $signal A valid POSIX signal (see https://php.net/pcntl.constants)
      *
      * @return $this
      *
@@ -753,7 +749,7 @@ class Process implements \IteratorAggregate
     public function getExitCodeText()
     {
         if (null === $exitcode = $this->getExitCode()) {
-            return;
+            return null;
         }
 
         return isset(self::$exitCodes[$exitcode]) ? self::$exitCodes[$exitcode] : 'Unknown error';
@@ -896,7 +892,7 @@ class Process implements \IteratorAggregate
      * @param int|float $timeout The timeout in seconds
      * @param int       $signal  A POSIX signal to send in case the process has not stop at timeout, default is SIGKILL (9)
      *
-     * @return int The exit-code of the process
+     * @return int|null The exit-code of the process or null if it's not running
      */
     public function stop($timeout = 10, $signal = null)
     {
@@ -970,7 +966,7 @@ class Process implements \IteratorAggregate
      *
      * @param string|array $commandline The command to execute
      *
-     * @return self The current Process instance
+     * @return $this
      *
      * @deprecated since Symfony 4.2.
      */
@@ -1004,13 +1000,13 @@ class Process implements \IteratorAggregate
     }
 
     /**
-     * Sets the process timeout (max. runtime).
+     * Sets the process timeout (max. runtime) in seconds.
      *
      * To disable the timeout, set this value to null.
      *
      * @param int|float|null $timeout The timeout in seconds
      *
-     * @return self The current Process instance
+     * @return $this
      *
      * @throws InvalidArgumentException if the timeout is negative
      */
@@ -1028,7 +1024,7 @@ class Process implements \IteratorAggregate
      *
      * @param int|float|null $timeout The timeout in seconds
      *
-     * @return self The current Process instance
+     * @return $this
      *
      * @throws LogicException           if the output is disabled
      * @throws InvalidArgumentException if the timeout is negative
@@ -1049,7 +1045,7 @@ class Process implements \IteratorAggregate
      *
      * @param bool $tty True to enabled and false to disable
      *
-     * @return self The current Process instance
+     * @return $this
      *
      * @throws RuntimeException In case the TTY mode is not supported
      */
@@ -1083,7 +1079,7 @@ class Process implements \IteratorAggregate
      *
      * @param bool $bool
      *
-     * @return self
+     * @return $this
      */
     public function setPty($bool)
     {
@@ -1123,7 +1119,7 @@ class Process implements \IteratorAggregate
      *
      * @param string $cwd The new working directory
      *
-     * @return self The current Process instance
+     * @return $this
      */
     public function setWorkingDirectory($cwd)
     {
@@ -1155,7 +1151,7 @@ class Process implements \IteratorAggregate
      *
      * @param array $env The new environment variables
      *
-     * @return self The current Process instance
+     * @return $this
      */
     public function setEnv(array $env)
     {
@@ -1186,7 +1182,7 @@ class Process implements \IteratorAggregate
      *
      * @param string|int|float|bool|resource|\Traversable|null $input The content
      *
-     * @return self The current Process instance
+     * @return $this
      *
      * @throws LogicException In case the process is running
      */
@@ -1206,7 +1202,7 @@ class Process implements \IteratorAggregate
      *
      * @param bool $inheritEnv
      *
-     * @return self The current Process instance
+     * @return $this
      */
     public function inheritEnvironmentVariables($inheritEnv = true)
     {
@@ -1308,25 +1304,21 @@ class Process implements \IteratorAggregate
     protected function buildCallback(callable $callback = null)
     {
         if ($this->outputDisabled) {
-            return function ($type, $data) use ($callback) {
-                if (null !== $callback) {
-                    return $callback($type, $data);
-                }
+            return function ($type, $data) use ($callback): bool {
+                return null !== $callback && $callback($type, $data);
             };
         }
 
         $out = self::OUT;
 
-        return function ($type, $data) use ($callback, $out) {
+        return function ($type, $data) use ($callback, $out): bool {
             if ($out == $type) {
                 $this->addOutput($data);
             } else {
                 $this->addErrorOutput($data);
             }
 
-            if (null !== $callback) {
-                return $callback($type, $data);
-            }
+            return null !== $callback && $callback($type, $data);
         };
     }
 
@@ -1487,7 +1479,7 @@ class Process implements \IteratorAggregate
     /**
      * Sends a POSIX signal to the process.
      *
-     * @param int  $signal         A valid POSIX signal (see http://www.php.net/manual/en/pcntl.constants.php)
+     * @param int  $signal         A valid POSIX signal (see https://php.net/pcntl.constants)
      * @param bool $throwException Whether to throw exception in case signal failed
      *
      * @return bool True if the signal was sent successfully, false otherwise

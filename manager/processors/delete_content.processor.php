@@ -12,7 +12,7 @@ if ($id == 0) {
 }
 
 /*******ищем родителя чтобы к нему вернуться********/
-$document = \EvolutionCMS\Models\SiteContent::findOrFail($id);
+$document = \EvolutionCMS\Models\SiteContent::withTrashed()->findOrFail($id);
 $pid = ($document->parent == 0 ? $id : $document->parent);
 
 /************ а заодно и путь возврата (сам путь внизу файла) **********/

@@ -22,7 +22,7 @@
             <div id="folders"></div>
         </div>
         <div id="right">
-            <div id="collapseSide"><a href="javascript:;" id="hide-side"><i id="hide-icon" class="fa fa-bars"></i></a>
+            <div id="collapseSide"><a href="javascript:;" id="hide-side"><i id="hide-icon" class="<?= $_style['icon_bars'] ?>"></i></a>
             </div>
             <div id="toolbar">
                 <div>

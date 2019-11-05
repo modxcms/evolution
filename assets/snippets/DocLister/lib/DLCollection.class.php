@@ -40,7 +40,7 @@ class DLCollection extends Helpers\Collection
     }
 
     /**
-     * @param mixed $q
+     * @param string|resource|mysqli_result $q
      * @param bool $exec
      * @return int
      */

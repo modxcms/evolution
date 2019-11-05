@@ -1,5 +1,7 @@
 <?php namespace EvolutionCMS;
 
+use Illuminate\Support\Str;
+
 class UrlProcessor
 {
     /**
@@ -115,7 +117,7 @@ class UrlProcessor
         return $output;
     }
 
-    protected function replaceUrl(string $input, array $aliases, array $isFolder) : string
+    protected function replaceUrl($input, array $aliases, array $isFolder) : string
     {
         $isFriendly = $this->core->getConfig('friendly_alias_urls');
         $pref = $this->core->getConfig('friendly_url_prefix');
@@ -544,7 +546,7 @@ class UrlProcessor
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
-                        if ($al['path']) {
+                        if (isset($al['path']) && $al['path']!='') {
                             $alPath = $al['path'] . '/';
                         }
 
@@ -617,8 +619,8 @@ class UrlProcessor
         }
 
         // Strip conflicting id/q from query string
-        if (str_contains($_SERVER['REQUEST_URI'], '?')) {
-            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', str_after($_SERVER['REQUEST_URI'],'?'));
+        if (Str::contains($_SERVER['REQUEST_URI'], '?')) {
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', Str::after($_SERVER['REQUEST_URI'],'?'));
         } else {
             $qstring = '';
         }

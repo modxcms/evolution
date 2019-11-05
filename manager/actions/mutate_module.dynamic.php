@@ -198,6 +198,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					ll = ls;
 				}
 
+				key   = key.replace(/\"/g, '&quot;');
+				value = value.replace(/\"/g, '&quot;');
+
 				switch(type) {
 					case 'int':
 						c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
@@ -265,7 +268,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="<?= $_style['icon_refresh'] ?>"></i></a>' : '';
 
 				t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
 			});
@@ -445,7 +448,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
 	<h1>
-		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icon_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
 	<?= ManagerTheme::getStyle('actionbuttons.dynamic.element') ?>
@@ -473,7 +476,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
-										<i class="fa fa-lock"></i>
+										<i class="<?= $_style['icon_lock'] ?>"></i>
 									</label>
 								<?php endif; ?>
 							</div>
@@ -601,7 +604,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<p><?= $_lang['module_viewdepend_msg'] ?></p>
 					<div class="form-group clearfix">
 						<a class="btn btn-primary" href="javascript:;" onclick="loadDependencies();return false;">
-							<i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
+							<i class="<?= $_style["icon_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
 					$ds = $modx->getDatabase()->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
@@ -671,7 +674,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<p><?= $_lang['module_group_access_msg'] ?></p>
 						<?php
 					}
-					$chk = '';
+                    $chks = '';
 					$rs = $modx->getDatabase()->select('name, id', $tbl_membergroup_names, '', 'name');
 					while($row = $modx->getDatabase()->getRow($rs)) {
 						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();

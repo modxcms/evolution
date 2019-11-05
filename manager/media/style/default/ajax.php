@@ -128,7 +128,7 @@ if (isset($action)) {
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_template')) {
-                            $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
+                            $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_template'] . '</a></li>';
                         }
 
                         break;
@@ -144,7 +144,7 @@ if (isset($action)) {
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
-                            $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
+                            $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_tmplvars'] . '</a></li>';
                         }
 
                         break;
@@ -158,7 +158,7 @@ if (isset($action)) {
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_chunk')) {
-                            $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
+                            $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
                         }
 
                         break;
@@ -172,7 +172,7 @@ if (isset($action)) {
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_snippet')) {
-                            $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
+                            $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_snippet'] . '</a></li>';
                         }
 
                         break;
@@ -186,7 +186,7 @@ if (isset($action)) {
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_plugin')) {
-                            $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
+                            $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_plugin'] . '</a></li>';
                         }
 
                         break;
@@ -238,7 +238,7 @@ if (isset($action)) {
 				' . $sqlLimit);
 
             if ($modx->hasPermission('new_user')) {
-                $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
+                $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_user'] . '</a></li>';
             }
 
             if ($count = $modx->getDatabase()->getRecordCount($sql)) {
@@ -277,7 +277,7 @@ if (isset($action)) {
 				' . $sqlLimit);
 
             if ($modx->hasPermission('new_web_user')) {
-                $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
+                $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_web_user'] . '</a></li>';
             }
 
             if ($count = $modx->getDatabase()->getRecordCount($sql)) {
@@ -319,26 +319,26 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=22&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
                                     'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
@@ -357,26 +357,26 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
                                     'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
@@ -397,14 +397,14 @@ if (isset($action)) {
                                     'innerText' => entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
@@ -418,30 +418,30 @@ if (isset($action)) {
                                 $row = $modx->getDatabase()->getRow($sql);
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
-                                        'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                        'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                         'url' => "index.php?a=22&id=" . $row['id']
                                     )
                                 );
                                 if (!empty($row['description'])) {
                                     $contextmenu['seperator'] = '';
                                     $contextmenu['description'] = array(
-                                        'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                     );
                                 }
                             } else {
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
-                                        'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
+                                        'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
                                         'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item2' => array(
-                                        'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
+                                        'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
                                         'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     )
                                 );
@@ -506,26 +506,26 @@ if (isset($action)) {
                             $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=301&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_tmplvars'],
                                     'url' => "index.php?a=300&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );

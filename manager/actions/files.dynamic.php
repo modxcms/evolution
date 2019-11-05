@@ -204,14 +204,14 @@ if (substr($webstart_path, 0, 1) == '/') {
     </script>
 
     <h1>
-        <i class="fa fa-folder-open-o"></i><?= $_lang['manage_files'] ?>
+        <i class="<?= $_style['icon_folder_open'] ?>"></i><?= $_lang['manage_files'] ?>
     </h1>
 
     <div id="actions">
         <div class="btn-group">
             <?php if (get_by_key($_POST, 'mode') == 'save' || get_by_key($_GET, 'mode') == 'edit') : ?>
                 <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.editFile.submit();">
-                    <i class="<?= $_style["files_save"] ?>"></i><span><?= $_lang['save'] ?></span>
+                    <i class="<?= $_style["icon_save"] ?>"></i><span><?= $_lang['save'] ?></span>
                 </a>
             <?php endif ?>
             <?php
@@ -224,20 +224,20 @@ if (substr($webstart_path, 0, 1) == '/') {
                 $ph = array();
                 $ph['style_path'] = $theme_image_path;
                 $tpl = '<a class="btn btn-secondary" href="[+href+]" onclick="return getFolderName(this);"><i class="[+image+]"></i><span>[+subject+]</span></a>';
-                $ph['image'] = $_style['files_folder-open'];
+                $ph['image'] = $_style['icon_folder_open'];
                 $ph['subject'] = $_lang['add_folder'];
                 $ph['href'] = 'index.php?a=31&mode=newfolder&path=' . urlencode($startpath) . '&name=';
                 $_ = parsePlaceholder($tpl, $ph);
 
                 $tpl = '<a class="btn btn-secondary" href="[+href+]" onclick="return getFileName(this);"><i class="[+image+]"></i><span>' . $_lang['files.dynamic.php1'] . '</span></a>';
-                $ph['image'] = $_style['files_page_html'];
+                $ph['image'] = $_style['icon_document'];
                 $ph['href'] = 'index.php?a=31&mode=newfile&path=' . urlencode($startpath) . '&name=';
                 $_ .= parsePlaceholder($tpl, $ph);
                 echo $_;
             }
             ?>
             <a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?<?= $href ?>';">
-                <i class="<?= $_style["actions_cancel"] ?>"></i><span><?= $_lang['cancel'] ?></span>
+                <i class="<?= $_style["icon_cancel"] ?>"></i><span><?= $_lang['cancel'] ?></span>
             </a>
         </div>
     </div>
@@ -262,10 +262,10 @@ if (substr($webstart_path, 0, 1) == '/') {
             $ph['style_path'] = $theme_image_path;
             // To Top Level with folder icon to the left
             if ($startpath == $filemanager_path || $startpath . '/' == $filemanager_path) {
-                $ph['image'] = '' . $_style['files_top'] . '';
+                $ph['image'] = '' . $_style['icon_folder_open'] . '';
                 $ph['subject'] = '<span>Top</span>';
             } else {
-                $ph['image'] = '' . $_style['files_top'] . '';
+                $ph['image'] = '' . $_style['icon_folder_open'] . '';
                 $ph['subject'] = '<a href="index.php?a=31&mode=drill&path=' . $filemanager_path . '">Top</a>/';
             }
 
@@ -450,7 +450,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 extract(ls($startpath, compact('len', 'webstart_path', 'editablefiles', 'enablefileunzip', 'inlineviewablefiles', 'uploadablefiles', 'enablefiledownload', 'viewablefiles', 'protected_path', 'excludes')), EXTR_OVERWRITE);
                 echo "\n\n\n";
                 if ($folders == 0 && $files == 0) {
-                    echo '<tr><td colspan="4"><i class="' . $_style['files_deleted_folder'] . ' FilesDeletedFolder"></i> <span style="color:#888;cursor:default;"> ' . $_lang['files_directory_is_empty'] . ' </span></td></tr>';
+                    echo '<tr><td colspan="4"><i class="' . $_style['icon_folder'] . ' FilesDeletedFolder"></i> <span style="color:#888;cursor:default;"> ' . $_lang['files_directory_is_empty'] . ' </span></td></tr>';
                 }
                 ?>
             </table>

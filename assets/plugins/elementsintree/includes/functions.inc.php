@@ -54,16 +54,16 @@ function getLockedByUser($lockType, $rowLock, $id)
     if ($rowLock['sid'] == $modx->sid) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);
         $tpl = '<span title="%s" class="editResource" style="cursor:context-menu;"><i class="%s"></i></span>&nbsp;';
-        $params = array($title, $_style['actions_preview']);
+        $params = array($title, $_style['icon_eye']);
     } else {
         $ph['username'] = $rowLock['username'];
         $title = $modx->parseText($_lang['lock_element_locked_by'], $ph);
         if ($modx->hasPermission('remove_locks')) {
             $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource">%s </a>';
-            $params = array($lockType, $id, $title, $_style['icons_secured']);
+            $params = array($lockType, $id, $title, '<i class="' . $_style['icon_lock'] . '"></i>');
         } else {
             $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;">%s </span>';
-            $params = array($title, $_style['icons_secured']);
+            $params = array($title, '<i class="' . $_style['icon_lock'] . '"></i>');
         }
     }
 

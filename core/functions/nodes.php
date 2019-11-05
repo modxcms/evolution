@@ -108,7 +108,7 @@ if(!function_exists('makeHTML')) {
         );
         if (!$modx->getDatabase()->getRecordCount($result)) {
             $output .= sprintf(
-                '<div><a class="empty">%s<i class="fa fa-ban"></i>&nbsp;<span class="empty">%s</span></a></div>'
+                '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
                 , $spacer
                 , $_lang['empty_folder']
             );
@@ -142,7 +142,7 @@ if(!function_exists('makeHTML')) {
             }
 
             if ($row['type'] === 'reference') {
-                $weblinkDisplay = sprintf('&nbsp;%s', $_style['tree_linkgo']);
+                $weblinkDisplay = sprintf('&nbsp;%s', '<i class="' . $_style['icon_chain'] . '"></i>');
             } else {
                 $weblinkDisplay = '';
             }
@@ -167,7 +167,7 @@ if(!function_exists('makeHTML')) {
                     $lockedByUser = sprintf(
                         '<span title="%s" class="editResource">%s</span>'
                         , $title
-                        , $_style['tree_preview_resource']
+                        , '<i class="' . $_style['icon_eye'] . '"></i>'
                     );
                 } else {
                     $title = $modx->parseText($_lang['lock_element_locked_by'], array(
@@ -176,9 +176,9 @@ if(!function_exists('makeHTML')) {
                         'lasthit_df'   => $rowLock['lasthit_df']
                     ));
                     if ($modx->hasPermission('remove_locks')) {
-                        $lockedByUser = '<span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+                        $lockedByUser = '<span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource"><i class="' . $_style['icon_lock'] . '"></i></span>';
                     } else {
-                        $lockedByUser = '<span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+                        $lockedByUser = '<span title="' . $title . '" class="lockedResource"><i class="' . $_style['icon_lock'] . '"></i></span>';
                     }
                 }
             }
@@ -236,8 +236,10 @@ if(!function_exists('makeHTML')) {
                 'showChildren'     => 1,
                 'openFolder'       => 1,
                 'contextmenu'      => '',
-                'tree_minusnode'   => $_style['tree_minusnode'],
-                'tree_plusnode'    => $_style['tree_plusnode'],
+                'tree_minusnode'   => '<i class=\'' . $_style['icon_angle_down'] . '\'></i>',
+                'tree_plusnode'    => '<i class=\'' . $_style['icon_angle_right'] . '\'></i>',
+                'icon_folder_open'  => '<i class=\'' . $_style['icon_folder_open'] . '\'></i>',
+                'icon_folder_close' => '<i class=\'' . $_style['icon_folder'] . '\'></i>',
                 'spacer'           => $spacer,
                 'subMenuState'     => '',
                 'level'            => $level,
@@ -255,22 +257,22 @@ if(!function_exists('makeHTML')) {
                 $tpl = getTplSingleNode();
                 switch ($row['id']) {
                     case $modx->getConfig('site_start')            :
-                        $icon = $_style['tree_page_home'];
+                        $icon = '<i class="' . $_style['icon_home'] . '"></i>';
                         break;
                     case $modx->getConfig('error_page')            :
-                        $icon = $_style['tree_page_404'];
+                        $icon = '<i class="' . $_style['icon_info_triangle'] . '"></i>';
                         break;
                     case $modx->getConfig('site_unavailable_page') :
-                        $icon = $_style['tree_page_hourglass'];
+                        $icon = '<i class="' . $_style['icon_clock'] . '"></i>';
                         break;
                     case $modx->getConfig('unauthorized_page')     :
-                        $icon = $_style['tree_page_info'];
+                        $icon = '<i class="' . $_style['icon_info'] . '"></i>';
                         break;
                     default:
                         if (isset($icons[$row['contentType']])) {
                             $icon = $icons[$row['contentType']];
                         } else {
-                            $icon = $_style['tree_page'];
+                            $icon = '<i class="' . $_style['icon_document'] . '"></i>';
                         }
                 }
                 $ph['icon'] = $icon;
@@ -303,9 +305,6 @@ if(!function_exists('makeHTML')) {
                 }
 
             } else {
-                $ph['icon_folder_open'] = $_style['tree_folderopen_new'];
-                $ph['icon_folder_close'] = $_style['tree_folder_new'];
-
                 if ($_SESSION['tree_show_only_folders']) {
                     $tpl = getTplFolderNodeNotChildren();
                     $checkFolders = checkIsFolder($row['id'], 1) ? 1 : 0; // folders
@@ -525,29 +524,19 @@ if(!function_exists('getIconInfo')) {
      */
     function getIconInfo($_style)
     {
-        if (!isset($_style['tree_page_gif'])) {
-            $_style['tree_page_gif'] = $_style['tree_page'];
-        }
-        if (!isset($_style['tree_page_jpg'])) {
-            $_style['tree_page_jpg'] = $_style['tree_page'];
-        }
-        if (!isset($_style['tree_page_png'])) {
-            $_style['tree_page_png'] = $_style['tree_page'];
-        }
-
         return array(
-            'text/html'                => $_style['tree_page_html'],
-            'text/plain'               => $_style['tree_page'],
-            'text/xml'                 => $_style['tree_page_xml'],
-            'text/css'                 => $_style['tree_page_css'],
-            'text/javascript'          => $_style['tree_page_js'],
-            'application/rss+xml'      => $_style['tree_page_rss'],
-            'application/pdf'          => $_style['tree_page_pdf'],
-            'application/vnd.ms-word'  => $_style['tree_page_word'],
-            'application/vnd.ms-excel' => $_style['tree_page_excel'],
-            'image/gif'                => $_style['tree_page_gif'],
-            'image/jpg'                => $_style['tree_page_jpg'],
-            'image/png'                => $_style['tree_page_png']
+            'text/plain'               => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/html'                => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/xml'                 => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/css'                 => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/javascript'          => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'image/gif'                => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/jpg'                => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/png'                => '<i class="' . $_style['icon_image'] . '"></i>',
+            'application/pdf'          => '<i class="' . $_style['icon_pdf'] . '"></i>',
+            'application/rss+xml'      => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'application/vnd.ms-word'  => '<i class="' . $_style['icon_word'] . '"></i>',
+            'application/vnd.ms-excel' => '<i class="' . $_style['icon_excel'] . '"></i>',
         );
     }
 }

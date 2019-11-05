@@ -1,7 +1,7 @@
 @extends('manager::template.page')
 @section('content')
     <h1>
-        <i class="fa fa-info-circle"></i>{{ $_lang['view_sysinfo'] }}
+        <i class="{{ $_style['icon_info_circle'] }}"></i>{{ ManagerTheme::getLexicon('view_sysinfo') }}
     </h1>
 
     <!-- server -->
@@ -14,7 +14,7 @@
                         <tbody>
                         @foreach ($serverArr as $key => $value)
                             <tr>
-                                <td width="1%">{{ empty($value['is_lexicon']) ? $key : $_lang[$key] }}</td>
+                                <td width="1%">{{ empty($value['is_lexicon']) ? $key : ManagerTheme::getLexicon($key) }}</td>
                                 <td>&nbsp;</td>
                                 <td>
                                     @if (isset($value['render']))
@@ -41,20 +41,20 @@
     ?>
     <div class="tab-page">
         <div class="container container-body">
-            <p><b>{{ $_lang['database_tables'] }}</b></p>
+            <p><b>{{ ManagerTheme::getLexicon('database_tables') }}</b></p>
             <div class="row">
                 <div class="table-responsive">
                     <table class="table data nowrap">
                         <thead>
                         <tr>
-                            <td>{{ $_lang["database_table_tablename"] }}</td>
+                            <td>{{ ManagerTheme::getLexicon('database_table_tablename') }}</td>
                             <td width="1%"></td>
-                            <td class="text-xs-center">{{ $_lang["database_table_records"] }}</td>
-                            <td class="text-xs-center">{{ $_lang["database_table_datasize"] }}</td>
-                            <td class="text-xs-center">{{ $_lang["database_table_overhead"] }}</td>
-                            <td class="text-xs-center">{{ $_lang["database_table_effectivesize"] }}</td>
-                            <td class="text-xs-center">{{ $_lang["database_table_indexsize"] }}</td>
-                            <td class="text-xs-center">{{ $_lang["database_table_totalsize"] }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_records') }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_datasize') }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_overhead') }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_effectivesize') }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_indexsize') }}</td>
+                            <td class="text-xs-center">{{ ManagerTheme::getLexicon('database_table_totalsize') }}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,14 +64,14 @@
                                 <td class="text-primary"><b>{{ $table['Name'] }}</b></td>
                                 <td class="text-xs-center">
                                     @if(!empty($table['Comment']))
-                                        <i class="fa fa-question-circle" data-tooltip="{{ $table['Comment'] }}"></i>
+                                        <i class="{{ $_style['icon_question_circle'] }}" data-tooltip="{{ $table['Comment'] }}"></i>
                                     @endif
                                 </td>
                                 <td class="text-xs-right">{{ $table['Rows'] }}</td>
 
                                 @if (evolutionCMS()->hasPermission('settings') && in_array($table['Name'], $truncateable))
                                     <td class="text-xs-right">
-                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $table['Name'] }}" title="{{ $_lang['truncate_table'] }}">
+                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('truncate_table') }}">
                                             {{ nicesize($table['Data_length'] + $table['Data_free']) }}
                                         </a>
                                     </td>
@@ -84,7 +84,7 @@
                                 @if (evolutionCMS()->hasPermission('settings'))
                                     <td class="text-xs-right">
                                         @if($table['Data_free'] > 0)
-                                            <a class="text-danger" href="index.php?a=54&mode=$action&t={{ $table['Name'] }}" title="{{ $_lang['optimize_table'] }}" >
+                                            <a class="text-danger" href="index.php?a=54&mode=$action&t={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('optimize_table') }}" >
                                                 <span> {{ nicesize($table['Data_free']) }}</span>
                                             </a>
                                         @else
@@ -117,7 +117,7 @@
                             ?>
                         @endforeach
                         <tr class="unstyled">
-                            <td class="text-xs-right">{{ $_lang['database_table_totals'] }}</td>
+                            <td class="text-xs-right">{{ ManagerTheme::getLexicon('database_table_totals') }}</td>
                             <td colspan="3">&nbsp;</td>
                             <td class="text-xs-right">
                                 @if($totaloverhead > 0)
@@ -135,7 +135,7 @@
             </div>
             @if ($totaloverhead > 0)
                 <br>
-                <p class="alert alert-danger">{{ $_lang['database_overhead'] }}</p>
+                <p class="alert alert-danger">{{ ManagerTheme::getLexicon('database_overhead') }}</p>
             @endif
         </div>
     </div>

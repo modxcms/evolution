@@ -35,7 +35,7 @@ $allowedfiles = array(
 </script>
 
 <h1>
-    <i class="fa fa-upload"></i><?= $_lang['import_site_html'] ?>
+    <i class="<?= $_style['icon_upload'] ?>"></i><?= $_lang['import_site_html'] ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.static.cancel') ?>
@@ -85,7 +85,7 @@ $allowedfiles = array(
                     </tr>
                 </table>
                 <a href="javascript:;" class="btn btn-primary" onclick="window.importFrm.submit();"><i
-                            class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["import_site_start"] ?></a>
+                            class="<?= $_style["icon_save"] ?>"></i> <?= $_lang["import_site_start"] ?></a>
             </form>
         <?php
         } else {
@@ -93,7 +93,7 @@ $allowedfiles = array(
         $modx->clearCache('full');
         ?>
             <a href="javascript:;" class="btn btn-primary" onclick="window.location.href='index.php?a=2';"><i
-                        class="<?= $_style["actions_close"] ?>"></i> <?= $_lang["close"] ?></a>
+                        class="<?= $_style["icon_close"] ?>"></i> <?= $_lang["close"] ?></a>
             <script type="text/javascript">
                 top.mainMenu.reloadtree();
                 parent.tree.ca = 'open';

@@ -1,8 +1,8 @@
 <form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
     <input name="<?php echo $view->get('request_key'); ?>[categorize][submit]" type="hidden" value="1" />
     <div class="form-group">
-        <a class="btn btn-success btn-sm" id="categorize-submit" href="javascript:;" onclick="document.getElementById('categorize-form').submit();return false;"><i class="fa fa-save"></i> <?php echo $view->txt('cm_save_categorization'); ?></a>
-        <a class="btn btn-secondary btn-sm" href="javascript:;" id="categorize-help" onclick="document.querySelector('#categorize-info').classList.toggle('show')"><i class="fa fa-question-circle"></i> <?php echo $_lang['help']; ?></a>
+        <a class="btn btn-success btn-sm" id="categorize-submit" href="javascript:;" onclick="document.getElementById('categorize-form').submit();return false;"><i class="<?= $_style['icon_save'] ?>"></i> <?php echo $view->txt('cm_save_categorization'); ?></a>
+        <a class="btn btn-secondary btn-sm" href="javascript:;" id="categorize-help" onclick="document.querySelector('#categorize-info').classList.toggle('show')"><i class="<?= $_style['icon_question_circle'] ?>"></i> <?php echo $_lang['help']; ?></a>
     </div>
     <p id="categorize-info" class="element-edit-message">
         Categorize elements easily by dragging them into categories.

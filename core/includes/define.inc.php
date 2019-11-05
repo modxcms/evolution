@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Str;
+
 if (! defined('HTTPS_PORT')) {
     define('HTTPS_PORT', env('HTTPS_PORT', '443')); //$https_port
 }
@@ -34,16 +36,6 @@ if (! defined('EVO_CORE_PATH')) {
 
 if (! defined('EVO_STORAGE_PATH')) {
     define('EVO_STORAGE_PATH', env('EVO_STORAGE_PATH', EVO_CORE_PATH . 'storage/'));
-}
-
-if (is_cli()) {
-    if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
-        throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');
-    }
-
-    if (! defined('MODX_SITE_URL')) {
-        throw new RuntimeException('Please, define MODX_SITE_URL on cli mode');
-    }
 }
 
 if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
@@ -82,9 +74,9 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
     }
 
     $url = implode($separator, $items);
+
+    $base_url = Str::finish(implode($separator, $items),'/');
     unset($separator);
-    
-    $base_url = str_finish(implode($separator, $items),'/');
 
     reset($items);
     $items = explode(MGR_DIR, str_replace('\\', '/', dirname(__DIR__, 2)));
@@ -92,7 +84,7 @@ if (! defined('MODX_BASE_PATH') || ! defined('MODX_BASE_URL')) {
         array_pop($items);
     }
 
-    $base_path = str_finish(
+    $base_path = Str::finish(
         str_replace('\\', '/', implode(MGR_DIR, $items))
         , '/'
     );
@@ -173,4 +165,14 @@ if (! defined('MODX_MANAGER_URL')) {
 
 if (! defined('MODX_SANITIZE_SEED')) {
     define('MODX_SANITIZE_SEED', 'sanitize_seed_' . base_convert(md5(__FILE__), 16, 36));
+}
+
+if (is_cli()) {
+    if (! (defined('MODX_BASE_PATH') || defined('MODX_BASE_URL'))) {
+        throw new RuntimeException('Please, define MODX_BASE_PATH and MODX_BASE_URL on cli mode');
+    }
+
+    if (! defined('MODX_SITE_URL')) {
+        throw new RuntimeException('Please, define MODX_SITE_URL on cli mode');
+    }
 }

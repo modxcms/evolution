@@ -12,11 +12,10 @@
     @endpush
 
     <h1>
-        <i class="fa fa-download"></i>{{ $_lang['export_site_html'] }}
+        <i class="{{ ManagerTheme::getStyle('icon_download') }}"></i>{{ ManagerTheme::getLexicon('export_site_html') }}
     </h1>
 
     {!! ManagerTheme::getStyle('actionbuttons.static.cancel') !!}
-
 
     <div class="tab-pane" id="exportPane">
         <script type="text/javascript">
@@ -24,7 +23,7 @@
         </script>
 
         <div class="tab-page" id="tabMain">
-            <h2 class="tab">{{ $_lang['export_site'] }}</h2>
+            <h2 class="tab">{{ ManagerTheme::getLexicon('export_site') }}</h2>
             <script type="text/javascript">tpExport.addTabPage(document.getElementById("tabMain"));</script>
 
             <div class="container container-body">
@@ -40,34 +39,34 @@
                         </style>
                         <table class="settings" cellspacing="0" cellpadding="2">
                             <tr>
-                                <td class="head">{{ $_lang['export_site_cacheable'] }}</td>
-                                <td><label><input type="radio" name="includenoncache" value="1" checked />{{ $_lang['yes'] }}</label>
-                                    <label><input type="radio" name="includenoncache" value="0" />{{ $_lang['no'] }}</label></td>
+                                <td class="head">{{ ManagerTheme::getLexicon('export_site_cacheable') }}</td>
+                                <td><label><input type="radio" name="includenoncache" value="1" checked />{{ ManagerTheme::getLexicon('yes') }}</label>
+                                    <label><input type="radio" name="includenoncache" value="0" />{{ ManagerTheme::getLexicon('no') }}</label></td>
                             </tr>
                             <tr>
-                                <td class="head">{{ $_lang['a83_ignore_ids_title'] }}</td>
+                                <td class="head">{{ ManagerTheme::getLexicon('a83_ignore_ids_title') }}</td>
                                 <td><input type="text" name="ignore_ids" value="" style="width:300px;" /></td>
                             </tr>
                             <tr>
-                                <td class="head">{{ $_lang['export_site.static.php4'] }}</td>
+                                <td class="head">{{ ManagerTheme::getLexicon('export_site.static.php4') }}</td>
                                 <td><input type="text" name="repl_before" value="" style="width:300px;" /></td>
                             </tr>
                             <tr>
-                                <td class="head">{{ $_lang['export_site.static.php5'] }}</td>
+                                <td class="head">{{ ManagerTheme::getLexicon('export_site.static.php5') }}</td>
                                 <td><input type="text" name="repl_after" value="" style="width:300px;" /></td>
                             </tr>
                             <tr>
-                                <td class="head">{{ $_lang['export_site_maxtime'] }}</td>
+                                <td class="head">{{ ManagerTheme::getLexicon('export_site_maxtime') }}</td>
                                 <td><input type="text" name="maxtime" value="60" />
                                     <br />
-                                    {{ $_lang['export_site_maxtime_message'] }}
+                                    {{ ManagerTheme::getLexicon('export_site_maxtime_message') }}
                                 </td>
                             </tr>
                         </table>
-                        <a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="{{ $_style["actions_save"] }}"></i> {{ $_lang["export_site_start"] }}</a>
+                        <a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="{{ ManagerTheme::getStyle('icon_save') }}"></i> {{ ManagerTheme::getLexicon('export_site_start') }}</a>
                         <script>
                             jQuery('#exportButton a').click(function() {
-                                jQuery(this).parent().html('{{ $_style['ajax_loader'] }}');
+                                jQuery(this).parent().html('<i class="' + {{ ManagerTheme::getStyle('ajax_loader') }} + '"></i>');
                             });
                         </script>
                     </form>
@@ -76,11 +75,11 @@
         </div>
 
         <div class="tab-page" id="tabHelp">
-            <h2 class="tab">{{ $_lang['help'] }}</h2>
+            <h2 class="tab">{{ ManagerTheme::getLexicon('help') }}</h2>
             <script type="text/javascript">tpExport.addTabPage(document.getElementById("tabHelp"));</script>
 
             <div class="container container-body">
-                {!! $_lang['export_site_message'] !!}
+                {!! ManagerTheme::getLexicon('export_site_message') !!}
             </div>
         </div>
 

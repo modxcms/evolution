@@ -30,11 +30,10 @@
 
     // context menu
     $cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
-    $cm->addItem(ManagerTheme::getLexicon('view_log'), "js:menuAction(1)", 'fa fa-eye');
+    $cm->addItem(ManagerTheme::getLexicon('view_log'), "js:menuAction(1)", $_style['icon_eye']);
     $cm->addSeparator();
-    $cm->addItem(ManagerTheme::getLexicon('delete'), "js:menuAction(2)", 'fa fa-trash', (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
+    $cm->addItem(ManagerTheme::getLexicon('delete'), "js:menuAction(2)", $_style['icon_trash'], (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
     echo $cm->render();
-
     ?>
     @push('scripts.top')
         <script type="text/javascript">
@@ -107,7 +106,7 @@
         <input type="hidden" name="op" value="" />
 
         <h1>
-            <i class="fa fa-exclamation-triangle"></i> {{ ManagerTheme::getLexicon('eventlog_viewer') }}<i class="fa fa-question-circle help"></i>
+            <i class="{{ $_style['icon_info_triangle'] }}"></i>{{ ManagerTheme::getLexicon('eventlog_viewer') }}<i class="{{ $_style['icon_question_circle'] }} help"></i>
         </h1>
 
         <div class="container element-edit-message">
@@ -117,23 +116,27 @@
         <div class="tab-page">
             <!-- load modules -->
             <div class="container container-body">
-                <div class="searchbar form-group">
-                    <div class="input-group">
+                <div class="row searchbar form-group">
+                    <div class="col-sm-6 input-group">
                         <div class="input-group-btn">
-                            <a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="fa fa-trash"></i> {{ ManagerTheme::getLexicon('clear_log') }}</a>
+                            <a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="{{ $_style['icon_trash'] }}"></i> {{ ManagerTheme::getLexicon('clear_log') }}</a>
                         </div>
-                        <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="{{ ManagerTheme::getLexicon('search') }}" />
-                        <div class="input-group-btn">
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('search') }}" onclick="searchResource();return false;"><i class="fa fa-search"></i></a>
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('reset') }}" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
-                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('list_mode') }}" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+                    </div>
+                    <div class="col-sm-6 ">
+                        <div class="input-group float-right w-auto">
+                            <input class="form-control form-control-sm" name="search" type="text" value="<?= $query ?>" placeholder="{{ ManagerTheme::getLexicon('search') }}" />
+                            <div class="input-group-append">
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('search') }}" onclick="searchResource();return false;"><i class="{{ $_style['icon_search'] }}"></i></a>
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('reset') }}" onclick="resetSearch();return false;"><i class="{{ $_style['icon_refresh'] }}"></i></a>
+                                <a class="btn btn-secondary btn-sm" href="javascript:;" title="{{ ManagerTheme::getLexicon('list_mode') }}" onclick="changeListMode();return false;"><i class="{{ $_style['icon_table'] }}"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="table-responsive">
                         <?php
-                        $ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info fa fa-info-circle' , 'text-warning fa fa-exclamation-triangle' , 'text-danger fa fa-times-circle' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
+                        $ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info " . $_style['icon_info_circle'] . "', 'text-warning " . $_style['icon_info_triangle'] . "' , 'text-danger " . $_style['icon_cancel'] . "' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
                         $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 100); // set page size to 0 t show all items

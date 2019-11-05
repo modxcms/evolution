@@ -40,7 +40,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
     $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
     while ($row = $modx->getDatabase()->getRow($rs)) {
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
-        $sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
+        $sortableList .= '<li id="item_' . $row['id'] . '"><i class="' . $_style['icon_tv'] . '"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
     }
     $sortableList .= '</ul></div>';
 } else {
@@ -121,7 +121,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= $_lang["template_tv_edit_title"] ?>
+    <i class="<?= $_style['icon_sort_num_asc'] ?>"></i><?= $_lang["template_tv_edit_title"] ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
@@ -134,8 +134,8 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
         <b><?= $_lang['template_tv_edit'] ?></b>
         <p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
         <p>
-            <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="fa fa-sort"></i> <?= $_lang['sort_alphabetically'] ?></a>
-            <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+            <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['icon_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+            <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
         </p>
         <?= $updateMsg ?>
         <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>

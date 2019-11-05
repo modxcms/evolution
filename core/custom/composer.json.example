@@ -1,8 +1,7 @@
 {
   "name": "evolutioncms/custom",
   "require": {
-    "barryvdh/laravel-ide-helper": "~2.4",
-    "vlucas/phpdotenv": "~2.2"
+    "barryvdh/laravel-ide-helper": "~2.4"
   },
   "autoload": {
     "psr-4": {

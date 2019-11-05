@@ -60,7 +60,7 @@ if ($id !== null) {
             $classes .= ($row['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode';
             $classes .= ($row['published']) ? ' publishedNode ' : ' unpublishedNode ';
             $classes = ($row['deleted']) ? ' deletedNode ' : $classes;
-            $icon = $row['isfolder'] ? '<i class="' . $_style['files_folder'] . '"></i> ' : ' <i class="' . $_style['files_page_html'] . '"></i> ';
+            $icon = $row['isfolder'] ? '<i class="' . $_style['icon_folder'] . '"></i> ' : ' <i class="' . $_style['icon_document'] . '"></i> ';
             $ressourcelist .= '<li id="item_' . $row['id'] . '" class="' . $classes . '">' . $icon . $row['pagetitle'] . ' <small>(' . $row['id'] . ')</small></li>';
         }
         $ressourcelist .= '</ul></div>';
@@ -148,7 +148,7 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
+    <i class="<?= $_style['icon_sort_num_asc'] ?>"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
@@ -161,8 +161,8 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
             ?>
             <p><?= $_lang["sort_elements_msg"] ?></p>
             <p>
-                <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="fa fa-sort"></i> <?= $_lang['sort_alphabetically'] ?></a>
-                <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+                <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['icon_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+                <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
             </p>
             <?= $updateMsg ?>
             <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>

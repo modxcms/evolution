@@ -124,6 +124,7 @@ class Cache
         if (!isset($this->cachePath)) {
             $modx->getService('ExceptionHandler')->messageQuit("Cache path not set.");
         }
+        \Illuminate\Support\Facades\Cache::flush();
 
         $files = glob(realpath($this->cachePath) . '/*.pageCache.php');
         $filesincache = count($files);
@@ -269,7 +270,7 @@ class Cache
             $config[$key] = $value;
         }
 
-        if ($config['enable_filter']) {
+        if (isset($config['enable_filter']) && $config['enable_filter'] == 1) {
             if (Models\SitePlugin::activePhx()->count()) {
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
@@ -415,7 +416,7 @@ class Cache
         $modx->invokeEvent('OnBeforeCacheUpdate');
 
         if (@file_put_contents($filename, $content) === false) {
-            exit("Cannot write main Evolution CMS cache file! Make sure the assets/cache directory is writable!");
+            exit("Cannot write $filename! Make sure file or its directory is writable!");
         }
 
         if (!is_file($this->cachePath . '/.htaccess')) {

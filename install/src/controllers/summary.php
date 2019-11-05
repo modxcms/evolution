@@ -276,25 +276,25 @@ if ($conn) {
 }
 
 // check for strict mode
-if ($conn) {
-    echo '<p>'. $_lang['checking_mysql_strict_mode'];
-    $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
-    if (mysqli_num_rows($mysqlmode) > 0){
-        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
-        //$modes = array("STRICT_TRANS_TABLES"); // for testing
-        // print_r($modes);
-        foreach ($modes as $mode) {
-            if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b> <strong>&nbsp;&nbsp;' . $_lang['strict_mode'] . '</strong></p>';
-                echo '<p><span class="notok">' . $_lang['strict_mode_error'] . '</span></p>';
-            } else {
-                echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
-            }
-        }
-    } else {
-        echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
-    }
-}
+//if ($conn) {
+//    echo '<p>'. $_lang['checking_mysql_strict_mode'];
+//    $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
+//    if (mysqli_num_rows($mysqlmode) > 0){
+//        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
+//        //$modes = array("STRICT_TRANS_TABLES"); // for testing
+//        // print_r($modes);
+//        foreach ($modes as $mode) {
+//            if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) {
+//                echo '<span class="notok">' . $_lang['warning'] . '</span></b> <strong>&nbsp;&nbsp;' . $_lang['strict_mode'] . '</strong></p>';
+//                echo '<p><span class="notok">' . $_lang['strict_mode_error'] . '</span></p>';
+//            } else {
+//                echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+//            }
+//        }
+//    } else {
+//        echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+//    }
+//}
 // Version and strict mode check end
 
 // andrazk 20070416 - add install flag and disable manager login

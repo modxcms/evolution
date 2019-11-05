@@ -37,7 +37,7 @@
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.id ='{$id}' AND ({$access})");
     $content = $modx->getDatabase()->getRow($rs);
     if(!$content) {
-        $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+        $modx->webAlertAndQuit(ManagerTheme::getLexicon('access_permission_denied'));
     }
 
     /**
@@ -79,10 +79,10 @@
     $filter_sort = '';
     $filter_dir = '';
     if($numRecords > 0) {
-        $filter_sort = '<select size="1" name="sort" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&dir=' . $dir . '&sort=\'+this.options[this.selectedIndex].value">' . '<option value="createdon"' . (($sort == 'createdon') ? ' selected' : '') . '>' . $_lang['createdon'] . '</option>' . '<option value="pub_date"' . (($sort == 'pub_date') ? ' selected' : '') . '>' . $_lang["page_data_publishdate"] . '</option>' . '<option value="pagetitle"' . (($sort == 'pagetitle') ? ' selected' : '') . '>' . $_lang['pagetitle'] . '</option>' . '<option value="menuindex"' . (($sort == 'menuindex') ? ' selected' : '') . '>' . $_lang['resource_opt_menu_index'] . '</option>' . //********  resource_opt_is_published - //
-            '<option value="published"' . (($sort == 'published') ? ' selected' : '') . '>' . $_lang['resource_opt_is_published'] . '</option>' . //********//
+        $filter_sort = '<select size="1" name="sort" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&dir=' . $dir . '&sort=\'+this.options[this.selectedIndex].value">' . '<option value="createdon"' . (($sort == 'createdon') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('createdon') . '</option>' . '<option value="pub_date"' . (($sort == 'pub_date') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('page_data_publishdate') . '</option>' . '<option value="pagetitle"' . (($sort == 'pagetitle') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('pagetitle') . '</option>' . '<option value="menuindex"' . (($sort == 'menuindex') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_menu_index') . '</option>' . //********  resource_opt_is_published - //
+            '<option value="published"' . (($sort == 'published') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_is_published') . '</option>' . //********//
             '</select>';
-        $filter_dir = '<select size="1" name="dir" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&sort=' . $sort . '&dir=\'+this.options[this.selectedIndex].value">' . '<option value="DESC"' . (($dir == 'DESC') ? ' selected' : '') . '>' . $_lang['sort_desc'] . '</option>' . '<option value="ASC"' . (($dir == 'ASC') ? ' selected' : '') . '>' . $_lang['sort_asc'] . '</option>' . '</select>';
+        $filter_dir = '<select size="1" name="dir" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&sort=' . $sort . '&dir=\'+this.options[this.selectedIndex].value">' . '<option value="DESC"' . (($dir == 'DESC') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('sort_desc') . '</option>' . '<option value="ASC"' . (($dir == 'ASC') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('sort_asc') . '</option>' . '</select>';
         $resource = $modx->getDatabase()->makeArray($rs);
 
         // CSS style for table
@@ -99,22 +99,21 @@
             'text-center',
             'text-center'
         );
-
-
-        $modx->getMakeTable()->setTableClass($tableClass);
-        $modx->getMakeTable()->setColumnHeaderClass($columnHeaderClass);
+        $this->table = new \EvolutionCMS\Support\MakeTable();
+        $this->table->setTableClass($tableClass);
+        $this->table->setColumnHeaderClass($columnHeaderClass);
         //	$modx->getMakeTable()->setRowHeaderClass($rowHeaderClass);
         //	$modx->getMakeTable()->setRowRegularClass($rowRegularClass);
         //	$modx->getMakeTable()->setRowAlternateClass($rowAlternateClass);
 
         // Table header
         $listTableHeader = array(
-            'docid' => $_lang['id'],
-            'title' => $_lang['resource_title'],
-            'createdon' => $_lang['createdon'],
-            'pub_date' => $_lang['page_data_publishdate'],
-            'status' => $_lang['page_data_status'],
-            'edit' => $_lang['mgrlog_action'],
+            'docid' => ManagerTheme::getLexicon('id'),
+            'title' => ManagerTheme::getLexicon('resource_title'),
+            'createdon' => ManagerTheme::getLexicon('createdon'),
+            'pub_date' => ManagerTheme::getLexicon('page_data_publishdate'),
+            'status' => ManagerTheme::getLexicon('page_data_status'),
+            'edit' => ManagerTheme::getLexicon('mgrlog_action'),
         );
         $tbWidth = array(
             '1%',
@@ -124,7 +123,7 @@
             '1%',
             '1%'
         );
-        $modx->getMakeTable()->setColumnWidths($tbWidth);
+        $this->table->setColumnWidths($tbWidth);
 
         $sd = isset($_REQUEST['dir']) ? '&amp;dir=' . $_REQUEST['dir'] : '&amp;dir=DESC';
         $sb = isset($_REQUEST['sort']) ? '&amp;sort=' . $_REQUEST['sort'] : '&amp;sort=createdon';
@@ -132,18 +131,18 @@
         $add_path = $sd . $sb . $pg;
 
         $icons = array(
-            'text/html' => $_style['tree_page_html'],
-            'text/plain' => $_style['tree_page'],
-            'text/xml' => $_style['tree_page_xml'],
-            'text/css' => $_style['tree_page_css'],
-            'text/javascript' => $_style['tree_page_js'],
-            'application/rss+xml' => $_style['tree_page_rss'],
-            'application/pdf' => $_style['tree_page_pdf'],
-            'application/vnd.ms-word' => $_style['tree_page_word'],
-            'application/vnd.ms-excel' => $_style['tree_page_excel'],
-            'image/gif' => $_style['tree_page_gif'],
-            'image/jpg' => $_style['tree_page_jpg'],
-            'image/png' => $_style['tree_page_png']
+            'text/plain'                 => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/html'                  => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/xml'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/css'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/javascript'            => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'image/gif'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/jpg'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/png'                  => '<i class="' . $_style['icon_image'] . '"></i>',
+            'application/pdf'            => '<i class="' . $_style['icon_pdf'] . '"></i>',
+            'application/rss+xml'        => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'application/vnd.ms-word'    => '<i class="' . $_style['icon_word'] . '"></i>',
+            'application/vnd.ms-excel'   => '<i class="' . $_style['icon_excel'] . '"></i>',
         );
 
         $listDocs = array();
@@ -151,25 +150,25 @@
 
             switch($children['id']) {
                 case $modx->getConfig('site_start')            :
-                    $icon = $_style['tree_page_home'];
+                    $icon = '<i class="' . $_style['icon_home'] . '"></i>';
                     break;
                 case $modx->getConfig('error_page')            :
-                    $icon = $_style['tree_page_404'];
+                    $icon = '<i class="' . $_style['icon_info_triangle'] . '"></i>';
                     break;
                 case $modx->getConfig('site_unavailable_page') :
-                    $icon = $_style['tree_page_hourglass'];
+                    $icon = '<i class="' . $_style['icon_clock'] . '"></i>';
                     break;
                 case $modx->getConfig('unauthorized_page')     :
-                    $icon = $_style['tree_page_info'];
+                    $icon = '<i class="' . $_style['icon_info'] . '"></i>';
                     break;
                 default:
                     if($children['isfolder']) {
-                        $icon = $_style['tree_folder_new'];
+                        $icon = '<i class="' . $_style['icon_folder'] . '"></i>';
                     } else {
                         if(isset($icons[$children['contentType']])) {
                             $icon = $icons[$children['contentType']];
                         } else {
-                            $icon = $_style['tree_page'];
+                            $icon = '<i class="' . $_style['icon_document'] . '"></i>';
                         }
                     }
             }
@@ -187,26 +186,26 @@
                 $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></span>';
             }
 
-            $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["publish_resource"] . '"><i class="' . $_style["icons_publish_document"] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["unpublish_resource"] . '"><i class="' . $_style["icons_unpublish_resource"] . '" ></i></a>';
+            $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('publish_resource') . '"><i class="' . $_style['icon_check'] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('unpublish_resource') . '"><i class="' . $_style['icon_close'] . '" ></i></a>';
 
-            $icon_del_undel = (!$children['deleted']) ? '<a onclick="return confirm(\'' . $_lang["confirm_delete_resource"] . '\')" href="index.php?a=6&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['delete_resource'] . '"><i class="' . $_style["icons_delete_resource"] . '"></i></a>' : '<a onclick="return confirm(\'' . $_lang["confirm_undelete"] . '\')" href="index.php?a=63&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['undelete_resource'] . '"><i class="' . $_style["icons_undelete_resource"] . '"></i></a>';
+            $icon_del_undel = (!$children['deleted']) ? '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_delete_resource') . '\')" href="index.php?a=6&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('delete_resource') . '"><i class="' . $_style['icon_trash'] . '"></i></a>' : '<a onclick="return confirm(\'' . ManagerTheme::getLexicon('confirm_undelete') . '\')" href="index.php?a=63&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('undelete_resource') . '"><i class="' . $_style['icon_undo'] . '"></i></a>';
 
             $listDocs[] = array(
                 'docid' => '<div class="text-right">' . $children['id'] . '</div>',
                 'title' => $title,
                 'createdon' => '<div class="text-right">' . ($modx->toDateFormat($children['createdon'] + $modx->timestamp(0), 'dateOnly')) . '</div>',
                 'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? ($modx->toDateFormat($children['pub_date'] + $modx->timestamp(0), 'dateOnly')) : '') . '</div>',
-                'status' => '<div class="text-nowrap">' . ($children['published'] == 0 ? '<span class="unpublishedDoc">' . $_lang['page_data_unpublished'] . '</span>' : '<span class="publishedDoc">' . $_lang['page_data_published'] . '</span>') . '</div>',
-                'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['edit'] . '"><i class="' . $_style["icons_edit_resource"] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang['move'] . '"><i
-				class="' . $_style["icons_move_document"] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
+                'status' => '<div class="text-nowrap">' . ($children['published'] == 0 ? '<span class="unpublishedDoc">' . ManagerTheme::getLexicon('page_data_unpublished') . '</span>' : '<span class="publishedDoc">' . ManagerTheme::getLexicon('page_data_published') . '</span>') . '</div>',
+                'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('edit') . '"><i class="' . $_style['icon_edit'] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('move') . '"><i
+				class="' . $_style['icon_move'] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
             );
         }
 
-        $modx->getMakeTable()->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
-        $children_output = $modx->getMakeTable()->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
+        $this->table->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
+        $children_output = $this->table->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
     } else {
         // No Child documents
-        $children_output = '<div class="container"><p>' . $_lang['resources_in_container_no'] . '</p></div>';
+        $children_output = '<div class="container"><p>' . ManagerTheme::getLexicon('resources_in_container_no') . '</p></div>';
         $add_path = '';
     }
     ?>
@@ -252,7 +251,7 @@
     <script type="text/javascript" src="media/script/tablesort.js"></script>
 
     <h1>
-        <i class="fa fa-info"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
+        <i class="{{ $_style['icon_info'] }}"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
     </h1>
 
     <?= $_style['actionbuttons']['static']['document'] ?>
@@ -279,24 +278,24 @@
                     <tr>
                         <td width="200" valign="top">{{ ManagerTheme::getLexicon('long_title') }}:</td>
                         <td>
-                            <small><?= $content['longtitle'] != '' ? entities($content['longtitle'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></small>
+                            <small><?= $content['longtitle'] != '' ? entities($content['longtitle'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></small>
                         </td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_description') }}:</td>
-                        <td><?= $content['description'] != '' ? entities($content['description'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['description'] != '' ? entities($content['description'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_summary') }}:</td>
-                        <td><?= $content['introtext'] != '' ? entities($content['introtext'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['introtext'] != '' ? entities($content['introtext'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('type') }}:</td>
-                        <td><?= $content['type'] == 'reference' ? $_lang['weblink'] : $_lang['resource'] ?></td>
+                        <td><?= $content['type'] == 'reference' ? ManagerTheme::getLexicon('weblink') : ManagerTheme::getLexicon('resource') ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_alias') }}:</td>
-                        <td><?= $content['alias'] != '' ? entities($content['alias'], $modx->getConfig('modx_charset')) : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
+                        <td><?= $content['alias'] != '' ? entities($content['alias'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
@@ -324,23 +323,23 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_status') }}:</td>
-                        <td><?= $content['published'] == 0 ? '<span class="unpublishedDoc">' . $_lang['page_data_unpublished'] . '</span>' : '<span class="publisheddoc">' . $_lang['page_data_published'] . '</span>' ?></td>
+                        <td><?= $content['published'] == 0 ? '<span class="unpublishedDoc">' . ManagerTheme::getLexicon('page_data_unpublished') . '</span>' : '<span class="publisheddoc">' . ManagerTheme::getLexicon('page_data_published') . '</span>' ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_publishdate') }}:</td>
-                        <td><?= $content['pub_date'] == 0 ? "(<i>" . $_lang['not_set'] . "</i>)" : $modx->toDateFormat($content['pub_date']) ?></td>
+                        <td><?= $content['pub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : $modx->toDateFormat($content['pub_date']) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_unpublishdate') }}:</td>
-                        <td><?= $content['unpub_date'] == 0 ? "(<i>" . $_lang['not_set'] . "</i>)" : $modx->toDateFormat($content['unpub_date']) ?></td>
+                        <td><?= $content['unpub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : $modx->toDateFormat($content['unpub_date']) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_cacheable') }}:</td>
-                        <td><?= $content['cacheable'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
+                        <td><?= $content['cacheable'] == 0 ? ManagerTheme::getLexicon('no') : ManagerTheme::getLexicon('yes') ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_searchable') }}:</td>
-                        <td><?= $content['searchable'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
+                        <td><?= $content['searchable'] == 0 ? ManagerTheme::getLexicon('no') : ManagerTheme::getLexicon('yes') ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_menu_index') }}:</td>
@@ -348,15 +347,15 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_show_menu') }}:</td>
-                        <td><?= $content['hidemenu'] == 1 ? $_lang['no'] : $_lang['yes'] ?></td>
+                        <td><?= $content['hidemenu'] == 1 ? ManagerTheme::getLexicon('no') : ManagerTheme::getLexicon('yes') ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_web_access') }}:</td>
-                        <td><?= $content['privateweb'] == 0 ? $_lang['public'] : '<b style="color: #821517">' . $_lang['private'] . '</b> ' . $_style["icons_secured"] ?></td>
+                        <td><?= $content['privateweb'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b><i class="' . $_style['icon_lock'] . '"></i>' ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_mgr_access') }}:</td>
-                        <td><?= $content['privatemgr'] == 0 ? $_lang['public'] : '<b style="color: #821517">' . $_lang['private'] . '</b> ' . $_style["icons_secured"] ?></td>
+                        <td><?= $content['privatemgr'] == 0 ? ManagerTheme::getLexicon('public') : '<b style="color: #821517">' . ManagerTheme::getLexicon('private') . '</b><i class="' . $_style['icon_lock'] . '"></i>' ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
@@ -370,11 +369,11 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_editor') }}:</td>
-                        <td><?= $content['richtext'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
+                        <td><?= $content['richtext'] == 0 ? ManagerTheme::getLexicon('no') : ManagerTheme::getLexicon('yes') ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_folder') }}:</td>
-                        <td><?= $content['isfolder'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
+                        <td><?= $content['isfolder'] == 0 ? ManagerTheme::getLexicon('no') : ManagerTheme::getLexicon('yes') ?></td>
                     </tr>
                 </table>
             </div>
@@ -388,10 +387,10 @@
                 <div class="form-group clearfix">
                     <?php if($numRecords > 0) : ?>
                     <div class="float-xs-left">
-                        <span class="publishedDoc"><?= $numRecords . ' ' . $_lang['resources_in_container'] ?> (<strong><?= entities($content['pagetitle'], $modx->getConfig('modx_charset')) ?></strong>)</span>
+                        <span class="publishedDoc"><?= $numRecords . ' ' . ManagerTheme::getLexicon('resources_in_container') ?> (<strong><?= entities($content['pagetitle'], $modx->getConfig('modx_charset')) ?></strong>)</span>
                     </div>
                     <?php endif; ?>
-                    <div class="float-xs-right">
+                    <div class="float-right">
                         <?= $filter_sort . ' ' . $filter_dir ?>
                     </div>
 
@@ -412,13 +411,13 @@
             $filename = MODX_BASE_PATH . "assets/cache/docid_" . $id . ".pageCache.php";
             $handle = @fopen($filename, "r");
             if(!$handle) {
-                $buffer = '<div class="container container-body">' . $_lang['page_data_notcached'] . '</div>';
+                $buffer = '<div class="container container-body">' . ManagerTheme::getLexicon('page_data_notcached') . '</div>';
             } else {
                 while(!feof($handle)) {
                     $buffer .= fgets($handle, 4096);
                 }
                 fclose($handle);
-                $buffer = '<div class="navbar navbar-editor">' . $_lang['page_data_cached'] . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
+                $buffer = '<div class="navbar navbar-editor">' . ManagerTheme::getLexicon('page_data_cached') . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
             }
             echo $buffer;
             ?>

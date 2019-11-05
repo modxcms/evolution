@@ -13,6 +13,7 @@ use EvolutionCMS\Traits;
  * @property string $email
  * @property string $phone
  * @property string $mobilephone
+ * @property int $verified
  * @property int $blocked
  * @property int $blockeduntil
  * @property int $blockedafter
@@ -53,6 +54,7 @@ class WebUserAttribute extends Eloquent\Model
 	protected $casts = [
 		'internalKey' => 'int',
 		'role' => 'int',
+        'verified' => 'int',
 		'blocked' => 'int',
 		'blockeduntil' => 'int',
 		'blockedafter' => 'int',
@@ -73,6 +75,7 @@ class WebUserAttribute extends Eloquent\Model
 		'email',
 		'phone',
 		'mobilephone',
+        'verified',
 		'blocked',
 		'blockeduntil',
 		'blockedafter',

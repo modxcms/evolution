@@ -37,6 +37,7 @@ $gender = !empty($input['gender']) ? $input['gender'] : 0;
 $photo = $input['photo'];
 $comment = $input['comment'];
 $role = !empty($input['role']) ? $input['role'] : 0;
+$verified = !empty($input['verified']) ? (int)!!$input['verified'] : 0;
 $failedlogincount = !empty($input['failedlogincount']) ? $input['failedlogincount'] : 0;
 $blocked = !empty($input['blocked']) ? $input['blocked'] : 0;
 $blockeduntil = !empty($input['blockeduntil']) ? $modx->toTimeStamp($input['blockeduntil']) : 0;
@@ -157,7 +158,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
                 <div class="btn-group">
-                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?>
+                    <a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["icon_save"] ?>"></i> <?php echo $_lang['edit']; ?>
                     </a>
                 </div>
 			</div>
@@ -293,7 +294,7 @@ switch ($input['mode']) {
 
             <div id="actions">
                 <div class="btn-group">
-                    <a href="<?php echo $stayUrl ?>" class="btn"><i class="<?php echo $_style["actions_save"] ?>"></i>
+                    <a href="<?php echo $stayUrl ?>" class="btn"><i class="<?php echo $_style["icon_save"] ?>"></i>
                         <?php echo $_lang['edit']; ?></a>
                 </div>
             </div>

@@ -14,7 +14,6 @@ class Console extends Artisan
     public function __construct(Container $laravel, Dispatcher $events, $version)
     {
         SymfonyApplication::__construct($laravel->getVersionData('branch'), $version);
-
         $this->laravel = $laravel;
         $this->events = $events;
         $this->setAutoExit(false);

@@ -22,7 +22,7 @@ return [
     'make_folders' => '0',
     'seostrict' => '0',
     'aliaslistingfolder' => '0',
-    'check_files_onlogin' => "index.php\n.htaccess\nmanager/index.php\nmanager/includes/config.inc.php",
+    'check_files_onlogin' => "index.php\n.htaccess\nmanager/index.php\n/core/config/database/connections/default.php",
     'use_captcha' => 0,
     'pwd_hash_algo' => 0,
     'rb_base_url' => 'assets/',

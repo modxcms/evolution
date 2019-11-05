@@ -126,7 +126,7 @@
                   modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', href, function(data) {
                     if (data) {
                       if (modx.isMobile || w.innerWidth < modx.minWidth) {
-                        data = '<li class="dropdown-back"><span class="dropdown-item"><i class="fa fa-arrow-left"></i>' + modx.lang.paging_prev + '</span></li>' + data;
+                        data = '<li class="dropdown-back"><span class="dropdown-item"><i class="' + modx.style.icon_angle_left + '"></i>' + modx.lang.paging_prev + '</span></li>' + data;
                       }
                       ul.id = 'parent_' + self.id;
                       ul.innerHTML = data;
@@ -255,7 +255,7 @@
           d.body.appendChild(this.result);
         }
         this.loader = d.createElement('i');
-        this.loader.className = 'fa fa-refresh fa-spin fa-fw';
+        this.loader.className = modx.style.icon_refresh + modx.style.icon_spin;
         this.input.parentNode.appendChild(this.loader);
         if (modx.config.global_tabs) {
           this.input.parentNode.onsubmit = function(e) {
@@ -393,7 +393,7 @@
           row.parentNode.insertBefore(rowContainer, row);
           rowContainer.appendChild(row);
           var p = d.createElement('i');
-          p.className = 'fa fa-angle-left prev disable';
+          p.className = modx.style.icon_angle_left + ' prev disable';
           p.onclick = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -405,7 +405,7 @@
           };
           rowContainer.appendChild(p);
           var n = d.createElement('i');
-          n.className = 'fa fa-angle-right next disable';
+          n.className = modx.style.icon_angle_right + ' next disable';
           n.onclick = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -769,15 +769,15 @@
             this.parentNode.classList.add('dragafter');
             this.parentNode.classList.remove('dragbefore');
             this.parentNode.classList.remove('dragenter');
-            e.dataTransfer.effectAllowed = 'link';
-            e.dataTransfer.dropEffect = 'link';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.dropEffect = 'move';
           } else if (c < this.offsetHeight / 3) {
             //this.parentNode.className = 'dragbefore';
             this.parentNode.classList.add('dragbefore');
             this.parentNode.classList.remove('dragafter');
             this.parentNode.classList.remove('dragenter');
-            e.dataTransfer.effectAllowed = 'link';
-            e.dataTransfer.dropEffect = 'link';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.dropEffect = 'move';
           } else {
             //this.parentNode.className = 'dragenter';
             this.parentNode.classList.add('dragenter');
@@ -827,7 +827,7 @@
             }
           } else {
             el.parentNode.removeChild(el);
-            d.querySelector('#node' + parent + ' .icon').innerHTML = parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder;
+            d.querySelector('#node' + parent + ' .icon').innerHTML = parseInt(this.dataset.private) ? modx.style.icon_folder : modx.style.icon_folder;
           }
           modx.tree.ondragupdate(this, id, parent, menuindex);
         }
@@ -1375,7 +1375,7 @@
           if (a) {
             el.title = modx.lang.empty_recycle_bin;
             el.classList.remove('disabled');
-            el.innerHTML = modx.style.empty_recycle_bin;
+            el.innerHTML = modx.style.icon_trash;
             el.onclick = function() {
               modx.tree.emptyTrash();
             };
@@ -1386,7 +1386,7 @@
           } else {
             el.title = modx.lang.empty_recycle_bin_empty;
             el.classList.add('disabled');
-            el.innerHTML = modx.style.empty_recycle_bin_empty;
+            el.innerHTML = modx.style.icon_trash_alt;
             el.onclick = null;
           }
         }
@@ -1552,10 +1552,10 @@
               this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
           };
           d.getElementById('main').appendChild(this.page);
-          console.time('load-tab');
+          //console.time('load-tab');
           this.page.firstElementChild.onload = function(e) {
             s.onload.call(s, e);
-            console.timeEnd('load-tab');
+            //console.timeEnd('load-tab');
           };
           this.tab = d.createElement('h2');
           this.tab.id = 'evo-tab-' + this.uid;
@@ -1595,7 +1595,7 @@
             };
             modx.popup({
               type: 'warning',
-              title: 'MODX :: Alert',
+              title: 'Evolution CMS :: Alert',
               position: 'top center alertQuit',
               content: message,
               wrap: 'body'
@@ -1985,7 +1985,7 @@
                 if (!!e.target.contentWindow.__alertQuit) {
                   modx.popup({
                     type: 'warning',
-                    title: 'MODX :: Alert',
+                    title: 'Evolution CMS :: Alert',
                     position: 'top center alertQuit',
                     content: e.target.contentWindow.document.body.querySelector('p').innerHTML
                   });
@@ -2400,28 +2400,28 @@
       var b = '';
       switch (this.typesactions[a]) {
         case 1:
-          b = 'fa fa-newspaper-o';
+          b = modx.style.icon_template;
           break;
         case 2:
-          b = 'fa fa-list-alt';
+          b = modx.style.icon_tv;
           break;
         case 3:
-          b = 'fa fa-th-large';
+          b = modx.style.icon_chunk;
           break;
         case 4:
-          b = 'fa fa-code';
+          b = modx.style.icon_code;
           break;
         case 5:
-          b = 'fa fa-plug';
+          b = modx.style.icon_plugin;
           break;
         case 6:
-          b = 'fa fa-cube';
+          b = modx.style.icon_element;
           break;
         case 7:
-          b = 'fa fa-pencil-square-o';
+          b = modx.style.icon_edit;
           break;
         default:
-          b = 'fa fa-circle';
+          b = modx.style.icon_circle;
       }
       return b;
     }

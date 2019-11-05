@@ -8,11 +8,11 @@
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 include_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 include_once(MODX_BASE_PATH . 'assets/lib/Helpers/Config.php');
-require_once(dirname(__DIR__) . "/lib/jsonHelper.class.php");
-require_once(dirname(__DIR__) . "/lib/sqlHelper.class.php");
-require_once(dirname(__DIR__) . "/lib/DLTemplate.class.php");
-require_once(dirname(__DIR__) . "/lib/DLCollection.class.php");
-require_once(dirname(__DIR__) . "/lib/xnop.class.php");
+require_once(dirname(dirname(__FILE__)) . "/lib/jsonHelper.class.php");
+require_once(dirname(dirname(__FILE__)) . "/lib/sqlHelper.class.php");
+require_once(dirname(dirname(__FILE__)) . "/lib/DLTemplate.class.php");
+require_once(dirname(dirname(__FILE__)) . "/lib/DLCollection.class.php");
+require_once(dirname(dirname(__FILE__)) . "/lib/xnop.class.php");
 
 /**
  * Class DocLister
@@ -258,8 +258,8 @@ abstract class DocLister
                 'site_content'
             ) : $this->table, $this->alias);
 
-            $this->idField = $this->getCFGDef('idField', 'id');
-            $this->parentField = $this->getCFGDef('parentField', 'parent');
+            $this->idField = $this->getCFGDef('idField', $this->idField);
+            $this->parentField =  $this->getCFGDef('parentField', $this->parentField);
             $this->extCache = $this->getExtender('cache', true);
             $this->extCache->init($this, array(
                 'cache'         => $this->getCFGDef('cache', 1),
@@ -386,7 +386,7 @@ abstract class DocLister
                     error_reporting(E_ALL ^ E_NOTICE);
                     ini_set('display_errors', 1);
                 }
-                $dir = dirname(__DIR__);
+                $dir = dirname(dirname(__FILE__));
                 if (file_exists($dir . "/lib/DLdebug.class.php")) {
                     include_once($dir . "/lib/DLdebug.class.php");
                     if (class_exists("DLdebug", false)) {
@@ -609,6 +609,10 @@ abstract class DocLister
      */
     public function render($tpl = '')
     {
+        if ($this->extPaginate === null) {
+            $this->toPlaceholders(count($this->_docs), 1, 'count');
+        }
+
         $this->debug->debug(array('Render data with template ' => $tpl), 'render', 2, array('html'));
         $out = '';
         if (1 == $this->getCFGDef('tree', '0')) {
@@ -621,11 +625,24 @@ abstract class DocLister
         }
 
         if ($out) {
-            $this->outData = DLTemplate::getInstance($this->modx)->parseDocumentSource($out);
+            $this->outData = $this->parseSource($out);
         }
         $this->debug->debugEnd('render');
 
         return $this->outData;
+    }
+
+    /**
+     * @param string $out
+     * @return string
+     */
+    public function parseSource($out = '')
+    {
+        if($this->getCFGDef('parseDocumentSource', 1)) {
+            $out = DLTemplate::getInstance($this->modx)->parseDocumentSource($out);
+        }
+
+        return $out;
     }
 
     /***************************************************
@@ -754,23 +771,7 @@ abstract class DocLister
      */
     public function sanitarIn($data, $sep = ',', $quote = true)
     {
-        if (is_scalar($data)) {
-            $data = explode($sep, $data);
-        }
-        if (!is_array($data)) {
-            $data = array(); //@TODO: throw
-        }
-
-        $out = array();
-        foreach ($data as $item) {
-            if ($item !== '') {
-                $out[] = $this->modx->db->escape($item);
-            }
-        }
-        $q = $quote ? "'" : "";
-        $out = $q . implode($q . "," . $q, $out) . $q;
-
-        return $out;
+        return APIhelpers::sanitarIn($data, $sep, $quote);
     }
 
     /**
@@ -789,8 +790,8 @@ abstract class DocLister
         if (empty($lang)) {
             $lang = $this->getCFGDef('lang', $this->modx->config['manager_language']);
         }
-        if (file_exists(dirname(__DIR__) . "/lang/" . $lang . ".php")) {
-            $tmp = include(__DIR__ . "/lang/" . $lang . ".php");
+        if (file_exists(dirname(dirname(__FILE__)) . "/lang/" . $lang . ".php")) {
+            $tmp = include(dirname(__FILE__) . "/lang/" . $lang . ".php");
             $this->_customLang = is_array($tmp) ? $tmp : array();
         }
 
@@ -820,8 +821,8 @@ abstract class DocLister
             $name = array($name);
         }
         foreach ($name as $n) {
-            if (file_exists(__DIR__ . "/lang/" . $lang . "/" . $n . ".inc.php")) {
-                $tmp = include(__DIR__ . "/lang/" . $lang . "/" . $n . ".inc.php");
+            if (file_exists(dirname(__FILE__) . "/lang/" . $lang . "/" . $n . ".inc.php")) {
+                $tmp = include(dirname(__FILE__) . "/lang/" . $lang . "/" . $n . ".inc.php");
                 if (is_array($tmp)) {
                     /**
                      * Переименовыываем элементы массива из array('test'=>'data') в array('name.test'=>'data')
@@ -1095,11 +1096,19 @@ abstract class DocLister
         if ($i == 1) {
             $this->renderTPL = $this->getCFGDef('tplFirst', $this->renderTPL);
             $class[] = $this->getCFGDef('firstClass', 'first');
+            $data[$this->getCFGDef("sysKey", "dl") . '.is_first'] = 1;
+        } else {
+            $data[$this->getCFGDef("sysKey", "dl") . '.is_first'] = 0;
         }
+
         if ($i == (count($this->_docs) - $this->skippedDocs)) {
             $this->renderTPL = $this->getCFGDef('tplLast', $this->renderTPL);
             $class[] = $this->getCFGDef('lastClass', 'last');
+            $data[$this->getCFGDef("sysKey", "dl") . '.is_last'] = 1;
+        } else {
+            $data[$this->getCFGDef("sysKey", "dl") . '.is_last'] = 0;
         }
+
         if ($this->modx->documentIdentifier == $data['id']) {
             $this->renderTPL = $this->getCFGDef('tplCurrent', $this->renderTPL);
             $data[$this->getCFGDef(
@@ -1157,26 +1166,23 @@ abstract class DocLister
             $out[$num] = $tmp;
         }
 
-        if ('new' == $this->getCFGDef('JSONformat', 'old')) {
-            $return = array();
-
-            $return['rows'] = array();
-            foreach ($out as $key => $item) {
-                $return['rows'][] = $item;
-            }
-            $return['total'] = $this->getChildrenCount();
-        } elseif ('simple' == $this->getCFGDef('JSONformat', 'old')) {
-            $return = array();
-            foreach ($out as $key => $item) {
-                $return[] = $item;
-            }
-        } else {
-            $return = $out;
+        $format = $this->getCFGDef('JSONformat', 'old');
+        switch ($format) {
+            case 'new':
+                $return['rows'] = array_values($out);
+                $return['total'] = $this->getChildrenCount();
+                break;
+            case 'simple':
+                $return = array_values($out);
+                break;
+            default:
+                $return = $out;
+            break;
         }
         $this->outData = json_encode($return);
         $this->isErrorJSON($return);
 
-        return jsonHelper::json_format($this->outData);
+        return $this->getCFGDef('debug') ? jsonHelper::json_format($this->outData) : $this->outData;
     }
 
     /**
@@ -1271,8 +1277,8 @@ abstract class DocLister
             $flag = true;
         } else {
             if (!class_exists($classname, false) && $classname != '') {
-                if (file_exists(__DIR__ . "/extender/" . $name . ".extender.inc")) {
-                    include_once(__DIR__ . "/extender/" . $name . ".extender.inc");
+                if (file_exists(dirname(__FILE__) . "/extender/" . $name . ".extender.inc")) {
+                    include_once(dirname(__FILE__) . "/extender/" . $name . ".extender.inc");
                 }
             }
             if (class_exists($classname, false) && $classname != '') {
@@ -1642,10 +1648,10 @@ abstract class DocLister
         $this->debug->debug("getFilters: " . $this->debug->dumpData($filter_string), 'getFilter', 1);
         // the filter parameter tells us, which filters can be used in this query
         $filter_string = ltrim(trim($filter_string, ';'));
-        if (!$filter_string) {
-            return;
-        }
         $output = array('join' => '', 'where' => '');
+        if (!$filter_string) {
+            return $output;
+        }
         $logic_op_found = false;
         $joins = $wheres = array();
         foreach ($this->_logic_ops as $op => $sql) {
@@ -1777,7 +1783,7 @@ abstract class DocLister
         // check if the filter is implemented
         if (!is_null($fltr)) {
             if (!class_exists($fltr_class) && file_exists(__DIR__ . '/filter/' . $fltr . '.filter.php')) {
-                require_once __DIR__ . '/filter/' . $fltr . '.filter.php';
+                require_once dirname(__FILE__) . '/filter/' . $fltr . '.filter.php';
             }
             if (class_exists($fltr_class)) {
                 $this->totalFilters++;

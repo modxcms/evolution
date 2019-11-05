@@ -189,7 +189,7 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 	<input type="hidden" name="id" value="<?php echo $content['id']; ?>" />
 
 	<h1>
-		<i class="fa fa-cogs"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['module_resource_title']) ?>
+		<i class="<?= $_style['icon_cogs'] ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['module_resource_title']) ?>
 	</h1>
 
 	<?php echo ManagerTheme::getStyle('actionbuttons.dynamic.close') ?>
@@ -232,14 +232,14 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 						?>
 					</td>
 					<td valign="top" style="width: 150px;">
-						<a class="btn btn-block btn-danger text-left" style="margin-bottom:10px;" href="javascript:;" onclick="removeDependencies();return false;"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['remove']; ?></a>
+						<a class="btn btn-block btn-danger text-left" style="margin-bottom:10px;" href="javascript:;" onclick="removeDependencies();return false;"><i class="<?php echo $_style["icon_trash"] ?>"></i> <?php echo $_lang['remove']; ?></a>
 						<div class="btn-group-vertical" style="min-width: 100%">
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addSnippet();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_snippet']; ?></a>
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addDocument();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_doc']; ?></a>
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addChunk();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_chunk']; ?></a>
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addPlugin();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_plugin']; ?></a>
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTV();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_tv']; ?></a>
-							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTemplate();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_template']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addSnippet();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_snippet']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addDocument();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_doc']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addChunk();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_chunk']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addPlugin();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_plugin']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTV();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_tv']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTemplate();return false;"><i class="<?php echo $_style["icon_add"] ?>"></i> <?php echo $_lang['add_template']; ?></a>
 						</div>
 					</td>
 				</tr>

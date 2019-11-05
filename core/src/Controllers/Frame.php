@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Interfaces\ManagerTheme;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
+use EvolutionCMS\Models\SiteModule;
 
 class Frame extends AbstractController implements ManagerTheme\PageControllerInterface
 {
@@ -93,7 +94,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->parameters['body_class'] = $body_class;
 
         $unlockTranslations = [
-            'msg'   => $this->managerTheme->getLexicon('unlock_element_id_warning'),
+            'msg' => $this->managerTheme->getLexicon('unlock_element_id_warning'),
             'type1' => $this->managerTheme->getLexicon('lock_element_type_1'),
             'type2' => $this->managerTheme->getLexicon('lock_element_type_2'),
             'type3' => $this->managerTheme->getLexicon('lock_element_type_3'),
@@ -225,7 +226,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             foreach ($menu as $item) {
                 $data = unserialize($item, ['allowed_classes' => false]);
                 if (\is_array($data)) {
-                    foreach($data as $k=>$v) {
+                    foreach ($data as $k => $v) {
                         $newmenu[$k] = $v;
                     }
                 }
@@ -239,12 +240,12 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->Build(
                 $this->sitemenu,
                 [
-                    'outerClass'      => 'nav',
-                    'innerClass'      => 'dropdown-menu',
-                    'parentClass'     => 'dropdown',
+                    'outerClass' => 'nav',
+                    'innerClass' => 'dropdown-menu',
+                    'parentClass' => 'dropdown',
                     'parentLinkClass' => 'dropdown-toggle',
-                    'parentLinkAttr'  => '',
-                    'parentLinkIn'    => ''
+                    'parentLinkAttr' => '',
+                    'parentLinkIn' => ''
                 ],
                 false
             );
@@ -255,7 +256,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['bars'] = [
             'bars',
             'main',
-            '<i class="fa fa-bars"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_bars') . '"></i>',
             'javascript:;',
             $this->managerTheme->getLexicon('home'),
             'modx.resizer.toggle(); return false;',
@@ -274,7 +275,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['site'] = [
             'site',
             'main',
-            '<i class="fa fa-tachometer"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('home') . '</span>',
+            '<i class="' . $this->managerTheme->getStyle('icon_tachometer') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('home') . '</span>',
             'index.php?a=2',
             $this->managerTheme->getLexicon('home'),
             '',
@@ -302,7 +303,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'elements',
             'main',
             sprintf(
-                '<i class="fa fa-th"></i><span class="menu-item-text">%s</span>'
+                '<i class="' . $this->managerTheme->getStyle('icon_elements') . '"></i><span class="menu-item-text">%s</span>'
                 , $this->managerTheme->getLexicon('elements')
             ),
             'javascript:;',
@@ -327,7 +328,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['modules'] = [
             'modules',
             'main',
-            '<i class="' . $this->managerTheme->getStyle('icons_modules') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('modules') . '</span>',
+            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('modules') . '</span>',
             'javascript:;',
             $this->managerTheme->getLexicon('modules'),
             ' return false;',
@@ -359,7 +360,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['users'] = [
             'users',
             'main',
-            '<i class="fa fa-users"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('users') . '</span>',
+            '<i class="' . $this->managerTheme->getStyle('icon_users') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('users') . '</span>',
             'javascript:;',
             $this->managerTheme->getLexicon('users'),
             ' return false;',
@@ -385,7 +386,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['tools'] = [
             'tools',
             'main',
-            '<i class="fa fa-wrench"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('tools') . '</span>',
+            '<i class="' . $this->managerTheme->getStyle('icon_wrench') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('tools') . '</span>',
             'javascript:;',
             $this->managerTheme->getLexicon('tools'),
             ' return false;',
@@ -419,7 +420,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['element_templates'] = [
             'element_templates',
             'elements',
-            '<i class="fa fa-newspaper-o"></i>' . $this->managerTheme->getLexicon('manage_templates') . '<i class="fa fa-angle-right toggle"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_template') . '"></i>' . $this->managerTheme->getLexicon('manage_templates') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
             'index.php?a=76&tab=' . $tab++,
             $this->managerTheme->getLexicon('manage_templates'),
             '',
@@ -442,7 +443,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['element_tplvars'] = [
             'element_tplvars',
             'elements',
-            '<i class="fa fa-list-alt"></i>' . $this->managerTheme->getLexicon('tmplvars') . '<i class="fa fa-angle-right toggle"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_tv') . '"></i>' . $this->managerTheme->getLexicon('tmplvars') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
             'index.php?a=76&tab=' . $tab++,
             $this->managerTheme->getLexicon('tmplvars'),
             '',
@@ -465,7 +466,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['element_htmlsnippets'] = [
             'element_htmlsnippets',
             'elements',
-            '<i class="fa fa-th-large"></i>' . $this->managerTheme->getLexicon('manage_htmlsnippets') . '<i class="fa fa-angle-right toggle"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_chunk') . '"></i>' . $this->managerTheme->getLexicon('manage_htmlsnippets') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
             'index.php?a=76&tab=' . $tab++,
             $this->managerTheme->getLexicon('manage_htmlsnippets'),
             '',
@@ -488,7 +489,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['element_snippets'] = [
             'element_snippets',
             'elements',
-            '<i class="fa fa-code"></i>' . $this->managerTheme->getLexicon('manage_snippets') . '<i class="fa fa-angle-right toggle"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_code') . '"></i>' . $this->managerTheme->getLexicon('manage_snippets') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
             'index.php?a=76&tab=' . $tab++,
             $this->managerTheme->getLexicon('manage_snippets'),
             '',
@@ -511,7 +512,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['element_plugins'] = [
             'element_plugins',
             'elements',
-            '<i class="fa fa-plug"></i>' . $this->managerTheme->getLexicon('manage_plugins') . '<i class="fa fa-angle-right toggle"></i>',
+            '<i class="' . $this->managerTheme->getStyle('icon_plugin') . '"></i>' . $this->managerTheme->getLexicon('manage_plugins') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
             'index.php?a=76&tab=' . $tab++,
             $this->managerTheme->getLexicon('manage_plugins'),
             '',
@@ -534,7 +535,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['manage_files'] = [
             'manage_files',
             'elements',
-            '<i class="fa fa-folder-open-o"></i>' . $this->managerTheme->getLexicon('manage_files'),
+            '<i class="' . $this->managerTheme->getStyle('icon_folder_open') . '"></i>' . $this->managerTheme->getLexicon('manage_files'),
             'index.php?a=31',
             $this->managerTheme->getLexicon('manage_files'),
             '',
@@ -557,7 +558,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['manage_categories'] = [
             'manage_categories',
             'elements',
-            '<i class="fa fa-object-group"></i>' . $this->managerTheme->getLexicon('manage_categories'),
+            '<i class="' . $this->managerTheme->getStyle('icon_category') . '"></i>' . $this->managerTheme->getLexicon('manage_categories'),
             'index.php?a=120',
             $this->managerTheme->getLexicon('manage_categories'),
             '',
@@ -584,7 +585,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['new_module'] = [
             'new_module',
             'modules',
-            '<i class="' . $this->managerTheme->getStyle('icons_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
+            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
             'index.php?a=106',
             $this->managerTheme->getLexicon('module_management'),
             '',
@@ -602,34 +603,26 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
     {
         if ($this->managerTheme->getCore()->hasPermission('exec_module')) {
             if ($_SESSION['mgrRole'] != 1 && $this->managerTheme->getCore()->getConfig('use_udperms') === true) {
-                $rs = $this->managerTheme->getCore()->getDatabase()->query(
-                    sprintf(
-                        'SELECT DISTINCT sm.id, sm.name, sm.icon, mg.member
-                        FROM %s AS sm
-                        LEFT JOIN %s AS sma ON sma.module = sm.id
-                        LEFT JOIN %s AS mg ON sma.usergroup = mg.user_group
-                        WHERE (mg.member IS NULL OR mg.member = %s) AND sm.disabled != 1 AND sm.locked != 1
-                        ORDER BY sm.name'
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_access')
-                        , $this->managerTheme->getCore()->getDatabase()->getFullTableName('member_groups')
-                        , $this->managerTheme->getCore()->getLoginUserID('mgr')
-                    )
-                );
+                $modules = SiteModule::select('site_modules.id', 'site_modules.name', 'site_modules.icon', 'member_groups.member')
+                    ->leftjoin('site_module_access', 'site_modules.id', '=', 'site_module_access.module')
+                    ->leftjoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
+                    ->where(function ($query) {
+                        $query->whereNull('member_groups.member')
+                            ->orWhere('member_groups.member', '=', $this->managerTheme->getCore()->getLoginUserID('mgr'));
+                    })
+                    ->where('site_modules.disabled', '!=', 1)
+                    ->where('site_modules.locked', '!=', 1)
+                    ->orderBy('site_modules.name')->get()->toArray();
+
             } else {
-                $rs = $this->managerTheme->getCore()->getDatabase()->select(
-                    '*',
-                    $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules'),
-                    'disabled != 1',
-                    'name'
-                );
+                $modules = SiteModule::where('disabled', '!=', 1)->orderBy('name')->get()->toArray();
             }
-            if ($this->managerTheme->getCore()->getDatabase()->getRecordCount($rs)) {
-                while ($row = $this->managerTheme->getCore()->getDatabase()->getRow($rs)) {
+            if (count($modules) > 0) {
+                foreach ($modules as $row) {
                     $this->sitemenu['module' . $row['id']] = [
                         'module' . $row['id'],
                         'modules',
-                        ($row['icon'] != '' ? '<i class="' . $row['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icons_module') . '"></i>') . $row['name'],
+                        ($row['icon'] != '' ? '<i class="' . $row['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $row['name'],
                         'index.php?a=112&id=' . $row['id'],
                         $row['name'],
                         '',
@@ -640,6 +633,21 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                         ''
                     ];
                 }
+            }
+            foreach ($this->managerTheme->getCore()->modulesFromFile as $module) {
+                $this->sitemenu['module' . $module['id']] = [
+                    'module' . $module['id'],
+                    'modules',
+                    ($module['icon'] != '' ? '<i class="' . $module['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $module['name'],
+                    'index.php?a=112&id=' . $module['id'],
+                    $module['name'],
+                    '',
+                    '',
+                    'main',
+                    0,
+                    1,
+                    ''
+                ];
             }
         }
 
@@ -653,7 +661,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'user_management_title',
                 'users',
                 sprintf(
-                    '<i class="fa fa-user-circle-o"></i>%s<i class="fa fa-angle-right toggle"></i>'
+                    '<i class="' . $this->managerTheme->getStyle('icon_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
                     , $this->managerTheme->getLexicon('user_management_title')
                 ),
                 'index.php?a=75',
@@ -677,7 +685,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'web_user_management_title',
                 'users',
                 sprintf(
-                    '<i class="fa fa-user"></i>%s<i class="fa fa-angle-right toggle"></i>'
+                    '<i class="' . $this->managerTheme->getStyle('icon_web_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
                     , $this->managerTheme->getLexicon('web_user_management_title')
                 ),
                 'index.php?a=99',
@@ -701,7 +709,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'role_management_title',
                 'users',
                 sprintf(
-                    '<i class="fa fa-legal"></i>%s'
+                    '<i class="' . $this->managerTheme->getStyle('icon_role') . '"></i>%s'
                     , $this->managerTheme->getLexicon('role_management_title')
                 ),
                 'index.php?a=86',
@@ -725,7 +733,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'manager_permissions',
                 'users',
                 sprintf(
-                    '<i class="fa fa-universal-access"></i>%s'
+                    '<i class="' . $this->managerTheme->getStyle('icon_user_access') . '"></i>%s'
                     , $this->managerTheme->getLexicon('manager_permissions')
                 ),
                 'index.php?a=40',
@@ -751,7 +759,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['web_permissions'] = [
             'web_permissions',
             'users',
-            '<i class="fa fa-male"></i>' . $this->managerTheme->getLexicon('web_permissions'),
+            '<i class="' . $this->managerTheme->getStyle('icon_web_user_access') . '"></i>' . $this->managerTheme->getLexicon('web_permissions'),
             'index.php?a=91',
             $this->managerTheme->getLexicon('web_permissions'),
             '',
@@ -770,7 +778,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['refresh_site'] = [
             'refresh_site',
             'tools',
-            '<i class="fa fa-recycle"></i>' . $this->managerTheme->getLexicon('refresh_site'),
+            '<i class="' . $this->managerTheme->getStyle('icon_recycle') . '"></i>' . $this->managerTheme->getLexicon('refresh_site'),
             'index.php?a=26',
             $this->managerTheme->getLexicon('refresh_site'),
             '',
@@ -794,7 +802,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                     // onclick
                     $this->managerTheme->getLexicon('refresh_site'),
                     // title
-                    '<i class="fa fa-recycle"></i>'
+                    '<i class="' . $this->managerTheme->getStyle('icon_recycle') . '"></i>'
                     // innerHTML
                 ]
             ]
@@ -809,7 +817,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'search',
             'tools',
             sprintf(
-                '<i class="fa fa-search"></i>%s'
+                '<i class="' . $this->managerTheme->getStyle('icon_search') . '"></i>%s'
                 , $this->managerTheme->getLexicon('search')
             ),
             'index.php?a=71',
@@ -835,7 +843,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'bk_manager',
             'tools',
             sprintf(
-                '<i class="fa fa-database"></i>%s'
+                '<i class="' . $this->managerTheme->getStyle('icon_database') . '"></i>%s'
                 , $this->managerTheme->getLexicon('bk_manager')
             ),
             'index.php?a=93',
@@ -861,7 +869,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'remove_locks',
             'tools',
             sprintf(
-                '<i class="fa fa-hourglass"></i>%s'
+                '<i class="' . $this->managerTheme->getStyle('icon_hourglass') . '"></i>%s'
                 , $this->managerTheme->getLexicon('remove_locks')
             ),
             'javascript:modx.removeLocks();',
@@ -887,7 +895,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'import_site',
             'tools',
             sprintf(
-                '<i class="fa fa-upload"></i>%s'
+                '<i class="' . $this->managerTheme->getStyle('icon_upload') . '"></i>%s'
                 , $this->managerTheme->getLexicon('import_site')
             ),
             'index.php?a=95',
@@ -913,7 +921,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             'export_site',
             'tools',
             sprintf(
-                '<i class="fa fa-download"></i>%s'
+                '<i class="' . $this->managerTheme->getStyle('icon_download') . '"></i>%s'
                 , $this->managerTheme->getLexicon('export_site')
             ),
             'index.php?a=83',
