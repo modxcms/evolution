@@ -4380,7 +4380,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function runSnippet($snippetName, $params = array(), $cacheTime = false, $cacheKey = false)
     {
-        if (is_numeric($cacheTime)) {
+        if (
+            is_numeric($cacheTime)
+            && $this->getConfig('enable_cache')
+        ){
             $arrPlaceholderCheck = $this->placeholders;
             if (!is_string($cacheKey)) {
                 $getParams = $_GET;
@@ -4391,7 +4394,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $return = Cache::get($cacheKey);
             if (!is_null($return)) {
                 $arrPlaceholderFromSnippet = Cache::get($cacheKey . '_placeholders');
-                $this->placeholders = array_merge($this->placeholders, $arrPlaceholderFromSnippet);
+                $this->toPlaceholders($arrPlaceholderFromSnippet);
                 return $return;
             }
         }
@@ -4410,7 +4413,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // run snippet
         $result = $this->evalSnippet($snippet, $parameters);
-        if (is_numeric($cacheTime)) {
+        if (
+            is_numeric($cacheTime)
+            && $this->getConfig('enable_cache')
+        ){
             $arrPlaceholderCheckAfterSnippet = $this->placeholders;
             $arrPlaceholderFromSnippet = array_diff($arrPlaceholderCheckAfterSnippet, $arrPlaceholderCheck);
             if ($cacheTime != 0) {
