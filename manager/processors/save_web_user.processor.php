@@ -44,6 +44,9 @@ $blockeduntil = !empty($input['blockeduntil']) ? $modx->toTimeStamp($input['bloc
 $blockedafter = !empty($input['blockedafter']) ? $modx->toTimeStamp($input['blockedafter']) : 0;
 $user_groups = $input['user_groups'];
 
+$websignupemail_message = $modx->config['websignupemail_message'];
+$site_url = $modx->config['site_url'];
+
 // verify password
 if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
 	webAlertAndQuit("Password typed is mismatched", 88);
