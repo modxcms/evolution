@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
+use Rocky\Eloquent\HasDynamicRelation;
 
 /**
  * EvolutionCMS\Models\ManagerUser
@@ -14,7 +15,8 @@ use EvolutionCMS\Traits;
  */
 class ManagerUser extends Eloquent\Model
 {
-    use Traits\Models\ManagerActions;
+    use Traits\Models\ManagerActions,
+        HasDynamicRelation;
 
 	public $timestamps = false;
 
