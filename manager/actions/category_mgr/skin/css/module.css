@@ -24,7 +24,7 @@ div#section-body-categories .ajax_loading {
     display: inline;
     text-decoration: inherit;
     color:#fff;
-    font-weight:normal;
+    font-weight:bold;
     float:left;
     margin-right:5px;
 }
