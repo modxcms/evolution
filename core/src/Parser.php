@@ -251,6 +251,7 @@ class Parser
                     }
                     break;
                 case '@B_CODE':
+                    $tpl = trim($tmp[3]);
                     $cache = md5($name) . '-' . sha1($subTmp);
                     $filesystem = $this->modx['filesystem']->drive('storage');
                     if (!$filesystem->exists('blade/' . $cache . '.blade.php')) {
@@ -447,6 +448,8 @@ class Parser
                 $out = $out->render($this->getTemplateData($data));
                 break;
             case $blade:
+                $filesystem = $this->modx['filesystem']->drive('storage');
+                $this->blade->addNamespace('cache', $filesystem->path('blade/'));
                 $out = $this->blade->make($out)->with($this->getTemplateData($data))->render();
                 break;
             case is_array($data) && ($out != ''):
