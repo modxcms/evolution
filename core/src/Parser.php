@@ -257,6 +257,7 @@ class Parser
                     if (!$filesystem->exists('blade/' . $cache . '.blade.php')) {
                         $filesystem->put('blade/' . $cache . '.blade.php', $tpl);
                     }
+                    $this->blade->addNamespace('cache', $filesystem->path('blade/'));
                     $tpl = 'cache::' . $cache;
                     break;
                 case '@FILE':
@@ -448,8 +449,6 @@ class Parser
                 $out = $out->render($this->getTemplateData($data));
                 break;
             case $blade:
-                $filesystem = $this->modx['filesystem']->drive('storage');
-                $this->blade->addNamespace('cache', $filesystem->path('blade/'));
                 $out = $this->blade->make($out)->with($this->getTemplateData($data))->render();
                 break;
             case is_array($data) && ($out != ''):
