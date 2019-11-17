@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
+use Rocky\Eloquent\HasDynamicRelation;
 
 /**
  * EvolutionCMS\Models\WebUserAttribute
@@ -45,7 +46,8 @@ use EvolutionCMS\Traits;
  */
 class WebUserAttribute extends Eloquent\Model
 {
-    use Traits\Models\TimeMutator;
+    use Traits\Models\TimeMutator,
+        HasDynamicRelation;
 
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';

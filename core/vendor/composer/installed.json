@@ -672,6 +672,41 @@
         ]
     },
     {
+        "name": "i-rocky/eloquent-dynamic-relation",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/i-rocky/eloquent-dynamic-relation.git",
+            "reference": "ac98e03dc28e08932f2e277c7f25af9f8647a4af"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/i-rocky/eloquent-dynamic-relation/zipball/ac98e03dc28e08932f2e277c7f25af9f8647a4af",
+            "reference": "ac98e03dc28e08932f2e277c7f25af9f8647a4af",
+            "shasum": ""
+        },
+        "time": "2019-04-03T20:24:34+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Rocky\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rocky",
+                "email": "wpkpda@gmail.com"
+            }
+        ],
+        "description": "Adds dynamic relationship capability to eloquent ORM models"
+    },
+    {
         "name": "illuminate/cache",
         "version": "v6.0.2",
         "version_normalized": "6.0.2.0",

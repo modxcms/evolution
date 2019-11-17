@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
+use Rocky\Eloquent\HasDynamicRelation;
 
 /**
  * EvolutionCMS\Models\SiteTemplate
@@ -41,7 +42,8 @@ use EvolutionCMS\Traits;
 class SiteTemplate extends Eloquent\Model
 {
     use Traits\Models\ManagerActions,
-        Traits\Models\TimeMutator;
+        Traits\Models\TimeMutator,
+        HasDynamicRelation;
 
 	const CREATED_AT = 'createdon';
 	const UPDATED_AT = 'editedon';
