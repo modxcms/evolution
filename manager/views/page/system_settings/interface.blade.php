@@ -128,8 +128,7 @@
                 'left' => ManagerTheme::getLexicon('login_form_position_left'),
                 'center' => ManagerTheme::getLexicon('login_form_position_center'),
                 'right' => ManagerTheme::getLexicon('login_form_position_right')
-            ],
-            'comment' => ManagerTheme::getLexicon('manager_theme_mode_message')
+            ]
         ])
 
         <div class="split my-1"></div>
@@ -140,8 +139,8 @@
             'small' => '[(login_form_style)]',
             'value' => $settings['login_form_style'],
             'options' => [
-                'dark' => 'Dark',
-                'light' => 'Light'
+                'dark' => ManagerTheme::getLexicon('login_form_style_dark'),
+                'light' => ManagerTheme::getLexicon('login_form_style_light')
             ]
         ])
 
