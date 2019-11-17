@@ -346,7 +346,7 @@ border-bottom: 1px solid #e0e0e0; }
 .darkness #content_body { margin: 0 -1.5rem; }
 .darkness .card .table.data, .darkness .table td[style="background-color:#ffffff;"] { background: #202329 !important; }
 .darkness .table.data, .darkness .grid { background: #282c34 !important; border: none !important }
-.darkness .table.data thead, .darkness .grid thead, .darkness #editorRow_TinyMCE { background: none }
+.darkness .table.data thead, .darkness .grid thead { background: none }
 .darkness .table.data thead th, .darkness .table.data thead td, .darkness .grid th, .darkness .grid thead td { padding: 0.75rem !important; background-color: #202329; border: none; border-bottom: 1px solid #1f5994; color: #777; text-transform: uppercase; font-size: 0.675rem; }
 .darkness .table.data thead .sortable a, .darkness .table.data thead .sortable-text a, .darkness .sortabletable th a { color: #777; }
 .darkness .table th a:hover, .darkness .table thead td a:hover, .darkness .grid th a:hover, .darkness .grid thead td a:hover, .darkness .table .sortable:hover a, .darkness .table .sortable-text:hover a { color: #eee !important; }
@@ -363,11 +363,10 @@ padding: .25rem .5rem; background: none; border: none !important; color: inherit
 .darkness .table.data .actions a:hover .fa::before { color: #eee; }
 .darkness .table.data .actions a:hover .fa::after { background-color: #3b414e; }
 .darkness .table.data .actions a:hover .fa.fa-trash::before { color: #d80030; }
-.darkness table .split, .darkness #editorRow_TinyMCE tr, .darkness table.table.table--edit > tbody > tr, .darkness .sysSettings > tbody > tr { border: none; border-bottom: 1px solid #23262b !important; }
+.darkness table .split, .darkness table.table.table--edit > tbody > tr, .darkness .sysSettings > tbody > tr { border: none; border-bottom: 1px solid #23262b !important; }
 .darkness table .split { margin: 0 -.5rem; }
 .darkness table tr.noborder { border: none !important; }
 .darkness table .comment { color: #999 !important; }
-.darkness #editorRow_TinyMCE > tbody > tr:first-child > th { background: none !important; color: inherit !important; }
 .darkness .section-editor, .darkness #content_body { border-top: 1px solid #414449; }
 .darkness #file_editfile .navbar-editor, .darkness #file_editfile [name="editFile"], .darkness #content_body, .darkness .section-editor { border-bottom: 1px solid #414449; }
 .darkness .section-editor > textarea, .darkness #content_body > div > textarea, .darkness #content_body > .section-editor { margin-top: 0 }
@@ -462,10 +461,6 @@ ul.mmTagList { float: left; margin-top: .25rem !important
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 .mce-container button { border: none; border-radius: 0; background-color: transparent; }
 .mce-window-head .mce-close { padding: 0; }
-#editorRow_TinyMCE { background-color: #fff; }
-#editorRow_TinyMCE tr { border: 1px dotted rgba(0, 0, 0, .05); }
-#editorRow_TinyMCE th { white-space: nowrap }
-#editorRow_TinyMCE th, #editorRow_TinyMCE td { padding: 0.5em; border: none !important }
 div.mce-fullscreen { margin-top:2.6rem;	}
 /* wrap TinyMCE3 toolbar */
 .mceEditor .mceToolbar td { height: 24px; float: left }
