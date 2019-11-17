@@ -56,7 +56,8 @@
     "phpmailer/phpmailer": "6.0.6",
     "tracy/tracy": "~2.5",
     "wikimedia/composer-merge-plugin": "dev-master",
-    "symfony/process": "^4.3"
+    "symfony/process": "^4.3",
+    "i-rocky/eloquent-dynamic-relation": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

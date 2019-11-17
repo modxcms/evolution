@@ -53,6 +53,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
             'Seld\\PharUtils\\' => 15,
             'Seld\\JsonLint\\' => 14,
         ),
+        'R' => 
+        array (
+            'Rocky\\' => 6,
+        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -171,6 +175,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Seld\\JsonLint\\' => 
         array (
             0 => __DIR__ . '/..' . '/seld/jsonlint/src/Seld/JsonLint',
+        ),
+        'Rocky\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/i-rocky/eloquent-dynamic-relation/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
