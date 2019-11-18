@@ -2889,8 +2889,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (isset($this->documentObject['id'])) {
                     $data = [
                         'modx' => $this,
-                        'documentObject' => $this->makeDocumentObject($this->documentObject['id']),
-                        'siteContentObject' => SiteContent::find($this->documentObject['id'])
+                        'documentObject' => $this->makeDocumentObject($this->documentObject['id'])
                     ];
                 } else {
                     $data = [
