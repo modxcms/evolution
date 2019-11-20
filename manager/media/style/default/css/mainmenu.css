@@ -170,7 +170,7 @@ body.light #mainMenu #nav #site::before, body.dark #mainMenu #nav #site::before,
 .navbar-left #mainMenu > .container > .row > .cell { display: block; }
 .navbar-left #mainMenu #nav, .navbar-left #mainMenu #settings { float: none; }
 .navbar-left #mainMenu #settings { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.15); }
-.navbar-left #mainMenu .nav > li { position: static; display: block; text-align: center; }
+.navbar-left #mainMenu .nav > li { width: 100%; position: static; display: block; text-align: center; }
 .navbar-left #mainMenu .nav > li > a { height: auto; }
 .navbar-left #mainMenu #nav > li > a, .navbar-left #mainMenu #settings > li > a { padding: 0; }
 .navbar-left #mainMenu #settings > li > a { padding: .5rem 0 }
