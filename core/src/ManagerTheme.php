@@ -707,7 +707,7 @@ class ManagerTheme implements ManagerThemeInterface
             $activeUser->username = $_SESSION['mgrShortname'];
             $activeUser->lasthit = $this->getCore()->tstart;
             $activeUser->action = $action;
-            $activeUser->id = $this->getItemId() ?? var_export(null, true);
+            $activeUser->id = $this->getItemId();
             $activeUser->save();
             $flag = true;
         }
