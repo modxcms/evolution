@@ -2389,10 +2389,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
         $cacheKey = md5(print_r(func_get_args(), true));
-        $cachedData = Cache::get($cacheKey);
-        if (!is_null($cachedData)) {
-            return $cachedData;
-        }
+        //@TODO: need use correct cache key
+        //$cachedData = Cache::get($cacheKey);
+        //if (!is_null($cachedData)) {
+        //    return $cachedData;
+        //}
 
         // allow alias to be full path
         if ($method === 'alias') {
