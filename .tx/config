@@ -11,13 +11,13 @@ lang_map = bg: bulgarian, cs: czech, da: danish, de: german, es: spanish-utf8, f
 
 [modx-evolution.countrylist]
 file_filter = manager/includes/lang/country/<lang>_country.inc.php
-source_file = manager/includes/lang/country/english_country.inc.php
+source_file = manager/includes/country/english_country.inc.php
 source_lang = en
 type = PHP_ALT_ARRAY
 
 [modx-evolution.manager]
-file_filter = manager/includes/lang/<lang>.inc.php
-source_file = manager/includes/lang/english.inc.php
+file_filter = manager/includes/<lang>.inc.php
+source_file = manager/includes/english.inc.php
 source_lang = en
 type = PHP_ALT_ARRAY
 
