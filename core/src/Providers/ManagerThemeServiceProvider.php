@@ -22,15 +22,10 @@ class ManagerThemeServiceProvider extends ServiceProvider
     public function register()
     {
         $theme = $this->app->getConfig('manager_theme', 'default');
-
         $this->app->singleton('ManagerTheme', function ($app) use ($theme) {
             return new ManagerTheme($app, $theme);
         });
 
-        $this->loadViewsFrom([
-            MODX_MANAGER_PATH . 'media/style/' . $theme . '/views/',
-            MODX_MANAGER_PATH . '/views/'
-        ], $this->namespace);
 
         $this->loadSnippetsFrom(
             MODX_MANAGER_PATH . 'media/style/' . $theme . '/snippets/',

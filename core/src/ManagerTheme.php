@@ -183,13 +183,15 @@ class ManagerTheme implements ManagerThemeInterface
         501
     ];
 
-    public function __construct(CoreInterface $core, $theme = '')
+    public function __construct(CoreInterface $core)
     {
         $this->core = $core;
 
-        if (empty($theme)) {
-            $theme = $this->getCore()->getConfig('manager_theme');
-        }
+
+        $theme = $this->getCore()->getConfig('manager_theme');
+
+        $this->getCore()['view']->addNamespace('manager', MODX_MANAGER_PATH . '/media/style/' . $theme . '/views/');
+        $this->getCore()['view']->addNamespace('manager', MODX_MANAGER_PATH . '/views/');
 
         $this->theme = $theme;
 
