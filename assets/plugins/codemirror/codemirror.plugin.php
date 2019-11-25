@@ -52,7 +52,7 @@ if (!empty($_COOKIE['MODX_themeMode'])) {
  */
 $prte = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
 $srte = ($modx->config['use_editor'] ? $modx->config['which_editor'] : 'none');
-$xrte = $content['richtext'];
+$xrte = isset($content['richtext']) ? $content['richtext'] : '';
 $tvMode = false;
 $limitedHeight = false;
 /*
@@ -104,9 +104,9 @@ switch($modx->event->name) {
 			return;
 		}
 		$textarea_name = 'ta';
-		$object_name = $content['pagetitle'];
+        $object_name = isset($content['pagetitle']) ? $content['pagetitle'] : '';
 		$xrte = (('htmlmixed' == $mode) ? $xrte : 0);
-		$rte = ($prte ? $prte : ($content['id'] ? ($xrte ? $srte : 'none') : $srte));
+        $rte = ($prte ? $prte : (isset($content['id']) ? ($xrte ? $srte : 'none') : $srte));
 		$contentType = $content['contentType'];
 		/*
 		* Switch contentType for doc
