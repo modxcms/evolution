@@ -21,4 +21,4 @@ $_lang['updateButton_txt'] = 'Обновить до версии';
 $_lang['error_curl'] = 'Необходимо включить функцию CURL в PHP';
 $_lang['error_zip'] = 'Необходимо включить функцию ZIP в PHP';
 $_lang['error_openssl'] = 'Необходимо включить функцию OpenSSL в PHP';
-$_lang['error_overwrite'] = 'Файлы EVO не доступны для перезаписи';
+$_lang['error_overwrite'] = 'Файлы Evolution CMS не доступны для перезаписи';

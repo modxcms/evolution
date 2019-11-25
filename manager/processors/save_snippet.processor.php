@@ -8,11 +8,11 @@ if (!$modx->hasPermission('save_snippet')) {
 
 $id = (int)$_POST['id'];
 $snippet = trim($_POST['post']);
-$name = $modx->db->escape(trim($_POST['name']));
-$description = $modx->db->escape($_POST['description']);
-$locked = $_POST['locked'] == 'on' ? 1 : 0;
-$disabled = $_POST['disabled'] == "on" ? '1' : '0';
-$currentdate = time() + $modx->config['server_offset_time'];
+$name = trim($_POST['name']);
+$description = $_POST['description'];
+$locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
+$disabled = isset($_POST['disabled']) && $_POST['disabled'] == "on" ? '1' : '0';
+$createdon = $editedon = time() + $modx->config['server_offset_time'];
 
 // strip out PHP tags from snippets
 if (strncmp($snippet, "<?", 2) == 0) {
@@ -26,21 +26,20 @@ if (substr($snippet, -2) == '?>') {
     $snippet = substr($snippet, 0, -2);
 }
 
-$snippet = $modx->db->escape($snippet);
-$properties = $modx->db->escape($_POST['properties']);
-$moduleguid = $modx->db->escape($_POST['moduleguid']);
-$parse_docblock = $_POST['parse_docblock'] == "1" ? '1' : '0';
+$properties = $_POST['properties'];
+$moduleguid = $_POST['moduleguid'];
+$parse_docblock = isset($_POST['parse_docblock']) && $_POST['parse_docblock'] == "1" ? '1' : '0';
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = (int)$_POST['categoryid'];
+    $category = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
-    $categoryid = 0;
+    $category = 0;
 } else {
     include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-    $categoryid = checkCategory($_POST['newcategory']);
-    if (!$categoryid) {
-        $categoryid = newCategory($_POST['newcategory']);
+    $category = checkCategory($_POST['newcategory']);
+    if (!$category) {
+        $category = newCategory($_POST['newcategory']);
     }
 }
 
@@ -49,7 +48,7 @@ if ($name == "") {
 }
 
 if ($parse_docblock) {
-    $parsed = $modx->parseDocBlockFromString($snippet, true);
+    $parsed = DocBlock::parseFromString($snippet);
     $name = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties = isset($parsed['properties']) ? $parsed['properties'] : $properties;
     $moduleguid = isset($parsed['guid']) ? $parsed['guid'] : $moduleguid;
@@ -61,7 +60,7 @@ if ($parse_docblock) {
     }
     if (isset($parsed['modx_category'])) {
         include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-        $categoryid = getCategory($parsed['modx_category']);
+        $category = getCategory($parsed['modx_category']);
     }
 }
 
@@ -75,26 +74,13 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for new snippets
-        $rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_snippets'), "name='{$name}'");
-        $count = $modx->db->getValue($rs);
-        if ($count > 0) {
-            $modx->manager->saveFormValues(23);
+        if (EvolutionCMS\Models\SiteSnippet::where('name','=',$name)->first()) {
+            $modx->getManagerApi()->saveFormValues(23);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
         }
 
         //do stuff to save the new doc
-        $newid = $modx->db->insert(array(
-            'name' => $name,
-            'description' => $description,
-            'snippet' => $snippet,
-            'moduleguid' => $moduleguid,
-            'locked' => $locked,
-            'properties' => $properties,
-            'category' => $categoryid,
-            'disabled' => $disabled,
-            'createdon' => $currentdate,
-            'editedon' => $currentdate
-        ), $modx->getFullTableName('site_snippets'));
+        $newid = EvolutionCMS\Models\SiteSnippet::create(compact('name', 'description','snippet','moduleguid','locked','properties','category','disabled','createdon','editedon'))->getKey();
 
         // invoke OnSnipFormSave event
         $modx->invokeEvent("OnSnipFormSave", array(
@@ -126,24 +112,15 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for snippets
-        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
-        if ($modx->db->getValue($rs) > 0) {
-            $modx->manager->saveFormValues(22);
+        if (EvolutionCMS\Models\SiteSnippet::where('id','!=',$id)->where('name','=',$name)->first()) {
+            $modx->getManagerApi()->saveFormValues(22);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
         }
 
         //do stuff to save the edited doc
-        $modx->db->update(array(
-            'name' => $name,
-            'description' => $description,
-            'snippet' => $snippet,
-            'moduleguid' => $moduleguid,
-            'locked' => $locked,
-            'properties' => $properties,
-            'category' => $categoryid,
-            'disabled' => $disabled,
-            'editedon' => $currentdate
-        ), $modx->getFullTableName('site_snippets'), "id='{$id}'");
+        $siteSnippet= EvolutionCMS\Models\SiteSnippet::find($id);
+
+        $siteSnippet->update(compact('name', 'description','snippet','moduleguid','locked','properties','category','disabled','editedon'));
 
         // invoke OnSnipFormSave event
         $modx->invokeEvent("OnSnipFormSave", array(
@@ -157,9 +134,6 @@ switch ($_POST['mode']) {
         // empty cache
         $modx->clearCache('full');
 
-        if ($_POST['runsnippet']) {
-            run_snippet($snippet);
-        }
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
             $a = ($_POST['stay'] == '2') ? "22&id=$id" : "23";

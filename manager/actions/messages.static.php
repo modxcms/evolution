@@ -5,10 +5,13 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 if (!$modx->hasPermission('messages')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
+
+$subjecttext = '';
+$messagetext = '';
 ?>
 
 <h1>
-    <i class="fa fa-envelope"></i><?= $_lang['messages_title'] ?>
+    <i class="<?= $_style['icon_mail'] ?>"></i><?= $_lang['messages_title'] ?>
 </h1>
 
 <?php if (isset($_REQUEST['id']) && $_REQUEST['m'] == 'r') { ?>
@@ -16,12 +19,12 @@ if (!$modx->hasPermission('messages')) {
         <div class="container container-body" id="lyr3">
             <b><?= $_lang['messages_read_message'] ?></b>
             <?php
-            $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='" . (int)$_REQUEST['id'] . "'");
-            $message = $modx->db->getRow($rs);
+            $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "id='" . (int)$_REQUEST['id'] . "'");
+            $message = $modx->getDatabase()->getRow($rs);
             if (!$message) {
                 echo "Wrong number of messages returned!";
             } else {
-                if ($message['recipient'] != $modx->getLoginUserID()) {
+                if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
                     // output message!
@@ -30,14 +33,14 @@ if (!$modx->hasPermission('messages')) {
                     if ($sender == 0) {
                         $sendername = $_lang['messages_system_user'];
                     } else {
-                        $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                        $sendername = $modx->db->getValue($rs2);
+                        $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
+                        $sendername = $modx->getDatabase()->getValue($rs2);
                     }
                     ?>
-                    <div class="btn-group float-xs-right">
-                        <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="fa fa-reply"></i> <?= $_lang['messages_reply'] ?></a>
-                        <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="fa fa-forward"></i> <?= $_lang['messages_forward'] ?></a>
-                        <a id="Button3" class="btn btn-outline-danger btn-sm" href="index.php?a=65&id=<?= $message['id'] ?>"><i class="<?= $_style["actions_delete"] ?>"></i> <?= $_lang['delete'] ?></a>
+                    <div class="btn-group float-right">
+                        <a id="Button1" class="btn btn-secondary btn-sm<?= ($message['sender'] == 0 ? ' disabled' : '') ?>" href="index.php?a=10&t=c&m=rp&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_reply'] ?>"></i> <?= $_lang['messages_reply'] ?></a>
+                        <a id="Button2" class="btn btn-secondary btn-sm" href="index.php?a=10&t=c&m=f&id=<?= $message['id'] ?>"><i class="<?= $_style['icon_forward'] ?>></i> <?= $_lang['messages_forward'] ?></a>
+                        <a id="Button3" class="btn btn-outline-danger btn-sm" href="index.php?a=65&id=<?= $message['id'] ?>"><i class="<?= $_style["icon_trash"] ?>"></i> <?= $_lang['delete'] ?></a>
                     </div>
                     <p class="clearfix"></p>
                     <div class="form-group card">
@@ -51,7 +54,7 @@ if (!$modx->hasPermission('messages')) {
                                 <tr>
                                     <td><b><?= $_lang['messages_sent'] ?>:</b></td>
                                     <td>&nbsp;</td>
-                                    <td><?= $modx->toDateFormat($message['postdate'] + $server_offset_time) ?></td>
+                                    <td><?= $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) ?></td>
                                 </tr>
                                 <tr>
                                     <td><b><?= $_lang['messages_subject'] ?>:</b></td>
@@ -73,7 +76,7 @@ if (!$modx->hasPermission('messages')) {
                     </div>
                     <?php
                     // mark the message as read
-                    $modx->db->update(array('messageread' => 1), $modx->getFullTableName('user_messages'), "id='{$_REQUEST['id']}'");
+                    $modx->getDatabase()->update(array('messageread' => 1), $modx->getDatabase()->getFullTableName('user_messages'), "id='{$_REQUEST['id']}'");
                 }
             }
             ?>
@@ -87,8 +90,8 @@ if (!$modx->hasPermission('messages')) {
         <p><b><?= $_lang['messages_inbox'] ?></b></p>
         <?php
         // Get  number of rows
-        $rs = $modx->db->select('count(id)', $modx->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "");
-        $num_rows = $modx->db->getValue($rs);
+        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
+        $num_rows = $modx->getDatabase()->getValue($rs);
 
         // ==============================================================
         // Exemple Usage
@@ -104,20 +107,19 @@ if (!$modx->hasPermission('messages')) {
         }
 
         // Number of result to display on the page, will be in the LIMIT of the sql query also
-        $int_num_result = $number_of_messages;
+        $int_num_result = isset($number_of_messages) ? (int)$number_of_messages : 10;
 
         $extargv = "&a=10"; // extra argv here (could be anything depending on your page)
 
-        include_once "paginate.inc.php";
         // New instance of the Paging class, you can modify the color and the width of the html table
-        $p = new Paging($num_rows, $int_cur_position, $int_num_result, $extargv);
+        $p = new EvolutionCMS\Support\Paginate($num_rows, $int_cur_position, $int_num_result, $extargv);
 
         // Load up the 2 array in order to display result
         $array_paging = $p->getPagingArray();
         $array_row_paging = $p->getPagingRowArray();
 
         // Display the result as you like...
-        $pager .= $_lang['showing'] . " " . $array_paging['lower'];
+        $pager = $_lang['showing'] . " " . $array_paging['lower'];
         $pager .= " " . $_lang['to'] . " " . $array_paging['upper'];
         $pager .= " (" . $array_paging['total'] . " " . $_lang['total'] . ")";
         $pager .= "<br />" . $array_paging['previous_link'] . "&lt;&lt;" . (isset($array_paging['previous_link']) ? "</a> " : " ");
@@ -131,8 +133,8 @@ if (!$modx->hasPermission('messages')) {
         // Of course you can now play with array_row_paging in order to print
         // only the results you would like...
 
-        $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
-        $limit = $modx->db->getRecordCount($rs);
+        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
+        $limit = $modx->getDatabase()->getRecordCount($rs);
         if ($limit < 1) {
             echo $_lang['messages_no_messages'];
         } else {
@@ -154,22 +156,22 @@ if (!$modx->hasPermission('messages')) {
                         </thead>
                         <tbody>
                         <?php
-                        while ($message = $modx->db->getRow($rs)) {
+                        while ($message = $modx->getDatabase()->getRow($rs)) {
                             $sender = $message['sender'];
                             if ($sender == 0) {
                                 $sendername = "[System]";
                             } else {
-                                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                                $sendername = $modx->db->getValue($rs2);
+                                $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
+                                $sendername = $modx->getDatabase()->getValue($rs2);
                             }
                             $messagestyle = $message['messageread'] == 0 ? "text-primary" : "";
                             ?>
                             <tr>
-                                <td><?= $message['messageread'] == 0 ? '<i class="fa fa-envelope"></i>' : "" ?></td>
+                                <td><?= $message['messageread'] == 0 ? '<i class="'. $_style['icon_mail'] .'"></i>' : "" ?></td>
                                 <td class="<?= $messagestyle ?>" style="cursor: pointer;" onClick="window.location.href='index.php?a=10&id=<?= $message['id'] ?>&m=r';"><?= $message['subject'] ?></td>
                                 <td><?= $sendername ?></td>
                                 <td><?= $message['private'] == 0 ? $_lang['no'] : $_lang['yes'] ?></td>
-                                <td><?= $modx->toDateFormat($message['postdate'] + $server_offset_time) ?></td>
+                                <td><?= $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) ?></td>
                             </tr>
                             <?php
                         }
@@ -188,13 +190,13 @@ if (!$modx->hasPermission('messages')) {
     <div class="container container-body">
         <p><b><?= $_lang['messages_compose'] ?></b></p>
         <?php
-        if (($_REQUEST['m'] == 'rp' || $_REQUEST['m'] == 'f') && isset($_REQUEST['id'])) {
-            $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='" . $_REQUEST['id'] . "'");
-            $message = $modx->db->getRow($rs);
+        if (isset($_REQUEST['m'], $_REQUEST['id']) && ($_REQUEST['m'] == 'rp' || $_REQUEST['m'] == 'f')) {
+            $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "id='" . $_REQUEST['id'] . "'");
+            $message = $modx->getDatabase()->getRow($rs);
             if (!$message) {
                 echo "Wrong number of messages returned!";
             } else {
-                if ($message['recipient'] != $modx->getLoginUserID()) {
+                if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
                     // output message!
@@ -203,12 +205,12 @@ if (!$modx->hasPermission('messages')) {
                     if ($sender == 0) {
                         $sendername = "[System]";
                     } else {
-                        $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                        $sendername = $modx->db->getValue($rs2);
+                        $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
+                        $sendername = $modx->getDatabase()->getValue($rs2);
                     }
                     $subjecttext = $_REQUEST['m'] == 'rp' ? "Re: " : "Fwd: ";
                     $subjecttext .= $message['subject'];
-                    $messagetext = "\n\n\n-----\n" . $_lang['messages_from'] . ": $sendername\n" . $_lang['messages_sent'] . ": " . $modx->toDateFormat($message['postdate'] + $server_offset_time) . "\n" . $_lang['messages_subject'] . ": " . $message['subject'] . "\n\n" . $message['message'];
+                    $messagetext = "\n\n\n-----\n" . $_lang['messages_from'] . ": $sendername\n" . $_lang['messages_sent'] . ": " . $modx->toDateFormat($message['postdate'] + $modx->getConfig('server_offset_time')) . "\n" . $_lang['messages_subject'] . ": " . $message['subject'] . "\n\n" . $message['message'];
                     if ($_REQUEST['m'] == 'rp') {
                         $recipientindex = $message['sender'];
                     }
@@ -248,11 +250,11 @@ if (!$modx->hasPermission('messages')) {
                 <div id='userspan' style="display:block;"> <?= $_lang['messages_select_user'] ?>:&nbsp;
                     <?php
                     // get all usernames
-                    $rs = $modx->db->select('username, id', $modx->getFullTableName('manager_users'));
+                    $rs = $modx->getDatabase()->select('username, id', $modx->getDatabase()->getFullTableName('manager_users'));
                     ?>
                     <select name="user" class="form-control form-control-sm" size="1">
                         <?php
-                        while ($row = $modx->db->getRow($rs)) {
+                        while ($row = $modx->getDatabase()->getRow($rs)) {
                             ?>
                             <option value="<?= $row['id'] ?>"><?= $row['username'] ?></option>
                             <?php
@@ -263,11 +265,11 @@ if (!$modx->hasPermission('messages')) {
                 <div id='groupspan' style="display:none;"> <?= $_lang['messages_select_group'] ?>:&nbsp;
                     <?php
                     // get all usernames
-                    $rs = $modx->db->select('name, id', $modx->getFullTableName('user_roles'));
+                    $rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('user_roles'));
                     ?>
                     <select name="group" class="form-control form-control-sm" size="1">
                         <?php
-                        while ($row = $modx->db->getRow($rs)) {
+                        while ($row = $modx->getDatabase()->getRow($rs)) {
                             ?>
                             <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
                             <?php
@@ -288,18 +290,18 @@ if (!$modx->hasPermission('messages')) {
                     <div class="col-xs-12"><textarea name="messagebody" rows="10" onLoad="this.focus();" class="form-control"><?= $messagetext ?></textarea></div>
                 </div>
             </div>
-            <a href="javascript:;" class="btn btn-success" onclick="documentDirty=false; document.messagefrm.submit();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['messages_send'] ?></a>
-            <a href="index.php?a=10&t=c" class="btn btn-secondary"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+            <a href="javascript:;" class="btn btn-success" onclick="documentDirty=false; document.messagefrm.submit();"><i class="<?= $_style["icon_save"] ?>"></i> <?= $_lang['messages_send'] ?></a>
+            <a href="index.php?a=10&t=c" class="btn btn-secondary"><i class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
         </form>
     </div>
 </div>
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . " and messageread=0");
-$_SESSION['nrnewmessages'] = $modx->db->getValue($rs);
-$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID() . "");
-$_SESSION['nrtotalmessages'] = $modx->db->getValue($rs);
+$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . " and messageread=0");
+$_SESSION['nrnewmessages'] = $modx->getDatabase()->getValue($rs);
+$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
+$_SESSION['nrtotalmessages'] = $modx->getDatabase()->getValue($rs);
 $messagesallowed = $modx->hasPermission('messages');
 ?>
 <script type="text/javascript">

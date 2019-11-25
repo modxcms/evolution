@@ -294,11 +294,11 @@ class uploader {
 		$modx = evolutionCMS();
 
 		// Cleaning uploaded filename?
-		$setting = $modx->db->select('count(*)', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
-		if ($modx->db->getValue($setting)>0) {
+		$setting = $modx->getDatabase()->select('count(*)', $modx->getDatabase()->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
+		if ($modx->getDatabase()->getValue($setting)>0) {
 			// Transalias plugin active?
-			$res = $modx->db->select('properties', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
-			if ($properties = $modx->db->getValue($res)) {
+			$res = $modx->getDatabase()->select('properties', $modx->getDatabase()->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
+			if ($properties = $modx->getDatabase()->getValue($res)) {
 				$properties = $modx->parseProperties($properties, 'TransAlias', 'plugin');
 			} else {
 				$properties = NULL;
@@ -586,6 +586,7 @@ class uploader {
                 return $img->output( 'gif', $options );
 
             case IMAGETYPE_PNG:
+		$options['quality'] = 9;
                 return $img->output( 'png', $options );
 
             default:

@@ -7,28 +7,29 @@ if(!$modx->hasPermission('edit_user')) {
 }
 
 // initialize page view state - the $_PAGE object
-$modx->manager->initPageViewState();
+$modx->getManagerApi()->initPageViewState();
+
+$op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 
 // get and save search string
-if($_REQUEST['op'] == 'reset') {
+if($op == 'reset') {
 	$query = '';
 	$_PAGE['vs']['search'] = '';
 } else {
-	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-	$sqlQuery = $modx->db->escape($query);
+	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : (isset($_PAGE['vs']['search']) ? $_PAGE['vs']['search'] : '');
+	$sqlQuery = $modx->getDatabase()->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 
 // get & save listmode
-$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : $_PAGE['vs']['lm'];
+$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : (isset($_PAGE['vs']['lm']) ? $_PAGE['vs']['lm'] : '');
 $_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["actions_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
-$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["actions_delete"], (!$modx->hasPermission('delete_user') ? 1 : 0));
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
+$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["icon_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
+$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["icon_trash"], (!$modx->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -90,12 +91,11 @@ echo $cm->render();
 
 </script>
 <form name="resource" method="post">
-	<input type="hidden" name="id" value="<?= $id ?>" />
 	<input type="hidden" name="listmode" value="<?= $listmode ?>" />
 	<input type="hidden" name="op" value="" />
 
 	<h1>
-		<i class="fa fa fa-user"></i><?= $_lang['user_management_title'] ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= $_style['icon_user'] ?>"></i><?= $_lang['user_management_title'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
 	<div class="container element-edit-message">
@@ -104,16 +104,20 @@ echo $cm->render();
 
 	<div class="tab-page">
 		<div class="container container-body">
-            <div class="searchbar form-group">
-                <div class="input-group">
+            <div class="row searchbar form-group">
+                <div class="col-sm-6 input-group">
                     <div class="input-group-btn">
-                        <a class="btn btn-success btn-sm" href="index.php?a=11"><i class="<?= $_style["actions_new"] ?>"></i> <?= $_lang['new_user'] ?></a>
+                        <a class="btn btn-success btn-sm" href="index.php?a=11"><i class="<?= $_style['icon_add'] ?>"></i> <?= $_lang['new_user'] ?></a>
                     </div>
-                    <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['actions_search'] ?>"></i></a>
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i></a>
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="<?= $_style['actions_table'] ?>"></i></a>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="input-group float-right w-auto">
+                        <input class="form-control form-control-sm" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
+                        <div class="input-group-append">
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['icon_search'] ?>"></i></a>
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="<?= $_style['icon_table'] ?>"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,11 +131,10 @@ echo $cm->render();
 					if(!empty($sqlQuery)) {
 						$where .= (empty($where) ? "" : " AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
 					}
-					$ds = $modx->db->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getFullTableName('manager_users') . " AS mu 
-			INNER JOIN " . $modx->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
-			LEFT JOIN " . $modx->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, $modx->config['number_of_results']); // set page size to 0 t show all items
+					$ds = $modx->getDatabase()->select("mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin, mua.logincount", $modx->getDatabase()->getFullTableName('manager_users') . " AS mu 
+			INNER JOIN " . $modx->getDatabase()->getFullTableName('user_attributes') . " AS mua ON mua.internalKey=mu.id 
+			LEFT JOIN " . $modx->getDatabase()->getFullTableName('user_roles') . " AS rname ON mua.role=rname.id", $where, 'mua.blocked ASC, mua.thislogin DESC');
+					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, $modx->getConfig('number_of_results')); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";
@@ -151,7 +154,7 @@ echo $cm->render();
 					$grd->colWidths = "1%,,,,,1%,1%,1%";
 					$grd->colAligns = "center,,,,,right' nowrap='nowrap,right,center";
 					$grd->colTypes = implode('||', array(
-						'template:<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu([+id+],event);" title="' . $_lang['click_to_context'] . '"><i class="' . $_style['icons_user'] . '"></i></a>',
+						'template:<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu([+id+],event);" title="' . $_lang['click_to_context'] . '"><i class="' . $_style['icon_user'] . '"></i></a>',
 						'template:<a href="index.php?a=12&id=[+id+]" title="' . $_lang['click_to_edit_title'] . '">[+value+]</a>',
 						'template:[+fullname+]',
 						'template:[+role+]',
@@ -163,7 +166,7 @@ echo $cm->render();
 					if($listmode == '1') {
 						$grd->pageSize = 0;
 					}
-					if($_REQUEST['op'] == 'reset') {
+					if($op == 'reset') {
 						$grd->pageNumber = 1;
 					}
 					// render grid

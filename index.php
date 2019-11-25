@@ -1,7 +1,7 @@
 <?php
 /*
 *************************************************************************
-	EVO Content Management System and PHP Application Framework ("EVO")
+	Evolution CMS Content Management System and PHP Application Framework ("EVO")
 	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
 	EVO is an opensource PHP/MySQL content management system and content
@@ -44,35 +44,43 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-
-$autoloader = __DIR__.'/vendor/autoload.php';
-if (file_exists($autoloader) && is_readable($autoloader)) {
-	include_once($autoloader);
+if (! isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+    $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
-
-if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
-
-$base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
-if(is_file($base_path . 'assets/cache/siteManager.php'))
-    include_once($base_path . 'assets/cache/siteManager.php');
-if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
-	define('MGR_DIR', 'manager');
-if(is_file($base_path . 'assets/cache/siteHostnames.php'))
-    include_once($base_path . 'assets/cache/siteHostnames.php');
-if(!defined('MODX_SITE_HOSTNAMES'))
-	define('MODX_SITE_HOSTNAMES', '');
-
-// get start time
 $mstart = memory_get_usage();
 
-// harden it
-require_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/protect.inc.php');
+$config = [
+    'core' => __DIR__ . '/core',
+    'manager' => __DIR__ . '/manager',
+    'root' => __DIR__
+];
+
+if (file_exists(__DIR__ . '/config.php')) {
+    $config = array_merge($config, require __DIR__ . '/config.php');
+}
+if (! file_exists($config['core'] . '/.install')) {
+    header('HTTP/1.1 503 Service Temporarily Unavailable');
+    header('Status: 503 Service Temporarily Unavailable');
+    header('Retry-After: 3600');
+
+    $path = __DIR__ . '/install/src/template/not_installed.tpl';
+    if (file_exists($path)) {
+        readfile($path);
+    } else {
+        echo '<h3>Unable to load configuration settings</h3>';
+        echo 'Please run the Evolution CMS install utility';
+    }
+
+    exit;
+}
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
 @ini_set('session.use_trans_sid', 0);
 @ini_set('session.use_only_cookies',1);
-session_cache_limiter('');
+
+require $config['core'] . '/bootstrap.php';
+
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 header('Cache-Control: private, must-revalidate');
 ob_start();
@@ -83,34 +91,18 @@ ob_start();
  */
 
 define('IN_PARSER_MODE', true);
-if ( ! defined('IN_MANAGER_MODE')) {
+if (! defined('IN_MANAGER_MODE')) {
 	define('IN_MANAGER_MODE', false);
 }
-if (!defined('MODX_API_MODE')) {
+if (! defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
-
-// get the required includes
-if(!isset($database_user) || $database_user=="") {
-	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
-	// Be sure config.inc.php is there and that it contains some important values
-	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-		readfile('install/not_installed.tpl');
-		exit;
-	}
+if (! defined('MODX_CLI')) {
+    define('MODX_CLI', false);
 }
-
-// start session
-startCMSSession();
 
 // initiate a new document parser
-if (isset($coreClass) && class_exists($coreClass)) {
-	$modx = new $coreClass;
-}
-if (!isset($modx) || !($modx instanceof \DocumentParser)) {
-	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = DocumentParser::getInstance();
-}
+$modx = evolutionCMS();
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes
@@ -118,7 +110,6 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->dumpPlugins = false;
-$modx->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
 $modx->mstart = $mstart;
 
 // Debugging mode:
@@ -129,7 +120,7 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
     @ini_set("display_errors","0");
 }
 
-if(MODX_CLI){
+if (is_cli()) {
     @set_time_limit(0);
     @ini_set('max_execution_time',0);
 }

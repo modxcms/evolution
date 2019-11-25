@@ -1,49 +1,103 @@
 <?php
-
+define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
-define('IN_MANAGER_MODE', true);
 
-include_once("./../../../../index.php");
-
-$modx->db->connect();
-
-if (empty ($modx->config)) {
-    $modx->getSettings();
+if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
+    $config = require dirname(__DIR__) . '/config.php';
+} elseif (file_exists(dirname(__DIR__, 4) . '/config.php')) {
+    $config = require dirname(__DIR__, 4) . '/config.php';
+} else {
+    $config = [
+        'root' => dirname(__DIR__, 4)
+    ];
 }
+
+if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+    require_once $config['root'] . '/index.php';
+} else {
+    echo "<h3>Unable to load configuration settings</h3>";
+    echo "Please run the Evolution CMS <a href='../install'>install utility</a>";
+    exit;
+}
+
+$modx->getSettings();
 
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
     $modx->sendErrorPage();
 }
 
 $modx->sid = session_id();
-$modx->loadExtension("ManagerAPI");
 
-$_lang = array();
-include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
-if ($modx->config['manager_language'] != 'english') {
-    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
-}
-include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
+$_lang = ManagerTheme::getLexicon();
+$_style = ManagerTheme::getStyle();
 
-$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
-$frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
+$action = get_by_key($_REQUEST, 'a', '', 'is_scalar');
+$frame = get_by_key($_REQUEST, 'f', '', 'is_scalar');
 $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
-
-header('Content-Type: text/html; charset='.$modx->config['modx_charset'], true);
+$limit = $modx->getConfig('number_of_results');
+header('Content-Type: text/html; charset='.$modx->getConfig('modx_charset'), true);
 
 if (isset($action)) {
     switch ($action) {
-
         case '1': {
-
             switch ($frame) {
                 case 'nodes':
-                    include_once MODX_MANAGER_PATH . '/frames/nodes.php';
+                    // save folderstate
+                    if (isset($_REQUEST['opened'])) {
+                        $_SESSION['openedArray'] = $_REQUEST['opened'];
+                    }
+                    if (isset($_REQUEST['savestateonly'])) {
+                        exit('send some data');
+                    } //??
 
+                    $indent = (int)$_REQUEST['indent'];
+                    $parent = (int)$_REQUEST['parent'];
+                    $expandAll = (int)$_REQUEST['expandAll'];
+                    $output = '';
+                    $hereid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : '';
+
+                    if (isset($_REQUEST['showonlyfolders'])) {
+                        $_SESSION['tree_show_only_folders'] = $_REQUEST['showonlyfolders'];
+                    }
+
+                    // setup sorting
+                    $sortParams = array(
+                        'tree_sortby',
+                        'tree_sortdir',
+                        'tree_nodename'
+                    );
+                    foreach ($sortParams as $param) {
+                        if (isset($_REQUEST[$param])) {
+                            $_SESSION[$param] = $_REQUEST[$param];
+                            $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
+                        }
+                    }
+
+                    // icons by content type
+                    $icons = getIconInfo($_style);
+
+                    if (isset($_SESSION['openedArray'])) {
+                        $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
+                    } else {
+                        $opened = array();
+                    }
+
+                    $opened2 = array();
+                    $closed2 = array();
+
+                    //makeHTML($indent, $parent, $expandAll, $hereid);
+                    echo makeHTML($indent, $parent, $expandAll, $hereid);
+
+                    // check for deleted documents on reload
+                    if ($expandAll == 2) {
+                        $rs = $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_content'), 'deleted=1 LIMIT 1');
+                        if ($modx->getDatabase()->getRecordCount($rs)) {
+                            echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
+                        }
+                    }
                     break;
             }
 
@@ -60,94 +114,94 @@ if (isset($action)) {
                 $sql = '';
                 $a = '';
                 $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
-                $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
+                $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
                 $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
                 switch ($elements) {
                     case 'element_templates':
                         $a = 16;
-                        $sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->db->escape($filter) . '%"' : '';
-                        $sql = $modx->db->query('SELECT t1.id, t1.templatename AS name, t1.locked, 0 AS disabled
+                        $sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
+                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.templatename AS name, t1.locked, 0 AS disabled
                         FROM ' . $modx->getFullTableName('site_templates') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.templatename ASC
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_template')) {
-                            $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
+                            $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_template'] . '</a></li>';
                         }
 
                         break;
 
                     case 'element_tplvars':
                         $a = 301;
-                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, IF(MIN(t2.tmplvarid),0,1) AS disabled
+                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, IF(MIN(t2.tmplvarid),0,1) AS disabled
                         FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
                         LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
                         ' . $sqlLike . '
-                        GROUP BY t1.id
+                        GROUP BY t1.id, t1.name, t1.locked
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
-                            $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
+                            $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_tmplvars'] . '</a></li>';
                         }
 
                         break;
 
                     case 'element_htmlsnippets':
                         $a = 78;
-                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
+                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_htmlsnippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_chunk')) {
-                            $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
+                            $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
                         }
 
                         break;
 
                     case 'element_snippets':
                         $a = 22;
-                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
+                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_snippets') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_snippet')) {
-                            $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
+                            $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_snippet'] . '</a></li>';
                         }
 
                         break;
 
                     case 'element_plugins':
                         $a = 102;
-                        $sql = $modx->db->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
+                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
                         FROM ' . $modx->getFullTableName('site_plugins') . ' AS t1
                         ' . $sqlLike . '
                         ORDER BY t1.name ASC
                         ' . $sqlLimit);
 
                         if ($modx->hasPermission('new_plugin')) {
-                            $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
+                            $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_plugin'] . '</a></li>';
                         }
 
                         break;
                 }
 
-                if ($count = $modx->db->getRecordCount($sql)) {
+                if ($count = $modx->getDatabase()->getRecordCount($sql)) {
                     if ($count == $limit) {
                         $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
-                    while ($row = $modx->db->getRow($sql)) {
+                    while ($row = $modx->getDatabase()->getRow($sql)) {
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
                             continue;
                         }
 
-                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . html_escape($row['name'], $modx->config['modx_charset']) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
+                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
                     }
                 }
 
@@ -168,7 +222,7 @@ if (isset($action)) {
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
-            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
+            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
             if(!$modx->hasPermission('save_role')) {
@@ -176,7 +230,7 @@ if (isset($action)) {
                 $sqlLike .= 't2.role != 1';
             }
 
-            $sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
+            $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
 				FROM ' . $modx->getFullTableName('manager_users') . ' AS t1
 				LEFT JOIN ' . $modx->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
 				' . $sqlLike . '
@@ -184,15 +238,15 @@ if (isset($action)) {
 				' . $sqlLimit);
 
             if ($modx->hasPermission('new_user')) {
-                $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
+                $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_user'] . '</a></li>';
             }
 
-            if ($count = $modx->db->getRecordCount($sql)) {
+            if ($count = $modx->getDatabase()->getRecordCount($sql)) {
                 if ($count == $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                while ($row = $modx->db->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . html_escape($row['name'], $modx->config['modx_charset']) . ' <small>(' . $row['id'] . ')</small></a></li>';
+                while ($row = $modx->getDatabase()->getRow($sql)) {
+                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
                 }
             }
 
@@ -212,10 +266,10 @@ if (isset($action)) {
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
-            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
+            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
-            $sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
+            $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
 				FROM ' . $modx->getFullTableName('web_users') . ' AS t1
 				LEFT JOIN ' . $modx->getFullTableName('web_user_attributes') . ' AS t2 ON t1.id=t2.internalKey
 				' . $sqlLike . '
@@ -223,15 +277,15 @@ if (isset($action)) {
 				' . $sqlLimit);
 
             if ($modx->hasPermission('new_web_user')) {
-                $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
+                $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_web_user'] . '</a></li>';
             }
 
-            if ($count = $modx->db->getRecordCount($sql)) {
+            if ($count = $modx->getDatabase()->getRecordCount($sql)) {
                 if ($count == $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                while ($row = $modx->db->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+                while ($row = $modx->getDatabase()->getRow($sql)) {
+                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
                 }
             }
 
@@ -247,8 +301,8 @@ if (isset($action)) {
         }
 
         case 'modxTagHelper': {
-            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $modx->db->escape($_REQUEST['name']) : false;
-            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $modx->db->escape($_REQUEST['type']) : false;
+            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $modx->getDatabase()->escape($_REQUEST['name']) : false;
+            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $modx->getDatabase()->escape($_REQUEST['type']) : false;
             $contextmenu = '';
 
             if ($role && $name && $type) {
@@ -256,36 +310,36 @@ if (isset($action)) {
                     case 'Snippet':
                     case 'SnippetNoCache': {
 
-                        $sql = $modx->db->query('SELECT *
+                        $sql = $modx->getDatabase()->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_snippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
-                        if ($modx->db->getRecordCount($sql)) {
-                            $row = $modx->db->getRow($sql);
+                        if ($modx->getDatabase()->getRecordCount($sql)) {
+                            $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=22&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'url' => "index.php?a=23&itemname=" . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
+                                    'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -294,36 +348,36 @@ if (isset($action)) {
                     }
                     case 'Chunk' : {
 
-                        $sql = $modx->db->query('SELECT *
+                        $sql = $modx->getDatabase()->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
-                        if ($modx->db->getRecordCount($sql)) {
-                            $row = $modx->db->getRow($sql);
+                        if ($modx->getDatabase()->getRecordCount($sql)) {
+                            $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-th-large"></i> ' . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'url' => "index.php?a=77&itemname=" . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
+                                    'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -331,64 +385,64 @@ if (isset($action)) {
                         break;
                     }
                     case 'AttributeValue': {
-                        $sql = $modx->db->query('SELECT *
+                        $sql = $modx->getDatabase()->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
-                        if ($modx->db->getRecordCount($sql)) {
-                            $row = $modx->db->getRow($sql);
+                        if ($modx->getDatabase()->getRecordCount($sql)) {
+                            $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerText' => html_escape($row['name'], $modx->config['modx_charset'])
+                                    'innerText' => entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
 
-                            $sql = $modx->db->query('SELECT *
+                            $sql = $modx->getDatabase()->query('SELECT *
 							FROM ' . $modx->getFullTableName('site_snippets') . '
 							WHERE name="' . $name . '"
 							LIMIT 1');
 
-                            if ($modx->db->getRecordCount($sql)) {
-                                $row = $modx->db->getRow($sql);
+                            if ($modx->getDatabase()->getRecordCount($sql)) {
+                                $row = $modx->getDatabase()->getRow($sql);
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
-                                        'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                        'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                         'url' => "index.php?a=22&id=" . $row['id']
                                     )
                                 );
                                 if (!empty($row['description'])) {
                                     $contextmenu['seperator'] = '';
                                     $contextmenu['description'] = array(
-                                        'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
+                                        'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                     );
                                 }
                             } else {
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="fa fa-code"></i> ' . html_escape($name, $modx->config['modx_charset'])
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
-                                        'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'url' => "index.php?a=77&itemname=" . html_escape($name, $modx->config['modx_charset'])
+                                        'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
+                                        'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     ),
                                     'item2' => array(
-                                        'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'url' => "index.php?a=23&itemname=" . html_escape($name, $modx->config['modx_charset'])
+                                        'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
+                                        'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                     )
                                 );
                             }
@@ -443,36 +497,36 @@ if (isset($action)) {
                             return;
                         }
 
-                        $sql = $modx->db->query('SELECT *
+                        $sql = $modx->getDatabase()->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_tmplvars') . '
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
-                        if ($modx->db->getRecordCount($sql)) {
-                            $row = $modx->db->getRow($sql);
+                        if ($modx->getDatabase()->getRecordCount($sql)) {
+                            $row = $modx->getDatabase()->getRow($sql);
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . html_escape($row['name'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+                                    'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
                                     'url' => "index.php?a=301&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="fa fa-info"></i> ' . html_escape($row['description'], $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="fa fa-list-alt"></i> ' . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
-                                    'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'url' => "index.php?a=300&itemname=" . html_escape($name, $modx->config['modx_charset'])
+                                    'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_tmplvars'],
+                                    'url' => "index.php?a=300&itemname=" . entities($name, $modx->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -499,7 +553,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
+                    $parentOld = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
@@ -520,10 +574,10 @@ if (isset($action)) {
                     if (empty($json['errors'])) {
                         // check privileges user for move docs
                         if (!empty($modx->config['tree_show_protected']) && $role != 1) {
-                            $sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
-                            if ($modx->db->getRecordCount($sql)) {
+                            $sql = $modx->getDatabase()->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
+                            if ($modx->getDatabase()->getRecordCount($sql)) {
                                 $document_groups = array();
-                                while ($row = $modx->db->getRow($sql)) {
+                                while ($row = $modx->getDatabase()->getRow($sql)) {
                                     $document_groups[$row['document']]['groups'][] = $row['document_group'];
                                 }
                                 foreach ($document_groups as $key => $value) {
@@ -543,22 +597,22 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            $modx->db->update(array(
+                            $modx->getDatabase()->update(array(
                                 'parent' => $parent
                             ), $modx->getFullTableName('site_content'), 'id=' . $id);
                             // set parent isfolder = 1
-                            $modx->db->update(array(
+                            $modx->getDatabase()->update(array(
                                 'isfolder' => 1
                             ), $modx->getFullTableName('site_content'), 'id=' . $parent);
 
                             if ($parent != $parentOld) {
                                 // check children docs and set parent isfolder
-                                if ($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
-                                    $modx->db->update(array(
+                                if ($modx->getDatabase()->getRecordCount($modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
+                                    $modx->getDatabase()->update(array(
                                         'isfolder' => 1
                                     ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
                                 } else {
-                                    $modx->db->update(array(
+                                    $modx->getDatabase()->update(array(
                                         'isfolder' => 0
                                     ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
                                 }
@@ -568,7 +622,7 @@ if (isset($action)) {
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
+                                    $modx->getDatabase()->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
                                 }
                             } else {
                                 // TODO: max(*) menuindex
@@ -610,9 +664,9 @@ if (isset($action)) {
                     FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
                     LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
                     WHERE sc.id=' . $id . ' GROUP BY sc.id';
-                $sql = $modx->db->query($sql);
-                if ($modx->db->getRecordCount($sql)) {
-                    $row = $modx->db->getRow($sql);
+                $sql = $modx->getDatabase()->query($sql);
+                if ($modx->getDatabase()->getRecordCount($sql)) {
+                    $row = $modx->getDatabase()->getRow($sql);
                     $output = !!$row['locked'];
                 }
             }

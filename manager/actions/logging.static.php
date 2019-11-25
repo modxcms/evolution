@@ -6,58 +6,11 @@ if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-/**
- * @param array $array
- * @param string $checkKey
- * @return array
- */
-function array_unique_multi($array, $checkKey)
-{
-    // Use the builtin if we're not a multi-dimensional array
-    if (!is_array(current($array)) || empty($checkKey)) {
-        return array_unique($array);
-    }
-
-    $ret = array();
-    $checkValues = array(); // contains the unique key Values
-    foreach ($array as $key => $current) {
-        if (in_array($current[$checkKey], $checkValues)) {
-            continue;
-        } // duplicate
-
-        $checkValues[] = $current[$checkKey];
-        $ret[$key] = $current;
-    }
-    return $ret;
-}
-
-/**
- * @param array $array
- * @param string $key
- * @return array
- */
-function record_sort($array, $key)
-{
-    $hash = array();
-    foreach ($array as $k => $v) {
-        $hash[$k] = $v[$key];
-    }
-
-    natsort($hash);
-
-    $records = array();
-    foreach ($hash as $k => $row) {
-        $records[$k] = $array[$k];
-    }
-
-    return $records;
-}
-
-$rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
-$logs = $modx->db->makeArray($rs);
+$rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getDatabase()->getFullTableName('manager_log'));
+$logs = $modx->getDatabase()->makeArray($rs);
 ?>
     <h1>
-        <?= $_style['page_manager_logs'] ?><?= $_lang['mgrlog_view'] ?>
+        <i class="<?= $_style['icon_user_secret'] ?>"></i><?= $_lang['mgrlog_view'] ?>
     </h1>
 
     <div class="tab-page">
@@ -75,7 +28,7 @@ $logs = $modx->db->makeArray($rs);
                             // get all users currently in the log
                             $logs_user = record_sort(array_unique_multi($logs, 'internalKey'), 'username');
                             foreach ($logs_user as $row) {
-                                $selectedtext = $row['internalKey'] == $_REQUEST['searchuser'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['internalKey'] == get_by_key($_REQUEST, 'searchuser') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['internalKey'] . '"' . $selectedtext . '>' . $row['username'] . "</option>\n";
                             }
                             ?>
@@ -89,14 +42,13 @@ $logs = $modx->db->makeArray($rs);
                             <option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
                             <?php
                             // get all available actions in the log
-                            include_once "actionlist.inc.php";
                             $logs_actions = record_sort(array_unique_multi($logs, 'action'), 'action');
                             foreach ($logs_actions as $row) {
-                                $action = getAction($row['action']);
+                                $action = EvolutionCMS\Legacy\LogHandler::getAction($row['action']);
                                 if ($action == 'Idle') {
                                     continue;
                                 }
-                                $selectedtext = $row['action'] == $_REQUEST['action'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['action'] == get_by_key($_REQUEST, 'action') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['action'] . '"' . $selectedtext . '>' . $row['action'] . ' - ' . $action . "</option>\n";
                             }
                             ?>
@@ -112,7 +64,7 @@ $logs = $modx->db->makeArray($rs);
                             // get all itemid currently in logging
                             $logs_items = record_sort(array_unique_multi($logs, 'itemid'), 'itemid');
                             foreach ($logs_items as $row) {
-                                $selectedtext = $row['itemid'] == $_REQUEST['itemid'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['itemid'] == get_by_key($_REQUEST, 'itemid') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['itemid'] . '"' . $selectedtext . '>' . $row['itemid'] . "</option>\n";
                             }
                             ?>
@@ -128,7 +80,7 @@ $logs = $modx->db->makeArray($rs);
                             // get all itemname currently in logging
                             $logs_names = record_sort(array_unique_multi($logs, 'itemname'), 'itemname');
                             foreach ($logs_names as $row) {
-                                $selectedtext = $row['itemname'] == $_REQUEST['itemname'] ? ' selected="selected"' : '';
+                                $selectedtext = $row['itemname'] == get_by_key($_REQUEST, 'itemname') ? ' selected="selected"' : '';
                                 echo "\t\t" . '<option value="' . $row['itemname'] . '"' . $selectedtext . '>' . $row['itemname'] . "</option>\n";
                             }
                             ?>
@@ -138,7 +90,7 @@ $logs = $modx->db->makeArray($rs);
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_msg"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="message" class="form-control" value="<?= $_REQUEST['message'] ?>" />
+                        <input type="text" name="message" class="form-control" value="<?= get_by_key($_REQUEST, 'message') ?>" />
                     </div>
                 </div>
                 <div class="row form-row">
@@ -146,7 +98,7 @@ $logs = $modx->db->makeArray($rs);
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
                             <input type="text" id="datefrom" name="datefrom" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ?>" />
-                            <i onClick="document.logging.datefrom.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <i onClick="document.logging.datefrom.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
@@ -155,19 +107,19 @@ $logs = $modx->db->makeArray($rs);
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
                             <input type="text" id="dateto" name="dateto" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ?>" />
-                            <i onClick="document.logging.dateto.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <i onClick="document.logging.dateto.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_results"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs ?>" />
+                        <input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs') ?>" />
                     </div>
                 </div>
 
-                <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['search'] ?></a>
-                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+                <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["icon_search"] ?>"></i> <?= $_lang['search'] ?></a>
+                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
 
                 <input type="submit" name="log_submit" value="<?= $_lang["mgrlog_searchlogs"] ?>" style="display:none;" />
             </form>
@@ -186,20 +138,20 @@ $logs = $modx->db->makeArray($rs);
 if (isset($_REQUEST['log_submit'])) {
     // get the selections the user made.
     $sqladd = array();
-    if ($_REQUEST['searchuser'] != 0) {
-        $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
+    if (get_by_key($_REQUEST, 'searchuser') != 0) {
+        $sqladd[] = "internalKey='" . (int)get_by_key($_REQUEST, 'searchuser') . "'";
     }
-    if ($_REQUEST['action'] != 0) {
-        $sqladd[] = "action=" . (int)$_REQUEST['action'];
+    if (get_by_key($_REQUEST, 'action') != 0) {
+        $sqladd[] = "action=" . (int)get_by_key($_REQUEST, 'action');
     }
-    if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
-        $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";
+    if (get_by_key($_REQUEST, 'itemid') != 0 || get_by_key($_REQUEST, 'itemid') == "-") {
+        $sqladd[] = "itemid='" . get_by_key($_REQUEST, 'itemid') . "'";
     }
-    if ($_REQUEST['itemname'] != '0') {
-        $sqladd[] = "itemname='" . $modx->db->escape($_REQUEST['itemname']) . "'";
+    if (get_by_key($_REQUEST, 'itemname') != '0') {
+        $sqladd[] = "itemname='" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'itemname')) . "'";
     }
-    if ($_REQUEST['message'] != "") {
-        $sqladd[] = "message LIKE '%" . $modx->db->escape($_REQUEST['message']) . "%'";
+    if (get_by_key($_REQUEST, 'message') != "") {
+        $sqladd[] = "message LIKE '%" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'message')) . "%'";
     }
     // date stuff
     if ($_REQUEST['datefrom'] != "") {
@@ -217,23 +169,22 @@ if (isset($_REQUEST['log_submit'])) {
     }
 
     // Number of result to display on the page, will be in the LIMIT of the sql query also
-    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs;
+    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs');
 
-    $extargv = "&a=13&searchuser=" . $_REQUEST['searchuser'] . "&action=" . $_REQUEST['action'] . "&itemid=" . $_REQUEST['itemid'] . "&itemname=" . $_REQUEST['itemname'] . "&message=" . $_REQUEST['message'] . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
+    $extargv = "&a=13&searchuser=" . get_by_key($_REQUEST, 'searchuser') . "&action=" . get_by_key($_REQUEST, 'action') . "&itemid=" . get_by_key($_REQUEST, 'itemid') . "&itemname=" . get_by_key($_REQUEST, 'itemname') . "&message=" . get_by_key($_REQUEST, 'message') . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
     // build the sql
-    $limit = $num_rows = $modx->db->getValue($modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
+    $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
 
-    $rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+    $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 
 if ($limit < 1) {
     echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
 } else {
     echo '<p>' . $_lang["mgrlog_sortinst"] . '</p>';
 
-    include_once "paginate.inc.php";
     // New instance of the Paging class, you can modify the color and the width of the html table
-    $p = new Paging($num_rows, $int_cur_position, $int_num_result, $extargv);
+    $p = new EvolutionCMS\Support\Paginate($num_rows, $int_cur_position, $int_num_result, $extargv);
 
     // Load up the 2 array in order to display result
     $array_paging = $p->getPagingArray();
@@ -291,7 +242,7 @@ if ($limit < 1) {
                 // grab the entire log file...
                 $logentries = array();
                 $i = 0;
-                while ($logentry = $modx->db->getRow($rs)) {
+                while ($logentry = $modx->getDatabase()->getRow($rs)) {
                     if (!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
                         $item = '<div style="text-align:center;">-</div>';
                     } elseif ($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
@@ -307,7 +258,7 @@ if ($limit < 1) {
                         <td class="text-nowrap"><?= '[' . $logentry['action'] . '] ' . $logentry['message'] ?></td>
                         <td class="text-xs-right"><?= $logentry['itemid'] ?></td>
                         <td><?= $item ?></td>
-                        <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $server_offset_time) ?></td>
+                        <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $modx->getConfig('server_offset_time')) ?></td>
                         <td class="text-nowrap"><?= $logentry['ip'] ?></td>
                         <td class="text-nowrap"><?= $logentry['useragent'] ?></td>
                     </tr>

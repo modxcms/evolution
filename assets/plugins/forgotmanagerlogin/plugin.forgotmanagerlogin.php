@@ -50,7 +50,7 @@ EOD;
             if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
             if(!empty($hash))      { $wheres[] = "MD5(CONCAT('{$today}',attr.lastlogin,usr.password))='{$hash}'"; }
             $wheres[] = "attr.lastlogin > 0";
-            
+
             if($wheres) {
                 $result = $modx->db->select(
                     "usr.id, usr.username, attr.email, attr.blocked, MD5(CONCAT('{$today}',attr.lastlogin,usr.password)) AS hash",
@@ -82,15 +82,16 @@ EOD;
             if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
 
             if($user['username']) {
+                $managerurl = MODX_MANAGER_URL;
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$managerurl}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
                 $param = array();
                 $param['from']    = "{$modx->config['site_name']}<{$modx->config['emailsender']}>";
-                $param['to']      = "{$user['username']}<{$to}>";
+                $param['to']      = $to;
                 $param['subject'] = $_lang['password_change_request'];
                 $param['body']    = $body;
                 $rs = $modx->sendmail($param); //ignore mail errors in this case

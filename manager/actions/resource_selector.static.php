@@ -6,7 +6,7 @@ if (!$modx->hasPermission('edit_module')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+$mxla = ManagerTheme::getLang();
 
 /**
  * Resource Selector
@@ -27,38 +27,38 @@ $sm = strtolower($_REQUEST['sm']);
 
 // get search string
 $query = $_REQUEST['search'];
-$sqlQuery = $modx->db->escape($query);
+$sqlQuery = $modx->getDatabase()->escape($query);
 
 // select SQL
 switch ($rt) {
     case "snip":
         $title = $_lang["snippet"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case "tpl":
         $title = $_lang["template"];
-        $ds = $modx->db->select('id,templatename as name,description', $modx->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
+        $ds = $modx->getDatabase()->select('id,templatename as name,description', $modx->getDatabase()->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
         break;
 
     case("tv"):
         $title = $_lang["tv"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("chunk"):
         $title = $_lang["chunk"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("plug"):
         $title = $_lang["plugin"];
-        $ds = $modx->db->select('id,name,description', $modx->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
         break;
 
     case("doc"):
         $title = $_lang["resource"];
-        $ds = $modx->db->select('id,pagetitle as name,longtitle as description', $modx->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
+        $ds = $modx->getDatabase()->select('id,pagetitle as name,longtitle as description', $modx->getDatabase()->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
         break;
 
 }
@@ -138,13 +138,13 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 </script>
 
 <h1>
-    <?= $title . " - " . $_lang['element_selector_title'] ?><i class="fa fa-question-circle help"></i>
+    <?= $title . " - " . $_lang['element_selector_title'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
 <div id="actions">
     <div class="btn-group">
-        <a id="Button1" class="btn btn-success" href="javascript:;" onclick="saveSelection()"><i class="<?= $_style['actions_add'] ?>"></i> <span><?= $_lang['insert'] ?></span></a>
-        <a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="window.close()"><i class="<?= $_style['actions_cancel'] ?>"></i> <span><?= $_lang['cancel'] ?></span></a>
+        <a id="Button1" class="btn btn-success" href="javascript:;" onclick="saveSelection()"><i class="<?= $_style['icon_add'] ?>"></i> <span><?= $_lang['insert'] ?></span></a>
+        <a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="window.close()"><i class="<?= $_style['icon_cancel'] ?>"></i> <span><?= $_lang['cancel'] ?></span></a>
     </div>
 </div>
 
@@ -154,7 +154,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 
 <form name="selector" method="get">
     <input type="hidden" name="id" value="<?= $id ?>" />
-    <input type="hidden" name="a" value="<?= $modx->manager->action ?>" />
+    <input type="hidden" name="a" value="<?= $modx->getManagerApi()->action ?>" />
     <input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
     <input type="hidden" name="op" value="" />
     <input type="hidden" name="rt" value="<?= $rt ?>" />
@@ -164,21 +164,22 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 
     <div class="tab-page">
         <div class="container container-body">
-            <div class="searchbar form-group">
-                <div class="input-group">
-                    <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['actions_search'] ?>"></i></a>
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i></a>
-                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="<?= $_style['actions_table'] ?>"></i></a>
+            <div class="row searchbar form-group">
+                <div class="col-sm-12">
+                    <div class="input-group float-right w-auto">
+                        <input class="form-control form-control-sm" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
+                        <div class="input-group-append">
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['icon_search'] ?>"></i></a>
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
+                            <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="<?= $_style['icon_table'] ?>"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="table-responsive">
                     <?php
-                    include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-                    $grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+                    $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 0); // set page size to 0 t show all items
                     $grd->noRecordMsg = $_lang["no_records_found"];
                     $grd->cssClass = "table data nowrap";
                     $grd->columnHeaderClass = "tableHeader";

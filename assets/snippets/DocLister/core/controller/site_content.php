@@ -70,6 +70,15 @@ class site_contentDocLister extends DocLister
             $extJotCount->init($this);
         }
 
+        /**
+         * @var $extCommentsCount commentscount_DL_Extender
+         */
+        $extCommentsCount = $this->getCFGdef('commentsCount', 0) ? $this->getExtender('commentscount', true) : null;
+
+        if ($extCommentsCount) {
+            $extCommentsCount->init($this);
+        }
+
         if ($this->extPaginate = $this->getExtender('paginate')) {
             $this->extPaginate->init($this);
         }
@@ -145,7 +154,11 @@ class site_contentDocLister extends DocLister
                     ); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
                     $item['iteration'] = $i; //[+iteration+] - Number element. Starting from zero
 
-                    $item['title'] = ($item['menutitle'] == '' ? $item['pagetitle'] : $item['menutitle']);
+                    if (isset($item['menutitle']) && $item['menutitle'] != '') {
+                        $item['title'] = $item['menutitle'];
+                    } elseif (isset($item['pagetitle'])) {
+                        $item['title'] = $item['pagetitle'];
+                    }
 
                     if ($this->getCFGDef('makeUrl', 1)) {
                         if ($item['type'] == 'reference') {

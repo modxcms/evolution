@@ -47,18 +47,9 @@ class CheckOutdated
     public function load($source)
     {
         if (0 === strpos($source, 'http')) {
-            include_once MODX_MANAGER_PATH . 'media/rss/rss_cache.inc';
-
-            $cache = new RSSCache(
-                MODX_BASE_PATH . $this->modx->getCacheFolder() . 'rss/',
-                24 * 60 * 60
-            );
-            if ($cache->check_cache($source) !== 'HIT') {
-                $data = json_decode(file_get_contents($source), true);
-                $cache->set($source, $data);
-            } else {
-                $data = $cache->get($source);
-            }
+            $data = Cache::remember('users', 24 * 60, function () use($source) {
+                return json_decode(file_get_contents($source), true);
+            });
         } else {
             $data = file_get_contents($source);
             $data = json_decode($data, true);

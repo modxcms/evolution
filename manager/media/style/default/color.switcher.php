@@ -1,10 +1,10 @@
 <div class="evocp-box">
-    <div class="evocp-icon"><i class="evocpicon fa fa-paint-brush" aria-hidden="true" ></i></div>
+    <div class="evocp-icon"><i class="evocpicon <?= $_style['icon_brush'] ?>" aria-hidden="true" ></i></div>
     <div class="evocp-frame">
     <h2 >COLOR SWITCHER</h2>
     <div class="panel panel-default">
      <div class="panel-heading">
-      <h3 data-toggle="collapse" data-target=".bgmcolors"><i class="fa togglearrow fa-chevron-down" aria-hidden="true"></i> <i class="fa fa-bars" aria-hidden="true"></i> Menu Background</h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadAll('my_evo_bgmcolor')" class="pull-right resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a>
+      <h3 data-toggle="collapse" data-target=".bgmcolors"><i class="togglearrow <?= $_style['icon_chevron_down'] ?>" aria-hidden="true"></i> <i class="<?= $_style['icon_bars'] ?> aria-hidden="true"></i> Menu Background</h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadAll('my_evo_bgmcolor')" class="pull-right resetcolor btn btn-secondary"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
          </div>
         <div class="panel-body collapse in bgmcolors">
         <div class="evocp-bgmcolors">
@@ -28,7 +28,7 @@
           </div>
         <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 span data-toggle="collapse" data-target=".menuColors"><i class="fa togglearrow fa-chevron-right" aria-hidden="true"></i> <i class="fa fa-bars" aria-hidden="true"></i> Menu links</h3> <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuColor')" class="pull-right resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a>
+            <h3 span data-toggle="collapse" data-target=".menuColors"><i class="togglearrow <?= $_style['icon_chevron_right'] ?>" aria-hidden="true"></i> <i class="<?= $_style['icon_bars'] ?>" aria-hidden="true"></i> Menu links</h3> <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuColor')" class="pull-right resetcolor btn btn-secondary"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
         </div>
         <div class="panel-body collapse menuColors">
         <div class="evocp-menuColors">
@@ -53,7 +53,7 @@
 
         <div class="panel panel-default">
         <div class="panel-heading">
-        <h3 data-toggle="collapse" data-target=".menuHColors"><i class="fa togglearrow fa-chevron-right" aria-hidden="true"></i> <i class="fa fa-bars" aria-hidden="true"></i> Menu links:hover </h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuHColor')" class="pull-right resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a>
+        <h3 data-toggle="collapse" data-target=".menuHColors"><i class="togglearrow <?= $_style['icon_chevron_right'] ?>" aria-hidden="true"></i> <i class="<?= $_style['icon_bars'] ?>" aria-hidden="true"></i> Menu links:hover </h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_menuHColor')" class="pull-right resetcolor btn btn-secondary"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
         </div>
         <div class="panel-body collapse menuHColors">
         <div class="evocp-menuHColors">
@@ -77,7 +77,7 @@
         </div>
         <div class="panel panel-default">
         <div class="panel-heading">
-        <h3 data-toggle="collapse" data-target=".cpcolors"><i class="fa togglearrow fa-chevron-right" aria-hidden="true"></i> <i class="fa fa-font" aria-hidden="true"></i> Text color </h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_color')" class="pull-right resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a>
+        <h3 data-toggle="collapse" data-target=".cpcolors"><i class="togglearrow <?= $_style['icon_chevron_right'] ?>" aria-hidden="true"></i> <i class="<?= $_style['icon_font'] ?>" aria-hidden="true"></i> Text color </h3><a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_color')" class="pull-right resetcolor btn btn-secondary"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
         </div>
         <div class="panel-body collapse cpcolors">
         <div class="evocp-colors">
@@ -101,7 +101,7 @@
         </div>
         <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 data-toggle="collapse" data-target=".alinkcolors"><i class="fa togglearrow fa-chevron-right" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> Links Color</h3> <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_alinkcolor')" class="pull-right resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a>
+            <h3 data-toggle="collapse" data-target=".alinkcolors"><i class="togglearrow <?= $_style['icon_chevron_right'] ?>" aria-hidden="true"></i> <i class="<?= $_style['icon_chain'] ?>" aria-hidden="true"></i> Links Color</h3> <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorageReloadMain('my_evo_alinkcolor')" class="pull-right resetcolor btn btn-secondary"><i class="<?= $_style['icon_refresh'] ?>"></i></a>
         </div>
         <div class="panel-body collapse alinkcolors">
         <div class="evocp-alinkcolors">

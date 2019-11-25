@@ -1,6 +1,6 @@
 <?php
 /**
- * Filename:       media/style/$modx->config['manager_theme']/style.php
+ * Filename:       media/style/ManagerTheme::getTheme()/style.php
  * Function:       Manager style variables for images and icons.
  * Encoding:       UTF-8
  * Credit:         icons by Mark James of FamFamFam http://www.famfamfam.com/lab/icons/
@@ -8,257 +8,130 @@
  * Version:        1.1
  * MODX version:   1.0.3
  */
-$style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$style_path = 'media/style/' . ManagerTheme::getTheme() . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
-if(!$modx->config['lang_code']) {
-	global $modx_lang_attribute;
-	$modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
-}
 
-if($_GET['a'] == 2) {
-	include_once('welcome.php');
+if(!empty($_GET['a']) && $_GET['a'] == 2) {
+    $modx->config['enable_filter'] = 1;
+
+    $modx->addSnippet('hasPermission','return $modx->hasPermission($key);');
+
+    if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags'))
+        $hasAnyPermission = 1;
+    else $hasAnyPermission = 0;
+    $modx->addSnippet('hasAnyPermission','global $hasAnyPermission; return $hasAnyPermission;');
+    $modx->addSnippet('getLoginUserName','return $modx->getLoginUserName();');
+    $code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"];';
+    $modx->addSnippet('getMessageCount',$code);
 }
 
 // Favicon
-$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
-
-//Main Menu
-$_style['menu_search']              = '<i class="fa fa-search"></i>';
-$_style['menu_preview_site']        = '<i class="fa fa-desktop"></i>';
-$_style['menu_new_resource']        = '<i class="fa fa-plus"></i>';
-$_style['menu_system']              = '<i class="fa fa-cogs"></i>';
-$_style['menu_user']                = '<i class="fa fa-user-circle"></i>';
-// full screen
-$_style['menu_expand']              = 'fa-expand';
-$_style['menu_compress']            = 'fa-compress';
-//help toggle
-$_style['icons_help']               = '<i class="fa fa-question-circle help"></i>';
-//pages
-$_style['page_settings']            = '<i class="fa fa-sliders fw"></i>';
-$_style['page_shedule']             = '<i class="fa fa-calendar"></i>';
-$_style['page_eventlog']            = '<i class="fa fa-exclamation-triangle"></i>';
-$_style['page_manager_logs']        = '<i class="fa fa-user-secret"></i>';
-$_style['page_sys_info']            = '<i class="fa fa-info-circle"></i>';
-$_style['page_help']                = '<i class="fa fa-question-circle"></i>';
-$_style['page_change_password']     = '<i class="fa fa-lock"></i>';
-$_style['page_logout']              = '<i class="fa fa-sign-out"></i>';
-
-// Tree Menu Toolbar
-$_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
-$_style['add_weblink_tree']         = '<i class="fa fa-link"></i>';
-$_style['collapse_tree']            = '<i class="fa fa-arrow-circle-up"></i>';
-$_style['empty_recycle_bin']        = '<i class="fa fa-trash"></i>';
-$_style['empty_recycle_bin_empty']  = '<i class="fa fa-trash-o"></i>';
-$_style['expand_tree']              = '<i class="fa fa-arrow-circle-down"></i>';
-$_style['hide_tree']                = '<i class="fa fa-caret-square-o-left"></i>';
-$_style['refresh_tree']             = '<i class="fa fa-refresh"></i>';
-$_style['show_tree']                = $style_path.'tree/expand.png';
-$_style['sort_tree']                = '<i class="fa fa-sort"></i>';
-$_style['sort_menuindex']           = '<i class="fa fa-sort-numeric-asc"></i>';
-$_style['element_management']       = '<i class="fa fa-th"></i>';
-$_style['images_management']        = '<i class="fa fa-camera"></i>';
-$_style['files_management']         = '<i class="fa fa-files-o"></i>';
-$_style['email']                    = '<i class="fa fa-envelope"></i>';
-
-//Tree Contextual Menu Popup
-$_style['ctx_new_document']         = 'fa fa-file-o';
-$_style['ctx_edit_document']        = 'fa fa-pencil-square-o';
-$_style['ctx_move_document']        = 'fa fa-arrows';
-$_style['ctx_resource_duplicate']   = 'fa fa-clone';
-$_style['ctx_sort_menuindex']       = 'fa fa-sort-numeric-asc';
-$_style['ctx_publish_document']     = 'fa fa-arrow-up';
-$_style['ctx_unpublish_resource']   = 'fa fa-arrow-down';
-$_style['ctx_delete']               = 'fa fa-trash';
-$_style['ctx_undelete_resource']    = 'fa fa-arrow-circle-o-up';
-$_style['ctx_weblink']              = 'fa fa-link';
-$_style['ctx_resource_overview']    = 'fa fa-info';
-$_style['ctx_preview_resource']     = 'fa fa-eye';
-
-// Tree Icons
-$_style['tree_deletedpage']         = "<i class='fa fa-ban'></i>";
-$_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
-$_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
-$_style['tree_globe']               = $style_path.'tree/globe.png';
-$_style['tree_folder_new']          = "<i class='fa fa-folder'></i>"; /* folder.png */
-$_style['tree_folderopen_new']      = "<i class='fa fa-folder-open'></i>"; /* folder-open.png */
-$_style['tree_folder_secure']       = "<i class='fa fa-folder'><i class='fa fa-lock'></i></i>";
-$_style['tree_folderopen_secure']   = "<i class='fa fa-folder-open'><i class='fa fa-lock'></i></i>";
-$_style['tree_linkgo']              = "<i class='fa fa-link'></i>";
-$_style['tree_page']                = "<i class='fa fa-file-o'></i>";
-$_style['tree_page_home']           = "<i class='fa fa-home'></i>";
-$_style['tree_page_404']            = "<i class='fa fa-exclamation-triangle'></i>";
-$_style['tree_page_hourglass']      = "<i class='fa fa-clock-o'></i>";
-$_style['tree_page_info']           = "<i class='fa fa-info'></i>";
-$_style['tree_page_blank']          = "<i class='fa fa-file-o'></i>";
-$_style['tree_page_css']            = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_html']           = "<i class='fa fa-file-o'></i>";
-$_style['tree_page_xml']            = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_js']             = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_rss']            = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_pdf']            = "<i class='fa fa-file-pdf-o'></i>";
-$_style['tree_page_word']           = "<i class='fa fa-file-word-o'></i>";
-$_style['tree_page_excel']          = "<i class='fa fa-file-excel-o'></i>";
-
-$_style['tree_minusnode']           = "<i class='fa fa-angle-down'></i>";//$style_path.'tree/angle-down.png';
-$_style['tree_plusnode']            = "<i class='fa fa-angle-right'></i>";//$style_path.'tree/angle-right.png';
-$_style['tree_weblink']             = $style_path.'tree/link.png';
-$_style['tree_preview_resource']    = "<i class='fa fa-eye'></i>";//$style_path.'icons/eye.png';
-
-$_style['tree_showtree']            = '<i class="fa fa-sitemap"></i>';
-$_style['tree_working']             = '<i class="fa fa-warning"></i>';
-$_style['tree_info']                = '<i class="fa fa-info-circle"></i>';
-
-$_style['tree_page_secure']         = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_blank_secure']   = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_css_secure']     = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_html_secure']    = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_xml_secure']     = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_js_secure']      = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_rss_secure']     = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_pdf_secure']     = "<i class='fa fa-file-pdf-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_word_secure']    = "<i class='fa fa-file-word-o'><i class='fa fa-lock'></i></i>";
-$_style['tree_page_excel_secure']   = "<i class='fa fa-file-excel-o'><i class='fa fa-lock'></i></i>";
-
-//search
-$_style['icons_external_link']      = '<i class="fa fa-external-link"></i>';
-
-//View Resource data
-$_style['icons_new_document']       = 'fa fa-file-o';
-$_style['icons_new_weblink']        = 'fa fa-link';
-$_style['icons_move_document']      = 'fa fa-arrows';
-$_style['icons_publish_document']   = 'fa fa-arrow-up';
-$_style['icons_unpublish_resource'] = 'fa fa-arrow-down';
-$_style['icons_delete_resource']    = 'fa fa-trash';
-$_style['icons_undelete_resource']  = 'fa fa-arrow-circle-o-up';
-$_style['icons_resource_overview']  = 'fa fa-info';
-$_style['icons_edit_resource']      = 'fa fa-pencil-square-o';
-//context menu
-$_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
-$_style['icons_edit_document']      = $style_path.'icons/save.png';
-$_style['icons_delete_document']    = $style_path.'icons/trash.png';
-//locks
-$_style['icons_preview_resource']   = $style_path.'icons/eye.png';//$style_path.'icons/eye.png';
-$_style['icons_secured']            = "<i class='fa fa-lock'></i>";//$style_path.'icons/lock.png';
-
-//file manager icons
-$_style['files_save']               = 'fa fa-floppy-o';
-$_style['files_folder']             = 'fa fa-folder-o';
-$_style['files_deleted_folder']     = 'fa fa-folder-o';
-$_style['files_folder-open']        = 'fa fa-folder-open-o';
-$_style['files_page_php']           = 'fa fa-file-o';
-$_style['files_page_html']          = 'fa fa-file-o';
-$_style['files_cancel']             = 'fa fa-times-circle';
-$_style['files_top']                = 'fa fa-folder-open-o';
-$_style['files_add']                = 'fa fa-plus-circle';
-$_style['files_upload']             = 'fa fa-upload';
-$_style['files_delete']             = 'fa fa-trash';
-$_style['files_duplicate']          = 'fa fa-clone';
-$_style['files_rename']             = 'fa fa-i-cursor';
-$_style['files_view']               = 'fa fa-eye';
-$_style['files_download']           = 'fa fa-download';
-$_style['files_unzip']              = 'fa fa-file-archive-o';
-$_style['files_edit']               = 'fa fa-pencil-square-o';
-
-//Action buttons
-$_style['actions_save']             = 'fa fa-floppy-o';
-$_style['actions_duplicate']        = 'fa fa-clone';
-$_style['actions_delete']           = 'fa fa-trash';
-$_style['actions_cancel']           = 'fa fa-times-circle';
-$_style['actions_close']            = 'fa fa-times-circle';
-$_style['actions_add']              = 'fa fa-plus-circle';
-$_style['actions_preview']          = 'fa fa-eye';
-$_style['actions_run']              = 'fa fa-play';
-$_style['actions_stop']             = 'fa fa-stop';
-$_style['actions_new']              = 'fa fa-plus-circle';
-$_style['actions_help']             = 'fa fa-question-circle';
-$_style['actions_sort']             = 'fa fa-sort';
-$_style['actions_options']          = 'fa fa-check-square';
-$_style['actions_categories']       = 'fa fa-folder-open';
-$_style['actions_search']           = 'fa fa-search';
-$_style['actions_file']             = 'fa fa-file-o';
-$_style['actions_folder']           = 'fa fa-folder-o';
-$_style['actions_folder_open']      = 'fa fa-folder-open-o';
-$_style['actions_calendar']         = 'fa fa-calendar';
-$_style['actions_calendar_delete']  = 'fa fa-calendar-times-o';
-$_style['actions_angle_up']         = 'fa fa-angle-up';
-$_style['actions_angle_down']       = 'fa fa-angle-down';
-$_style['actions_angle_left']       = 'fa fa-angle-left';
-$_style['actions_angle_right']      = 'fa fa-angle-right';
-$_style['actions_chain']            = 'fa fa-chain';
-$_style['actions_chain_broken']     = 'fa fa-chain-broken';
-$_style['actions_edit']             = 'fa fa-edit';
-$_style['actions_move']             = 'fa fa-arrows';
-$_style['actions_pencil']           = 'fa fa-pencil';
-$_style['actions_reply']            = 'fa fa-reply';
-$_style['actions_plus']             = 'fa fa-plus';
-$_style['actions_refresh']          = 'fa fa-refresh';
-$_style['actions_error']            = 'fa fa-times-circle';
-$_style['actions_info']             = 'fa fa-info-circle';
-$_style['actions_triangle']         = 'fa fa-exclamation-triangle';
-$_style['actions_table']            = 'fa fa-table';
-
-//for back compatibility
-
-$_style['icons_save']               = $style_path.'icons/save.png';
-$_style['icons_delete']             = $style_path.'icons/trash.png';
-$_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
-$_style['icons_unzip']              = $style_path.'icons/download-alt.png';
-
-
-// Indicators
-$_style['icons_tooltip']            = 'fa fa-question-circle';
-$_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
-$_style['icons_cal']                = $style_path.'icons/calendar.png';
-$_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
-$_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
-
-//modules
-$_style['icons_module']            = 'fa fa-cube';
-$_style['icons_modules']            = 'fa fa-cubes'; //$style_path.'icons/modules.png';
-$_style['icons_run']                = $style_path.'icons/play.png';
-
-//users and webusers
-$_style['icons_user']               = 'fa fa-user'; //$style_path.'icons/user.png';
-
-//Messages
-$_style['icons_message_unread']     = $style_path.'icons/email.png';
-$_style['icons_message_forward']    = $style_path.'icons/forward.png';
-$_style['icons_message_reply']      = $style_path.'icons/reply.png';
+$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . ManagerTheme::getTheme() . '/images/favicon.ico');
 
 // Icons
-$_style['icons_add']                = $style_path.'icons/add.png';
-$_style['icons_cancel']             = $style_path.'icons/cancel.png';
-$_style['icons_close']              = $style_path.'icons/stop.png';
-$_style['icons_refresh']            = $style_path.'icons/refresh.png';
-$_style['icons_table']              = $style_path.'icons/table.png';
+$_style['icon_size_2x']           = ' fa-2x';
+$_style['icon_size_fix']          = ' fa-fw';
+$_style['icon_spin']              = ' fa-spin';
 
-// top bar
-$_style['icons_loading_doc_tree']   = $style_path.'icons/info-sign.png';
-$_style['icons_mail']               = $style_path.'icons/email.png';
-$_style['icons_working']            = $style_path.'icons/exclamation.png';
+$_style['icon_add']               = 'fa fa-plus-circle';
+$_style['icon_angle_down']        = 'fa fa-angle-down';
+$_style['icon_angle_left']        = 'fa fa-angle-left';
+$_style['icon_angle_right']       = 'fa fa-angle-right';
+$_style['icon_angle_up']          = 'fa fa-angle-up';
+$_style['icon_archive']           = 'fa fa-file-archive-o';
+$_style['icon_arrow_down_circle'] = 'fa fa-arrow-circle-down';
+$_style['icon_arrow_up_circle']   = 'fa fa-arrow-circle-up';
+$_style['icon_ban']               = 'fa fa-ban';
+$_style['icon_bars']              = 'fa fa-bars';
+$_style['icon_brush']             = 'fa fa-paint-brush';
+$_style['icon_calendar']          = 'fa fa-calendar';
+$_style['icon_calendar_close']    = 'fa fa-calendar-times-o';
+$_style['icon_category']          = 'fa fa-object-group';
+$_style['icon_camera']            = 'fa fa-camera';
+$_style['icon_cancel']            = 'fa fa-times-circle';
+$_style['icon_chain']             = 'fa fa-link';
+$_style['icon_chain_broken']      = 'fa fa-chain-broken';
+$_style['icon_check']             = 'fa fa-check';
+$_style['icon_check_square']      = 'fa fa-check-square';
+$_style['icon_chevron_down']      = 'fa fa-chevron-down';
+$_style['icon_chevron_right']     = 'fa fa-chevron-right';
+$_style['icon_chunk']             = 'fa fa-th-large';
+$_style['icon_circle']            = 'fa fa-circle';
+$_style['icon_clock']             = 'fa fa-clock-o';
+$_style['icon_clone']             = 'fa fa-clone';
+$_style['icon_close']             = 'fa fa-close';
+$_style['icon_code']              = 'fa fa-code';
+$_style['icon_code_file']         = 'fa fa-file-code-o';
+$_style['icon_cog']               = 'fa fa-cog';
+$_style['icon_cogs']              = 'fa fa-cogs';
+$_style['icon_compress']          = 'fa fa-compress';
+$_style['icon_database']          = 'fa fa-database';
+$_style['icon_desktop']           = 'fa fa-desktop';
+$_style['icon_document']          = 'fa fa-file-o';
+$_style['icon_download']          = 'fa fa-download';
+$_style['icon_edit']              = 'fa fa-edit';
+$_style['icon_elements']          = 'fa fa-th';
+$_style['icon_excel']             = 'fa fa-file-excel-o';
+$_style['icon_expand']            = 'fa fa-expand';
+$_style['icon_external_link']     = 'fa fa-external-link';
+$_style['icon_eye']               = 'fa fa-eye';
+$_style['icon_file']              = 'fa fa-file-o';
+$_style['icon_files']             = 'fa fa-files-o';
+$_style['icon_folder']            = 'fa fa-folder';
+$_style['icon_folder_open']       = 'fa fa-folder-open';
+$_style['icon_font']              = 'fa fa-font';
+$_style['icon_forward']           = 'fa fa-forward';
+$_style['icon_globe']             = 'fa fa-globe';
+$_style['icon_home']              = 'fa fa-home';
+$_style['icon_hourglass']         = 'fa fa-hourglass-end';
+$_style['icon_i_cursor']          = 'fa fa-i-cursor';
+$_style['icon_image']             = 'fa fa-file-image-o';
+$_style['icon_info']              = 'fa fa-info';
+$_style['icon_info_circle']       = 'fa fa-info-circle';
+$_style['icon_info_triangle']     = 'fa fa-exclamation-triangle';
+$_style['icon_loader']            = 'fa fa-spinner';
+$_style['icon_lock']              = 'fa fa-lock';
+$_style['icon_logout']            = 'fa fa-sign-out';
+$_style['icon_mail']              = 'fa fa-envelope';
+$_style['icon_module']            = 'fa fa-cube';
+$_style['icon_modules']           = 'fa fa-cubes';
+$_style['icon_move']              = 'fa fa-arrows';
+$_style['icon_pdf']               = 'fa fa-file-pdf-o';
+$_style['icon_pencil']            = 'fa fa-pencil';
+$_style['icon_play']              = 'fa fa-play';
+$_style['icon_plugin']            = 'fa fa-plug';
+$_style['icon_plus']              = 'fa fa-plus';
+$_style['icon_question_circle']   = 'fa fa-question-circle';
+$_style['icon_recycle']           = 'fa fa-recycle';
+$_style['icon_refresh']           = 'fa fa-refresh';
+$_style['icon_reply']             = 'fa fa-reply';
+$_style['icon_role']              = 'fa fa-legal';
+$_style['icon_save']              = 'fa fa-floppy-o';
+$_style['icon_search']            = 'fa fa-search';
+$_style['icon_sitemap']           = 'fa fa-sitemap';
+$_style['icon_sliders']           = 'fa fa-sliders';
+$_style['icon_sort']              = 'fa fa-sort';
+$_style['icon_sort_num_asc']      = 'fa fa-sort-numeric-asc';
+$_style['icon_stop']              = 'fa fa-stop';
+$_style['icon_table']             = 'fa fa-table';
+$_style['icon_tachometer']        = 'fa fa-tachometer';
+$_style['icon_template']          = 'fa fa-newspaper-o';
+$_style['icon_theme']             = 'fa fa-adjust';
+$_style['icon_trash']             = 'fa fa-trash';
+$_style['icon_trash_alt']         = 'fa fa-trash-o';
+$_style['icon_tv']                = 'fa fa-list-alt';
+$_style['icon_undo']              = 'fa fa-undo';
+$_style['icon_upload']            = 'fa fa-upload';
+$_style['icon_user']              = 'fa fa-user-circle-o';
+$_style['icon_users']             = 'fa fa-users';
+$_style['icon_user_access']       = 'fa fa-universal-access';
+$_style['icon_user_secret']       = 'fa fa-user-secret';
+$_style['icon_web_user']          = 'fa fa-user';
+$_style['icon_web_user_access']   = 'fa fa-male';
+$_style['icon_word']              = 'fa fa-file-word-o';
+$_style['icon_wrench']            = 'fa fa-wrench';
 
-//event log
-$_style['icons_event1']             = $style_path.'icons/event1.png';
-$_style['icons_event2']             = $style_path.'icons/event2.png';
-$_style['icons_event3']             = $style_path.'icons/event3.png';
-
-
-//nowhere in the manager
-$_style['icons_folder']             = $style_path.'icons/folder.png';
-$_style['icons_email']              = $style_path.'icons/email.png';
-$_style['icons_home']               = $style_path.'icons/home.png';
-$_style['icons_sort_menuindex']     = $style_path.'icons/sort_index.png';
-$_style['icons_weblink']            = $style_path.'icons/world_link.png';
-$_style['icons_tab_preview']        = $style_path.'icons/preview.png'; // Tabs
-$_style['icons_information']        = $style_path.'icons/info-sign.png';
-
-
-// Miscellaneous
-$_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><i class="fa fa-spinner fa-spin"></i></p>';
-$_style['tx']                       = $style_path.'misc/_tx_.gif';
-$_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
-$_style['fade']                     = $style_path.'misc/fade.gif';
-$_style['ed_save']                  = $style_path.'misc/ed_save.gif';
+$_style['tx']                     = $style_path.'misc/_tx_.gif';
 
 // actions buttons templates
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
@@ -335,9 +208,17 @@ $_style['actionbuttons'] = array(
 	'dynamic' => array(
 		'document' => '<div id="actions">
 			<div class="btn-group">
+			'. (isset($_REQUEST['id']) ? '
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
+						<i class="' . $_style["icon_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
+					</a>
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.newlink();">
+						<i class="' . $_style["icon_chain"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
+					</a>
+				' : '') . '
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
@@ -350,17 +231,17 @@ $_style['actionbuttons'] = array(
 				</div>' .
 					($addnew ? '
 					<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
-						<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+						<i class="' . $_style["icon_clone"] . '"></i><span>' . $_lang['duplicate'] . '</span>
 					</a>
 					' : '') . '
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
-					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+					<i class="' . $_style["icon_eye"] . '"></i><span>' . $_lang['preview'] . '</span>
 				</a>
 			</div>
 		</div>',
@@ -368,7 +249,7 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
@@ -380,10 +261,10 @@ $_style['actionbuttons'] = array(
 					</select>
 				</div>
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',
@@ -391,7 +272,7 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">
 				<div class="btn-group">
 					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+						<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
 					</a>
 					<span class="btn btn-success plus dropdown-toggle"></span>
 					<select id="stay" name="stay">
@@ -404,18 +285,18 @@ $_style['actionbuttons'] = array(
 				</div>
 				' . ($addnew ? '
 				<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
-					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+					<i class="' . $_style["icon_clone"] . '"></i><span>' . $_lang['duplicate'] . '</span>
 				</a>
 				' : '') . '
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 				' . ($run ? '
 				<a id="Button4" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.run();">
-					<i class="' . $_style["actions_run"] . '"></i><span>' . $_lang['run_module'] . '</span>
+					<i class="' . $_style["icon_play"] . '"></i><span>' . $_lang['run_module'] . '</span>
 				</a>
 				' : '') . '
 			</div>
@@ -423,54 +304,54 @@ $_style['actionbuttons'] = array(
 		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
+					<i class="' . $_style["icon_add"] . '"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
 			</div>
 		</div>' : ''),
 		'close' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">
-					<i class="' . $_style["actions_close"] . '"></i><span>' . $_lang['close'] . '</span>
+					<i class="' . $_style["icon_close"] . '"></i><span>' . $_lang['close'] . '</span>
 				</a>
 			</div>
 		</div>',
 		'save' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',
 		'savedelete' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
-					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					<i class="' . $_style["icon_save"] . '"></i><span>' . $_lang['save'] . '</span>
 				</a>
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',
 		'cancel' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',
 		'canceldelete' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',
@@ -480,33 +361,33 @@ $_style['actionbuttons'] = array(
 			<div class="btn-group">' .
 				($addnew ? '
 					<a class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
-						<i class="' . $_style["icons_new_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
+						<i class="' . $_style["icon_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
 					</a>
 					<a class="btn btn-secondary" href="javascript:;" onclick="actions.newlink();">
-						<i class="' . $_style["icons_new_weblink"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
+						<i class="' . $_style["icon_chain"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
 					</a>
 				' : '') . '
 				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.edit();">
-					<i class="' . $_style["actions_edit"] . '"></i><span>' . $_lang['edit'] . '</span>
+					<i class="' . $_style["icon_edit"] . '"></i><span>' . $_lang['edit'] . '</span>
 				</a>
 				<a id="Button2" class="btn btn-secondary" href="javascript:;" onclick="actions.move();">
-					<i class="' . $_style["actions_move"] . '"></i><span>' . $_lang['move'] . '</span>
+					<i class="' . $_style["icon_move"] . '"></i><span>' . $_lang['move'] . '</span>
 				</a>
 				<a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
-					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+					<i class="' . $_style["icon_clone"] . '"></i><span>' . $_lang['duplicate'] . '</span>
 				</a>
 				<a id="Button3" class="btn btn-secondary" href="javascript:;" onclick="actions.delete();">
-					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+					<i class="' . $_style["icon_trash"] . '"></i><span>' . $_lang['delete'] . '</span>
 				</a>
 				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
-					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+					<i class="' . $_style["icon_eye"] . '"></i><span>' . $_lang['preview'] . '</span>
 				</a>
 			</div>
 		</div>',
 		'cancel' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
-					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+					<i class="' . $_style["icon_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
 				</a>
 			</div>
 		</div>',

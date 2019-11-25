@@ -307,12 +307,12 @@ class browser extends uploader
         if (is_dir($thumbDir)) {
             @rename($thumbDir, dirname($thumbDir) . "/$newName");
         }
+
         $this->modx->invokeEvent('OnFileBrowserRename', array(
             'element' => 'dir',
             'filepath' => realpath($dir),
             'newname' => $newName
         ));
-
         return json_encode(array('name' => $newName));
     }
 

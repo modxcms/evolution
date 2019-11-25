@@ -2,7 +2,7 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-switch($modx->manager->action) {
+switch($modx->getManagerApi()->action) {
 	case 107:
 		if(!$modx->hasPermission('new_module')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -18,28 +18,17 @@ switch($modx->manager->action) {
 }
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // Get table names (alphabetical)
-$tbl_membergroup_names = $modx->getFullTableName('membergroup_names');
-$tbl_site_content = $modx->getFullTableName('site_content');
-$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
-$tbl_site_module_access = $modx->getFullTableName('site_module_access');
-$tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
-$tbl_site_modules = $modx->getFullTableName('site_modules');
-$tbl_site_plugins = $modx->getFullTableName('site_plugins');
-$tbl_site_snippets = $modx->getFullTableName('site_snippets');
-$tbl_site_templates = $modx->getFullTableName('site_templates');
-$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-/**
- * create globally unique identifiers (guid)
- *
- * @return string
- */
-function createGUID() {
-	srand((double) microtime() * 1000000);
-	$r = rand();
-	$u = uniqid(getmypid() . $r . (double) microtime() * 1000000, 1);
-	$m = md5($u);
-	return $m;
-}
+$tbl_membergroup_names = $modx->getDatabase()->getFullTableName('membergroup_names');
+$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
+$tbl_site_htmlsnippets = $modx->getDatabase()->getFullTableName('site_htmlsnippets');
+$tbl_site_module_access = $modx->getDatabase()->getFullTableName('site_module_access');
+$tbl_site_module_depobj = $modx->getDatabase()->getFullTableName('site_module_depobj');
+$tbl_site_modules = $modx->getDatabase()->getFullTableName('site_modules');
+$tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
+$tbl_site_snippets = $modx->getDatabase()->getFullTableName('site_snippets');
+$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
+$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
+
 
 // check to see the module editor isn't locked
 if($lockedEl = $modx->elementIsLocked(6, $id)) {
@@ -51,8 +40,8 @@ if($lockedEl = $modx->elementIsLocked(6, $id)) {
 $modx->lockElement(6, $id);
 
 if(isset($_GET['id'])) {
-	$rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
-	$content = $modx->db->getRow($rs);
+	$rs = $modx->getDatabase()->select('*', $tbl_site_modules, "id='{$id}'");
+	$content = $modx->getDatabase()->getRow($rs);
 	if(!$content) {
 		$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 	}
@@ -65,8 +54,8 @@ if(isset($_GET['id'])) {
 	$_SESSION['itemname'] = $_lang["new_module"];
 	$content['wrap'] = '1';
 }
-if($modx->manager->hasFormValues()) {
-	$modx->manager->loadFormValues();
+if($modx->getManagerApi()->hasFormValues()) {
+	$modx->getManagerApi()->loadFormValues();
 }
 
 $content = array_merge($content, $_POST);
@@ -209,6 +198,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					ll = ls;
 				}
 
+				key   = key.replace(/\"/g, '&quot;');
+				value = value.replace(/\"/g, '&quot;');
+
 				switch(type) {
 					case 'int':
 						c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
@@ -276,7 +268,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="<?= $_style['icon_refresh'] ?>"></i></a>' : '';
 
 				t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
 			});
@@ -446,20 +438,20 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	}
 
 	// Prepare internal params & info-tab via parseDocBlock
-	$modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
+	$modulecode = isset($content['modulecode']) ? $modx->getDatabase()->escape($content['modulecode']) : '';
 	$docBlock = $modx->parseDocBlockFromString($modulecode);
 	$docBlockList = $modx->convertDocBlockIntoList($docBlock);
 	$internal = array();
 	?>
     <input type="hidden" name="a" value="109">
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+	<input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
 
 	<h1>
-		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icon_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
 	</h1>
 
-	<?= $_style['actionbuttons']['dynamic']['element'] ?>
+	<?= ManagerTheme::getStyle('actionbuttons.dynamic.element') ?>
 
 	<div class="container element-edit-message">
 		<div class="alert alert-info"><?= $_lang['module_msg'] ?></div>
@@ -467,7 +459,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	<div class="tab-pane" id="modulePane">
 		<script type="text/javascript">
-			tp = new WebFXTabPane(document.getElementById("modulePane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+			tp = new WebFXTabPane(document.getElementById("modulePane"), <?= ($modx->getConfig('remember_last_tab') === true ? 'true' : 'false') ?> );
 		</script>
 
 		<!-- General -->
@@ -480,11 +472,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<label class="col-md-3 col-lg-2"><?= $_lang['module_name'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
-								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+								<input name="name" type="text" maxlength="100" value="<?= $modx->getPhpCompat()->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
-										<i class="fa fa-lock"></i>
+										<i class="<?= $_style['icon_lock'] ?>"></i>
 									</label>
 								<?php endif; ?>
 							</div>
@@ -506,7 +498,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php
 								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
 								foreach(getCategories() as $n => $v) {
-									echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . "</option>\n";
+									echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($v['category']) . "</option>\n";
 								}
 								?>
 							</select>
@@ -542,7 +534,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 					<div class="form-row">
 						<label for="parse_docblock">
-							<input name="parse_docblock" id="parse_docblock" type="checkbox" value="1"<?= ($modx->manager->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?></label>
+							<input name="parse_docblock" id="parse_docblock" type="checkbox" value="1"<?= ($modx->getManagerApi()->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?></label>
 						<small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
 					</div>
 				</div>
@@ -553,7 +545,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<span><?= $_lang['module_code'] ?></span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['modulecode'])) ?></textarea>
+				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($content['post'] ?? $content['modulecode']) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
@@ -581,7 +573,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['guid'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="guid" type="text" maxlength="32" value="<?= ($modx->manager->action == 107 ? createGUID() : $content['guid']) ?>" class="form-control" onchange="documentDirty=true;" />
+							<input name="guid" type="text" maxlength="32" value="<?= ($modx->getManagerApi()->action == 107 ? createGUID() : $content['guid']) ?>" class="form-control" onchange="documentDirty=true;" />
 							<small class="form-text text-muted"><?= $_lang['import_params_msg'] ?></small>
 						</div>
 					</div>
@@ -603,7 +595,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			</div>
 			<!-- HTML text editor end -->
 		</div>
-		<?php if($modx->manager->action == '108'): ?>
+		<?php if($modx->getManagerApi()->action == '108'): ?>
 			<!-- Dependencies -->
 			<div class="tab-page" id="tabDepend">
 				<h2 class="tab"><?= $_lang['settings_dependencies'] ?></h2>
@@ -612,10 +604,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<p><?= $_lang['module_viewdepend_msg'] ?></p>
 					<div class="form-group clearfix">
 						<a class="btn btn-primary" href="javascript:;" onclick="loadDependencies();return false;">
-							<i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
+							<i class="<?= $_style["icon_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
-					$ds = $modx->db->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+					$ds = $modx->getDatabase()->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
 					CASE smd.type
 						WHEN 10 THEN 'Chunk'
 						WHEN 20 THEN 'Document'
@@ -631,8 +623,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
 						LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60", "smd.module='{$id}'", 'smd.type,name');
 
-					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-					$grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
+					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, 0); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang['no_records_found'];
 					$grd->cssClass = 'grid';
 					$grd->columnHeaderClass = 'gridHeader';
@@ -651,11 +642,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<h2 class="tab"><?= $_lang['access_permissions'] ?></h2>
 			<script type="text/javascript">tp.addTabPage(document.getElementById("tabPermissions"));</script>
 			<div class="container container-body">
-				<?php if($use_udperms == 1) : ?>
+				<?php if($modx->getConfig('use_udperms')) : ?>
 					<?php
 					// fetch user access permissions for the module
-					$rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
-					$groupsarray = $modx->db->getColumn('usergroup', $rs);
+					$rs = $modx->getDatabase()->select('usergroup', $tbl_site_module_access, "module='{$id}'");
+					$groupsarray = $modx->getDatabase()->getColumn('usergroup', $rs);
 
 					if($modx->hasPermission('access_permissions')) {
 						?>
@@ -683,9 +674,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<p><?= $_lang['module_group_access_msg'] ?></p>
 						<?php
 					}
-					$chk = '';
-					$rs = $modx->db->select('name, id', $tbl_membergroup_names, '', 'name');
-					while($row = $modx->db->getRow($rs)) {
+                    $chks = '';
+					$rs = $modx->getDatabase()->select('name, id', $tbl_membergroup_names, '', 'name');
+					while($row = $modx->getDatabase()->getRow($rs)) {
 						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
 						$checked = in_array($row['id'], $groupsarray);
 						if($modx->hasPermission('access_permissions')) {

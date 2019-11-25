@@ -276,7 +276,7 @@
 {
     display:block;
     float:left;
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 5 Free';
     content: "\f142";
     color: #dedede;
     font-size:16px;
@@ -312,7 +312,7 @@ a#qmLogoClose
 a#qmLogoClose:after
 {
     display:block;
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 5 Free';
     content: "\f0c9 ";
     color: #bbb;
     font-size:16px;

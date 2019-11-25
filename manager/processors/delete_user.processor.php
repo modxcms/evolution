@@ -12,12 +12,12 @@ if($id==0) {
 }
 
 // delete the user, but first check if we are deleting our own record
-if($id==$modx->getLoginUserID()) {
+if($id==$modx->getLoginUserID('mgr')) {
 	$modx->webAlertAndQuit("You can't delete yourself!");
 }
 
 // Set the item name for logger
-$username = $modx->db->getValue($modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$id}'"));
+$username = EvolutionCMS\Models\ManagerUser::findOrFail($id)->username;
 $_SESSION['itemname'] = $username;
 
 // invoke OnBeforeUserFormDelete event
@@ -27,15 +27,7 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 	));
 
 // delete the user.
-$modx->db->delete($modx->getFullTableName('manager_users'), "id='{$id}'");
-
-$modx->db->delete($modx->getFullTableName('member_groups'), "member='{$id}'");
-
-// delete user settings
-$modx->db->delete($modx->getFullTableName('user_settings'), "user='{$id}'");
-
-// delete the attributes
-$modx->db->delete($modx->getFullTableName('user_attributes'), "internalKey='{$id}'");
+EvolutionCMS\Models\ManagerUser::destroy($id);
 
 // invoke OnManagerDeleteUser event
 $modx->invokeEvent("OnManagerDeleteUser",

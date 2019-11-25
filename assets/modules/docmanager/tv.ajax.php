@@ -40,7 +40,8 @@ if (isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
 				</td>
 				<td valign="top" style="position:relative">';
             $base_url = str_replace("assets/modules/docmanager/", "", MODX_BASE_URL);
-            $output .= renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
+            $output .= DMrenderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'],
+                $row['value'], ' style="width:300px;"');
             $output .= '</td></tr>';
         }
         $output .= '</table>';
@@ -55,7 +56,7 @@ if (isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
 }
 
 
-function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style = '')
+function DMrenderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style = '')
 {
     global $modx;
     global $dm;
@@ -277,18 +278,3 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
     } // end switch statement
     return $field_html;
 } // end renderFormElement function
-
-
-function ParseIntputOptions($v)
-{
-    global $modx;
-    $a = array();
-    if (is_array($v)) {
-        return $v;
-    } else if ($modx->db->isResult($v)) {
-        $a = $modx->db->makeArray($v);
-    } else {
-        $a = explode("||", $v);
-    }
-    return $a;
-}

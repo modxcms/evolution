@@ -17,12 +17,12 @@ class TransAlias {
      * @access private
      */
     var $_useTable;
-    
+
     /**
      * hold conversion tables
      *
      * @var array
-     * @access 
+     * @access
      */
     var $_tables = array ('named' => array (
             'quot' => '&#34;','amp' => '&#38;','lt' => '&#60;','gt' => '&#62;','OElig' => '&#338;','oelig' => '&#339;','Scaron' => '&#352;','scaron' => '&#353;',
@@ -139,7 +139,7 @@ class TransAlias {
             $this->_useTable = $name;
             return true;
         } else {
-            $filePath = dirname(__FILE__).'/transliterations/'.$name.'.php';
+            $filePath = __DIR__.'/transliterations/'.$name.'.php';
             if (is_file($filePath)) {
             	$table = include $filePath;
             	if ($remove_periods == 'Yes') {
@@ -169,7 +169,7 @@ class TransAlias {
     function stripAlias($alias,$char_restrict,$word_separator) {
         // Convert all named HTML entities to numeric entities
         $alias = preg_replace_callback('/&([a-zA-Z][a-zA-Z0-9]{1,7});/', array($this,'convert_entity'), $alias);
-        
+
         // Convert all numeric entities to their actual character
         $alias = preg_replace_callback('/&#x([0-9a-f]{1,7});/i', array($this, 'convert_hex_entity'), $alias);
         $alias = preg_replace_callback('/&#([0-9]{1,7});/', array($this, 'convert_numeric_entity'), $alias);

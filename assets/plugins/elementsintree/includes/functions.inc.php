@@ -54,16 +54,16 @@ function getLockedByUser($lockType, $rowLock, $id)
     if ($rowLock['sid'] == $modx->sid) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);
         $tpl = '<span title="%s" class="editResource" style="cursor:context-menu;"><i class="%s"></i></span>&nbsp;';
-        $params = array($title, $_style['actions_preview']);
+        $params = array($title, $_style['icon_eye']);
     } else {
         $ph['username'] = $rowLock['username'];
         $title = $modx->parseText($_lang['lock_element_locked_by'], $ph);
         if ($modx->hasPermission('remove_locks')) {
             $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource">%s </a>';
-            $params = array($lockType, $id, $title, $_style['icons_secured']);
+            $params = array($lockType, $id, $title, '<i class="' . $_style['icon_lock'] . '"></i>');
         } else {
             $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;">%s </span>';
-            $params = array($title, $_style['icons_secured']);
+            $params = array($title, '<i class="' . $_style['icon_lock'] . '"></i>');
         }
     }
 
@@ -91,11 +91,11 @@ function createElementsList($elmTable, $action, $nameField = 'name')
         case 'site_htmlsnippets':
         case 'site_snippets':
         case 'site_plugins':
-            $orderBy = '6,1';
+            $orderBy = '5,1';
             $field['disabled'] = "[+prefix+]{$elmTable}.disabled";
             break;
         case 'site_tmplvars':
-            $orderBy = '6,1';
+            $orderBy = '5,1';
             $field['caption'] = "[+prefix+]{$elmTable}.caption";
             break;
         default:
@@ -190,7 +190,7 @@ function createModulesList($action)
                 '(mg.member IS NULL OR mg.member=%s) AND sm.disabled!=1 AND sm.locked!=1',
                 $modx->getLoginUserID()
             ),
-            '4,2'
+            'ISNULL(catname), 4,2'
         );
     } else {
         $query = $modx->db->select(
@@ -200,7 +200,7 @@ function createModulesList($action)
                 'LEFT JOIN [+prefix+]categories as cats ON sm.category=cats.id'
             ),
             'sm.disabled!=1',
-            '4,2'
+            'ISNULL(catname), 4,2'
         );
     }
 

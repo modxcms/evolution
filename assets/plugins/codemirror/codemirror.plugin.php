@@ -15,7 +15,9 @@
  *
  * @see         https://github.com/Mihanik71/CodeMirror-MODx
  */
-global $content, $which_editor;
+global $content;
+
+$which_editor = $modx->getConfig('which_editor');
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
@@ -50,19 +52,19 @@ if (!empty($_COOKIE['MODX_themeMode'])) {
  */
 $prte = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
 $srte = ($modx->config['use_editor'] ? $modx->config['which_editor'] : 'none');
-$xrte = $content['richtext'];
+$xrte = isset($content['richtext']) ? $content['richtext'] : '';
 $tvMode = false;
 $limitedHeight = false;
 /*
  * Switch event
  */
-switch($modx->Event->name) {
+switch($modx->event->name) {
 	case 'OnTempFormRender'   :
 		$object_name = $content['templatename'];
 		$rte = ($prte ? $prte : 'none');
 		break;
 	case 'OnChunkFormRender'  :
-		$rte = isset($which_editor) ? $which_editor : 'none';
+		$rte = isset($editor) ? $editor : 'none';
 		break;
 
 	case 'OnRichTextEditorInit':
@@ -102,9 +104,9 @@ switch($modx->Event->name) {
 			return;
 		}
 		$textarea_name = 'ta';
-		$object_name = $content['pagetitle'];
+        $object_name = isset($content['pagetitle']) ? $content['pagetitle'] : '';
 		$xrte = (('htmlmixed' == $mode) ? $xrte : 0);
-		$rte = ($prte ? $prte : ($content['id'] ? ($xrte ? $srte : 'none') : $srte));
+        $rte = ($prte ? $prte : (isset($content['id']) ? ($xrte ? $srte : 'none') : $srte));
 		$contentType = $content['contentType'];
 		/*
 		* Switch contentType for doc
@@ -150,6 +152,7 @@ switch($modx->Event->name) {
 		$this->logEvent(1, 2, 'Undefined event : <b>' . $modx->Event->name . '</b> in <b>' . $this->Event->activePlugin . '</b> Plugin', 'CodeMirror Plugin : ' . $modx->Event->name);
 }
 $output = '';
+
 if(('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
 	define('INIT_CODEMIRROR', 1);
 	$output = <<< HEREDOC
@@ -342,7 +345,7 @@ if(('none' == $rte) && $mode && $elements !== NULL) {
 			$setHeight = '';
 		};
 
-		$object_id = md5($evt->name . '-' . $content['id'] . '-' . $el);
+		$object_id = md5($modx->event->name . '-' . $content['id'] . '-' . $el);
 
 		$output .= "
 			<script>
@@ -405,5 +408,4 @@ if(('none' == $rte) && $mode && $elements !== NULL) {
 			</script>\n";
 	};
 };
-
-$modx->Event->output($output);
+$modx->event->addOutput($output);

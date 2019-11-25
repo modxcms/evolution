@@ -1,1 +1,0 @@
-<?php $cacheRefreshTime=0; ?>

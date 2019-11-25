@@ -10,22 +10,21 @@ if(!$modx->hasPermission('category_manager')) {
 $_module_params = array(
 	'module_version'   => '1.0.0',
 	'module_params'    => '',
-	'module_id'        => $_GET['id'],
+	'module_id'        => get_by_key($_GET, 'id', 0),
 	'package_name'     => 'Module_Categories_Manager',
 	'native_language'  => 'de',
 	'name'             => $_lang['manage_categories'],
-	'dirname'          => $site_manager_url,
-	'url'              => 'index.php?a=120&amp;id=' . $_GET['id'],
-	'path'             => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR,
-	'inc_dir'          => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR,
-	'languages_dir'    => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR,
-	'views_dir'        => realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'skin' . DIRECTORY_SEPARATOR,
+	'dirname'          => MODX_MANAGER_URL,
+	'url'              => 'index.php?a=120&amp;id=' . get_by_key($_GET, 'id', 0),
+	'path'             => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR,
+	'inc_dir'          => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR,
+	'languages_dir'    => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR,
+	'views_dir'        => realpath( __DIR__ ) . DIRECTORY_SEPARATOR . 'category_mgr' . DIRECTORY_SEPARATOR . 'skin' . DIRECTORY_SEPARATOR,
 	'request_key'      => 'module_categories_manager',
 	'messages'         => array()
 );
 
-require_once $_module_params['inc_dir'] . 'Module_Categories_Manager.php';
-$cm = new Module_Categories_Manager();
+$cm = new EvolutionCMS\Legacy\ModuleCategoriesManager();
 
 // assign module_params to internal params
 foreach( $_module_params as $param => $value )

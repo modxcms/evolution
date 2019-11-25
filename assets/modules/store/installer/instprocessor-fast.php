@@ -6,7 +6,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPerm
 error_reporting(E_ALL & ~E_NOTICE);
 define('MGR',MODX_BASE_PATH.MGR_DIR);
 $moduleurl = 'assets/modules/store/installer/index.php';
-$modulePath = dirname(__FILE__);
+$modulePath = __DIR__;
 $self = $modulePath.'/index.php';
 require_once($modulePath."/functions.php");
 
@@ -63,7 +63,7 @@ if (count($a) > 1)
     array_pop($a);
 $url = implode("install", $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", realpath(dirname(__FILE__))));
+$a = explode("install", str_replace("\\", "/", realpath(__DIR__)));
 if (count($a) > 1)
     array_pop($a);
 $pth = implode("install", $a);
@@ -72,10 +72,10 @@ $base_url = $url . (substr($url, -1) != "/" ? "/" : "");
 $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 
-if(!function_exists('parseProperties')) {
+if(!function_exists('propertiesNameValue')) {
     // parses a resource property string and returns the result as an array
     // duplicate of method in documentParser class
-    function parseProperties($propertyString) {
+    function propertiesNameValue($propertyString) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
@@ -107,7 +107,7 @@ if ( count($moduleTemplates )>0) {
     echo "<h3>" . $_lang['templates'] . ":</h3> ";
     $selTemplates = $_POST['template'];
     foreach ($moduleTemplates as $k=>$moduleTemplate) {
-        $installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
       //  if(in_array($k, $selTemplates) || $installSample) {
             $name = $modx->db->escape($moduleTemplate[0]);
             $desc = $modx->db->escape($moduleTemplate[1]);
@@ -152,7 +152,7 @@ if (count($moduleTVs )>0) {
     echo "<h3>" . $_lang['tvs'] . ":</h3> ";
     $selTVs = $_POST['tv'];
     foreach ($moduleTVs as $k=>$moduleTV) {
-        $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
         //if(in_array($k, $selTVs) || $installSample) {
             $name = $modx->db->escape($moduleTV[0]);
             $caption = $modx->db->escape($moduleTV[1]);
@@ -226,7 +226,7 @@ if (count($moduleChunks )>0) {
     echo "<h3>" . $_lang['chunks'] . ":</h3> ";
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
-        $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
         //if(in_array($k, $selChunks) || $installSample) {
 
             $name = $modx->db->escape($moduleChunk[0]);
@@ -280,7 +280,7 @@ if (count($moduleModules )>0) {
     echo "<h3>" . $_lang['modules'] . ":</h3> ";
     $selModules = $_POST['module'];
     foreach ($moduleModules as $k=>$moduleModule) {
-        $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
         //if(in_array($k, $selModules) || $installSample) {
             $name = $modx->db->escape($moduleModule[0]);
             $desc = $modx->db->escape($moduleModule[1]);
@@ -327,7 +327,7 @@ if (count($modulePlugins )>0) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
     $selPlugs = $_POST['plugin'];
     foreach ($modulePlugins as $k=>$modulePlugin) {
-        $installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
+        //$installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
        // if(in_array($k, $selPlugs) || $installSample) {
             $name = $modx->db->escape($modulePlugin[0]);
             $desc = $modx->db->escape($modulePlugin[1]);
@@ -402,7 +402,7 @@ if (count($modulePlugins )>0) {
                         $id = $row["id"];
                         $_events = implode("','", $events);
                         // add new events
-                        $modx->db->query("INSERT IGNORE INTO `" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM `" . $table_prefix . "system_eventnames` se WHERE name IN ('" . $_events . "')");
+                        $modx->db->query("INSERT IGNORE INTO `" . $table_prefix . "site_plugin_events` (pluginid, evtid, priority) SELECT '$id' as 'pluginid', se.id as 'evtid', IF(spe.priority IS NULL, 0, MAX(spe.priority) + 1) as 'priority' FROM `" . $table_prefix . "system_eventnames` se LEFT JOIN `" . $table_prefix . "site_plugin_events` spe ON spe.evtid = se.id WHERE name IN ('" . $_events . "') GROUP BY se.id");
                         // remove existing events
                         $modx->db->query("DELETE `pe` FROM `{$table_prefix}site_plugin_events` `pe` LEFT JOIN `{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
                     }
@@ -418,7 +418,7 @@ if (count($moduleSnippets ) > 0) {
     $selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k=>$moduleSnippet) {
 
-        $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
+        //$installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         //if(in_array($k, $selSnips) || $installSample) {
             $name = $modx->db->escape($moduleSnippet[0]);
             $desc = $modx->db->escape($moduleSnippet[1]);
@@ -483,12 +483,7 @@ if (is_file($installPath.'/'.$moduleSQLDataFile)) {
 }
 
 // always empty cache after install
-
-include_once MGR."/processors/cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath(MODX_BASE_PATH."assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache
+$modx->clearCache('full');
 
 
 
@@ -515,8 +510,9 @@ function parseProperties($propertyString, $json=false) {
     $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
-    if(empty($propertyString)) return array();
-    if($propertyString=='{}' || $propertyString=='[]') return array();
+    if (empty($propertyString) || $propertyString == '{}' || $propertyString == '[]') {
+        $propertyString = '';
+    }
 
     $jsonFormat = isJson($propertyString, true);
     $property = array();
