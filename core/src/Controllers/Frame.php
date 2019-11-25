@@ -76,7 +76,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         }
 
         $theme_modes = ['', 'lightness', 'light', 'dark', 'darkness'];
-        if (!empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
+        if (isset($_COOKIE['MODX_themeMode']) && !empty($theme_modes[$_COOKIE['MODX_themeMode']])) {
             $body_class .= ' ' . $theme_modes[$_COOKIE['MODX_themeMode']];
         } elseif (!empty($theme_modes[$this->managerTheme->getCore()->getConfig('manager_theme_mode')])) {
             $body_class .= ' ' . $theme_modes[$this->managerTheme->getCore()->getConfig('manager_theme_mode')];
