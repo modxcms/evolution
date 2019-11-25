@@ -49,8 +49,7 @@
         <h1>
             <i class="{{ $_style['icon_template'] }}"></i>
             @if($data->templatename)
-                {{ $data->templatename }}
-                <small>({{ $data->getKey() }})</small>
+                {{ $data->templatename }}<small>({{ $data->getKey() }})</small>
             @else
                 {{ ManagerTheme::getLexicon('new_template') }}
             @endif
