@@ -1,6 +1,28 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 2.0.1 (Nov 25, 2019)
+* [GitHub:#b79cb2a13] - fix: manager fix change theme (Serious)
+* [GitHub:#41f00c6d1] - fix: #1271 childrens should be children (Dmi3yy)
+* [GitHub:#8c0334d38] - fix: #1294 Bad layout on page template-bound resources (Dmi3yy)
+* [GitHub:#7c69af1a4] - fix: Lang issue &amp; #1272 (Dmi3yy)
+* [GitHub:#4ddf9d30b] - fix: forgot ->db-> #1265 (Dmi3yy)
+* [GitHub:#c655cf46c] - fix: issets are need in codemirror plugin #1264 (Dmi3yy)
+* [GitHub:#7005ec384] - fix: needs isset #1263 (Dmi3yy)
+* [GitHub:#c977fcae3] - fix: getDocumentObject method (Pathologic)
+* [GitHub:#bd3f836c5] - fix: need use correct cachekey with event and GET (Dmi3yy)
+* [GitHub:#3dd33e33c] - fix: manager theme bug (Dmi3yy)
+* [GitHub:#933179807] - fix: styles anв icons (Ruslan Aleev)
+* [GitHub:#74341fca8] - fix: tree icon for private resource (Mr B)
+* [GitHub:#cdca6687c] - fix: No hint path defined for [cache] (Pathologic)
+* [GitHub:#db0ec014f] - fix: Corrected lexicons, Corrected output of lexicons in template (Ruslan Aleev)
+* [GitHub:#4b8099d8b] - fix: send mail to manager e-mail. (Yevhen Lebediev)
+* [GitHub:#23c1b33dc] - fix: demo site install (Pathologic)
+* [GitHub:#e087dfc54] - fix: fullscreen tinymce hiding buttons (Mr B)
+* [GitHub:#7da9f1c20] - fix: parse plugin params (dzhuryn.volodymyr)
+* [GitHub:#cbfdb67a2] - refactor: htaccess add rules for remove // #1239 fix (Dmi3yy)
+* [GitHub:#4ea798ef8] - new: (core) Add Dynamic Relation (Ser1ous)
+
 
 Evolution CMS 2.0 (Nov 05, 2019)
 I think it’s impossible to make all the changes since version 1.4, so let's start from scratch
