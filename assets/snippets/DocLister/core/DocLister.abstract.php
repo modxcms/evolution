@@ -244,7 +244,7 @@ abstract class DocLister
                 default:
                     $cfg['idType'] = "parents";
                     if (($IDs = $this->getCFGDef('parents', '')) === '') {
-                        $IDs = $this->getCurrentMODXPageID();
+                        $IDs = $cfg['parents'] = $this->getCurrentMODXPageID();
                     }
                     break;
             }
