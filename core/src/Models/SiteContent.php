@@ -50,7 +50,7 @@ use Rocky\Eloquent\HasDynamicRelation;
  * @property SiteTemplate|null $tpl
  *
  * HasMany
- * @property Eloquent\Collection $childrens
+ * @property Eloquent\Collection $children
  * @property Eloquent\Collection $templateValues
  *
  * BelongsToMany
@@ -267,12 +267,12 @@ class SiteContent extends Eloquent\Model
     /**
      * @return array
      */
-    public function getAllChildrens($parent): array
+    public function getAllChildren($parent): array
     {
         $ids = [];
-        foreach ($parent->childrens as $child) {
+        foreach ($parent->children as $child) {
             $ids[] = $child->id;
-            $ids = array_merge($ids, $this->getAllChildrens($child));
+            $ids = array_merge($ids, $this->getAllChildren($child));
         }
         return $ids;
     }
@@ -344,7 +344,7 @@ class SiteContent extends Eloquent\Model
     /**
      * @return Eloquent\Relations\HasMany
      */
-    public function childrens(): Eloquent\Relations\HasMany
+    public function children(): Eloquent\Relations\HasMany
     {
         return $this->hasMany(__CLASS__, 'parent')
             ->withTrashed();

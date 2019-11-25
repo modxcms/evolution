@@ -35,7 +35,7 @@ if (!$document->deletedon) {
     $modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
 }
 
-$children = $document->getAllChildrens($document);
+$children = $document->getAllChildren($document);
 
 $documentDeleteIds = $children;
 array_unshift($documentDeleteIds, $id);

@@ -33,7 +33,7 @@ if (!$udperms->checkPermissions()) {
     $modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
-$children = $document->getAllChildrens($document);
+$children = $document->getAllChildren($document);
 
 // invoke OnBeforeDocFormDelete event
 $modx->invokeEvent("OnBeforeDocFormDelete",
