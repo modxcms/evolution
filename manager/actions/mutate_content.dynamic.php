@@ -1405,7 +1405,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $documentId
                             );
                             $from = vsprintf("%s AS dgn LEFT JOIN %s AS groups_resource ON groups_resource.document_group=dgn.id AND groups_resource.document='%s'", $vs);
-                            $rs = $modx->db->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
+                            $rs = $modx->getDatabase()->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
                         } else {
                             // Just load up the names, we're starting clean
                             $rs = $modx->getDatabase()->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
