@@ -15,6 +15,10 @@ RewriteBase /
 RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
 
+#Remove ///// in url
+#RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+#RewriteRule . %1/%2 [R=301,L]
+
 #redirect http to https
 #RewriteCond %{HTTP:SSL} !=1 [NC]
 #RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R=301]
