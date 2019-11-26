@@ -5688,10 +5688,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (!is_array($parameter)) {
                 $parameter = array();
             }
-            if ($extParams) {
-                foreach($extParams as $k=>$v) {
-                    $parameter[$k] = $v;
-                }
+            if (!empty($extParams)) {
+                $parameter = array_merge($parameter, $extParams);
             }
 
             // eval plugin
