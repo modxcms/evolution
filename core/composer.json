@@ -38,7 +38,7 @@
     "agelxnash/modx-evo-database": "~1.4",
     "doctrine/dbal": "~2.3",
     "phpoption/phpoption": "*",
-    "vlucas/phpdotenv": "*",
+    "vlucas/phpdotenv": "3.6.*",
     "composer/composer": "master",
     "illuminate/cache": "6.0.*",
     "illuminate/config": "6.0.*",
