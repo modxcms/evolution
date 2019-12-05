@@ -1108,7 +1108,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $rc++;
                 if ($lc === $rc) {
                     // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
-                    if ($this->config['enable_filter'] == 1) {
+                    if ($this->config['enable_filter'] == 1 OR class_exists('PHxParser')) {
                         if (Str::contains($fetch, $left)) {
                             $nested = $this->_getTagsFromContent($fetch, $left, $right);
                             foreach ($nested as $tag) {
