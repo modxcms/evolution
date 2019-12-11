@@ -115,7 +115,7 @@ if ($conn) {
 
     if ($installLevel === 2) {
         // check status of Inherit Parent Template plugin
-        $auto_template_logic = 'parent';
+        $auto_template_logic = 'sibling';
         if ($installMode !== 0) {
             $query = sprintf(
                 "SELECT properties, disabled FROM %s.`%s` WHERE name='Inherit Parent Template'"

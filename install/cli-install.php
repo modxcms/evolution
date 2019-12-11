@@ -562,7 +562,7 @@ if (!function_exists('propertiesNameValue')) {
 }
 
 // check status of Inherit Parent Template plugin
-$auto_template_logic = 'parent';
+$auto_template_logic = 'sibling';
 if ($installMode != 0) {
     $rs = mysqli_query($conn,
         "SELECT properties, disabled FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'");
