@@ -40,6 +40,7 @@ return [
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
         'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
         'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
+        'Laravel_Redis' => Illuminate\Redis\RedisServiceProvider::class,
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
 
         'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
