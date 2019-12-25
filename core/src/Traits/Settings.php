@@ -29,7 +29,7 @@ trait Settings
         'xhtml_urls' => 'bool',
         'aliaslistingfolder' => 'bool',
         'friendly_alias_urls' => 'bool',
-        'enable_cache' => 'bool',
+        'enable_cache' => 'float',
         'enable_at_syntax' => 'bool',
         'enable_filter' => 'bool',
         'use_udperms' => 'bool',
