@@ -80,7 +80,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 <form name="userform" method="post" action="index.php" enctype="multipart/form-data">
     <input type="hidden" name="a" value="36">
     <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
-    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+    <input type="hidden" name="id" value="<?= isset($_GET['id']) ? $_GET['id'] : '' ?>">
 
     <h1>
         <i class="<?= $_style['icon_role'] ?>"></i><?= ($roledata['name'] ? $roledata['name'] . '<small>(' . $roledata['id'] . ')</small>' : $_lang['role_title']) ?>
