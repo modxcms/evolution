@@ -6590,6 +6590,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->dataForView = array_merge($this->dataForView, $data);
     }
 
+    public function getDataForView()
+    {
+        return $this->dataForView;
+    }
+
     /**
      * @param string $name
      * @param string $file
