@@ -125,7 +125,7 @@ class Store{
 	public $language;
 
 	function __construct(){
-		global $modx;
+		$modx = EvolutionCMS();
 		$lang = $modx->config['manager_language'];
 		if (file_exists( __DIR__ .  '/lang/'.$lang.'.php')){
 			include_once(__DIR__ .  '/lang/'.$lang.'.php');
@@ -144,14 +144,14 @@ class Store{
 		return isset($match[1]) ? $match[1] : '';
 	}
 
-	static function parse($tpl,$field){
-        global $modx;
-		foreach($field as $key=>$value)  $tpl = str_replace('[+'.$key.'+]',$value,$tpl);
-       $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
-       $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
-       $tpl = str_replace('[+onManagerMainFrameHeaderHTMLBlock+]',$onManagerMainFrameHeaderHTMLBlock,$tpl);
-		return $tpl;
-	}
+    static function parse($tpl, $fields){
+        $modx = EvolutionCMS();
+        $tpl = $modx->parseText($tpl, $fields);
+        $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+        $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
+        $tpl = str_replace('[+onManagerMainFrameHeaderHTMLBlock+]',$onManagerMainFrameHeaderHTMLBlock,$tpl);
+        return $tpl;
+    }
 	function tpl($file){
 		$lang = $this->lang;
 		ob_start();
