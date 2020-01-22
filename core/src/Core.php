@@ -3064,7 +3064,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 'id,alias,isfolder,parent'
                 , $this->getDatabase()->getFullTableName('site_content')
                 , sprintf(
-                    "parent IN (%d) AND deleted = '0'"
+                    "parent IN (%s) AND deleted = '0'"
                     , $id
                 )
             );
