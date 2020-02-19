@@ -142,6 +142,7 @@ switch ($input['mode']) {
 		// end of user_groups stuff!
 
         if ($passwordnotifymethod == 'e') {
+            $signupemail_message = $modx->getConfig('websignupemail_message');
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $signupemail_message, MODX_MANAGER_URL);
             if ($input['stay'] != '') {
 				$a = ($input['stay'] == '2') ? "12&id={$internalKey}" : "11";
@@ -203,6 +204,7 @@ switch ($input['mode']) {
 			}
 		}
         if ($passwordnotifymethod == 'e') {
+            $signupemail_message = $modx->getConfig('websignupemail_message');
             sendMailMessageForUser($email, $newusername, $newpassword, $fullname, $signupemail_message, MODX_MANAGER_URL);
 		}
 
