@@ -59,26 +59,26 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @var array
      */
-    public $configGlobal = array(); // contains backup of settings overwritten by user-settings
+    public $configGlobal = []; // contains backup of settings overwritten by user-settings
     public $rs;
     public $result;
     public $sql;
     public $debug = false;
-    public $documentIdentifier;
+    public $documentIdentifier = 0;
     public $documentMethod;
     public $documentGenerated;
     public $documentContent;
     public $documentOutput;
-    public $tstart;
-    public $mstart;
-    public $minParserPasses;
-    public $maxParserPasses;
-    public $documentObject;
+    public $tstart = 0;
+    public $mstart = 0;
+    public $minParserPasses = 1;
+    public $maxParserPasses = 10;
+    public $documentObject = [];
     public $templateObject;
     public $snippetObjects;
     public $stopOnNotice = false;
-    public $executedQueries;
-    public $queryTime;
+    public $executedQueries = 0;
+    public $queryTime = 0;
     public $currentSnippet;
     public $documentName;
     public $aliases;
@@ -87,17 +87,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @deprecated use UrlProcessor::getFacadeRoot()->documentListing
      */
-    public $documentListing;
+    public $documentListing = [];
     /**
      * feed the parser the execution start time
      * @var bool
      */
     public $dumpSnippets = false;
     public $snippetsCode;
-    public $snippetsTime = array();
-    public $chunkCache;
-    public $snippetCache;
-    public $modulesFromFile = array();
+    public $snippetsTime = [];
+    public $chunkCache = [];
+    public $snippetCache = [];
+    public $modulesFromFile = [];
     public $contentTypes;
     public $dumpSQL = false;
     public $queryCode;
@@ -105,29 +105,29 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @deprecated use UrlProcessor::getFacadeRoot()->virtualDir
      */
     public $virtualDir;
-    public $placeholders;
-    public $sjscripts = array();
-    public $jscripts = array();
-    public $loadedjscripts = array();
-    public $documentMap;
+    public $placeholders = [];
+    public $sjscripts = [];
+    public $jscripts = [];
+    public $loadedjscripts = [];
+    public $documentMap = [];
     public $forwards = 3;
     public $error_reporting = 1;
     public $dumpPlugins = false;
     public $pluginsCode;
-    public $pluginsTime = array();
-    public $pluginCache = array();
+    public $pluginsTime = [];
+    public $pluginCache = [];
     /**
      * @deprecated use UrlProcessor::getFacadeRoot()->aliasListing
      */
-    public $aliasListing;
+    public $aliasListing = [];
     public $lockedElements = null;
-    public $tmpCache = array();
-    private $version = array();
-    public $extensions = array();
-    public $cacheKey = null;
+    public $tmpCache = [];
+    private $version = [];
+    public $extensions = [];
+    public $cacheKey = '';
     public $recentUpdate = 0;
     public $useConditional = false;
-    protected $systemCacheKey = null;
+    protected $systemCacheKey = '';
     public $snipLapCount = 0;
     public $messageQuitCount;
     public $time;
