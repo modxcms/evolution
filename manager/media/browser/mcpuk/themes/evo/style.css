@@ -88,7 +88,7 @@ input[type=checkbox]:checked + label { color: #f00; font-style: normal; }
 .menu a:hover { background-color: #0e80cb; color: #fff; }
 .menu a:hover:before { color: #fff; }
 .menu a[href="kcact:refresh"]:before { content: "\f021"; font-weight: bold;}
-.menu a[href="kcact:mkdir"]:before { content: "\f114"; font-weight: bold;}
+.menu a[href="kcact:mkdir"]:before { content: "\f07b"; font-weight: bold;}
 .menu a[href="kcact:mvdir"]:before, .menu a[href="kcact:mv"]:before { content: "\f246"; font-weight: bold;}
 .menu a[href="kcact:rmdir"]:before, .menu a[href="kcact:rm"]:before, .menu a[href="kcact:rmcbd"]:before { content: "\f1f8"; font-weight: bold;}
 .menu a[href="kcact:clpbrdadd"]:before { content: "\f0ea"; font-weight: bold;}
