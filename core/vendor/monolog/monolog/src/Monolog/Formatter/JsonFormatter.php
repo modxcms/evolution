@@ -137,7 +137,7 @@ class JsonFormatter extends NormalizerFormatter
             return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (is_array($data)) {
             $normalized = [];
 
             $count = 1;
@@ -155,6 +155,10 @@ class JsonFormatter extends NormalizerFormatter
 
         if ($data instanceof Throwable) {
             return $this->normalizeException($data, $depth);
+        }
+
+        if (is_resource($data)) {
+            return parent::normalize($data);
         }
 
         return $data;

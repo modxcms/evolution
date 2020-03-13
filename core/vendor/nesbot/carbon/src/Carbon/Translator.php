@@ -34,7 +34,7 @@ class Translator extends Translation\Translator
     /**
      * List of custom directories that contain translation files.
      *
-     * @var array
+     * @var string[]
      */
     protected $directories = [];
 
@@ -44,6 +44,16 @@ class Translator extends Translation\Translator
      * @var bool
      */
     protected $initializing = false;
+
+    /**
+     * List of locales aliases.
+     *
+     * @var string[]
+     */
+    protected $aliases = [
+        'me' => 'sr_Latn_ME',
+        'scr' => 'sh',
+    ];
 
     /**
      * Return a singleton instance of Translator.
@@ -180,9 +190,10 @@ class Translator extends Translation\Translator
         }
 
         foreach ($this->getDirectories() as $directory) {
-            $directory = rtrim($directory, '\\/');
-            if (file_exists($filename = "$directory/$locale.php")) {
-                $this->messages[$locale] = require $filename;
+            $data = @include sprintf('%s/%s.php', rtrim($directory, '\\/'), $locale);
+
+            if ($data !== false) {
+                $this->messages[$locale] = $data;
                 $this->addResource('array', $this->messages[$locale], $locale);
 
                 return true;
@@ -359,6 +370,10 @@ class Translator extends Translation\Translator
             });
 
             $locale = $locales[0];
+        }
+
+        if (isset($this->aliases[$locale])) {
+            $locale = $this->aliases[$locale];
         }
 
         // If subtag (ex: en_CA) first load the macro (ex: en) to have a fallback

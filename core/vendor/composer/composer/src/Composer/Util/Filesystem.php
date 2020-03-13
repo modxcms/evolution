@@ -206,7 +206,7 @@ class Filesystem
                 usleep(350000);
                 $unlinked = @$this->unlinkImplementation($path);
             }
-            
+
             if (!$unlinked) {
                 $error = error_get_last();
                 $message = 'Could not delete '.$path.': ' . @$error['message'];
@@ -237,7 +237,7 @@ class Filesystem
                 usleep(350000);
                 $deleted = @rmdir($path);
             }
-            
+
             if (!$deleted) {
                 $error = error_get_last();
                 $message = 'Could not delete '.$path.': ' . @$error['message'];
@@ -310,7 +310,9 @@ class Filesystem
         }
 
         if (!function_exists('proc_open')) {
-            return $this->copyThenRemove($source, $target);
+            $this->copyThenRemove($source, $target);
+            
+            return;
         }
 
         if (Platform::isWindows()) {
@@ -340,7 +342,7 @@ class Filesystem
             }
         }
 
-        return $this->copyThenRemove($source, $target);
+        $this->copyThenRemove($source, $target);
     }
 
     /**
@@ -682,12 +684,14 @@ class Filesystem
         if (!Platform::isWindows()) {
             return false;
         }
+
+        // Important to clear all caches first
+        clearstatcache(true, $junction);
+
         if (!is_dir($junction) || is_link($junction)) {
             return false;
         }
 
-        // Important to clear all caches first
-        clearstatcache(true, $junction);
         $stat = lstat($junction);
 
         // S_ISDIR test (S_IFDIR is 0x4000, S_IFMT is 0xF000 bitmask)

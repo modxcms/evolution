@@ -152,7 +152,7 @@ class LineFormatter extends NormalizerFormatter
             return (string) $data;
         }
 
-        return (string) $this->toJson($data, true);
+        return $this->toJson($data, true);
     }
 
     protected function replaceNewlines(string $str): string
@@ -180,8 +180,8 @@ class LineFormatter extends NormalizerFormatter
                 $str .= ' faultactor: ' . $e->faultactor;
             }
 
-            if (isset($e->detail)) {
-                $str .= ' detail: ' . $e->detail;
+            if (isset($e->detail) && (is_string($e->detail) || is_object($e->detail) || is_array($e->detail))) {
+                $str .= ' detail: ' . (is_string($e->detail) ? $e->detail : reset($e->detail));
             }
         }
         $str .= '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';

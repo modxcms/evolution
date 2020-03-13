@@ -1,6 +1,28 @@
 CHANGELOG
 =========
 
+5.0.0
+-----
+
+ * removed support for using `null` as the locale in `Translator`
+ * removed `TranslatorInterface`
+ * removed `MessageSelector`
+ * removed `ChoiceMessageFormatterInterface`
+ * removed `PluralizationRule`
+ * removed `Interval`
+ * removed `transChoice()` methods, use the trans() method instead with a %count% parameter
+ * removed `FileDumper::setBackup()` and `TranslationWriter::disableBackup()`
+ * removed `MessageFormatter::choiceFormat()`
+ * added argument `$filename` to `PhpExtractor::parseTokens()`
+ * removed support for implicit STDIN usage in the `lint:xliff` command, use `lint:xliff -` (append a dash) instead to make it explicit.
+
+4.4.0
+-----
+
+ * deprecated support for using `null` as the locale in `Translator`
+ * deprecated accepting STDIN implicitly when using the `lint:xliff` command, use `lint:xliff -` (append a dash) instead to make it explicit.
+ * Marked the `TranslationDataCollector` class as `@final`.
+
 4.3.0
 -----
 

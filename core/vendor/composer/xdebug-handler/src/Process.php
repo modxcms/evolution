@@ -50,6 +50,11 @@ class Process
             return $args;
         }
 
+        // Check for NO_COLOR variable (https://no-color.org/)
+        if (false !== getenv('NO_COLOR')) {
+            return $args;
+        }
+
         if (false !== ($index = array_search('--', $args))) {
             // Position option before double-dash delimiter
             array_splice($args, $index, 0, $colorOption);
@@ -115,6 +120,10 @@ class Process
      */
     public static function supportsColor($output)
     {
+        if ('Hyper' === getenv('TERM_PROGRAM')) {
+            return true;
+        }
+
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             return (function_exists('sapi_windows_vt100_support')
                 && sapi_windows_vt100_support($output))
@@ -125,7 +134,9 @@ class Process
 
         if (function_exists('stream_isatty')) {
             return stream_isatty($output);
-        } elseif (function_exists('posix_isatty')) {
+        }
+
+        if (function_exists('posix_isatty')) {
             return posix_isatty($output);
         }
 

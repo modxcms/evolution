@@ -621,8 +621,28 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         // Parse and assign arguments one by one. First argument may be an ISO 8601 spec,
         // which will be first parsed into parts and then processed the same way.
 
-        if (count($arguments) && static::isIso8601($iso = $arguments[0])) {
+        $agumentsCount = count($arguments);
+
+        if ($agumentsCount && static::isIso8601($iso = $arguments[0])) {
             array_splice($arguments, 0, 1, static::parseIso8601($iso));
+        }
+
+        if ($agumentsCount === 1) {
+            if ($arguments[0] instanceof DatePeriod) {
+                $arguments = [
+                    $arguments[0]->start,
+                    $arguments[0]->end ?: ($arguments[0]->recurrences - 1),
+                    $arguments[0]->interval,
+                    $arguments[0]->include_start_date ? 0 : static::EXCLUDE_START_DATE,
+                ];
+            } elseif ($arguments[0] instanceof self) {
+                $arguments = [
+                    $arguments[0]->getStartDate(),
+                    $arguments[0]->getEndDate() ?: $arguments[0]->getRecurrences(),
+                    $arguments[0]->getDateInterval(),
+                    $arguments[0]->getOptions(),
+                ];
+            }
         }
 
         foreach ($arguments as $argument) {
@@ -1446,10 +1466,11 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         $this->key = 0;
         $this->current = call_user_func([$this->dateClass, 'make'], $this->startDate);
         $settings = $this->getSettings();
-        $locale = $this->getLocalTranslator()->getLocale();
-        if ($locale) {
-            $settings['locale'] = $locale;
+
+        if ($this->hasLocalTranslator()) {
+            $settings['locale'] = $this->getTranslatorLocale();
         }
+
         $this->current->settings($settings);
         $this->timezone = static::intervalHasTime($this->dateInterval) ? $this->current->getTimezone() : null;
 
@@ -1681,7 +1702,9 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         $macro = static::$macros[$name];
 
         if ($macro instanceof Closure) {
-            return call_user_func_array($macro->bindTo($this, static::class), $parameters);
+            $boundMacro = @$macro->bindTo($this, static::class) ?: @$macro->bindTo(null, static::class);
+
+            return call_user_func_array($boundMacro ?: $macro, $parameters);
         }
 
         return call_user_func_array($macro, $parameters);
@@ -1715,7 +1738,9 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-            return $this->callMacro($method, $parameters);
+            return static::bindMacroContext($this, function () use (&$method, &$parameters) {
+                return $this->callMacro($method, $parameters);
+            });
         }
 
         $action = substr($method, 0, 4);

@@ -1,5 +1,6 @@
 {
     "name": "league/flysystem",
+    "type": "library",
     "description": "Filesystem abstraction: Many filesystems, one API.",
     "keywords": [
         "filesystem", "filesystems", "files", "storage", "dropbox", "aws",
@@ -19,7 +20,7 @@
     },
     "require-dev": {
         "phpspec/phpspec": "^3.4",
-        "phpunit/phpunit": "^5.7.10"
+        "phpunit/phpunit": "^5.7.26"
     },
     "autoload": {
         "psr-4": {

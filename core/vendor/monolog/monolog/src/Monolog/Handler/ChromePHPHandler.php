@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\ChromePHPFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -46,7 +47,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Tracks whether we sent too much data
      *
-     * Chrome limits the headers to 256KB, so when we sent 240KB we stop sending
+     * Chrome limits the headers to 4KB, so when we sent 3KB we stop sending
      *
      * @var bool
      */
@@ -144,9 +145,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
             self::$json['request_uri'] = $_SERVER['REQUEST_URI'] ?? '';
         }
 
-        $json = @json_encode(self::$json);
+        $json = Utils::jsonEncode(self::$json, null, true);
         $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 240 * 1024) {
+        if (strlen($data) > 3 * 1024) {
             self::$overflowed = true;
 
             $record = [
@@ -159,7 +160,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
                 'extra' => [],
             ];
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = @json_encode(self::$json);
+            $json = Utils::jsonEncode(self::$json, null, true);
             $data = base64_encode(utf8_encode($json));
         }
 

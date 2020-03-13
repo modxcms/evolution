@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Formats incoming records into an HTML table
@@ -92,7 +93,7 @@ class HtmlFormatter extends NormalizerFormatter
         if ($record['context']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
             foreach ($record['context'] as $key => $value) {
-                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
+                $embeddedTable .= $this->addRow((string)$key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';
             $output .= $this->addRow('Context', $embeddedTable, false);
@@ -100,7 +101,7 @@ class HtmlFormatter extends NormalizerFormatter
         if ($record['extra']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
             foreach ($record['extra'] as $key => $value) {
-                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
+                $embeddedTable .= $this->addRow((string)$key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';
             $output .= $this->addRow('Extra', $embeddedTable, false);
@@ -133,6 +134,6 @@ class HtmlFormatter extends NormalizerFormatter
 
         $data = $this->normalize($data);
 
-        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return Utils::jsonEncode($data, JSON_PRETTY_PRINT | Utils::DEFAULT_JSON_FLAGS, true);
     }
 }

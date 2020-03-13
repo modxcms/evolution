@@ -2,10 +2,10 @@
 
 namespace Illuminate\Database\Schema\Grammars;
 
-use RuntimeException;
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Fluent;
+use RuntimeException;
 
 class MySqlGrammar extends Grammar
 {
@@ -954,7 +954,7 @@ class MySqlGrammar extends Grammar
     protected function modifyDefault(Blueprint $blueprint, Fluent $column)
     {
         if (! is_null($column->default)) {
-            return ' default ('.$this->getDefaultValue($column->default).')';
+            return ' default '.$this->getDefaultValue($column->default);
         }
     }
 

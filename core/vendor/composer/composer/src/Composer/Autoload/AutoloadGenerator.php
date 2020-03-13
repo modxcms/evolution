@@ -236,6 +236,7 @@ EOF;
 
         // flatten array
         $classMap = array();
+        $ambiguousClasses = array();
         if ($scanPsr0Packages) {
             $namespacesToScan = array();
 
@@ -256,15 +257,23 @@ EOF;
                             continue;
                         }
 
-                        $namespaceFilter = $namespace === '' ? null : $namespace;
-                        $classMap = $this->addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist, $namespaceFilter, $classMap);
+                        $classMap = $this->addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist, $namespace, $group['type'], $classMap, $ambiguousClasses);
                     }
                 }
             }
         }
 
         foreach ($autoloads['classmap'] as $dir) {
-            $classMap = $this->addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist, null, $classMap);
+            $classMap = $this->addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist, null, null, $classMap, $ambiguousClasses);
+        }
+
+        foreach ($ambiguousClasses as $className => $ambigiousPaths) {
+            $cleanPath = str_replace(array('$vendorDir . \'', '$baseDir . \'', "',\n"), array($vendorPath, $basePath, ''), $classMap[$className]);
+
+            $this->io->writeError(
+                '<warning>Warning: Ambiguous class resolution, "'.$className.'"'.
+                ' was found '. (count($ambigiousPaths) + 1) .'x: in "'.$cleanPath.'" and "'. implode('", "', $ambigiousPaths) .'", the first will be used.</warning>'
+            );
         }
 
         ksort($classMap);
@@ -286,24 +295,24 @@ EOF;
             }
         }
 
-        file_put_contents($targetDir.'/autoload_namespaces.php', $namespacesFile);
-        file_put_contents($targetDir.'/autoload_psr4.php', $psr4File);
-        file_put_contents($targetDir.'/autoload_classmap.php', $classmapFile);
+        $this->filePutContentsIfModified($targetDir.'/autoload_namespaces.php', $namespacesFile);
+        $this->filePutContentsIfModified($targetDir.'/autoload_psr4.php', $psr4File);
+        $this->filePutContentsIfModified($targetDir.'/autoload_classmap.php', $classmapFile);
         $includePathFilePath = $targetDir.'/include_paths.php';
         if ($includePathFileContents = $this->getIncludePathsFile($packageMap, $filesystem, $basePath, $vendorPath, $vendorPathCode52, $appBaseDirCode)) {
-            file_put_contents($includePathFilePath, $includePathFileContents);
+            $this->filePutContentsIfModified($includePathFilePath, $includePathFileContents);
         } elseif (file_exists($includePathFilePath)) {
             unlink($includePathFilePath);
         }
         $includeFilesFilePath = $targetDir.'/autoload_files.php';
         if ($includeFilesFileContents = $this->getIncludeFilesFile($autoloads['files'], $filesystem, $basePath, $vendorPath, $vendorPathCode52, $appBaseDirCode)) {
-            file_put_contents($includeFilesFilePath, $includeFilesFileContents);
+            $this->filePutContentsIfModified($includeFilesFilePath, $includeFilesFileContents);
         } elseif (file_exists($includeFilesFilePath)) {
             unlink($includeFilesFilePath);
         }
-        file_put_contents($targetDir.'/autoload_static.php', $this->getStaticFile($suffix, $targetDir, $vendorPath, $basePath, $staticPhpVersion));
-        file_put_contents($vendorPath.'/autoload.php', $this->getAutoloadFile($vendorPathToTargetDirCode, $suffix));
-        file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $staticPhpVersion));
+        $this->filePutContentsIfModified($targetDir.'/autoload_static.php', $this->getStaticFile($suffix, $targetDir, $vendorPath, $basePath, $staticPhpVersion));
+        $this->filePutContentsIfModified($vendorPath.'/autoload.php', $this->getAutoloadFile($vendorPathToTargetDirCode, $suffix));
+        $this->filePutContentsIfModified($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $staticPhpVersion));
 
         $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
         $this->safeCopy(__DIR__.'/../../../LICENSE', $targetDir.'/LICENSE');
@@ -317,26 +326,33 @@ EOF;
         return count($classMap);
     }
 
-    private function addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist = null, $namespaceFilter = null, array $classMap = array())
+    private function filePutContentsIfModified($path, $content)
     {
-        foreach ($this->generateClassMap($dir, $blacklist, $namespaceFilter) as $class => $path) {
+        $currentContent = @file_get_contents($path);
+        if (!$currentContent || ($currentContent != $content)) {
+            return file_put_contents($path, $content);
+        }
+
+        return 0;
+    }
+
+    private function addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $blacklist, $namespaceFilter, $autoloadType, array $classMap, array &$ambiguousClasses)
+    {
+        foreach ($this->generateClassMap($dir, $blacklist, $namespaceFilter, $autoloadType) as $class => $path) {
             $pathCode = $this->getPathCode($filesystem, $basePath, $vendorPath, $path).",\n";
             if (!isset($classMap[$class])) {
                 $classMap[$class] = $pathCode;
             } elseif ($this->io && $classMap[$class] !== $pathCode && !preg_match('{/(test|fixture|example|stub)s?/}i', strtr($classMap[$class].' '.$path, '\\', '/'))) {
-                $this->io->writeError(
-                    '<warning>Warning: Ambiguous class resolution, "'.$class.'"'.
-                    ' was found in both "'.str_replace(array('$vendorDir . \'', "',\n"), array($vendorPath, ''), $classMap[$class]).'" and "'.$path.'", the first will be used.</warning>'
-                );
+                $ambiguousClasses[$class][] = $path;
             }
         }
 
         return $classMap;
     }
 
-    private function generateClassMap($dir, $blacklist = null, $namespaceFilter = null, $showAmbiguousWarning = true)
+    private function generateClassMap($dir, $blacklist = null, $namespaceFilter = null, $autoloadType = null, $showAmbiguousWarning = true)
     {
-        return ClassMapGenerator::createMap($dir, $blacklist, $showAmbiguousWarning ? $this->io : null, $namespaceFilter);
+        return ClassMapGenerator::createMap($dir, $blacklist, $showAmbiguousWarning ? $this->io : null, $namespaceFilter, $autoloadType);
     }
 
     public function buildPackageMap(InstallationManager $installationManager, PackageInterface $mainPackage, array $packages)
@@ -384,8 +400,8 @@ EOF;
     /**
      * Compiles an ordered list of namespace => path mappings
      *
-     * @param  array            $packageMap  array of array(package, installDir-relative-to-composer.json)
-     * @param  PackageInterface $mainPackage root package instance
+     * @param  array            $packageMap                  array of array(package, installDir-relative-to-composer.json)
+     * @param  PackageInterface $mainPackage                 root package instance
      * @param  bool             $filterOutRequireDevPackages whether to filter out require-dev packages
      * @return array            array('psr-0' => array('Ns\\Foo' => array('installDir')))
      */
@@ -447,7 +463,7 @@ EOF;
 
             foreach ($autoloads['classmap'] as $dir) {
                 try {
-                    $loader->addClassMap($this->generateClassMap($dir, $blacklist, null, false));
+                    $loader->addClassMap($this->generateClassMap($dir, $blacklist, null, null, false));
                 } catch (\RuntimeException $e) {
                     $this->io->writeError('<warning>'.$e->getMessage().'</warning>');
                 }
@@ -592,6 +608,9 @@ class ComposerAutoloaderInit$suffix
         }
     }
 
+    /**
+     * @return \Composer\Autoload\ClassLoader
+     */
     public static function getLoader()
     {
         if (null !== self::\$loader) {
@@ -889,7 +908,7 @@ INITIALIZER;
                         }
 
                         $resolvedPath = realpath($installPath . '/' . $updir);
-                        $autoloads[] = preg_quote(strtr($resolvedPath, '\\', '/')) . '/' . $path;
+                        $autoloads[] = preg_quote(strtr($resolvedPath, '\\', '/')) . '/' . $path . '($|/)';
                         continue;
                     }
 
@@ -927,16 +946,23 @@ INITIALIZER;
     {
         $packages = array();
         $include = array();
+        $replacedBy = array();
 
         foreach ($packageMap as $item) {
             $package = $item[0];
             $name = $package->getName();
             $packages[$name] = $package;
+            foreach ($package->getReplaces() as $replace) {
+                $replacedBy[$replace->getTarget()] = $name;
+            }
         }
 
-        $add = function (PackageInterface $package) use (&$add, $packages, &$include) {
+        $add = function (PackageInterface $package) use (&$add, $packages, &$include, $replacedBy) {
             foreach ($package->getRequires() as $link) {
                 $target = $link->getTarget();
+                if (isset($replacedBy[$target])) {
+                    $target = $replacedBy[$target];
+                }
                 if (!isset($include[$target])) {
                     $include[$target] = true;
                     if (isset($packages[$target])) {
@@ -984,7 +1010,6 @@ INITIALIZER;
 
         $sortedPackages = PackageSorter::sortPackages($packages);
 
-
         $sortedPackageMap = array();
 
         foreach ($sortedPackages as $package) {
@@ -1003,11 +1028,42 @@ INITIALIZER;
      */
     protected function safeCopy($source, $target)
     {
-        $source = fopen($source, 'r');
-        $target = fopen($target, 'w+');
+        if (!file_exists($target) || !file_exists($source) || !$this->filesAreEqual($source, $target)) {
+            $source = fopen($source, 'r');
+            $target = fopen($target, 'w+');
 
-        stream_copy_to_stream($source, $target);
-        fclose($source);
-        fclose($target);
+            stream_copy_to_stream($source, $target);
+            fclose($source);
+            fclose($target);
+        }
+    }
+
+    /**
+     * compare 2 files
+     * https://stackoverflow.com/questions/3060125/can-i-use-file-get-contents-to-compare-two-files
+     */
+    private function filesAreEqual($a, $b)
+    {
+        // Check if filesize is different
+        if (filesize($a) !== filesize($b)) {
+            return false;
+        }
+
+        // Check if content is different
+        $ah = fopen($a, 'rb');
+        $bh = fopen($b, 'rb');
+
+        $result = true;
+        while (!feof($ah)) {
+            if (fread($ah, 8192) != fread($bh, 8192)) {
+                $result = false;
+                break;
+            }
+        }
+
+        fclose($ah);
+        fclose($bh);
+
+        return $result;
     }
 }

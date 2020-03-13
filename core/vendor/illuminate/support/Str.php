@@ -2,11 +2,11 @@
 
 namespace Illuminate\Support;
 
+use Illuminate\Support\Traits\Macroable;
+use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
+use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
-use Illuminate\Support\Traits\Macroable;
-use Ramsey\Uuid\Generator\CombGenerator;
-use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 
 class Str
 {
@@ -606,7 +606,7 @@ class Str
     /**
      * Set the callable that will be used to generate UUIDs.
      *
-     * @param  callable
+     * @param  callable  $factory
      * @return void
      */
     public static function createUuidsUsing(callable $factory = null)

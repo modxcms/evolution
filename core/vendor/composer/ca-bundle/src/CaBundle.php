@@ -71,11 +71,11 @@ class CaBundle
 
         // If SSL_CERT_FILE env variable points to a valid certificate/bundle, use that.
         // This mimics how OpenSSL uses the SSL_CERT_FILE env variable.
-        $caBundlePaths[] = getenv('SSL_CERT_FILE');
+        $caBundlePaths[] = self::getEnvVariable('SSL_CERT_FILE');
 
         // If SSL_CERT_DIR env variable points to a valid certificate/bundle, use that.
         // This mimics how OpenSSL uses the SSL_CERT_FILE env variable.
-        $caBundlePaths[] = getenv('SSL_CERT_DIR');
+        $caBundlePaths[] = self::getEnvVariable('SSL_CERT_DIR');
 
         $caBundlePaths[] = ini_get('openssl.cafile');
         $caBundlePaths[] = ini_get('openssl.capath');
@@ -92,6 +92,7 @@ class CaBundle
             '/etc/ssl/cert.pem', // OpenBSD
             '/usr/local/etc/ssl/cert.pem', // FreeBSD 10.x
             '/usr/local/etc/openssl/cert.pem', // OS X homebrew, openssl package
+            '/usr/local/etc/openssl@1.1/cert.pem', // OS X homebrew, openssl@1.1 package
         );
 
         foreach($otherLocations as $location) {
@@ -296,6 +297,19 @@ EOT;
         self::$caFileValidity = array();
         self::$caPath = null;
         self::$useOpensslParse = null;
+    }
+
+    private static function getEnvVariable($name)
+    {
+        if (isset($_SERVER[$name])) {
+            return (string) $_SERVER[$name];
+        }
+
+        if (PHP_SAPI === 'cli' && ($value = getenv($name)) !== false && $value !== null) {
+            return (string) $value;
+        }
+
+        return false;
     }
 
     private static function caFileUsable($certFile, LoggerInterface $logger = null)
