@@ -3613,6 +3613,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'usertype'    => $this->isFrontend() ? 1 : 0
         ), $this->getDatabase()->getFullTableName("event_log"));
 
+        $this->invokeEvent('OnLogEvent', array(
+            'eventid' => (int)$evtid,
+            'type' => $type,
+            'createdon' => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
+            'source' => $this->getDatabase()->escape($esc_source),
+            'description' => $this->getDatabase()->escape($msg),
+            'user' => $LoginUserID,
+            'usertype' => $this->isFrontend() ? 1 : 0
+        ));
+
         if ($this->getConfig('send_errormail', '0') != '0') {
             if ($this->getConfig('send_errormail') <= $type) {
                 $this->sendmail(array(

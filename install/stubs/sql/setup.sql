@@ -1132,7 +1132,8 @@ INSERT IGNORE INTO `{PREFIX}system_eventnames`
 ('OnFileBrowserCopy','1','File Browser Events'),
 ('OnBeforeFileBrowserCopy','1','File Browser Events'),
 ('OnBeforeFileBrowserRename','1','File Browser Events'),
-('OnFileBrowserRename','1','File Browser Events');
+('OnFileBrowserRename','1','File Browser Events'),
+('OnLogEvent','1','Log Event');
 
 #Update System Tables
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
