@@ -4,7 +4,7 @@
  *
  * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy and Nicola1971
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.10 updated 02/02/2018
+ * @version     1.5.11 updated 19/03/2020
  */
 
 if(!class_exists('Qm')) {
