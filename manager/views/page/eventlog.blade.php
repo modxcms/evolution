@@ -141,6 +141,7 @@
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
                         $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 100); // set page size to 0 t show all items
                         $grd->pagerClass = '';
+                        $grd->pagerStyle = 'white-space: normal;';
                         $grd->pageClass = 'page-item';
                         $grd->selPageClass = 'page-item active';
                         $grd->noRecordMsg = ManagerTheme::getLexicon('no_records_found');
