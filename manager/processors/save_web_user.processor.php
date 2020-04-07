@@ -229,7 +229,7 @@ switch ($input['mode']) {
 		$webUser->update($field);
         $field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
             'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil',
-            'blockedafter');
+            'blockedafter', 'verified');
 		$webUser->attributes->update($field);
 
 		// Save User Settings
