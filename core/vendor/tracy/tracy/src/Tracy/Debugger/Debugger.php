@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.7.3';
+	public const VERSION = '2.7.4';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -145,7 +145,7 @@ class Debugger
 
 	/**
 	 * Enables displaying or logging errors and exceptions.
-	 * @param  mixed   $mode  production, development mode, autodetection or IP address(es) whitelist.
+	 * @param  bool|string|string[]  $mode  use constant Debugger::PRODUCTION, DEVELOPMENT, DETECT (autodetection) or IP address(es) whitelist.
 	 * @param  string  $logDirectory  error log directory
 	 * @param  string|array  $email  administrator email; enables email sending in production mode
 	 */
@@ -292,9 +292,6 @@ class Debugger
 
 		if (!headers_sent()) {
 			http_response_code(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== false ? 503 : 500);
-			if (Helpers::isHtmlMode()) {
-				header('Content-Type: text/html; charset=UTF-8');
-			}
 		}
 
 		Helpers::improveException($exception);
@@ -309,8 +306,12 @@ class Debugger
 			if (!$firstTime) {
 				// nothing
 			} elseif (Helpers::isHtmlMode()) {
-				$logged = empty($e);
-				require self::$errorTemplate ?: __DIR__ . '/assets/error.500.phtml';
+				if (!headers_sent()) {
+					header('Content-Type: text/html; charset=UTF-8');
+				}
+				(function ($logged) use ($exception) {
+					require self::$errorTemplate ?: __DIR__ . '/assets/error.500.phtml';
+				})(empty($e));
 			} elseif (PHP_SAPI === 'cli') {
 				@fwrite(STDERR, 'ERROR: application encountered an error and can not continue. '
 					. (isset($e) ? "Unable to log error.\n" : "Error was logged.\n")); // @ triggers E_NOTICE when strerr is closed since PHP 7.4
