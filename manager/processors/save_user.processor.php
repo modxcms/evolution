@@ -55,7 +55,7 @@ if ($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!", 12);
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	if (EvolutionCMS\Models\ManagerUser::where('role', '=', 1)->where('internalKey', '=', $id)->first()) {
+	if (EvolutionCMS\Models\UserAttribute::where('role', '=', 1)->where('internalKey', '=', $id)->first()) {
 		webAlertAndQuit("You cannot alter an administrative user.", 12);
 	}
 
