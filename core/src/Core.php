@@ -1786,6 +1786,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function evalPlugin($pluginCode, $params)
     {
         $modx = &$this;
+        if(!is_object($modx->event)){
+            $modx->event = new \stdClass();
+        }
         $modx->event->params = &$params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1855,6 +1858,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 elseif($v==='true') $params[$k] = true;
             }
         }*/
+        if(!is_object($modx->event)){
+            $modx->event = new \stdClass();
+        }
         $modx->event->params = &$params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -4412,8 +4418,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
             $snippetObject = $this->getSnippetFromDatabase($snippetName);
-
-            $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'] === null ?? "return false;";
+            if($snippetObject['content'] === null){
+                $snippet = $this->snippetCache[$snippetName] = "return false";
+            }else {
+                $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'];
+            }
             $properties = $this->snippetCache[$snippetName . "Props"] = $snippetObject['properties'];
         }
         // load default params/properties

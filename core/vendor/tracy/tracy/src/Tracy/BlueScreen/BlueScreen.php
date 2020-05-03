@@ -88,6 +88,9 @@ class BlueScreen
 			];
 
 		} else {
+			if (!headers_sent()) {
+				header('Content-Type: text/html; charset=UTF-8');
+			}
 			$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml');
 		}
 	}
@@ -113,23 +116,8 @@ class BlueScreen
 
 	private function renderTemplate(\Throwable $exception, string $template, $toScreen = true): void
 	{
-		$messageHtml = Dumper::encodeString((string) $exception->getMessage(), self::MAX_MESSAGE_LENGTH);
-		$messageHtml = htmlspecialchars($messageHtml, ENT_SUBSTITUTE, 'UTF-8');
-		$messageHtml = preg_replace(
-			'#\'\S(?:[^\']|\\\\\')*\S\'|"\S(?:[^"]|\\\\")*\S"#',
-			'<i>$0</i>',
-			$messageHtml
-		);
-		$messageHtml = preg_replace_callback(
-			'#\w+\\\\[\w\\\\]+\w#',
-			function ($m) {
-				return class_exists($m[0], false) || interface_exists($m[0], false)
-				? '<a href="' . Helpers::escapeHtml(Helpers::editorUri((new \ReflectionClass($m[0]))->getFileName())) . '">' . $m[0] . '</a>'
-				: $m[0];
-			},
-			$messageHtml
-		);
-
+		$showEnvironment = strpos($exception->getMessage(), 'Allowed memory size') === false;
+		$messageHtml = $this->formatMessage($exception);
 		$info = array_filter($this->info);
 		$source = Helpers::getSource();
 		$title = $exception instanceof \ErrorException
@@ -259,13 +247,14 @@ class BlueScreen
 	public static function highlightFile(string $file, int $line, int $lines = 15, array $vars = [], array $keysToHide = []): ?string
 	{
 		$source = @file_get_contents($file); // @ file may not exist
-		if ($source) {
-			$source = static::highlightPhp($source, $line, $lines, $vars, $keysToHide);
-			if ($editor = Helpers::editorUri($file, $line)) {
-				$source = substr_replace($source, ' data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
-			}
-			return $source;
+		if ($source === false) {
+			return null;
 		}
+		$source = static::highlightPhp($source, $line, $lines, $vars, $keysToHide);
+		if ($editor = Helpers::editorUri($file, $line)) {
+			$source = substr_replace($source, ' data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
+		}
+		return $source;
 	}
 
 
@@ -282,6 +271,7 @@ class BlueScreen
 			ini_set('highlight.string', '#080');
 		}
 
+		$source = preg_replace('#(__halt_compiler\s*\(\)\s*;).*#is', '$1', $source);
 		$source = str_replace(["\r\n", "\r"], "\n", $source);
 		$source = explode("\n", highlight_string($source, true));
 		$out = $source[0]; // <code><span color=highlight.html>
@@ -383,5 +373,48 @@ class BlueScreen
 				Dumper::KEYS_TO_HIDE => $this->keysToHide,
 			]);
 		};
+	}
+
+
+	private function formatMessage(\Throwable $exception): string
+	{
+		$msg = Dumper::encodeString((string) $exception->getMessage(), self::MAX_MESSAGE_LENGTH);
+		$msg = htmlspecialchars($msg, ENT_SUBSTITUTE, 'UTF-8');
+
+		// highlight 'string'
+		$msg = preg_replace(
+			'#\'\S(?:[^\']|\\\\\')*\S\'|"\S(?:[^"]|\\\\")*\S"#',
+			'<i>$0</i>',
+			$msg
+		);
+
+		// clickable class & methods
+		$msg = preg_replace_callback(
+			'#(\w+\\\\[\w\\\\]+\w)(?:::(\w+))?#',
+			function ($m) {
+				if (isset($m[2]) && method_exists($m[1], $m[2])) {
+					$r = new \ReflectionMethod($m[1], $m[2]);
+				} elseif (class_exists($m[1], false) || interface_exists($m[1], false)) {
+					$r = new \ReflectionClass($m[1]);
+				} else {
+					return $m[0];
+				}
+				return '<a href="' . Helpers::escapeHtml(Helpers::editorUri($r->getFileName(), $r->getStartLine())) . '">' . $m[0] . '</a>';
+			},
+			$msg
+		);
+
+		// clickable file name
+		$msg = preg_replace_callback(
+			'#([\w\\\\/.:-]+\.(?:php|phpt|phtml|latte|neon))(?|:(\d+)| on line (\d+))?#',
+			function ($m) {
+				return @is_file($m[1])
+				? '<a href="' . Helpers::escapeHtml(Helpers::editorUri($m[1], isset($m[2]) ? (int) $m[2] : null)) . '">' . $m[0] . '</a>'
+				: $m[0];
+			},
+			$msg
+		);
+
+		return $msg;
 	}
 }
