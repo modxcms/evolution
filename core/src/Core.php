@@ -4418,8 +4418,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
             $snippetObject = $this->getSnippetFromDatabase($snippetName);
-
-            $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'] === null ?? "return false;";
+            if($snippetObject['content'] === null){
+                $snippet = $this->snippetCache[$snippetName] = "return false";
+            }else {
+                $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'];
+            }
             $properties = $this->snippetCache[$snippetName . "Props"] = $snippetObject['properties'];
         }
         // load default params/properties
