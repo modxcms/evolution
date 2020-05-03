@@ -1786,6 +1786,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function evalPlugin($pluginCode, $params)
     {
         $modx = &$this;
+        if(!is_object($modx->event)){
+            $modx->event = new \stdClass();
+        }
         $modx->event->params = &$params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1855,6 +1858,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 elseif($v==='true') $params[$k] = true;
             }
         }*/
+        if(!is_object($modx->event)){
+            $modx->event = new \stdClass();
+        }
         $modx->event->params = &$params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
