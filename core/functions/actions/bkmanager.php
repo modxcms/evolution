@@ -29,7 +29,10 @@ if(!function_exists('import_sql')) {
             if (empty($sql_entry)) {
                 continue;
             }
+
             $rs = $modx->getDatabase()->query($sql_entry);
+
+
         }
         restoreSettings($settings);
 
@@ -40,18 +43,44 @@ if(!function_exists('import_sql')) {
     }
 }
 
+if (!function_exists('import_sql_from_file')) {
+    function import_sql_from_file($path, $result_code = 'import_ok')
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+        $fp = fopen($path, 'r');
+        $output = '';
+        while (($buffer = fgets($fp)) !== false) {
+            $output .= $buffer . "\n";
+            if (strlen($output) > 5040000 && $buffer === "\n") {
+
+                import_sql($output);
+                $output = '';
+            }
+        }
+
+        if(!empty($output)){
+            import_sql($output);
+        }
+    }
+}
+
 if(!function_exists('dumpSql')) {
     /**
      * @param string $dumpstring
      * @return bool
      */
-    function dumpSql(&$dumpstring)
+    function dumpSql($dumpTempFilePath)
     {
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
         $modx = evolutionCMS();
         $today = $modx->toDateFormat(time(), 'dateOnly');
         $today = str_replace('/', '-', $today);
         $today = strtolower($today);
-        $size = strlen($dumpstring);
+        $size = filesize($dumpTempFilePath);
         if (!headers_sent()) {
             header('Expires: 0');
             header('Cache-Control: private');
@@ -60,9 +89,8 @@ if(!function_exists('dumpSql')) {
             header("Content-Length: {$size}");
             header("Content-Disposition: attachment; filename={$today}_database_backup.sql");
         }
-        echo $dumpstring;
-
-        return true;
+        readfile($dumpTempFilePath);
+        exit;
     }
 }
 
@@ -71,11 +99,9 @@ if(!function_exists('snapshot')) {
      * @param string $dumpstring
      * @return bool
      */
-    function snapshot(&$dumpstring)
+    function snapshot($dumpTempFilePath,$snapshootFile)
     {
-        global $path;
-        file_put_contents($path, $dumpstring, FILE_APPEND);
-
+        rename($dumpTempFilePath, $snapshootFile);
         return true;
     }
 }

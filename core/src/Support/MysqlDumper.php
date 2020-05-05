@@ -34,6 +34,13 @@ class MysqlDumper implements MysqlDumperInterface
     public $database_server;
 
     /**
+     * Field with snapshoot filename
+     * @var string
+     */
+    private $snapshootFile;
+
+
+    /**
      * Mysqldumper constructor.
      * @param string $dbname
      */
@@ -70,6 +77,12 @@ class MysqlDumper implements MysqlDumperInterface
     {
         $modx = evolutionCMS();
         $createtable = array();
+        $dataBaseConfig = $modx->db->getConfig();
+
+        $databaseName = $dataBaseConfig['database'];
+
+        $sql =  'SELECT table_name AS "table", round(((data_length + index_length) / 1024 / 1024)) "size" FROM information_schema.TABLES WHERE table_schema = "'.$databaseName.'"';
+        $tableSizes = array_column($modx->db->makeArray($modx->db->query($sql)),'size','table');
 
         // Set line feed
         $lf = "\n";
@@ -105,7 +118,12 @@ class MysqlDumper implements MysqlDumperInterface
         } else {
             unset($this->_dbtables);
         }
+
+
+
         foreach ($tables as $tblval) {
+
+
             // check for selected table
             if (isset($this->_dbtables)) {
                 if (strstr(",{$this->_dbtables},", ",{$tblval},") === false) {
@@ -128,50 +146,94 @@ class MysqlDumper implements MysqlDumperInterface
             }
             $output .= "{$createtable[$tblval][0]};{$lf}";
             $output .= $lf;
-            $output .= "#{$lf}# Dumping data for table `{$tblval}`{$lf}#{$lf}";
-            $result = $modx->getDatabase()->select('*', $tblval);
-            $rows = $this->loadObjectList('', $result);
-            foreach ($rows as $row) {
-                $insertdump = $lf;
-                $insertdump .= "INSERT INTO `{$tblval}` VALUES (";
-                $arr = $this->object2Array($row);
-                if (!is_array($arr)) {
-                    $arr = array();
-                }
-                foreach ($arr as $key => $value) {
-                    if (is_null($value)) {
-                        $value = 'NULL';
-                    } else {
-                        $value = addslashes($value);
-                        $value = str_replace(array(
-                            "\r\n",
-                            "\r",
-                            "\n"
-                        ), '\\n', $value);
-                        $value = "'{$value}'";
-                    }
-                    $insertdump .= $value . ',';
-                }
-                $output .= rtrim($insertdump, ',') . ");\n";
-                if (1048576 < strlen($output)) {
-                    file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
-                    $output = '';
-                }
+
+            $rowCount = $modx->getDatabase()->getValue($modx->getDatabase()->select("COUNT(*)",$tblval));
+            if(!empty($rowCount)){
+                $output .= "#{$lf}# Dumping data for table `{$tblval}`{$lf}#{$lf}";
             }
             file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
             $output = '';
-        }
-        $output = file_get_contents($tempfile_path);
-        if (!empty($output)) {
-            unlink($tempfile_path);
+
+            if(empty($rowCount)){
+                continue;
+            }
+
+            $tableSize = $tableSizes[$tblval];
+
+            $parts = round($tableSize/5);
+            $parts = !empty($parts)?$parts:1;
+            $rowByOneQuery = round($rowCount/$parts);
+
+            $total = intval(($rowCount - 1) / $rowByOneQuery) + 1;
+
+            $insertQuerySize = 0;
+
+            for ($page = 1; $page <= $total; $page++) {
+                $start = $page * $rowByOneQuery - $rowByOneQuery;
+                $result = $modx->getDatabase()->select('*', $tblval, '', '', "$start, $rowByOneQuery");
+
+
+
+                while ($arr = $modx->getDatabase()->getRow($result)) {
+                    //формируем блок  значений
+                    $insertdump = "(";
+                    if (!is_array($arr)) $arr = array();
+
+                    foreach ($arr as $key => $value) {
+                        if (is_null($value)) {
+                            $value = 'NULL';
+                        } else {
+                            $value = addslashes($value);
+                            $value = str_replace(array(
+                                "\r\n",
+                                "\r",
+                                "\n"
+                            ), '\\n', $value);
+                            $value = "'{$value}'";
+                        }
+                        $insertdump .= $value . ',';
+                    }
+                    $insertdump = rtrim($insertdump, ',') . ")";
+
+                    //если еще небыло значен
+                    if($insertQuerySize === 0){
+                        $output .= $lf."INSERT INTO `{$tblval}` VALUES";
+                    }
+                    else{
+                        $output .= ",";
+                    }
+                    $output .= $lf."  ".$insertdump;
+                    $insertQuerySize+=strlen($insertdump);
+
+                    //если записали больше 30 строк з запрос ставим ; и сбрасивыем счетчик
+                    if($insertQuerySize>47299){
+                        $output .= ";".$lf;
+                        $insertQuerySize = 0;
+                    }
+                    //если большая строрки пишем в файл чтоб не перегрузить память
+
+                    if (5040000 < strlen($output)) {
+                        file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
+                        $output = '';
+                    }
+                }
+            }
+            //если данные есть, и записано больше 0 строк данных ставим ; в конце
+            if(!empty($output) && $insertQuerySize >0){
+                $output .= ";".$lf;
+            }
+
+            //пишем блок в файл
+            file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
+            $output = '';
         }
 
         switch ($callBack) {
             case 'dumpSql':
-                dumpSql($output);
+                dumpSql($tempfile_path);
                 break;
             case 'snapshot':
-                snapshot($output);
+                snapshot($tempfile_path,$this->snapshootFile);
                 break;
         }
 
@@ -242,4 +304,9 @@ class MysqlDumper implements MysqlDumperInterface
 
         return $array;
     }
+
+    public function setSnapshotFile($file){
+        $this->snapshootFile = $file;
+    }
+
 }

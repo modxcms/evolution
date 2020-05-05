@@ -5,6 +5,7 @@ die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager
 if (!$modx->hasPermission('bk_manager')) {
 $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
+require_once MODX_BASE_PATH . 'assets/lib/Helpers/FS.php';
 
 $dbase = $modx->getDatabase()->getConfig('database');
 
@@ -16,100 +17,109 @@ $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'assets/backup/');
 }
 }
 
-// Backup Manager by Raymond:
+$FS = \Helpers\FS::getInstance();
+$tempFile = $modx->getConfig('snapshot_path').'temp.php';
+if($FS->checkFile($tempFile)){
+    unlink($tempFile);
+}
 
+// Backup Manager by Raymond:
 $mode = isset($_POST['mode']) ? $_POST['mode'] : '';
 
 if ($mode == 'restore1') {
-if (isset($_POST['textarea']) && !empty($_POST['textarea'])) {
-$source = trim($_POST['textarea']);
-$_SESSION['textarea'] = $source . "\n";
-} else {
-$source = file_get_contents($_FILES['sqlfile']['tmp_name']);
-}
-import_sql($source);
-header('Location: index.php?r=9&a=93');
-exit;
-} elseif ($mode == 'restore2') {
-$path = $modx->getConfig('snapshot_path') . $_POST['filename'];
-if (file_exists($path)) {
-$source = file_get_contents($path);
-import_sql($source);
-if (headers_sent()) {
-echo "<script>document.location.href='index.php?r=9&a=93';</script>\n";
-} else {
-header("Location: index.php?r=9&a=93");
-}
-}
-exit;
-} elseif ($mode == 'backup') {
-$tables = isset($_POST['chk']) ? $_POST['chk'] : '';
-if (!is_array($tables)) {
-$modx->webAlertAndQuit("Please select a valid table from the list below.");
-}
 
-/*
-* Code taken from Ralph A. Dahlgren MySQLdumper Snippet - Etomite 0.6 - 2004-09-27
-* Modified by Raymond 3-Jan-2005
-* Perform MySQLdumper data dump
-*/
-@set_time_limit(120); // set timeout limit to 2 minutes
-$dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
-$dumper->setDBtables($tables);
-$dumper->setDroptables((isset($_POST['droptables']) ? true : false));
-$dumpfinished = $dumper->createDump('dumpSql');
-if ($dumpfinished) {
-exit;
-} else {
-$modx->webAlertAndQuit('Unable to Backup Database');
-}
+    if (isset($_POST['textarea']) && !empty($_POST['textarea'])) {
+        $source = trim($_POST['textarea']);
+        $_SESSION['textarea'] = $source . "\n";
+        import_sql($source);
+    } else {
+        import_sql_from_file($_FILES['sqlfile']['tmp_name']);
+    }
+
+    header('Location: index.php?r=9&a=93');
+    exit;
+} elseif ($mode == 'restore2') {
+    $path = $modx->getConfig('snapshot_path') . $_POST['filename'];
+    if (file_exists($path)) {
+        import_sql_from_file($path);
+        if (headers_sent()) {
+            echo "<script>document.location.href='index.php?r=9&a=93';</script>\n";
+        } else {
+            header("Location: index.php?r=9&a=93");
+        }
+    }
+
+    exit;
+} elseif ($mode == 'backup') {
+    $tables = isset($_POST['chk']) ? $_POST['chk'] : '';
+    if (!is_array($tables)) {
+        $modx->webAlertAndQuit("Please select a valid table from the list below.");
+    }
+
+    /*
+    * Code taken from Ralph A. Dahlgren MySQLdumper Snippet - Etomite 0.6 - 2004-09-27
+    * Modified by Raymond 3-Jan-2005
+    * Perform MySQLdumper data dump
+    */
+    @set_time_limit(120); // set timeout limit to 2 minutes
+    $dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
+    $dumper->setDBtables($tables);
+
+    $dumper->setDroptables((isset($_POST['droptables']) ? true : false));
+    $dumpfinished = $dumper->createDump('dumpSql');
+    if ($dumpfinished) {
+        exit;
+    } else {
+        $modx->webAlertAndQuit('Unable to Backup Database');
+    }
 
 // MySQLdumper class can be found below
 } elseif ($mode == 'snapshot') {
-if (!is_dir(rtrim($modx->getConfig('snapshot_path'), '/'))) {
-mkdir(rtrim($modx->getConfig('snapshot_path'), '/'));
-@chmod(rtrim($modx->getConfig('snapshot_path'), '/'), 0777);
-}
-if (!is_file("{$modx->getConfig('snapshot_path')}.htaccess")) {
-$htaccess = "order deny,allow\ndeny from all\n";
-file_put_contents("{$modx->getConfig('snapshot_path')}.htaccess", $htaccess);
-}
-if (!is_writable(rtrim($modx->getConfig('snapshot_path'), '/'))) {
-$modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig('snapshot_path'))));
-}
-$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
-$rs = $modx->getDatabase()->query($sql);
-$tables = $modx->getDatabase()->getColumn('Name', $rs);
-$today = date('Y-m-d_H-i-s');
-global $path;
-$path = "{$modx->getConfig('snapshot_path')}{$today}.sql";
+    if (!is_dir(rtrim($modx->getConfig('snapshot_path'), '/'))) {
+        mkdir(rtrim($modx->getConfig('snapshot_path'), '/'));
+        @chmod(rtrim($modx->getConfig('snapshot_path'), '/'), 0777);
+    }
+    if (!is_file("{$modx->getConfig('snapshot_path')}.htaccess")) {
+        $htaccess = "order deny,allow\ndeny from all\n";
+        file_put_contents("{$modx->getConfig('snapshot_path')}.htaccess", $htaccess);
+    }
+    if (!is_writable(rtrim($modx->getConfig('snapshot_path'), '/'))) {
+        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig('snapshot_path'))));
+    }
+    $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
+    $rs = $modx->getDatabase()->query($sql);
+    $tables = $modx->getDatabase()->getColumn('Name', $rs);
+    $today = date('Y-m-d_H-i-s');
+    global $path;
+    $path = "{$modx->getConfig('snapshot_path')}{$today}.sql";
 
-@set_time_limit(120); // set timeout limit to 2 minutes
-$dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
-$dumper->setDBtables($tables);
-$dumper->setDroptables(true);
-$dumpfinished = $dumper->createDump('snapshot');
+    @set_time_limit(120); // set timeout limit to 2 minutes
+    $dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
+    $dumper->setDBtables($tables);
+    $dumper->setSnapshotFile($path);
+    $dumper->setDroptables(true);
+    $dumpfinished = $dumper->createDump('snapshot');
 
-$pattern = "{$modx->getConfig('snapshot_path')}*.sql";
-$files = glob($pattern, GLOB_NOCHECK);
-$total = ($files[0] !== $pattern) ? count($files) : 0;
-arsort($files);
-while (10 < $total && $limit < 50) {
-$del_file = array_pop($files);
-unlink($del_file);
-$total = count($files);
-$limit++;
-}
+    $pattern = "{$modx->getConfig('snapshot_path')}*.sql";
+    $files = glob($pattern, GLOB_NOCHECK);
+    $total = ($files[0] !== $pattern) ? count($files) : 0;
+    arsort($files);
+    while (10 < $total && $limit < 50) {
+        $del_file = array_pop($files);
+        unlink($del_file);
+        $total = count($files);
+        $limit++;
+    }
 
-if ($dumpfinished) {
-$_SESSION['result_msg'] = 'snapshot_ok';
-header("Location: index.php?a=93");
-exit;
+    if ($dumpfinished) {
+        $_SESSION['result_msg'] = 'snapshot_ok';
+        header("Location: index.php?a=93");
+        exit;
+    } else {
+        $modx->webAlertAndQuit('Unable to Backup Database');
+    }
 } else {
-$modx->webAlertAndQuit('Unable to Backup Database');
-}
-} else {
-include_once MODX_MANAGER_PATH . "includes/header.inc.php";  // start normal header
+    include_once MODX_MANAGER_PATH . "includes/header.inc.php";  // start normal header
 }
 
 if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
