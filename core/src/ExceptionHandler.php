@@ -257,7 +257,7 @@ class ExceptionHandler
             $table[] = array('Manager action', $this->container->getManagerApi()->action . $actionName);
         }
 
-        if (preg_match('@^[0-9]+@', $this->container->documentIdentifier)) {
+        if (preg_match('@^[1-9]+@', $this->container->documentIdentifier)) {
             $resource = $this->container->getDocumentObject('id', $this->container->documentIdentifier);
             $url = $this->container->makeUrl($this->container->documentIdentifier, '', '', 'full');
             $table[] = array(
