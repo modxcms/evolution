@@ -4419,7 +4419,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else { // not in cache so let's check the db
             $snippetObject = $this->getSnippetFromDatabase($snippetName);
             if($snippetObject['content'] === null){
-                $snippet = $this->snippetCache[$snippetName] = "return false";
+                $snippet = $this->snippetCache[$snippetName] = "return false;";
             }else {
                 $snippet = $this->snippetCache[$snippetName] = $snippetObject['content'];
             }
