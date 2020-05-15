@@ -515,7 +515,7 @@ class MakeTable implements MakeTableInterface
     public function createPagingNavigation($numRecords, $qs = '')
     {
         global $_lang;
-        $currentPage = (is_numeric($_GET['page']) ? $_GET['page'] : 1);
+        $currentPage = (isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1);
         $numPages = ceil($numRecords / MAX_DISPLAY_RECORDS_NUM);
         $nav = '';
         if ($numPages > 1) {
