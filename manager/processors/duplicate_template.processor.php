@@ -30,11 +30,13 @@ $newid = $modx->getDatabase()->insert(
 // duplicate TV values
 $modx->getDatabase()->insert(
 	array(
-		'tmplvarid'=>'',
-		'templateid'=>'',
-		'rank'=>'',
-		), $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), // Insert into
-	"tmplvarid, '{$newid}', rank", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'"); // Copy from
+		'`tmplvarid`'=>'',
+		'`templateid`'=>'',
+		'`rank`'=>'',
+    ),
+    $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), // Insert into
+	"`tmplvarid`, '{$newid}', `rank`", $modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "`templateid`='{$id}'"
+); // Copy from
 
 // Set the item name for logger
 $name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$newid}'"));
