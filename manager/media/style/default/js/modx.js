@@ -1,5 +1,6 @@
 (function($, w, d, u) {
   'use strict';
+  modx.tree_parent = modx.tree_parent || 0;
   modx.extended({
     frameset: 'frameset',
     minWidth: 840,
@@ -1299,7 +1300,7 @@
           d.getElementById('treeloader').classList.add('visible');
           this.setItemToChange();
           this.rpcNode = d.getElementById('treeRoot');
-          modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
+          modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=2&id=' + this.itemToChange, function(r) {
             modx.tree.rpcLoadData(r);
             modx.tree.draggable();
           });
@@ -1308,7 +1309,7 @@
       expandTree: function() {
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
-        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
+        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=1&id=' + this.itemToChange, function(r) {
           modx.tree.rpcLoadData(r);
           modx.tree.saveFolderState();
           modx.tree.draggable();
@@ -1317,7 +1318,7 @@
       collapseTree: function() {
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
-        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r) {
+        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=0&id=' + this.itemToChange, function(r) {
           modx.openedArray = [];
           modx.tree.saveFolderState();
           modx.tree.rpcLoadData(r);
@@ -1328,7 +1329,7 @@
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
         var a = d.sortFrm;
-        var b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
+        var b = 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
         modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', b, function(r) {
           modx.tree.rpcLoadData(r);
           modx.tree.draggable();

@@ -168,26 +168,27 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
     {
         $this->parameters['css'] = $this->managerTheme->getThemeDir(false) . 'css/page.css?v=' . EVO_INSTALL_TIME;
 
-        if ($this->managerTheme->getTheme() === 'default') {
-            $themeDir = $this->managerTheme->getThemeDir();
+        $themeDir = $this->managerTheme->getThemeDir();
 
-            if (!file_exists($themeDir . 'css/styles.min.css') && is_writable($themeDir . 'css')) {
-                require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
-                $minifier = new \Formatter\CSSMinify();
-                $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
-                $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
-                $minifier->addFile($themeDir . 'css/fonts.css');
-                $minifier->addFile($themeDir . 'css/forms.css');
-                $minifier->addFile($themeDir . 'css/mainmenu.css');
-                $minifier->addFile($themeDir . 'css/tree.css');
-                $minifier->addFile($themeDir . 'css/custom.css');
-                $minifier->addFile($themeDir . 'css/tabpane.css');
-                $minifier->addFile($themeDir . 'css/contextmenu.css');
-                $minifier->addFile($themeDir . 'css/index.css');
-                $minifier->addFile($themeDir . 'css/main.css');
-                file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
+        if (file_exists($themeDir . 'CSSMinify.php'))
+        {
+            if (!file_exists($themeDir . 'css/styles.min.css') && is_writable($themeDir . 'css'))
+            {
+                $cssFiles = include_once $themeDir . 'CSSMinify.php';
+                if (is_array($cssFiles) && count($cssFiles))
+                {
+                    require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
+                    $minifier = new \Formatter\CSSMinify();
+                    foreach ($cssFiles as $item)
+                    {
+                        $minifier->addFile($item);
+                    }
+                    file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
+                }
             }
-            if (file_exists($themeDir . 'css/styles.min.css')) {
+
+            if (file_exists($themeDir . 'css/styles.min.css'))
+            {
                 $this->parameters['css'] = $this->managerTheme->getThemeDir(false) . 'css/styles.min.css?v=' . EVO_INSTALL_TIME;
             }
         }
