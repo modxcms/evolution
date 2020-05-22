@@ -21,21 +21,18 @@ class ManagerThemeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $theme = $this->app->getConfig('manager_theme', 'default');
-        $this->app->singleton('ManagerTheme', function ($app) use ($theme) {
+        $this->app->singleton('ManagerTheme', function ($app) {
+            $theme = $this->app->getConfig('manager_theme', 'default');
+            $this->loadSnippetsFrom(
+                MODX_MANAGER_PATH . 'media/style/' . $theme . '/snippets/',
+                $this->namespace
+            );
+            $this->loadChunksFrom(
+                MODX_MANAGER_PATH . 'media/style/' . $theme . '/chunks/',
+                $this->namespace
+            );
             return new ManagerTheme($app, $theme);
         });
-
-
-        $this->loadSnippetsFrom(
-            MODX_MANAGER_PATH . 'media/style/' . $theme . '/snippets/',
-            $this->namespace
-        );
-
-        $this->loadChunksFrom(
-            MODX_MANAGER_PATH . 'media/style/' . $theme . '/chunks/',
-            $this->namespace
-        );
     }
 
     /**
