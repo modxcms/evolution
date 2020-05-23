@@ -956,30 +956,28 @@ if ($conn) {
                             $_events = implode("','", $events);
                             // add new events
                             if ($prev_id) {
-                                $sql = sprintf(
-                                    "INSERT IGNORE INTO $dbase.`%s` (pluginid, evtid, priority)
-                                        SELECT '$id' as 'pluginid', se.id as 'evtid', IF(spe.pluginid IS NULL, IF(spe2.priority IS NULL, 0, MAX(spe2.priority) + 1), spe.priority) as 'priority'
-                                        FROM $dbase.`%s` se
-                                        LEFT JOIN $dbase.`%s` spe ON spe.evtid = se.id AND spe.pluginid = '%s'
-                                        LEFT JOIN $dbase.`%s` spe2 ON spe2.evtid = se.id
-                                        WHERE name IN ('%s')
-                                        GROUP BY se.id, priority"
+                                $sql = sprintf("INSERT IGNORE INTO {$dbase}.`%s` (`pluginid`, `evtid`, `priority`)
+                                    SELECT {$id} as 'pluginid', `se`.`id` AS `evtid`, COALESCE(`spe`.`priority`, MAX(`spe2`.`priority`) + 1, 0) AS `priority`
+                                    FROM {$dbase}.`%s` `se`
+                                    LEFT JOIN {$dbase}.`%s` `spe` ON `spe`.`evtid` = `se`.`id` AND `spe`.`pluginid` = {$prev_id}
+                                    LEFT JOIN {$dbase}.`%s` `spe2` ON `spe2`.`evtid` = `se`.`id`
+                                    WHERE name IN ('%s')
+                                    GROUP BY `se`.`id`"
                                     , table_prefix('site_plugin_events')
                                     , table_prefix('system_eventnames')
                                     , table_prefix('site_plugin_events')
-                                    , sql_escape($prev_id)
                                     , table_prefix('site_plugin_events')
-                                    , $_events
-                                );
+                                    , $_events);
                             } else {
-                                $sql = sprintf(
-                                    "INSERT IGNORE INTO %s.`%s` (pluginid, evtid, priority) SELECT '$id' as 'pluginid', se.id as 'evtid', IF(spe.priority IS NULL, 0, MAX(spe.priority) + 1) as 'priority' FROM $dbase.`%s` se LEFT JOIN $dbase.`%s` spe ON spe.evtid = se.id WHERE name IN ('%s') GROUP BY se.id, priority"
-                                    , $dbase
+                                $sql = sprintf("INSERT IGNORE INTO {$dbase}.`%s` (`pluginid`, `evtid`, `priority`) 
+                                    SELECT {$id} as `pluginid`, `se`.`id` as `evtid`, COALESCE(MAX(`spe`.`priority`) + 1, 0) as `priority` 
+                                    FROM {$dbase}.`%s` `se` 
+                                    LEFT JOIN {$dbase}.`%s` `spe` ON `spe`.`evtid` = `se`.`id` 
+                                    WHERE `name` IN ('%s') GROUP BY `se`.`id`",
                                     , table_prefix('site_plugin_events')
                                     , table_prefix('system_eventnames')
                                     , table_prefix('site_plugin_events')
-                                    , $_events
-                                );
+                                    , $_events);
                             }
                             mysqli_query($sqlParser->conn, $sql);
                             // remove absent events
