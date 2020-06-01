@@ -408,7 +408,7 @@ $ph['result_msg_snapshot'] = '';
                 $files = glob($pattern, GLOB_NOCHECK);
                 $total = ($files[0] !== $pattern) ? count($files) : 0;
                 $detailFields = array(
-                    'MODX Version',
+                    'Evolution CMS Version',
                     'Host',
                     'Generation Time',
                     'Server version',
@@ -468,7 +468,7 @@ $ph['result_msg_snapshot'] = '';
                                         <td><i class="<?= $_style['icon_question_circle'] ?>" data-tooltip="<?= $tooltip ?>"></i></td>
                                         <td><?= $filesize ?></td>
                                         <td><?= $details['Description'] ?></td>
-                                        <td><?= $details['MODX Version'] ?></td>
+                                        <td><?= $details['Evolution CMS Version'] ?></td>
                                         <td><?= $details['Database'] ?></td>
                                         <td><a href="javascript:;" onclick="confirmRevert('<?= $filename ?>');" title="<?= $tooltip ?>"><?= $_lang["bkmgr_restore_submit"] ?></a></td>
                                     </tr>
