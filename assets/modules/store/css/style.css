@@ -586,42 +586,10 @@ body,
 .type-package .catalog_thumb:before{content:'\f187';}
 .type-core .catalog_thumb:before{content:'\f7a2';}
 
-/* Deprecated needs red background */
-.item-AjaxSearch .catalog_thumb,
-.item-Ditto .catalog_thumb,
-.item-Wayfinder .catalog_thumb,
-.item-eForm .catalog_thumb,
-.item-TinyMCE3 .catalog_thumb,
-.item-Shopkeeper .catalog_thumb,
-.item-Reflect .catalog_thumb,
-.item-TSVshop .catalog_thumb,
-.item-EvoRE3 .catalog_thumb,
-.item-EvoFLAT .catalog_thumb{background:#d94444!important;}
-
 /* Deprecated */
-.item-eForm .catalog_thumb:after{content:'Deprecated! Use FormLister';}
-.item-AjaxSearch .catalog_thumb:after{content:'Deprecated! Use evoSearch';}
-.item-Ditto .catalog_thumb:after{content:'Deprecated! Use DocLister';}
-.item-Wayfinder .catalog_thumb:after{content:'Deprecated! Use DLMenu';}
-.item-TinyMCE3 .catalog_thumb:after{content:'Deprecated! Use TinyMCE4';}
-.item-EvoRE3 .catalog_thumb:after{content:'Deprecated! Use Default style';}
-.item-TSVshop .catalog_thumb:after{content:'Deprecated! Use Commerce';}
-.item-Shopkeeper .catalog_thumb:after{content:'Deprecated! Use Commerce';}
-.item-Reflect .catalog_thumb:after,
-.item-EvoFLAT .catalog_thumb:after,
-.item-EvoRE3 .catalog_thumb:after{content:'Deprecated!';}
-
-.item-eForm .catalog_thumb:before,
-.item-AjaxSearch .catalog_thumb:before,
-.item-Ditto .catalog_thumb:before,
-.item-Wayfinder .catalog_thumb:before,
-.item-EvoRE3 .catalog_thumb:before,
-.item-TinyMCE3 .catalog_thumb:before,
-.item-Shopkeeper .catalog_thumb:before,
-.item-TSVshop .catalog_thumb:before,
-.item-Reflect .catalog_thumb:before,
-.item-EvoFLAT .catalog_thumb:before,
-.item-EvoRE3 .catalog_thumb:before{content:'\f057';}
+.catalog_item.deprecated-1 .catalog_thumb{background:#d94444!important;}
+.catalog_item.deprecated-1 .catalog_thumb:after{content:'Deprecated!';}
+.catalog_item.deprecated-1 .catalog_thumb:before{content:'\f057';}
 
 .item-anythingRating .catalog_thumb:before{content:'\f005';}
 .item-AutoSplitBigArticle .catalog_thumb:before{content:'\f1ea';}
