@@ -3,6 +3,8 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use EvolutionCMS\Models\EventLog;
+use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
@@ -3609,7 +3611,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $type = 3;
         }
 
-        $this->getDatabase()->insert(array(
+        EventLog::insert(array(
             'eventid'     => (int)$evtid,
             'type'        => $type,
             'createdon'   => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
@@ -3617,7 +3619,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'description' => $this->getDatabase()->escape($msg),
             'user'        => $LoginUserID,
             'usertype'    => $this->isFrontend() ? 1 : 0
-        ), $this->getDatabase()->getFullTableName("event_log"));
+        ));
 
         $this->invokeEvent('OnLogEvent', array(
             'eventid' => (int)$evtid,
@@ -5253,16 +5255,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$uid];
         }
 
-        $from = $this->getDatabase()->getFullTableName('manager_users') . ' mu INNER JOIN ' .
-            $this->getDatabase()->getFullTableName('user_attributes'). ' mua ON mua.internalkey=mu.id';
-        $where = sprintf("mu.id='%s'", $this->getDatabase()->escape($uid));
-        $rs = $this->getDatabase()->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        $row = ManagerUser::select('manager_users.username', 'manager_users.password', 'user_attributes.*')
+            ->join('user_attributes', 'manager_users.id', '=','user_attributes.internalKey')
+            ->where('manager_users.id', $uid)->first();
 
-        if (!$this->getDatabase()->getRecordCount($rs)) {
+
+        if (!is_null($row)) {
             return $this->tmpCache[__FUNCTION__][$uid] = false;
         }
 
-        $row = $this->getDatabase()->getRow($rs);
+        $row = $row->toArray();
         if (!isset($row['usertype']) || !$row['usertype']) {
             $row['usertype'] = 'manager';
         }

@@ -1,6 +1,8 @@
 <?php namespace EvolutionCMS\Legacy;
 
 use EvolutionCMS\Interfaces\ManagerApiInterface;
+use EvolutionCMS\Models\UserSetting;
+
 /*
  * Evolution CMS Manager API Class
  * Written by Raymond Irving 2005
@@ -339,11 +341,10 @@ class ManagerApi implements ManagerApiInterface
     {
         $modx = evolutionCMS();
 
-        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_settings'),
-            "user = '{$_SESSION['mgrInternalKey']}'");
+        $rs = UserSetting::where('user', (int)$_SESSION['mgrInternalKey'])->get();
 
         $usersettings = array();
-        while ($row = $modx->getDatabase()->getRow($rs)) {
+        foreach ($rs as $row) {
             if (substr($row['setting_name'], 0, 6) == '_LAST_') {
                 $name = substr($row['setting_name'], 6);
                 $usersettings[$name] = $row['setting_value'];
