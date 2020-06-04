@@ -157,12 +157,12 @@
         'msginfo' => sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages)
     ));
 
-    $from = array();
-    $from[] = $modx->getDatabase()->getFullTableName('active_user_sessions');
-    $from[] = " us LEFT JOIN " . $modx->getDatabase()->getFullTableName('active_users') . " au ON au.sid=us.sid WHERE au.action <> '8'";
-    $rs = $modx->getDatabase()->select('*', $from, '', 'username ASC, au.sid ASC');
-
-    if($modx->getDatabase()->getRecordCount($rs) < 1) {
+    $activeUsers = \EvolutionCMS\Models\ActiveUserSession::query()
+        ->join('active_users', 'active_users.sid', '=', 'active_user_sessions.sid')
+        ->where('active_users.action', '<>', 8)
+        ->orderBy('username', 'ASC')
+        ->orderBy('active_users.sid', 'ASC');
+    if($activeUsers->count() < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
         $now = $modx->timestamp($_SERVER['REQUEST_TIME']);
@@ -189,21 +189,21 @@
         $userList = array();
         $userCount = array();
         // Create userlist with session-count first before output
-        while($activeusers = $modx->getDatabase()->getRow($rs)) {
-            $userCount[$activeusers['internalKey']] = isset($userCount[$activeusers['internalKey']]) ? $userCount[$activeusers['internalKey']] + 1 : 1;
+        foreach($activeUsers->get()->toArray() as $activeUser) {
+            $userCount[$activeUser['internalKey']] = isset($userCount[$activeUser['internalKey']]) ? $userCount[$activeUser['internalKey']] + 1 : 1;
 
-            $idle = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
-            $webicon = $activeusers['internalKey'] < 0 ? '<i class="[&icon_globe&]"></i>' : '';
-            $ip = $activeusers['ip'] === '::1' ? '127.0.0.1' : $activeusers['ip'];
-            $currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeusers['action'], $activeusers['id']);
+            $idle = $activeUser['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+            $webicon = $activeUser['internalKey'] < 0 ? '<i class="[&icon_globe&]"></i>' : '';
+            $ip = $activeUser['ip'] === '::1' ? '127.0.0.1' : $activeUser['ip'];
+            $currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeUser['action'], $activeUser['id']);
             $userList[] = array(
                 $idle,
                 '',
-                $activeusers['username'],
+                $activeUser['username'],
                 $webicon,
-                abs($activeusers['internalKey']),
+                abs($activeUser['internalKey']),
                 $ip,
-                strftime('%H:%M:%S', $modx->timestamp($activeusers['lasthit'])),
+                strftime('%H:%M:%S', $modx->timestamp($activeUser['lasthit'])),
                 $currentaction
             );
         }

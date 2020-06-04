@@ -3,9 +3,9 @@ $enable_filter = $modx->getConfig('enable_filter');
 $modx->setConfig('enable_filter', true);
 $_style = ManagerTheme::getStyle();
 
-$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_content'), '', 'editedon DESC', 10);
+$contents = \EvolutionCMS\Models\SiteContent::query()->orderBy('editedon','DESC')->limit(10);
 
-if ($modx->getDatabase()->getRecordCount($rs) < 1) {
+if ($contents->count() < 1) {
     return '<tr><td>[%no_activity_message%]</td></tr>';
 }
 $tpl = '<tr>
@@ -36,7 +36,7 @@ $btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id
 $btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="'. $_style['icon_eye'] . $_style['icon_size_fix'] . '"></i></a> ';
 
 $output = array();
-while ($ph = $modx->getDatabase()->getRow($rs)) {
+foreach ($contents->get()->toArray() as $ph) {
     $docid = $ph['id'];
     $_ = $modx->getUserInfo($ph['editedby']);
     $ph['username'] = $_['username'];

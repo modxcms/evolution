@@ -6,6 +6,7 @@ use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
 use EvolutionCMS\Models\EventLog;
 use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
+use EvolutionCMS\Models\SitePlugin;
 use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
 use UrlProcessor;
@@ -5777,15 +5778,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $pluginProperties = '';
             }
         } else {
-            $pluginName = $this->getDatabase()->escape($pluginName);
-            $result = $this->getDatabase()->select(
-                'name, plugincode, properties'
-                , $this->getDatabase()->getFullTableName('site_plugins')
-                , sprintf("name='%s' AND disabled=0", $pluginName)
-            );
-            if ($row = $this->getDatabase()->getRow($result)) {
-                $pluginCode = $this->pluginCache[$row['name']] = $row['plugincode'];
-                $pluginProperties = $this->pluginCache[$row['name'] . 'Props'] = $row['properties'];
+
+            $plugin = SitePlugin::select('name', 'plugincode', 'properties')
+                ->where('name', $pluginName)->where('disabled', 0)->first();
+
+            if(!is_null($plugin)) {
+                $pluginCode = $this->pluginCache[$plugin->name] = $plugin->plugincode;
+                $pluginProperties = $this->pluginCache[$plugin->name . 'Props'] = $plugin->properties;
             } else {
                 $pluginCode = $this->pluginCache[$pluginName] = "return false;";
                 $pluginProperties = '';
