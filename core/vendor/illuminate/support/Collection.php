@@ -94,7 +94,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Get the median of a given key.
      *
-     * @param  string|array|null $key
+     * @param  string|array|null  $key
      * @return mixed
      */
     public function median($key = null)
@@ -208,7 +208,7 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection that are not present in the given items.
+     * Get the items in the collection that are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -231,7 +231,7 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection whose keys and values are not present in the given items.
+     * Get the items in the collection whose keys and values are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -254,9 +254,9 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection whose keys are not present in the given items.
+     * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
-     * @param  mixed   $items
+     * @param  mixed  $items
      * @param  callable  $callback
      * @return static
      */
@@ -428,7 +428,7 @@ class Collection implements ArrayAccess, Enumerable
      */
     public function groupBy($groupBy, $preserveKeys = false)
     {
-        if (is_array($groupBy)) {
+        if (! $this->useAsCallable($groupBy) && is_array($groupBy)) {
             $nextGroups = $groupBy;
 
             $groupBy = array_shift($nextGroups);
@@ -1128,7 +1128,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Sort the collection keys in descending order.
      *
-     * @param  int $options
+     * @param  int  $options
      * @return static
      */
     public function sortKeysDesc($options = SORT_REGULAR)

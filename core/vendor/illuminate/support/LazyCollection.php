@@ -100,6 +100,54 @@ class LazyCollection implements Enumerable
     }
 
     /**
+     * Eager load all items into a new lazy collection backed by an array.
+     *
+     * @return static
+     */
+    public function eager()
+    {
+        return new static($this->all());
+    }
+
+    /**
+     * Cache values as they're enumerated.
+     *
+     * @return static
+     */
+    public function remember()
+    {
+        $iterator = $this->getIterator();
+
+        $iteratorIndex = 0;
+
+        $cache = [];
+
+        return new static(function () use ($iterator, &$iteratorIndex, &$cache) {
+            for ($index = 0; true; $index++) {
+                if (array_key_exists($index, $cache)) {
+                    yield $cache[$index][0] => $cache[$index][1];
+
+                    continue;
+                }
+
+                if ($iteratorIndex < $index) {
+                    $iterator->next();
+
+                    $iteratorIndex++;
+                }
+
+                if (! $iterator->valid()) {
+                    break;
+                }
+
+                $cache[$index] = [$iterator->key(), $iterator->current()];
+
+                yield $cache[$index][0] => $cache[$index][1];
+            }
+        });
+    }
+
+    /**
      * Get the average value of a given key.
      *
      * @param  callable|string|null  $callback
@@ -113,7 +161,7 @@ class LazyCollection implements Enumerable
     /**
      * Get the median of a given key.
      *
-     * @param  string|array|null $key
+     * @param  string|array|null  $key
      * @return mixed
      */
     public function median($key = null)
@@ -227,7 +275,7 @@ class LazyCollection implements Enumerable
     }
 
     /**
-     * Get the items whose keys and values are not present in the given items.
+     * Get the items whose keys and values are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -250,9 +298,9 @@ class LazyCollection implements Enumerable
     }
 
     /**
-     * Get the items whose keys are not present in the given items.
+     * Get the items whose keys are not present in the given items, using the callback.
      *
-     * @param  mixed   $items
+     * @param  mixed  $items
      * @param  callable  $callback
      * @return static
      */
@@ -1018,7 +1066,7 @@ class LazyCollection implements Enumerable
     /**
      * Sort the collection keys in descending order.
      *
-     * @param  int $options
+     * @param  int  $options
      * @return static
      */
     public function sortKeysDesc($options = SORT_REGULAR)

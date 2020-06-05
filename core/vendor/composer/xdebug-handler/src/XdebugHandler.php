@@ -256,6 +256,13 @@ class XdebugHandler
      */
     private function doRestart($command)
     {
+        // Ignore SIGINTs here so the child process can handle them. To replicate this
+        // on Windows we would need to use proc_open (PHP 7.4+) rather than passthru.
+        if (function_exists('pcntl_async_signals') && function_exists('pcntl_signal')) {
+            pcntl_async_signals(true);
+            pcntl_signal(SIGINT, SIG_IGN);
+        }
+
         passthru($command, $exitCode);
         $this->notify(Status::INFO, 'Restarted process exited '.$exitCode);
 

@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.7.4';
+	public const VERSION = '2.7.5';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -182,6 +182,7 @@ class Debugger
 			ini_set('display_errors', self::$productionMode ? '0' : '1'); // or 'stderr'
 			ini_set('html_errors', '0');
 			ini_set('log_errors', '0');
+			ini_set('zend.exception_ignore_args', '0');
 
 		} elseif (
 			ini_get('display_errors') != !self::$productionMode // intentionally ==

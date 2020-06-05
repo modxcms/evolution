@@ -150,8 +150,8 @@ class MessageBag implements Arrayable, Countable, Jsonable, JsonSerializable, Me
     /**
      * Get the first message from the message bag for a given key.
      *
-     * @param  string  $key
-     * @param  string  $format
+     * @param  string|null  $key
+     * @param  string|null  $format
      * @return string
      */
     public function first($key = null, $format = null)
@@ -241,7 +241,7 @@ class MessageBag implements Arrayable, Countable, Jsonable, JsonSerializable, Me
     /**
      * Format an array of messages.
      *
-     * @param  array   $messages
+     * @param  array  $messages
      * @param  string  $format
      * @param  string  $messageKey
      * @return array

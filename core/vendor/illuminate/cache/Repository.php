@@ -504,7 +504,7 @@ class Repository implements ArrayAccess, CacheContract
     /**
      * Get the default cache time.
      *
-     * @return int
+     * @return int|null
      */
     public function getDefaultCacheTime()
     {
@@ -548,6 +548,16 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
+     * Get the event dispatcher instance.
+     *
+     * @return  \Illuminate\Contracts\Events\Dispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->events;
+    }
+
+    /**
      * Set the event dispatcher instance.
      *
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events
@@ -584,7 +594,7 @@ class Repository implements ArrayAccess, CacheContract
      * Store an item in the cache for the default time.
      *
      * @param  string  $key
-     * @param  mixed   $value
+     * @param  mixed  $value
      * @return void
      */
     public function offsetSet($key, $value)

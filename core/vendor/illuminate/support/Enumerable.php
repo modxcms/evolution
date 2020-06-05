@@ -61,7 +61,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Get the median of a given key.
      *
-     * @param  string|array|null $key
+     * @param  string|array|null  $key
      * @return mixed
      */
     public function median($key = null);
@@ -159,7 +159,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     public function diffAssoc($items);
 
     /**
-     * Get the items whose keys and values are not present in the given items.
+     * Get the items whose keys and values are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -176,9 +176,9 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     public function diffKeys($items);
 
     /**
-     * Get the items whose keys are not present in the given items.
+     * Get the items whose keys are not present in the given items, using the callback.
      *
-     * @param  mixed   $items
+     * @param  mixed  $items
      * @param  callable  $callback
      * @return static
      */
@@ -218,7 +218,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     public function eachSpread(callable $callback);
 
     /**
-     * Determine if all items pass the given test.
+     * Determine if all items pass the given truth test.
      *
      * @param  string|callable  $key
      * @param  mixed  $operator
@@ -791,7 +791,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Sort the collection keys in descending order.
      *
-     * @param  int $options
+     * @param  int  $options
      * @return static
      */
     public function sortKeysDesc($options = SORT_REGULAR);
@@ -823,7 +823,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Pass the enumerable to the given callback and return the result.
      *
-     * @param  callable $callback
+     * @param  callable  $callback
      * @return mixed
      */
     public function pipe(callable $callback);

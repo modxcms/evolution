@@ -315,6 +315,10 @@ class Collection extends BaseCollection implements QueueableCollection
     {
         $intersect = new static;
 
+        if (empty($items)) {
+            return $intersect;
+        }
+
         $dictionary = $this->getDictionary($items);
 
         foreach ($this->items as $item) {
@@ -420,7 +424,7 @@ class Collection extends BaseCollection implements QueueableCollection
     /**
      * Get an array with the values of a given key.
      *
-     * @param  string  $value
+     * @param  string|array  $value
      * @param  string|null  $key
      * @return \Illuminate\Support\Collection
      */
@@ -485,7 +489,7 @@ class Collection extends BaseCollection implements QueueableCollection
      * Pad collection to the specified length with a value.
      *
      * @param  int  $size
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return \Illuminate\Support\Collection
      */
     public function pad($size, $value)
@@ -553,7 +557,19 @@ class Collection extends BaseCollection implements QueueableCollection
      */
     public function getQueueableRelations()
     {
-        return $this->isNotEmpty() ? $this->first()->getQueueableRelations() : [];
+        if ($this->isEmpty()) {
+            return [];
+        }
+
+        $relations = $this->map->getQueueableRelations()->all();
+
+        if (count($relations) === 0 || $relations === [[]]) {
+            return [];
+        } elseif (count($relations) === 1) {
+            return array_values($relations)[0];
+        } else {
+            return array_intersect(...$relations);
+        }
     }
 
     /**

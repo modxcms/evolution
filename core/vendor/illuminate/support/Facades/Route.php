@@ -3,6 +3,7 @@
 namespace Illuminate\Support\Facades;
 
 /**
+ * @method static \Illuminate\Routing\Route fallback(\Closure|array|string|callable|null $action = null)
  * @method static \Illuminate\Routing\Route get(string $uri, \Closure|array|string|callable|null $action = null)
  * @method static \Illuminate\Routing\Route post(string $uri, \Closure|array|string|callable|null $action = null)
  * @method static \Illuminate\Routing\Route put(string $uri, \Closure|array|string|callable|null $action = null)
@@ -14,6 +15,8 @@ namespace Illuminate\Support\Facades;
  * @method static \Illuminate\Routing\RouteRegistrar prefix(string  $prefix)
  * @method static \Illuminate\Routing\RouteRegistrar where(array  $where)
  * @method static \Illuminate\Routing\PendingResourceRegistration resource(string $name, string $controller, array $options = [])
+ * @method static void resources(array $resources)
+ * @method static void pattern(string $key, string $pattern)
  * @method static \Illuminate\Routing\PendingResourceRegistration apiResource(string $name, string $controller, array $options = [])
  * @method static void apiResources(array $resources, array $options = [])
  * @method static \Illuminate\Routing\RouteRegistrar middleware(array|string|null $middleware)
