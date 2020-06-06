@@ -1,7 +1,6 @@
 <?php
 define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
-
 if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
     $config = require dirname(__DIR__) . '/config.php';
 } elseif (file_exists(dirname(__DIR__, 4) . '/config.php')) {
@@ -45,6 +44,7 @@ if (isset($action)) {
         case '1': {
             switch ($frame) {
                 case 'nodes':
+
                     // save folderstate
                     if (isset($_REQUEST['opened'])) {
                         $_SESSION['openedArray'] = $_REQUEST['opened'];
@@ -93,8 +93,8 @@ if (isset($action)) {
 
                     // check for deleted documents on reload
                     if ($expandAll == 2) {
-                        $rs = $modx->getDatabase()->select('id', $modx->getDatabase()->getFullTableName('site_content'), 'deleted=1 LIMIT 1');
-                        if ($modx->getDatabase()->getRecordCount($rs)) {
+                        if (!is_null(\EvolutionCMS\Models\SiteContent::query()
+                            ->where('deleted', 1)->first())) {
                             echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
                         }
                     }

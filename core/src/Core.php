@@ -3,6 +3,8 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use EvolutionCMS\Models\ActiveUserLock;
+use EvolutionCMS\Models\ActiveUserSession;
 use EvolutionCMS\Models\EventLog;
 use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
@@ -212,6 +214,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->getService('ExceptionHandler');
+
         $this->getSettings();
         $this->getService('UrlProcessor');
         $this->getService('TemplateProcessor');
@@ -3319,17 +3322,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->lockedElements === null) {
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
-
-            $rs = $this->getDatabase()->select(
-                'sid,internalKey,elementType,elementId,lasthit,username'
-                , sprintf(
-                    '%s ul
-                    LEFT JOIN %s mu on ul.internalKey = mu.id'
-                    , $this->getDatabase()->getFullTableName('active_user_locks')
-                    , $this->getDatabase()->getFullTableName('manager_users')
-                )
-            );
-            while ($row = $this->getDatabase()->getRow($rs)) {
+            $rs = ActiveUserLock::query()
+                ->select('sid', 'internalKey', 'elementType', 'elementId', 'lasthit', 'username')
+                ->leftJoin('manager_users', 'active_user_locks.internalKey', '=', 'manager_users.id')
+                ->get();
+            foreach ($rs->toArray() as $row){
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
@@ -3357,28 +3354,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
-        $this->getDatabase()->delete(
-            $this->getDatabase()->getFullTableName('active_user_sessions')
-            , sprintf('lasthit < %d', (int)$validSessionTimeLimit)
-        );
+        ActiveUserSession::where('lasthit', '<', (int)$validSessionTimeLimit)->delete();
 
         // Clean-up active_user_locks
-        $rs = $this->getDatabase()->select(
-            'sid,internalKey'
-            , $this->getDatabase()->getFullTableName('active_user_sessions')
-        );
-        if ($this->getDatabase()->getRecordCount($rs)) {
-            $rs = $this->getDatabase()->makeArray($rs);
+        $activeUsers = ActiveUserSession::select('sid', 'internalKey')->get();
+
+        if ($activeUsers->count() > 0) {
+            $rs = $activeUsers->toArray();
             $userSids = array();
             foreach ($rs as $row) {
                 $userSids[] = $row['sid'];
             }
-            $this->getDatabase()->delete(
-                $this->getDatabase()->getFullTableName('active_user_locks')
-                , sprintf("sid NOT IN('%s')", implode("','", $userSids))
-            );
+            ActiveUserSession::whereNotIn('sid', $userSids)->delete();
         } else {
-            $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'));
+            ActiveUserLock::query()->truncate();
         }
 
     }
