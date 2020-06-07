@@ -45,7 +45,6 @@ $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
 $tbl_categories = $modx->getDatabase()->getFullTableName('categories');
-$tbl_document_group_names = $modx->getDatabase()->getFullTableName('documentgroup_names');
 $tbl_member_groups = $modx->getDatabase()->getFullTableName('member_groups');
 $tbl_membergroup_access = $modx->getDatabase()->getFullTableName('membergroup_access');
 $tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
@@ -954,24 +953,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
                                         $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($id));
                                     })->join('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id');
-                                /*$field = "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
-                                $vs = array(
-                                    $tbl_site_tmplvars,
-                                    $tbl_site_tmplvar_templates,
-                                    $tbl_site_tmplvar_contentvalues,
-                                    $id,
-                                    $tbl_site_tmplvar_access
-                                );
-                                $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
-                                LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
-                                LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
-                                $dgs = !empty($docgrp) ? " OR tva.documentgroup IN ({$docgrp})" : '';
-                                $vs = array(
-                                    $template,
-                                    $_SESSION['mgrRole'],
-                                    $dgs
-                                );
-                                $sort = 'tvtpl.rank,tv.rank, tv.id';*/
+
                                 if ($group_tvs) {
                                     $field .= ', IFNULL(cat.id,0) AS category_id,  IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
                                     $from .= '
@@ -981,9 +963,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     //$sort = 'category_rank,category_id,' . $sort;
                                     $tvs = $tvs->orderBy('category_rank', 'ASC');
                                     $tvs = $tvs->orderBy('category_id', 'ASC');
-                                } else {
-                                    //$tvs = $tvs->select(\DB::raw(0).' as category_id', '' . $_lang['no_category'] . ' as category', \DB::raw(0).' as category_rank');
-                                    //$field .= ', 0 as category_id, "' . $_lang['no_category'] . '" as category, 0 as category_rank';
                                 }
                                 $tvs = $tvs->orderBy('site_tmplvar_templates.rank', 'ASC');
                                 $tvs = $tvs->orderBy('site_tmplvars.rank', 'ASC');
@@ -1013,6 +992,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $row['category'] = $_lang['no_category'];
                                             $row['category_rank'] = 0;
                                         }
+                                        if($row['value'] == '') $row['value'] = $row['default_text'];
                                         if ($group_tvs && $row['category_id'] != 0) {
                                             $ii = 0;
                                             if ($tab !== $row['category_id']) {
@@ -1442,12 +1422,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $groupsarray[] = $documentGroup->document_group . ',' . $documentGroup->id;
                             }
 
-                            // Load up the current permissions and names
-                            $vs = array(
-                                $tbl_document_group_names,
-                                $tbl_document_groups,
-                                $documentId
-                            );
                             $groups = \EvolutionCMS\Models\DocumentgroupName::query()
                                 ->select('documentgroup_names.*', 'document_groups.id as link_id')
                                 ->leftJoin('document_groups', function ($join) use ($documentId) {
@@ -1455,14 +1429,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $join->on('document_groups.document', '=', \DB::raw($documentId));
                                 })->get();
 
-                            //$from = vsprintf("%s AS dgn LEFT JOIN %s AS groups_resource ON groups_resource.document_group=dgn.id AND groups_resource.document='%s'", $vs);
-                            //$rs = $modx->getDatabase()->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
                         } else {
                             // Just load up the names, we're starting clean
                             $groups = \EvolutionCMS\Models\DocumentgroupName::query()
                                 ->select('documentgroup_names.*')
                                 ->get();
-                            //$rs = $modx->getDatabase()->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
                         }
 
                         // retain selected doc groups between post
