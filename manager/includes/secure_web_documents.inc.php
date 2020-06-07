@@ -14,20 +14,21 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function secureWebDocument($docid = '')
 {
-    $modx = evolutionCMS();
+    if (is_numeric($docid) && $docid > 0) {
+        \EvolutionCMS\Models\SiteContent::find($docid)->update(['privatweb' => 0]);
+    } else {
+        \EvolutionCMS\Models\SiteContent::where('privateweb', 1)->update(['privatweb' => 0]);
+    }
+    $documentIds = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id')->distinct()
+        ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
+        ->leftJoin('webgroup_access', 'document_groups.document_group', '=', 'webgroup_access.documentgroup')
+        ->where('webgroup_access.id', '>', 0);
+    if (is_numeric($docid) && $docid > 0) {
+        $documentIds = $documentIds->where('site_content.id', $docid);
+    }
 
-    $modx->getDatabase()->update('privateweb = 0', $modx->getDatabase()->getFullTableName("site_content"),
-        ($docid > 0 ? "id='$docid'" : "privateweb = 1"));
-    $rs = $modx->getDatabase()->select(
-        'DISTINCT sc.id',
-        $modx->getDatabase()->getFullTableName("site_content") . " sc
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName("document_groups") . " dg ON dg.document = sc.id
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group",
-        ($docid > 0 ? " sc.id='{$docid}' AND " : "") . "wga.id>0"
-    );
-    $ids = $modx->getDatabase()->getColumn("id", $rs);
+    $ids = $documentIds->get()->pluck('id');
     if (count($ids) > 0) {
-        $modx->getDatabase()->update('privateweb = 1', $modx->getDatabase()->getFullTableName("site_content"),
-            "id IN (" . implode(", ", $ids) . ")");
+        \EvolutionCMS\Models\SiteContent::whereIn('id', $ids)->update(['privatweb' => 1]);
     }
 }

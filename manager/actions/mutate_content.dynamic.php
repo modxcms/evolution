@@ -139,8 +139,7 @@ if($formRestored == true) {
 if(!isset($_REQUEST['id'])) {
     if ($modx->getConfig('auto_menuindex')) {
         $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
-        $rs = $modx->getDatabase()->select('count(*)', $tbl_site_content, "parent='{$pid}'");
-        $content['menuindex'] = $modx->getDatabase()->getValue($rs);
+        $content['menuindex'] = SiteContent::where('parent', $pid)->count();
     } else {
         $content['menuindex'] = 0;
     }
@@ -620,9 +619,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $parents = implode(',', $temp);
 
                     if(!empty($parents)) {
-                        $where = "FIND_IN_SET(id,'{$parents}') DESC";
-                        $rs = $modx->getDatabase()->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
-                        while($row = $modx->getDatabase()->getRow($rs)) {
+                        $parentsResult = SiteContent::select('id','pagetitle')->whereIn('id', $temp)->get();
+                        foreach ($parentsResult->toArray() as $row) {
                             $out .= '<li class="breadcrumbs__li">
                                 <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->getConfig('modx_charset')) . '</a>
                                 <span class="breadcrumbs__sep">&gt;</span>
@@ -835,8 +833,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $content['parent'] = 0;
                                         }
                                         if($parentlookup !== false && is_numeric($parentlookup)) {
-                                            $rs = $modx->getDatabase()->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
-                                            $parentname = $modx->getDatabase()->getValue($rs);
+                                            $parentname = SiteContent::select('pagetitle')->find($parentlookup)->pagetitle;
                                             if(!$parentname) {
                                                 $modx->webAlertAndQuit($_lang["error_no_parent"]);
                                             }
@@ -955,9 +952,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     })->join('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id');
 
                                 if ($group_tvs) {
-                                    $field .= ', IFNULL(cat.id,0) AS category_id,  IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
-                                    $from .= '
-                                    LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
                                     $tvs = $tvs->select('categories.id as category_id', 'categories.category as category', 'categories.rank as category_rank');
                                     $tvs = $tvs->leftJoin('categories', 'categories.id', '=', 'site_tmplvars.category');
                                     //$sort = 'category_rank,category_id,' . $sort;
@@ -975,12 +969,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     });
                                 }
                                 $tvs = $tvs->get();
-                                //$where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
 
-                                //rs = $modx->getDatabase()->select($field, $from, $where, $sort);
                                 if (count($tvs)>0) {
                                     $tvsArray = $tvs->toArray();
-                                    //$modx->getDatabase()->makeArray($rs, 'name');
                                     $templateVariablesOutput = '';
                                     $templateVariablesGeneral = '';
 

@@ -8,12 +8,13 @@ if (!$modx->hasPermission('save_document')) {
 
 // preprocess POST values
 $id = is_numeric($_POST['id']) ? $_POST['id'] : '';
-$introtext = $modx->getDatabase()->escape($_POST['introtext']);
-$content = $modx->getDatabase()->escape($_POST['ta']);
-$pagetitle = $modx->getDatabase()->escape($_POST['pagetitle']);
-$description = $modx->getDatabase()->escape($_POST['description']);
-$alias = $modx->getDatabase()->escape($_POST['alias']);
-$link_attributes = $modx->getDatabase()->escape($_POST['link_attributes']);
+
+$introtext = $_POST['introtext'];
+$content = $_POST['ta'];
+$pagetitle = $_POST['pagetitle'];
+$description = $_POST['description'];
+$alias = $_POST['alias'];
+$link_attributes = $_POST['link_attributes'];
 $isfolder = (int)$_POST['isfolder'];
 $richtext = (int)$_POST['richtext'];
 $published = (int)$_POST['published'];
@@ -26,12 +27,12 @@ $syncsite = (int)$_POST['syncsite'];
 $pub_date = $_POST['pub_date'];
 $unpub_date = $_POST['unpub_date'];
 $document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? [] : get_by_key($_POST, 'docgroups', [], 'is_array');
-$type = $modx->getDatabase()->escape($_POST['type']);
-$contentType = $modx->getDatabase()->escape($_POST['contentType']);
+$type = $_POST['type'];
+$contentType = $_POST['contentType'];
 $contentdispo = (int)$_POST['content_dispo'];
-$longtitle = $modx->getDatabase()->escape($_POST['longtitle']);
+$longtitle = $_POST['longtitle'];
 $donthit = (int)$_POST['donthit'];
-$menutitle = $modx->getDatabase()->escape($_POST['menutitle']);
+$menutitle = $_POST['menutitle'];
 $hidemenu = (int)$_POST['hidemenu'];
 $aliasvisible = (int)$_POST['alias_visible'];
 
@@ -60,8 +61,6 @@ $tbl_membergroup_access         = $modx->getDatabase()->getFullTableName('member
 $tbl_site_content               = $modx->getDatabase()->getFullTableName('site_content');
 $tbl_site_tmplvar_access        = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
 $tbl_site_tmplvar_contentvalues = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
-$tbl_site_tmplvar_templates     = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
-$tbl_site_tmplvars              = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 $actionToTake = "new";
 if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {
@@ -74,10 +73,15 @@ if ($modx->getConfig('friendly_urls')) {
     if (!$alias && $modx->getConfig('automatic_alias')) {
         $alias = strtolower($modx->stripAlias(trim($pagetitle)));
         if(!$modx->getConfig('allow_duplicate_alias')) {
-            if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$alias'")) != 0) {
+
+            if (\EvolutionCMS\Models\SiteContent::query()
+                    ->where('id', '<>', $id)
+                    ->where('alias', $alias)->count() > 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
-                while ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$tempAlias'")) != 0) {
+                while (\EvolutionCMS\Models\SiteContent::query()
+                    ->where('id', '<>', $id)
+                    ->where('alias', $alias)->count() > 0) {
                     $tempAlias = $alias;
                     $tempAlias .= $cnt;
                     $cnt++;
@@ -85,10 +89,16 @@ if ($modx->getConfig('friendly_urls')) {
                 $alias = $tempAlias;
             }
         }else{
-            if ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
+            if (\EvolutionCMS\Models\SiteContent::query()
+                    ->where('id', '<>', $id)
+                    ->where('alias', $alias)
+                    ->where('parent', $parent)->count() > 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
-                while ($modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
+                while (\EvolutionCMS\Models\SiteContent::query()
+                        ->where('id', '<>', $id)
+                        ->where('alias', $alias)
+                        ->where('parent', $parent)->count() > 0) {
                     $tempAlias = $alias;
                     $tempAlias .= $cnt;
                     $cnt++;
@@ -101,19 +111,21 @@ if ($modx->getConfig('friendly_urls')) {
     // check for duplicate alias name if not allowed
     elseif ($alias && !$modx->getConfig('allow_duplicate_alias')) {
         $alias = $modx->stripAlias($alias);
+        $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
+            ->where('id', '<>', $id)
+            ->where('alias', $alias);
         if ($modx->getConfig('use_alias_path')) {
             // only check for duplicates on the same level if alias_path is on
-            $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
-        } else {
-            $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias'", '', 1));
+            $docid = $docid->where('parent', $parent);
         }
-        if ($docid > 0) {
+        $docid = $docid->first();
+        if (!is_null($docid)) {
             if ($actionToTake == 'edit') {
                 $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
             } else {
                 $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
             }
         }
     }
@@ -121,18 +133,18 @@ if ($modx->getConfig('friendly_urls')) {
     // strip alias of special characters
     elseif ($alias) {
         $alias = $modx->stripAlias($alias);
-        //webber
-        $docid = $modx->getDatabase()->getValue($modx->getDatabase()->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
-        if ($docid > 0) {
+        $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
+            ->where('id', '<>', $id)
+            ->where('alias', $alias)->where('parent', $parent)->first();
+        if (!is_null($docid)) {
             if ($actionToTake == 'edit') {
                 $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
             } else {
                 $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
             }
         }
-        //end webber
     }
 }
 elseif ($alias) {
@@ -187,16 +199,23 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
     }
 }
 
-$rs = $modx->getDatabase()->select(
-    "DISTINCT tv.*, IF(tvc.`value`!='',tvc.`value`,tv.`default_text`) as `value`",
-    "{$tbl_site_tmplvars} AS tv
-        INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
-        LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
-        LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
-    "tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ")",
-    "tv.rank"
-    );
-while ($row = $modx->getDatabase()->getRow($rs)) {
+$tvs = \EvolutionCMS\Models\SiteTmplvar::query()->distinct()
+    ->select('site_tmplvars.*', 'site_tmplvar_contentvalues.value')
+    ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
+    ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($id) {
+        $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
+        $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($id));
+    })->join('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id')
+    ->where('site_tmplvar_templates.templateid', $template)->orderBy('site_tmplvars.rank');
+if($_SESSION['mgrRole']!= 1){
+    $tvs = $tvs->where(function ($query) {
+        $query->whereNull('site_tmplvar_access.documentgroup')
+            ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+    });
+}
+$tvs = $tvs->get();
+
+foreach ($tvs->toArray() as $row) {
     $tmplvar = '';
     switch ($row['type']) {
         case 'url':
@@ -243,12 +262,11 @@ while ($row = $modx->getDatabase()->getRow($rs)) {
 
 // get the document, but only if it already exists
 if ($actionToTake != "new") {
-    $rs = $modx->getDatabase()->select('*', $tbl_site_content, "id='{$id}'");
-    $existingDocument = $modx->getDatabase()->getRow($rs);
-    if (!$existingDocument) {
+    $existingDocument = \EvolutionCMS\Models\SiteContent::query()->find($id);
+    if (is_null($existingDocument)) {
         $modx->webAlertAndQuit($_lang["error_no_results"]);
     }
-
+    $existingDocument = $existingDocument->toArray();
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
@@ -271,9 +289,40 @@ if ($modx->getConfig('use_udperms') == 1) {
     }
 }
 
+$resourceArray = array
+(
+    "introtext"        => $introtext ,
+    "content"          => $content ,
+    "pagetitle"        => $pagetitle ,
+    "longtitle"        => $longtitle ,
+    "type"             => $type ,
+    "description"      => $description ,
+    "alias"            => $alias ,
+    "link_attributes"  => $link_attributes ,
+    "isfolder"         => $isfolder ,
+    "richtext"         => $richtext ,
+    "published"        => $published ,
+    "parent"           => $parent ,
+    "template"         => $template ,
+    "menuindex"        => $menuindex ,
+    "searchable"       => $searchable ,
+    "cacheable"        => $cacheable ,
+    "editedby"         => $modx->getLoginUserID('mgr') ,
+    "editedon"         => $currentdate ,
+    "pub_date"         => $pub_date ,
+    "unpub_date"       => $unpub_date ,
+    "contentType"      => $contentType ,
+    "content_dispo"    => $contentdispo ,
+    "donthit"          => $donthit ,
+    "menutitle"        => $menutitle ,
+    "hidemenu"         => $hidemenu ,
+    "alias_visible"    => $aliasvisible
+);
+
 switch ($actionToTake) {
         case 'new' :
-
+            $resourceArray['createdby'] = $modx->getLoginUserID('mgr');
+            $resourceArray['createdon'] = $currentdate;
             // invoke OnBeforeDocFormSave event
             switch($modx->config['docid_incrmnt_method'])
             {
@@ -311,39 +360,11 @@ switch ($actionToTake) {
             $publishedon=$pub_date;
         }
 
-        $dbInsert = array
-        (
-            "introtext"        => $introtext ,
-            "content"          => $content ,
-            "pagetitle"        => $pagetitle ,
-            "longtitle"        => $longtitle ,
-            "type"             => $type ,
-            "description"      => $description ,
-            "alias"            => $alias ,
-            "link_attributes"  => $link_attributes ,
-            "isfolder"         => $isfolder ,
-            "richtext"         => $richtext ,
-            "published"        => $published ,
-            "parent"           => $parent ,
-            "template"         => $template ,
-            "menuindex"        => $menuindex ,
-            "searchable"       => $searchable ,
-            "cacheable"        => $cacheable ,
-            "createdby"        => $modx->getLoginUserID('mgr') ,
-            "createdon"        => $currentdate ,
-            "editedby"         => $modx->getLoginUserID('mgr') ,
-            "editedon"         => $currentdate ,
-            "publishedby"      => $publishedby ,
-            "publishedon"      => $publishedon ,
-            "pub_date"         => $pub_date ,
-            "unpub_date"       => $unpub_date ,
-            "contentType"      => $contentType ,
-            "content_dispo"    => $contentdispo ,
-            "donthit"          => $donthit ,
-            "menutitle"        => $menutitle ,
-            "hidemenu"         => $hidemenu ,
-            "alias_visible"    => $aliasvisible
-        );
+
+        $resourceArray['pub_date'] = $pub_date;
+        $resourceArray['publishedon'] = $publishedon;
+        $resourceArray['publishedby'] = $publishedby;
+        $resourceArray['unpub_date'] = $unpub_date;
 
         if ($id != '')
             $dbInsert["id"] = $id;
@@ -442,7 +463,6 @@ switch ($actionToTake) {
 
         break;
         case 'edit' :
-
             // get the document's current parent
             $oldparent = $existingDocument['parent'];
             $doctype = $existingDocument['type'];
@@ -467,9 +487,8 @@ switch ($actionToTake) {
             }
 
             // check to see document is a folder
-            $rs = $modx->getDatabase()->select('count(id)', $tbl_site_content, "parent='{$id}'");
-            $count = $modx->getDatabase()->getValue($rs);
-            if ($count > 0) {
+            $child = \EvolutionCMS\Models\SiteContent::select('id')->where('parent', $id)->first();
+            if (!is_null($child)) {
                 $isfolder = 1;
             }
 
@@ -494,9 +513,13 @@ switch ($actionToTake) {
                 $publishedon = 0;
                 $publishedby = 0;
             } else {
-                $publishedon = 'publishedon';
-                $publishedby = 'publishedby';
+                $publishedon = $existingDocument['publishedon'];
+                $publishedby = $existingDocument['publishedby'];
             }
+
+            $resourceArray['pub_date'] = $pub_date;
+            $resourceArray['publishedon'] = $publishedon;
+            $resourceArray['publishedby'] = $publishedby;
 
             // invoke OnBeforeDocFormSave event
             $modx->invokeEvent("OnBeforeDocFormSave", array (
@@ -504,75 +527,34 @@ switch ($actionToTake) {
                 "id" => $id
             ));
 
-            // update the document
-            $modx->getDatabase()->update(
-                "introtext='{$introtext}', "
-                . "content='{$content}', "
-                . "pagetitle='{$pagetitle}', "
-                . "longtitle='{$longtitle}', "
-                . "type='{$type}', "
-                . "description='{$description}', "
-                . "alias='{$alias}', "
-                . "link_attributes='{$link_attributes}', "
-                . "isfolder={$isfolder}, "
-                . "richtext={$richtext}, "
-                . "published={$published}, "
-                . "pub_date={$pub_date}, "
-                . "unpub_date={$unpub_date}, "
-                . "parent={$parent}, "
-                . "template={$template}, "
-                . "menuindex={$menuindex}, "
-                . "searchable={$searchable}, "
-                . "cacheable={$cacheable}, "
-                . "editedby=" . $modx->getLoginUserID('mgr') . ", "
-                . "editedon={$currentdate}, "
-                . "publishedon={$publishedon}, "
-                . "publishedby={$publishedby}, "
-                . "contentType='{$contentType}', "
-                . "content_dispo={$contentdispo}, "
-                . "donthit={$donthit}, "
-                . "menutitle='{$menutitle}', "
-                . "hidemenu={$hidemenu}, "
-                . "alias_visible={$aliasvisible}"
-                , $tbl_site_content, "id='{$id}'");
+            \EvolutionCMS\Models\SiteContent::query()->find($id)->update($resourceArray);
 
             // update template variables
-            $rs = $modx->getDatabase()->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, "contentid='{$id}'");
+            $tvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::select('id', 'tmplvarid')->where('contentid', $id)->get();
             $tvIds = array ();
-            while ($row = $modx->getDatabase()->getRow($rs)) {
-                $tvIds[$row['tmplvarid']] = $row['id'];
+            foreach ($tvs as $tv) {
+                $tvIds[$tv->tmplvarid] = $tv->id;
             }
             $tvDeletions = array();
             $tvChanges = array();
+            $tvAdded = array();
+
             foreach ($tmplvars as $field => $value) {
                 if (!is_array($value)) {
                     if (isset($tvIds[$value])) $tvDeletions[] = $tvIds[$value];
                 } else {
                     $tvId = $value[0];
                     $tvVal = $value[1];
-
                     if (isset($tvIds[$tvId])) {
-                        $tvChanges[] = array(array('tmplvarid' => $tvId, 'contentid' => $id, 'value' => $modx->getDatabase()->escape($tvVal)), array('id' => $tvIds[$tvId]));
+                        \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->find($tvIds[$tvId])->update(array('tmplvarid' => $tvId, 'contentid' => $id, 'value' => $tvVal));
                     } else {
-                        $tvAdded[] = array('tmplvarid' => $tvId, 'contentid' => $id, 'value' => $modx->getDatabase()->escape($tvVal));
+                        \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->create(array('tmplvarid' => $tvId, 'contentid' => $id, 'value' => $tvVal));
                     }
                 }
             }
 
             if (!empty($tvDeletions)) {
-                $modx->getDatabase()->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
-            }
-
-            if (!empty($tvAdded)) {
-                foreach ($tvAdded as $tv) {
-                    $modx->getDatabase()->insert($tv, $tbl_site_tmplvar_contentvalues);
-                }
-            }
-
-            if (!empty($tvChanges)) {
-                foreach ($tvChanges as $tv) {
-                    $modx->getDatabase()->update($tv[0], $tbl_site_tmplvar_contentvalues, "id='{$tv[1]['id']}'");
-                }
+                \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->whereIn('id', $tvDeletions)->delete();
             }
 
             // set document permissions
@@ -587,14 +569,22 @@ switch ($actionToTake) {
                 // grab the current set of permissions on this document the user can access
                 $isManager = $modx->hasPermission('access_permissions');
                 $isWeb     = $modx->hasPermission('web_access_permissions');
-                $rs = $modx->getDatabase()->select(
-                    'groups_document.id, groups_document.document_group',
-                    "{$tbl_document_groups} AS groups_document
-                    LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups_document.document_group",
-                    "((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups_document.document = '{$id}'"
-                    );
+                $documentGroups = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.id','document_groups.document_group')
+                    ->leftJoin('documentgroup_names','document_groups.document_group','=','documentgroup_names.id')
+                    ->where(function ($query) use ($isWeb, $isManager) {
+                        $query->where(function ($query) use ($isManager) {
+                            $query->whereRaw('1 = '.(int)$isManager)
+                                ->where('documentgroup_names.private_memgroup', true);
+                        })
+                            ->orWhere(function ($query) use ($isWeb) {
+                                $query->whereRaw('1 = '.(int)$isWeb)
+                                    ->where('documentgroup_names.private_webgroup', true);
+                            });
+                    })->where('document_groups.document', $id)->get();
+
                 $old_groups = array();
-                while ($row = $modx->getDatabase()->getRow($rs)) $old_groups[$row['document_group']] = $row['id'];
+                foreach ($documentGroups as $documentGroup)
+                    $old_groups[$documentGroup->document_group] = $documentGroup->id;
 
                 // update the permissions in the database
                 $insertions = $deletions = array();
@@ -603,34 +593,31 @@ switch ($actionToTake) {
                         unset($old_groups[$group]);
                         continue;
                     } elseif ($link_id == 'new') {
-                        $insertions[] = '('.(int)$group.','.$id.')';
+                        $insertions[] = ['document_group'=>(int)$group, 'document'=>$id];
                     }
                 }
                 if (!empty($insertions)) {
-                    $modx->getDatabase()->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $insertions));
+                    \EvolutionCMS\Models\DocumentGroup::query()->insert($insertions);
                 }
                 if (!empty($old_groups)) {
-                    $modx->getDatabase()->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");
+                    \EvolutionCMS\Models\DocumentGroup::query()->whereIn('id', $old_groups)->delete();
                 }
                 // necessary to remove all permissions as document is public
                 if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
-                    $modx->getDatabase()->delete($tbl_document_groups, "document='{$id}'");
+                    \EvolutionCMS\Models\DocumentGroup::query()->where('document', $id)->delete();
                 }
             }
 
             // do the parent stuff
             if ($parent != 0) {
-                $fields = array('isfolder' => 1);
-                $modx->getDatabase()->update($fields, $tbl_site_content, "id='{$_REQUEST['parent']}'");
+                \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent'])->update(array('isfolder' => 1));
             }
 
             // finished moving the document, now check to see if the old_parent should no longer be a folder
-            $rs = $modx->getDatabase()->select('COUNT(id)', $tbl_site_content, "parent='{$oldparent}'");
-            $limit = $modx->getDatabase()->getValue($rs);
+            $countChildOldParent = \EvolutionCMS\Models\SiteContent::where('parent', $oldparent)->count();
 
-            if ($limit == 0) {
-                $fields = array('isfolder' => 0);
-                $modx->getDatabase()->update($fields, $tbl_site_content, "id='{$oldparent}'");
+            if ($countChildOldParent == 0) {
+                \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent'])->update(array('isfolder' => 0));
             }
 
 
