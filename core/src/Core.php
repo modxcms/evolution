@@ -3477,15 +3477,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (!$includeAllUsers) {
-            return $this->getDatabase()->query(
-                sprintf(
-                    'DELETE FROM %s WHERE internalKey=%d AND elementType=%d AND elementId=%d'
-                    , $this->getDatabase()->getFullTableName('active_user_locks')
-                    , $userId
-                    , $type
-                    , $id
-                )
-            );
+            return ActiveUserLock::where('internalKey', $userId)
+                ->where('elementType', $type)
+                ->where('elementId', $id)
+                ->delete();
         }
 
         return $this->getDatabase()->query(
