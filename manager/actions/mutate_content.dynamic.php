@@ -1,5 +1,9 @@
 <?php
 /********************/
+
+use EvolutionCMS\Models\SiteContent;
+use EvolutionCMS\Models\SiteTmplvar;
+
 $sd = isset($_REQUEST['dir']) ? '&dir=' . $_REQUEST['dir'] : '&dir=DESC';
 $sb = isset($_REQUEST['sort']) ? '&sort=' . $_REQUEST['sort'] : '&sort=createdon';
 $pg = isset($_REQUEST['page']) ? '&page=' . (int) $_REQUEST['page'] : '';
@@ -80,12 +84,17 @@ if($_SESSION['mgrDocgroups']) {
 }
 
 if(!empty ($id)) {
-    $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
-    if(isset($docgrp)) {
-        $access .= " OR dg.document_group IN ({$docgrp})";
+    $documentObjectQuery = SiteContent::query()
+        ->select('site_content.*')
+        ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
+        ->where('site_content.id', $id);
+    if ($_SESSION['mgrRole'] != 1) {
+        $documentObjectQuery->where(function ($query) {
+            $query->where('privatemgr', 0)
+                ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+        });
     }
-    $rs = $modx->getDatabase()->select('sc.*', "{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id", "sc.id='{$id}' AND ({$access})");
-    $content = $modx->getDatabase()->getRow($rs);
+    $content = $documentObjectQuery->first()->toArray();
     $modx->documentObject = &$content;
     if(!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
@@ -729,12 +738,16 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <select id="template" name="template" class="inputBox" onchange="templateWarning();">
                                             <option value="0">(blank)</option>
                                             <?php
-                                            $field = "t.templatename, t.selectable, t.id, c.category";
-                                            $from = "{$tbl_site_templates} AS t LEFT JOIN {$tbl_categories} AS c ON t.category = c.id";
-                                            $rs = $modx->getDatabase()->select($field, $from, '', 'c.category, t.templatename ASC');
+                                            $templates = \EvolutionCMS\Models\SiteTemplate::query()
+                                                ->select('site_templates.templatename', 'site_templates.selectable', 'site_templates.id', 'categories.category')
+                                                ->leftJoin('categories','site_templates.category','=','categories.id')
+                                                ->orderBy('categories.category', 'ASC')
+                                                ->orderBy('site_templates.templatename', 'ASC')->get();
+
                                             $currentCategory = '';
                                             $closeOptGroup = false;
-                                            while($row = $modx->getDatabase()->getRow($rs)) {
+                                            foreach ($templates as $template){
+                                                $row = $template->toArray();
                                                 if($row['selectable'] != 1 && $row['id'] != $content['template']) {
                                                     continue;
                                                 };
@@ -934,8 +947,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         $template = $content['template'];
                                     }
                                 }
-
-                                $field = "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                                $id = (int)$id;
+                                $tvs = SiteTmplvar::query()->distinct()->select('site_tmplvars.*', 'site_tmplvar_contentvalues.value', 'site_tmplvar_templates.rank as tvrank')
+                                    ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
+                                    ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($id) {
+                                        $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
+                                        $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($id));
+                                    })->join('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id');
+                                /*$field = "DISTINCT tv.*,  IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                                 $vs = array(
                                     $tbl_site_tmplvars,
                                     $tbl_site_tmplvar_templates,
@@ -952,25 +971,48 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $_SESSION['mgrRole'],
                                     $dgs
                                 );
-                                $sort = 'tvtpl.rank,tv.rank, tv.id';
+                                $sort = 'tvtpl.rank,tv.rank, tv.id';*/
                                 if ($group_tvs) {
                                     $field .= ', IFNULL(cat.id,0) AS category_id,  IFNULL(cat.category,"' . $_lang['no_category'] . '") AS category, IFNULL(cat.rank,0) AS category_rank';
                                     $from .= '
                                     LEFT JOIN ' . $tbl_categories . ' AS cat ON cat.id=tv.category';
-                                    $sort = 'category_rank,category_id,' . $sort;
+                                    $tvs = $tvs->select('categories.id as category_id', 'categories.category as category', 'categories.rank as category_rank');
+                                    $tvs = $tvs->leftJoin('categories', 'categories.id', '=', 'site_tmplvars.category');
+                                    //$sort = 'category_rank,category_id,' . $sort;
+                                    $tvs = $tvs->orderBy('category_rank', 'ASC');
+                                    $tvs = $tvs->orderBy('category_id', 'ASC');
                                 } else {
-                                    $field .= ', 0 as category_id, "' . $_lang['no_category'] . '" as category, 0 as category_rank';
+                                    //$tvs = $tvs->select(\DB::raw(0).' as category_id', '' . $_lang['no_category'] . ' as category', \DB::raw(0).' as category_rank');
+                                    //$field .= ', 0 as category_id, "' . $_lang['no_category'] . '" as category, 0 as category_rank';
                                 }
-                                $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
-                                $rs = $modx->getDatabase()->select($field, $from, $where, $sort);
-                                if ($modx->getDatabase()->getRecordCount($rs)) {
-                                    $tvsArray = $modx->getDatabase()->makeArray($rs, 'name');
+                                $tvs = $tvs->orderBy('site_tmplvar_templates.rank', 'ASC');
+                                $tvs = $tvs->orderBy('site_tmplvars.rank', 'ASC');
+                                $tvs = $tvs->orderBy('site_tmplvars.id', 'ASC');
+                                $tvs = $tvs->where('site_tmplvar_templates.templateid', $template);
+                                if ($_SESSION['mgrRole'] != 1) {
+                                    $tvs = $tvs->where(function ($query) {
+                                        $query->whereNull('site_tmplvar_access.documentgroup')
+                                            ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+                                    });
+                                }
+                                $tvs = $tvs->get();
+                                //$where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
+
+                                //rs = $modx->getDatabase()->select($field, $from, $where, $sort);
+                                if (count($tvs)>0) {
+                                    $tvsArray = $tvs->toArray();
+                                    //$modx->getDatabase()->makeArray($rs, 'name');
                                     $templateVariablesOutput = '';
                                     $templateVariablesGeneral = '';
 
                                     $i = $ii = 0;
                                     $tab = '';
                                     foreach ($tvsArray as $row) {
+                                        if(!isset($row['category_id'])){
+                                            $row['category_id'] = 0;
+                                            $row['category'] = $_lang['no_category'];
+                                            $row['category_rank'] = 0;
+                                        }
                                         if ($group_tvs && $row['category_id'] != 0) {
                                             $ii = 0;
                                             if ($tab !== $row['category_id']) {
@@ -1395,8 +1437,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         $documentId = ($modx->getManagerApi()->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
                         if($documentId > 0) {
                             // Load up, the permissions from the parent (if new document) or existing document
-                            $rs = $modx->getDatabase()->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
-                            while($currentgroup = $modx->getDatabase()->getRow($rs)) $groupsarray[] = $currentgroup['document_group'] . ',' . $currentgroup['id'];
+                            $documentGroups = \EvolutionCMS\Models\DocumentGroup::where('document', $documentId)->get();
+                            foreach ($documentGroups as $documentGroup) {
+                                $groupsarray[] = $documentGroup->document_group . ',' . $documentGroup->id;
+                            }
 
                             // Load up the current permissions and names
                             $vs = array(
@@ -1404,11 +1448,21 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $tbl_document_groups,
                                 $documentId
                             );
-                            $from = vsprintf("%s AS dgn LEFT JOIN %s AS groups_resource ON groups_resource.document_group=dgn.id AND groups_resource.document='%s'", $vs);
-                            $rs = $modx->getDatabase()->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
+                            $groups = \EvolutionCMS\Models\DocumentgroupName::query()
+                                ->select('documentgroup_names.*', 'document_groups.id as link_id')
+                                ->leftJoin('document_groups', function ($join) use ($documentId) {
+                                    $join->on('document_groups.document_group', '=', 'documentgroup_names.id');
+                                    $join->on('document_groups.document', '=', \DB::raw($documentId));
+                                })->get();
+
+                            //$from = vsprintf("%s AS dgn LEFT JOIN %s AS groups_resource ON groups_resource.document_group=dgn.id AND groups_resource.document='%s'", $vs);
+                            //$rs = $modx->getDatabase()->select('dgn.*, groups_resource.id AS link_id', $from, '', 'name');
                         } else {
                             // Just load up the names, we're starting clean
-                            $rs = $modx->getDatabase()->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
+                            $groups = \EvolutionCMS\Models\DocumentgroupName::query()
+                                ->select('documentgroup_names.*')
+                                ->get();
+                            //$rs = $modx->getDatabase()->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
                         }
 
                         // retain selected doc groups between post
@@ -1431,8 +1485,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         $permissions_no = 0; // count permissions the current mgr user doesn't have
 
                         // Loop through the permissions list
-                        while($row = $modx->getDatabase()->getRow($rs)) {
-
+                        foreach ($groups as $group){
+                            $row = $group->toArray();
                             // Create an inputValue pair (group ID and group link (if it exists))
                             $inputValue = $row['id'] . ',' . ($row['link_id'] ? $row['link_id'] : 'new');
                             $inputId = 'group-' . $row['id'];

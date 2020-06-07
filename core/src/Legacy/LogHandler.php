@@ -1,5 +1,7 @@
 <?php namespace EvolutionCMS\Legacy;
 
+use EvolutionCMS\Models\ManagerLog;
+
 /**
  * logger class.
  *
@@ -107,7 +109,7 @@ class LogHandler
         $fields['ip'] = $this->getUserIP();
         $fields['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
-        $insert_id = $modx->getDatabase()->insert($fields, $tbl_manager_log);
+        $insert_id = ManagerLog::query()->create($fields)->getKey();
         if (!$insert_id) {
             $modx->getService('ExceptionHandler')
                 ->messageQuit(

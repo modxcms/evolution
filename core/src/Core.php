@@ -2507,25 +2507,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         if ($documentObject['template']) {
             // load TVs and merge with document - Orig by Apodigm - Docvars
-            $tvs = SiteTmplvar::query()->select('site_tmplvars','site_tmplvar_contentvalues.value')
+            $tvs = SiteTmplvar::query()->select('site_tmplvars.*','site_tmplvar_contentvalues.value')
                 ->join('site_tmplvar_templates','site_tmplvar_templates.tmplvarid','=','site_tmplvars.id')
                 ->leftJoin('site_tmplvar_contentvalues', function($join) use ($documentObject) {
                     $join->on('site_tmplvar_contentvalues.tmplvarid','=','site_tmplvars.id');
                     $join->on('site_tmplvar_contentvalues.contentid','=',(int)$documentObject['id']);
                 })->where('site_tmplvar_templates.templateid', $documentObject['template']);
-            /*$rs = $this->getDatabase()->select(
-                "tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value"
-                , sprintf(
-                    "%s tv
-                    INNER JOIN %s tvtpl ON tvtpl.tmplvarid = tv.id
-                    LEFT JOIN %s tvc ON tvc.tmplvarid=tv.id AND tvc.contentid=%d"
-                    , $this->getDatabase()->getFullTableName('site_tmplvars')
-                    , $this->getDatabase()->getFullTableName('site_tmplvar_templates')
-                    , $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-                    , (int)$documentObject['id']
-                ),
-                sprintf("tvtpl.templateid='%s'", $documentObject['template'])
-            );*/
+
             $tmplvars = array();
             foreach ($tvs as $tv){
                 $row = $tv->toArray();
@@ -3932,60 +3920,65 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $dir = 'ASC',
         $limit = ''
     ) {
-
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
-
-        if ($published === 'all') {
-            $published = '';
-        } else {
-            $published = 'AND sc.published = ' . $published;
+        $documentChildes = SiteContent::query();
+        if ($published !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.published', $published);
         }
-        if ($deleted === 'all') {
-            $deleted = '';
-        } else {
-            $deleted = 'AND sc.deleted = ' . $deleted;
+        if ($deleted !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.deleted', $deleted);
         }
 
-        if ($where != '') {
-            $where = 'AND ' . $where;
+        if (is_string($where) && $where != '') {
+            $documentChildes = $documentChildes->whereRaw($where);
+        }elseif(is_array($where)){
+            $documentChildes = $documentChildes->where($where);
         }
-
+        if (!is_array($fields)) {
+            $documentChildes = $documentChildes->select(explode(',', $fields));
+        }
         // modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        if ($sort == '') {
-            $sort = '';
-        } else {
-            $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        if ($sort != '') {
+            $sort = explode(',', $sort);
+            foreach ($sort as $item)
+                $documentChildes = $documentChildes->orderBy($item, $dir);
         }
 
         // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(',', $docgrp);
-        }
+        $docgrp = $this->getUserDocGroups();
 
         // build query
+
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $access = ('sc.privateweb=0');
+                $documentChildes = $documentChildes->where('privateweb', 0);
             } else {
-                $access = sprintf('sc.privateweb=0 OR dg.document_group IN (%s)', $docgrp);
+                $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                    $query->where('privateweb', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
             }
         } else {
-            $access = ('1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
+            if ($_SESSION['mgrRole'] != 1) {
+                if (!$docgrp) {
+                    $documentChildes = $documentChildes->where('privatemgr', 0);
+                } else {
+                    $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                        $query->where('privatemgr', 0)
+                            ->orWhereIn('document_groups.document_group', $docgrp);
+                    });
+                }
+            }
         }
 
-        $tblsc = $this->getDatabase()->getFullTableName('site_content');
-        $tbldg = $this->getDatabase()->getFullTableName('document_groups');
+        if (is_numeric($limit)) {
+            $documentChildes = $documentChildes->take($limit);
+        }
 
-        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-            "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
-            ($sort ? "{$sort} {$dir}" : ""), $limit);
-
-        $resourceArray = $this->getDatabase()->makeArray($result);
+        $resourceArray = $documentChildes->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
