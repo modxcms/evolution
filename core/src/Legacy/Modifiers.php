@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Legacy;
 
 use EvolutionCMS\Interfaces\ModifiersInterface;
+use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Support\DataGrid;
 
 class Modifiers implements ModifiersInterface
@@ -975,10 +976,14 @@ class Modifiers implements ModifiersInterface
 
                 return $menutitle ? $menutitle : $pagetitle;
             case 'templatename':
-                $rs = $modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$value}'");
-                $templateName = $modx->getDatabase()->getValue($rs);
+                $template = SiteTemplate::query()->select('templatename')->find($value);
 
-                return !$templateName ? '(blank)' : $templateName;
+                if(!is_null($template)){
+                    return $template->templatename;
+                }else {
+                    return '(blank)';
+                }
+
             case 'getfield':
                 if (!$opt) {
                     $opt = 'content';

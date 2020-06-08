@@ -67,22 +67,42 @@ if(!function_exists('makeHTML')) {
             $showProtected = false;
         }
         $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
+
+        $docgrp_cond = $docgrp ? sprintf('OR dg.document_group IN (%s)', $docgrp) : '';
+        $mgrRole = (int)$mgrRole;
+        $docgrp_cond = $docgrp_cond;
+
+        $result = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id', 'site_content.pagetitle',  'longtitle',
+                'menutitle', 'parent', 'isfolder'
+                , 'published', 'pub_date', 'unpub_date', 'richtext', 'searchable', 'cacheable'
+                , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'donthit', 'hidemenu', 'alias'
+                , 'contentType', 'privateweb', 'privatemgr'
+                 )
+            ->leftJoin('document_groups', 'site_content.id','=','document_groups.document')
+            ->leftJoin('site_templates', 'site_content.template','=','site_templates.id')
+            ->where('parent', (int)$parent);
+//'privatemgr',\DB::raw('MAX(IF(1='.$mgrRole.' OR privatemgr=0 '.$docgrp_cond.', 1, 0)) AS hasAccess'),
         if (!$showProtected) {
             if (!$docgrp) {
-                $access = sprintf('AND (1=%s OR sc.privatemgr=0)', $mgrRole);
+                $result = $result->where(function($q) use ($mgrRole) {
+                    $q->orWhere('privatemgr', 0);
+                });
             } else {
-                $access = sprintf(
-                    'AND (1=%s OR sc.privatemgr=0 OR dg.document_group IN (%s))'
-                    , $mgrRole
-                    , $docgrp
-                );
+                $result = $result->where(function($q) use ($mgrRole) {
+                    $q->where('privatemgr', 0)
+                        ->orWhereIn('document_group', $_SESSION['mgrDocgroups']);
+                });
             }
-        } else {
-            $access = '';
         }
-        $docgrp_cond = $docgrp ? sprintf('OR dg.document_group IN (%s)', $docgrp) : '';
+        $result->groupBy(['site_content.id', 'site_content.pagetitle',  'longtitle',
+            'menutitle', 'parent', 'isfolder'
+            , 'published', 'pub_date', 'unpub_date', 'richtext', 'searchable', 'cacheable'
+            , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'donthit', 'hidemenu', 'alias'
+            , 'contentType', 'privateweb', 'privatemgr']);
+        $result = $result->get();
 
-        $result = $modx->getDatabase()->select(
+
+        /*$result = $modx->getDatabase()->select(
             sprintf(
                 "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder
                 , published, pub_date, unpub_date, richtext, searchable, cacheable
@@ -105,8 +125,8 @@ if(!function_exists('makeHTML')) {
                 , $access
             )
             , $orderby
-        );
-        if (!$modx->getDatabase()->getRecordCount($result)) {
+        );*/
+        if ($result->count() == 0) {
             $output .= sprintf(
                 '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
                 , $spacer
@@ -119,8 +139,14 @@ if(!function_exists('makeHTML')) {
         } else {
             $nodeNameSource = $_SESSION['tree_nodename'];
         }
-
-        while ($row = $modx->getDatabase()->getRow($result)) {
+        foreach ($result as $item) {
+            $row = $item->toArray();
+            $row['roles'] = '';
+            $row['hasAccess'] = 0;
+            if($mgrRole == 1 || $row['privatemgr']==0){
+                $row['hasAccess'] = 1;
+            }
+        //while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
             $nodetitle = getNodeTitle($nodeNameSource, $row);
             $nodetitleDisplay = $nodetitle;

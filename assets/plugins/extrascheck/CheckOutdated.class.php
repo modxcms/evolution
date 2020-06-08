@@ -67,12 +67,11 @@ class CheckOutdated
     {
         $out = '';
         //search the snippet by name
-        $query = $this->modx->db->select(
-            '`id`, `name`, `description`',
-            $this->modx->getFullTableName('site_snippets'),
-            "`name`='" . $this->modx->db->escape($name). "' AND `disabled`=0"
-        );
-        if ($query !== false) {
+
+        $snippet = \EvolutionCMS\Models\SiteSnippet::select('id', 'name', 'description')
+            ->where('name', $name)->where('disabled', 0)->first();
+
+        if (!is_null($snippet)) {
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                     '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
@@ -88,25 +87,24 @@ class CheckOutdated
             $replaced = isset($options['replaced']) ? implode('</b>, </b>', $options['replaced']) : '';
             $isSecurity = !empty($options['security']);
 
-            while ($row = $this->modx->db->getRow($query)) {
-                //extract snippet version from description <strong></strong> tags
-                $currentVersion = $this->getver($row['description'], 'strong');
-                //check snippet version and return an alert if outdated
-                if (version_compare($currentVersion, $minVersion, 'lt')) {
-                    $out .= $this->parseTemplate(
-                        $tpl,
-                        array(
-                            'name' => $row['name'],
-                            'replaced' => $replaced,
-                            'isSecurity' => $isSecurity,
-                            'minVersion' => $minVersion,
-                            'currentVersion' => $currentVersion,
-                            'extrasID' => $this->getExtrasId(),
-                            'extrasURL' => $this->getExtrasUrl($row['name'])
-                        )
-                    );
-                }
+            //extract snippet version from description <strong></strong> tags
+            $currentVersion = $this->getver($snippet->description, 'strong');
+            //check snippet version and return an alert if outdated
+            if (version_compare($currentVersion, $minVersion, 'lt')) {
+                $out .= $this->parseTemplate(
+                    $tpl,
+                    array(
+                        'name' => $snippet->name,
+                        'replaced' => $replaced,
+                        'isSecurity' => $isSecurity,
+                        'minVersion' => $minVersion,
+                        'currentVersion' => $currentVersion,
+                        'extrasID' => $this->getExtrasId(),
+                        'extrasURL' => $this->getExtrasUrl($snippet->name)
+                    )
+                );
             }
+
         }
 
         return $out;
@@ -120,13 +118,11 @@ class CheckOutdated
     public function plugin($name, $options)
     {
         $out = '';
-        //search the snippet by name
-        $query = $this->modx->db->select(
-            '`id`, `name`, `description`',
-            $this->modx->getFullTableName('site_plugins'),
-            "`name`='" . $this->modx->db->escape($name). "' AND `disabled`=0"
-        );
-        if ($query !== false) {
+        //search the plugin by name
+
+        $plugin = \EvolutionCMS\Models\SitePlugin::select('id', 'name', 'description')
+            ->where('name', $name)->where('disabled', 0)->first();
+        if (!is_null($plugin)) {
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                 '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
@@ -142,24 +138,23 @@ class CheckOutdated
             $replaced = isset($options['replaced']) ? implode('</b>, </b>', $options['replaced']) : '';
             $isSecurity = !empty($options['security']);
 
-            while ($row = $this->modx->db->getRow($query)) {
-                //extract snippet version from description <strong></strong> tags
-                $currentVersion = $this->getver($row['description'], 'strong');
-                //check snippet version and return an alert if outdated
-                if (version_compare($currentVersion, $minVersion, 'lt')) {
-                    $out .= $this->parseTemplate(
-                        $tpl,
-                        array(
-                            'name' => $row['name'],
-                            'replaced' => $replaced,
-                            'isSecurity' => $isSecurity,
-                            'minVersion' => $minVersion,
-                            'currentVersion' => $currentVersion,
-                            'extrasID' => $this->getExtrasId(),
-                            'extrasURL' => $this->getExtrasUrl($row['name'])
-                        )
-                    );
-                }
+
+            //extract snippet version from description <strong></strong> tags
+            $currentVersion = $this->getver($plugin->description, 'strong');
+            //check snippet version and return an alert if outdated
+            if (version_compare($currentVersion, $minVersion, 'lt')) {
+                $out .= $this->parseTemplate(
+                    $tpl,
+                    array(
+                        'name' => $plugin->name,
+                        'replaced' => $replaced,
+                        'isSecurity' => $isSecurity,
+                        'minVersion' => $minVersion,
+                        'currentVersion' => $currentVersion,
+                        'extrasID' => $this->getExtrasId(),
+                        'extrasURL' => $this->getExtrasUrl($plugin->name)
+                    )
+                );
             }
         }
 
@@ -174,13 +169,10 @@ class CheckOutdated
     public function module($name, $options)
     {
         $out = '';
-        //search the snippet by name
-        $query = $this->modx->db->select(
-            '`id`, `name`, `description`',
-            $this->modx->getFullTableName('site_modules'),
-            "`name`='" . $this->modx->db->escape($name). "' AND `disabled`=0"
-        );
-        if ($query !== false) {
+        //search the module by name
+        $module = \EvolutionCMS\Models\SiteModule::select('id', 'name', 'description')
+            ->where('name', $name)->where('disabled', 0)->first();
+        if (!is_null($module)) {
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                 '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
@@ -198,19 +190,19 @@ class CheckOutdated
 
             while ($row = $this->modx->db->getRow($query)) {
                 //extract snippet version from description <strong></strong> tags
-                $currentVersion = $this->getver($row['description'], 'strong');
+                $currentVersion = $this->getver($module->description, 'strong');
                 //check snippet version and return an alert if outdated
                 if (version_compare($currentVersion, $minVersion, 'lt')) {
                     $out .= $this->parseTemplate(
                         $tpl,
                         array(
-                            'name' => $row['name'],
+                            'name' => $module->name,
                             'replaced' => $replaced,
                             'isSecurity' => $isSecurity,
                             'minVersion' => $minVersion,
                             'currentVersion' => $currentVersion,
                             'extrasID' => $this->getExtrasId(),
-                            'extrasURL' => $this->getExtrasUrl($row['name'])
+                            'extrasURL' => $this->getExtrasUrl($module->name)
                         )
                     );
                 }
@@ -335,10 +327,11 @@ class CheckOutdated
      */
     public function findExtrasId()
     {
-        return (int)$this->modx->db->getValue(
-            'SELECT id FROM ' . $this->modx->getFullTableName('site_modules') . ' WHERE ' .
-            "`name`='Extras' AND disabled=0"
-        );
+        $moduleId = \EvolutionCMS\Models\SiteModule::select('id')->where('name', 'Extras')->where('disabled', 0)->first();
+        if (!is_null($moduleId)) {
+            return (int)$moduleId->id;
+        }
+        return 0;
     }
 
     /**
@@ -354,11 +347,11 @@ class CheckOutdated
      */
     public function findPluginId()
     {
-        $query = $this->modx->db->query(
-            'SELECT id FROM ' . $this->modx->getFullTableName('site_plugins') . ' WHERE ' .
-            "`name`='" . $this->modx->db->escape($this->pluginName) ."' AND disabled=0"
-        );
-        return (int)$this->modx->db->getValue($query);
+        $pluginId = \EvolutionCMS\Models\SitePlugin::select('id')->where('name', $this->pluginName)->where('disabled', 0)->first();
+        if (!is_null($pluginId)) {
+            return (int)$pluginId->id;
+        }
+        return 0;
     }
 
     /**

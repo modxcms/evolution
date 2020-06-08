@@ -705,11 +705,11 @@ class ManagerTheme implements ManagerThemeInterface
             ActiveUser::where('internalKey', $this->getCore()->getLoginUserID('mgr'))->forceDelete();
             $activeUser = new ActiveUser;
             $activeUser->sid = session_id();
-            $activeUser->internalKey = $this->getCore()->getLoginUserID('mgr');
+            $activeUser->internalKey = (int)$this->getCore()->getLoginUserID('mgr');
             $activeUser->username = $_SESSION['mgrShortname'];
-            $activeUser->lasthit = $this->getCore()->tstart;
-            $activeUser->action = $action;
-            $activeUser->id = $this->getItemId();
+            $activeUser->lasthit = (int)$this->getCore()->tstart;
+            $activeUser->action = (int)$action;
+            $activeUser->id = (int)$this->getItemId();
             $activeUser->save();
             $flag = true;
         }

@@ -41,11 +41,14 @@ if(!isset($modx->config['_hide_configcheck_validate_referer']) || $modx->config[
 // check for Template Switcher plugin
 if(!isset($modx->config['_hide_configcheck_templateswitcher_present']) || $modx->config['_hide_configcheck_templateswitcher_present'] !== '1') {
     if(isset($_SESSION['mgrPermissions']['edit_plugin']) && $_SESSION['mgrPermissions']['edit_plugin'] == '1') {
-        $rs = $modx->getDatabase()->select('name, disabled', $modx->getDatabase()->getFullTableName('site_plugins'), "name IN ('TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher') OR plugincode LIKE '%TemplateSwitcher%'");
-        $row = $modx->getDatabase()->getRow($rs);
-        if($row && $row['disabled'] == 0) {
+
+        $row = \EvolutionCMS\Models\SitePlugin::select('name','disabled')->where(function($q) {
+            $q->whereIn('name',['TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher'])
+                ->orWhere('plugincode','LIKE','%TemplateSwitcher%');
+        })->first();
+        if(!is_null($row) && $row->disabled == 0) {
             $warnings[] = array($_lang['configcheck_templateswitcher_present']);
-            $tplName = $row['name'];
+            $tplName = $row->name;
             $script = <<<JS
 <script type="text/javascript">
 function deleteTemplateSwitcher(){

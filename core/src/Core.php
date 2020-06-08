@@ -3,7 +3,14 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use EvolutionCMS\Models\ActiveUserLock;
+use EvolutionCMS\Models\ActiveUserSession;
+use EvolutionCMS\Models\DocumentGroup;
+use EvolutionCMS\Models\EventLog;
+use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
+use EvolutionCMS\Models\SitePlugin;
+use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Cache;
 use PHPMailer\PHPMailer\Exception;
 use UrlProcessor;
@@ -209,6 +216,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->getService('ExceptionHandler');
+
         $this->getSettings();
         $this->getService('UrlProcessor');
         $this->getService('TemplateProcessor');
@@ -640,14 +648,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (!$pass) {
                     if ($this->getConfig('unauthorized_page')) {
                         // check if file is not public
-                        $rs = $this->getDatabase()->select(
-                            'count(id)',
-                            $this->getDatabase()->getFullTableName('document_groups'),
-                            "document='{$id}'",
-                            '',
-                            '1'
-                        );
-                        $total = $this->getDatabase()->getValue($rs);
+                        $documentGroups = DocumentGroup::where('document', $id);
+                        $total = $documentGroups->count();
                     } else {
                         $total = 0;
                     }
@@ -995,14 +997,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             if (!empty($this->cacheKey) && is_scalar($this->cacheKey)) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
-                $where = "document='{$this->documentIdentifier}'";
-                $rs = $this->getDatabase()->select(
-                    'document_group',
-                    $this->getDatabase()->getFullTableName('document_groups'),
-                    $where
-                );
-                $docGroups = $this->getDatabase()->getColumn('document_group', $rs);
-
+                $docGroups = DocumentGroup::where('document', $this->documentIdentifier)->pluck('document_group')->toArray();
                 // Attach Document Groups and Scripts
                 if (is_array($docGroups)) {
                     $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
@@ -2424,43 +2419,38 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // get document groups for current user
         $docgrp = $this->getUserDocGroups();
+        $documentObjectQuery = SiteContent::query()
+            ->select('site_content.*')
+            ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
+            ->where('site_content.'.$method, $identifier);
+
 
         // get document
         if (!$docgrp) {
             if ($this->isFrontend()) {
-                $access = 'sc.privateweb=0';
+                $documentObjectQuery->where('privateweb', 0);
             } else {
-                $access = sprintf(
-                    "1='%s' OR sc.privatemgr=0"
-                    , $_SESSION['mgrRole']
-                );
+                if ($_SESSION['mgrRole'] != 1) {
+                    $documentObjectQuery->where('privatemgr', 0);
+                }
             }
         } else if ($this->isFrontend()) {
-            $access = sprintf(
-                'sc.privateweb=0 OR dg.document_group IN (%s)'
-                , $docgrp = implode(',', $docgrp)
-            );
-        } else {
-            $access = sprintf(
-                "1='%s' OR sc.privatemgr=0 OR dg.document_group IN (%s)"
-                , $_SESSION['mgrRole']
-                , $docgrp = implode(',', $docgrp)
-            );
-        }
+            $documentObjectQuery->where(function ($query) use ($docgrp) {
+                $query->where('privateweb', 0)
+                    ->orWhereIn('document_groups.document_group', $docgrp);
+            });
 
-        $rs = $this->getDatabase()->select(
-            'sc.*'
-            , sprintf(
-                "%s sc
-                LEFT JOIN %s dg ON dg.document = sc.id"
-                , $this->getDatabase()->getFullTableName('site_content')
-                , $this->getDatabase()->getFullTableName('document_groups')
-            )
-            , sprintf("sc.%s = '%s' AND (%s)", $method, $identifier, $access)
-            , ''
-            , 1
-        );
-        if (!$this->getDatabase()->getRecordCount($rs)) {
+        } else {
+            if ($_SESSION['mgrRole'] != 1) {
+                $documentObjectQuery->where(function ($query) use ($docgrp) {
+                    $query->where('privatemgr', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
+            }
+
+        }
+        $rs = $documentObjectQuery->first();
+        if (is_null($rs)) {
             // method may still be alias, while identifier is not full path alias, e.g. id not found above
             if ($this->getConfig('unauthorized_page')) {
                 if ($method !== 'alias') {
@@ -2501,7 +2491,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         # this is now the document :) #
-        $documentObject = $this->getDatabase()->getRow($rs);
+        $documentObject = $rs->toArray();
 
         if ($isPrepareResponse === 'prepareResponse') {
             $this->documentObject = &$documentObject;
@@ -2517,21 +2507,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         if ($documentObject['template']) {
             // load TVs and merge with document - Orig by Apodigm - Docvars
-            $rs = $this->getDatabase()->select(
-                "tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value"
-                , sprintf(
-                    "%s tv
-                    INNER JOIN %s tvtpl ON tvtpl.tmplvarid = tv.id
-                    LEFT JOIN %s tvc ON tvc.tmplvarid=tv.id AND tvc.contentid=%d"
-                    , $this->getDatabase()->getFullTableName('site_tmplvars')
-                    , $this->getDatabase()->getFullTableName('site_tmplvar_templates')
-                    , $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-                    , (int)$documentObject['id']
-                ),
-                sprintf("tvtpl.templateid='%s'", $documentObject['template'])
-            );
+            $tvs = SiteTmplvar::query()->select('site_tmplvars.*','site_tmplvar_contentvalues.value')
+                ->join('site_tmplvar_templates','site_tmplvar_templates.tmplvarid','=','site_tmplvars.id')
+                ->leftJoin('site_tmplvar_contentvalues', function($join) use ($documentObject) {
+                    $join->on('site_tmplvar_contentvalues.tmplvarid','=','site_tmplvars.id');
+                    $join->on('site_tmplvar_contentvalues.contentid','=',(int)$documentObject['id']);
+                })->where('site_tmplvar_templates.templateid', $documentObject['template']);
+
             $tmplvars = array();
-            while ($row = $this->getDatabase()->getRow($rs)) {
+            foreach ($tvs as $tv){
+                $row = $tv->toArray();
+                if($row['value'] == '') $row['value'] = $row['default_text'];
                 $tmplvars[$row['name']] = array(
                     $row['name'],
                     $row['value'],
@@ -3316,17 +3302,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->lockedElements === null) {
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
-
-            $rs = $this->getDatabase()->select(
-                'sid,internalKey,elementType,elementId,lasthit,username'
-                , sprintf(
-                    '%s ul
-                    LEFT JOIN %s mu on ul.internalKey = mu.id'
-                    , $this->getDatabase()->getFullTableName('active_user_locks')
-                    , $this->getDatabase()->getFullTableName('manager_users')
-                )
-            );
-            while ($row = $this->getDatabase()->getRow($rs)) {
+            $rs = ActiveUserLock::query()
+                ->select('sid', 'internalKey', 'elementType', 'elementId', 'lasthit', 'username')
+                ->leftJoin('manager_users', 'active_user_locks.internalKey', '=', 'manager_users.id')
+                ->get();
+            foreach ($rs->toArray() as $row){
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
@@ -3354,28 +3334,20 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
-        $this->getDatabase()->delete(
-            $this->getDatabase()->getFullTableName('active_user_sessions')
-            , sprintf('lasthit < %d', (int)$validSessionTimeLimit)
-        );
+        ActiveUserSession::where('lasthit', '<', (int)$validSessionTimeLimit)->delete();
 
         // Clean-up active_user_locks
-        $rs = $this->getDatabase()->select(
-            'sid,internalKey'
-            , $this->getDatabase()->getFullTableName('active_user_sessions')
-        );
-        if ($this->getDatabase()->getRecordCount($rs)) {
-            $rs = $this->getDatabase()->makeArray($rs);
+        $activeUsers = ActiveUserSession::select('sid', 'internalKey')->get();
+
+        if ($activeUsers->count() > 0) {
+            $rs = $activeUsers->toArray();
             $userSids = array();
             foreach ($rs as $row) {
                 $userSids[] = $row['sid'];
             }
-            $this->getDatabase()->delete(
-                $this->getDatabase()->getFullTableName('active_user_locks')
-                , sprintf("sid NOT IN('%s')", implode("','", $userSids))
-            );
+            ActiveUserSession::whereNotIn('sid', $userSids)->delete();
         } else {
-            $this->getDatabase()->delete($this->getDatabase()->getFullTableName('active_user_locks'));
+            ActiveUserLock::query()->truncate();
         }
 
     }
@@ -3480,19 +3452,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (!$type || !$id || !$userId) {
             return false;
         }
+        return ActiveUserLock::query()->updateOrCreate(['elementId' => $id],
+            ['internalKey' => $userId, 'elementType' => $type, 'lasthit' => $this->time, 'sid' => $this->sid]);
 
-        return $this->getDatabase()->query(
-            sprintf(
-                "REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
-                    VALUES (%d, %d, %d, %d, '%s')"
-                , $this->getDatabase()->getFullTableName('active_user_locks')
-                , $userId
-                , $type
-                , $id
-                , $this->time
-                , $this->sid
-            )
-        );
     }
 
     /**
@@ -3515,15 +3477,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (!$includeAllUsers) {
-            return $this->getDatabase()->query(
-                sprintf(
-                    'DELETE FROM %s WHERE internalKey=%d AND elementType=%d AND elementId=%d'
-                    , $this->getDatabase()->getFullTableName('active_user_locks')
-                    , $userId
-                    , $type
-                    , $id
-                )
-            );
+            return ActiveUserLock::where('internalKey', $userId)
+                ->where('elementType', $type)
+                ->where('elementId', $id)
+                ->delete();
         }
 
         return $this->getDatabase()->query(
@@ -3609,7 +3566,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $type = 3;
         }
 
-        $this->getDatabase()->insert(array(
+        EventLog::insert(array(
             'eventid'     => (int)$evtid,
             'type'        => $type,
             'createdon'   => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
@@ -3617,7 +3574,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'description' => $this->getDatabase()->escape($msg),
             'user'        => $LoginUserID,
             'usertype'    => $this->isFrontend() ? 1 : 0
-        ), $this->getDatabase()->getFullTableName("event_log"));
+        ));
 
         $this->invokeEvent('OnLogEvent', array(
             'eventid' => (int)$evtid,
@@ -3958,60 +3915,65 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $dir = 'ASC',
         $limit = ''
     ) {
-
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
-
-        if ($published === 'all') {
-            $published = '';
-        } else {
-            $published = 'AND sc.published = ' . $published;
+        $documentChildes = SiteContent::query();
+        if ($published !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.published', $published);
         }
-        if ($deleted === 'all') {
-            $deleted = '';
-        } else {
-            $deleted = 'AND sc.deleted = ' . $deleted;
+        if ($deleted !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.deleted', $deleted);
         }
 
-        if ($where != '') {
-            $where = 'AND ' . $where;
+        if (is_string($where) && $where != '') {
+            $documentChildes = $documentChildes->whereRaw($where);
+        }elseif(is_array($where)){
+            $documentChildes = $documentChildes->where($where);
         }
-
+        if (!is_array($fields)) {
+            $documentChildes = $documentChildes->select(explode(',', $fields));
+        }
         // modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        if ($sort == '') {
-            $sort = '';
-        } else {
-            $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        if ($sort != '') {
+            $sort = explode(',', $sort);
+            foreach ($sort as $item)
+                $documentChildes = $documentChildes->orderBy($item, $dir);
         }
 
         // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(',', $docgrp);
-        }
+        $docgrp = $this->getUserDocGroups();
 
         // build query
+
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $access = ('sc.privateweb=0');
+                $documentChildes = $documentChildes->where('privateweb', 0);
             } else {
-                $access = sprintf('sc.privateweb=0 OR dg.document_group IN (%s)', $docgrp);
+                $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                    $query->where('privateweb', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
             }
         } else {
-            $access = ('1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
+            if ($_SESSION['mgrRole'] != 1) {
+                if (!$docgrp) {
+                    $documentChildes = $documentChildes->where('privatemgr', 0);
+                } else {
+                    $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                        $query->where('privatemgr', 0)
+                            ->orWhereIn('document_groups.document_group', $docgrp);
+                    });
+                }
+            }
         }
 
-        $tblsc = $this->getDatabase()->getFullTableName('site_content');
-        $tbldg = $this->getDatabase()->getFullTableName('document_groups');
+        if (is_numeric($limit)) {
+            $documentChildes = $documentChildes->take($limit);
+        }
 
-        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-            "sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
-            ($sort ? "{$sort} {$dir}" : ""), $limit);
-
-        $resourceArray = $this->getDatabase()->makeArray($result);
+        $resourceArray = $documentChildes->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -5253,16 +5215,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$uid];
         }
 
-        $from = $this->getDatabase()->getFullTableName('manager_users') . ' mu INNER JOIN ' .
-            $this->getDatabase()->getFullTableName('user_attributes'). ' mua ON mua.internalkey=mu.id';
-        $where = sprintf("mu.id='%s'", $this->getDatabase()->escape($uid));
-        $rs = $this->getDatabase()->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        $row = ManagerUser::select('manager_users.username', 'manager_users.password', 'user_attributes.*')
+            ->join('user_attributes', 'manager_users.id', '=','user_attributes.internalKey')
+            ->where('manager_users.id', $uid)->first();
 
-        if (!$this->getDatabase()->getRecordCount($rs)) {
+
+        if (!is_null($row)) {
             return $this->tmpCache[__FUNCTION__][$uid] = false;
         }
 
-        $row = $this->getDatabase()->getRow($rs);
+        $row = $row->toArray();
         if (!isset($row['usertype']) || !$row['usertype']) {
             $row['usertype'] = 'manager';
         }
@@ -5775,15 +5737,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $pluginProperties = '';
             }
         } else {
-            $pluginName = $this->getDatabase()->escape($pluginName);
-            $result = $this->getDatabase()->select(
-                'name, plugincode, properties'
-                , $this->getDatabase()->getFullTableName('site_plugins')
-                , sprintf("name='%s' AND disabled=0", $pluginName)
-            );
-            if ($row = $this->getDatabase()->getRow($result)) {
-                $pluginCode = $this->pluginCache[$row['name']] = $row['plugincode'];
-                $pluginProperties = $this->pluginCache[$row['name'] . 'Props'] = $row['properties'];
+
+            $plugin = SitePlugin::select('name', 'plugincode', 'properties')
+                ->where('name', $pluginName)->where('disabled', 0)->first();
+
+            if(!is_null($plugin)) {
+                $pluginCode = $this->pluginCache[$plugin->name] = $plugin->plugincode;
+                $pluginProperties = $this->pluginCache[$plugin->name . 'Props'] = $plugin->properties;
             } else {
                 $pluginCode = $this->pluginCache[$pluginName] = "return false;";
                 $pluginProperties = '';

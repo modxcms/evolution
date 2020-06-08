@@ -14,20 +14,22 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function secureMgrDocument($docid = '')
 {
-    $modx = evolutionCMS();
-
-    $modx->getDatabase()->update('privatemgr = 0', $modx->getDatabase()->getFullTableName("site_content"),
-        ($docid > 0 ? "id='$docid'" : "privatemgr = 1"));
-    $rs = $modx->getDatabase()->select(
-        'DISTINCT sc.id',
-        $modx->getDatabase()->getFullTableName("site_content") . " sc
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName("document_groups") . " dg ON dg.document = sc.id
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group",
-        ($docid > 0 ? " sc.id='{$docid}' AND " : "") . "mga.id>0"
-    );
-    $ids = $modx->getDatabase()->getColumn("id", $rs);
-    if (count($ids) > 0) {
-        $modx->getDatabase()->update('privatemgr = 1', $modx->getDatabase()->getFullTableName("site_content"),
-            "id IN (" . implode(", ", $ids) . ")");
+    if (is_numeric($docid) && $docid > 0) {
+        \EvolutionCMS\Models\SiteContent::find($docid)->update(['privatemgr' => 0]);
+    } else {
+        \EvolutionCMS\Models\SiteContent::where('privatemgr', 1)->update(['privatemgr' => 0]);
     }
+    $documentIds = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id')->distinct()
+        ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
+        ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
+        ->where('membergroup_access.id', '>', 0);
+    if (is_numeric($docid) && $docid > 0) {
+        $documentIds = $documentIds->where('site_content.id', $docid);
+    }
+
+    $ids = $documentIds->get()->pluck('id');
+    if (count($ids) > 0) {
+        \EvolutionCMS\Models\SiteContent::whereIn('id', $ids)->update(['privatemgr' => 1]);
+    }
+
 }
