@@ -53,14 +53,6 @@ if (trim($no_esc_pagetitle) == "") {
     }
 }
 
-// get table names
-$tbl_document_groups            = $modx->getDatabase()->getFullTableName('document_groups');
-$tbl_documentgroup_names        = $modx->getDatabase()->getFullTableName('documentgroup_names');
-$tbl_member_groups              = $modx->getDatabase()->getFullTableName('member_groups');
-$tbl_membergroup_access         = $modx->getDatabase()->getFullTableName('membergroup_access');
-$tbl_site_content               = $modx->getDatabase()->getFullTableName('site_content');
-$tbl_site_tmplvar_access        = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
-$tbl_site_tmplvar_contentvalues = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
 
 $actionToTake = "new";
 if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {
@@ -182,11 +174,12 @@ $docgrp = $_SESSION['mgrDocgroups'] ? implode(",", $_SESSION['mgrDocgroups']) : 
 
 // ensure that user has not made this document inaccessible to themselves
 if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
-    $document_group_list = implode(',', $document_groups);
-    $document_group_list = implode(',', array_filter(explode(',',$document_group_list), 'is_numeric'));
     if(!empty($document_group_list)) {
-        $rs = $modx->getDatabase()->select('COUNT(mg.id)', "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg", "mga.membergroup = mg.user_group AND mga.documentgroup IN({$document_group_list}) AND mg.member = {$_SESSION['mgrInternalKey']}");
-        $count = $modx->getDatabase()->getValue($rs);
+        $count = \EvolutionCMS\Models\MembergroupAccess::query()
+            ->join('member_groups', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
+            ->whereIn('membergroup_access.documentgroup', $document_groups)
+            ->where('member_groups.member', $_SESSION['mgrInternalKey'])->count('member_groups.id');
+
         if($count == 0) {
             if ($actionToTake == 'edit') {
                 $modx->getManagerApi()->saveFormValues(27);
@@ -271,7 +264,7 @@ if ($actionToTake != "new") {
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
 if ($modx->getConfig('use_udperms') == 1) {
-    if ($existingDocument['parent'] != $parent) {
+    if (!isset($existingDocument) || $existingDocument['parent'] != $parent) {
         $udperms = new EvolutionCMS\Legacy\Permissions();
         $udperms->user = $modx->getLoginUserID('mgr');
         $udperms->document = $parent;
@@ -327,14 +320,15 @@ switch ($actionToTake) {
             switch($modx->config['docid_incrmnt_method'])
             {
             case '1':
-                $from = "{$tbl_site_content} AS T0 LEFT JOIN {$tbl_site_content} AS T1 ON T0.id + 1 = T1.id";
-                $where = "T1.id IS NULL";
-                $rs = $modx->getDatabase()->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
-                $id = $modx->getDatabase()->getValue($rs);
+                $id = \EvolutionCMS\Models\SiteContent::query()
+                    ->leftJoin('site_content as t1', 'site_content.id +1', '=','t1.id')
+                    ->whereNull('t1.id')->min('site_content.id');
+                $id++;
+
                 break;
             case '2':
-                $rs = $modx->getDatabase()->select('MAX(id)+1', $tbl_site_content);
-                $id = $modx->getDatabase()->getValue($rs);
+                $id = \EvolutionCMS\Models\SiteContent::max('id');
+                $id++;
             break;
 
             default:
@@ -367,23 +361,20 @@ switch ($actionToTake) {
         $resourceArray['unpub_date'] = $unpub_date;
 
         if ($id != '')
-            $dbInsert["id"] = $id;
+            $resourceArray["id"] = $id;
 
-        $key = $modx->getDatabase()->insert($dbInsert, $tbl_site_content);
+        $key = \EvolutionCMS\Models\SiteContent::query()->insertGetId($resourceArray);
+
 
         $tvChanges = array();
         foreach ($tmplvars as $field => $value) {
             if (is_array($value)) {
                 $tvId = $value[0];
                 $tvVal = $value[1];
-                $tvChanges[] = array('tmplvarid' => $tvId, 'contentid' => $key, 'value' => $modx->getDatabase()->escape($tvVal));
+                \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->create(array('tmplvarid' => $tvId, 'contentid' => $key, 'value' => $tvVal));
             }
         }
-        if (!empty($tvChanges)) {
-            foreach ($tvChanges as $tv) {
-                $modx->getDatabase()->insert($tv, $tbl_site_tmplvar_contentvalues);
-            }
-        }
+
 
         // document access permissions
         if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
@@ -391,31 +382,30 @@ switch ($actionToTake) {
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
                 list($group) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
-                $new_groups[] = '('.(int)$group.','.$key.')';
+                $new_groups[] = ['document_group'=>(int)$group, 'document'=>$key];
             }
             $saved = true;
             if (!empty($new_groups)) {
-                $modx->getDatabase()->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $new_groups));
+                \EvolutionCMS\Models\DocumentGroup::query()->insert($new_groups);
             }
         } else {
             $isManager = $modx->hasPermission('access_permissions');
             $isWeb     = $modx->hasPermission('web_access_permissions');
             if($modx->getConfig('use_udperms') && !($isManager || $isWeb) && $parent != 0) {
                 // inherit document access permissions
-                $modx->getDatabase()->insert(
-                    array(
-                        'document_group' =>'',
-                        'document'       =>''
-                        ), $tbl_document_groups, // Insert into
-                    "document_group, {$key}", $tbl_document_groups, "document = '{$parent}'"); // Copy from
+                $groupsParent = \EvolutionCMS\Models\DocumentGroup::select('document_group','document')
+                    ->where('document', $parent)->get();
+                foreach ($groupsParent as $item){
+                    \EvolutionCMS\Models\DocumentGroup::insert(['document_group'=>$item->document_group, 'document'=>$key]);
+                }
+
             }
         }
 
-
         // update parent folder status
-        if ($parent != 0) {
+        if ($resourceArray['parent'] != 0) {
             $fields = array('isfolder' => 1);
-            $modx->getDatabase()->update($fields, $tbl_site_content, "id='{$_REQUEST['parent']}'");
+            \EvolutionCMS\Models\SiteContent::where('id',$resourceArray['parent'])->update(['isfolder'=>1]);
         }
 
         // invoke OnDocFormSave event
@@ -489,7 +479,7 @@ switch ($actionToTake) {
             // check to see document is a folder
             $child = \EvolutionCMS\Models\SiteContent::select('id')->where('parent', $id)->first();
             if (!is_null($child)) {
-                $isfolder = 1;
+                $resourceArray['isfolder'] = 1;
             }
 
             // set publishedon and publishedby
@@ -609,7 +599,7 @@ switch ($actionToTake) {
             }
 
             // do the parent stuff
-            if ($parent != 0) {
+            if ($resourceArray['parent'] != 0) {
                 \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent'])->update(array('isfolder' => 1));
             }
 
