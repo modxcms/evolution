@@ -41,6 +41,7 @@ class CreateUserAttributesTable extends Migration {
 			$table->text('comment', 65535)->nullable();
 			$table->integer('createdon')->default(0);
 			$table->integer('editedon')->default(0);
+            $table->tinyInteger('verified')->default(0);
 		});
 	}
 
