@@ -115,11 +115,26 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             ->get();
     }
 
-    protected function parameterImportParams()
+    protected function parameterImportParams(): array
     {
         $out = [];
-
-        $ds = $this->managerTheme->getCore()
+        $ds=Models\SiteModule::
+            from('site_modules AS sm')
+            ->join('site_module_depobj AS smd',function($join) {
+                $join->on("smd.module","=","sm.id")
+                ->where("smd.type",30);
+            })
+            ->join('site_plugins as sp',"sp.id",'=',"smd.resource")
+            ->select("sm.id","sm.name","sm.guid")
+            ->where("smd.resource",$this->object->getKey())
+            ->where("sm.enable_sharedparams",1)
+            ->orderBy("sm.name")
+            ->get();
+        foreach ($ds as $row) {
+            $out[$row['guid']] = $row['name'];
+        }
+        //todo: remove it after test
+        /*$ds = $this->managerTheme->getCore()
             ->getDatabase()
             ->select('sm.id,sm.name,sm.guid',
                 sprintf(
@@ -140,7 +155,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             ->getDatabase()
             ->getRow($ds)) {
             $out[$row['guid']] = $row['name'];
-        }
+        }*/
 
         return $out;
     }
