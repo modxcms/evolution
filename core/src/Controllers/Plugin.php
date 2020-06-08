@@ -115,30 +115,22 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             ->get();
     }
 
-    protected function parameterImportParams()
+    protected function parameterImportParams(): array
     {
         $out = [];
-
-        $ds = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->select('sm.id,sm.name,sm.guid',
-                sprintf(
-                    '%s sm
-                        INNER JOIN %s smd ON smd.module=sm.id AND smd.type=30
-                        INNER JOIN %s sp ON sp.id=smd.resource'
-                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
-                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_depobj')
-                    , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_plugins')
-                )
-                , sprintf(
-                    "smd.resource='%s' AND sm.enable_sharedparams='1'"
-                    , $this->object->getKey()
-                )
-                , 'sm.name'
-            );
-        while ($row = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->getRow($ds)) {
+        $ds=Models\SiteModule::
+            from('site_modules AS sm')
+            ->join('site_module_depobj AS smd',function($join) {
+                $join->on("smd.module","=","sm.id")
+                ->where("smd.type",30);
+            })
+            ->join('site_plugins as sp',"sp.id",'=',"smd.resource")
+            ->select("sm.id","sm.name","sm.guid")
+            ->where("smd.resource",$this->object->getKey())
+            ->where("sm.enable_sharedparams",1)
+            ->orderBy("sm.name")
+            ->get()->toArray();
+        foreach ($ds as $row) {
             $out[$row['guid']] = $row['name'];
         }
 

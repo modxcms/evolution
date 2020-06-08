@@ -586,6 +586,7 @@
             </div>
 
             <!-- System Events -->
+
             <div class="tab-page" id="tabEvents">
                 <h2 class="tab">{{ ManagerTheme::getLexicon('settings_events') }}</h2>
                 <script>tpSnippet.addTabPage(document.getElementById('tabEvents'));</script>
@@ -595,12 +596,7 @@
                     <?php
                     // get selected events
                     if ($data->getKey() > 0) {
-                        $tbl_site_plugin_events = $modx->getDatabase()
-                            ->getFullTableName('site_plugin_events');
-                        $rs = $modx->getDatabase()
-                            ->select('evtid', $tbl_site_plugin_events, "pluginid='{$data->getKey()}'");
-                        $evts = $modx->getDatabase()
-                            ->getColumn('evtid', $rs);
+                        $evts=\EvolutionCMS\Models\SitePluginEvent::select('evtid')->where('pluginid',$data->getKey())->pluck('evtid')->toArray();
                     } else {
                         if (isset($data->sysevents) && is_array($data->sysevents)) {
                             $evts = $data->sysevents;
@@ -619,10 +615,8 @@
                         "Template Service Events",
                         "User Defined Events"
                     );
-                    $tbl_system_eventnames = $modx->getDatabase()
-                        ->getFullTableName('system_eventnames');
-                    $rs = $modx->getDatabase()
-                        ->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
+                    //todo: remove after test
+                    $rs=\EvolutionCMS\Models\SystemEventname::orderBy('service','DESC')->orderBy('groupname')->orderBy('name')->get()->toArray();
                     $limit = $modx->getDatabase()
                         ->getRecordCount($rs);
                     if ($limit == 0) {
@@ -630,9 +624,7 @@
                     } else {
                         $srv = null;
                         $grp = null;
-
-                        while ($row = $modx->getDatabase()
-                            ->getRow($rs)) {
+                        foreach ($rs  as $row) {
                             // display records
                             if ($srv != $row['service']) {
                                 $srv = $row['service'];
