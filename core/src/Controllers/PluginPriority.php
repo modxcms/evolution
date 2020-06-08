@@ -62,11 +62,16 @@ class PluginPriority extends AbstractController implements ManagerTheme\PageCont
 
                 if (\count($pluginsOrder) > 0) {
                     foreach ($pluginsOrder as $priority => $pluginId) {
-                        $db->update(
+                        Models\SitePluginEvent::
+                            where('pluginid',intval($pluginId))
+                            ->where('evtid',intval($eventId))
+                            ->update(['priority' => intval($priority)]);
+                         //todo: delete after test
+                        /*$db->update(
                             ['priority' => intval($priority)],
                             $tableName,
                             sprintf("pluginid='%s' AND evtid='%s'", intval($pluginId), intval($eventId))
-                        );
+                        );*/
                     }
                 }
             }
