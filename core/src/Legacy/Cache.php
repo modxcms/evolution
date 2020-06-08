@@ -84,18 +84,13 @@ class Cache
      */
     public function getParents($id, $path = '')
     { // modx:returns child's parent
-        $modx = evolutionCMS();
         if (empty($this->aliases)) {
-            $rs = $modx->getDatabase()->select(
-                "id, IF(alias='', id, alias) AS alias, parent, alias_visible",
-                $modx->getDatabase()->getFullTableName('site_content'),
-                'deleted=0'
-            );
-            while ($row = $modx->getDatabase()->getRow($rs)) {
-                $docid = $row['id'];
-                $this->aliases[$docid] = $row['alias'];
-                $this->parents[$docid] = $row['parent'];
-                $this->aliasVisible[$docid] = $row['alias_visible'];
+            $parents = Models\SiteContent::select('id', 'alias', 'parent', 'alias_visible')->where('deleted', 0)->get();
+            foreach ($parents->toArray() as $row) {
+                if ($row['alias'] == '') $row['alias'] = $row['id'];
+                $this->aliases[$row['id']] = $row['alias'];
+                $this->parents[$row['id']] = $row['parent'];
+                $this->aliasVisible[$row['id']] = $row['alias_visible'];
             }
         }
         if (isset($this->aliases[$id])) {
@@ -209,32 +204,18 @@ class Cache
         // update publish time file
         $timesArr = array();
 
-        $result = $modx->getDatabase()->select(
-            'MIN(pub_date) AS minpub',
-            $modx->getDatabase()->getFullTableName('site_content'),
-            'pub_date>' . $this->request_time
-        );
-        if (!$result) {
-            echo "Couldn't determine next publish event!";
-        }
+        $minpub = Models\SiteContent::query()
+            ->where('pub_date', '>', $this->request_time)->min('pub_date');
 
-        $minpub = $modx->getDatabase()->getValue($result);
         if ($minpub != null) {
             $timesArr[] = $minpub;
         }
 
-        $result = $modx->getDatabase()->select(
-            'MIN(unpub_date) AS minunpub',
-            $modx->getDatabase()->getFullTableName('site_content'),
-            'unpub_date>' . $this->request_time
-        );
-        if (!$result) {
-            echo "Couldn't determine next unpublish event!";
-        }
+        $minpub = Models\SiteContent::query()
+            ->where('unpub_date', '>', $this->request_time)->min('unpub_date');
 
-        $minunpub = $modx->getDatabase()->getValue($result);
-        if ($minunpub != null) {
-            $timesArr[] = $minunpub;
+        if ($minpub != null) {
+            $timesArr[] = $minpub;
         }
 
         if (isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime)) {
@@ -262,12 +243,12 @@ class Cache
         // SETTINGS & DOCUMENT LISTINGS CACHE
 
         // get settings
-        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('system_settings'));
+        $systemSettings = Models\SystemSetting::all();
         $config = array();
         $content .= '$c=&$this->config;';
-        while (list($key, $value) = $modx->getDatabase()->getRow($rs, 'num')) {
-            $content .= '$c[\'' . $modx->getDatabase()->escape($key) . '\']="' . $this->escapeDoubleQuotes($value) . '";';
-            $config[$key] = $value;
+        foreach ($systemSettings as $systemSetting) {
+            $content .= '$c[\'' . $systemSetting->setting_name . '\']="' . $this->escapeDoubleQuotes($systemSetting->setting_value) . '";';
+            $config[$systemSetting->setting_name] = $systemSetting->setting_value;
         }
 
         if (isset($config['enable_filter']) && $config['enable_filter'] == 1) {
@@ -276,24 +257,17 @@ class Cache
             }
         }
 
+        $resources = Models\SiteContent::query()->select('site_content.id', 'site_content.alias', 'site_content.parent', 'site_content.isfolder', 'site_content.alias_visible')
+            ->where('site_content.deleted', 0)
+            ->orderBy('site_content.parent', 'ASC')
+            ->orderBy('site_content.menuindex', 'ASC');
+
         if ($config['aliaslistingfolder'] == 1) {
-            $f['id'] = 'c.id';
-            $f['alias'] = "IF( c.alias='', c.id, c.alias)";
-            $f['parent'] = 'c.parent';
-            $f['isfolder'] = 'c.isfolder';
-            $f['alias_visible'] = 'c.alias_visible';
-            $from = array();
-            $from[] = $modx->getDatabase()->getFullTableName('site_content') . ' c';
-            $from[] = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_content') . ' p ON p.id=c.parent';
-            $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
-            $rs = $modx->getDatabase()->select($f, $from, $where, 'c.parent, c.menuindex');
-        } else {
-            $rs = $modx->getDatabase()->select(
-                "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible",
-                $modx->getDatabase()->getFullTableName('site_content'),
-                'deleted=0',
-                'parent, menuindex'
-            );
+            $resources = $resources->where(function ($query) {
+                $query->where('site_content.isfolder', 1)
+                    ->orWhere('p.alias_visible', 1);
+            });
+
         }
 
         $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
@@ -302,8 +276,8 @@ class Cache
         $content .= '$a=&$this->aliasListing;';
         $content .= '$d=&$this->documentListing;';
         $content .= '$m=&$this->documentMap;';
-        while ($doc = $modx->getDatabase()->getRow($rs)) {
-            $docid = $doc['id'];
+        foreach ($resources->get()->toArray() as $doc) {
+            if ($doc['alias'] == '') $doc['alias'] = $doc['id'];
             if ($use_alias_path) {
                 $tmpPath = $this->getParents($doc['parent']);
                 $alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '') . $doc['alias'];
@@ -313,93 +287,86 @@ class Cache
             }
 
             $doc['path'] = $tmpPath;
-            $content .= '$a[' . $docid . ']=array(\'id\'=>' . $docid . ',\'alias\'=>\'' . $doc['alias'] . '\',\'path\'=>\'' . $doc['path'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
-            $content .= '$d[\'' . $key . '\']=' . $docid . ';';
-            $content .= '$m[]=array(' . $doc['parent'] . '=>' . $docid . ');';
+            $content .= '$a[' . $doc['id'] . ']=array(\'id\'=>' . $doc['id'] . ',\'alias\'=>\'' . $doc['alias'] . '\',\'path\'=>\'' . $doc['path'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
+            $content .= '$d[\'' . $key . '\']=' . $doc['id'] . ';';
+            $content .= '$m[]=array(' . $doc['parent'] . '=>' . $doc['id'] . ');';
         }
 
         // get content types
-        $rs = $modx->getDatabase()->select(
-            'id, contentType',
-            $modx->getDatabase()->getFullTableName('site_content'),
-            "contentType!='text/html'"
-        );
+        $contentTypes = Models\SiteContent::query()
+            ->select('id', 'contentType')
+            ->where('contentType', '!=', 'text/html')->get();
+
         $content .= '$c=&$this->contentTypes;';
-        while ($doc = $modx->getDatabase()->getRow($rs)) {
+        foreach ($contentTypes->toArray() as $doc) {
             $content .= '$c[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
         }
 
         // WRITE Chunks to cache file
-        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('site_htmlsnippets'));
+        $chunks = Models\SiteHtmlsnippet::all();
         $content .= '$c=&$this->chunkCache;';
-        while ($doc = $modx->getDatabase()->getRow($rs)) {
-            $content .= '$c[\'' . $modx->getDatabase()->escape($doc['name']) . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+        foreach ($chunks->toArray() as $doc) {
+            $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
 
+
         // WRITE snippets to cache file
-        $f = 'ss.*, sm.properties as sharedproperties';
-        $from = $modx->getDatabase()->getFullTableName('site_snippets') . ' ss LEFT JOIN ' .
-            $modx->getDatabase()->getFullTableName('site_modules') . ' sm on sm.guid=ss.moduleguid';
-        $rs = $modx->getDatabase()->select($f, $from);
+        $snippets = Models\SiteSnippet::query()->select('site_snippets.*', 'site_modules.properties as sharedproperties')
+            ->leftJoin('site_modules', 'site_snippets.moduleguid', '=', 'site_modules.guid')->get();
         $content .= '$s=&$this->snippetCache;';
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            $key = $modx->getDatabase()->escape($row['name']);
+        foreach ($snippets->toArray() as $row) {
             if ($row['disabled']) {
-                $content .= '$s[\'' . $key . '\']=\'return false;\';';
+                $content .= '$s[\'' . $row['name'] . '\']=\'return false;\';';
             } else {
                 $value = trim($row['snippet']);
                 if ($modx->getConfig('minifyphp_incache')) {
                     $value = $this->php_strip_whitespace($value);
                 }
-                $content .= '$s[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+                $content .= '$s[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
                 $properties = $modx->parseProperties($row['properties']);
                 $sharedproperties = $modx->parseProperties($row['sharedproperties']);
                 $properties = array_merge($sharedproperties, $properties);
                 if (0 < count($properties)) {
-                    $content .= '$s[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    $content .= '$s[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
             }
         }
 
         // WRITE plugins to cache file
-        $f = 'sp.*, sm.properties as sharedproperties';
-        $from = [];
-        $from[] = $modx->getDatabase()->getFullTableName('site_plugins') . ' sp';
-        $from[] = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_modules') . ' sm on sm.guid=sp.moduleguid';
-        $rs = $modx->getDatabase()->select($f, $from, 'sp.disabled=0');
+        $plugins = Models\SitePlugin::query()->select('site_plugins.*', 'site_modules.properties as sharedproperties')
+            ->leftJoin('site_modules', 'site_plugins.moduleguid', '=', 'site_modules.guid')
+            ->where('site_plugins.disabled', 0)->get();
         $content .= '$p=&$this->pluginCache;';
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            $key = $modx->getDatabase()->escape($row['name']);
+        foreach ($plugins->toArray() as $row) {
             $value = trim($row['plugincode']);
             if ($modx->getConfig('minifyphp_incache')) {
                 $value = $this->php_strip_whitespace($value);
             }
-            $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+            $content .= '$p[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
                 $properties = $modx->parseProperties($row['properties']);
                 $sharedproperties = $modx->parseProperties($row['sharedproperties']);
                 $properties = array_merge($sharedproperties, $properties);
                 if (0 < count($properties)) {
-                    $content .= '$p[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    $content .= '$p[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
             }
         }
 
         // WRITE system event triggers
-        $f = 'sysevt.name as evtname, event.pluginid, plugin.name as pname';
-        $from = array();
-        $from[] = $modx->getDatabase()->getFullTableName('system_eventnames') . ' sysevt';
-        $from[] = 'INNER JOIN ' . $modx->getDatabase()->getFullTableName('site_plugin_events') . ' event ON event.evtid=sysevt.id';
-        $from[] = 'INNER JOIN ' . $modx->getDatabase()->getFullTableName('site_plugins') . ' plugin ON plugin.id=event.pluginid';
-        $rs = $modx->getDatabase()->select($f, $from, 'plugin.disabled=0', 'sysevt.name, event.priority');
+        $systemEvents = Models\SystemEventname::query()->select('system_eventnames.name as evtname', 'site_plugin_events.pluginid', 'site_plugins.name as pname')
+            ->leftJoin('site_plugin_events', 'system_eventnames.id', '=', 'site_plugin_events.evtid')
+            ->leftJoin('site_plugins', 'site_plugin_events.pluginid', '=', 'site_plugins.id')
+            ->where('site_plugins.disabled', 0)
+            ->orderBy('system_eventnames.name', 'ASC')
+            ->orderBy('site_plugin_events.priority', 'ASC')->get();
         $content .= '$e=&$this->pluginEvent;';
         $events = array();
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            $evtname = $row['evtname'];
-            if (!isset($events[$evtname])) {
-                $events[$evtname] = array();
+        foreach ($systemEvents->toArray() as $row) {
+            if (!isset($events[$row['evtname']])) {
+                $events[$row['evtname']] = array();
             }
-            $events[$evtname][] = $row['pname'];
+            $events[$row['evtname']][] = $row['pname'];
         }
         foreach ($events as $evtname => $pluginnames) {
             $events[$evtname] = $pluginnames;
