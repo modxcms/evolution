@@ -114,18 +114,17 @@ if (isset($action)) {
                 $sql = '';
                 $a = '';
                 $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
-                $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
-                $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
                 switch ($elements) {
                     case 'element_templates':
                         $a = 16;
-                        $sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
-                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.templatename AS name, t1.locked, 0 AS disabled
-                        FROM ' . $modx->getFullTableName('site_templates') . ' AS t1
-                        ' . $sqlLike . '
-                        ORDER BY t1.templatename ASC
-                        ' . $sqlLimit);
+                        $sql = \EvolutionCMS\Models\SiteTemplate::query()
+                            ->select('id', 'templatename', 'templatename as name', 'locked')
+                            ->orderBy('templatename', 'ASC')
+                            ->take($limit);
+                        if($filter != ''){
+                            $sql = $sql->where('templatename', 'LIKE', '%'.$filter.'%');
+                        }
 
                         if ($modx->hasPermission('new_template')) {
                             $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_template'] . '</a></li>';
@@ -135,13 +134,17 @@ if (isset($action)) {
 
                     case 'element_tplvars':
                         $a = 301;
-                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, IF(MIN(t2.tmplvarid),0,1) AS disabled
-                        FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
-                        LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
-                        ' . $sqlLike . '
-                        GROUP BY t1.id, t1.name, t1.locked
-                        ORDER BY t1.name ASC
-                        ' . $sqlLimit);
+                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', 'site_tmplvar_templates.tmplvarid as disabled')
+                            ->leftJoin('site_tmplvar_templates', function ($join) {
+                                $join->on('site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id');
+                                $join->on('site_tmplvar_templates.templateid', '>', \DB::raw(0));
+                            })
+                            ->orderBy('site_tmplvars.name')
+                            ->groupBy(['site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid'])
+                            ->take($limit);
+                        if($filter != ''){
+                            $sql = $sql->where('site_tmplvars.name', 'LIKE', '%'.$filter.'%');
+                        }
 
                         if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
                             $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_tmplvars'] . '</a></li>';
@@ -151,11 +154,11 @@ if (isset($action)) {
 
                     case 'element_htmlsnippets':
                         $a = 78;
-                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getFullTableName('site_htmlsnippets') . ' AS t1
-                        ' . $sqlLike . '
-                        ORDER BY t1.name ASC
-                        ' . $sqlLimit);
+                        $sql = \EvolutionCMS\Models\SiteHtmlsnippet::select('id', 'name', 'locked', 'disabled')
+                            ->orderBy('name', 'ASC')->take($limit);
+                        if($filter != ''){
+                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                        }
 
                         if ($modx->hasPermission('new_chunk')) {
                             $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
@@ -165,11 +168,11 @@ if (isset($action)) {
 
                     case 'element_snippets':
                         $a = 22;
-                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getFullTableName('site_snippets') . ' AS t1
-                        ' . $sqlLike . '
-                        ORDER BY t1.name ASC
-                        ' . $sqlLimit);
+                        $sql = \EvolutionCMS\Models\SiteSnippet::select('id', 'name', 'locked', 'disabled')
+                            ->orderBy('name', 'ASC')->take($limit);
+                        if($filter != ''){
+                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                        }
 
                         if ($modx->hasPermission('new_snippet')) {
                             $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_snippet'] . '</a></li>';
@@ -179,11 +182,11 @@ if (isset($action)) {
 
                     case 'element_plugins':
                         $a = 102;
-                        $sql = $modx->getDatabase()->query('SELECT t1.id, t1.name, t1.locked, t1.disabled
-                        FROM ' . $modx->getFullTableName('site_plugins') . ' AS t1
-                        ' . $sqlLike . '
-                        ORDER BY t1.name ASC
-                        ' . $sqlLimit);
+                        $sql = \EvolutionCMS\Models\SitePlugin::select('id', 'name', 'locked', 'disabled')
+                            ->orderBy('name', 'ASC')->take($limit);
+                        if($filter != ''){
+                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                        }
 
                         if ($modx->hasPermission('new_plugin')) {
                             $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_plugin'] . '</a></li>';
@@ -192,11 +195,14 @@ if (isset($action)) {
                         break;
                 }
 
-                if ($count = $modx->getDatabase()->getRecordCount($sql)) {
-                    if ($count == $limit) {
+                if ($sql->count()>0) {
+                    if ($sql->count() == $limit) {
                         $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
-                    while ($row = $modx->getDatabase()->getRow($sql)) {
+                    foreach ($sql->get() as $row){
+                        $row = $row->toArray();
+                        if($a == 301 && !isset($row['disabled'])) $row['disabled'] = 1;
+                        if(!isset($row['disabled'])) $row['disabled'] = 0;
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
                             continue;
                         }
@@ -222,31 +228,28 @@ if (isset($action)) {
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
-            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
-            $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
+            $sql = \EvolutionCMS\Models\ManagerUser::select('manager_users.*', 'user_attributes.blocked')
+                ->leftJoin('user_attributes', 'manager_users.id','=','user_attributes.internalKey')
+                ->orderBy('manager_users.username')->take($limit);
+            if($filter != ''){
+                $sql = $sql->where('manager_users.username', 'LIKE', '%'.$filter.'%');
+            }
             if(!$modx->hasPermission('save_role')) {
-                $sqlLike .= $sqlLike ? ' AND ' : 'WHERE ';
-                $sqlLike .= 't2.role != 1';
+                $sql = $sql->where('user_attributes.role', '!=', \DB::raw(1));
             }
 
-            $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
-				FROM ' . $modx->getFullTableName('manager_users') . ' AS t1
-				LEFT JOIN ' . $modx->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
-				' . $sqlLike . '
-				ORDER BY t1.username ASC
-				' . $sqlLimit);
 
             if ($modx->hasPermission('new_user')) {
                 $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_user'] . '</a></li>';
             }
 
-            if ($count = $modx->getDatabase()->getRecordCount($sql)) {
+            if ($count = $sql->count()) {
                 if ($count == $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                while ($row = $modx->getDatabase()->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
+                foreach ($sql->get() as $row){
+                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
 
@@ -266,26 +269,24 @@ if (isset($action)) {
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
-            $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->getDatabase()->escape($filter) . '%"' : '';
-            $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
-            $sql = $modx->getDatabase()->query('SELECT t1.*, t1.username AS name, t2.blocked
-				FROM ' . $modx->getFullTableName('web_users') . ' AS t1
-				LEFT JOIN ' . $modx->getFullTableName('web_user_attributes') . ' AS t2 ON t1.id=t2.internalKey
-				' . $sqlLike . '
-				ORDER BY t1.username ASC
-				' . $sqlLimit);
+            $sql = \EvolutionCMS\Models\WebUser::select('web_users.*', 'web_user_attributes.blocked')
+                ->leftJoin('web_user_attributes', 'web_users.id','=','web_user_attributes.internalKey')
+                ->orderBy('web_users.username')->take($limit);
+            if($filter != ''){
+                $sql = $sql->where('web_users.username', 'LIKE', '%'.$filter.'%');
+            }
 
             if ($modx->hasPermission('new_web_user')) {
                 $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_web_user'] . '</a></li>';
             }
 
-            if ($count = $modx->getDatabase()->getRecordCount($sql)) {
+            if ($count = $sql->count()) {
                 if ($count == $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                while ($row = $modx->getDatabase()->getRow($sql)) {
-                    $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>';
+                foreach ($sql->get() as $row){
+                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
 
