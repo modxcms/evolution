@@ -198,7 +198,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->loadLang(
             $this->getCore()->getConfig('manager_language')
         );
-
+        if(IN_INSTALL_MODE === false)
         $this->loadStyle();
 
         if ($this->getCore()->getConfig('mgr_jquery_path', '') === '') {

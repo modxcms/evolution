@@ -14,7 +14,7 @@ class CreateUserSettingsTable extends Migration {
 	{
 		Schema::create('user_settings', function(Blueprint $table)
 		{
-			$table->integer('user')->index('user');
+			$table->integer('user')->index();
 			$table->string('setting_name', 50)->default('')->index('setting_name');
 			$table->text('setting_value', 65535)->nullable();
 			$table->primary(['user','setting_name']);

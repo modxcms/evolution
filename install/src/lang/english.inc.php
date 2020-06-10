@@ -47,6 +47,7 @@ $_lang["checking_if_images_exist"] = 'Checking if <span class="mono">/assets/ima
 $_lang["checking_if_images_writable"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
+$_lang["checking_pgsql_version"] = 'Checking PostgeSQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
 $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
 $_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your Evolution CMS install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install Evolution CMS, but consider yourself warned.';
@@ -60,6 +61,7 @@ $_lang["connection_screen_connection_method"] = 'Connection method:';
 $_lang["connection_screen_database_connection_information"] = 'Database information';
 $_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this Evolution CMS install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
 $_lang["connection_screen_database_host"] = 'Database host:';
+$_lang["connection_screen_database_type"] = 'Database type:';
 $_lang["connection_screen_database_info"] = 'Database Information';
 $_lang["connection_screen_database_login"] = 'Database login name:';
 $_lang["connection_screen_database_name"] = 'Database name:';
@@ -123,6 +125,7 @@ $_lang["modx_requires_php"] = ', and Evolution CMS requires PHP [+min_version+] 
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
+$_lang["mysql_version_is"] = ' Your PostgerSQL version is: ';
 $_lang["no"] = 'No';
 $_lang["none"] = 'None';
 $_lang["not_found"] = 'not found';

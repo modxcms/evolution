@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS\Providers;
 
+use EvolutionCMS\Console;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Console\Seeds\SeedCommand;
 use Illuminate\Database\Console\Migrations\MigrateCommand;
@@ -77,6 +78,9 @@ class ArtisanServiceProvider extends ServiceProvider
         $this->registerCommands(array_merge(
             $this->commands, $this->devCommands
         ));
+        $this->app->singleton('Console', function ($app) {
+            return new Console($app, $app['events'], '0.1');
+        });
     }
 
     /**
@@ -370,4 +374,6 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         return array_merge(array_values($this->commands), array_values($this->devCommands));
     }
+
+
 }

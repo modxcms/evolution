@@ -221,6 +221,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getService('UrlProcessor');
         $this->getService('TemplateProcessor');
         $this->getService('DLTemplate');
+        $this->getService('Console');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
 
@@ -6289,6 +6290,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $cache = new Legacy\Cache();
         $cache->setCachepath($siteCacheDir);
         $cache->setReport(false);
+        if(IN_INSTALL_MODE === false)
         $cache->buildCache($this);
 
         clearstatcache();
@@ -6298,7 +6300,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (! empty($this->config)) {
             return;
         }
-
+        if(IN_INSTALL_MODE === false)
         $this->config = Models\SystemSetting::all()
             ->pluck('setting_value', 'setting_name')
             ->toArray();
@@ -6306,7 +6308,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->getConfig('enable_filter') === null) {
             return;
         }
-
+        if(IN_INSTALL_MODE === false)
         if (Models\SitePlugin::activePhx()->count() === 0) {
             $this->setConfig('enable_filter', '0');
         }

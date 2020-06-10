@@ -15,6 +15,7 @@
         <input type="hidden" value="[+installMode+]" name="installmode" />
         <input type="hidden" value="[+database_name+]" name="database_name" />
         <input type="hidden" value="[+tableprefix+]" name="tableprefix" />
+        <input type="hidden" value="[+database_type+]" name="database_type" />
         <input type="hidden" value="[+database_collation+]" name="database_collation" />
         <input type="hidden" value="[+database_connection_charset+]" name="database_connection_charset" />
         <input type="hidden" value="[+database_connection_method+]" name="database_connection_method" />

@@ -36,7 +36,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
      */
     public function __construct(Resolver $resolver, $table)
     {
-        $this->table = $table;
+        $this->table = 'migrations';//table;
         $this->resolver = $resolver;
     }
 
