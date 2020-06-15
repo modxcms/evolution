@@ -64,23 +64,17 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
     protected function parameterTemplates()
     {
-        $database = $this->managerTheme->getCore()->getDatabase();
-        // load templates
-        $rs = $database->query(sprintf('
-            SELECT t.templatename, t.id, c.category
-            FROM %s AS t
-            LEFT JOIN %s AS c ON t.category=c.id
-            ORDER BY c.category, t.templatename ASC'
-            , $database->getFullTableName('site_templates')
-            , $database->getFullTableName('categories')
-        ));
-
+        $templatesFromDb = Models\SiteTemplate::query()
+            ->select('site_templates.templatename','site_templates.id','categories.category')
+            ->leftJoin('categories','site_templates.category','=','categories.id')
+            ->orderBy('categories.category', 'ASC')
+            ->orderBy('site_templates.templatename', 'ASC')->get();
         $templates = [];
         $currentCategory = '';
         $templates['oldTmpId'] = 0;
         $templates['oldTmpName'] = '';
         $i = 0;
-        while ($row = $database->getRow($rs)) {
+        foreach ($templatesFromDb->toArray() as $row){
             $thisCategory = $row['category'];
             if ($row['category'] == null) {
                 $thisCategory = $this->managerTheme->getLexicon('no_category');
