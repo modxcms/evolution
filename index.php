@@ -100,6 +100,9 @@ if (! defined('MODX_API_MODE')) {
 if (! defined('MODX_CLI')) {
     define('MODX_CLI', false);
 }
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
+}
 
 // initiate a new document parser
 $modx = evolutionCMS();
