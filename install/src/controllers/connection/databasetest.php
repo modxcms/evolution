@@ -62,7 +62,7 @@ try {
             }
             break;
     }
-    echo $output . '<span id="server_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
+    echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
     exit();
 } catch (PDOException $e) {
     if (!stristr($e->getMessage(), 'database "' . $_POST['database_name'] . '" does not exist') && !stristr($e->getMessage(), 'Unknown database \'' . $_POST['database_name'] . '\'')) {
@@ -103,7 +103,7 @@ try {
             break;
     }
 
-    echo $output . '<span id="server_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
+    echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
     exit();
 } catch (PDOException $e) {
 

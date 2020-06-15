@@ -16,7 +16,7 @@ class CreateSystemEventnamesTable extends Migration {
 		{
 			$table->integer('id', true);
 			$table->string('name', 50)->default('');
-			$table->boolean('service')->default(0)->comment('System Service number');
+			$table->integer('service')->default(0)->comment('System Service number');
 			$table->string('groupname', 20)->default('');
 		});
 	}

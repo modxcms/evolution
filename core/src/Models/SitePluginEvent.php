@@ -26,6 +26,8 @@ class SitePluginEvent extends Eloquent\Model
 	];
 
 	protected $fillable = [
+		'pluginid',
+		'evtid',
 		'priority'
 	];
 }

@@ -3571,8 +3571,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'eventid'     => (int)$evtid,
             'type'        => $type,
             'createdon'   => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
-            'source'      => $this->getDatabase()->escape($esc_source),
-            'description' => $this->getDatabase()->escape($msg),
+            'source'      => $esc_source,
+            'description' => $msg,
             'user'        => $LoginUserID,
             'usertype'    => $this->isFrontend() ? 1 : 0
         ));
@@ -6177,6 +6177,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getSettings()
     {
+
         /**
          * Restore original settings
          * And hack again at the getSettings() method
@@ -6290,6 +6291,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $cache = new Legacy\Cache();
         $cache->setCachepath($siteCacheDir);
         $cache->setReport(false);
+
         if(IN_INSTALL_MODE === false)
         $cache->buildCache($this);
 
