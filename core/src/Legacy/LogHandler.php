@@ -84,7 +84,6 @@ class LogHandler
     public function writeToLog()
     {
         $modx = evolutionCMS();
-        $tbl_manager_log = $modx->getDatabase()->getFullTableName('manager_log');
 
         if ($this->entry['internalKey'] == "") {
             $modx->webAlertAndQuit("Logging error: internalKey not set.");
@@ -100,12 +99,12 @@ class LogHandler
         }
 
         $fields['timestamp'] = time();
-        $fields['internalKey'] = $modx->getDatabase()->escape($this->entry['internalKey']);
-        $fields['username'] = $modx->getDatabase()->escape($this->entry['username']);
+        $fields['internalKey'] = $this->entry['internalKey'];
+        $fields['username'] = $this->entry['username'];
         $fields['action'] = $this->entry['action'];
         $fields['itemid'] = $this->entry['itemId'];
-        $fields['itemname'] = $modx->getDatabase()->escape($this->entry['itemName']);
-        $fields['message'] = $modx->getDatabase()->escape($this->entry['msg']);
+        $fields['itemname'] = $this->entry['itemName'];
+        $fields['message'] = $this->entry['msg'];
         $fields['ip'] = $this->getUserIP();
         $fields['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
