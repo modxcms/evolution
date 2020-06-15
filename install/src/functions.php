@@ -685,27 +685,16 @@ if (!function_exists('getCreateDbCategory')) {
      * @param SqlParser $sqlParser
      * @return int
      */
-    function getCreateDbCategory($category, $sqlParser)
+    function getCreateDbCategory($category)
     {
-        $dbase = $sqlParser->dbname;
-        $dbase = '`' . trim($dbase, '`') . '`';
-        $table_prefix = $sqlParser->prefix;
         $category_id = 0;
         if (!empty($category)) {
-            $category = mysqli_real_escape_string($sqlParser->conn, $category);
-            $rs = mysqli_query($sqlParser->conn,
-                "SELECT id FROM $dbase.`" . $table_prefix . "categories` WHERE category = '" . $category . "'");
-            if (mysqli_num_rows($rs) && ($row = mysqli_fetch_assoc($rs))) {
-                $category_id = $row['id'];
-            } else {
-                $q = "INSERT INTO $dbase.`" . $table_prefix . "categories` (`category`) VALUES ('{$category}');";
-                $rs = mysqli_query($sqlParser->conn, $q);
-                if ($rs) {
-                    $category_id = mysqli_insert_id($sqlParser->conn);
-                }
+            $categoryRecord = \EvolutionCMS\Models\Category::where('category', $category)->first();
+            if(is_null($categoryRecord)){
+                $categoryRecord = \EvolutionCMS\Models\Category::firstOrCreate(['category'=>$category]);
             }
+            $category_id = $categoryRecord->getKey();
         }
-
         return $category_id;
     }
 }

@@ -61,6 +61,9 @@ if($isGet && count($_GET) === 1 && !empty($_GET['time'])) {
 if (!defined('IN_MANAGER_MODE')) {
     define('IN_MANAGER_MODE', true);
 }
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
+}
 
 if (file_exists(__DIR__ . '/config.php')) {
     $config = require __DIR__ . '/config.php';
