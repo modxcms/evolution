@@ -28,10 +28,10 @@ if (isset($_COOKIE[session_name()])) {
 //session_destroy();
 
 // Clean up active_user_locks
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('active_user_locks'), "sid = '{$sid}'");
+\EvolutionCMS\Models\ActiveUserLock::query()->where('sid', $sid)->delete();
 
 // Clean up active_user_sessions
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('active_user_sessions'), "sid = '{$sid}'");
+\EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
 
 // invoke OnManagerLogout event
 $modx->invokeEvent("OnManagerLogout",
