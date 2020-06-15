@@ -88,7 +88,7 @@ class SitePlugin extends Eloquent\Model
 	public function scopeActivePhx(Eloquent\Builder $builder)
     {
         return $builder->where('disabled', '!=', 1)
-            ->whereRaw('plugincode LIKE "%phx.parser.class.inc.php%OnParseDocument();%"');
+            ->where('plugincode', 'LIKE', "%phx.parser.class.inc.php%OnParseDocument();%");
     }
 
     public function categories() : Eloquent\Relations\BelongsTo

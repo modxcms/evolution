@@ -41,7 +41,6 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // for backward compatibility
 
 $username = get_by_key($_REQUEST, 'username', '', 'is_scalar');
-$username = $modx->getDatabase()->escape($modx->getPhpCompat()->htmlspecialchars($username, ENT_NOQUOTES));
 
 $requestPassword = get_by_key($_REQUEST, 'password', '', 'is_scalar');
 $givenPassword = $modx->getPhpCompat()->htmlspecialchars($requestPassword, ENT_NOQUOTES);
@@ -55,19 +54,18 @@ $modx->invokeEvent('OnBeforeManagerLogin', array(
 		'userpassword' => $givenPassword,
 		'rememberme' => $rememberme
 	));
-$fields = 'mu.*, ua.*';
-$from = $modx->getDatabase()->getFullTableName('manager_users') . ' AS mu, ' .
-    $modx->getDatabase()->getFullTableName('user_attributes') . ' AS ua';
-$where = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
-$rs = $modx->getDatabase()->select($fields, $from, $where);
-$limit = $modx->getDatabase()->getRecordCount($rs);
 
-if($limit == 0 || $limit > 1) {
+$user = \EvolutionCMS\Models\ManagerUser::query()
+    ->join('user_attributes', 'user_attributes.internalKey','=','manager_users.id')
+    ->where('manager_users.username', $username);
+
+
+if($user->count() == 0 || $user->count() > 1) {
 	jsAlert($_lang['login_processor_unknown_user']);
 	return;
 }
-$row = $modx->getDatabase()->getRow($rs);
-
+$user = $user->first()->makeVisible('password');
+$row = $user->toArray();
 $internalKey = $row['internalKey'];
 $dbasePassword = $row['password'];
 $failedlogins = $row['failedlogincount'];
@@ -81,7 +79,9 @@ $nrlogins = $row['logincount'];
 $fullname = $row['fullname'];
 $email = $row['email'];
 
+
 // get the user settings from the database
+/*
 $rs = $modx->getDatabase()->select(
     'setting_name, setting_value',
     $modx->getDatabase()->getFullTableName('user_settings'),
@@ -90,7 +90,7 @@ $rs = $modx->getDatabase()->select(
 while($row = $modx->getDatabase()->getRow($rs)) {
 	extract($row);
 	${$setting_name} = $setting_value;
-}
+}*/
 
 // blocked due to number of login errors.
 if($failedlogins >= $failed_allowed && $blockeduntildate > time()) {
@@ -116,11 +116,8 @@ if($failedlogins >= $failed_allowed && $blockeduntildate < time()) {
 	$fields = array();
 	$fields['failedlogincount'] = '0';
 	$fields['blockeduntil'] = time() - 1;
-	$modx->getDatabase()->update(
-	    $fields,
-        $modx->getDatabase()->getFullTableName('user_attributes'),
-        "internalKey='{$internalKey}'"
-    );
+	\EvolutionCMS\Models\UserAttribute::where('internalKey', $internalKey)->update($fields);
+
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -185,6 +182,7 @@ $matchPassword = false;
 if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 	// check user password - local authentication
 	$hashType = $modx->getManagerApi()->getHashType($dbasePassword);
+
 	if($hashType == 'phpass') {
 		$matchPassword = login($username, $requestPassword, $dbasePassword);
 	} elseif($hashType == 'md5') {
@@ -232,21 +230,25 @@ $_SESSION['mgrFailedlogins'] = $failedlogins;
 $_SESSION['mgrLastlogin'] = $lastlogin;
 $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
-$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_roles'), "id='{$role}'");
-$_SESSION['mgrPermissions'] = $modx->getDatabase()->getRow($rs);
+$_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $role)->first()->toArray();
 
 // successful login so reset fail count and update key values
-$modx->getDatabase()->update(
-    'failedlogincount=0, ' . 'logincount=logincount+1, ' . 'lastlogin=thislogin, ' . 'thislogin=' . time() . ', ' . "sessionid='{$currentsessionid}'",
-    $modx->getDatabase()->getFullTableName('user_attributes'),
-    "internalKey='{$internalKey}'"
-);
+$userAttribute = \EvolutionCMS\Models\UserAttribute::where('internalKey', $internalKey)->first();
+$userAttribute->failedlogincount = 0;
+$userAttribute->logincount = $userAttribute->logincount+1;
+$userAttribute->lastlogin = $userAttribute->thislogin;
+$userAttribute->thislogin = time();
+$userAttribute->sessionid = $currentsessionid;
+$userAttribute->save();
+
 
 // get user's document groups
 $i = 0;
-$rs = $modx->getDatabase()->select('uga.documentgroup', $modx->getDatabase()->getFullTableName('member_groups') . ' ug
-		INNER JOIN ' . $modx->getDatabase()->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
-$_SESSION['mgrDocgroups'] = $modx->getDatabase()->getColumn('documentgroup', $rs);
+
+$_SESSION['mgrDocgroups'] = \EvolutionCMS\Models\MemberGroup::query()
+    ->join('membergroup_access', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
+    ->where('member_groups.member', $internalKey)->pluck('documentgroup');
+
 
 $_SESSION['mgrToken'] = md5($currentsessionid);
 
@@ -271,14 +273,13 @@ if($rememberme == '1') {
 }
 
 // Check if user already has an active session, if not check if user pressed logout end of last session
-$rs = $modx->getDatabase()->select('lasthit', $modx->getDatabase()->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
-$activeSession = $modx->getDatabase()->getValue($rs);
-if(!$activeSession) {
-	$rs = $modx->getDatabase()->select('lasthit', $modx->getDatabase()->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
-	if($lastHit = $modx->getDatabase()->getValue($rs)) {
+$activeSession = \EvolutionCMS\Models\ActiveUserSession::where('internalKey',$internalKey)->first();
+if(!is_null($activeSession)) {
+    $lastHit = \EvolutionCMS\Models\ActiveUser::select('lasthit')->where('internalKey', $internalKey)->where('action', '!=', 8)->first();
+	if(!is_null($lastHit)) {
 		$_SESSION['show_logout_reminder'] = array(
 			'type' => 'logout_reminder',
-			'lastHit' => $lastHit
+			'lastHit' => $lastHit->lasthit
 		);
 	}
 }
@@ -295,12 +296,8 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 
 // check if we should redirect user to a web page
-$rs = $modx->getDatabase()->select(
-    'setting_value',
-    $modx->getDatabase()->getFullTableName('user_settings'),
-    "user='{$internalKey}' AND setting_name='manager_login_startup'"
-);
-$id = (int)$modx->getDatabase()->getValue($rs);
+$id = (int)\EvolutionCMS\Models\UserSetting::where('user',$internalKey)
+    ->where('setting_name','manager_login_startup')->first()->setting_value;
 $ajax = (int)get_by_key($_POST, 'ajax', 0, 'is_scalar');
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');

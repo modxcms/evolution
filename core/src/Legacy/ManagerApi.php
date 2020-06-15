@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Legacy;
 
 use EvolutionCMS\Interfaces\ManagerApiInterface;
+use EvolutionCMS\Models\SystemSetting;
 use EvolutionCMS\Models\UserSetting;
 
 /*
@@ -294,10 +295,7 @@ class ManagerApi implements ManagerApiInterface
      */
     public function setSystemChecksum($checksum)
     {
-        $modx = evolutionCMS();
-        $tbl_system_settings = $modx->getDatabase()->getFullTableName('system_settings');
-        $sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->getDatabase()->escape($checksum) . "')";
-        $modx->getDatabase()->query($sql);
+        SystemSetting::query()->updateOrCreate(['setting_name'=>'sys_files_checksum'],['setting_value'=>$checksum]);
     }
 
     /**
