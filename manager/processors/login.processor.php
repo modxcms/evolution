@@ -80,18 +80,6 @@ $fullname = $row['fullname'];
 $email = $row['email'];
 
 
-// get the user settings from the database
-/*
-$rs = $modx->getDatabase()->select(
-    'setting_name, setting_value',
-    $modx->getDatabase()->getFullTableName('user_settings'),
-    "user='{$internalKey}' AND setting_value!=''"
-);
-while($row = $modx->getDatabase()->getRow($rs)) {
-	extract($row);
-	${$setting_name} = $setting_value;
-}*/
-
 // blocked due to number of login errors.
 if($failedlogins >= $failed_allowed && $blockeduntildate > time()) {
 	@session_destroy();
