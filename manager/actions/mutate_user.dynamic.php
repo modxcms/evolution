@@ -21,8 +21,12 @@ switch($modx->getManagerApi()->action) {
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID('mgr') . "'");
-if($username = $modx->getDatabase()->getValue($rs)) {
+$username = \EvolutionCMS\Models\ActiveUser::query()->where('action', 12)
+    ->where('id', $user)
+    ->where('internalKey', '!=', $modx->getLoginUserID('mgr'))
+    ->first();
+if(!is_null($username)) {
+    $username = $username->username;
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
 }
 // end check for lock
@@ -61,8 +65,8 @@ $usernamedata = [
 
 if($modx->getManagerApi()->action == '12') {
 	// get user attribute
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_attributes'), "internalKey = '{$user}'");
-    $userdatatmp = $modx->getDatabase()->getRow($rs);
+
+    $userdatatmp = \EvolutionCMS\Models\UserAttribute::where('internalKey', $user)->first()->toArray();
 	if(!$userdata) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
@@ -75,8 +79,7 @@ if($modx->getManagerApi()->action == '12') {
 
 
 	// get user settings
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_settings'), "user = '{$user}'");
-	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
+    $usersettings = \EvolutionCMS\Models\UserSetting::where('user', $user)->pluck('setting_value', 'setting_name');
 	// manually extract so that user display settings are not overwritten
 	foreach($usersettings as $k => $v) {
 		if($k != 'manager_language' && $k != 'manager_theme') {
@@ -85,8 +88,7 @@ if($modx->getManagerApi()->action == '12') {
 	}
 
 	// get user name
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('manager_users'), "id = '{$user}'");
-	$usernamedata = $modx->getDatabase()->getRow($rs);
+    $usernamedata = \EvolutionCMS\Models\ManagerUser::find($user)->toArray();
 	if(!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
@@ -339,16 +341,15 @@ if($usersettings['which_browser'] === 'default') {
 						<th><?php echo $_lang['user_role']; ?>:</th>
 						<td>&nbsp;</td>
 						<td><?php
+                            $roles = \EvolutionCMS\Models\UserRole::query()->select('name', 'id');
 
-							$rs = $modx->getDatabase()->select(
-							        'name, id',
-                                    $modx->getDatabase()->getFullTableName('user_roles'),
-                                    ($modx->hasPermission('save_role')) ? '' : 'id != 1'
-                            );
+							if(!$modx->hasPermission('save_role')){
+                                $roles = $roles->where('id', '!=', 1);
+                            }
 							?>
 							<select name="role" class="inputBox" onChange='documentDirty=true;' style="width:300px">
 								<?php
-								while($row = $modx->getDatabase()->getRow($rs)) {
+                                foreach($roles->get()->toArray() as $row) {
 									if($modx->getManagerApi()->action == '11') {
 										$selectedtext = $row['id'] == '1' ? ' selected="selected"' : '';
 									} else {
@@ -812,8 +813,7 @@ if($usersettings['which_browser'] === 'default') {
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '12') { // only do this bit if the user is being edited
-				$rs = $modx->getDatabase()->select('user_group', $modx->getDatabase()->getFullTableName('member_groups'), "member='{$user}'");
-				$groupsarray = $modx->getDatabase()->getColumn('user_group', $rs);
+                $groupsarray = \EvolutionCMS\Models\MemberGroup::query()->where('member', $user)->pluck('user_group')->toArray();
 			}
 			// retain selected doc groups between post
 			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
@@ -825,11 +825,11 @@ if($usersettings['which_browser'] === 'default') {
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabAccess"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-				$rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('membergroup_names'), '', 'name');
-				while($row = $modx->getDatabase()->getRow($rs)) {
-					echo "<label><input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "</label><br />";
-				}
-				}
+                $memberGroupNames = \EvolutionCMS\Models\MembergroupName::query()->orderBy('name', 'ASC')->get();
+                foreach ($memberGroupNames->toArray() as $row) {
+                    echo "<label><input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "</label><br />";
+                }
+                }
 				?>
 			</div>
 		</div>

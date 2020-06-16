@@ -731,7 +731,6 @@ if (!function_exists('saveManagerUserSettings')) {
     function saveManagerUserSettings($id)
     {
         $modx = evolutionCMS();
-        $tbl_user_settings = $modx->getDatabase()->getFullTableName('user_settings');
 
         $ignore = array(
             'id',
@@ -796,7 +795,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        $modx->getDatabase()->delete($tbl_user_settings, sprintf("user='%d'", (int)$id));
+        \EvolutionCMS\Models\UserSetting::where('user', $id)->delete();
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -807,8 +806,7 @@ if (!function_exists('saveManagerUserSettings')) {
                 $f['user'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->getDatabase()->escape($f);
-                $modx->getDatabase()->insert($f, $tbl_user_settings);
+                \EvolutionCMS\Models\UserSetting::create($f);
             }
         }
     }
