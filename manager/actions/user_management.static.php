@@ -139,7 +139,7 @@ echo $cm->render();
                     if (!$modx->hasPermission('save_role')) {
                         $managerUsers = $managerUsers->where('user_attributes.role', '!=', 1);
                     }
-                    if (!empty($sqlQuery)) {
+                    if (!empty($query)) {
                         $managerUsers = $managerUsers->where(function ($q) use ($query) {
                             $q->where('manager_users.username', 'LIKE', $query.'%')
                                 ->orWhere('user_attributes.fullname', 'LIKE', '%'.$query.'%')
