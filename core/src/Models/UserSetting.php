@@ -21,6 +21,8 @@ class UserSetting extends Eloquent\Model
 	];
 
 	protected $fillable = [
+		'user',
+		'setting_name',
 		'setting_value'
 	];
 
