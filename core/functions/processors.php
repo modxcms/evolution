@@ -694,18 +694,17 @@ if (!function_exists('saveWebUserSettings')) {
 // Save User Settings
     function saveWebUserSettings($id)
     {
-        $modx = evolutionCMS();
-        $tbl_web_user_settings = $modx->getDatabase()->getFullTableName('web_user_settings');
-
         $settings = array(
             'login_home',
             'allowed_ip',
             'allowed_days'
         );
-
-        $modx->getDatabase()->delete($tbl_web_user_settings, sprintf("webuser='%d'", (int)$id));
+        \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n) {
+            if(!isset($_POST[$n])){
+                continue;
+            }
             $vl = $_POST[$n];
             if (is_array($vl)) {
                 $vl = implode(',', $vl);
@@ -715,8 +714,7 @@ if (!function_exists('saveWebUserSettings')) {
                 $f['webuser'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->getDatabase()->escape($f);
-                $modx->getDatabase()->insert($f, $tbl_web_user_settings);
+                \EvolutionCMS\Models\WebUserSetting::create($f);
             }
         }
     }

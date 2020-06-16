@@ -124,7 +124,7 @@ echo $cm->render();
 				<div class="table-responsive">
 					<?php
                     $managerUsers = \EvolutionCMS\Models\WebUser::query()
-                        ->select('web_users.id', 'web_users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount')
+                        ->select('web_users.id', 'web_users.username', 'web_user_attributes.fullname', 'web_user_attributes.email', 'web_user_attributes.blocked', 'web_user_attributes.thislogin', 'web_user_attributes.logincount')
                         ->join('web_user_attributes', 'web_user_attributes.internalKey', '=', 'web_users.id')
                         ->orderBy('web_users.username', 'ASC');
                     $where = "";

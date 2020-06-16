@@ -18,6 +18,7 @@ switch($modx->getManagerApi()->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
@@ -79,7 +80,7 @@ if($modx->getManagerApi()->action == '12') {
 
 
 	// get user settings
-    $usersettings = \EvolutionCMS\Models\UserSetting::where('user', $user)->pluck('setting_value', 'setting_name');
+    $usersettings = \EvolutionCMS\Models\UserSetting::where('user', $user)->pluck('setting_value', 'setting_name')->toArray();
 	// manually extract so that user display settings are not overwritten
 	foreach($usersettings as $k => $v) {
 		if($k != 'manager_language' && $k != 'manager_theme') {
@@ -511,7 +512,7 @@ if($usersettings['which_browser'] === 'default') {
 					</tr>
 					<tr>
 						<th><?php echo $_lang["mgr_login_start"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
+						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : (isset($usersettings['manager_login_startup']) ? $usersettings['manager_login_startup'] : ""); ?>"></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -531,7 +532,7 @@ if($usersettings['which_browser'] === 'default') {
 					</tr>
 					<tr>
 						<th><?php echo $_lang["login_allowed_ip"] ?></th>
-						<td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo $usersettings['allowed_ip']; ?>" /></td>
+						<td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($usersettings['allowed_ip']) ? $usersettings['allowed_ip'] : ""; ?>" /></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -539,7 +540,7 @@ if($usersettings['which_browser'] === 'default') {
 					</tr>
 					<tr>
 						<th><?php echo $_lang["login_allowed_days"] ?></th>
-						<td><label>
+						<td><label> <?php if(!isset($usersettings['allowed_days'])) $usersettings['allowed_days'] = ''; ?>
 								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'], '1') !== false ? "checked='checked'" : ""; ?> />
 								<?php echo $_lang['sunday']; ?></label>
 							<br />

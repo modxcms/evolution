@@ -15,7 +15,7 @@ foreach ($input as $k => $v) {
 }
 
 $id = (int)$input['id'];
-$oldusername = $input['oldusername'];
+$oldusername = isset($input['oldusername'])? $input['oldusername'] : '';
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $fullname = $input['fullname'];
 $genpassword = $input['newpassword'];
@@ -42,7 +42,8 @@ $failedlogincount = !empty($input['failedlogincount']) ? $input['failedlogincoun
 $blocked = !empty($input['blocked']) ? $input['blocked'] : 0;
 $blockeduntil = !empty($input['blockeduntil']) ? $modx->toTimeStamp($input['blockeduntil']) : 0;
 $blockedafter = !empty($input['blockedafter']) ? $modx->toTimeStamp($input['blockedafter']) : 0;
-$user_groups = $input['user_groups'];
+$user_groups = isset($input['user_groups'])? $input['user_groups'] : [];
+$newpassword = '';
 
 $websignupemail_message = $modx->config['websignupemail_message'];
 $site_url = $modx->config['site_url'];
