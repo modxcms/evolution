@@ -106,19 +106,7 @@
     }
 
     // Check multiple sessions
-    //$where = sprintf("internalKey='%s'", $modx->getDatabase()->escape($_SESSION['mgrInternalKey']));
-    //$rs = $modx->getDatabase()->select('count(*) AS count', $modx->getDatabase()->getFullTableName('active_user_sessions'), $where);
-    //$count = $modx->getDatabase()->getValue($rs);
-    /*
-    if($count > 1) {
-        $ph['multiple_sessions_msg'] = $modx->parseText($_lang['multiple_sessions_msg'], array(
-            'username' => $_SESSION['mgrShortname'],
-            'total' => $count
-        ));
-        $ph['show_multiple_sessions'] = 'block';
-    } else {
-        $ph['show_multiple_sessions'] = 'none';
-    }*/
+
     $ph['show_multiple_sessions'] = 'none';
 
     $ph['RecentInfo'] = $modx->getChunk('manager#welcome\RecentInfo');
