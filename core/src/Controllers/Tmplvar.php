@@ -101,6 +101,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'action'            => $this->getIndex(),
             'events'            => $this->parameterEvents(),
             'actionButtons'     => $this->parameterActionButtons(),
+            'groupsArray'       => $this->getGroupsArray(),
             // :TODO delete
             'origin'            => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
             'originId'          => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
@@ -271,6 +272,12 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         return array_unique(array_map('intval', get_by_key($_POST, 'template', [], 'is_array')));
     }
 
+    private function getGroupsArray()
+    {
+        $id = $this->getElementId();
+        return Models\SiteTmplvarAccess::where('tmplvarid',$id)->get()->pluck('documentgroup')->toArray();
+    }
+
     public function isSelectedTemplate(Models\SiteTemplate $item)
     {
         return (
@@ -281,4 +288,6 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             )
         );
     }
+
+
 }

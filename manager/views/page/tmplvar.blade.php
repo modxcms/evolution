@@ -434,14 +434,7 @@
                     <script>tpTmplvars.addTabPage(document.getElementById('tabAccess'));</script>
 
                     <div class="container container-body">
-                        <?php
-                        // fetch permissions for the variable
-                        $rs = $modx->getDatabase()
-                            ->select('documentgroup', $modx->getDatabase()
-                                ->getFullTableName('site_tmplvar_access'), "tmplvarid='{$data->getKey()}'");
-                        $groupsarray = $modx->getDatabase()
-                            ->getColumn('documentgroup', $rs);
-                        ?>
+
                         <script>
                           function makePublic(b)
                           {
@@ -480,20 +473,13 @@
 
                         <?php
 
-                        $tbl_documentgroup_names = $modx->getDatabase()
-                            ->getFullTableName('documentgroup_names');
-
-                        $chks = '';
-                        $rs = $modx->getDatabase()
-                            ->select('name, id', $tbl_documentgroup_names);
-
-                        if (empty($groupsarray) && isset($_POST['docgroups']) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
-                            $groupsarray = $_POST['docgroups'];
+                        if (empty($groupsArray) && isset($_POST['docgroups']) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
+                            $groupsArray = $_POST['docgroups'];
                         }
-
-                        while ($row = $modx->getDatabase()
-                            ->getRow($rs)) {
-                            $checked = in_array($row['id'], $groupsarray);
+                        $documentGroupNames = \EvolutionCMS\Models\DocumentgroupName::all()->toArray();
+                        $chks = '';
+                        foreach ($documentGroupNames as $row) {
+                            $checked = in_array($row['id'], $groupsArray);
                             if ($modx->hasPermission('access_permissions')) {
                                 if ($checked) {
                                     $notPublic = true;
