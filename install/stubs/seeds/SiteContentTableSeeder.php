@@ -19,7 +19,6 @@ class SiteContentTableSeeder extends Seeder
         \DB::table('site_content')->insert(array (
             0 => 
             array (
-                'id' => 1,
                 'type' => 'document',
                 'contentType' => 'text/html',
                 'pagetitle' => 'Evolution CMS Install Success',

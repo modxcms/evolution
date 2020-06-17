@@ -20,8 +20,6 @@ switch ((int)$modx->getManagerApi()->action) {
 
 $role = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-$tbl_user_roles = $modx->getDatabase()->getFullTableName('user_roles');
-
 // check to see the snippet editor isn't locked
 if ($lockedEl = $modx->elementIsLocked(8, $role)) {
     $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['role']));
@@ -32,8 +30,7 @@ if ($lockedEl = $modx->elementIsLocked(8, $role)) {
 $modx->lockElement(8, $role);
 global $roledata;
 if ($modx->getManagerApi()->action == '35') {
-    $rs = $modx->getDatabase()->select('*', $tbl_user_roles, "id='{$role}'");
-    $roledata = $modx->getDatabase()->getRow($rs);
+    $roledata = \EvolutionCMS\Models\UserRole::find($role)->toArray();
     if (!$roledata) {
         $modx->webAlertAndQuit("No role returned!");
     }

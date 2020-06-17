@@ -3690,14 +3690,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $trim = $limit;
         }
 
-        $table_name = $this->getDatabase()->getFullTableName($target);
-        $count = $this->getDatabase()->getValue($this->getDatabase()->select('COUNT(id)', $table_name));
+        $count = \DB::table($target)->count();
         $over = $count - $limit;
         if (0 < $over) {
             $trim = ($over + $trim);
-            $this->getDatabase()->delete($table_name, '', '', $trim);
+            \DB::table($target)->delete()->take($trim);
         }
-        $this->getDatabase()->optimize($table_name);
     }
 
     /**

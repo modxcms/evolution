@@ -89,20 +89,17 @@ $fields = array(
 	'category_manager' => $category_manager
 );
 
-$fields = $modx->getDatabase()->escape($fields);
 
 switch($_POST['mode']) {
 	case '38' :
-		$tbl = $modx->getDatabase()->getFullTableName("user_roles");
-
 		// disallow duplicate names for role
-		$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_roles'), "name='{$fields['name']}'");
-		if($modx->getDatabase()->getValue($rs) > 0) {
+
+		if(\EvolutionCMS\Models\UserRole::where('name', $fields['name'])->count() > 0) {
 			$modx->getManagerApi()->saveFormValues(38);
 			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=38");
 		}
 
-		$modx->getDatabase()->insert($fields, $tbl);
+		\EvolutionCMS\Models\UserRole::query()->create($fields);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $_POST['name'];
@@ -111,16 +108,13 @@ switch($_POST['mode']) {
 		header($header);
 		break;
 	case '35' :
-		$tbl = $modx->getDatabase()->getFullTableName("user_roles");
-
 		// disallow duplicate names for role
-		$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$id}'");
-		if($modx->getDatabase()->getValue($rs) > 0) {
+        if(\EvolutionCMS\Models\UserRole::where('name', $fields['name'])->where('id', '!=', $id)->count() > 0) {
 			$modx->getManagerApi()->saveFormValues(35);
 			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=35&id={$id}");
 		}
 
-		$modx->getDatabase()->update($fields, $tbl, "id='{$id}'");
+        \EvolutionCMS\Models\UserRole::find($id)->update($fields);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $_POST['name'];

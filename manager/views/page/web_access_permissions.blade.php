@@ -188,7 +188,7 @@
                                         @foreach($userGroup->documentGroups as $documentGroup)
                                             <li>
                                                 {{ $documentGroup->name }}
-                                                <small><i>(<a class="text-danger" href="index.php?a=92&coupling={{ $documentGroup->getKey() }}&operation=remove_document_group_from_user_group">{{ ManagerTheme::getLexicon('remove') }}</a>)</i></small>
+                                                <small><i>(<a class="text-danger" href="index.php?a=92&coupling={{ $userGroup->getKey() }}&document_group={{ $documentGroup->getKey() }}&operation=remove_document_group_from_user_group">{{ ManagerTheme::getLexicon('remove') }}</a>)</i></small>
                                             </li>
                                         @endforeach
                                     </ul>

@@ -19,7 +19,6 @@ class SiteTemplatesTableSeeder extends Seeder
         \DB::table('site_templates')->insert(array (
             0 => 
             array (
-                'id' => 1,
                 'templatename' => 'Minimal Template',
                 'templatealias' => '',
             'description' => 'Default minimal empty template (content returned only)',
