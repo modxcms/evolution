@@ -179,7 +179,8 @@ try {
             $managerUser = EvolutionCMS\Models\ManagerUser::create($field);
             $internalKey = $managerUser->getKey();
             $verified = 1;
-            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => 1];
+            $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
+            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role];
             $managerUser->attributes()->create($field);
             $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $managerlanguage];
             $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => $parent];
