@@ -17,7 +17,7 @@ function secureWebDocument($docid = '')
     if (is_numeric($docid) && $docid > 0) {
         \EvolutionCMS\Models\SiteContent::find($docid)->update(['privatweb' => 0]);
     } else {
-        \EvolutionCMS\Models\SiteContent::where('privateweb', 1)->update(['privatweb' => 0]);
+        \EvolutionCMS\Models\SiteContent::where('privateweb', 1)->update(['privateweb' => 0]);
     }
     $documentIds = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id')->distinct()
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
