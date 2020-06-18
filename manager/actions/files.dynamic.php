@@ -347,7 +347,6 @@ if (substr($webstart_path, 0, 1) == '/') {
             if (get_by_key($_REQUEST, 'mode') == 'newfile') {
                 $old_umask = umask(0);
                 $filename = str_replace('..\\', '', str_replace('../', '', $_REQUEST['name']));
-                $filename = $modx->getDatabase()->escape($filename);
 
                 if (!checkExtension($filename)) {
                     echo '<span class="warning"><b>' . $_lang['files_filetype_notok'] . '</b></span><br /><br />';
@@ -367,9 +366,7 @@ if (substr($webstart_path, 0, 1) == '/') {
             if (get_by_key($_REQUEST, 'mode') == 'duplicate') {
                 $old_umask = umask(0);
                 $filename = $_REQUEST['path'];
-                $filename = $modx->getDatabase()->escape($filename);
                 $newFilename = str_replace('..\\', '', str_replace('../', '', $_REQUEST['newFilename']));
-                $newFilename = $modx->getDatabase()->escape($newFilename);
 
                 if (!checkExtension($newFilename)) {
                     echo '<span class="warning"><b>' . $_lang['files_filetype_notok'] . '</b></span><br /><br />';
@@ -386,14 +383,12 @@ if (substr($webstart_path, 0, 1) == '/') {
             if (get_by_key($_REQUEST, 'mode') == 'renameFolder') {
                 $old_umask = umask(0);
                 $dirname = $_REQUEST['path'] . '/' . $_REQUEST['dirname'];
-                $dirname = $modx->getDatabase()->escape($dirname);
                 $newDirname = str_replace(array(
                     '..\\',
                     '../',
                     '\\',
                     '/'
                 ), '', $_REQUEST['newDirname']);
-                $newDirname = $modx->getDatabase()->escape($newDirname);
 
                 if (preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@', $newDirname) !== 0) {
                     echo $_lang['files.dynamic.php3'];
@@ -407,14 +402,12 @@ if (substr($webstart_path, 0, 1) == '/') {
                 $old_umask = umask(0);
                 $path = dirname($_REQUEST['path']);
                 $filename = $_REQUEST['path'];
-                $filename = $modx->getDatabase()->escape($filename);
                 $newFilename = str_replace(array(
                     '..\\',
                     '../',
                     '\\',
                     '/'
                 ), '', $_REQUEST['newFilename']);
-                $newFilename = $modx->getDatabase()->escape($newFilename);
 
                 if (!checkExtension($newFilename)) {
                     echo '<span class="warning"><b>' . $_lang['files_filetype_notok'] . '</b></span><br /><br />';

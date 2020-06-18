@@ -6,18 +6,20 @@ if(!$modx->hasPermission('delete_eventlog')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+$query = \EvolutionCMS\Models\EventLog::query();
+
 if (isset($_GET['cls']) && $_GET['cls']==1) {
-	$where = '';
 } else {
 	$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 	if($id==0) {
 		$modx->webAlertAndQuit($_lang["error_no_id"]);
 	}
-	$where = "id='{$id}'";
+    $query = $query->where('id', $id);
 }
 
 // delete event log
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('event_log'), $where);
+
+$query->delete();
 
 $header="Location: index.php?a=114";
 header($header);
