@@ -1480,14 +1480,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             $inputHTML = '<input ' . implode(' ', $inputString) . ' />';
 
                             // does user have this permission?
-                            $from = "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg";
-                            $vs = array(
-                                $row['id'],
-                                $_SESSION['mgrInternalKey']
-                            );
-                            $where = vsprintf("mga.membergroup=mg.user_group AND mga.documentgroup=%s AND mg.member=%s", $vs);
-                            $rsp = $modx->getDatabase()->select('COUNT(mg.id)', $from, $where);
-                            $count = $modx->getDatabase()->getValue($rsp);
+
+                            $count = \EvolutionCMS\Models\MembergroupAccess::query()
+                                ->join('member_groups', 'member_groups.user_group', '=', 'membergroup_access.membergroup')
+                                ->where('membergroup_access.documentgroup', $row['id'])
+                                ->where('member_groups.member', $_SESSION['mgrInternalKey'])->count();
+
                             if($count > 0) {
                                 ++$permissions_yes;
                             } else {

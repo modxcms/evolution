@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 if (!$modx->hasPermission('save_plugin')) {
@@ -7,13 +7,13 @@ if (!$modx->hasPermission('save_plugin')) {
 }
 
 $id = (int)$_POST['id'];
-$name = $modx->getDatabase()->escape(trim($_POST['name']));
-$description = $modx->getDatabase()->escape($_POST['description']);
+$name = trim($_POST['name']);
+$description = $_POST['description'];
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? '1' : '0';
-$plugincode = $modx->getDatabase()->escape($_POST['post']);
-$properties = $modx->getDatabase()->escape($_POST['properties']);
+$plugincode = $_POST['post'];
+$properties = $_POST['properties'];
 $disabled = isset($_POST['disabled']) && $_POST['disabled'] == 'on' ? '1' : '0';
-$moduleguid = $modx->getDatabase()->escape($_POST['moduleguid']);
+$moduleguid = $_POST['moduleguid'];
 $sysevents = !empty($_POST['sysevents']) ? $_POST['sysevents'] : array();
 $parse_docblock = isset($_POST['parse_docblock']) && $_POST['parse_docblock'] == '1' ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
@@ -34,8 +34,8 @@ if ($name == '') {
 
 if ($parse_docblock) {
     $parsed = $modx->parseDocBlockFromString($plugincode, true);
-    $name       = isset($parsed['name']) ? $parsed['name'] : $name;
-    $sysevents  = isset($parsed['events']) ? explode(',', $parsed['events']) : $sysevents;
+    $name = isset($parsed['name']) ? $parsed['name'] : $name;
+    $sysevents = isset($parsed['events']) ? explode(',', $parsed['events']) : $sysevents;
     $properties = isset($parsed['properties']) ? $parsed['properties'] : $properties;
     $moduleguid = isset($parsed['guid']) ? $parsed['guid'] : $moduleguid;
 
@@ -50,7 +50,6 @@ if ($parse_docblock) {
     }
 }
 
-$tblSitePlugins = $modx->getDatabase()->getFullTableName('site_plugins');
 $eventIds = array();
 switch ($_POST['mode']) {
     case '101':
@@ -63,8 +62,7 @@ switch ($_POST['mode']) {
 
         // disallow duplicate names for active plugins
         if ($disabled == '0') {
-            $rs = $modx->getDatabase()->select('COUNT(id)', $modx->getDatabase()->getFullTableName('site_plugins'), "name='{$name}' AND disabled='0'");
-            $count = $modx->getDatabase()->getValue($rs);
+            $count = \EvolutionCMS\Models\SitePlugin::query()->where('name', $name)->where('disabled', 0)->count();
             if ($count > 0) {
                 $modx->getManagerApi()->saveFormValues(101);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), 'index.php?a=101');
@@ -72,7 +70,7 @@ switch ($_POST['mode']) {
         }
 
         //do stuff to save the new plugin
-        $newid = $modx->getDatabase()->insert(array(
+        $newid = \EvolutionCMS\Models\SitePlugin::query()->insertGetId(array(
             'name' => $name,
             'description' => $description,
             'plugincode' => $plugincode,
@@ -83,7 +81,7 @@ switch ($_POST['mode']) {
             'category' => $categoryid,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $tblSitePlugins);
+        ));
 
         // save event listeners
         saveEventListeners($newid, $sysevents, $_POST['mode']);
@@ -120,15 +118,15 @@ switch ($_POST['mode']) {
 
         // disallow duplicate names for active plugins
         if ($disabled == '0') {
-            $rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}' AND disabled='0'");
-            if ($modx->getDatabase()->getValue($rs) > 0) {
+            $count = \EvolutionCMS\Models\SitePlugin::query()->where('name', $name)->where('disabled', 0)->where('id', '!=', $id)->count();
+            if ($count > 0) {
                 $modx->getManagerApi()->saveFormValues(102);
                 $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
             }
         }
 
         //do stuff to save the edited plugin
-        $modx->getDatabase()->update(array(
+        $newid = \EvolutionCMS\Models\SitePlugin::query()->find($id)->update(array(
             'name' => $name,
             'description' => $description,
             'plugincode' => $plugincode,
@@ -138,7 +136,7 @@ switch ($_POST['mode']) {
             'properties' => $properties,
             'category' => $categoryid,
             'editedon' => $currentdate
-        ), $tblSitePlugins, "id='{$id}'");
+        ));
 
         // save event listeners
         saveEventListeners($id, $sysevents, $_POST['mode']);

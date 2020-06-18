@@ -573,12 +573,12 @@ try {
                         }
                         if ($insert === true) {
                             \EvolutionCMS\Models\SitePlugin::create(['name' => $name, 'description' => $desc, 'plugincode' => $plugin, 'properties' => $props, 'moduleguid' => $guid, 'disabled' => 0, 'category' => $category]);
-
                         }
                     } else {
                         $installDataLevel['plugins'][$modulePlugin[0]]['type'] = 'create';
+
                         $properties = parseProperties($properties, true);
-                        \EvolutionCMS\Models\SitePlugin::create(['name' => $name, 'description' => $desc, 'plugincode' => $plugin, 'properties' => $props, 'moduleguid' => $guid, 'disabled' => $disabled, 'category' => $category]);
+                        \EvolutionCMS\Models\SitePlugin::create(['name' => $name, 'description' => $desc, 'plugincode' => $plugin, 'properties' => $properties, 'moduleguid' => $guid, 'disabled' => $disabled, 'category' => $category]);
 
                     }
                     // add system events
