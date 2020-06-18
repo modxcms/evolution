@@ -115,7 +115,7 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
             ->get();
     }
 
-    protected function parameterImportParams()
+    protected function parameterImportParams(): array
     {
 
         return Models\SiteModule::query()->join('site_module_depobj', function ($join) {

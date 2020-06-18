@@ -586,6 +586,7 @@
             </div>
 
             <!-- System Events -->
+
             <div class="tab-page" id="tabEvents">
                 <h2 class="tab">{{ ManagerTheme::getLexicon('settings_events') }}</h2>
                 <script>tpSnippet.addTabPage(document.getElementById('tabEvents'));</script>
@@ -595,7 +596,7 @@
                     <?php
                     // get selected events
                     if ($data->getKey() > 0) {
-                        $evts = \EvolutionCMS\Models\SitePluginEvent::where('pluginid', $data->getKey())->pluck('evtid')->toArray();
+                        $evts=\EvolutionCMS\Models\SitePluginEvent::select('evtid')->where('pluginid',$data->getKey())->pluck('evtid')->toArray();
                     } else {
                         if (isset($data->sysevents) && is_array($data->sysevents)) {
                             $evts = $data->sysevents;
@@ -618,11 +619,14 @@
                         ->orderBy('service', 'DESC')->orderBy('groupname', 'ASC')->orderBy('name', 'ASC');
 
                     if ($eventNames->count() == 0) {
+
                         echo "";
                     } else {
                         $srv = null;
                         $grp = null;
+
                         foreach($eventNames->get()->toArray() as $row) {
+
                             // display records
                             if ($srv != $row['service']) {
                                 $srv = $row['service'];
