@@ -595,12 +595,7 @@
                     <?php
                     // get selected events
                     if ($data->getKey() > 0) {
-                        $tbl_site_plugin_events = $modx->getDatabase()
-                            ->getFullTableName('site_plugin_events');
-                        $rs = $modx->getDatabase()
-                            ->select('evtid', $tbl_site_plugin_events, "pluginid='{$data->getKey()}'");
-                        $evts = $modx->getDatabase()
-                            ->getColumn('evtid', $rs);
+                        $evts = \EvolutionCMS\Models\SitePluginEvent::where('pluginid', $data->getKey())->pluck('evtid')->toArray();
                     } else {
                         if (isset($data->sysevents) && is_array($data->sysevents)) {
                             $evts = $data->sysevents;
@@ -619,20 +614,15 @@
                         "Template Service Events",
                         "User Defined Events"
                     );
-                    $tbl_system_eventnames = $modx->getDatabase()
-                        ->getFullTableName('system_eventnames');
-                    $rs = $modx->getDatabase()
-                        ->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
-                    $limit = $modx->getDatabase()
-                        ->getRecordCount($rs);
-                    if ($limit == 0) {
+                    $eventNames = \EvolutionCMS\Models\SystemEventname::query()
+                        ->orderBy('service', 'DESC')->orderBy('groupname', 'ASC')->orderBy('name', 'ASC');
+
+                    if ($eventNames->count() == 0) {
                         echo "";
                     } else {
                         $srv = null;
                         $grp = null;
-
-                        while ($row = $modx->getDatabase()
-                            ->getRow($rs)) {
+                        foreach($eventNames->get()->toArray() as $row) {
                             // display records
                             if ($srv != $row['service']) {
                                 $srv = $row['service'];

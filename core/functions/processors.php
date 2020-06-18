@@ -3,7 +3,7 @@
 use EvolutionCMS\Models\SiteTmplvarAccess;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 
-if(!function_exists('duplicateDocument')) {
+if (!function_exists('duplicateDocument')) {
     /**
      * @param int $docid
      * @param null|int $parent
@@ -123,7 +123,7 @@ if(!function_exists('duplicateDocument')) {
 
         // invoke OnDocDuplicate event
         $evtOut = $modx->invokeEvent('OnDocDuplicate', array(
-            'id'     => $docid,
+            'id' => $docid,
             'new_id' => $newparent
         ));
 
@@ -144,7 +144,7 @@ if(!function_exists('duplicateDocument')) {
     }
 }
 
-if(!function_exists('duplicateTVs')) {
+if (!function_exists('duplicateTVs')) {
     /**
      * Duplicate Document TVs
      *
@@ -169,7 +169,7 @@ if(!function_exists('duplicateTVs')) {
     }
 }
 
-if(!function_exists('duplicateAccess')) {
+if (!function_exists('duplicateAccess')) {
     /**
      * Duplicate Document Access Permissions
      *
@@ -182,7 +182,7 @@ if(!function_exists('duplicateAccess')) {
 
         $modx->getDatabase()->insert(
             array(
-                'document'       => '',
+                'document' => '',
                 'document_group' => ''
             )
             , $modx->getDatabase()->getFullTableName('document_groups')
@@ -193,7 +193,7 @@ if(!function_exists('duplicateAccess')) {
     }
 }
 
-if(!function_exists('evalModule')) {
+if (!function_exists('evalModule')) {
     /**
      * evalModule
      *
@@ -253,7 +253,7 @@ if(!function_exists('evalModule')) {
     }
 }
 
-if(!function_exists('allChildren')) {
+if (!function_exists('allChildren')) {
     /**
      * @param int $currDocID
      * @return array
@@ -277,7 +277,7 @@ if(!function_exists('allChildren')) {
     }
 }
 
-if(!function_exists('jsAlert')) {
+if (!function_exists('jsAlert')) {
     /**
      * show javascript alert
      *
@@ -298,7 +298,7 @@ if(!function_exists('jsAlert')) {
     }
 }
 
-if(!function_exists('login')) {
+if (!function_exists('login')) {
     /**
      * @param string $username
      * @param string $givenPassword
@@ -313,7 +313,7 @@ if(!function_exists('login')) {
     }
 }
 
-if(!function_exists('loginV1')) {
+if (!function_exists('loginV1')) {
     /**
      * @param int $internalKey
      * @param string $givenPassword
@@ -346,7 +346,7 @@ if(!function_exists('loginV1')) {
     }
 }
 
-if(!function_exists('loginMD5')) {
+if (!function_exists('loginMD5')) {
     /**
      * @param int $internalKey
      * @param string $givenPassword
@@ -367,7 +367,7 @@ if(!function_exists('loginMD5')) {
     }
 }
 
-if(!function_exists('updateNewHash')) {
+if (!function_exists('updateNewHash')) {
     /**
      * @param string $username
      * @param string $password
@@ -383,7 +383,7 @@ if(!function_exists('updateNewHash')) {
     }
 }
 
-if(!function_exists('incrementFailedLoginCount')) {
+if (!function_exists('incrementFailedLoginCount')) {
     /**
      * @param int $internalKey
      * @param int $failedlogins
@@ -418,7 +418,7 @@ if(!function_exists('incrementFailedLoginCount')) {
     }
 }
 
-if(!function_exists('saveUserGroupAccessPermissons')) {
+if (!function_exists('saveUserGroupAccessPermissons')) {
     /**
      * saves module user group access
      */
@@ -444,7 +444,7 @@ if(!function_exists('saveUserGroupAccessPermissons')) {
                 foreach ($usrgroups as $value) {
                     $modx->getDatabase()->insert(
                         array(
-                            'module'    => (int)$id,
+                            'module' => (int)$id,
                             'usergroup' => stripslashes($value),
                         )
                         , $modx->getDatabase()->getFullTableName('site_module_access'));
@@ -454,11 +454,10 @@ if(!function_exists('saveUserGroupAccessPermissons')) {
     }
 }
 
-if(!function_exists('saveEventListeners')) {
+if (!function_exists('saveEventListeners')) {
 # Save Plugin Event Listeners
     function saveEventListeners($id, $sysevents, $mode)
     {
-        $modx = evolutionCMS();
         // save selected system events
         $formEventList = array();
         foreach ($sysevents as $evtId) {
@@ -466,19 +465,11 @@ if(!function_exists('saveEventListeners')) {
                 $evtId = getEventIdByName($evtId);
             }
             if ($mode == '101') {
-                $rs = $modx->getDatabase()->select(
-                    'max(priority) as priority',
-                    $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    sprintf("evtid='%d'", (int)$evtId)
-                );
+                $prevPriority = \EvolutionCMS\Models\SitePluginEvent::query()->where('evtid', $evtId)->max('priority');
             } else {
-                $rs = $modx->getDatabase()->select(
-                    'priority',
-                    $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    sprintf("evtid='%d' and pluginid='%d'", (int)$evtId, (int)$id)
-                );
+                $prevPriority = \EvolutionCMS\Models\SitePluginEvent::query()->where('evtid', $evtId)
+                    ->where('pluginid', $id)->max('priority');
             }
-            $prevPriority = $modx->getDatabase()->getValue($rs);
             if ($mode == '101') {
                 $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
             } else {
@@ -490,23 +481,13 @@ if(!function_exists('saveEventListeners')) {
 
         $evtids = array();
         foreach ($formEventList as $eventInfo) {
-            $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
-            $modx->getDatabase()->save(
-                $eventInfo,
-                $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                $where
-            );
+            \EvolutionCMS\Models\SitePluginEvent::query()->updateOrCreate(['pluginid' => $eventInfo['pluginid'], 'evtid' => $eventInfo['evtid']], ['priority' => $eventInfo['priority']]);
             $evtids[] = $eventInfo['evtid'];
         }
+        $pluginEvents = \EvolutionCMS\Models\SitePluginEvent::query()->where('pluginid', $id)->get();
 
-        $rs = $modx->getDatabase()->select(
-            '*',
-            $modx->getDatabase()->getFullTableName('site_plugin_events'),
-            sprintf("pluginid='%d'", (int)$id)
-        );
-        $dbEventList = array();
         $del = array();
-        while ($row = $modx->getDatabase()->getRow($rs)) {
+        foreach ($pluginEvents->toArray() as $row) {
             if (!in_array($row['evtid'], $evtids)) {
                 $del[] = $row['evtid'];
             }
@@ -515,17 +496,12 @@ if(!function_exists('saveEventListeners')) {
         if (empty($del)) {
             return;
         }
+        \EvolutionCMS\Models\SitePluginEvent::query()->where('pluginid', $id)->whereIn('evtid', $del)->delete();
 
-        foreach ($del as $delid) {
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                sprintf("evtid='%d' AND pluginid='%d'", (int)$delid, (int)$id)
-            );
-        }
     }
 }
 
-if(!function_exists('getEventIdByName')) {
+if (!function_exists('getEventIdByName')) {
     /**
      * @param string $name
      * @return string|int
@@ -538,20 +514,13 @@ if(!function_exists('getEventIdByName')) {
         if (isset($eventIds[$name])) {
             return $eventIds[$name];
         }
-
-        $rs = $modx->getDatabase()->select(
-            'id, name',
-            $modx->getDatabase()->getFullTableName('system_eventnames')
-        );
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            $eventIds[$row['name']] = $row['id'];
-        }
+        $eventIds = \EvolutionCMS\Models\SystemEventname::query()->get()->pluck('id', 'name')->get();
 
         return $eventIds[$name];
     }
 }
 
-if(!function_exists('saveTemplateAccess')) {
+if (!function_exists('saveTemplateAccess')) {
     /**
      * @param int $id
      */
@@ -590,8 +559,8 @@ if(!function_exists('saveTemplateAccess')) {
                 $modx->getDatabase()->insert(
                     array(
                         'templateid' => $id,
-                        'tmplvarid'  => $tvid,
-                        'rank'       => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+                        'tmplvarid' => $tvid,
+                        'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
                     )
                     , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
                 );
@@ -600,7 +569,7 @@ if(!function_exists('saveTemplateAccess')) {
     }
 }
 
-if(!function_exists('saveTemplateVarAccess')) {
+if (!function_exists('saveTemplateVarAccess')) {
     /**
      * @return void
      */
@@ -622,16 +591,16 @@ if(!function_exists('saveTemplateVarAccess')) {
         }
         foreach ($templates as $i => $iValue) {
             $field = [
-                'tmplvarid'  => $id,
+                'tmplvarid' => $id,
                 'templateid' => $templates[$i],
-                'rank'       => get_by_key($getRankArray, $iValue, 0)
+                'rank' => get_by_key($getRankArray, $iValue, 0)
             ];
             EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
         }
     }
 }
 
-if(!function_exists('saveDocumentAccessPermissons')) {
+if (!function_exists('saveDocumentAccessPermissons')) {
     function saveDocumentAccessPermissons($id)
     {
         $modx = evolutionCMS();
@@ -639,7 +608,7 @@ if(!function_exists('saveDocumentAccessPermissons')) {
         $docgroups = isset($_POST['docgroups']) ? $_POST['docgroups'] : '';
 
         // check for permission update access
-        if($modx->getConfig('use_udperms') != 1) {
+        if ($modx->getConfig('use_udperms') != 1) {
             return;
         }
 
@@ -702,7 +671,7 @@ if (!function_exists('saveWebUserSettings')) {
         \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n) {
-            if(!isset($_POST[$n])){
+            if (!isset($_POST[$n])) {
                 continue;
             }
             $vl = $_POST[$n];
