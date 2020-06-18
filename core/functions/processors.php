@@ -531,24 +531,15 @@ if (!function_exists('saveTemplateAccess')) {
             $newAssignedTvs = isset($_POST['assignedTv']) ? $_POST['assignedTv'] : '';
 
             // Preserve rankings of already assigned TVs
-            $rs = $modx->getDatabase()->select(
-                '`tmplvarid`, `rank`'
-                , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                , sprintf("templateid='%d'", (int)$id)
-                , ''
-            );
-
+            $templates = SiteTmplvarTemplate::query()->where('templateid', $id)->get();
             $ranksArr = array();
             $highest = 0;
-            while ($row = $modx->getDatabase()->getRow($rs)) {
+            foreach ($templates->toArray() as $row) {
                 $ranksArr[$row['tmplvarid']] = $row['rank'];
                 $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
             };
+            SiteTmplvarTemplate::query()->where('templateid', $id)->delete();
 
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                , sprintf("templateid='%d'", (int)$id)
-            );
             if (empty($newAssignedTvs)) {
                 return;
             }
@@ -556,14 +547,11 @@ if (!function_exists('saveTemplateAccess')) {
                 if (!$id || !$tvid) {
                     continue;
                 }    // Dont link zeros
-                $modx->getDatabase()->insert(
-                    array(
-                        'templateid' => $id,
-                        'tmplvarid' => $tvid,
-                        'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
-                    )
-                    , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                );
+                SiteTmplvarTemplate::create( array(
+                    'templateid' => $id,
+                    'tmplvarid' => $tvid,
+                    'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+                ));
             }
         }
     }
