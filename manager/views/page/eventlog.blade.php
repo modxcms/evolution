@@ -19,7 +19,7 @@
     } else {
         $sqlQuery = $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : get_by_key($_PAGE, 'vs.search');
         if (!is_numeric($sqlQuery)) {
-            $sqlQuery = $modx->getDatabase()->escape($query);
+            $sqlQuery = $query;
         }
         $_PAGE['vs']['search'] = $query;
     }
@@ -136,14 +136,37 @@
                 <div class="row">
                     <div class="table-responsive">
                         <?php
-                        $ds = $modx->getDatabase()->select("el.id, ELT(el.type , 'text-info " . $_style['icon_info_circle'] . "', 'text-warning " . $_style['icon_info_triangle'] . "' , 'text-danger " . $_style['icon_cancel'] . "' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
+                       /* $ds = $modx->getDatabase()->select("el.id, el.type  as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
-			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
-                        $grd = new \EvolutionCMS\Support\DataGrid('', $ds, 100); // set page size to 0 t show all items
+			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");*/
+                        $eventLog = \EvolutionCMS\Models\EventLog::query()->select('event_log.id', 'event_log.type as icon', 'event_log.createdon', 'event_log.source', 'event_log.eventid', 'manager_users.username as username', 'web_users.username as web_username')
+                            ->leftJoin('manager_users', function($join)
+                        {
+                            $join->on('manager_users.id', '=', 'event_log.user');
+                            $join->on('event_log.usertype', '=', \DB::raw(0));
+                        })->leftJoin('web_users', function($join)
+                        {
+                            $join->on('web_users.id', '=', 'event_log.user');
+                            $join->on('event_log.usertype', '=', \DB::raw(1));
+                        })->orderBy('createdon', 'ASC');
+
+                        if($sqlQuery!=''){
+                            if(is_numeric($sqlQuery))
+                                $eventLog = $eventLog->where('eventid', $sqlQuery);
+                            else {
+                                $eventLog = $eventLog->where(function ($q) use ($sqlQuery) {
+                                    $q->where('event_log.source', 'LIKE', '%'.$sqlQuery.'%')
+                                        ->orWhere('event_log.description', 'LIKE', '%'.$sqlQuery.'%');
+                                });
+                            }
+
+                        }
+                        $grd = new \EvolutionCMS\Support\DataGrid('', $eventLog, 100); // set page size to 0 t show all items
                         $grd->pagerClass = '';
                         $grd->pagerStyle = 'white-space: normal;';
                         $grd->pageClass = 'page-item';
                         $grd->selPageClass = 'page-item active';
+                        $grd->prepareResult = ['icon' => [1 => "text-info " . $_style['icon_info_circle'], 2 => "text-warning " . $_style['icon_info_triangle'], 3 => "text-danger " . $_style['icon_cancel']]];
                         $grd->noRecordMsg = ManagerTheme::getLexicon('no_records_found');
                         $grd->cssClass = "table data nowrap";
                         $grd->columnHeaderClass = "tableHeader";
