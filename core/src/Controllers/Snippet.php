@@ -54,17 +54,17 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     /**
      * {@inheritdoc}
      */
-    public function process() : bool
+    public function process(): bool
     {
         $this->object = $this->parameterData();
 
         $this->parameters = [
-            'data'          => $this->object,
-            'categories'    => $this->parameterCategories(),
-            'action'        => $this->getIndex(),
-            'importParams'  => $this->parameterImportParams(),
-            'docBlockList'  => $this->parameterDocBlockList(),
-            'events'        => $this->parameterEvents(),
+            'data' => $this->object,
+            'categories' => $this->parameterCategories(),
+            'action' => $this->getIndex(),
+            'importParams' => $this->parameterImportParams(),
+            'docBlockList' => $this->parameterDocBlockList(),
+            'events' => $this->parameterEvents(),
             'actionButtons' => $this->parameterActionButtons()
         ];
 
@@ -114,29 +114,13 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
 
     protected function parameterImportParams()
     {
-        $out = [];
-
-        $ds = $this->managerTheme->getCore()
-            ->getDatabase()
-            ->select('sm.id,sm.name,sm.guid', sprintf(
-                '%s AS sm
-                INNER JOIN %s AS smd ON smd.module=sm.id AND smd.type=40 
-                INNER JOIN %s AS ss ON ss.id=smd.resource'
-                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_modules')
-                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_module_depobj')
-                , $this->managerTheme->getCore()->getDatabase()->getFullTableName('site_snippets')
-            )
-                , sprintf(
-                    "smd.resource='%s' AND sm.enable_sharedparams=1"
-                    , $this->object->getKey())
-                , 'sm.name'
-            );
-
-        while ($row = $this->managerTheme->getCore()->getDatabase()->getRow($ds)) {
-            $out[$row['guid']] = $row['name'];
-        }
-
-        return $out;
+        return Models\SiteModule::query()->join('site_module_depobj', function ($join) {
+            $join->on('site_module_depobj.module', '=', 'site_modules.id');
+            $join->on('site_module_depobj.type', '=', \DB::raw(40));
+        })->join('site_snippets', 'site_snippets.id', '=', 'site_module_depobj.resource')
+            ->where('site_module_depobj.resource', $this->object->getKey())
+            ->where('site_modules.enable_resource', 1)->orderBy('site_modules.name', 'ASC')->get()
+            ->pluck('name', 'guid')->toArray();
     }
 
     protected function parameterDocBlockList()
@@ -147,9 +131,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
 
         return $this->managerTheme->getCore()->convertDocBlockIntoList(
             $this->managerTheme->getCore()->parseDocBlockFromString(
-                $this->managerTheme->getCore()->getDatabase()->escape(
-                    $this->object->snippet
-                )
+                $this->object->snippet
             )
         );
     }
@@ -168,7 +150,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     private function callEvent($name): string
     {
         $out = $this->managerTheme->getCore()->invokeEvent($name, [
-            'id'         => $this->getElementId(),
+            'id' => $this->getElementId(),
             'controller' => $this
         ]);
 
@@ -182,12 +164,12 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
     protected function parameterActionButtons()
     {
         return [
-            'select'    => 1,
-            'save'      => $this->managerTheme->getCore()->hasPermission('save_snippet'),
-            'new'       => $this->managerTheme->getCore()->hasPermission('new_snippet'),
+            'select' => 1,
+            'save' => $this->managerTheme->getCore()->hasPermission('save_snippet'),
+            'new' => $this->managerTheme->getCore()->hasPermission('new_snippet'),
             'duplicate' => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('new_snippet'),
-            'delete'    => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
-            'cancel'    => 1
+            'delete' => $this->object->getKey() && $this->managerTheme->getCore()->hasPermission('delete_snippet'),
+            'cancel' => 1
         ];
     }
 }
