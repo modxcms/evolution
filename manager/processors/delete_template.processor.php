@@ -12,8 +12,8 @@ if($id == 0) {
 }
 
 // delete the template, but first check it doesn't have any documents using it
-$rs = $modx->getDatabase()->select('id, pagetitle,introtext', $modx->getDatabase()->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
-$limit = $modx->getDatabase()->getRecordCount($rs);
+$siteContents = EvolutionCMS\Models\SiteContent::select('id', 'pagetitle','introtext')->where('template',$id)->where('deleted',0)->get();
+$limit = $siteContents->count();
 if($limit > 0) {
     include MODX_MANAGER_PATH . "includes/header.inc.php";
     ?>
@@ -28,8 +28,8 @@ if($limit > 0) {
                 Documents using this template:</p>
             <ul>
                 <?php
-                while($row = $modx->getDatabase()->getRow($rs)) {
-                    echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['introtext'] != '' ? ' - ' . $row['introtext'] : '') . '</li>';
+                foreach ($siteContents as $row){
+                    echo '<li><span style="width: 200px"><a href="index.php?id=' . $row->id . '&a=27">' . $row->pagetitle . '</a></span>' . ($row->introtext != '' ? ' - ' . $row->introtext : '') . '</li>';
                 }
                 ?>
             </ul>
@@ -45,7 +45,7 @@ if($id == $default_template) {
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('templatename', $modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'"));
+$name = EvolutionCMS\Models\SiteTemplate::firstOrFail($id)->templatename;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTempFormDelete event
@@ -54,10 +54,9 @@ $modx->invokeEvent("OnBeforeTempFormDelete", array(
 ));
 
 // delete the document.
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_templates'), "id='{$id}'");
+EvolutionCMS\Models\SiteTemplate::destroy($id);
 
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
-
+EvolutionCMS\Models\SiteTmplvarTemplate::where('templateid',$id)->delete();
 // invoke OnTempFormDelete event
 $modx->invokeEvent("OnTempFormDelete", array(
     "id" => $id

@@ -12,8 +12,6 @@ if ($id == 0) {
 }
 
 // check the user is allowed to delete this message
-$rs = $modx->getDatabase()->select('recipient', $modx->getDatabase()->getFullTableName('user_messages'), "id='{$id}'");
-$message = $modx->getDatabase()->getRow($rs);
 $message = \EvolutionCMS\Models\UserMessage::query()->find($id);
 if (is_null($message)) {
     $modx->webAlertAndQuit("Wrong number of messages returned!");
