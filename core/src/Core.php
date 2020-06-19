@@ -12,12 +12,12 @@ use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SitePlugin;
 use EvolutionCMS\Models\SiteTmplvar;
-use Illuminate\Support\Facades\Cache;
-use PHPMailer\PHPMailer\Exception;
-use UrlProcessor;
-use TemplateProcessor;
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use PHPMailer\PHPMailer\Exception;
+use TemplateProcessor;
+use UrlProcessor;
 
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
@@ -942,16 +942,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // now, check for documents that need publishing
         $field = array('published' => 1, 'publishedon' => $timeNow);
         $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
-        $result_pub = $this->getDatabase()->select(
-            'id',
-            $this->getDatabase()->getFullTableName('site_content'),
-            $where
-        );
-        $this->getDatabase()->update($field, $this->getDatabase()->getFullTableName('site_content'), $where);
-        if ($this->getDatabase()->getRecordCount($result_pub) >= 1) { //Event unPublished doc
-            while ($row_pub = $this->getDatabase()->getRow($result_pub)) {
+        $result_pub = \EvolutionCMS\Models\SiteContent::select('id')->whereRaw($where)->get();
+        \EvolutionCMS\Models\SiteContent::whereRaw($where)->update($field);
+
+        if ($result_pub->count() >= 1) { //Event unPublished doc
+            foreach ($result_pub as $row_pub) {
                 $this->invokeEvent("OnDocUnPublished", array(
-                    "docid" => $row_pub['id']
+                    "docid" => $row_pub->id
                 ));
             }
         }
@@ -959,16 +956,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // now, check for documents that need un-publishing
         $field = array('published' => 0, 'publishedon' => 0);
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
-        $result_unpub = $this->getDatabase()->select(
-            'id',
-            $this->getDatabase()->getFullTableName('site_content'),
-            $where
-        );
-        $this->getDatabase()->update($field, $this->getDatabase()->getFullTableName('site_content'), $where);
-        if ($this->getDatabase()->getRecordCount($result_unpub) >= 1) { //Event unPublished doc
-            while ($row_unpub = $this->getDatabase()->getRow($result_unpub)) {
+//
+        $result_unpub = \EvolutionCMS\Models\SiteContent::select('id')->whereRaw($where)->get();
+
+        \EvolutionCMS\Models\SiteContent::whereRaw($where)->update($field);
+
+        if ($result_unpub->count() >= 1) { //Event unPublished doc
+            foreach ($result_unpub as $row_unpub) {
                 $this->invokeEvent("OnDocUnPublished", array(
-                    "docid" => $row_unpub['id']
+                    "docid" => $row_unpub->id
                 ));
             }
         }
@@ -2458,29 +2454,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // method may still be alias, while identifier is not full path alias, e.g. id not found above
             if ($this->getConfig('unauthorized_page')) {
                 if ($method !== 'alias') {
-                    $count = $this->getDatabase()->getValue(
-                        $this->getDatabase()->select(
-                            'count(id)'
-                            , $this->getDatabase()->getFullTableName('document_groups')
-                            , sprintf("document = '%s'", $identifier)
-                            , ''
-                            , 1
-                        )
-                    );
+                    $count =\EvolutionCMS\Models\DocumentGroup::where('document',$identifier)->exists();
                 } else {
-                    $count = $this->getDatabase()->getValue(
-                        $this->getDatabase()->select(
-                            'count(dg.id)'
-                            , sprintf(
-                                '%s as dg, %s as sc'
-                                , $this->getDatabase()->getFullTableName('document_groups')
-                                , $this->getDatabase()->getFullTableName('site_content')
-                            )
-                            , sprintf("dg.document=sc.id AND sc.alias='%s'", $identifier)
-                            , ''
-                            , 1
-                        )
-                    );
+                    $count =DB::table('document_groups as dg' )->join('site_content as sc')->on('dg.document','=','sc.id')->where('sc.alias',$identifier)->exists();
                 }
                 // check if file is not public
                 if ($count) {
@@ -2559,41 +2535,29 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $documentObject;
         }
 
-        $documentObject = $this->db->query(
-            sprintf(
-                'SELECT * FROM %s WHERE id=%d'
-                , $this->getDatabase()->getFullTableName('site_content'), (int)$id
-            ));
-        $documentObject = $this->db->getRow($documentObject);
 
+        $documentObject= \EvolutionCMS\Models\SiteContent::findOrFail((int)$id)->toArray();
         if ($documentObject === null) {
             return array();
         }
 
-        $rs = $this->db->select(
-            "tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value"
-            , sprintf(
-                '%s tv
-                INNER JOIN %s tvtpl ON tvtpl.tmplvarid = tv.id
-                LEFT JOIN %s tvc ON tvc.tmplvarid=tv.id AND tvc.contentid=%d'
-                , $this->getDatabase()->getFullTableName('site_tmplvars')
-                , $this->getDatabase()->getFullTableName('site_tmplvar_templates')
-                , $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-                , (int)$documentObject['id']
-            )
-            , sprintf(
-                'tvtpl.templateid=%d'
-                , (int)$documentObject['template']
-            )
-        );
+        $rs = \DB::table('site_tmplvars as tv')
+            ->selectRaw("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value")
+            ->join('site_tmplvar_templates as tvtpl')->on('tvtpl.tmplvarid', '=', 'tv.id')
+            ->leftJoin('site_tmplvar_contentvalues as tvc')->on([
+                    ['tvc.tmplvarid', '=', 'tv.id'],
+                    ['tvc.contentid', '=', (int)$documentObject['id']]
+                ]
+            )->where('tvtpl.templateid', (int)$documentObject['template'])->get();
+
         $tmplvars = array();
-        while ($row = $this->db->getRow($rs)) {
-            $tmplvars[$row['name']] = array(
-                $row['name'],
-                $row['value'],
-                $row['display'],
-                $row['display_params'],
-                $row['type']
+        foreach ($rs as $row){
+            $tmplvars[$row->name] = array(
+                $row->name,
+                $row->value,
+                $row->display,
+                $row->display_params,
+                $row->type
             );
         }
         $documentObject = array_merge($documentObject, $tmplvars);
@@ -3056,17 +3020,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->getConfig('aliaslistingfolder') == 1) {
 
-            $res = $this->getDatabase()->select(
-                'id,alias,isfolder,parent'
-                , $this->getDatabase()->getFullTableName('site_content')
-                , sprintf(
-                    "parent IN (%s) AND deleted = '0'"
-                    , $id
-                )
-            );
+            $res = \EvolutionCMS\Models\SiteContent::destroy()
+            ->selectRaw("id,alias,isfolder,parent")
+            ->where([
+                    ['parent', 'IN', $id],
+                    ['deleted', '=', '0']
+                ]
+            )->get()->toArray();
+
 
             $idx = array();
-            while ($row = $this->getDatabase()->getRow($res)) {
+            foreach ($res as $row){
                 $pAlias = '';
                 if (isset(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']])) {
                     if (UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path']) {
@@ -3472,14 +3436,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 ->delete();
         }
 
-        return $this->getDatabase()->query(
-            sprintf(
-                'DELETE FROM %s WHERE elementType=%d AND elementId=%d'
-                , $this->getDatabase()->getFullTableName('active_user_locks')
-                , $type
-                , $id
-            )
-        );
+        return  \EvolutionCMS\Models\ActiveUserLock::where(['elementType'=>$type,'elementId'=>$id])->delete();
     }
 
     /**
@@ -3770,22 +3727,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 );
             }
         }
-        $result = $this->getDatabase()->select(
-            'DISTINCT ' . $fields
-            , sprintf(
-                '%s sc
-                LEFT JOIN %s dg on dg.document = sc.id'
-                , $this->getDatabase()->getFullTableName('site_content')
-                , $this->getDatabase()->getFullTableName('document_groups')
-            )
-            , sprintf(
-                "sc.parent=%d AND (%s) GROUP BY sc.id"
-                , (int)$id
-                , $access
-            )
-            , $sort . ' ' . $dir
-        );
-        $resourceArray = $this->getDatabase()->makeArray($result);
+        $result = \DB::table('site_content as sc')
+            ->selectRaw( 'DISTINCT ' . $fields)
+            ->leftJoin('document_groups as dg')
+            ->on('dg.document','=','sc.id')
+            ->where('sc.parent',(int)$id)
+            ->whereRaw($access)
+            ->groupBy('sc.id')
+            ->orderBy($sort . ' ' . $dir)
+            ->get();
+
+
+        $resourceArray = $result->toArray();
         $cached[$cacheKey] = $resourceArray;
 
         return $resourceArray;
@@ -3843,23 +3796,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        $result = $this->getDatabase()->select(
-            'DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))))
-            , sprintf(
-                '%s sc
-                LEFT JOIN %s dg on dg.document = sc.id'
-                , $this->getDatabase()->getFullTableName('site_content')
-                , $this->getDatabase()->getFullTableName('document_groups')
-            )
-            , sprintf(
-                "sc.parent = '%d' AND sc.published=1 AND sc.deleted=0 AND (%s) GROUP BY sc.id"
-                , $id
-                , $access
-            )
-            , 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort)))) . ' ' . $dir
-        );
+        $result = \DB::table('site_content as sc')
+            ->selectRaw(  'DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields)))))
+            ->leftJoin('document_groups as dg')
+            ->on('dg.document','=','sc.id')
+            ->where('sc.parent',(int)$id)
+            ->where('sc.published',1)
+            ->where('sc.deleted',0)
+            ->whereRaw($access)
+            ->groupBy('sc.id')
+            ->orderBy('sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort)))) . ' ' . $dir)
+            ->get();
 
-        $resourceArray = $this->getDatabase()->makeArray($result);
+        $resourceArray = $result->toArray();
 
         $cached[$cacheKey] = $resourceArray;
 
@@ -4045,15 +3994,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
 
-        $tblsc = $this->getDatabase()->getFullTableName('site_content');
-        $tbldg = $this->getDatabase()->getFullTableName('document_groups');
 
-        $result = $this->getDatabase()->select("DISTINCT {$fields}", "{$tblsc} sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',',
-                $ids) . ") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
-            ($sort ? "{$sort} {$dir}" : ""), $limit);
+        $result = \DB::table('site_content as sc')
+            ->selectRaw( 'DISTINCT ' . $fields)
+            ->leftJoin('document_groups as dg')
+            ->on('dg.document','=','sc.id')
+            ->whereIn('sc.id',$ids)
+            ->whereRaw(" ( {$published} {$deleted} {$where}) AND ({$access})")
+            ->groupBy('sc.id')
+            ->orderBy( $sort ? "{$sort} {$dir}" : "")
+            ->limit($limit)
+            ->get();
 
-        $resourceArray = $this->getDatabase()->makeArray($result);
+        $resourceArray =$result->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -4161,8 +4114,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        $tblsc = $this->getDatabase()->getFullTableName("site_content");
-        $tbldg = $this->getDatabase()->getFullTableName("document_groups");
         $activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
         // modify field names to use sc. table reference
         $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
@@ -4171,9 +4122,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $docgrp = implode(",", $docgrp);
         }
         $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $result = $this->getDatabase()->select($fields, "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-            "(sc.id='{$pageid}' {$activeSql}) AND ({$access})", "", 1);
-        $pageInfo = $this->getDatabase()->getRow($result);
+
+        $pageInfo = \DB::table('site_content as sc')
+            ->selectRaw( $fields)
+            ->leftJoin('document_groups as dg')
+            ->on('dg.document','=','sc.id')
+            ->whereRaw("(sc.id='{$pageid}' {$activeSql}) AND ({$access})")
+            ->groupBy('sc.id')
+            ->first()
+            ->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
 
@@ -4226,10 +4183,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getSnippetId()
     {
         if ($this->currentSnippet) {
-            $tbl = $this->getDatabase()->getFullTableName("site_snippets");
-            $rs = $this->getDatabase()->select('id', $tbl,
-                "name='" . $this->getDatabase()->escape($this->currentSnippet) . "'", '', 1);
-            if ($snippetId = $this->getDatabase()->getValue($rs)) {
+            $snippetId = \EvolutionCMS\Models\SiteSnippet::select('id')->where('name',$this->currentSnippet)->first()->id;
+            if ($snippetId) {
                 return $snippetId;
             }
         }
@@ -4735,19 +4690,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $docid = $doc['id'];
 
-            $rs = $this->getDatabase()->select(
-                "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ",
+            $rs = \DB::table('site_tmplvars as tv')
+                ->selectRaw( "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ")
+                ->leftJoin('site_tmplvar_templates as tvtpl')
+                ->on(['tvtpl.tmplvarid'=>'tv.id','tvc.contentid'=>$docid])
+                ->whereRaw("{$query} AND tvtpl.templateid = '{$doc['template']}")
+                ->orderBy($tvsort ? "{$tvsort} {$tvsortdir}" : "")
+                ->get();
 
-                $this->getDatabase()->getFullTableName("site_tmplvars") .
-                " tv INNER JOIN " . $this->getDatabase()->getFullTableName("site_tmplvar_templates") .
-                " tvtpl ON tvtpl.tmplvarid = tv.id LEFT JOIN " .
-                $this->getDatabase()->getFullTableName("site_tmplvar_contentvalues") .
-                " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
+            $tvs = $rs->toArray();
 
-                "{$query} AND tvtpl.templateid = '{$doc['template']}'",
-                ($tvsort ? "{$tvsort} {$tvsortdir}" : "")
-            );
-            $tvs = $this->getDatabase()->makeArray($rs);
+
 
             // get default/built-in template variables
             ksort($doc);
@@ -4922,15 +4875,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
         }
 
-        $rs = $this->getDatabase()->select(
-            "{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
-            $this->getDatabase()->getFullTableName('site_tmplvars') . ' tv ' .
-            'INNER JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_templates') . ' tvtpl ON tvtpl.tmplvarid = tv.id ' .
-            'LEFT JOIN ' . $this->getDatabase()->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid = tv.id AND tvc.contentid = '" . $docid . "'",
-            $query . " AND tvtpl.templateid = '" . $docRow['template'] . "'",
-            ($sort ? ($sort . ' ' . $dir) : '')
-        );
-        $result = $this->getDatabase()->makeArray($rs);
+        $rs = \DB::table('site_tmplvars as tv')
+            ->selectRaw("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value")
+            ->join('site_tmplvar_templates as tvtpl')
+            ->on('tvtpl.tmplvarid' ,'tv.id')
+            ->leftJoin('site_tmplvar_contentvalues as tvc')
+            ->on(['tvc.tmplvarid' => 'tv.id', 'tvc.contentid' => $docid])
+            ->whereRaw($query . " AND tvtpl.templateid = '" . $docRow['template'] . "'")
+            ->orderBy($sort ? ($sort . ' ' . $dir) : '')
+        ->get();
+
+        $result = $rs->toArray();
 
         // get default/built-in template variables
         if (is_array($docRow)) {
@@ -5089,16 +5044,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $private = ($private) ? 1 : 0;
         if (!is_numeric($to)) {
             // Query for the To ID
-            $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName("manager_users"), "username='{$to}'");
-            $to = $this->getDatabase()->getValue($rs);
+            $to =  \EvolutionCMS\Models\ManagerUser::select('id')->where('username',$to)->first()->id;;
         }
         if (!is_numeric($from)) {
             // Query for the From ID
-            $rs = $this->getDatabase()->select('id', $this->getDatabase()->getFullTableName("manager_users"), "username='{$from}'");
-            $from = $this->getDatabase()->getValue($rs);
+            $from =\EvolutionCMS\Models\ManagerUser::select('id')->where('username',$from)->first()->id;;
         }
         // insert a new message into user_messages
-        $this->getDatabase()->insert(array(
+        \EvolutionCMS\Models\UserMessage::insert(array(
             'type' => $type,
             'subject' => $subject,
             'message' => $msg,
@@ -5107,7 +5060,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'private' => $private,
             'postdate' => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
             'messageread' => 0,
-        ), $this->getDatabase()->getFullTableName('user_messages'));
+        ));
     }
 
     /**
@@ -5240,14 +5193,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getWebUserInfo($uid)
     {
-        $rs = $this->getDatabase()->select(
-            'wu.username, wu.password, wua.*',
-            $this->getDatabase()->getFullTableName("web_users") . ' wu ' .
-            'INNER JOIN ' . $this->getDatabase()->getFullTableName("web_user_attributes") . ' wua ' .
-            'ON wua.internalkey=wu.id',
-            "wu.id='{$uid}'"
-        );
-        if ($row = $this->getDatabase()->getRow($rs)) {
+        $rs = \DB::table('web_users as wu')
+            ->selectRaw('wu.username, wu.password, wua.*')
+            ->leftJoin('web_user_attributes as wua')
+            ->on(' wua.internalkey', 'wu.id')
+            ->where('wu.id', $uid)
+            ->first();
+
+        if ($row = $rs->toArray()) {
             if (!isset($row['usertype']) or !$row['usertype']) {
                 $row['usertype'] = 'web';
             }
@@ -5289,13 +5242,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_array($dg)) {
             // resolve ids to names
             $dgn = array();
-            $ds = $this->getDatabase()->select(
-                'name',
-                $this->getDatabase()->getFullTableName("documentgroup_names"),
-                "id IN (" . implode(",", $dg) . ")"
-            );
-            while ($row = $this->getDatabase()->getRow($ds)) {
-                $dgn[] = $row['name'];
+            $ds = \EvolutionCMS\Models\DocumentgroupName::select('name')
+                ->whereIn('id',$dg)
+                ->get();
+
+            foreach ($ds as $row){
+                $dgn[] = $row->name;
             }
             // cache docgroup names to session
             $_SESSION[$this->getContext() . 'DocgrpNames'] = $dgn;
@@ -5320,12 +5272,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($_SESSION['webValidated'] != 1) {
             return false;
         }
-        $ds = $this->getDatabase()->select(
-            'id, username, password'
-            , $this->getDatabase()->getFullTableName('web_users')
-            , sprintf('id=%d', (int)$this->getLoginUserID())
-        );
-        $row = $this->getDatabase()->getRow($ds);
+        $ds = \EvolutionCMS\Models\WebUser::selectRaw('id, username, password')
+            ->where('id', (int)$this->getLoginUserID())
+            ->first();
+
+        $row = $ds->toArray();
         if (!$row) {
             return false;
         }
@@ -5341,11 +5292,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return "You didn't specify a password for this user!";
         }
 
-        $this->getDatabase()->update(
-            array('password' => $this->getDatabase()->escape($newPwd))
-            , $this->getDatabase()->getFullTableName('web_users')
-            , sprintf('id=%d', (int)$this->getLoginUserID())
-        );
+        \EvolutionCMS\Models\WebUser::where('id', (int)$this->getLoginUserID())
+            ->update(array(
+                'password' => $newPwd
+            ));
+
         // invoke OnWebChangePassword event
         $this->invokeEvent('OnWebChangePassword', array(
             'userid' => $row['id'],
@@ -5371,16 +5322,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // check cache
         $grpNames = isset ($_SESSION['webUserGroupNames']) ? $_SESSION['webUserGroupNames'] : false;
         if (!is_array($grpNames)) {
-            $rs = $this->getDatabase()->select(
-                'wgn.name',
-                sprintf(
-                    "%s wgn INNER JOIN %s wg ON wg.webgroup=wgn.id AND wg.webuser='%d'"
-                    , $this->getDatabase()->getFullTableName('webgroup_names')
-                    , $this->getDatabase()->getFullTableName('web_groups')
-                    , $this->getLoginUserID()
-                )
-            );
-            $grpNames = $this->getDatabase()->getColumn('name', $rs);
+            $rs = \DB::table('webgroup_names as wgn')
+                ->select('wgn.name')
+                ->join('web_groups as wg')
+                ->on(['wg.webgroup'=>'wgn.id','wg.webuser'=>$this->getLoginUserID()])
+                ->get();
+
+            $grpNames =$rs->toArray();
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
         }
