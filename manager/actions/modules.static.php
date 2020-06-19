@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\DB;
+
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
@@ -35,7 +38,7 @@ if ($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') ||
 $cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['icon_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
 $cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['icon_clone'], (!$modx->hasPermission('new_module') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['icon_trash'], (!$modx->hasPermission('delete_module') ? 1 : 0));
-echo $cm->render();
+echo $cm->render();getdatabase
 
 ?>
 <script type="text/javascript">
@@ -109,12 +112,19 @@ echo $cm->render();
     <div class="table-responsive">
         <?php
         if ($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-            $rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icon_modules'] . '") as icon
-				FROM ' . $modx->getDatabase()->getFullTableName('site_modules') . ' AS sm
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1
-                ORDER BY sm.name');
+            $rs = DB::table('site_modules as sm')->selectRaw(
+                    'DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' .
+                    $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icon_modules'] . '") as icon'
+            )
+                ->join('site_module_access AS sma')->on('sma.module','=','sm.id')
+                ->join('member_groups AS mg')->on('sma.usergroup','=','mg.user_group')
+                ->whereRaw(
+                    '(mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1'
+                )
+                ->orderBy("sm.name");
+
+
+
             if ($modx->hasPermission('edit_module')) {
                 $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
             } else if ($modx->hasPermission('exec_module')) {
@@ -123,7 +133,14 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icon_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $rs = DB::table('site_modules')
+                ->select("id", "name", "description", "IF(locked,'{$_lang['yes']}','-') as locked",
+                "IF(disabled,'{$_lang['yes']}','-') as disabled", "IF(icon<>'',icon,'{$_style['icon_module']}') as icon")
+                ->whereRaw(
+                    !empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""
+                )
+                ->orderBy("name");
+
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         $grd = new \EvolutionCMS\Support\DataGrid('', $rs, 0); // set page size to 0 t show all items
