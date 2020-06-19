@@ -38,7 +38,7 @@ if ($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') ||
 $cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['icon_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
 $cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['icon_clone'], (!$modx->hasPermission('new_module') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['icon_trash'], (!$modx->hasPermission('delete_module') ? 1 : 0));
-echo $cm->render();getdatabase
+echo $cm->render();
 
 ?>
 <script type="text/javascript">
