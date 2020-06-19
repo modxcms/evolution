@@ -116,8 +116,8 @@ echo $cm->render();
                     'DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' .
                     $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icon_modules'] . '") as icon'
             )
-                ->join('site_module_access AS sma')->on('sma.module','=','sm.id')
-                ->join('member_groups AS mg')->on('sma.usergroup','=','mg.user_group')
+                ->leftJoin('site_module_access AS sma')->on('sma.module','=','sm.id')
+                ->leftJoin('member_groups AS mg')->on('sma.usergroup','=','mg.user_group')
                 ->whereRaw(
                     '(mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1'
                 )
