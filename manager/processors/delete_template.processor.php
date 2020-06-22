@@ -45,7 +45,7 @@ if($id == $default_template) {
 }
 
 // Set the item name for logger
-$name = EvolutionCMS\Models\SiteTemplate::firstOrFail($id)->templatename;
+$name = EvolutionCMS\Models\SiteTemplate::where('id',$id)->first()->templatename;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTempFormDelete event
@@ -54,7 +54,7 @@ $modx->invokeEvent("OnBeforeTempFormDelete", array(
 ));
 
 // delete the document.
-EvolutionCMS\Models\SiteTemplate::destroy($id);
+EvolutionCMS\Models\SiteTemplate::where('id', $id)->delete();
 
 EvolutionCMS\Models\SiteTmplvarTemplate::where('templateid',$id)->delete();
 // invoke OnTempFormDelete event
