@@ -58,7 +58,7 @@ $config = [
 if (file_exists(__DIR__ . '/config.php')) {
     $config = array_merge($config, require __DIR__ . '/config.php');
 }
-if (! file_exists($config['core'] . '/.install')) {
+if (! defined('IN_INSTALL_MODE') && ! file_exists($config['core'] . '/.install')) {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
     header('Status: 503 Service Temporarily Unavailable');
     header('Retry-After: 3600');
