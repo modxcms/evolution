@@ -482,7 +482,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // function to test the query and find the retrieval method
         if ($method === 'alias') {
-            return $this->getDatabase()->escape($_REQUEST['q']);
+            return $_REQUEST['q'];
         }
 
         $id_ = filter_input(INPUT_GET, 'id');
@@ -3526,8 +3526,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'eventid' => (int)$evtid,
             'type' => $type,
             'createdon' => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
-            'source' => $this->getDatabase()->escape($esc_source),
-            'description' => $this->getDatabase()->escape($msg),
+            'source' => $esc_source,
+            'description' => $msg,
             'user' => $LoginUserID,
             'usertype' => $this->isFrontend() ? 1 : 0
         ));
@@ -5794,9 +5794,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function parseDocBlockFromFile($element_dir, $filename, $escapeValues = false)
     {
         $data = $this->get('DocBlock')->parseFromFile($element_dir, $filename);
-        if ($escapeValues) {
-            $data = $this->getDatabase()->escape($data);
-        }
         return $data;
     }
 
@@ -5806,9 +5803,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function parseDocBlockFromString($string, $escapeValues = false)
     {
         $data = $this->get('DocBlock')->parseFromString($string);
-        if ($escapeValues) {
-            $data = $this->getDatabase()->escape($data);
-        }
         return $data;
     }
 
