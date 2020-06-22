@@ -15,18 +15,17 @@ if($id==1){
 	$modx->webAlertAndQuit("The role you are trying to delete is the admin role. This role cannot be deleted!");
 }
 
-$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_attributes'), "role='{$id}'");
-$count=$modx->getDatabase()->getValue($rs);
+$count = EvolutionCMS\Models\UserAttribute::where('role',$id)->count();
 if($count>0){
 	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");
 }
 
 // Set the item name for logger
-$name = $modx->getDatabase()->getValue($modx->getDatabase()->select('name', $modx->getDatabase()->getFullTableName('user_roles'), "id='{$id}'"));
+$name = EvolutionCMS\Models\UserRole::select('name')->where('id',$id)->first()->name;
 $_SESSION['itemname'] = $name;
 
 // delete the attributes
-$modx->getDatabase()->delete($modx->getDatabase()->getFullTableName('user_roles'), "id='{$id}'");
+EvolutionCMS\Models\UserRole::select('name')->where('id',$id)->delete();
 
 $header="Location: index.php?a=86";
 header($header);
