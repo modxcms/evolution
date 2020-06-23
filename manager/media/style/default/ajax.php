@@ -93,7 +93,7 @@ if (isset($action)) {
 
                     // check for deleted documents on reload
                     if ($expandAll == 2) {
-                        if (!is_null(\EvolutionCMS\Models\SiteContent::query()
+                        if (!is_null(\EvolutionCMS\Models\SiteContent::query()->withTrashed()
                             ->where('deleted', 1)->first())) {
                             echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
                         }
