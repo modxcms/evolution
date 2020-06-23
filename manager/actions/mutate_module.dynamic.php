@@ -17,18 +17,6 @@ switch($modx->getManagerApi()->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-// Get table names (alphabetical)
-$tbl_membergroup_names = $modx->getDatabase()->getFullTableName('membergroup_names');
-$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
-$tbl_site_htmlsnippets = $modx->getDatabase()->getFullTableName('site_htmlsnippets');
-$tbl_site_module_access = $modx->getDatabase()->getFullTableName('site_module_access');
-$tbl_site_module_depobj = $modx->getDatabase()->getFullTableName('site_module_depobj');
-$tbl_site_modules = $modx->getDatabase()->getFullTableName('site_modules');
-$tbl_site_plugins = $modx->getDatabase()->getFullTableName('site_plugins');
-$tbl_site_snippets = $modx->getDatabase()->getFullTableName('site_snippets');
-$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
-$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
-
 
 // check to see the module editor isn't locked
 if($lockedEl = $modx->elementIsLocked(6, $id)) {
@@ -40,11 +28,11 @@ if($lockedEl = $modx->elementIsLocked(6, $id)) {
 $modx->lockElement(6, $id);
 
 if(isset($_GET['id'])) {
-	$rs = $modx->getDatabase()->select('*', $tbl_site_modules, "id='{$id}'");
-	$content = $modx->getDatabase()->getRow($rs);
-	if(!$content) {
+	$content = \EvolutionCMS\Models\SiteModule::find($id);
+	if(is_null($content)) {
 		$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 	}
+	$content = $content->toArray();
 	$content['properties'] = str_replace("&", "&amp;", $content['properties']);
 	$_SESSION['itemname'] = $content['name'];
 	if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
@@ -438,7 +426,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	}
 
 	// Prepare internal params & info-tab via parseDocBlock
-	$modulecode = isset($content['modulecode']) ? $modx->getDatabase()->escape($content['modulecode']) : '';
+	$modulecode = isset($content['modulecode']) ? $content['modulecode'] : '';
 	$docBlock = $modx->parseDocBlockFromString($modulecode);
 	$docBlockList = $modx->convertDocBlockIntoList($docBlock);
 	$internal = array();
@@ -607,25 +595,45 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<i class="<?= $_style["icon_save"] ?>"></i> <?= $_lang['manage_depends'] ?></a>
 					</div>
 					<?php
-					$ds = $modx->getDatabase()->select("smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
-					CASE smd.type
-						WHEN 10 THEN 'Chunk'
-						WHEN 20 THEN 'Document'
-						WHEN 30 THEN 'Plugin'
-						WHEN 40 THEN 'Snippet'
-						WHEN 50 THEN 'Template'
-						WHEN 60 THEN 'TV'
-					END AS type", "{$tbl_site_module_depobj} AS smd 
-						LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
-						LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
-						LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
-						LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
-						LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
-						LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60", "smd.module='{$id}'", 'smd.type,name');
-
-					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, 0); // set page size to 0 t show all items
+                    $depobj = \EvolutionCMS\Models\SiteModuleDepobj::query()->select('site_module_depobj.id', \DB::raw( 'COALESCE(NULL'), 'site_snippets.name',
+                        'site_templates.templatename', 'site_tmplvars.name', 'site_htmlsnippets.name' , 'site_tmplvars.name', 'site_plugins.name', 'site_content.pagetitle', \DB::raw('NULL) as name'),
+                    'site_module_depobj.type')
+                        ->leftJoin('site_htmlsnippets', function($join)
+                        {
+                            $join->on('site_htmlsnippets.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(10));
+                        })
+                        ->leftJoin('site_content', function($join)
+                        {
+                            $join->on('site_content.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(20));
+                        })
+                        ->leftJoin('site_plugins', function($join)
+                        {
+                            $join->on('site_plugins.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(30));
+                        })
+                        ->leftJoin('site_snippets', function($join)
+                        {
+                            $join->on('site_snippets.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(40));
+                        })
+                        ->leftJoin('site_templates', function($join)
+                        {
+                            $join->on('site_templates.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(50));
+                        })
+                        ->leftJoin('site_tmplvars', function($join)
+                        {
+                            $join->on('site_tmplvars.id', '=', 'site_module_depobj.resource');
+                            $join->on('site_module_depobj.type', '=', \DB::raw(60));
+                        })
+                        ->where('site_module_depobj.module', $id)
+                        ->orderBy('site_module_depobj.type');
+					$grd = new \EvolutionCMS\Support\DataGrid('', $depobj, 0); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang['no_records_found'];
-					$grd->cssClass = 'grid';
+                    $grd->prepareResult = ['type' => [10 => 'Chunk', 20 => 'Document', 30 => 'Plugin', 40 => 'Snippet', 50 => 'Template', 60 => 'TV']];
+                    $grd->cssClass = 'grid';
 					$grd->columnHeaderClass = 'gridHeader';
 					$grd->itemClass = 'gridItem';
 					$grd->altItemClass = 'gridAltItem';
@@ -645,8 +653,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<?php if($modx->getConfig('use_udperms')) : ?>
 					<?php
 					// fetch user access permissions for the module
-					$rs = $modx->getDatabase()->select('usergroup', $tbl_site_module_access, "module='{$id}'");
-					$groupsarray = $modx->getDatabase()->getColumn('usergroup', $rs);
+					$groupsarray = \EvolutionCMS\Models\SiteModuleAccess::query()->where('module', $id)->pluck('usergroup')->toArray();
 
 					if($modx->hasPermission('access_permissions')) {
 						?>
@@ -675,8 +682,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<?php
 					}
                     $chks = '';
-					$rs = $modx->getDatabase()->select('name, id', $tbl_membergroup_names, '', 'name');
-					while($row = $modx->getDatabase()->getRow($rs)) {
+					$membergroupNames = \EvolutionCMS\Models\MembergroupName::query()->select('name', 'id')->get();
+					foreach ($membergroupNames->toArray() as $row) {
 						$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
 						$checked = in_array($row['id'], $groupsarray);
 						if($modx->hasPermission('access_permissions')) {
