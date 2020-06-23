@@ -235,7 +235,7 @@ $i = 0;
 
 $_SESSION['mgrDocgroups'] = \EvolutionCMS\Models\MemberGroup::query()
     ->join('membergroup_access', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
-    ->where('member_groups.member', $internalKey)->pluck('documentgroup');
+    ->where('member_groups.member', $internalKey)->pluck('documentgroup')->toArray();
 
 
 $_SESSION['mgrToken'] = md5($currentsessionid);

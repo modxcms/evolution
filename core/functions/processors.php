@@ -436,18 +436,15 @@ if (!function_exists('saveUserGroupAccessPermissons')) {
         // check for permission update access
         if ($use_udperms == 1) {
             // delete old permissions on the module
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_module_access')
-                , sprintf('module=%d', (int)$id)
-            );
+            \EvolutionCMS\Models\SiteModuleAccess::where('module', $id)->delete();
+
             if (is_array($usrgroups)) {
                 foreach ($usrgroups as $value) {
-                    $modx->getDatabase()->insert(
-                        array(
-                            'module' => (int)$id,
-                            'usergroup' => stripslashes($value),
-                        )
-                        , $modx->getDatabase()->getFullTableName('site_module_access'));
+                    \EvolutionCMS\Models\SiteModuleAccess::create(array(
+                        'module' => (int)$id,
+                        'usergroup' => stripslashes($value),
+                    ));
+
                 }
             }
         }
@@ -547,7 +544,7 @@ if (!function_exists('saveTemplateAccess')) {
                 if (!$id || !$tvid) {
                     continue;
                 }    // Dont link zeros
-                SiteTmplvarTemplate::create( array(
+                SiteTmplvarTemplate::create(array(
                     'templateid' => $id,
                     'tmplvarid' => $tvid,
                     'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
