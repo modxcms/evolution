@@ -72,7 +72,7 @@ if (!function_exists('makeHTML')) {
         $mgrRole = (int)$mgrRole;
         $docgrp_cond = $docgrp_cond;
 
-        $result = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id', 'site_content.pagetitle', 'longtitle',
+        $result = \EvolutionCMS\Models\SiteContent::query()->withTrashed()->select('site_content.id', 'site_content.pagetitle', 'longtitle',
             'menutitle', 'parent', 'isfolder'
             , 'published', 'pub_date', 'unpub_date', 'richtext', 'searchable', 'cacheable'
             , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'donthit', 'hidemenu', 'alias'
