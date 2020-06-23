@@ -224,6 +224,14 @@ class DataGrid implements DataGridInterface
 
     public function RenderRowFnc($n, $row)
     {
+        foreach ($this->prepareResult as $key => $value) {
+            if (isset($row[$key]) && isset($value[$row[$key]])) {
+                $row[$key] = $value[$row[$key]];
+            }
+            if($row[$key] === '' && isset($value['__'])){
+                $row[$key] = $value['__'];
+            }
+        }
         if ($this->_alt == 0) {
             $Style = $this->_itemStyle;
             $Class = $this->_itemClass;

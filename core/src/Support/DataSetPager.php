@@ -194,9 +194,13 @@ class DataSetPager implements DataSetPagerInterface
             $n = 0;
             while ($i <= $maxitems && $i<=$countResult) {
                 $row = ($isDataset) ? $results[$n] : $this->ds[$i - 1];
+
                 foreach ($this->prepareResult as $key => $value) {
                     if (isset($row[$key]) && isset($value[$row[$key]])) {
                         $row[$key] = $value[$row[$key]];
+                    }
+                    if($row[$key] === '' && isset($value['__'])){
+                        $row[$key] = $value['__'];
                     }
                 }
                 $n++;
