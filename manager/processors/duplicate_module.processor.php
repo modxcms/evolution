@@ -18,13 +18,14 @@ else $count = '';
 
 // duplicate module
 $module = EvolutionCMS\Models\SiteModule::select("name",
-    "description", "'1' AS disabled", "category", "wrap", "icon", "enable_resource", "resourcefile", "createdon",
+    "description",  "category", "wrap", "icon", "enable_resource", "resourcefile", "createdon",
     "editedon", "guid", "enable_sharedparams", "properties", "modulecode")
     ->findOrFail($id);
 
 $moduleNew = $module->replicate();
 $moduleNew->name .= " {$_lang['duplicated_el_suffix']}{$count}";
 $moduleNew->guid = createGUID();
+$moduleNew->disabled = 1;
 $moduleNew->save();
 $newid = $moduleNew->id;
 

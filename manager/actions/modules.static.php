@@ -131,8 +131,7 @@ echo $cm->render();
         } else {
             $siteModules = \EvolutionCMS\Models\SiteModule::query()
                 ->select('site_modules.id', 'site_modules.name', 'site_modules.description', 'locked', 'disabled', 'icon')
-                ->where('site_modules.disabled', '!=', 1)
-                ->where('site_modules.locked', '!=', 1)->orderBy("site_modules.name");
+                ->orderBy("site_modules.name");
             if ($query != '') {
 
                 $siteModules = $siteModules->where(function ($q) use ($query) {
