@@ -1,13 +1,13 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$rs = $modx->getDatabase()->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getDatabase()->getFullTableName('manager_log'));
-$logs = $modx->getDatabase()->makeArray($rs);
+$logs = \EvolutionCMS\Models\ManagerLog::query()->select('internalKey', 'username', 'action', 'itemid', 'itemname')->distinct()->get()->toArray();
+
 ?>
     <h1>
         <i class="<?= $_style['icon_user_secret'] ?>"></i><?= $_lang['mgrlog_view'] ?>
@@ -90,15 +90,19 @@ $logs = $modx->getDatabase()->makeArray($rs);
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_msg"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="message" class="form-control" value="<?= get_by_key($_REQUEST, 'message') ?>" />
+                        <input type="text" name="message" class="form-control"
+                               value="<?= get_by_key($_REQUEST, 'message') ?>"/>
                     </div>
                 </div>
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_datefr"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
-                            <input type="text" id="datefrom" name="datefrom" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ?>" />
-                            <i onClick="document.logging.datefrom.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <input type="text" id="datefrom" name="datefrom" class="form-control unstyled DatePicker"
+                                   value="<?= isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ?>"/>
+                            <i onClick="document.logging.datefrom.value=''; return true;"
+                               class="clearDate <?php echo $_style["icon_calendar_close"] ?>"
+                               title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
@@ -106,22 +110,30 @@ $logs = $modx->getDatabase()->makeArray($rs);
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_dateto"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <div class="input-group">
-                            <input type="text" id="dateto" name="dateto" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ?>" />
-                            <i onClick="document.logging.dateto.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" title="<?php echo $_lang['remove_date']; ?>"></i>
+                            <input type="text" id="dateto" name="dateto" class="form-control unstyled DatePicker"
+                                   value="<?= isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ?>"/>
+                            <i onClick="document.logging.dateto.value=''; return true;"
+                               class="clearDate <?php echo $_style["icon_calendar_close"] ?>"
+                               title="<?php echo $_lang['remove_date']; ?>"></i>
                         </div>
                     </div>
                 </div>
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_results"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
-                        <input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs') ?>" />
+                        <input type="text" name="nrresults" class="form-control"
+                               value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs') ?>"/>
                     </div>
                 </div>
 
-                <a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["icon_search"] ?>"></i> <?= $_lang['search'] ?></a>
-                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+                <a class="btn btn-success" href="javascript:;"
+                   onclick="documentDirty=false;document.logging.log_submit.click();"><i
+                            class="<?= $_style["icon_search"] ?>"></i> <?= $_lang['search'] ?></a>
+                <a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i
+                            class="<?= $_style["icon_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
 
-                <input type="submit" name="log_submit" value="<?= $_lang["mgrlog_searchlogs"] ?>" style="display:none;" />
+                <input type="submit" name="log_submit" value="<?= $_lang["mgrlog_searchlogs"] ?>"
+                       style="display:none;"/>
             </form>
 
         </div>
@@ -136,29 +148,32 @@ $logs = $modx->getDatabase()->makeArray($rs);
 
 <?php
 if (isset($_REQUEST['log_submit'])) {
+    $logs = \EvolutionCMS\Models\ManagerLog::query()->orderBy('timestamp', 'DESC')->orderBy('id', 'DESC');
     // get the selections the user made.
     $sqladd = array();
     if (get_by_key($_REQUEST, 'searchuser') != 0) {
-        $sqladd[] = "internalKey='" . (int)get_by_key($_REQUEST, 'searchuser') . "'";
+        $logs = $logs->where('internalKey', (int)get_by_key($_REQUEST, 'searchuser'));
     }
     if (get_by_key($_REQUEST, 'action') != 0) {
-        $sqladd[] = "action=" . (int)get_by_key($_REQUEST, 'action');
+        $logs = $logs->where('action', (int)get_by_key($_REQUEST, 'action'));
     }
     if (get_by_key($_REQUEST, 'itemid') != 0 || get_by_key($_REQUEST, 'itemid') == "-") {
-        $sqladd[] = "itemid='" . get_by_key($_REQUEST, 'itemid') . "'";
+        $logs = $logs->where('itemid', get_by_key($_REQUEST, 'itemid'));
     }
     if (get_by_key($_REQUEST, 'itemname') != '0') {
-        $sqladd[] = "itemname='" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'itemname')) . "'";
+        $logs = $logs->where('itemname', get_by_key($_REQUEST, 'itemname'));
     }
     if (get_by_key($_REQUEST, 'message') != "") {
-        $sqladd[] = "message LIKE '%" . $modx->getDatabase()->escape(get_by_key($_REQUEST, 'message')) . "%'";
+        $logs = $logs->where('itemname', 'LIKE', '%'.get_by_key($_REQUEST, 'itemname').'%');
     }
     // date stuff
     if ($_REQUEST['datefrom'] != "") {
+        $logs = $logs->where('timestamp', '>', $modx->toTimeStamp($_REQUEST['datefrom']));
+
         $sqladd[] = "timestamp>" . $modx->toTimeStamp($_REQUEST['datefrom']);
     }
     if ($_REQUEST['dateto'] != "") {
-        $sqladd[] = "timestamp<" . $modx->toTimeStamp($_REQUEST['dateto']);
+        $logs = $logs->where('timestamp', '<', $modx->toTimeStamp($_REQUEST['dateto']));
     }
 
     // If current position is not set, set it to zero
@@ -174,9 +189,9 @@ if (isset($_REQUEST['log_submit'])) {
     $extargv = "&a=13&searchuser=" . get_by_key($_REQUEST, 'searchuser') . "&action=" . get_by_key($_REQUEST, 'action') . "&itemid=" . get_by_key($_REQUEST, 'itemid') . "&itemname=" . get_by_key($_REQUEST, 'itemname') . "&message=" . get_by_key($_REQUEST, 'message') . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
     // build the sql
-    $limit = $num_rows = $modx->getDatabase()->getValue($modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
+    $limit = $num_rows = $logs->count();
 
-    $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+    $rs = $logs->skip($int_cur_position)->take($int_num_result)->get();
 
 if ($limit < 1) {
     echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
@@ -242,7 +257,7 @@ if ($limit < 1) {
                 // grab the entire log file...
                 $logentries = array();
                 $i = 0;
-                while ($logentry = $modx->getDatabase()->getRow($rs)) {
+                foreach ($rs->toArray() as $logentry) {
                     if (!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
                         $item = '<div style="text-align:center;">-</div>';
                     } elseif ($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
