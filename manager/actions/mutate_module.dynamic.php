@@ -629,7 +629,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             $join->on('site_module_depobj.type', '=', \DB::raw(60));
                         })
                         ->where('site_module_depobj.module', $id)
-                        ->orderBy('site_module_depobj.type');
+                        ->orderBy('site_module_depobj.type')
+                        ->orderBy('name');
 					$grd = new \EvolutionCMS\Support\DataGrid('', $depobj, 0); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang['no_records_found'];
                     $grd->prepareResult = ['type' => [10 => 'Chunk', 20 => 'Document', 30 => 'Plugin', 40 => 'Snippet', 50 => 'Template', 60 => 'TV']];
