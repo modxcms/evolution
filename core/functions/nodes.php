@@ -80,7 +80,7 @@ if (!function_exists('makeHTML')) {
         )
             ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
             ->leftJoin('site_templates', 'site_content.template', '=', 'site_templates.id')
-            ->where('parent', (int)$parent);
+            ->where('parent', (int)$parent)->orderBy('menuindex', 'ASC')->orderBy('pagetitle', 'ASC');
 //'privatemgr',\DB::raw('MAX(IF(1='.$mgrRole.' OR privatemgr=0 '.$docgrp_cond.', 1, 0)) AS hasAccess'),
         if (!$showProtected) {
             if (!$docgrp) {
