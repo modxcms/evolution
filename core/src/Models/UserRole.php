@@ -169,10 +169,6 @@ class UserRole extends Eloquent\Model
 		'change_resourcetype' => 'int'
 	];
 
-	protected $hidden = [
-		'change_password',
-		'save_password'
-	];
 
 	protected $fillable = [
 		'name',
