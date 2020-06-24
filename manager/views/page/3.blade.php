@@ -3,57 +3,57 @@
 @section('content')
     <?php /*include_once evolutionCMS()->get('ManagerTheme')->getFileProcessor("actions/document_data.static.php"); */?>
     <?php
-    if(isset($_REQUEST['id'])) {
-        $id = (int) $_REQUEST['id'];
+    if (isset($_REQUEST['id'])) {
+        $id = (int)$_REQUEST['id'];
     } else {
         $id = 0;
     }
 
-    if(isset($_GET['opened'])) {
+    if (isset($_GET['opened'])) {
         $_SESSION['openedArray'] = $_GET['opened'];
     }
 
-    // Get table names (alphabetical)
-    $tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
-    $tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
-    $tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
-    $tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
 
-    // Get access permissions
-    $docgrp = $_SESSION['mgrDocgroups'] ? implode(",", $_SESSION['mgrDocgroups']) : '';
-    $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-
-    //
-    if($_SESSION['tree_show_only_folders']) {
-        $parent = $id ? ($modx->getDatabase()->getValue("SELECT parent FROM " . $tbl_site_content . " WHERE id=$id LIMIT 1")) : 0;
-        $isfolder = $modx->getDatabase()->getValue("SELECT isfolder FROM " . $tbl_site_content . " WHERE id=$id LIMIT 1");
-        if(!$isfolder && $parent != 0) {
+    if ($_SESSION['tree_show_only_folders']) {
+        $resource = \EvolutionCMS\Models\SiteContent::find($id);
+        $parent = $id ? $resource->parent : 0;
+        $isfolder = $resource->isfolder;
+        if (!$isfolder && $parent != 0) {
             $id = $_REQUEST['id'] = $parent;
         }
     }
 
     // Get the document content
-    $rs = $modx->getDatabase()->select('DISTINCT sc.*', "{$tbl_site_content} AS sc
-		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.id ='{$id}' AND ({$access})");
-    $content = $modx->getDatabase()->getRow($rs);
-    if(!$content) {
-        $modx->webAlertAndQuit(ManagerTheme::getLexicon('access_permission_denied'));
+    $resources = \EvolutionCMS\Models\SiteContent::query()->select('site_content.*')->distinct()
+        ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+        ->where('site_content.id', $id);
+    if ($_SESSION['mgrRole'] != 1) {
+        if (is_array($_SESSION['mgrDocgroups']) && count($_SESSION['mgrDocgroups']) > 0) {
+            $resources = $resources->where(function ($q) {
+                $q->where('site_content.privatemgr', 0)
+                    ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+            });
+        } else {
+            $resources = $resources->where('site_content.privatemgr', 0);
+        }
     }
 
+    $content = $resources->first();
+    if (!$content) {
+        $modx->webAlertAndQuit(ManagerTheme::getLexicon('access_permission_denied'));
+    }
+    $content = $content->toArray();
     /**
      * "General" tab setup
      */
     // Get Creator's username
-    $rs = $modx->getDatabase()->select('username', $tbl_manager_users, "id='{$content['createdby']}'");
-    $createdbyname = $modx->getDatabase()->getValue($rs);
+    $createdbyname = \EvolutionCMS\Models\ManagerUser::find($content['createdby'])->username;
 
     // Get Editor's username
-    $rs = $modx->getDatabase()->select('username', $tbl_manager_users, "id='{$content['editedby']}'");
-    $editedbyname = $modx->getDatabase()->getValue($rs);
+    $editedbyname = \EvolutionCMS\Models\ManagerUser::find($content['editedby'])->username;
 
     // Get Template name
-    $rs = $modx->getDatabase()->select('templatename', $tbl_site_templates, "id='{$content['template']}'");
-    $templatename = $modx->getDatabase()->getValue($rs);
+    $templatename = \EvolutionCMS\Models\SiteTemplate::find($content['template'])->templatename;
 
     // Set the item name for logger
     $_SESSION['itemname'] = $content['pagetitle'];
@@ -65,25 +65,37 @@
     define('MAX_DISPLAY_RECORDS_NUM', $maxpageSize);
 
     // Get child document count
-    $rs = $modx->getDatabase()->select('count(DISTINCT sc.id)', "{$tbl_site_content} AS sc
-		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.parent='{$content['id']}' AND ({$access})");
-    $numRecords = $modx->getDatabase()->getValue($rs);
+    $childs = \EvolutionCMS\Models\SiteContent::query()->select('site_content.*')->distinct()
+        ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+        ->where('site_content.parent', $id);
+    if ($_SESSION['mgrRole'] != 1) {
+        if (is_array($_SESSION['mgrDocgroups']) && count($_SESSION['mgrDocgroups']) > 0) {
+            $childs = $resources->where(function ($q) {
+                $q->where('site_content.privatemgr', 0)
+                    ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+            });
+        } else {
+            $childs = $resources->where('site_content.privatemgr', 0);
+        }
+    }
+
+    $numRecords = $childs->count();
 
     $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon';
     $dir = isset($_REQUEST['dir']) ? $_REQUEST['dir'] : 'DESC';
 
     // Get child documents (with paging)
-    $rs = $modx->getDatabase()->select('DISTINCT sc.*', "{$tbl_site_content} AS sc
-		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id", "sc.parent='{$content['id']}' AND ({$access})", "{$sort} {$dir}", $modx->getMakeTable()->handlePaging() // add limit clause
-    );
+
     $filter_sort = '';
     $filter_dir = '';
-    if($numRecords > 0) {
+    if ($numRecords > 0) {
+        $childs = $childs->orderBy($sort, $dir)->get();
+
         $filter_sort = '<select size="1" name="sort" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&dir=' . $dir . '&sort=\'+this.options[this.selectedIndex].value">' . '<option value="createdon"' . (($sort == 'createdon') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('createdon') . '</option>' . '<option value="pub_date"' . (($sort == 'pub_date') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('page_data_publishdate') . '</option>' . '<option value="pagetitle"' . (($sort == 'pagetitle') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('pagetitle') . '</option>' . '<option value="menuindex"' . (($sort == 'menuindex') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_menu_index') . '</option>' . //********  resource_opt_is_published - //
             '<option value="published"' . (($sort == 'published') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_is_published') . '</option>' . //********//
             '</select>';
         $filter_dir = '<select size="1" name="dir" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&sort=' . $sort . '&dir=\'+this.options[this.selectedIndex].value">' . '<option value="DESC"' . (($dir == 'DESC') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('sort_desc') . '</option>' . '<option value="ASC"' . (($dir == 'ASC') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('sort_asc') . '</option>' . '</select>';
-        $resource = $modx->getDatabase()->makeArray($rs);
+        $resource = $childs->toArray();
 
         // CSS style for table
         //	$tableClass = 'grid';
@@ -127,28 +139,28 @@
 
         $sd = isset($_REQUEST['dir']) ? '&amp;dir=' . $_REQUEST['dir'] : '&amp;dir=DESC';
         $sb = isset($_REQUEST['sort']) ? '&amp;sort=' . $_REQUEST['sort'] : '&amp;sort=createdon';
-        $pg = isset($_REQUEST['page']) ? '&amp;page=' . (int) $_REQUEST['page'] : '';
+        $pg = isset($_REQUEST['page']) ? '&amp;page=' . (int)$_REQUEST['page'] : '';
         $add_path = $sd . $sb . $pg;
 
         $icons = array(
-            'text/plain'                 => '<i class="' . $_style['icon_document'] . '"></i>',
-            'text/html'                  => '<i class="' . $_style['icon_document'] . '"></i>',
-            'text/xml'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
-            'text/css'                   => '<i class="' . $_style['icon_code_file'] . '"></i>',
-            'text/javascript'            => '<i class="' . $_style['icon_code_file'] . '"></i>',
-            'image/gif'                  => '<i class="' . $_style['icon_image'] . '"></i>',
-            'image/jpg'                  => '<i class="' . $_style['icon_image'] . '"></i>',
-            'image/png'                  => '<i class="' . $_style['icon_image'] . '"></i>',
-            'application/pdf'            => '<i class="' . $_style['icon_pdf'] . '"></i>',
-            'application/rss+xml'        => '<i class="' . $_style['icon_code_file'] . '"></i>',
-            'application/vnd.ms-word'    => '<i class="' . $_style['icon_word'] . '"></i>',
-            'application/vnd.ms-excel'   => '<i class="' . $_style['icon_excel'] . '"></i>',
+            'text/plain' => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/html' => '<i class="' . $_style['icon_document'] . '"></i>',
+            'text/xml' => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/css' => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'text/javascript' => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'image/gif' => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/jpg' => '<i class="' . $_style['icon_image'] . '"></i>',
+            'image/png' => '<i class="' . $_style['icon_image'] . '"></i>',
+            'application/pdf' => '<i class="' . $_style['icon_pdf'] . '"></i>',
+            'application/rss+xml' => '<i class="' . $_style['icon_code_file'] . '"></i>',
+            'application/vnd.ms-word' => '<i class="' . $_style['icon_word'] . '"></i>',
+            'application/vnd.ms-excel' => '<i class="' . $_style['icon_excel'] . '"></i>',
         );
 
         $listDocs = array();
-        foreach($resource as $k => $children) {
+        foreach ($resource as $k => $children) {
 
-            switch($children['id']) {
+            switch ($children['id']) {
                 case $modx->getConfig('site_start')            :
                     $icon = '<i class="' . $_style['icon_home'] . '"></i>';
                     break;
@@ -162,10 +174,10 @@
                     $icon = '<i class="' . $_style['icon_info'] . '"></i>';
                     break;
                 default:
-                    if($children['isfolder']) {
+                    if ($children['isfolder']) {
                         $icon = '<i class="' . $_style['icon_folder'] . '"></i>';
                     } else {
-                        if(isset($icons[$children['contentType']])) {
+                        if (isset($icons[$children['contentType']])) {
                             $icon = $icons[$children['contentType']];
                         } else {
                             $icon = '<i class="' . $_style['icon_document'] . '"></i>';
@@ -180,7 +192,7 @@
             $class = ($children['deleted'] ? 'text-danger text-decoration-through' : (!$children['published'] ? ' font-italic text-muted' : ' publish'));
             //$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
             //$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
-            if($modx->hasPermission('edit_document')) {
+            if ($modx->hasPermission('edit_document')) {
                 $title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></a></span>';
             } else {
                 $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></span>';
@@ -211,38 +223,38 @@
     ?>
     <script type="text/javascript">
         var actions = {
-            new: function() {
+            new: function () {
                 document.location.href = "index.php?pid=<?= $_REQUEST['id'] ?>&a=4";
             },
-            newlink: function() {
+            newlink: function () {
                 document.location.href = "index.php?pid=<?= $_REQUEST['id'] ?>&a=72";
             },
-            edit: function() {
+            edit: function () {
                 document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=27";
             },
-            save: function() {
+            save: function () {
                 documentDirty = false;
                 form_save = true;
                 document.mutate.save.click();
             },
-            delete: function() {
-                if(confirm("{{ ManagerTheme::getLexicon('confirm_delete_resource') }}") === true) {
+            delete: function () {
+                if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_resource') }}") === true) {
                     document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=6";
                 }
             },
-            cancel: function() {
+            cancel: function () {
                 documentDirty = false;
                 document.location.href = 'index.php?<?=($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
             },
-            move: function() {
+            move: function () {
                 document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=51";
             },
-            duplicate: function() {
-                if(confirm("{{ ManagerTheme::getLexicon('confirm_resource_duplicate') }}") === true) {
+            duplicate: function () {
+                if (confirm("{{ ManagerTheme::getLexicon('confirm_resource_duplicate') }}") === true) {
                     document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94";
                 }
             },
-            view: function() {
+            view: function () {
                 window.open('<?= ($modx->getConfig('friendly_urls')) ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
             }
         };
@@ -305,13 +317,15 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_created') }}:</td>
-                        <td><?= $modx->toDateFormat($content['createdon'] + $modx->timestamp(0)) ?> (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= $modx->toDateFormat($content['createdon'] + $modx->timestamp(0)) ?>
+                            (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php if($editedbyname != '') { ?>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_edited') }}:</td>
-                        <td><?= $modx->toDateFormat($content['editedon'] + $modx->timestamp(0)) ?> (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= $modx->toDateFormat($content['editedon'] + $modx->timestamp(0)) ?>
+                            (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php } ?>
@@ -403,26 +417,26 @@
 
     @if($modx->getConfig('cache_type'))
         <!-- Page Source -->
-        <div class="tab-page" id="tabSource">
-            <h2 class="tab">{{ ManagerTheme::getLexicon('page_data_source') }}</h2>
-            <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabSource"));</script>
-            <?php
-            $buffer = "";
-            $filename = MODX_BASE_PATH . "assets/cache/docid_" . $id . ".pageCache.php";
-            $handle = @fopen($filename, "r");
-            if(!$handle) {
-                $buffer = '<div class="container container-body">' . ManagerTheme::getLexicon('page_data_notcached') . '</div>';
-            } else {
-                while(!feof($handle)) {
-                    $buffer .= fgets($handle, 4096);
+            <div class="tab-page" id="tabSource">
+                <h2 class="tab">{{ ManagerTheme::getLexicon('page_data_source') }}</h2>
+                <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabSource"));</script>
+                <?php
+                $buffer = "";
+                $filename = MODX_BASE_PATH . "assets/cache/docid_" . $id . ".pageCache.php";
+                $handle = @fopen($filename, "r");
+                if (!$handle) {
+                    $buffer = '<div class="container container-body">' . ManagerTheme::getLexicon('page_data_notcached') . '</div>';
+                } else {
+                    while (!feof($handle)) {
+                        $buffer .= fgets($handle, 4096);
+                    }
+                    fclose($handle);
+                    $buffer = '<div class="navbar navbar-editor">' . ManagerTheme::getLexicon('page_data_cached') . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
                 }
-                fclose($handle);
-                $buffer = '<div class="navbar navbar-editor">' . ManagerTheme::getLexicon('page_data_cached') . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
-            }
-            echo $buffer;
-            ?>
-        </div><!-- end tab-page -->
-    @endif
+                echo $buffer;
+                ?>
+            </div><!-- end tab-page -->
+        @endif
 
     </div><!-- end documentPane -->
 
@@ -433,7 +447,8 @@
     @if(!empty($show_preview))
         <div class="sectionHeader">{{ ManagerTheme::getLexicon('preview') }}</div>
         <div class="sectionBody" id="lyr2">
-            <iframe src="{{ MODX_SITE_URL }}index.php?id={{ $id }}&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
+            <iframe src="{{ MODX_SITE_URL }}index.php?id={{ $id }}&z=manprev" frameborder="0" border="0"
+                    id="previewIframe"></iframe>
         </div>
     @endif
 @endsection
