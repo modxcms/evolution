@@ -49,7 +49,7 @@ if(is_array($evtOut)) {
     <div id="treeHolder">
         <?php
         // invoke OnManagerTreePrerender event
-        $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $modx->getDatabase()->escape($_REQUEST));
+        $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $_REQUEST);
         if(is_array($evtOut)) {
             echo implode("\n", $evtOut);
         }
@@ -63,7 +63,7 @@ if(is_array($evtOut)) {
 
         <?php
         // invoke OnManagerTreeRender event
-        $evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->getDatabase()->escape($_REQUEST));
+        $evtOut = $modx->invokeEvent('OnManagerTreeRender', $_REQUEST);
         if(is_array($evtOut)) {
             echo implode("\n", $evtOut);
         }

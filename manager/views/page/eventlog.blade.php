@@ -1,10 +1,6 @@
 @extends('manager::template.page')
 @section('content')
     <?php
-    // Get table Names (alphabetical)
-    $tbl_event_log = $modx->getDatabase()->getFullTableName('event_log');
-    $tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
-    $tbl_web_users = $modx->getDatabase()->getFullTableName('web_users');
 
     // initialize page view state - the $_PAGE object
     $modx->getManagerApi()->initPageViewState();
@@ -136,9 +132,6 @@
                 <div class="row">
                     <div class="table-responsive">
                         <?php
-                       /* $ds = $modx->getDatabase()->select("el.id, el.type  as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el
-			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
-			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");*/
                         $eventLog = \EvolutionCMS\Models\EventLog::query()->select('event_log.id', 'event_log.type as icon', 'event_log.createdon', 'event_log.source', 'event_log.eventid', 'manager_users.username as username', 'web_users.username as web_username')
                             ->leftJoin('manager_users', function($join)
                         {

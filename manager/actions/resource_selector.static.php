@@ -27,42 +27,53 @@ $sm = strtolower($_REQUEST['sm']);
 
 // get search string
 $query = $_REQUEST['search'];
-$sqlQuery = $modx->getDatabase()->escape($query);
 
 // select SQL
 switch ($rt) {
     case "snip":
         $title = $_lang["snippet"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_snippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = \EvolutionCMS\Models\SiteSnippet::query()->select('id', 'name', 'description')->orderBy('name');
+        if(isset($query) && $query != ''){
+            $ds = $ds->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('description', 'LIKE', '%' . $query . '%');
+            });
+        }
         break;
 
     case "tpl":
         $title = $_lang["template"];
-        $ds = $modx->getDatabase()->select('id,templatename as name,description', $modx->getDatabase()->getFullTableName("site_templates"), ($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'templatename');
+        $ds = \EvolutionCMS\Models\SiteTemplate::query()->select('id', 'templatename as name', 'description')->orderBy('name');
         break;
 
     case("tv"):
         $title = $_lang["tv"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_tmplvars"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = \EvolutionCMS\Models\SiteTmplvar::query()->select('id', 'name', 'description')->orderBy('name');
         break;
 
     case("chunk"):
         $title = $_lang["chunk"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_htmlsnippets"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = \EvolutionCMS\Models\SiteHtmlsnippet::query()->select('id', 'name', 'description')->orderBy('name');
         break;
 
     case("plug"):
         $title = $_lang["plugin"];
-        $ds = $modx->getDatabase()->select('id,name,description', $modx->getDatabase()->getFullTableName("site_plugins"), ($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), 'name');
+        $ds = \EvolutionCMS\Models\SitePlugin::query()->select('id', 'name', 'description')->orderBy('name');
         break;
 
     case("doc"):
         $title = $_lang["resource"];
-        $ds = $modx->getDatabase()->select('id,pagetitle as name,longtitle as description', $modx->getDatabase()->getFullTableName("site_content"), ($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')" : ""), 'pagetitle');
+        $ds = \EvolutionCMS\Models\SiteContent::query()->select('id', 'pagetitle as name', 'longtitle as description')->orderBy('name');
         break;
 
 }
 
+if(isset($query) && $query != ''){
+    $ds = $ds->where(function ($q) use ($query) {
+        $q->where('name', 'LIKE', '%' . $query . '%')
+            ->orWhere('description', 'LIKE', '%' . $query . '%');
+    });
+}
 include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 ?>
 <script language="JavaScript" type="text/javascript">
