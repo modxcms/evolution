@@ -10,16 +10,11 @@ if(!is_array($groupNames)) return 0;
 // Creates an array with all webgroups the user id is in
 if (isset($modx->getModifiers()->cache['mo'][$userID])) $grpNames = $modx->getModifiers()->cache['mo'][$userID];
 else {
-    $from = sprintf(
-        $modx->getDatabase()->getFullTableName('webgroup_names') .
-        " wgn INNER JOIN " .
-        $modx->getDatabase()->getFullTableName('web_groups') .
-        " wg ON wg.webgroup=wgn.id AND wg.webuser='%s'",
 
-        $userID
-    );
-    $rs = $modx->getDatabase()->select('wgn.name',$from);
-    $modx->getModifiers()->cache['mo'][$userID] = $grpNames = $modx->getDatabase()->getColumn('name',$rs);
+    $grpNames = \EvolutionCMS\Models\WebgroupName::query()
+        ->join('web_groups', 'webgroup_names.id', '=', 'web_groups.webgroup')
+        ->where('webgroup.webuser', $userID)->pluck('webgroup_names.name');
+    $modx->getModifiers()->cache['mo'][$userID] = $grpNames;
 }
 
 // Check if a supplied group matches a webgroup from the array we just created
