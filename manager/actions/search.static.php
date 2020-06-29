@@ -187,12 +187,7 @@ if (isset($_REQUEST['submitok'])) {
 
     $searchQuery = $searchQuery->groupBy('site_content.id');
 
-    if ($where) {
-        $limit = $searchQuery->count();
-    } else {
-        $limit = 0;
-    }
-
+    $limit = $searchQuery->count();
     ?>
     <div class="container navbar">
         <?= $_lang['search_results'] ?>
