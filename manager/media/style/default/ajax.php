@@ -302,8 +302,8 @@ if (isset($action)) {
         }
 
         case 'modxTagHelper': {
-            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $modx->getDatabase()->escape($_REQUEST['name']) : false;
-            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $modx->getDatabase()->escape($_REQUEST['type']) : false;
+            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $_REQUEST['name'] : false;
+            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $_REQUEST['type'] : false;
             $contextmenu = '';
 
             if ($role && $name && $type) {
@@ -634,16 +634,20 @@ if (isset($action)) {
             $output = !!$modx->elementIsLocked($type, $id, true);
 
             if (!$output) {
-                $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
-                $docgrp_cond = $docgrp ? ' OR dg.document_group IN (' . $docgrp . ')' : '';
-                $sql = '
-                    SELECT MAX(IF(1=' . $role . ' OR sc.privatemgr=0' . $docgrp_cond . ', 0, 1)) AS locked
-                    FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
-                    LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
-                    WHERE sc.id=' . $id . ' GROUP BY sc.id';
-                $sql = $modx->getDatabase()->query($sql);
-                if ($modx->getDatabase()->getRecordCount($sql)) {
-                    $row = $modx->getDatabase()->getRow($sql);
+                $searchQuery = \EvolutionCMS\Models\SiteContent::query()->where('site_content.id', $id);
+                if ($role != 1) {
+                    if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
+                        $searchQuery = $searchQuery->join('document_groups', 'site_content.id', '=', 'document_groups.document')
+                            ->where(function ($query) {
+                                $query->where('privatemgr', 0)
+                                    ->orWhereIn('document_group', $_SESSION['mgrDocgroups']);
+                            });
+                    } else {
+                        $searchQuery = $searchQuery->where('privatemgr', 0);
+                    }
+                }
+                if ($searchQuery->count() > 0) {
+                    $row = $searchQuery->first()->toArray();
                     $output = !!$row['locked'];
                 }
             }
