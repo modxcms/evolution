@@ -27,33 +27,20 @@ if (!function_exists('duplicateDocument')) {
         $userID = $modx->getLoginUserID();
 
         // Grab the original document
-        $rs = $modx->getDatabase()->select(
-            '*'
-            , $modx->getDatabase()->getFullTableName('site_content')
-            , sprintf('id=%d', (int)$docid)
-        );
-        $content = $modx->getDatabase()->getRow($rs);
+
+        $content = \EvolutionCMS\Models\SiteContent::query()->find($docid)->toArray();
 
         // Handle incremental ID
         switch ($modx->getConfig('docid_incrmnt_method')) {
             case '1':
-                $rs = $modx->getDatabase()->select(
-                    'MIN(T0.id)+1'
-                    , sprintf(
-                        '%s AS T0 LEFT JOIN %s AS T1 ON T0.id + 1 = T1.id'
-                        , $modx->getDatabase()->getFullTableName('site_content')
-                        , $modx->getDatabase()->getFullTableName('site_content')
-                    )
-                    , 'T1.id IS NULL'
-                );
-                $content['id'] = $modx->getDatabase()->getValue($rs);
+                $minId = \EvolutionCMS\Models\SiteContent::query()
+                    ->leftJoin('site_content as T1', \DB::raw('(') . 'site_content.id' . \DB::raw('+1)'), '=', 'T1.id')
+                    ->whereNull('T1.id')->min('site_content.id');
+
+                $content['id'] = $minId + 1;
                 break;
             case '2':
-                $rs = $modx->getDatabase()->select(
-                    'MAX(id)+1'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                );
-                $content['id'] = $modx->getDatabase()->getValue($rs);
+                $content['id'] = \EvolutionCMS\Models\SiteContent::query()->max('id') + 1;
                 break;
 
             default:
@@ -63,21 +50,10 @@ if (!function_exists('duplicateDocument')) {
         // Once we've grabbed the document object, start doing some modifications
         if ($_toplevel == 0) {
             // count duplicates
-            $pagetitle = $modx->getDatabase()->getValue(
-                $modx->getDatabase()->select(
-                    'pagetitle'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                    , sprintf('id=%d', (int)$docid)
-                )
-            );
-            $pagetitle = $modx->getDatabase()->escape($pagetitle);
-            $count = $modx->getDatabase()->getRecordCount(
-                $modx->getDatabase()->select(
-                    'pagetitle'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                    , sprintf("pagetitle LIKE '%s Duplicate%%'", $pagetitle)
-                )
-            );
+            $pagetitle = \EvolutionCMS\Models\SiteContent::find($docid)->pagetitle;
+
+            $count = \EvolutionCMS\Models\SiteContent::query()->where('pagetitle', 'LIKE', '%'.$pagetitle.' Duplicate%')->count();
+
             if ($count >= 1) {
                 $count = ' ' . ($count + 1);
             } else {
@@ -108,14 +84,9 @@ if (!function_exists('duplicateDocument')) {
         // Set the published status to unpublished by default (see above ... commit #3388)
         $content['published'] = $content['pub_date'] = 0;
 
-        // Escape the proper strings
-        $content = $modx->getDatabase()->escape($content);
 
         // Duplicate the Document
-        $newparent = $modx->getDatabase()->insert(
-            $content
-            , $modx->getDatabase()->getFullTableName('site_content')
-        );
+        $newparent = \EvolutionCMS\Models\SiteContent::query()->insertGetId($content);
 
         // duplicate document's TVs
         duplicateTVs($docid, $newparent);
@@ -129,14 +100,10 @@ if (!function_exists('duplicateDocument')) {
 
         // Start duplicating all the child documents that aren't deleted.
         $_toplevel++;
-        $rs = $modx->getDatabase()->select(
-            'id'
-            , $modx->getDatabase()->getFullTableName('site_content')
-            , sprintf('parent=%d AND deleted=0', (int)$docid)
-            , 'id ASC'
-        );
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            duplicateDocument($row['id'], $newparent, $_toplevel);
+        $documents = \EvolutionCMS\Models\SiteContent::where('parent', $docid)->where('deleted', 0)->orderBy('id')->get();
+
+        foreach ($documents as $document) {
+            duplicateDocument($document->id, $newparent, $_toplevel);
         }
 
         // return the new doc id
@@ -153,19 +120,11 @@ if (!function_exists('duplicateTVs')) {
      */
     function duplicateTVs($oldid, $newid)
     {
-        $modx = evolutionCMS();
-
-        $modx->getDatabase()->insert(
-            array(
-                'contentid' => '',
-                'tmplvarid' => '',
-                'value' => ''
-            )
-            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-            , sprintf('%d, tmplvarid, value', (int)$newid)
-            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-            , sprintf('contentid=%d', (int)$oldid) // Copy from
-        );
+        $oldTvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->where('contentid', $oldid)->get();
+        foreach ($oldTvs->toArray() as $oldTv) {
+            $oldTv['contentid'] = $newid;
+            SiteTmplvarTemplate::query()->insert($oldTv);
+        }
     }
 }
 
@@ -179,17 +138,11 @@ if (!function_exists('duplicateAccess')) {
     function duplicateAccess($oldid, $newid)
     {
         $modx = evolutionCMS();
-
-        $modx->getDatabase()->insert(
-            array(
-                'document' => '',
-                'document_group' => ''
-            )
-            , $modx->getDatabase()->getFullTableName('document_groups')
-            , sprintf('%d, document_group', (int)$newid)
-            , $modx->getDatabase()->getFullTableName('document_groups')
-            , sprintf('document=%d', (int)$oldid) // Copy from
-        );
+        $oldDocGroups = \EvolutionCMS\Models\DocumentGroup::query()->where('document', $oldid)->get();
+        foreach ($oldDocGroups->toArray() as $oldDocGroup) {
+            $oldDocGroup['document'] = $newid;
+            \EvolutionCMS\Models\DocumentGroup::query()->insert($oldDocGroup);
+        }
     }
 }
 
@@ -289,8 +242,7 @@ if (!function_exists('jsAlert')) {
         if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
             echo sprintf(
                 '<script>window.setTimeout("alert(\'%s\')",10);history.go(-1)</script>'
-                , addslashes($modx->getDatabase()->escape($msg)
-                )
+                , addslashes($msg)
             );
         } else {
             echo $msg . "\n";
