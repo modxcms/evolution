@@ -537,7 +537,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = \EvolutionCMS\Models\SiteContent::query()->find($id)->parent;
+                    $parentOld = (int)\EvolutionCMS\Models\SiteContent::query()->find($id)->parent;
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
@@ -558,11 +558,10 @@ if (isset($action)) {
                     if (empty($json['errors'])) {
                         // check privileges user for move docs
                         if (!empty($modx->config['tree_show_protected']) && $role != 1) {
-
-                            $sql = $modx->getDatabase()->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
-                            if ($modx->getDatabase()->getRecordCount($sql)) {
+                            $docs = \EvolutionCMS\Models\DocumentGroup::query()->whereIn('document', [$id, $parent, $parentOld]);
+                            if ($docs->count() > 0) {
                                 $document_groups = array();
-                                while ($row = $modx->getDatabase()->getRow($sql)) {
+                                foreach ($docs->get()->toArray() as $row) {
                                     $document_groups[$row['document']]['groups'][] = $row['document_group'];
                                 }
                                 foreach ($document_groups as $key => $value) {
@@ -582,24 +581,17 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            $modx->getDatabase()->update(array(
-                                'parent' => $parent
-                            ), $modx->getFullTableName('site_content'), 'id=' . $id);
+                            \EvolutionCMS\Models\SiteContent::where('id', $id)->update(['parent' => $parent]);
+
                             // set parent isfolder = 1
-                            $modx->getDatabase()->update(array(
-                                'isfolder' => 1
-                            ), $modx->getFullTableName('site_content'), 'id=' . $parent);
+                            \EvolutionCMS\Models\SiteContent::where('id', $parent)->update(['isfolder' => 1]);
 
                             if ($parent != $parentOld) {
                                 // check children docs and set parent isfolder
-                                if ($modx->getDatabase()->getRecordCount($modx->getDatabase()->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
-                                    $modx->getDatabase()->update(array(
-                                        'isfolder' => 1
-                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                if (\EvolutionCMS\Models\SiteContent::query()->where('parent', $parentOld)->count() > 0) {
+                                    \EvolutionCMS\Models\SiteContent::where('id', $parentOld)->update(['isfolder' => 1]);
                                 } else {
-                                    $modx->getDatabase()->update(array(
-                                        'isfolder' => 0
-                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                    \EvolutionCMS\Models\SiteContent::where('id', $parentOld)->update(['isfolder' => 0]);
                                 }
                             }
 
@@ -607,7 +599,7 @@ if (isset($action)) {
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    $modx->getDatabase()->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
+                                    \EvolutionCMS\Models\SiteContent::query()->where('id', $value)->update(['menuindex' => $key]);
                                 }
                             } else {
                                 // TODO: max(*) menuindex
