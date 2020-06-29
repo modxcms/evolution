@@ -310,14 +310,10 @@ if (isset($action)) {
                 switch ($type) {
                     case 'Snippet':
                     case 'SnippetNoCache': {
+                        $snippet = \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->first();
 
-                        $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getFullTableName('site_snippets') . '
-						WHERE name="' . $name . '"
-						LIMIT 1');
-
-                        if ($modx->getDatabase()->getRecordCount($sql)) {
-                            $row = $modx->getDatabase()->getRow($sql);
+                        if (!is_null($snippet)) {
+                            $row = $snippets->toArray();
                             $contextmenu = array(
                                 'header' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
@@ -348,14 +344,10 @@ if (isset($action)) {
                         break;
                     }
                     case 'Chunk' : {
+                        $chunk  =\EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
 
-                        $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
-						WHERE name="' . $name . '"
-						LIMIT 1');
-
-                        if ($modx->getDatabase()->getRecordCount($sql)) {
-                            $row = $modx->getDatabase()->getRow($sql);
+                        if (!is_null($chunk)) {
+                            $row = $chunk->toArray();
                             $contextmenu = array(
                                 'header' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
@@ -386,13 +378,10 @@ if (isset($action)) {
                         break;
                     }
                     case 'AttributeValue': {
-                        $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
-						WHERE name="' . $name . '"
-						LIMIT 1');
+                        $chunk  =\EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
 
-                        if ($modx->getDatabase()->getRecordCount($sql)) {
-                            $row = $modx->getDatabase()->getRow($sql);
+                        if (!is_null($chunk)) {
+                            $row = $chunk->toArray();
                             $contextmenu = array(
                                 'header' => array(
                                     'innerText' => entities($row['name'], $modx->getConfig('modx_charset'))
@@ -410,13 +399,10 @@ if (isset($action)) {
                             }
                         } else {
 
-                            $sql = $modx->getDatabase()->query('SELECT *
-							FROM ' . $modx->getFullTableName('site_snippets') . '
-							WHERE name="' . $name . '"
-							LIMIT 1');
+                            $snippet = \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->first();
 
-                            if ($modx->getDatabase()->getRecordCount($sql)) {
-                                $row = $modx->getDatabase()->getRow($sql);
+                            if (!is_null($snippet)) {
+                                $row = $snippets->toArray();
                                 $contextmenu = array(
                                     'header' => array(
                                         'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
@@ -498,13 +484,10 @@ if (isset($action)) {
                             return;
                         }
 
-                        $sql = $modx->getDatabase()->query('SELECT *
-						FROM ' . $modx->getFullTableName('site_tmplvars') . '
-						WHERE name="' . $name . '"
-						LIMIT 1');
+                        $tv = \EvolutionCMS\Models\SiteTmplvar::query()->where('name', $name)->first();
 
-                        if ($modx->getDatabase()->getRecordCount($sql)) {
-                            $row = $modx->getDatabase()->getRow($sql);
+                        if (!is_null($tv)) {
+                            $row = $tv->toArray();
                             $contextmenu = array(
                                 'header' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
@@ -554,7 +537,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
+                    $parentOld = \EvolutionCMS\Models\SiteContent::query()->find($id)->parent;
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
@@ -575,6 +558,7 @@ if (isset($action)) {
                     if (empty($json['errors'])) {
                         // check privileges user for move docs
                         if (!empty($modx->config['tree_show_protected']) && $role != 1) {
+
                             $sql = $modx->getDatabase()->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
                             if ($modx->getDatabase()->getRecordCount($sql)) {
                                 $document_groups = array();
