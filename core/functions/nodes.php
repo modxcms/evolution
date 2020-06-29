@@ -47,7 +47,7 @@ if (!function_exists('makeHTML')) {
                 $sortby = 'sc.' . $_SESSION['tree_sortby'];
         };
 
-        $orderby = $modx->getDatabase()->escape($sortby . ' ' . $_SESSION['tree_sortdir']);
+        $orderby = $sortby . ' ' . $_SESSION['tree_sortdir'];
 
         // Folder sorting gets special setup ;) Add menuindex and pagetitle
         if ($_SESSION['tree_sortby'] === 'isfolder') {
@@ -106,30 +106,7 @@ if (!function_exists('makeHTML')) {
         $result = $result->get();
 
 
-        /*$result = $modx->getDatabase()->select(
-            sprintf(
-                "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder
-                , published, pub_date, unpub_date, richtext, searchable, cacheable
-                , deleted, type, template, templatename, menuindex, donthit, hidemenu, alias
-                , contentType, privateweb, privatemgr
-                ,MAX(IF(1=%s OR sc.privatemgr=0 %s, 1, 0)) AS hasAccess
-                , GROUP_CONCAT(document_group SEPARATOR ',') AS roles"
-                , $mgrRole
-                , $docgrp_cond
-            )
-            , sprintf(
-                '%s AS sc LEFT JOIN %s dg on dg.document = sc.id LEFT JOIN %s st on st.id = sc.template'
-                , $modx->getDatabase()->getFullTableName('site_content')
-                , $modx->getDatabase()->getFullTableName('document_groups')
-                , $modx->getDatabase()->getFullTableName('site_templates')
-            )
-            , sprintf(
-                '(parent=%d) %s GROUP BY sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr'
-                , $parent
-                , $access
-            )
-            , $orderby
-        );*/
+
         if ($result->count() == 0) {
             $output .= sprintf(
                 '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
@@ -150,7 +127,6 @@ if (!function_exists('makeHTML')) {
             if ($mgrRole == 1 || $row['privatemgr'] == 0) {
                 $row['hasAccess'] = 1;
             }
-            //while ($row = $modx->getDatabase()->getRow($result)) {
             $node = '';
             $nodetitle = getNodeTitle($nodeNameSource, $row);
             $nodetitleDisplay = $nodetitle;
@@ -654,18 +630,7 @@ if (!function_exists('checkIsFolder')) {
      */
     function checkIsFolder($parent = 0, $isfolder = 1)
     {
-        $modx = evolutionCMS();
-
-        return (int)$modx->getDatabase()->getValue(
-            $modx->getDatabase()->query(
-                sprintf(
-                    'SELECT count(*) FROM %s WHERE parent=%d AND isfolder=%d '
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                    , (int)$parent
-                    , (int)$isfolder
-                )
-            )
-        );
+        return (int)\EvolutionCMS\Models\SiteContent::query()->where('parent', $parent)->where('isfolder',$isfolder)->count();
     }
 }
 

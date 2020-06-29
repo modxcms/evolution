@@ -19,11 +19,11 @@ $messagetext = '';
         <div class="container container-body" id="lyr3">
             <b><?= $_lang['messages_read_message'] ?></b>
             <?php
-            $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "id='" . (int)$_REQUEST['id'] . "'");
-            $message = $modx->getDatabase()->getRow($rs);
-            if (!$message) {
+            $message = \EvolutionCMS\Models\UserMessage::query()->find($_REQUEST['id']);
+            if (is_null($message)) {
                 echo "Wrong number of messages returned!";
             } else {
+                $message = $message->toArray();
                 if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
@@ -33,8 +33,7 @@ $messagetext = '';
                     if ($sender == 0) {
                         $sendername = $_lang['messages_system_user'];
                     } else {
-                        $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
-                        $sendername = $modx->getDatabase()->getValue($rs2);
+                        $sendername = \EvolutionCMS\Models\ManagerUser::find($sender)->username;
                     }
                     ?>
                     <div class="btn-group float-right">
@@ -76,7 +75,7 @@ $messagetext = '';
                     </div>
                     <?php
                     // mark the message as read
-                    $modx->getDatabase()->update(array('messageread' => 1), $modx->getDatabase()->getFullTableName('user_messages'), "id='{$_REQUEST['id']}'");
+                    \EvolutionCMS\Models\UserMessage::query()->where('id', $_REQUEST['id'])->update(['messageread' => 1]);
                 }
             }
             ?>
@@ -90,8 +89,7 @@ $messagetext = '';
         <p><b><?= $_lang['messages_inbox'] ?></b></p>
         <?php
         // Get  number of rows
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
-        $num_rows = $modx->getDatabase()->getValue($rs);
+        $num_rows = \EvolutionCMS\Models\UserMessage::query()->where('recipient', $modx->getLoginUserID('mgr'))->count();
 
         // ==============================================================
         // Exemple Usage
@@ -133,8 +131,8 @@ $messagetext = '';
         // Of course you can now play with array_row_paging in order to print
         // only the results you would like...
 
-        $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
-        $limit = $modx->getDatabase()->getRecordCount($rs);
+        $messages = \EvolutionCMS\Models\UserMessage::query()->where('recipient', $modx->getLoginUserID('mgr'))->orderBy('postdate', 'DESC')->take($int_num_result)->skip($int_cur_position);
+        $limit = $messages->count();
         if ($limit < 1) {
             echo $_lang['messages_no_messages'];
         } else {
@@ -156,13 +154,12 @@ $messagetext = '';
                         </thead>
                         <tbody>
                         <?php
-                        while ($message = $modx->getDatabase()->getRow($rs)) {
+                        foreach ($messages->get()->toArray() as $message) {
                             $sender = $message['sender'];
                             if ($sender == 0) {
                                 $sendername = "[System]";
                             } else {
-                                $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
-                                $sendername = $modx->getDatabase()->getValue($rs2);
+                                $sendername = \EvolutionCMS\Models\ManagerUser::find($sender)->username;
                             }
                             $messagestyle = $message['messageread'] == 0 ? "text-primary" : "";
                             ?>
@@ -191,11 +188,12 @@ $messagetext = '';
         <p><b><?= $_lang['messages_compose'] ?></b></p>
         <?php
         if (isset($_REQUEST['m'], $_REQUEST['id']) && ($_REQUEST['m'] == 'rp' || $_REQUEST['m'] == 'f')) {
-            $rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('user_messages'), "id='" . $_REQUEST['id'] . "'");
-            $message = $modx->getDatabase()->getRow($rs);
-            if (!$message) {
+            $message = \EvolutionCMS\Models\UserMessage::query()->where('id', $_REQUEST['id'])->first();
+
+            if (is_null($message)) {
                 echo "Wrong number of messages returned!";
             } else {
+                $message = $message->toArray();
                 if ($message['recipient'] != $modx->getLoginUserID('mgr')) {
                     echo $_lang['messages_not_allowed_to_read'];
                 } else {
@@ -205,8 +203,7 @@ $messagetext = '';
                     if ($sender == 0) {
                         $sendername = "[System]";
                     } else {
-                        $rs2 = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('manager_users'), "id='{$sender}'");
-                        $sendername = $modx->getDatabase()->getValue($rs2);
+                        $sendername = \EvolutionCMS\Models\ManagerUser::find($sender)->username;
                     }
                     $subjecttext = $_REQUEST['m'] == 'rp' ? "Re: " : "Fwd: ";
                     $subjecttext .= $message['subject'];
@@ -250,11 +247,11 @@ $messagetext = '';
                 <div id='userspan' style="display:block;"> <?= $_lang['messages_select_user'] ?>:&nbsp;
                     <?php
                     // get all usernames
-                    $rs = $modx->getDatabase()->select('username, id', $modx->getDatabase()->getFullTableName('manager_users'));
+                    $users = \EvolutionCMS\Models\ManagerUser::all()->toArray();
                     ?>
                     <select name="user" class="form-control form-control-sm" size="1">
                         <?php
-                        while ($row = $modx->getDatabase()->getRow($rs)) {
+                        foreach ($users as $row) {
                             ?>
                             <option value="<?= $row['id'] ?>"><?= $row['username'] ?></option>
                             <?php
@@ -265,11 +262,11 @@ $messagetext = '';
                 <div id='groupspan' style="display:none;"> <?= $_lang['messages_select_group'] ?>:&nbsp;
                     <?php
                     // get all usernames
-                    $rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('user_roles'));
+                    $userRoles = \EvolutionCMS\Models\UserRole::all()->toArray();
                     ?>
                     <select name="group" class="form-control form-control-sm" size="1">
                         <?php
-                        while ($row = $modx->getDatabase()->getRow($rs)) {
+                        foreach ($userRoles as $row) {
                             ?>
                             <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
                             <?php
@@ -298,10 +295,8 @@ $messagetext = '';
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . " and messageread=0");
-$_SESSION['nrnewmessages'] = $modx->getDatabase()->getValue($rs);
-$rs = $modx->getDatabase()->select('COUNT(*)', $modx->getDatabase()->getFullTableName('user_messages'), "recipient=" . $modx->getLoginUserID('mgr') . "");
-$_SESSION['nrtotalmessages'] = $modx->getDatabase()->getValue($rs);
+$_SESSION['nrnewmessages'] = \EvolutionCMS\Models\UserMessage::query()->where('recipient', $modx->getLoginUserID('mgr'))->where('messageread', 0)->count();
+$_SESSION['nrtotalmessages'] = \EvolutionCMS\Models\UserMessage::query()->where('recipient', $modx->getLoginUserID('mgr'))->count();
 $messagesallowed = $modx->hasPermission('messages');
 ?>
 <script type="text/javascript">
