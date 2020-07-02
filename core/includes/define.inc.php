@@ -5,6 +5,18 @@ if (! defined('HTTPS_PORT')) {
     define('HTTPS_PORT', env('HTTPS_PORT', '443')); //$https_port
 }
 
+if (! defined('SESSION_STORAGE')) {
+    define('SESSION_STORAGE', env('SESSION_STORAGE', 'default')); // $session_cookie_path
+}
+
+if (! defined('REDIS_HOST')) {
+    define('REDIS_HOST', env('REDIS_HOST', '127.0.0.1')); // $session_cookie_path
+}
+
+if (! defined('REDIS_PORT')) {
+    define('REDIS_PORT', env('REDIS_PORT', '6379')); // $session_cookie_path
+}
+
 if (! defined('SESSION_COOKIE_PATH')) {
     define('SESSION_COOKIE_PATH', env('SESSION_COOKIE_PATH', '')); // $session_cookie_path
 }

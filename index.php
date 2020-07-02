@@ -74,6 +74,10 @@ if (! defined('IN_INSTALL_MODE') && ! file_exists($config['core'] . '/.install')
     exit;
 }
 
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
+}
+
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
 @ini_set('session.use_trans_sid', 0);
