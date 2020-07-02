@@ -5,6 +5,9 @@ define('MODX_API_MODE', true);
 
 require __DIR__ . '/bootstrap.php';
 
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
+}
 /*
 |--------------------------------------------------------------------------
 | Run The Artisan Application
