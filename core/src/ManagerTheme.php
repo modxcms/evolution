@@ -183,12 +183,9 @@ class ManagerTheme implements ManagerThemeInterface
         501
     ];
 
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core,String $theme)
     {
         $this->core = $core;
-
-
-        $theme = $this->getCore()->getConfig('manager_theme');
 
         $this->getCore()['view']->addNamespace('manager', MODX_MANAGER_PATH . '/media/style/' . $theme . '/views/');
         $this->getCore()['view']->addNamespace('manager', MODX_MANAGER_PATH . '/views/');
@@ -198,7 +195,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->loadLang(
             $this->getCore()->getConfig('manager_language')
         );
-
+        if(IN_INSTALL_MODE === false)
         $this->loadStyle();
 
         if ($this->getCore()->getConfig('mgr_jquery_path', '') === '') {

@@ -16,17 +16,16 @@ if (isset($_GET['id'])) {
 }
 // check if user has access permission, except admins
 if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
-    $rs = $modx->getDatabase()->select(
-        'sma.usergroup,mg.member',
-        $modx->getDatabase()->getFullTableName("site_module_access") . " sma
-			LEFT JOIN " . $modx->getDatabase()->getFullTableName("member_groups") . " mg ON mg.user_group = sma.usergroup AND member='" . $modx->getLoginUserID('mgr') . "'",
-        "sma.module = '{$id}'"
-    );
+    $moduleAccess = \EvolutionCMS\Models\SiteModuleAccess::query()
+        ->leftJoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
+        ->where('site_module_access.module', $id)->where('member', $modx->getLoginUserID('mgr'));
+
+
     //initialize permission to -1, if it stays -1 no permissions
     //attached so permission granted
     $permissionAccessInt = -1;
 
-    while ($row = $modx->getDatabase()->getRow($rs)) {
+    foreach ($moduleAccess->get()->toArray() as $row) {
         if ($row["usergroup"] && $row["member"]) {
             //if there are permissions and this member has permission, ofcourse
             //this is granted

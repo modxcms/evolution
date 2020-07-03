@@ -15,7 +15,7 @@ class CreateMembergroupNamesTable extends Migration {
 		Schema::create('membergroup_names', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name', 245)->default('')->unique('name');
+			$table->string('name', 245)->default('')->unique();
 		});
 	}
 

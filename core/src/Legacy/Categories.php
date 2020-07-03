@@ -1,5 +1,13 @@
 <?php namespace EvolutionCMS\Legacy;
 
+use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\SiteHtmlsnippet;
+use EvolutionCMS\Models\SiteModule;
+use EvolutionCMS\Models\SitePlugin;
+use EvolutionCMS\Models\SiteSnippet;
+use EvolutionCMS\Models\SiteTemplate;
+use EvolutionCMS\Models\SiteTmplvar;
+
 /**
  * Class to handle the modx-categories
  */
@@ -11,14 +19,7 @@ class Categories
 
     public function __construct()
     {
-        $modx = evolutionCMS();
 
-        $this->db = $modx->getDatabase();
-        $this->db_tbl['categories'] = $modx->getDatabase()->getFullTableName('categories');
-
-        foreach ($this->elements as $element) {
-            $this->db_tbl[$element] = $modx->getDatabase()->getFullTableName('site_' . $element);
-        }
     }
 
 
@@ -28,14 +29,7 @@ class Categories
      */
     public function getCategories()
     {
-        $categories = $this->db->makeArray(
-            $this->db->select(
-                '*',
-                $this->db_tbl['categories'],
-                '1',
-                '`rank`,`category`'
-            )
-        );
+        $categories = Category::query()->orderBy('rank', 'ASC')->orderBy('category', 'ASC')->get()->toArray();
 
         return empty($categories) ? array() : $categories;
     }
@@ -47,15 +41,11 @@ class Categories
      */
     public function getCategory($search, $where = 'category')
     {
-        $category = $this->db->getRow(
-            $this->db->select(
-                '*',
-                $this->db_tbl['categories'],
-                "`" . $where . "` = '" . $this->db->escape($search) . "'"
-            )
-        );
-
-        return $category;
+        $category = Category::where($where, $search)->first();
+        if(!is_null($category))
+            return $category->toArray();
+        else
+            return false;
     }
 
     /**
@@ -66,15 +56,12 @@ class Categories
      */
     public function getCategoryValue($value, $search, $where = 'category')
     {
-        $_value = $this->db->getValue(
-            $this->db->select(
-                '`' . $value . '`',
-                $this->db_tbl['categories'],
-                "`" . $where . "` = '" . $this->db->escape($search) . "'"
-            )
-        );
 
-        return $_value;
+        $category = Category::where($where, $search)->first();
+        if(!is_null($category))
+            return $category->{$value};
+        else
+            return false;
     }
 
     /**
@@ -85,21 +72,32 @@ class Categories
     public function getAssignedElements($category_id, $element)
     {
         if (in_array($element, $this->elements, true)) {
-            $elements = $this->db->makeArray(
-                $this->db->select(
-                    '*',
-                    $this->db_tbl[$element],
-                    "`category` = '" . (int)$category_id . "'"
-                )
-            );
+            switch ($element) {
+                case 'templates':
+                    $elements = SiteTemplate::where('category', $category_id)->get()->toArray();
+                    $_elements_count = count($elements);
+                    for ($i = 0; $i < $_elements_count; $i++) {
+                        $elements[$i]['name'] = $elements[$i]['templatename'];
+                    }
+                    break;
+                case  'tmplvars':
+                    $elements = SiteTmplvar::where('category', $category_id)->get()->toArray();
+                    break;
+                case 'htmlsnippets':
+                    $elements = SiteHtmlsnippet::where('category', $category_id)->get()->toArray();
+                    break;
+                case 'snippets':
+                    $elements = SiteSnippet::where('category', $category_id)->get()->toArray();
+                    break;
+                case 'plugins':
+                    $elements = SitePlugin::where('category', $category_id)->get()->toArray();
+                    break;
+                case 'modules':
+                    $elements = SiteModule::where('category', $category_id)->get()->toArray();
+                    break;
 
-            // correct the name of templates
-            if ($element === 'templates') {
-                $_elements_count = count($elements);
-                for ($i = 0; $i < $_elements_count; $i++) {
-                    $elements[$i]['name'] = $elements[$i]['templatename'];
-                }
             }
+
 
             return $elements;
         }
@@ -128,20 +126,22 @@ class Categories
     public function deleteCategory($category_id)
     {
         $_update = array('category' => 0);
-        foreach ($this->elements as $element) {
-            $this->db->update(
-                $_update,
-                $this->db_tbl[$element],
-                "`category` = '" . (int)$category_id . "'"
-            );
-        }
+        SiteTemplate::where('category', $category_id)->update($_update);
 
-        $this->db->delete(
-            $this->db_tbl['categories'],
-            "`id` = '" . (int)$category_id . "'"
-        );
+        SiteTmplvar::where('category', $category_id)->update($_update);
 
-        return $this->db->getAffectedRows() === 1;
+        SiteHtmlsnippet::where('category', $category_id)->update($_update);
+
+        SiteSnippet::where('category', $category_id)->update($_update);
+
+        SitePlugin::where('category', $category_id)->update($_update);
+
+        SiteModule::where('category', $category_id)->update($_update);
+
+        Category::where('id', $category_id)->delete();
+
+
+        return true;
     }
 
     /**
@@ -156,17 +156,13 @@ class Categories
         }
 
         $_update = array(
-            'category' => $this->db->escape($data['category']),
-            'rank'     => (int)$data['rank']
+            'category' => $data['category'],
+            'rank' => (int)$data['rank']
         );
+        $category = Category::query()->find($category_id);
 
-        $this->db->update(
-            $_update,
-            $this->db_tbl['categories'],
-            "`id` = '" . (int)$category_id . "'"
-        );
-
-        if ($this->db->getAffectedRows() === 1) {
+        if (!is_null($category)) {
+            $category->update($_update);
             return true;
         }
 
@@ -183,19 +179,10 @@ class Categories
         if ($this->isCategoryExists($category_name)) {
             return false;
         }
+        $catId = Category::query()->insertGetId(['category' => $category_name, 'rank' => $category_rank]);
 
-        $_insert = array(
-            'category' => $this->db->escape($category_name),
-            'rank'     => (int)$category_rank
-        );
-
-        $this->db->insert(
-            $_insert,
-            $this->db_tbl['categories']
-        );
-
-        if ($this->db->getAffectedRows() === 1) {
-            return $this->db->getInsertId();
+        if (is_numeric($catId)) {
+            return $catId;
         }
 
         return false;
@@ -207,18 +194,10 @@ class Categories
      */
     public function isCategoryExists($category_name)
     {
-        $category = $this->db->escape($category_name);
+        $category = Category::where('category', $category_name)->first();
 
-        $category_id = $this->db->getValue(
-            $this->db->select(
-                '`id`',
-                $this->db_tbl['categories'],
-                "`category` = '" . $category . "'"
-            )
-        );
-
-        if ($this->db->getAffectedRows() === 1) {
-            return $category_id;
+        if (!is_null($category)) {
+            return $category->id;
         }
 
         return false;

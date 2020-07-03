@@ -7,8 +7,7 @@
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
 include_once('../../index.php');
-$modx->getDatabase()->connect();
-$modx->getSettings();
+$modx = EvolutionCMS();
 $modx->invokeEvent('OnManagerPageInit');
 $ok = false;
 

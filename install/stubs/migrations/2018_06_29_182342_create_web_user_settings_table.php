@@ -15,7 +15,7 @@ class CreateWebUserSettingsTable extends Migration {
 		Schema::create('web_user_settings', function(Blueprint $table)
 		{
 			$table->integer('webuser')->index('webuserid');
-			$table->string('setting_name', 50)->default('')->index('setting_name');
+			$table->string('setting_name', 50)->default('')->index();
 			$table->text('setting_value', 65535)->nullable();
 			$table->primary(['webuser','setting_name']);
 		});

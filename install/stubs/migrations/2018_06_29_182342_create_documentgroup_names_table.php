@@ -16,8 +16,8 @@ class CreateDocumentgroupNamesTable extends Migration {
 		{
 			$table->integer('id', true);
 			$table->string('name', 245)->default('')->unique('name');
-			$table->boolean('private_memgroup')->nullable()->default(0)->comment('determine whether the document group is private to manager users');
-			$table->boolean('private_webgroup')->nullable()->default(0)->comment('determines whether the document is private to web users');
+			$table->integer('private_memgroup')->nullable()->default(0)->comment('determine whether the document group is private to manager users');
+			$table->integer('private_webgroup')->nullable()->default(0)->comment('determines whether the document is private to web users');
 		});
 	}
 

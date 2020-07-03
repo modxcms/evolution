@@ -67,6 +67,15 @@ if (!function_exists('startCMSSession')) {
             , $secure
             , true
         );
+
+        if (SESSION_STORAGE == 'redis' && class_exists('Redis')) {
+            $redis = new Redis();
+            if ($redis->connect(REDIS_HOST, REDIS_PORT) && $redis->select(0)) {
+                $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
+                session_set_save_handler($handler);
+            }
+        }
+
         session_start();
         $key = "modx.mgr.session.cookie.lifetime";
 
@@ -125,7 +134,7 @@ if (!function_exists('modx_sanitize_gpc')) {
      * @param int $depth
      * @return array|string
      */
-    function modx_sanitize_gpc(& $values, $depth = 0)
+    function modx_sanitize_gpc(&$values, $depth = 0)
     {
         if (200 < $depth) {
             exit('GPC Array nested too deep!');
@@ -148,7 +157,7 @@ if (!function_exists('modx_sanitize_gpc')) {
     }
 }
 
-if (! function_exists('getSanitizedValue')) {
+if (!function_exists('getSanitizedValue')) {
     /**
      * @param string $value
      * @return string
@@ -177,7 +186,7 @@ if (! function_exists('getSanitizedValue')) {
         return $value;
     }
 }
-if (! function_exists('removeSanitizeSeed')) {
+if (!function_exists('removeSanitizeSeed')) {
     /**
      * @param string $string
      * @return string

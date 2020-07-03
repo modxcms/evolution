@@ -1,5 +1,12 @@
 <?php namespace EvolutionCMS\Legacy;
 
+use EvolutionCMS\Models\SiteHtmlsnippet;
+use EvolutionCMS\Models\SiteModule;
+use EvolutionCMS\Models\SitePlugin;
+use EvolutionCMS\Models\SiteSnippet;
+use EvolutionCMS\Models\SiteTemplate;
+use EvolutionCMS\Models\SiteTmplvar;
+
 class ModuleCategoriesManager extends Categories
 {
     /**
@@ -111,17 +118,32 @@ class ModuleCategoriesManager extends Categories
     {
 
         $_update = array(
-            'id'       => (int)$element_id,
             'category' => (int)$category_id
         );
+        switch ($element) {
+            case 'templates':
+                SiteTemplate::where('id', $element_id)->update($_update);
+                break;
+            case  'tmplvars':
+                $elements = SiteTmplvar::where('id', $element_id)->update($_update);
+                break;
+            case 'htmlsnippets':
+                $elements = SiteHtmlsnippet::where('id', $element_id)->update($_update);
+                break;
+            case 'snippets':
+                $elements = SiteSnippet::where('id', $element_id)->update($_update);
+                break;
+            case 'plugins':
+                $elements = SitePlugin::where('id', $element_id)->update($_update);
+                break;
+            case 'modules':
+                $elements = SiteModule::where('id', $element_id)->update($_update);
+                break;
 
-        $this->getDatabase()->update(
-            $_update,
-            $this->db_tbl[$element],
-            "`id` = '" . (int)$element_id . "'"
-        );
+        }
 
-        return $this->getDatabase()->getAffectedRows() === 1;
+
+        return true;
     }
 
 

@@ -16,6 +16,7 @@ class CreateSiteTemplatesTable extends Migration {
 		{
 			$table->integer('id', true);
 			$table->string('templatename', 100)->default('');
+			$table->string('templatealias', 100)->default('');
 			$table->string('description')->default('Template');
 			$table->integer('editor_type')->default(0)->comment('0-plain text,1-rich text,2-code editor');
 			$table->integer('category')->default(0)->comment('category id');

@@ -294,12 +294,13 @@ class uploader {
 		$modx = evolutionCMS();
 
 		// Cleaning uploaded filename?
-		$setting = $modx->getDatabase()->select('count(*)', $modx->getDatabase()->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
-		if ($modx->getDatabase()->getValue($setting)>0) {
+        $setting = \EvolutionCMS\Models\SystemSetting::query()->where('setting_name', 'clean_uploaded_filename')->where('setting_value', 1);
+        if ($setting->count() > 0) {
 			// Transalias plugin active?
-			$res = $modx->getDatabase()->select('properties', $modx->getDatabase()->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
-			if ($properties = $modx->getDatabase()->getValue($res)) {
-				$properties = $modx->parseProperties($properties, 'TransAlias', 'plugin');
+
+            $property = \EvolutionCMS\Models\SitePlugin::query()->where('name', 'TransAlias')->where('disabled', 0)->first();
+			if (!is_null($property)) {
+				$properties = $modx->parseProperties($property->properties, 'TransAlias', 'plugin');
 			} else {
 				$properties = NULL;
 			}

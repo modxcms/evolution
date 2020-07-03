@@ -43,17 +43,6 @@ switch($modx->getManagerApi()->action) {
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-// Get table names (alphabetical)
-$tbl_categories = $modx->getDatabase()->getFullTableName('categories');
-$tbl_member_groups = $modx->getDatabase()->getFullTableName('member_groups');
-$tbl_membergroup_access = $modx->getDatabase()->getFullTableName('membergroup_access');
-$tbl_document_groups = $modx->getDatabase()->getFullTableName('document_groups');
-$tbl_site_content = $modx->getDatabase()->getFullTableName('site_content');
-$tbl_site_templates = $modx->getDatabase()->getFullTableName('site_templates');
-$tbl_site_tmplvar_access = $modx->getDatabase()->getFullTableName('site_tmplvar_access');
-$tbl_site_tmplvar_contentvalues = $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues');
-$tbl_site_tmplvar_templates = $modx->getDatabase()->getFullTableName('site_tmplvar_templates');
-$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 if($modx->getManagerApi()->action == 27) {
     //editing an existing document
@@ -93,7 +82,7 @@ if(!empty ($id)) {
                 ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
         });
     }
-    $content = $documentObjectQuery->first()->toArray();
+    $content = $documentObjectQuery->withTrashed()->first()->toArray();
     $modx->documentObject = &$content;
     if(!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
@@ -1480,14 +1469,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             $inputHTML = '<input ' . implode(' ', $inputString) . ' />';
 
                             // does user have this permission?
-                            $from = "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg";
-                            $vs = array(
-                                $row['id'],
-                                $_SESSION['mgrInternalKey']
-                            );
-                            $where = vsprintf("mga.membergroup=mg.user_group AND mga.documentgroup=%s AND mg.member=%s", $vs);
-                            $rsp = $modx->getDatabase()->select('COUNT(mg.id)', $from, $where);
-                            $count = $modx->getDatabase()->getValue($rsp);
+
+                            $count = \EvolutionCMS\Models\MembergroupAccess::query()
+                                ->join('member_groups', 'member_groups.user_group', '=', 'membergroup_access.membergroup')
+                                ->where('membergroup_access.documentgroup', $row['id'])
+                                ->where('member_groups.member', $_SESSION['mgrInternalKey'])->count();
+
                             if($count > 0) {
                                 ++$permissions_yes;
                             } else {

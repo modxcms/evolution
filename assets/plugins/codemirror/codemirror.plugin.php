@@ -60,7 +60,6 @@ $limitedHeight = false;
  */
 switch($modx->event->name) {
 	case 'OnTempFormRender'   :
-		$object_name = $content['templatename'];
 		$rte = ($prte ? $prte : 'none');
 		break;
 	case 'OnChunkFormRender'  :
@@ -72,7 +71,6 @@ switch($modx->event->name) {
 			return;
 		}
 		$textarea_name = $modx->event->params['elements'];
-		$object_name = $content['pagetitle'];
 		$rte = 'none';
 		$tvMode = true;
 		$contentType = $content['contentType'] ? $content['contentType'] : $modx->event->params['contentType'];
@@ -104,7 +102,6 @@ switch($modx->event->name) {
 			return;
 		}
 		$textarea_name = 'ta';
-        $object_name = isset($content['pagetitle']) ? $content['pagetitle'] : '';
 		$xrte = (('htmlmixed' == $mode) ? $xrte : 0);
         $rte = ($prte ? $prte : (isset($content['id']) ? ($xrte ? $srte : 'none') : $srte));
 		$contentType = $content['contentType'];
@@ -344,8 +341,10 @@ if(('none' == $rte) && $mode && $elements !== NULL) {
 		} else {
 			$setHeight = '';
 		};
-
-		$object_id = md5($modx->event->name . '-' . $content['id'] . '-' . $el);
+        if(isset($content['id']))
+		    $object_id = md5($modx->event->name . '-' . $content['id'] . '-' . $el);
+        else
+            $object_id = md5($modx->event->name . '-' . $el);
 
 		$output .= "
 			<script>

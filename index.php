@@ -58,7 +58,7 @@ $config = [
 if (file_exists(__DIR__ . '/config.php')) {
     $config = array_merge($config, require __DIR__ . '/config.php');
 }
-if (! file_exists($config['core'] . '/.install')) {
+if (! defined('IN_INSTALL_MODE') && ! file_exists($config['core'] . '/.install')) {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
     header('Status: 503 Service Temporarily Unavailable');
     header('Retry-After: 3600');
@@ -72,6 +72,10 @@ if (! file_exists($config['core'] . '/.install')) {
     }
 
     exit;
+}
+
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
 }
 
 // set some settings, and address some IE issues
@@ -99,6 +103,9 @@ if (! defined('MODX_API_MODE')) {
 }
 if (! defined('MODX_CLI')) {
     define('MODX_CLI', false);
+}
+if (! defined('IN_INSTALL_MODE')) {
+    define('IN_INSTALL_MODE', false);
 }
 
 // initiate a new document parser

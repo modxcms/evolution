@@ -415,54 +415,30 @@ if (!function_exists('getSnippets')) {
 }
 
 if (!function_exists('clean_up')) {
-    function clean_up($sqlParser)
+    function clean_up()
     {
-        $ids = array();
-
         // secure web documents - privateweb
-        mysqli_query($sqlParser->conn,
-            'UPDATE `' . $sqlParser->prefix . "site_content` SET privateweb = 0 WHERE privateweb = 1");
-        $sql = "SELECT DISTINCT sc.id
-             FROM `" . $sqlParser->prefix . "site_content` sc
-             LEFT JOIN `" . $sqlParser->prefix . "document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `" . $sqlParser->prefix . "webgroup_access` wga ON wga.documentgroup = dg.document_group
-             WHERE wga.id>0";
-        $ds = mysqli_query($sqlParser->conn, $sql);
-        if (!$ds) {
-            echo 'An error occurred while executing a query: ' . mysqli_error($sqlParser->conn);
-        } else {
-            while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r['id'];
-            }
-            if (count($ids) > 0) {
-                mysqli_query($sqlParser->conn,
-                    "UPDATE `" . $sqlParser->prefix . "site_content` SET privateweb = 1 WHERE id IN (" . implode(", ",
-                        $ids) . ')');
-                unset($ids);
-            }
-        }
+        \EvolutionCMS\Models\SiteContent::query()->where('privateweb', 1)->update(['privateweb' => 0]);
 
-        // secure manager documents privatemgr
-        mysqli_query($sqlParser->conn,
-            "UPDATE `" . $sqlParser->prefix . "site_content` SET privatemgr = 0 WHERE privatemgr = 1");
-        $sql = "SELECT DISTINCT sc.id
-             FROM `" . $sqlParser->prefix . "site_content` sc
-             LEFT JOIN `" . $sqlParser->prefix . "document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `" . $sqlParser->prefix . "membergroup_access` mga ON mga.documentgroup = dg.document_group
-             WHERE mga.id>0";
-        $ds = mysqli_query($sqlParser->conn, $sql);
-        if (!$ds) {
-            echo 'An error occurred while executing a query: ' . mysqli_error($sqlParser->conn);
-        } else {
-            while ($r = mysqli_fetch_assoc($ds)) {
-                $ids[] = $r['id'];
+        $ids = \EvolutionCMS\Models\SiteContent::query()
+            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+            ->leftJoin('webgroup_access', 'document_groups.document_group', '=', 'webgroup_access.documentgroup')
+            ->where('webgroup_access.id', '>', 0)->pluck('site_content.id');
+
+
+        if($ids->count()> 0){
+            \EvolutionCMS\Models\SiteContent::query()->whereIn('id', $ids)->update(['privateweb' => 1]);
             }
-            if (count($ids) > 0) {
-                mysqli_query($sqlParser->conn,
-                    "UPDATE `" . $sqlParser->prefix . "site_content` SET privatemgr = 1 WHERE id IN (" . implode(", ",
-                        $ids) . ")");
-                unset($ids);
-            }
+        //Clear privatemgr
+        \EvolutionCMS\Models\SiteContent::query()->where('privatemgr', 1)->update(['privatemgr' => 0]);
+
+        $ids = \EvolutionCMS\Models\SiteContent::query()
+            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+            ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
+            ->where('membergroup_access.id', '>', 0)->pluck('site_content.id');
+
+        if($ids->count()> 0){
+            \EvolutionCMS\Models\SiteContent::query()->whereIn('id', $ids)->update(['privatemgr' => 1]);
         }
     }
 }
@@ -685,27 +661,16 @@ if (!function_exists('getCreateDbCategory')) {
      * @param SqlParser $sqlParser
      * @return int
      */
-    function getCreateDbCategory($category, $sqlParser)
+    function getCreateDbCategory($category)
     {
-        $dbase = $sqlParser->dbname;
-        $dbase = '`' . trim($dbase, '`') . '`';
-        $table_prefix = $sqlParser->prefix;
         $category_id = 0;
         if (!empty($category)) {
-            $category = mysqli_real_escape_string($sqlParser->conn, $category);
-            $rs = mysqli_query($sqlParser->conn,
-                "SELECT id FROM $dbase.`" . $table_prefix . "categories` WHERE category = '" . $category . "'");
-            if (mysqli_num_rows($rs) && ($row = mysqli_fetch_assoc($rs))) {
-                $category_id = $row['id'];
-            } else {
-                $q = "INSERT INTO $dbase.`" . $table_prefix . "categories` (`category`) VALUES ('{$category}');";
-                $rs = mysqli_query($sqlParser->conn, $q);
-                if ($rs) {
-                    $category_id = mysqli_insert_id($sqlParser->conn);
-                }
+            $categoryRecord = \EvolutionCMS\Models\Category::where('category', $category)->first();
+            if(is_null($categoryRecord)){
+                $categoryRecord = \EvolutionCMS\Models\Category::firstOrCreate(['category'=>$category]);
             }
+            $category_id = $categoryRecord->getKey();
         }
-
         return $category_id;
     }
 }

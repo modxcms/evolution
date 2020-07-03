@@ -57,6 +57,7 @@ $ph['manager_language'] = $manager_language;
 $ph['installMode'] = $installMode;
 $ph['database_name'] = trim($_POST['database_name'], '`');
 $ph['tableprefix'] = $_POST['tableprefix'];
+$ph['database_type'] = $_POST['database_type'];
 $ph['database_collation'] = $_POST['database_collation'];
 $ph['database_connection_charset'] = $_POST['database_connection_charset'];
 $ph['database_connection_method'] = $_POST['database_connection_method'];

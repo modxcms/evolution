@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!$modx->hasPermission('save_template')) {
@@ -7,8 +7,6 @@ if (!$modx->hasPermission('save_template')) {
 }
 
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
-
-$tbl_site_tmplvars = $modx->getDatabase()->getFullTableName('site_tmplvars');
 
 $siteURL = MODX_SITE_URL;
 
@@ -27,18 +25,18 @@ if (isset($_POST['listSubmitted'])) {
             }
             $key = $reset ? 0 : $key;
             $id = ltrim($item, 'item_');
-            $modx->getDatabase()->update(array('rank' => $key), $tbl_site_tmplvars, "id='{$id}'");
+            \EvolutionCMS\Models\SiteTmplvar::where('id', $id)->update(array('rank' => $key));
         }
     }
     // empty cache
     $modx->clearCache('full');
 }
+$tmplvars = \EvolutionCMS\Models\SiteTmplvar::query()->select('name', 'caption', 'id', 'rank')
+    ->orderBy('rank', 'ASC')->orderBy('id', 'ASC');
 
-$rs = $modx->getDatabase()->select("name, caption, id, rank", $tbl_site_tmplvars, "", "rank ASC, id ASC");
-
-if ($modx->getDatabase()->getRecordCount($rs)) {
+if ($tmplvars->count() > 0) {
     $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
-    while ($row = $modx->getDatabase()->getRow($rs)) {
+    foreach ($tmplvars->get()->toArray() as $row) {
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
         $sortableList .= '<li id="item_' . $row['id'] . '"><i class="' . $_style['icon_tv'] . '"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
     }
@@ -51,7 +49,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
 <script type="text/javascript">
 
     var actions = {
-        save: function() {
+        save: function () {
             var el = document.getElementById('updated');
             if (el) {
                 el.style.display = 'none';
@@ -61,13 +59,12 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
                 el.style.display = 'block';
             }
             setTimeout('document.sortableListForm.submit()', 1000);
-        }, cancel: function() {
+        }, cancel: function () {
             document.location.href = 'index.php?a=76';
         },
     };
 
-    function renderList()
-    {
+    function renderList() {
         var list = '';
         var els = document.querySelectorAll('.sortableList > li');
         for (var i = 0; i < els.length; i++) {
@@ -78,19 +75,18 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
 
     var sortdir = 'asc';
 
-    function sort()
-    {
+    function sort() {
         var els = document.querySelectorAll('.sortableList > li');
         var keyA, keyB;
         if (sortdir === 'asc') {
-            els = [].slice.call(els).sort(function(a, b) {
+            els = [].slice.call(els).sort(function (a, b) {
                 keyA = a.innerText.toLowerCase();
                 keyB = b.innerText.toLowerCase();
                 return keyA.localeCompare(keyB);
             });
             sortdir = 'desc';
         } else {
-            els = [].slice.call(els).sort(function(b, a) {
+            els = [].slice.call(els).sort(function (b, a) {
                 keyA = a.innerText.toLowerCase();
                 keyB = b.innerText.toLowerCase();
                 return keyA.localeCompare(keyB);
@@ -106,8 +102,7 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
         document.getElementById('list').value = list;
     }
 
-    function resetSortOrder()
-    {
+    function resetSortOrder() {
         if (confirm('<?= $_lang["confirm_reset_sort_order"] ?>') === true) {
             documentDirty = false;
             var input = document.createElement('input');
@@ -130,17 +125,19 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
     <div class="container container-body">
         <?php
         if ($sortableList) {
-        ?>
-        <b><?= $_lang['template_tv_edit'] ?></b>
-        <p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
-        <p>
-            <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['icon_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
-            <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
-        </p>
-        <?= $updateMsg ?>
-        <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
-        <?= $sortableList ?>
-        <?php
+            ?>
+            <b><?= $_lang['template_tv_edit'] ?></b>
+            <p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
+            <p>
+                <a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i
+                            class="<?= $_style['icon_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+                <a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i
+                            class="<?= $_style['icon_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+            </p>
+            <?= $updateMsg ?>
+            <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
+            <?= $sortableList ?>
+            <?php
         } else {
             echo $updateMsg;
         }
@@ -149,14 +146,14 @@ if ($modx->getDatabase()->getRecordCount($rs)) {
 </div>
 
 <form action="" method="post" name="sortableListForm">
-    <input type="hidden" name="listSubmitted" value="true" />
-    <input type="hidden" id="list" name="list" value="" />
+    <input type="hidden" name="listSubmitted" value="true"/>
+    <input type="hidden" id="list" name="list" value=""/>
 </form>
 
 <script type="text/javascript">
 
     evo.sortable('.sortableList > li', {
-        complete: function() {
+        complete: function () {
             renderList();
         }
     })

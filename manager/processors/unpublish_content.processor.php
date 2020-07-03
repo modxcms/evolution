@@ -12,7 +12,7 @@ if($id==0) {
 }
 
 /************webber ********/
-$content=$modx->getDatabase()->getRow($modx->getDatabase()->select('parent, pagetitle', $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'"));
+$content=\EvolutionCMS\Models\SiteContent::query()->select('parent', 'pagetitle')->where('id', $id)->first()->toArray();
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
@@ -36,16 +36,15 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$modx->getDatabase()->update(
-	array(
-		'published'   => 0,
-		'pub_date'    => 0,
-		'unpub_date'  => 0,
-		'editedby'    => $modx->getLoginUserID('mgr'),
-		'editedon'    => time(),
-		'publishedby' => 0,
-		'publishedon' => 0,
-	), $modx->getDatabase()->getFullTableName('site_content'), "id='{$id}'");
+\EvolutionCMS\Models\SiteContent::query()->find($id)->update(array(
+    'published'   => 0,
+    'pub_date'    => 0,
+    'unpub_date'  => 0,
+    'editedby'    => $modx->getLoginUserID('mgr'),
+    'editedon'    => time(),
+    'publishedby' => 0,
+    'publishedon' => 0,
+));
 
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));

@@ -25,7 +25,7 @@ if ($sysMsgs != '') : ?>
         if (parent.modx) {
           parent.modx.popup({
             title: '<?=$_lang['sys_alert']; ?>',
-            content: '<?=$modx->getDatabase()->escape($sysMsgs);?>',
+            content: '<?=$sysMsgs?>',
             wrap: document.body,
             type: 'warning',
             width: '400px',

@@ -17,7 +17,6 @@ if($op == 'reset') {
 	$_PAGE['vs']['search'] = '';
 } else {
 	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : (isset($_PAGE['vs']['search']) ? $_PAGE['vs']['search'] : '');
-	$sqlQuery = $modx->getDatabase()->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 
@@ -124,12 +123,25 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-					$ds = $modx->getDatabase()->select("wu.id, wu.username, wua.fullname, wua.email, wua.thislogin, wua.logincount, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getDatabase()->getFullTableName("web_users") . " wu 
-			INNER JOIN " . $modx->getDatabase()->getFullTableName("web_user_attributes") . " wua ON wua.internalKey=wu.id", ($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '%{$sqlQuery}%')" : ""), 'username');
-					$grd = new \EvolutionCMS\Support\DataGrid('', $ds, $modx->getConfig('number_of_results')); // set page size to 0 t show all items
+                    $managerUsers = \EvolutionCMS\Models\WebUser::query()
+                        ->select('web_users.id', 'web_users.username', 'web_user_attributes.fullname', 'web_user_attributes.email', 'web_user_attributes.blocked', 'web_user_attributes.thislogin', 'web_user_attributes.logincount')
+                        ->join('web_user_attributes', 'web_user_attributes.internalKey', '=', 'web_users.id')
+                        ->orderBy('web_users.username', 'ASC');
+                    $where = "";
+                    if (!empty($query)) {
+                        $managerUsers = $managerUsers->where(function ($q) use ($query) {
+                            $q->where('web_users.username', 'LIKE', $query.'%')
+                                ->orWhere('web_user_attributes.fullname', 'LIKE', '%'.$query.'%')
+                                ->orWhere('web_user_attributes.email', 'LIKE', '%'.$query.'%');
+                        });
+                    }
+
+
+					$grd = new \EvolutionCMS\Support\DataGrid('', $managerUsers, $modx->getConfig('number_of_results')); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";
+                    $grd->prepareResult = ['blocked'=>[1=>$_lang['yes'],0=>'-']];
 					$grd->itemClass = "tableItem";
 					$grd->altItemClass = "tableAltItem";
 					$grd->fields = "id,username,fullname,email,thislogin,logincount,blocked";

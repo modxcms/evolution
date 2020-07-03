@@ -15,7 +15,7 @@ class CreateWebUsersTable extends Migration {
 		Schema::create('web_users', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('username', 100)->default('')->unique('username');
+			$table->string('username', 100)->default('')->unique();
 			$table->string('password', 100)->default('');
 			$table->string('cachepwd', 100)->default('')->comment('Store new unconfirmed password');
 		});

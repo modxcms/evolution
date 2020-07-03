@@ -3,6 +3,7 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
+
 switch($modx->getManagerApi()->action) {
 	case 88:
 		if(!$modx->hasPermission('edit_web_user')) {
@@ -22,8 +23,12 @@ $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked
-$rs = $modx->getDatabase()->select('username', $modx->getDatabase()->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID('mgr') . "'");
-if($username = $modx->getDatabase()->getValue($rs)) {
+$username = \EvolutionCMS\Models\ActiveUser::query()->where('action', 12)
+    ->where('id', $user)
+    ->where('internalKey', '!=', $modx->getLoginUserID('mgr'))
+    ->first();
+if(!is_null($username)) {
+    $username = $username->username;
 	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 }
 // end check for lock
@@ -57,8 +62,7 @@ $usernamedata = [];
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
-	$userdatatmp = $modx->getDatabase()->getRow($rs);
+	$userdatatmp = \EvolutionCMS\Models\WebUserAttribute::query()->where('internalKey', $user)->first()->toArray();
 	if(!$userdatatmp) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
@@ -66,13 +70,11 @@ if($modx->getManagerApi()->action == '88') {
 	unset($userdatatmp);
 
 	// get user settings
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_user_settings'), "webuser = '{$user}'");
-	while($row = $modx->getDatabase()->getRow($rs)) $usersettings[$row['setting_name']] = $row['setting_value'];
+    $usersettings = \EvolutionCMS\Models\WebUserSetting::where('webuser', $user)->pluck('setting_value', 'setting_name')->toArray();
 	extract($usersettings, EXTR_OVERWRITE);
 
 	// get user name
-	$rs = $modx->getDatabase()->select('*', $modx->getDatabase()->getFullTableName('web_users'), "id = '{$user}'");
-	$usernamedata = $modx->getDatabase()->getRow($rs);
+	$usernamedata = \EvolutionCMS\Models\WebUser::find($user)->toArray();
 	if(!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
@@ -436,7 +438,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<th><?php echo $_lang["login_homepage"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td>
+						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : (isset($usersettings['login_home']) ? $usersettings['login_home'] : ""); ?>"></td>
 					</tr>
 					<tr>
 						<td width="200">&nbsp;</td>
@@ -444,7 +446,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					</tr>
 					<tr>
 						<th><?php echo $_lang["login_allowed_ip"] ?></th>
-						<td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : $usersettings['allowed_ip']; ?>" /></td>
+						<td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : (isset($usersettings['allowed_ip']) ? $usersettings['allowed_ip'] : ""); ?>" /></td>
 					</tr>
 					<tr>
 						<td width="200">&nbsp;</td>
@@ -452,7 +454,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					</tr>
 					<tr>
 						<th><?php echo $_lang["login_allowed_days"] ?></th>
-						<td><label>
+						<td><label><?php if(!isset($usersettings['allowed_days'])) $usersettings['allowed_days'] = ''; ?>
 								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'], '1') !== false ? "checked='checked'" : ""; ?> />
 								<?php echo $_lang['sunday']; ?></label>
 							<br />
@@ -528,7 +530,26 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<td class='comment'><?php echo $_lang["user_photo_message"] ?></td>
 					</tr>
 					<tr>
-						<td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? (strpos($_POST['photo'], "http://") === false ? MODX_SITE_URL : "") . $_POST['photo'] : !empty($userdata['photo']) ? (strpos($userdata['photo'], "http://") === false ? MODX_SITE_URL : "") . $userdata['photo'] : $_style["tx"]; ?>" /></td>
+                        <?php
+                        $out = '';
+                            if (isset($_POST['photo'])) {
+                                if((strpos($_POST['photo'], "http://") === false)){
+                                    $out = MODX_SITE_URL;
+                                }
+                                $out.=$_POST['photo'];
+                            }else {
+                                if(!empty($userdata['photo'])){
+                                    if((strpos($_POST['photo'], "http://") === false)){
+                                    $out = MODX_SITE_URL;
+                                }
+                                $out.=$userdata['photo'];
+
+                                }else {
+                                    $out = $_style["tx"];
+                                }
+                            }
+                        ?>
+						<td colspan="2" align="center"><img name="iphoto" src="<?php echo $out;  ?>" /></td>
 					</tr>
 				</table>
 			</div>
@@ -538,8 +559,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '88') { // only do this bit if the user is being edited
-				$rs = $modx->getDatabase()->select('webgroup', $modx->getDatabase()->getFullTableName('web_groups'), "webuser='{$user}'");
-				$groupsarray = $modx->getDatabase()->getColumn('webgroup', $rs);
+				$groupsarray = \EvolutionCMS\Models\WebGroup::query()->where('webuser', $user)->pluck('webgroup');
 			}
 			// retain selected user groups between post
 			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
@@ -551,8 +571,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabPermissions"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-				$rs = $modx->getDatabase()->select('name, id', $modx->getDatabase()->getFullTableName('webgroup_names'), '', 'name');
-				while($row = $modx->getDatabase()->getRow($rs)) {
+				$webgroupnames = \EvolutionCMS\Models\WebgroupName::query()->orderBy('name')->get();
+				foreach ($webgroupnames->toArray() as $row) {
 					echo '<label><input type="checkbox" name="user_groups[]" value="' . $row['id'] . '"' . (in_array($row['id'], $groupsarray) ? ' checked="checked"' : '') . ' />' . $row['name'] . '</label><br />';
 				}
 				}

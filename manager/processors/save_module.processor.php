@@ -11,19 +11,19 @@ if (!$modx->hasPermission('save_module')) {
 }
 
 $id = (int)$_POST['id'];
-$name = $modx->getDatabase()->escape(trim($_POST['name']));
-$description = $modx->getDatabase()->escape($_POST['description']);
-$resourcefile = $modx->getDatabase()->escape($_POST['resourcefile']);
+$name = trim($_POST['name']);
+$description = $_POST['description'];
+$resourcefile = $_POST['resourcefile'];
 $enable_resource = $_POST['enable_resource'] == 'on' ? 1 : 0;
-$icon = $modx->getDatabase()->escape($_POST['icon']);
+$icon = $_POST['icon'];
 //$category = (int)$_POST['category'];
 $disabled = $_POST['disabled'] == 'on' ? 1 : 0;
 $wrap = $_POST['wrap'] == 'on' ? 1 : 0;
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
-$modulecode = $modx->getDatabase()->escape($_POST['post']);
-$properties = $modx->getDatabase()->escape($_POST['properties']);
+$modulecode = $_POST['post'];
+$properties = $_POST['properties'];
 $enable_sharedparams = $_POST['enable_sharedparams'] == 'on' ? 1 : 0;
-$guid = $modx->getDatabase()->escape($_POST['guid']);
+$guid = $_POST['guid'];
 $parse_docblock = $_POST['parse_docblock'] == "1" ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
 
@@ -71,15 +71,14 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('site_modules'), "name='{$name}'");
-        $count = $modx->getDatabase()->getValue($rs);
+        $count = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->count();
         if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(107);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
         }
 
         // save the new module
-        $newid = $modx->getDatabase()->insert(array(
+        $newid = \EvolutionCMS\Models\SiteModule::query()->insertGetId(array(
             'name' => $name,
             'description' => $description,
             'disabled' => $disabled,
@@ -95,7 +94,7 @@ switch ($_POST['mode']) {
             'properties' => $properties,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getDatabase()->getFullTableName('site_modules'));
+        ));
 
         // save user group access permissions
         saveUserGroupAccessPermissons();
@@ -130,14 +129,15 @@ switch ($_POST['mode']) {
             ));
 
         // disallow duplicate names for new modules
-        $rs = $modx->getDatabase()->select('count(id)', $modx->getDatabase()->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
-        if ($modx->getDatabase()->getValue($rs) > 0) {
+        $count = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->where('id', '!=', $id)->count();
+
+        if ($count > 0) {
             $modx->getManagerApi()->saveFormValues(108);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
         }
 
         // save the edited module
-        $modx->getDatabase()->update(array(
+        \EvolutionCMS\Models\SiteModule::find($id)->update(array(
             'name' => $name,
             'description' => $description,
             'icon' => $icon,
@@ -152,7 +152,7 @@ switch ($_POST['mode']) {
             'modulecode' => $modulecode,
             'properties' => $properties,
             'editedon' => $currentdate
-        ), $modx->getDatabase()->getFullTableName('site_modules'), "id='{$id}'");
+        ));
 
         // save user group access permissions
         saveUserGroupAccessPermissons();

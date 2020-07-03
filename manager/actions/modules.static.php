@@ -1,5 +1,8 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+
+use Illuminate\Support\Facades\DB;
+
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module'))) {
@@ -17,7 +20,6 @@ if (get_by_key($_REQUEST, 'op') == 'reset') {
     $_PAGE['vs']['search'] = '';
 } else {
     $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : get_by_key($_PAGE, 'vs.search');
-    $sqlQuery = $modx->getDatabase()->escape($query);
     $_PAGE['vs']['search'] = $query;
 }
 
@@ -42,8 +44,7 @@ echo $cm->render();
     var selectedItem;
     var contextm = <?= $cm->getClientScriptObject() ?>;
 
-    function showContentMenu(id, e)
-    {
+    function showContentMenu(id, e) {
         selectedItem = id;
         contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('+10') ?>+ 'px'; //offset menu if RTL is selected
         contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop))) + 'px';
@@ -52,8 +53,7 @@ echo $cm->render();
         return false;
     };
 
-    function menuAction(a)
-    {
+    function menuAction(a) {
         var id = selectedItem;
         switch (a) {
             case 1:		// run module
@@ -76,19 +76,19 @@ echo $cm->render();
         }
     }
 
-    document.addEventListener('click', function() {
+    document.addEventListener('click', function () {
         contextm.style.visibility = 'hidden';
     });
 
     var actions = {
-        new: function() {
+        new: function () {
             document.location.href = 'index.php?a=107';
         },
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var h1help = document.querySelector('h1 > .help');
-        h1help.onclick = function() {
+        h1help.onclick = function () {
             document.querySelector('.element-edit-message').classList.toggle('show');
         };
     });
@@ -96,7 +96,8 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="<?= $_style['icon_modules'] ?>"></i><?= $_lang['module_management'] ?><i class="<?= $_style['icon_question_circle'] ?> help"></i>
+    <i class="<?= $_style['icon_modules'] ?>"></i><?= $_lang['module_management'] ?><i
+            class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.newmodule') ?>
@@ -109,12 +110,17 @@ echo $cm->render();
     <div class="table-responsive">
         <?php
         if ($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-            $rs = $modx->getDatabase()->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icon_modules'] . '") as icon
-				FROM ' . $modx->getDatabase()->getFullTableName('site_modules') . ' AS sm
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
-				LEFT JOIN ' . $modx->getDatabase()->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID('mgr') . ') AND sm.disabled != 1 AND sm.locked != 1
-                ORDER BY sm.name');
+            $siteModules = \EvolutionCMS\Models\SiteModule::query()
+                ->select('site_modules.id', 'site_modules.name', 'site_modules.description', 'member_groups.member', 'disabled', 'icon')
+                ->leftJoin('site_module_access', 'site_module_access.module', '=', 'site_modules.id')
+                ->leftJoin('member_groups', 'site_module_access.usergroup', '=', 'member_groups.user_group')
+                ->where('site_modules.disabled', '!=', 1)
+                ->where('site_modules.locked', '!=', 1)->where(function ($q) use ($modx) {
+                    $q->whereNull('member_groups.member')
+                        ->orWhere('member_groups.member', '=', $modx->getLoginUserID('mgr'));
+                })->orderBy("site_modules.name");
+
+
             if ($modx->hasPermission('edit_module')) {
                 $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
             } else if ($modx->hasPermission('exec_module')) {
@@ -123,10 +129,22 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->getDatabase()->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icon_module']}') as icon", $modx->getDatabase()->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $siteModules = \EvolutionCMS\Models\SiteModule::query()
+                ->select('site_modules.id', 'site_modules.name', 'site_modules.description', 'locked', 'disabled', 'icon')
+                ->orderBy("site_modules.name");
+            if ($query != '') {
+
+                $siteModules = $siteModules->where(function ($q) use ($query) {
+                    $q->where('site_modules.name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('site_modules.description', 'LIKE', '%' . $query . '%');
+                });
+            }
+
+
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
-        $grd = new \EvolutionCMS\Support\DataGrid('', $rs, 0); // set page size to 0 t show all items
+        $grd = new \EvolutionCMS\Support\DataGrid('', $siteModules, 0); // set page size to 0 t show all items
+        $grd->prepareResult = ['disabled' => [1 => $_lang['yes'], 0 => '-'], 'locked' => [1 => $_lang['yes'], 0 => '-'], 'icon' => ['__' => $_style['icon_modules']]];
         $grd->noRecordMsg = $_lang["no_records_found"];
         $grd->cssClass = "table data";
         $grd->columnHeaderClass = "tableHeader";

@@ -615,16 +615,18 @@
                         "Template Service Events",
                         "User Defined Events"
                     );
-                    //todo: remove after test
-                    $rs=\EvolutionCMS\Models\SystemEventname::orderBy('service','DESC')->orderBy('groupname')->orderBy('name')->get()->toArray();
-                    $limit = $modx->getDatabase()
-                        ->getRecordCount($rs);
-                    if ($limit == 0) {
+                    $eventNames = \EvolutionCMS\Models\SystemEventname::query()
+                        ->orderBy('service', 'DESC')->orderBy('groupname', 'ASC')->orderBy('name', 'ASC');
+
+                    if ($eventNames->count() == 0) {
+
                         echo "";
                     } else {
                         $srv = null;
                         $grp = null;
-                        foreach ($rs  as $row) {
+
+                        foreach($eventNames->get()->toArray() as $row) {
+
                             // display records
                             if ($srv != $row['service']) {
                                 $srv = $row['service'];

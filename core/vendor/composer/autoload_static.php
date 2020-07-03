@@ -34,6 +34,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'suffi\\RedisSessionHandler\\' => 26,
+        ),
         'W' => 
         array (
             'Wikimedia\\Composer\\' => 19,
@@ -123,6 +127,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
     );
 
     public static $prefixDirsPsr4 = array (
+        'suffi\\RedisSessionHandler\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dmitry-suffi/redis-session-handler/src',
+        ),
         'Wikimedia\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/wikimedia/composer-merge-plugin/src',

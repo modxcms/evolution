@@ -3,7 +3,7 @@
 use EvolutionCMS\Models\SiteTmplvarAccess;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 
-if(!function_exists('duplicateDocument')) {
+if (!function_exists('duplicateDocument')) {
     /**
      * @param int $docid
      * @param null|int $parent
@@ -27,33 +27,20 @@ if(!function_exists('duplicateDocument')) {
         $userID = $modx->getLoginUserID();
 
         // Grab the original document
-        $rs = $modx->getDatabase()->select(
-            '*'
-            , $modx->getDatabase()->getFullTableName('site_content')
-            , sprintf('id=%d', (int)$docid)
-        );
-        $content = $modx->getDatabase()->getRow($rs);
+
+        $content = \EvolutionCMS\Models\SiteContent::query()->find($docid)->toArray();
 
         // Handle incremental ID
         switch ($modx->getConfig('docid_incrmnt_method')) {
             case '1':
-                $rs = $modx->getDatabase()->select(
-                    'MIN(T0.id)+1'
-                    , sprintf(
-                        '%s AS T0 LEFT JOIN %s AS T1 ON T0.id + 1 = T1.id'
-                        , $modx->getDatabase()->getFullTableName('site_content')
-                        , $modx->getDatabase()->getFullTableName('site_content')
-                    )
-                    , 'T1.id IS NULL'
-                );
-                $content['id'] = $modx->getDatabase()->getValue($rs);
+                $minId = \EvolutionCMS\Models\SiteContent::query()
+                    ->leftJoin('site_content as T1', \DB::raw('(') . 'site_content.id' . \DB::raw('+1)'), '=', 'T1.id')
+                    ->whereNull('T1.id')->min('site_content.id');
+
+                $content['id'] = $minId + 1;
                 break;
             case '2':
-                $rs = $modx->getDatabase()->select(
-                    'MAX(id)+1'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                );
-                $content['id'] = $modx->getDatabase()->getValue($rs);
+                $content['id'] = \EvolutionCMS\Models\SiteContent::query()->max('id') + 1;
                 break;
 
             default:
@@ -63,21 +50,10 @@ if(!function_exists('duplicateDocument')) {
         // Once we've grabbed the document object, start doing some modifications
         if ($_toplevel == 0) {
             // count duplicates
-            $pagetitle = $modx->getDatabase()->getValue(
-                $modx->getDatabase()->select(
-                    'pagetitle'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                    , sprintf('id=%d', (int)$docid)
-                )
-            );
-            $pagetitle = $modx->getDatabase()->escape($pagetitle);
-            $count = $modx->getDatabase()->getRecordCount(
-                $modx->getDatabase()->select(
-                    'pagetitle'
-                    , $modx->getDatabase()->getFullTableName('site_content')
-                    , sprintf("pagetitle LIKE '%s Duplicate%%'", $pagetitle)
-                )
-            );
+            $pagetitle = \EvolutionCMS\Models\SiteContent::find($docid)->pagetitle;
+
+            $count = \EvolutionCMS\Models\SiteContent::query()->where('pagetitle', 'LIKE', '%'.$pagetitle.' Duplicate%')->count();
+
             if ($count >= 1) {
                 $count = ' ' . ($count + 1);
             } else {
@@ -108,14 +84,9 @@ if(!function_exists('duplicateDocument')) {
         // Set the published status to unpublished by default (see above ... commit #3388)
         $content['published'] = $content['pub_date'] = 0;
 
-        // Escape the proper strings
-        $content = $modx->getDatabase()->escape($content);
 
         // Duplicate the Document
-        $newparent = $modx->getDatabase()->insert(
-            $content
-            , $modx->getDatabase()->getFullTableName('site_content')
-        );
+        $newparent = \EvolutionCMS\Models\SiteContent::query()->insertGetId($content);
 
         // duplicate document's TVs
         duplicateTVs($docid, $newparent);
@@ -123,20 +94,16 @@ if(!function_exists('duplicateDocument')) {
 
         // invoke OnDocDuplicate event
         $evtOut = $modx->invokeEvent('OnDocDuplicate', array(
-            'id'     => $docid,
+            'id' => $docid,
             'new_id' => $newparent
         ));
 
         // Start duplicating all the child documents that aren't deleted.
         $_toplevel++;
-        $rs = $modx->getDatabase()->select(
-            'id'
-            , $modx->getDatabase()->getFullTableName('site_content')
-            , sprintf('parent=%d AND deleted=0', (int)$docid)
-            , 'id ASC'
-        );
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            duplicateDocument($row['id'], $newparent, $_toplevel);
+        $documents = \EvolutionCMS\Models\SiteContent::where('parent', $docid)->where('deleted', 0)->orderBy('id')->get();
+
+        foreach ($documents as $document) {
+            duplicateDocument($document->id, $newparent, $_toplevel);
         }
 
         // return the new doc id
@@ -144,7 +111,7 @@ if(!function_exists('duplicateDocument')) {
     }
 }
 
-if(!function_exists('duplicateTVs')) {
+if (!function_exists('duplicateTVs')) {
     /**
      * Duplicate Document TVs
      *
@@ -153,23 +120,15 @@ if(!function_exists('duplicateTVs')) {
      */
     function duplicateTVs($oldid, $newid)
     {
-        $modx = evolutionCMS();
-
-        $modx->getDatabase()->insert(
-            array(
-                'contentid' => '',
-                'tmplvarid' => '',
-                'value' => ''
-            )
-            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-            , sprintf('%d, tmplvarid, value', (int)$newid)
-            , $modx->getDatabase()->getFullTableName('site_tmplvar_contentvalues')
-            , sprintf('contentid=%d', (int)$oldid) // Copy from
-        );
+        $oldTvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->where('contentid', $oldid)->get();
+        foreach ($oldTvs->toArray() as $oldTv) {
+            $oldTv['contentid'] = $newid;
+            SiteTmplvarTemplate::query()->insert($oldTv);
+        }
     }
 }
 
-if(!function_exists('duplicateAccess')) {
+if (!function_exists('duplicateAccess')) {
     /**
      * Duplicate Document Access Permissions
      *
@@ -179,21 +138,15 @@ if(!function_exists('duplicateAccess')) {
     function duplicateAccess($oldid, $newid)
     {
         $modx = evolutionCMS();
-
-        $modx->getDatabase()->insert(
-            array(
-                'document'       => '',
-                'document_group' => ''
-            )
-            , $modx->getDatabase()->getFullTableName('document_groups')
-            , sprintf('%d, document_group', (int)$newid)
-            , $modx->getDatabase()->getFullTableName('document_groups')
-            , sprintf('document=%d', (int)$oldid) // Copy from
-        );
+        $oldDocGroups = \EvolutionCMS\Models\DocumentGroup::query()->where('document', $oldid)->get();
+        foreach ($oldDocGroups->toArray() as $oldDocGroup) {
+            $oldDocGroup['document'] = $newid;
+            \EvolutionCMS\Models\DocumentGroup::query()->insert($oldDocGroup);
+        }
     }
 }
 
-if(!function_exists('evalModule')) {
+if (!function_exists('evalModule')) {
     /**
      * evalModule
      *
@@ -253,7 +206,7 @@ if(!function_exists('evalModule')) {
     }
 }
 
-if(!function_exists('allChildren')) {
+if (!function_exists('allChildren')) {
     /**
      * @param int $currDocID
      * @return array
@@ -277,7 +230,7 @@ if(!function_exists('allChildren')) {
     }
 }
 
-if(!function_exists('jsAlert')) {
+if (!function_exists('jsAlert')) {
     /**
      * show javascript alert
      *
@@ -289,8 +242,7 @@ if(!function_exists('jsAlert')) {
         if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
             echo sprintf(
                 '<script>window.setTimeout("alert(\'%s\')",10);history.go(-1)</script>'
-                , addslashes($modx->getDatabase()->escape($msg)
-                )
+                , addslashes($msg)
             );
         } else {
             echo $msg . "\n";
@@ -298,7 +250,7 @@ if(!function_exists('jsAlert')) {
     }
 }
 
-if(!function_exists('login')) {
+if (!function_exists('login')) {
     /**
      * @param string $username
      * @param string $givenPassword
@@ -313,7 +265,7 @@ if(!function_exists('login')) {
     }
 }
 
-if(!function_exists('loginV1')) {
+if (!function_exists('loginV1')) {
     /**
      * @param int $internalKey
      * @param string $givenPassword
@@ -346,7 +298,7 @@ if(!function_exists('loginV1')) {
     }
 }
 
-if(!function_exists('loginMD5')) {
+if (!function_exists('loginMD5')) {
     /**
      * @param int $internalKey
      * @param string $givenPassword
@@ -367,7 +319,7 @@ if(!function_exists('loginMD5')) {
     }
 }
 
-if(!function_exists('updateNewHash')) {
+if (!function_exists('updateNewHash')) {
     /**
      * @param string $username
      * @param string $password
@@ -378,15 +330,12 @@ if(!function_exists('updateNewHash')) {
 
         $field = array();
         $field['password'] = $modx->getPasswordHash()->HashPassword($password);
-        $modx->getDatabase()->update(
-            $field,
-            $modx->getDatabase()->getFullTableName('manager_users'),
-            sprintf("username='%s'", $username)
-        );
+        \EvolutionCMS\Models\ManagerUser::where('username', $username)->update($field);
+
     }
 }
 
-if(!function_exists('incrementFailedLoginCount')) {
+if (!function_exists('incrementFailedLoginCount')) {
     /**
      * @param int $internalKey
      * @param int $failedlogins
@@ -404,12 +353,7 @@ if(!function_exists('incrementFailedLoginCount')) {
         {
             $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
         }
-
-        $modx->getDatabase()->update(
-            $fields,
-            $modx->getDatabase()->getFullTableName('user_attributes'),
-            sprintf("internalKey='%d'", (int)$internalKey)
-        );
+        \EvolutionCMS\Models\UserAttribute::where('internalKey', (int)$internalKey)->update($fields);
 
         if ($failedlogins < $failed_allowed) {
             //sleep to help prevent brute force attacks
@@ -426,7 +370,7 @@ if(!function_exists('incrementFailedLoginCount')) {
     }
 }
 
-if(!function_exists('saveUserGroupAccessPermissons')) {
+if (!function_exists('saveUserGroupAccessPermissons')) {
     /**
      * saves module user group access
      */
@@ -444,29 +388,25 @@ if(!function_exists('saveUserGroupAccessPermissons')) {
         // check for permission update access
         if ($use_udperms == 1) {
             // delete old permissions on the module
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_module_access')
-                , sprintf('module=%d', (int)$id)
-            );
+            \EvolutionCMS\Models\SiteModuleAccess::where('module', $id)->delete();
+
             if (is_array($usrgroups)) {
                 foreach ($usrgroups as $value) {
-                    $modx->getDatabase()->insert(
-                        array(
-                            'module'    => (int)$id,
-                            'usergroup' => stripslashes($value),
-                        )
-                        , $modx->getDatabase()->getFullTableName('site_module_access'));
+                    \EvolutionCMS\Models\SiteModuleAccess::create(array(
+                        'module' => (int)$id,
+                        'usergroup' => stripslashes($value),
+                    ));
+
                 }
             }
         }
     }
 }
 
-if(!function_exists('saveEventListeners')) {
+if (!function_exists('saveEventListeners')) {
 # Save Plugin Event Listeners
     function saveEventListeners($id, $sysevents, $mode)
     {
-        $modx = evolutionCMS();
         // save selected system events
         $formEventList = array();
         foreach ($sysevents as $evtId) {
@@ -474,19 +414,11 @@ if(!function_exists('saveEventListeners')) {
                 $evtId = getEventIdByName($evtId);
             }
             if ($mode == '101') {
-                $rs = $modx->getDatabase()->select(
-                    'max(priority) as priority',
-                    $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    sprintf("evtid='%d'", (int)$evtId)
-                );
+                $prevPriority = \EvolutionCMS\Models\SitePluginEvent::query()->where('evtid', $evtId)->max('priority');
             } else {
-                $rs = $modx->getDatabase()->select(
-                    'priority',
-                    $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                    sprintf("evtid='%d' and pluginid='%d'", (int)$evtId, (int)$id)
-                );
+                $prevPriority = \EvolutionCMS\Models\SitePluginEvent::query()->where('evtid', $evtId)
+                    ->where('pluginid', $id)->max('priority');
             }
-            $prevPriority = $modx->getDatabase()->getValue($rs);
             if ($mode == '101') {
                 $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
             } else {
@@ -498,23 +430,13 @@ if(!function_exists('saveEventListeners')) {
 
         $evtids = array();
         foreach ($formEventList as $eventInfo) {
-            $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
-            $modx->getDatabase()->save(
-                $eventInfo,
-                $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                $where
-            );
+            \EvolutionCMS\Models\SitePluginEvent::query()->updateOrCreate(['pluginid' => $eventInfo['pluginid'], 'evtid' => $eventInfo['evtid']], ['priority' => $eventInfo['priority']]);
             $evtids[] = $eventInfo['evtid'];
         }
+        $pluginEvents = \EvolutionCMS\Models\SitePluginEvent::query()->where('pluginid', $id)->get();
 
-        $rs = $modx->getDatabase()->select(
-            '*',
-            $modx->getDatabase()->getFullTableName('site_plugin_events'),
-            sprintf("pluginid='%d'", (int)$id)
-        );
-        $dbEventList = array();
         $del = array();
-        while ($row = $modx->getDatabase()->getRow($rs)) {
+        foreach ($pluginEvents->toArray() as $row) {
             if (!in_array($row['evtid'], $evtids)) {
                 $del[] = $row['evtid'];
             }
@@ -523,17 +445,12 @@ if(!function_exists('saveEventListeners')) {
         if (empty($del)) {
             return;
         }
+        \EvolutionCMS\Models\SitePluginEvent::query()->where('pluginid', $id)->whereIn('evtid', $del)->delete();
 
-        foreach ($del as $delid) {
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_plugin_events'),
-                sprintf("evtid='%d' AND pluginid='%d'", (int)$delid, (int)$id)
-            );
-        }
     }
 }
 
-if(!function_exists('getEventIdByName')) {
+if (!function_exists('getEventIdByName')) {
     /**
      * @param string $name
      * @return string|int
@@ -546,20 +463,13 @@ if(!function_exists('getEventIdByName')) {
         if (isset($eventIds[$name])) {
             return $eventIds[$name];
         }
-
-        $rs = $modx->getDatabase()->select(
-            'id, name',
-            $modx->getDatabase()->getFullTableName('system_eventnames')
-        );
-        while ($row = $modx->getDatabase()->getRow($rs)) {
-            $eventIds[$row['name']] = $row['id'];
-        }
+        $eventIds = \EvolutionCMS\Models\SystemEventname::query()->get()->pluck('id', 'name')->get();
 
         return $eventIds[$name];
     }
 }
 
-if(!function_exists('saveTemplateAccess')) {
+if (!function_exists('saveTemplateAccess')) {
     /**
      * @param int $id
      */
@@ -570,24 +480,15 @@ if(!function_exists('saveTemplateAccess')) {
             $newAssignedTvs = isset($_POST['assignedTv']) ? $_POST['assignedTv'] : '';
 
             // Preserve rankings of already assigned TVs
-            $rs = $modx->getDatabase()->select(
-                '`tmplvarid`, `rank`'
-                , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                , sprintf("templateid='%d'", (int)$id)
-                , ''
-            );
-
+            $templates = SiteTmplvarTemplate::query()->where('templateid', $id)->get();
             $ranksArr = array();
             $highest = 0;
-            while ($row = $modx->getDatabase()->getRow($rs)) {
+            foreach ($templates->toArray() as $row) {
                 $ranksArr[$row['tmplvarid']] = $row['rank'];
                 $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
             };
+            SiteTmplvarTemplate::query()->where('templateid', $id)->delete();
 
-            $modx->getDatabase()->delete(
-                $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                , sprintf("templateid='%d'", (int)$id)
-            );
             if (empty($newAssignedTvs)) {
                 return;
             }
@@ -595,20 +496,17 @@ if(!function_exists('saveTemplateAccess')) {
                 if (!$id || !$tvid) {
                     continue;
                 }    // Dont link zeros
-                $modx->getDatabase()->insert(
-                    array(
-                        'templateid' => $id,
-                        'tmplvarid'  => $tvid,
-                        'rank'       => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
-                    )
-                    , $modx->getDatabase()->getFullTableName('site_tmplvar_templates')
-                );
+                SiteTmplvarTemplate::create(array(
+                    'templateid' => $id,
+                    'tmplvarid' => $tvid,
+                    'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+                ));
             }
         }
     }
 }
 
-if(!function_exists('saveTemplateVarAccess')) {
+if (!function_exists('saveTemplateVarAccess')) {
     /**
      * @return void
      */
@@ -630,16 +528,16 @@ if(!function_exists('saveTemplateVarAccess')) {
         }
         foreach ($templates as $i => $iValue) {
             $field = [
-                'tmplvarid'  => $id,
+                'tmplvarid' => $id,
                 'templateid' => $templates[$i],
-                'rank'       => get_by_key($getRankArray, $iValue, 0)
+                'rank' => get_by_key($getRankArray, $iValue, 0)
             ];
             EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
         }
     }
 }
 
-if(!function_exists('saveDocumentAccessPermissons')) {
+if (!function_exists('saveDocumentAccessPermissons')) {
     function saveDocumentAccessPermissons($id)
     {
         $modx = evolutionCMS();
@@ -647,7 +545,7 @@ if(!function_exists('saveDocumentAccessPermissons')) {
         $docgroups = isset($_POST['docgroups']) ? $_POST['docgroups'] : '';
 
         // check for permission update access
-        if($modx->getConfig('use_udperms') != 1) {
+        if ($modx->getConfig('use_udperms') != 1) {
             return;
         }
 
@@ -702,18 +600,17 @@ if (!function_exists('saveWebUserSettings')) {
 // Save User Settings
     function saveWebUserSettings($id)
     {
-        $modx = evolutionCMS();
-        $tbl_web_user_settings = $modx->getDatabase()->getFullTableName('web_user_settings');
-
         $settings = array(
             'login_home',
             'allowed_ip',
             'allowed_days'
         );
-
-        $modx->getDatabase()->delete($tbl_web_user_settings, sprintf("webuser='%d'", (int)$id));
+        \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n) {
+            if (!isset($_POST[$n])) {
+                continue;
+            }
             $vl = $_POST[$n];
             if (is_array($vl)) {
                 $vl = implode(',', $vl);
@@ -723,8 +620,7 @@ if (!function_exists('saveWebUserSettings')) {
                 $f['webuser'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->getDatabase()->escape($f);
-                $modx->getDatabase()->insert($f, $tbl_web_user_settings);
+                \EvolutionCMS\Models\WebUserSetting::create($f);
             }
         }
     }
@@ -739,7 +635,6 @@ if (!function_exists('saveManagerUserSettings')) {
     function saveManagerUserSettings($id)
     {
         $modx = evolutionCMS();
-        $tbl_user_settings = $modx->getDatabase()->getFullTableName('user_settings');
 
         $ignore = array(
             'id',
@@ -804,7 +699,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        $modx->getDatabase()->delete($tbl_user_settings, sprintf("user='%d'", (int)$id));
+        \EvolutionCMS\Models\UserSetting::where('user', $id)->delete();
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -815,8 +710,7 @@ if (!function_exists('saveManagerUserSettings')) {
                 $f['user'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                $f = $modx->getDatabase()->escape($f);
-                $modx->getDatabase()->insert($f, $tbl_user_settings);
+                \EvolutionCMS\Models\UserSetting::create($f);
             }
         }
     }
