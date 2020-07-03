@@ -67,6 +67,9 @@ _ide_helper.php
 /node_modules
 npm-debug.log
 
+
+#docker
+/docker/nginx/logs/*
 # System
 ftpsync.settings
 Thumbs.db

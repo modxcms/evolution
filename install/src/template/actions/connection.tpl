@@ -297,12 +297,13 @@
     var ss = document.getElementById('serverstatus');
     var ssv = ss.innerHTML;
     if (document.getElementById('server_pass') !== null) {
-      col.style.backgroundColor = '#9CCD00';
-      col.style.borderWidth = '1px';
-      col.style.fontWeight = 'bold';
+
 
       document.getElementById('setCollation').style.display = 'block';
       document.getElementById('collationMask').style.opacity = '1';
+      document.getElementById('database_collation').style.backgroundColor = '#9CCD00';
+      document.getElementById('database_collation').style.borderWidth = '1px';
+      document.getElementById('database_collation').style.fontWeight = 'bold';
       window.setTimeout(function() {
         document.getElementById('setCollation').style.backgroundColor = '#ffffff';
       }, 1000);
