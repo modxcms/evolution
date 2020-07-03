@@ -1,0 +1,3 @@
+2020/07/03 10:15:25 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2020/07/03 10:15:26 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2020/07/03 10:15:27 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10

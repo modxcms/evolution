@@ -26,9 +26,12 @@ For content management, you can easily duplicate documents, folders (and all the
 
 Most significant, though, is **Evolution CMS's** ability to empower you to quickly and easily create and maintain a rich and dynamic website like never before.
 
-
 ## Install
 Just use [Evolution CMS Installer](https://github.com/evolution-cms/installer)
+
+###Docker
+    
+To run **Evolution CMS** using docker make **docker-compose up -d** command in your terminal. Additional configs and access parameters you can find in **docker-compose.yml** file and **docker** folder 
 
 ### Screenshots
 
