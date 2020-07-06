@@ -50,8 +50,11 @@ class CreateSiteContentTable extends Migration {
 			$table->boolean('content_dispo')->default(0)->comment('0-inline, 1-attachment');
 			$table->boolean('hidemenu')->default(0)->comment('Hide document from menu');
 			$table->integer('alias_visible')->default(1);
-			$table->index(['pagetitle','description','content'], 'content_ft_idx');
 		});
+
+        $prefix = DB::getTablePrefix();
+        $site_content_table_name = (new \EvolutionCMS\Models\SiteContent())->getTable();
+        DB::statement('ALTER TABLE '.$prefix.$site_content_table_name.' ADD FULLTEXT content_ft_idx(pagetitle, description, content)');
 	}
 
 
@@ -62,6 +65,9 @@ class CreateSiteContentTable extends Migration {
 	 */
 	public function down()
 	{
+        Schema::table('posts', function($table) {
+            $table->dropIndex('content_ft_idx');
+        });
 		Schema::drop('site_content');
 	}
 
