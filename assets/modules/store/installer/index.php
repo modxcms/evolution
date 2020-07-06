@@ -7,8 +7,7 @@ define('MGR',MODX_BASE_PATH.MGR_DIR);
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 include_once (MODX_BASE_PATH . 'index.php');
-$modx->db->connect();
-$modx->getSettings();
+$modx = EvolutionCMS();
 $modx->invokeEvent('OnManagerPageInit');
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
 	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');

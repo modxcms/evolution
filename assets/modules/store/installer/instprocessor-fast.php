@@ -94,7 +94,6 @@ if(!function_exists('propertiesNameValue')) {
         return $parameter;
     }
 }
-$table_prefix = $modx->db->config['table_prefix'];
 $setupPath = $modulePath;
 include "{$setupPath}/setup.info.php";
 include "sqlParser.class.php";
@@ -109,10 +108,10 @@ if ( count($moduleTemplates )>0) {
     foreach ($moduleTemplates as $k=>$moduleTemplate) {
         //$installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
       //  if(in_array($k, $selTemplates) || $installSample) {
-            $name = $modx->db->escape($moduleTemplate[0]);
-            $desc = $modx->db->escape($moduleTemplate[1]);
-            $category = $modx->db->escape($moduleTemplate[4]);
-            $locked = $modx->db->escape($moduleTemplate[5]);
+            $name = $moduleTemplate[0];
+            $desc = $moduleTemplate[1];
+            $category = $moduleTemplate[4];
+            $locked = $moduleTemplate[5];
             $filecontent = $moduleTemplate[3];
             if (!file_exists($filecontent)) {
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -122,24 +121,21 @@ if ( count($moduleTemplates )>0) {
 
                 // Strip the first comment up top
                 $template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $template = $modx->db->escape($template);
+                $template = $template;
 
                 // See if the template already exists
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_templates` WHERE templatename='$name'");
+                $template = \EvolutionCMS\Models\SiteTemplate::where('templatename', $name)->first();
 
-                if ($modx->db->getRecordCount($rs)) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category_id', locked='$locked'  WHERE templatename='$name';")) {
-                        $errors += 1;
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                if ($template->count()>0) {
+                    $template->content = $template;
+                    $template->description = $desc;
+                    $template->category = $category_id;
+                    $template->locked = $locked;
+                    $template->save();
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category_id','$locked');")) {
-                        $errors += 1;
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    \EvolutionCMS\Models\SiteTemplate::create(['templatename' => $name, 'description' => $desc, 'content' => $template, 'category' => $category_id, 'locked' => $locked]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -154,41 +150,36 @@ if (count($moduleTVs )>0) {
     foreach ($moduleTVs as $k=>$moduleTV) {
         //$installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
         //if(in_array($k, $selTVs) || $installSample) {
-            $name = $modx->db->escape($moduleTV[0]);
-            $caption = $modx->db->escape($moduleTV[1]);
-            $desc = $modx->db->escape($moduleTV[2]);
-            $input_type = $modx->db->escape($moduleTV[3]);
-            $input_options = $modx->db->escape($moduleTV[4]);
-            $input_default = $modx->db->escape($moduleTV[5]);
-            $output_widget = $modx->db->escape($moduleTV[6]);
-            $output_widget_params = $modx->db->escape($moduleTV[7]);
+            $name = $moduleTV[0];
+            $caption = $moduleTV[1];
+            $desc = $moduleTV[2];
+            $input_type = $moduleTV[3];
+            $input_options = $moduleTV[4];
+            $input_default = $moduleTV[5];
+            $output_widget = $moduleTV[6];
+            $output_widget_params = $moduleTV[7];
             $filecontent = $moduleTV[8];
             $assignments = $moduleTV[9];
-            $category = $modx->db->escape($moduleTV[10]);
-            $locked = $modx->db->escape($moduleTV[11]);
+            $category = $moduleTV[10];
+            $locked = $moduleTV[11];
 
 
             // Create the category if it does not already exist
             $category = getCreateDbCategory($category, $sqlParser);
 
-            $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_tmplvars` WHERE name='$name'");
-            if ($modx->db->getRecordCount($rs)) {
+            $tmplavr = \EvolutionCMS\Models\SiteTmplvar::where('name', $name);
+            if ($tmplavr->count() > 0) {
                 $insert = true;
-                while($row = $modx->db->getRow($rs,'assoc')) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category='$category', locked='$locked', elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id='{$row['id']}';")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                foreach ($tmplavr->get()->toArray() as $row) {
+                    \EvolutionCMS\Models\SiteTmplvar::query()->where('id', $row['id'])->update(['type' => $input_type, 'caption' => $caption, 'description' => $desc, 'category' => $category, 'locked' => $locked, 'elements' => $input_options, 'display' => $output_widget, 'display_params' => $output_widget_params, 'default_text' => $input_default]);
                     $insert = false;
                 }
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
             } else {
-                //$q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM `" . $table_prefix . "categories` WHERE `category` = '$category'),$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
-                $q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc','$category','$locked','$input_options','$output_widget','$output_widget_params','$input_default');";
-                if (!@ $modx->db->query($q)) {
-                    echo "<p>" . mysql_error() . "</p>";
-                    return;
-                }
+                \EvolutionCMS\Models\SiteTmplvar::create(
+                    ['type' => $input_type, 'name'=> $name, 'caption' => $caption, 'description' => $desc, 'category' => $category, 'locked' => $locked, 'elements' => $input_options, 'display' => $output_widget, 'display_params' => $output_widget_params, 'default_text' => $input_default]
+                );
+
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
             }
 
@@ -198,22 +189,22 @@ if (count($moduleTVs )>0) {
                 if (count($assignments) > 0) {
 
                     // remove existing tv -> template assignments
-                    $ds=$modx->db->query("SELECT id FROM `".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
-                    $row = $modx->db->getRow($ds,'assoc');
-                    $id = $row["id"];
-                    $modx->db->query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
+                    $templateVar = \EvolutionCMS\Models\SiteTmplvar::query()->where('name', $name)->where('description', $desc)->first();
+                    if(!is_null($templateVar)){
+                        \EvolutionCMS\Models\SiteTmplvarTemplate::query()->where('tmplvarid', $id)->delete();
 
-                    // add tv -> template assignments
-                    foreach ($assignments as $assignment) {
-                        $template = $modx->db->escape($assignment);
-                        $where = "WHERE templatename='$template'";
-                        if ($template=='*') $where ='';
-                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` ".$where.";" );
-                        if ($ds && $ts) {
-                            $tRow = $modx->db->getRow($ts,'assoc');
-                            $templateId = $tRow['id'];
-                            $modx->db->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES('$id', '$templateId')");
-                       }
+                        // add tv -> template assignments
+                        foreach ($assignments as $assignment) {
+                            $template = $assignment;
+                            $template_name = \EvolutionCMS\Models\SiteTemplate::query();
+                            if ($template != '*')
+                                $template_name = $template_name->where('templatename', $template);
+
+                            $template_name = $template_name->first();
+                            if (!is_null($ts)) {
+                                \EvolutionCMS\Models\SiteTmplvarTemplate::query()->create(['tmplvarid'=>$templateVar->getKey(),'templateid'=>$template_name->getKey()]);
+                            }
+                        }
                     }
                 }
             }
@@ -229,10 +220,10 @@ if (count($moduleChunks )>0) {
         //$installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
         //if(in_array($k, $selChunks) || $installSample) {
 
-            $name = $modx->db->escape($moduleChunk[0]);
-            $desc = $modx->db->escape($moduleChunk[1]);
-            $category = $modx->db->escape($moduleChunk[3]);
-            $overwrite = $modx->db->escape($moduleChunk[4]);
+            $name = $moduleChunk[0];
+            $desc = $moduleChunk[1];
+            $category = $moduleChunk[3];
+            $overwrite = $moduleChunk[4];
             $filecontent = $moduleChunk[2];
 
             if (!file_exists($filecontent))
@@ -243,31 +234,23 @@ if (count($moduleChunks )>0) {
                 $category_id = getCreateDbCategory($category, $sqlParser);
 
                 $chunk = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $chunk = $modx->db->escape($chunk);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$name'");
-                $count_original_name = $modx->db->getRecordCount($rs);
+                $chunkDbRecord = \EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name);
+                $count_original_name = $chunkDbRecord->count();
                 if($overwrite == 'false') {
                     $newname = $name . '-' . str_replace('.', '_', $modx_version);
-                    $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'");
-                    $count_new_name = $modx->db->getRecordCount($rs);
+                    $chunkDbRecordNew = \EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $newname);
+                    $count_new_name = $chunkDbRecordNew->count();
                 }
                 $update = $count_original_name > 0 && $overwrite == 'true';
                 if ($update) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category='$category_id' WHERE name='$name';")) {
-                        $errors += 1;
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    \EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->update(['snippet' => $chunk, 'description' => $desc, 'category' => $category_id]);
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } elseif($count_new_name == 0) {
                     if($count_original_name > 0 && $overwrite == 'false') {
                         $name = $newname;
                     }
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk','$category_id');")) {
-                        $errors += 1;
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    \EvolutionCMS\Models\SiteHtmlsnippet::query()->create(['name' => $name, 'snippet' => $chunk, 'description' => $desc, 'category' => $category_id]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -282,13 +265,13 @@ if (count($moduleModules )>0) {
     foreach ($moduleModules as $k=>$moduleModule) {
         //$installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
         //if(in_array($k, $selModules) || $installSample) {
-            $name = $modx->db->escape($moduleModule[0]);
-            $desc = $modx->db->escape($moduleModule[1]);
+            $name = $moduleModule[0];
+            $desc = $moduleModule[1];
             $filecontent = $moduleModule[2];
             $properties = $moduleModule[3];
-            $guid = $modx->db->escape($moduleModule[4]);
-            $shared = $modx->db->escape($moduleModule[5]);
-            $category = $modx->db->escape($moduleModule[6]);
+            $guid = $moduleModule[4];
+            $shared = $moduleModule[5];
+            $category = $moduleModule[6];
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
@@ -299,22 +282,15 @@ if (count($moduleModules )>0) {
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                 // remove installer docblock
                 $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
-                $module = $modx->db->escape($module);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
-                if ($modx->db->getRecordCount($rs)) {
-                    $row = $modx->db->getRow($rs,'assoc');
-                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                $moduleDb = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->first();
+                if (!is_null($moduleDb)) {
+                    $props = propUpdate($properties,$moduleDb->properties);
+                    \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode'=>$module, 'description'=>$desc,'properties'=>$props, 'enable_sharedparams'=>$shared]);
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', '$category');")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    $properties = parseProperties($properties, true);
+                    \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $props, 'enable_sharedparams' => $shared]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -329,27 +305,27 @@ if (count($modulePlugins )>0) {
     foreach ($modulePlugins as $k=>$modulePlugin) {
         //$installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
        // if(in_array($k, $selPlugs) || $installSample) {
-            $name = $modx->db->escape($modulePlugin[0]);
-            $desc = $modx->db->escape($modulePlugin[1]);
+            $name = $modulePlugin[0];
+            $desc = $modulePlugin[1];
             $filecontent = $modulePlugin[2];
             $properties = $modulePlugin[3];
             $events = explode(",", $modulePlugin[4]);
-            $guid = $modx->db->escape($modulePlugin[5]);
-            $category = $modx->db->escape($modulePlugin[6]);
-            $leg_names = '';
+            $guid = $modulePlugin[5];
+            $category = $modulePlugin[6];
+            $leg_names = [];
             $disabled = $modulePlugin[9];
             if(array_key_exists(7, $modulePlugin)) {
                 // parse comma-separated legacy names and prepare them for sql IN clause
-                $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', $modx->db->escape($modulePlugin[7]))) . "'";
+                $leg_names = preg_split('/\s*,\s*/', $modulePlugin[7]);
             }
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
 
                 // disable legacy versions based on legacy_names provided
-                if(!empty($leg_names)) {
-                    $update_query = "UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);";
-                    $rs = $modx->db->query($update_query);
+                if(count($leg_names)) {
+                    \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $leg_names)->update(['disabled'=>1]);
+
                 }
 
                 // Create the category if it does not already exist
@@ -358,77 +334,82 @@ if (count($modulePlugins )>0) {
                 $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                 // remove installer docblock
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
-                $plugin = $modx->db->escape($plugin);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name' ORDER BY id");
+                $pluginDbRecord = \EvolutionCMS\Models\SitePlugin::where('name', $name)->orderBy('id');
                 $prev_id = null;
 
-                if ($modx->db->getRecordCount($rs)) {
+                if ($pluginDbRecord->count() > 0) {
                     $insert = true;
-                    while($row = $modx->db->getRow($rs,'assoc')) {
-                        $props = $modx->db->escape(propUpdate($properties,$row['properties']));
+                    foreach ($pluginDbRecord->get()->toArray() as $row) {
+                        $props = propUpdate($properties,$row['properties']);
                         if($row['description'] == $desc){
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id='{$row['id']}';")) {
-                                echo "<p>" . mysql_error() . "</p>";
-                                return;
-                            }
+                            \EvolutionCMS\Models\SitePlugin::query()->where('id', $row['id'])->update(['plugincode' => $plugin, 'description' => $desc, 'properties' => $props]);
+
                             $insert = false;
                         } else {
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE id='{$row['id']}';")) {
-                                echo "<p>".mysql_error()."</p>";
-                                return;
-                            }
+                            \EvolutionCMS\Models\SitePlugin::query()->where('id', $row['id'])->update(['disabled' => 1]);
                         }
                         $prev_id = $row['id'];
                     }
                     if($insert === true) {
-                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0','$category');",$sqlParser->conn)) {
-                            echo "<p>".mysql_error()."</p>";
-                            return;
-                        }
+                        $props = propUpdate($properties,$row['properties']);
+
+                        \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid'=>$guid, 'disabled'=>0, 'category'=>$category]);
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','$disabled','$category');")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
-
+                    $properties = parseProperties($properties, true);
+                    \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $properties, 'moduleguid'=>$guid, 'disabled'=>$disabled, 'category'=>$category]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
                 if (count($events) > 0) {
-                    $ds=$modx->db->query("SELECT id FROM `".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc' ORDER BY id DESC LIMIT 1;",$sqlParser->conn);
-                    if ($ds) {
-                        $row = $modx->db->getRow($ds,'assoc');
-                        $id = $row["id"];
-                        $_events = implode("','", $events);
+                    $sitePlugin = \EvolutionCMS\Models\SitePlugin::where('name', $name)->where('description', $desc)->first();
+                    if (!is_null($sitePlugin)) {
+                        $id = $sitePlugin->id;
 
                         // add new events
-                        if ($prev_id) {
-                            $prev_id = $modx->db->escape($prev_id);
-
-                            $modx->db->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`)
-                                SELECT {$id} as 'pluginid', `se`.`id` AS `evtid`, COALESCE(`spe`.`priority`, MAX(`spe2`.`priority`) + 1, 0) AS `priority`
-                                FROM `{$table_prefix}system_eventnames` `se`
-                                LEFT JOIN `{$table_prefix}site_plugin_events` `spe` ON `spe`.`evtid` = `se`.`id` AND `spe`.`pluginid` = {$prev_id}
-                                LEFT JOIN `{$table_prefix}site_plugin_events` `spe2` ON `spe2`.`evtid` = `se`.`id`
-                                WHERE name IN ('{$_events}')
-                                GROUP BY `se`.`id`
-                            ");
-                        } else {
-                            $modx->db->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`) 
-                                SELECT {$id} as `pluginid`, `se`.`id` as `evtid`, COALESCE(MAX(`spe`.`priority`) + 1, 0) as `priority` 
-                                FROM `{$table_prefix}system_eventnames` `se` 
-                                LEFT JOIN `{$table_prefix}site_plugin_events` `spe` ON `spe`.`evtid` = `se`.`id` 
-                                WHERE `name` IN ('{$_events}') GROUP BY `se`.`id`
-                            ");
+                        foreach ($events as $event) {
+                            $eventName = \EvolutionCMS\Models\SystemEventname::where('name', $event)->first();
+                            if (!is_null($eventName)) {
+                                $prev_priority = null;
+                                if ($prev_id) {
+                                    $pluginEvent = \EvolutionCMS\Models\SitePluginEvent::query()
+                                        ->where('pluginid', $prev_id)
+                                        ->where('evtid', $eventName->getKey())->first();
+                                    if (!is_null($pluginEvent)) {
+                                        $prev_priority = $pluginEvent->priority;
+                                    }
+                                }
+                                if (is_null($prev_priority)) {
+                                    $pluginEvent = \EvolutionCMS\Models\SitePluginEvent::query()
+                                        ->where('evtid', $eventName->getKey())
+                                        ->orderBy('priority', 'DESC')->first();
+                                    if (!is_null($pluginEvent)) {
+                                        $prev_priority = $pluginEvent->priority;
+                                        $prev_priority++;
+                                    }
+                                }
+                                if (is_null($prev_priority)) {
+                                    $prev_priority = 0;
+                                }
+                                $arrInsert = ['pluginid' => $id, 'evtid' => $eventName->getKey(), 'priority' => $prev_priority];
+                                \EvolutionCMS\Models\SitePluginEvent::query()
+                                    ->firstOrCreate($arrInsert);
+                            }
                         }
 
-                        // remove existing events
-                        $modx->db->query("DELETE `pe` FROM `{$table_prefix}site_plugin_events` `pe` LEFT JOIN `{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
+                        // remove absent events
+                        \EvolutionCMS\Models\SitePluginEvent::query()->join('system_eventnames', function ($join) use ($events) {
+                            $join->on('site_plugin_events.evtid', '=', 'system_eventnames.id')
+                                ->whereIn('name', $events);
+                        })
+                            ->whereNull('name')
+                            ->where('pluginid', $id)->delete();
+
                     }
                 }
+
+
             }
         //}
     }
@@ -442,11 +423,11 @@ if (count($moduleSnippets ) > 0) {
 
         //$installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         //if(in_array($k, $selSnips) || $installSample) {
-            $name = $modx->db->escape($moduleSnippet[0]);
-            $desc = $modx->db->escape($moduleSnippet[1]);
+            $name = $moduleSnippet[0];
+            $desc = $moduleSnippet[1];
             $filecontent = $moduleSnippet[2];
             $properties = $moduleSnippet[3];
-            $category = $modx->db->escape($moduleSnippet[4]);
+            $category = $moduleSnippet[4];
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
@@ -457,24 +438,17 @@ if (count($moduleSnippets ) > 0) {
                 $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
                 // remove installer docblock
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
-                $snippet = $modx->db->escape($snippet);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
+                $snippetDbRecord = \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->first();
 
-                if ($modx->db->getRecordCount($rs)) {
+                if (!is_null($snippetDbRecord)) {
 
-                    $row = $modx->db->getRow($rs,'assoc');
-                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
-                    if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    $props = propUpdate($properties,$snippetDbRecord->properties);
+                    \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->update(['snippet'=>$snippet, 'description'=>$desc, 'properties'=>$props]);
+
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties','$category');")) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+                    $properties = parseProperties($properties, true);
+                    \EvolutionCMS\Models\SiteSnippet::query()->insert(['name'=>$name,'snippet'=>$snippet, 'description'=>$desc, 'properties'=>$props, 'category'=>$category]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -584,22 +558,13 @@ function isJson($string, $returnData=false) {
 }
 
 function getCreateDbCategory($category) {
-
-    global $modx;
-    $dbase = $modx->db->config['dbase'];
-    $table_prefix = $modx->db->config['table_prefix'];
     $category_id = 0;
     if(!empty($category)) {
-        $category = $modx->db->escape($category);
-        $rs = $modx->db->query("SELECT id FROM `".$table_prefix."categories` WHERE category = '".$category."'");
-        if($modx->db->getRecordCount($rs) && ($row = $modx->db->getRow($rs,'assoc'))) {
-            $category_id = $row['id'];
+        $categoryDbRecord = \EvolutionCMS\Models\Category::query()->where('category', $category)->first();
+        if(!is_null($categoryDbRecord)) {
+            $category_id = $categoryDbRecord->getKey();
         } else {
-            $q = "INSERT INTO `".$table_prefix."categories` (`category`) VALUES ('{$category}');";
-            $rs = $modx->db->query($q);
-            if($rs) {
-                $category_id = $modx->db->getInsertId();
-            }
+            $category_id = \EvolutionCMS\Models\Category::query()->insertGetId(['category'=>$category]);
         }
     }
     return $category_id;

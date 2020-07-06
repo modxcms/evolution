@@ -24,7 +24,7 @@ class CreateSitePluginsTable extends Migration {
 			$table->boolean('locked')->default(0);
 			$table->text('properties', 65535)->nullable()->comment('Default Properties');
 			$table->boolean('disabled')->default(0)->comment('Disables the plugin');
-			$table->string('moduleguid', 32)->default('')->comment('GUID of module from which to import shared parameters');
+			$table->string('moduleguid', 32)->default('')->nullable()->comment('GUID of module from which to import shared parameters');
 			$table->integer('createdon')->default(0);
 			$table->integer('editedon')->default(0);
 		});
