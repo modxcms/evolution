@@ -351,12 +351,14 @@ if (count($modulePlugins )>0) {
                         $prev_id = $row['id'];
                     }
                     if($insert === true) {
+                        $props = propUpdate($properties,$row['properties']);
+
                         \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid'=>$guid, 'disabled'=>0, 'category'=>$category]);
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
                     $properties = parseProperties($properties, true);
-                    \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid'=>$guid, 'disabled'=>$disabled, 'category'=>$category]);
+                    \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $properties, 'moduleguid'=>$guid, 'disabled'=>$disabled, 'category'=>$category]);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
