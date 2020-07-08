@@ -2542,16 +2542,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $rs = \DB::table('site_tmplvars as tv')
-            ->selectRaw("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value")
-            ->join('site_tmplvar_templates as tvtpl')->on('tvtpl.tmplvarid', '=', 'tv.id')
-            ->leftJoin('site_tmplvar_contentvalues as tvc')->on([
-                    ['tvc.tmplvarid', '=', 'tv.id'],
-                    ['tvc.contentid', '=', (int)$documentObject['id']]
-                ]
-            )->where('tvtpl.templateid', (int)$documentObject['template'])->get();
+            ->select('tv.*', 'tvc.value', 'tv.default_text')
+            ->join('site_tmplvar_templates as tvtpl', 'tvtpl.tmplvarid', '=', 'tv.id')
+            ->leftJoin('site_tmplvar_contentvalues as tvc', function($join) use ($documentObject) {
+                $join->on('tvc.tmplvarid', '=', 'tv.id');
+                $join->on('tvc.contentid', '=', \DB::raw((int)$documentObject['id']));
+            })->where('tvtpl.templateid', (int)$documentObject['template'])->get();
 
         $tmplvars = array();
         foreach ($rs as $row){
+            if($row->value == ''){
+                $row->value = $row->default_text;
+            }
             $tmplvars[$row->name] = array(
                 $row->name,
                 $row->value,
