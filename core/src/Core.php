@@ -5170,11 +5170,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             ->where('manager_users.id', $uid)->first();
 
 
-        if (!is_null($row)) {
+        if (is_null($row)) {
             return $this->tmpCache[__FUNCTION__][$uid] = false;
         }
 
         $row = $row->toArray();
+
         if (!isset($row['usertype']) || !$row['usertype']) {
             $row['usertype'] = 'manager';
         }

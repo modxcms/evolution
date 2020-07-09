@@ -88,7 +88,7 @@
                 icon_circle:              '<?= addslashes($_style['icon_circle']) ?>',
                 icon_code:                '<?= addslashes($_style['icon_code']) ?>',
                 icon_edit:                '<?= addslashes($_style['icon_edit']) ?>',
-                icon_element:             '<?= addslashes($_style['icon_element']) ?>',
+                icon_element:             '<?= addslashes($_style['icon_elements']) ?>',
                 icon_folder:              '<?= addslashes('<i class="' . $_style['icon_folder'] . '"></i>') ?>',
                 icon_plugin:              '<?= addslashes($_style['icon_plugin']) ?>',
                 icon_refresh:             '<?= addslashes($_style['icon_refresh']) ?>',
