@@ -22,6 +22,7 @@ class CreateSiteTmplvarContentvaluesTable extends Migration {
         });
         $prefix = DB::getTablePrefix();
         $site_content_tmplvar = (new \EvolutionCMS\Models\SiteTmplvarContentvalue())->getTable();
+        if($_POST['database_type'] != 'pgsql')
         DB::statement('ALTER TABLE '.$prefix.$site_content_tmplvar.' ADD FULLTEXT content_ft_idx(value)');
 	}
 

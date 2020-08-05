@@ -6,7 +6,7 @@ $pwd = $_POST['pwd'];
 
 
 try {
-    $dbh = new PDO($_POST['method'] . ':host=' . $_POST['host'] . ';dbname=' . $_POST['database_name'], $_POST['uid'], $_POST['pwd']);
+    $dbh = new PDO($_POST['method'] . ':host=' . $_POST['host'] , $_POST['uid'], $_POST['pwd']);
     $output = '<select id="database_collation" name="database_collation">';
 
     switch ($_POST['method']) {
