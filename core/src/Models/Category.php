@@ -30,7 +30,8 @@ class Category extends Eloquent\Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'rank' => 'int'
+		'rank' => 'int',
+		'category' => 'string'
 	];
 
 	protected $fillable = [
