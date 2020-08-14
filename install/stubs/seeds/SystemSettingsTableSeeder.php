@@ -237,6 +237,11 @@ class SystemSettingsTableSeeder extends Seeder
                 'setting_name' => 'smtp_autotls',
                 'setting_value' => '0',
             ),
+            49 =>
+            array (
+                'setting_name' => 'auto_template_logic',
+                'setting_value' => '1',
+            ),
         ));
         
         

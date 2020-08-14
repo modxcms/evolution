@@ -61,7 +61,7 @@
                         <?php $i = 0; ?>
                         @foreach ($tables as $table)
                             <tr>
-                                <td class="text-primary"><b>{{ $table['Name'] }}</b></td>
+                                <td class="text-primary"><b>{{ $table['Name'] }}{{ $table['name'] }}</b></td>
                                 <td class="text-xs-center">
                                     @if(!empty($table['Comment']))
                                         <i class="{{ $_style['icon_question_circle'] }}" data-tooltip="{{ $table['Comment'] }}"></i>

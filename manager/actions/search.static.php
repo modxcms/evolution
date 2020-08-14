@@ -131,13 +131,13 @@ if (isset($_REQUEST['submitok'])) {
         /*end search by TV*/
 
         if (ctype_digit($searchfields)) {
-            $searchQuery->orWhere('site_content,id', $searchfields);
+            $searchQuery->orWhere('site_content.id', $searchfields);
             if (strlen($searchfields) > 3) {
-                $searchQuery->orWhere('site_content,pagetitle', 'LIKE', '%' . $searchfields . '%');
+                $searchQuery->orWhere('site_content.pagetitle', 'LIKE', '%' . $searchfields . '%');
             }
         }
         if ($idFromAlias) {
-            $searchQuery->orWhere('site_content,id', $idFromAlias);
+            $searchQuery->orWhere('site_content.id', $idFromAlias);
 
         }
 

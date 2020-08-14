@@ -144,7 +144,7 @@ echo $cm->render();
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
         $grd = new \EvolutionCMS\Support\DataGrid('', $siteModules, 0); // set page size to 0 t show all items
-        $grd->prepareResult = ['disabled' => [1 => $_lang['yes'], 0 => '-'], 'locked' => [1 => $_lang['yes'], 0 => '-'], 'icon' => ['__' => $_style['icon_modules']]];
+        $grd->prepareResult = ['disabled' => [1 => $_lang['yes'], 0 => '-'], 'locked' => [1 => $_lang['yes'], 0 => '-'], 'icon' => ['__' => $_style['icon_module']]];
         $grd->noRecordMsg = $_lang["no_records_found"];
         $grd->cssClass = "table data";
         $grd->columnHeaderClass = "tableHeader";
