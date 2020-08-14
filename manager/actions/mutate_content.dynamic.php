@@ -959,13 +959,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
                                     });
                                 }
-                                echo $tvs->toSql();
 
                                 $tvs = $tvs->get();
                                 if (count($tvs)>0) {
                                     $tvsArray = $tvs->toArray();
-                                    print_r($tvsArray);
-                                    exit();
+
                                     $templateVariablesOutput = '';
                                     $templateVariablesGeneral = '';
 
