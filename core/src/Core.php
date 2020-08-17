@@ -2485,14 +2485,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
         }
+
         if ($documentObject['template']) {
             // load TVs and merge with document - Orig by Apodigm - Docvars
             $tvs = SiteTmplvar::query()->select('site_tmplvars.*', 'site_tmplvar_contentvalues.value')
                 ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
                 ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($documentObject) {
                     $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
-                    $join->on('site_tmplvar_contentvalues.contentid', '=', (int)$documentObject['id']);
-                })->where('site_tmplvar_templates.templateid', $documentObject['template']);
+                    $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw((int)$documentObject['id']));
+                })->where('site_tmplvar_templates.templateid', $documentObject['template'])->get();
 
             $tmplvars = array();
             foreach ($tvs as $tv) {
@@ -2535,7 +2536,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $documentObject;
         }
 
-
         $documentObject= \EvolutionCMS\Models\SiteContent::findOrFail((int)$id)->toArray();
         if ($documentObject === null) {
             return array();
@@ -2551,6 +2551,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $tmplvars = array();
         foreach ($rs as $row){
+
             if($row->value == ''){
                 $row->value = $row->default_text;
             }
