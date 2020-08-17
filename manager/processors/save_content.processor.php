@@ -199,7 +199,7 @@ $tvs = \EvolutionCMS\Models\SiteTmplvar::query()->distinct()
     ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($id) {
         $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
         $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($id));
-    })->join('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id')
+    })->leftjoin('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id')
     ->where('site_tmplvar_templates.templateid', $template)->orderBy('site_tmplvars.rank');
 if($_SESSION['mgrRole']!= 1){
     $tvs = $tvs->where(function ($query) {
@@ -208,7 +208,6 @@ if($_SESSION['mgrRole']!= 1){
     });
 }
 $tvs = $tvs->get();
-
 foreach ($tvs->toArray() as $row) {
     $tmplvar = '';
     switch ($row['type']) {
@@ -531,6 +530,7 @@ switch ($actionToTake) {
             $tvAdded = array();
 
             foreach ($tmplvars as $field => $value) {
+
                 if (!is_array($value)) {
                     if (isset($tvIds[$value])) $tvDeletions[] = $tvIds[$value];
                 } else {
