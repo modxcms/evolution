@@ -72,9 +72,10 @@ if ($modx->getConfig('friendly_urls')) {
                     ->where('alias', $alias)->count() > 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
+
                 while (\EvolutionCMS\Models\SiteContent::query()
                     ->where('id', '<>', $id)
-                    ->where('alias', $alias)->count() > 0) {
+                    ->where('alias', $tempAlias)->count() > 0) {
                     $tempAlias = $alias;
                     $tempAlias .= $cnt;
                     $cnt++;
@@ -90,7 +91,7 @@ if ($modx->getConfig('friendly_urls')) {
                 $tempAlias = $alias;
                 while (\EvolutionCMS\Models\SiteContent::query()
                         ->where('id', '<>', $id)
-                        ->where('alias', $alias)
+                        ->where('alias', $tempAlias)
                         ->where('parent', $parent)->count() > 0) {
                     $tempAlias = $alias;
                     $tempAlias .= $cnt;
