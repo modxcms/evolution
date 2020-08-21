@@ -463,7 +463,7 @@ if (!function_exists('getEventIdByName')) {
         if (isset($eventIds[$name])) {
             return $eventIds[$name];
         }
-        $eventIds = \EvolutionCMS\Models\SystemEventname::query()->get()->pluck('id', 'name')->get();
+        $eventIds = \EvolutionCMS\Models\SystemEventname::query()->pluck('id', 'name')->toArray();
 
         return $eventIds[$name];
     }
