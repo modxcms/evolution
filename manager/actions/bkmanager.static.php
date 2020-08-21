@@ -233,12 +233,37 @@ $ph['result_msg_snapshot'] = '';
                             </thead>
                             <tbody>
                             <?php
-                            $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
-                            $rs = $modx->getDatabase()->query($sql);
+                            $prefix = $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix'));
+
+                            switch ($modx->getDatabase()->getConfig()['driver']) {
+                                case 'pgsql':
+                                    $sql = "SELECT *, tablename as Name
+                 FROM pg_catalog.pg_tables WHERE 
+            schemaname != 'information_schema' AND tablename LIKE '%".$prefix."%'";
+
+                                    $array =  $modx->getDatabase()->makeArray(
+                                        $modx->getDatabase()->query($sql)
+                                    );
+                                    break;
+
+                                case 'mysql':
+                                    $sql = 'SHOW TABLE STATUS FROM `' . $modx->getDatabase()->getConfig('database') . '` LIKE "' . $prefix . '%"';
+
+                                    $array = $modx->getDatabase()->makeArray(
+                                        $modx->getDatabase()->query($sql)
+                                    );
+                                    break;
+                                default:
+                                    $array = [];
+                                    break;
+                            }
                             $i = 0;
                             $total = 0;
                             $totaloverhead = 0;
-                            while ($db_status = $modx->getDatabase()->getRow($rs)) {
+                            foreach ($array as $db_status) {
+                                if(isset($db_status['tablename'])) {
+                                    $db_status['Name'] = $db_status['tablename'];
+                                }
                                 if (isset($tables)) {
                                     $table_string = implode(',', $table);
                                 } else {
