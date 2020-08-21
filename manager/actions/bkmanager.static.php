@@ -257,9 +257,6 @@ $ph['result_msg_snapshot'] = '';
                                     $array = [];
                                     break;
                             }
-
-                            //$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
-                            //$rs = $modx->getDatabase()->query($sql);
                             $i = 0;
                             $total = 0;
                             $totaloverhead = 0;
@@ -267,7 +264,6 @@ $ph['result_msg_snapshot'] = '';
                                 if(isset($db_status['tablename'])) {
                                     $db_status['Name'] = $db_status['tablename'];
                                 }
-                            //while ($db_status = $modx->getDatabase()->getRow($rs)) {
                                 if (isset($tables)) {
                                     $table_string = implode(',', $table);
                                 } else {
