@@ -9,6 +9,7 @@ if (!function_exists('getDefaultTemplate')) {
         $modx = evolutionCMS();
 
         $default_template = '';
+
         switch ($modx->getConfig('auto_template_logic')) {
             case 'sibling':
                 if (!isset($_GET['pid']) || empty($_GET['pid'])) {
@@ -22,20 +23,21 @@ if (!function_exists('getDefaultTemplate')) {
                         }
                     }
                 } else {
-                    $where = ['isfolder' => 0];
-                    $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template,menuindex', $where,
-                        'menuindex', 'ASC', 1);
+
+                    $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template,menuindex', [],
+                        'isfolder', 'ASC', 1);
+
                     if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
                         $default_template = $sibl[0]['template'];
                     } else {
-                        $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template,menuindex', $where,
-                            'menuindex', 'ASC', 1);
+                        $sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template,menuindex', [],
+                            'isfolder', 'ASC', 1);
                         if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
                             $default_template = $sibl[0]['template'];
                         }
                     }
                 }
-                if (isset($default_template)) {
+                if (is_numeric($default_template)) {
                     break;
                 } // If $default_template could not be determined, fall back / through to "parent"-mode
             case 'parent':

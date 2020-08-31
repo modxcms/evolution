@@ -3861,7 +3861,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
-        $documentChildes = SiteContent::query();
+
+        $documentChildes = SiteContent::query()->where('site_content.parent', $parentid);
         if ($published !== 'all') {
             $documentChildes = $documentChildes->where('site_content.published', $published);
         }
@@ -3914,7 +3915,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_numeric($limit)) {
             $documentChildes = $documentChildes->take($limit);
         }
-
         $resourceArray = $documentChildes->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
@@ -4117,23 +4117,37 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        $activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
+        //$activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
         // modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        //$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
         // get document groups for current user
         if ($docgrp = $this->getUserDocGroups()) {
             $docgrp = implode(",", $docgrp);
         }
-        $access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+        //$access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+        $fields = array_filter(array_map('trim', explode(',', $fields)));
 
-        $pageInfo = \DB::table('site_content as sc')
-            ->selectRaw( $fields)
-            ->leftJoin('document_groups as dg')
-            ->on('dg.document','=','sc.id')
-            ->whereRaw("(sc.id='{$pageid}' {$activeSql}) AND ({$access})")
-            ->groupBy('sc.id')
-            ->first()
-            ->toArray();
+        $pageInfo = SiteContent::query()->select($fields)
+            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+            ->where('site_content.id', $pageid);
+        if($active == 1){
+            $pageInfo = $pageInfo->where('site_content.published', 1)->where('site_content.deleted', 0);
+        }
+        if ($docgrp = $this->getUserDocGroups() && $_SESSION['mgrRole'] != 1) {
+            if($this->isFrontend()){
+                $pageInfo = $pageInfo->where('site_content.privateweb', 0);
+            }else {
+                $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
+                    $query->where('site_content.privatemgr', '=', 0)
+                    ->orWhereIn('document_groups.document_group', $docgrp);
+                });
+            }
+        }
+        $pageInfo = $pageInfo->first();
+        if(!is_null($pageInfo)){
+            $pageInfo = $pageInfo->toArray();
+        }
+
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
 
