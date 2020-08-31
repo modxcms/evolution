@@ -201,7 +201,11 @@ if (isset($action)) {
                     }
                     foreach ($sql->get() as $row){
                         $row = $row->toArray();
-                        if($a == 301 && !isset($row['disabled'])) $row['disabled'] = 1;
+                        if($a == 301 && !is_numeric($row['disabled'])) {
+                            $row['disabled'] = 1;
+                        }else {
+                            $row['disabled'] = 0;
+                        }
                         if(!isset($row['disabled'])) $row['disabled'] = 0;
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
                             continue;
