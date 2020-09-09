@@ -41,32 +41,32 @@ class Category extends Eloquent\Model
 
     public function templates() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SiteTemplate::class, 'category', 'id');
+        return $this->hasMany(SiteTemplate::class, 'category', 'id')->orderBy('templatename', 'ASC');
     }
 
     public function chunks() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SiteHtmlsnippet::class, 'category', 'id');
+        return $this->hasMany(SiteHtmlsnippet::class, 'category', 'id')->orderBy('name', 'ASC');
     }
 
     public function snippets() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SiteSnippet::class, 'category', 'id');
+        return $this->hasMany(SiteSnippet::class, 'category', 'id')->orderBy('name', 'ASC');
     }
 
     public function plugins() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SitePlugin::class, 'category', 'id');
+        return $this->hasMany(SitePlugin::class, 'category', 'id')->orderBy('name', 'ASC');
     }
 
     public function modules() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SiteModule::class, 'category', 'id');
+        return $this->hasMany(SiteModule::class, 'category', 'id')->orderBy('name', 'ASC');
     }
 
     public function tvs() : Eloquent\Relations\HasMany
     {
-        return $this->hasMany(SiteTmplvar::class, 'category', 'id');
+        return $this->hasMany(SiteTmplvar::class, 'category', 'id')->orderBy('name', 'ASC');
     }
 
     public function getNameAttribute()
