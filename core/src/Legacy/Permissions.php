@@ -1,5 +1,7 @@
 <?php namespace EvolutionCMS\Legacy;
 
+use EvolutionCMS\Models\SiteContent;
+
 /**
  * @class: udperms
  */
@@ -31,10 +33,6 @@ class Permissions
         global $udperms_allowroot;
         $modx = evolutionCMS();
 
-        $tblsc = $modx->getDatabase()->getFullTableName('site_content');
-        $tbldg = $modx->getDatabase()->getFullTableName('document_groups');
-        $tbldgn = $modx->getDatabase()->getFullTableName('documentgroup_names');
-
         $document = $this->document;
         $role = $this->role;
 
@@ -46,7 +44,7 @@ class Permissions
             return true; // permissions aren't in use
         }
 
-        $parent = $modx->getDatabase()->getValue($modx->getDatabase()->select('parent', $tblsc, "id='{$this->document}'"));
+        $parent = SiteContent::query()->find($this->document)->parent;
         if ($document == 0 && $parent == null && $udperms_allowroot == 1) {
             return true;
         } // User is allowed to create new document in root
@@ -68,13 +66,19 @@ class Permissions
          */
         $permissionsok = false;  // set permissions to false
 
-        $rs = $modx->getDatabase()->select(
-            'count(DISTINCT sc.id)',
-            "{$tblsc} AS sc 
-				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
-				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
-            "sc.id='{$this->document}' AND (" . (empty($docgrp) ? '' : "dg.document_group = " . $docgrp . " ||") . " sc.privatemgr = 0)"
-        );
+        $query = SiteContent::query()->select('id');
+        if(!empty($docgrp)){
+            $query = $query->leftJoin('document_groups', 'site_content.id','=', 'document_groups.document')
+                ->where(function($q) use ($docgrp) {
+                    $q->where('document_groups.document_group', $docgrp)
+                        ->orWhere('site_content.privatemgr', 0);
+                });
+        }else {
+            $query->where('privatemgr', 0);
+        }
+        if ($query->count() > 0) {
+            $permissionsok = true;
+        }
         $limit = $modx->getDatabase()->getValue($rs);
         if ($limit == 1) {
             $permissionsok = true;
