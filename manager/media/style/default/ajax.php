@@ -585,17 +585,29 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            \EvolutionCMS\Models\SiteContent::where('id', $id)->update(['parent' => $parent]);
+                            $resource = \EvolutionCMS\Models\SiteContent::find($id);
+                            $resource->parent = $parent;
+                            $resource->save();
 
-                            // set parent isfolder = 1
-                            \EvolutionCMS\Models\SiteContent::where('id', $parent)->update(['isfolder' => 1]);
+                            if ($parent > 0) {
+                                // set parent isfolder = 1
+                                $parentResource = \EvolutionCMS\Models\SiteContent::find($parent);
+                                $parentResource->isfolder = 1;
+                                $parentResource->save();
+                            }
 
                             if ($parent != $parentOld) {
                                 // check children docs and set parent isfolder
                                 if (\EvolutionCMS\Models\SiteContent::query()->where('parent', $parentOld)->count() > 0) {
-                                    \EvolutionCMS\Models\SiteContent::where('id', $parentOld)->update(['isfolder' => 1]);
+                                    if ($parentOld > 0) {
+                                        $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
+                                        $parentResource->isfolder = 1;
+                                        $parentResource->save();
+                                    }
                                 } else {
-                                    \EvolutionCMS\Models\SiteContent::where('id', $parentOld)->update(['isfolder' => 0]);
+                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
+                                    $parentResource->isfolder = 0;
+                                    $parentResource->save();
                                 }
                             }
 
@@ -603,7 +615,9 @@ if (isset($action)) {
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    \EvolutionCMS\Models\SiteContent::query()->where('id', $value)->update(['menuindex' => $key]);
+                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($value);
+                                    $parentResource->menuindex = $key;
+                                    $parentResource->save();
                                 }
                             } else {
                                 // TODO: max(*) menuindex

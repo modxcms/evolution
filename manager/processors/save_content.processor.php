@@ -364,7 +364,7 @@ switch ($actionToTake) {
         if ($id != '')
             $resourceArray["id"] = $id;
 
-        $key = \EvolutionCMS\Models\SiteContent::query()->insertGetId($resourceArray);
+        $key = \EvolutionCMS\Models\SiteContent::query()->create($resourceArray)->getKey();
 
 
         $tvChanges = array();
@@ -518,7 +518,11 @@ switch ($actionToTake) {
                 "id" => $id
             ));
 
-            \EvolutionCMS\Models\SiteContent::query()->find($id)->update($resourceArray);
+            $resource = \EvolutionCMS\Models\SiteContent::query()->find($id);
+            foreach($resourceArray as $key=>$value){
+                $resource->{$key} = $value;
+            }
+            $resource->save();
 
             // update template variables
             $tvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::select('id', 'tmplvarid')->where('contentid', $id)->get();
@@ -602,14 +606,18 @@ switch ($actionToTake) {
 
             // do the parent stuff
             if ($resourceArray['parent'] != 0) {
-                \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent'])->update(array('isfolder' => 1));
+                $parent = \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent']);
+                $parent->isfolder = 1;
+                $parent->save();
             }
 
             // finished moving the document, now check to see if the old_parent should no longer be a folder
             $countChildOldParent = \EvolutionCMS\Models\SiteContent::where('parent', $oldparent)->count();
 
             if ($countChildOldParent == 0) {
-                \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent'])->update(array('isfolder' => 0));
+                $oldParent = \EvolutionCMS\Models\SiteContent::find($oldparent);
+                $oldParent->isfolder = 0;
+                $oldParent->save();
             }
 
 

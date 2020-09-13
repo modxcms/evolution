@@ -16,8 +16,7 @@ class SiteContentTableSeeder extends Seeder
 
         \DB::table('site_content')->delete();
         
-        \DB::table('site_content')->insert(array (
-            0 => 
+        $resource = \EvolutionCMS\Models\SiteContent::create(
             array (
                 'type' => 'document',
                 'contentType' => 'text/html',
@@ -60,9 +59,9 @@ class SiteContentTableSeeder extends Seeder
                 'content_dispo' => 0,
                 'hidemenu' => 0,
                 'alias_visible' => 1,
-            ),
+
         ));
-        
+        $resource->save();
         
     }
 }

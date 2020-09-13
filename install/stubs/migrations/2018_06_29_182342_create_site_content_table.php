@@ -14,7 +14,7 @@ class CreateSiteContentTable extends Migration {
 	{
 		Schema::create('site_content', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id', true, true);
 			$table->string('type', 20)->default('document')->index('typeidx');
 			$table->string('contentType', 50)->default('text/html');
 			$table->string('pagetitle')->default('');
