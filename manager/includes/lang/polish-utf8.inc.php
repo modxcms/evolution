@@ -415,7 +415,7 @@ $_lang["import_files_found"] = '<b>Znaleziono %s dokumentów do importu...</b><p
 $_lang["import_params"] = 'Importuj parametry udostępniane przez moduł';
 $_lang["import_params_msg"] = 'Możesz zaimportować parametry i ustawienia modułu wybierając nazwę modułu z menu rozwijalnego.<br /><b>Uwaga:</b> Aby moduł pojawił się na liści ta wtyczka/snippet musi być częścią listy zależności modułu oraz moduł musi mieć włączone udostępnianie parametrów. ';
 $_lang["import_parent_resource"] = 'Dokument nadrzędny:';
-$_lang["import_site"] = 'Importuj serwis';
+$_lang["update_tree"] = 'Odbuduj drzewo';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>Błąd!</span>';
 $_lang["import_site_failed_db_error"] = 'Wystąpił błąd bazy danych podczas próby zduplikowania zasobu: ';
 $_lang["import_site_failed_no_open_dir"] = 'Nie można otworzyć folderu: ';

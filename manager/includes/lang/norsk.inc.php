@@ -389,7 +389,7 @@ $_lang["import_files_found"] = '<b>Fant %s dokumenter for importering...</b>';
 $_lang["import_params"] = 'Importer en modules delte parametere';
 $_lang["import_params_msg"] = 'Du kan importere parameterne eller innstillingene av en modul ved å velge modulens navn i ovenstående meny. <b>OBS:</b> For at moduler skal synes i menyen må denne pluginen/kodesnutten være med i modulens avhengighetsliste og modulen må være satt opp for parameterdeling.';
 $_lang["import_parent_resource"] = 'Eierdokument';
-$_lang["import_site"] = 'Importer webplass';
+$_lang["update_tree"] = 'Gjenoppbygg treet';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>Mislyktes!</span>';
 $_lang["import_site_failed_db_error"] = 'A database error occured while trying to clone Resource: ';
 $_lang["import_site_failed_no_open_dir"] = 'Could not open directory: ';

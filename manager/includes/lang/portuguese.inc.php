@@ -389,7 +389,7 @@ $_lang["import_files_found"] = '<b>Encontrados %s documentos para importação..
 $_lang["import_params"] = 'Importar parâmetros partilhados do módulo';
 $_lang["import_params_msg"] = 'Pode importar os parâmetros ou configurações de um módulo seleccionando-o no menu acima.<b>NOTA:</b> Para que o módulo pretendido apareça neste menu, o plugin/snippet deve fazer parte de uma dependência da listagem de módulos e o módulo deve ter a partilha de parâmetros activa.';
 $_lang["import_parent_resource"] = 'Documento Antecessor:';
-$_lang["import_site"] = 'Importar';
+$_lang["update_tree"] = 'Reconstruir a árvore';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>Importação do site falhou!</span>';
 $_lang["import_site_failed_db_error"] = 'A database error occured while trying to clone Resource: ';
 $_lang["import_site_failed_no_open_dir"] = 'Could not open directory: ';

@@ -414,7 +414,7 @@ $_lang["import_files_found"] = '<b>Trovate %s Risorse da importare...</b>';
 $_lang["import_params"] = 'Importa i parametri condivisi del Modulo';
 $_lang["import_params_msg"] = 'Potete importare i parametri e le impostazioni di un Modulo selezionando il nome del Modulo dalla lista sottostante. <b>NOTA:</b> Affinchè un Modulo appaia nel menu questo Plugin/Snippet deve essere incluso nell\'elenco di dipendenza del Modulo ed il Modulo deve avere la attiva la condivisione dei parametri. ';
 $_lang["import_parent_resource"] = 'Risorsa genitore:';
-$_lang["import_site"] = 'Importa Sito';
+$_lang["update_tree"] = 'Ricostruisci l\'albero';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>Fallito!</span>';
 $_lang["import_site_failed_db_error"] = 'Si è verificato un errore del database cercando di duplicare la Risorsa: ';
 $_lang["import_site_failed_no_open_dir"] = 'Impossibile aprire la directory: ';
