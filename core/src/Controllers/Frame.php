@@ -218,8 +218,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->menuSearch()
             ->menuBkManager()
             ->menuRemoveLocks()
-            ->menuImportSite()
-            ->menuExportSite();
+            ->menuUpdateTree();
 
         $menu = $this->managerTheme->getCore()->invokeEvent('OnManagerMenuPrerender', ['menu' => $this->sitemenu]);
         if (\is_array($menu)) {
@@ -886,52 +885,26 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         return $this;
     }
 
-    protected function menuImportSite()
+    protected function menuUpdateTree()
     {
         if (!$this->managerTheme->getCore()->hasPermission('import_static')) {
             return $this;
         }
 
-        $this->sitemenu['import_site'] = [
-            'import_site',
+        $this->sitemenu['update_tree'] = [
+            'update_tree',
             'tools',
             sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_upload') . '"></i>%s'
-                , $this->managerTheme->getLexicon('import_site')
+                '<i class="' . $this->managerTheme->getStyle('icon_sitemap') . '"></i>%s'
+                , $this->managerTheme->getLexicon('update_tree')
             ),
             'index.php?a=95',
-            $this->managerTheme->getLexicon('import_site'),
+            $this->managerTheme->getLexicon('update_tree'),
             '',
-            'import_static',
+            'update_tree',
             'main',
             0,
             30,
-            ''
-        ];
-
-        return $this;
-    }
-
-    protected function menuExportSite()
-    {
-        if (!$this->managerTheme->getCore()->hasPermission('export_static')) {
-            return $this;
-        }
-
-        $this->sitemenu['export_site'] = [
-            'export_site',
-            'tools',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_download') . '"></i>%s'
-                , $this->managerTheme->getLexicon('export_site')
-            ),
-            'index.php?a=83',
-            $this->managerTheme->getLexicon('export_site'),
-            '',
-            'export_static',
-            'main',
-            1,
-            40,
             ''
         ];
 
