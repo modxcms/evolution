@@ -77,7 +77,11 @@ try {
 
     include dirname(__DIR__) . '/processor/result.php';
 
-    $installLevel = 1;
+    if($installMode == 1){
+        $installLevel = 3;
+    }else {
+        $installLevel = 1;
+    }
     // select database
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -113,6 +117,7 @@ try {
         $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
         $configFileFailed = false;
         if (@ !$handle = fopen($filename, 'w')) {
+            echo 111;
             $configFileFailed = true;
         }
 
@@ -157,10 +162,24 @@ try {
         define('MODX_BASE_PATH', dirname(dirname(dirname(__DIR__))) . '/');
 
         define('MODX_SITE_URL', $_SERVER['HTTP_HOST'] . '/');
+        if(file_exists(MODX_BASE_PATH.'core/storage/bootstrap/services.php')){
+            unlink(MODX_BASE_PATH.'core/storage/bootstrap/services.php');
+        }
+
         include(MODX_BASE_PATH . '/index.php');
         $modx->setConfig('migrations', 'migrations');
+        if ($database_type == 'pgsql') {
 
+            $result = \DB::table('migrations_install')->select('id')->orderBy('id', 'DESC')->first();
+            if (!is_null($result)) {
+                $new_id = $result->id;
+                $new_id++;
+                $table = table_prefix('migrations_install') . '_id_seq';
+                \DB::statement('ALTER SEQUENCE '.$table.' RESTART WITH ' . $new_id);
+            }
+        }
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
+
         if ($installMode == 0) {
             foreach (glob("../install/stubs/seeds/*.php") as $filename) {
                 include $filename;
@@ -802,9 +821,9 @@ try {
 
     if ($installLevel === 7) {
         // call back function
-        if ($callBackFnc != "") {
+        /*if ($callBackFnc != "") {
             $callBackFnc($sqlParser);
-        }
+        }*/
 
         // Setup the MODX API -- needed for the cache processor
         if (file_exists(dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
