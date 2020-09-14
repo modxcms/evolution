@@ -5,14 +5,13 @@ if (is_file(EVO_CORE_PATH . 'config/database/connections/default.php')) { // Inc
     $db_config = include_once EVO_CORE_PATH . 'config/database/connections/default.php';
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
     if (isset($db_config['database'])) {
-        if (!$conn = @mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'], '', isset
-        ($db_config['port']) ? $db_config['port'] : null)) {
+        try {
+        $dbh = new PDO($_POST['method'] . ':host=' . $db_config['host'] . ';dbname=' . $db_config['database'], $db_config['username'], $db_config['password']);
             $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-        } elseif (!@mysqli_select_db($conn, $db_config['database'])) {
-            $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-        } else {
+        } catch (PDOException $e) {
             $upgradeable = 1;
         }
+
     } else {
         $upgradeable = 2;
     }
