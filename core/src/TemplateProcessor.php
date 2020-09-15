@@ -33,6 +33,27 @@ class TemplateProcessor
                 $template = 'tpl-' . $doc['template'];
                 break;
             case $this->core['view']->exists($templateAlias):
+               
+                $baseClassName = $this->core->getConfig('ControllerNamespace') . 'BaseController';
+                if (class_exists($baseClassName)) { //Проверяем есть ли Base класс
+                    $classArray = explode('.', $templateAlias);
+                    $classArray = array_map(
+                        function ($item) {
+                            return $this->setPsrClassNames($item);
+                        },
+                        $classArray
+                    );
+                    $classViewPart = implode('.', $classArray);
+                    $className = str_replace('.', '\\', $classViewPart);
+                    $className =
+                        $this->core->getConfig('ControllerNamespace') . ucfirst($className) . 'Controller';
+                    if (!class_exists(
+                        $className
+                    )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
+                        $className = $baseClassName;
+                    }
+                    $customClass = new $className();
+                }
                 $template = $templateAlias;
                 break;
             default:
@@ -58,5 +79,22 @@ class TemplateProcessor
     public function getTemplateCodeFromDB($templateID)
     {
         return SiteTemplate::findOrFail($templateID)->content;
+    }
+
+    /**
+     * @param string $templateAlias
+     * @return string
+     */
+    private function setPsrClassNames(string $templateAlias): string
+    {
+        $explodedTplName = explode('_', $templateAlias);
+        $explodedTplName = array_map(
+            function ($item) {
+                return ucfirst(trim($item));
+            },
+            $explodedTplName
+        );
+
+        return join($explodedTplName);
     }
 }
