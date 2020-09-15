@@ -416,19 +416,14 @@ $_lang["import_params"] = 'Import Module shared parameters';
 $_lang["import_params_msg"] = 'You can import the parameters or settings of a Module by selecting the name of the Module from the above drop down menu. <b>NOTE:</b> In order for Modules to appear inside the menu, this Plugin/Snippet must be a part of the Module\'s dependency listing and the Module must have parameter sharing enabled. ';
 $_lang["import_parent_resource"] = 'Parent Resource:';
 $_lang["update_tree"] = 'Rebuild the tree';
-$_lang["import_site_failed"] = 'Failed!';
-$_lang["import_site_failed_db_error"] = 'A database error occured while trying to clone Resource: ';
-$_lang["import_site_failed_no_open_dir"] = 'Could not open directory: ';
-$_lang["import_site_failed_no_retrieve_file"] = 'Could not retrieve file: ';
-$_lang["import_site_html"] = 'Import site from HTML';
-$_lang["import_site_importing_document"] = 'Importing file <b>%s</b> ';
-$_lang["import_site_maxtime"] = 'Max import time:';
-$_lang["import_site_maxtime_message"] = 'Specify the number of seconds allowed for the Content Manager to import the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
-$_lang["import_site_message"] = '<p>Import an entire HTML site into your site database. Please note that you will need to copy your html files and/or directories into the /assets/import directory.</p><p>Please fill out the form and press \'Import\' to start the import process. The files imported will be saved into the selected location, using the files name as the Resource\'s URL aliases where possible, and the Resource title tag as the pagetitle.';
-$_lang["import_site_skip"] = 'Skipped!';
-$_lang["import_site_start"] = 'Start Import';
-$_lang["import_site_success"] = 'Success!';
-$_lang["import_site_time"] = 'Import finished. Import took %s seconds to complete.';
+$_lang["update_tree_description"] = '<ul>
+                   <li> - Closure table database design pattern that makes working with the document tree more convenient and fast </li>
+                     <li> - If the data in the tree is updated not through models, then there is a possibility of an incorrect linking of documents in the database </li>
+                     <li> - This operation fixes the problem when site_content is not updated through the model (save, create) and the links (Closure table) are not updated </li>
+                     <li> - It is also possible to perform this operation in CLI mode via the \'php artisan closuretable: rebuild \' command </li> 
+                     </ul>';
+$_lang["update_tree_danger"] = 'If you have more than 1000 resources, it is better to perform this operation in CLI mode using the \'php artisan closuretable: rebuild command\'';
+$_lang["import_site_time"] = 'Rebuild tree finished. Documents processed: <b>%s</b><br>Import took <b>%s</b> seconds to complete.';
 $_lang["inbox"] = 'Inbox';
 $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';

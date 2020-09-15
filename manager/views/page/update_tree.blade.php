@@ -14,36 +14,38 @@
     <h1>
         <i class="{{ ManagerTheme::getStyle('icon_sitemap') }}"></i>{{ ManagerTheme::getLexicon('update_tree') }}
     </h1>
-
+    <div class="tab-page">
     {!! ManagerTheme::getStyle('actionbuttons.static.cancel') !!}
 
-    <div class="tab-pane" id="exportPane">
-        <script type="text/javascript">
-            tpExport = new WebFXTabPane(document.getElementById("exportPane"));
-        </script>
 
-        <div class="tab-page" id="tabMain">
-            <h2 class="tab">{{ ManagerTheme::getLexicon('update_tree') }}</h2>
-            <script type="text/javascript">tpExport.addTabPage(document.getElementById("tabMain"));</script>
 
             <div class="container container-body">
+                <p>
+                    {!! ManagerTheme::getLexicon('update_tree_description') !!}
+                </p>
+                @if($count < 1000)
 
-                <form action="index.php" method="post" name="exportFrm">
-                    <div class="form-group">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100"></div>
+                    @if($finish == 1)
+                        <div class="alert alert-success" role="alert">
+                            {!! sprintf(ManagerTheme::getLexicon('update_tree_time'), $count, $end) !!}
                         </div>
+                    @endif
 
+                    <form  method="post" name="exportFrm">
+
+                        <button type="submit" name="start" class="btn btn-primary"> <i class="{{ ManagerTheme::getStyle('icon_sitemap') }}"></i> {{ ManagerTheme::getLexicon('update_tree') }}</button>
+                    </form>
+
+                @else
+                    <div class="alert alert-danger" role="alert">
+                        {!! ManagerTheme::getLexicon('update_tree_danger') !!}
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                @endif
             </div>
-        </div>
+
+            </div>
 
 
-
-    </div>
 
 
 @endsection
