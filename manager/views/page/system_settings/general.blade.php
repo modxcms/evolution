@@ -70,6 +70,18 @@
             <div class="split my-1"></div>
         @endif
 
+
+             @include('manager::form.input', [
+                        'name' => 'ControllerNamespace',
+                        'label' => ManagerTheme::getLexicon('controller_namespace'),
+                        'small' => '[(ControllerNamespace)]',
+                        'value' => (isset($settings['ControllerNamespace']))? $settings['ControllerNamespace'] : '',
+                        'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                        'comment' => ManagerTheme::getLexicon('controller_namespace_message')
+                  ])
+
+             <div class="split my-1"></div>
+
         @if(! isset($fileSetting['site_unavailable_page']))
             @include('manager::form.input', [
                 'name' => 'site_unavailable_page',
