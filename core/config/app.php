@@ -48,7 +48,6 @@ return [
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
         'Evolution_DBAPI' => EvolutionCMS\Providers\DatabaseServiceProvider::class,
         'Evolution_DEPRECATED' => EvolutionCMS\Providers\DeprecatedCoreServiceProvider::class,
-        'Evolution_EXPORT_SITE' => EvolutionCMS\Providers\ExportSiteServiceProvider::class,
         'Evolution_MODxMailer' => EvolutionCMS\Providers\MailServiceProvider::class,
         'Evolution_makeTable' => EvolutionCMS\Providers\MakeTableServiceProvider::class,
         'Evolution_ManagerAPI' => EvolutionCMS\Providers\ManagerApiServiceProvider::class,

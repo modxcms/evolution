@@ -631,13 +631,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
         return $this->getService('makeTable');
     }
 
-    /**
-     * @return Legacy\ExportSite
-     */
-    public function getExportSite(): Legacy\ExportSite
-    {
-        return $this->getService('EXPORT_SITE');
-    }
 
     /**
      * @return mixed

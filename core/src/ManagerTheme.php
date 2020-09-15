@@ -157,16 +157,14 @@ class ManagerTheme implements ManagerThemeInterface
         86 => Controllers\RoleManagment::class,
         /** template/ snippet management */
         76 => Controllers\Resources::class,
-        /** Export to file */
-        83 => Controllers\ExportSite::class,
         /** Resource Selector  */
         84,
         /** Backup Manager */
         93,
         /** Duplicate Document */
         94,
-        /** Import Document from file */
-        95,
+        /** Update Tree for Closure Table */
+        95 => Controllers\UpdateTree::class,
         /** Help */
         9 => Controllers\Help::class,
         /** Template Variables - Based on Apodigm's Docvars */

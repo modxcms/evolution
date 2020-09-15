@@ -29,8 +29,6 @@ use UrlProcessor;
  *      $this->loadExtension('PHPCOMPAT');
  * @property Legacy\Modifiers $filter
  *      $this->loadExtension('MODIFIERS');
- * @property Legacy\ExportSite $export
- *      $this->loadExtension('EXPORT_SITE');
  * @property Support\MakeTable $table
  *      $this->loadExtension('makeTable');
  * @property Legacy\ManagerApi $manager

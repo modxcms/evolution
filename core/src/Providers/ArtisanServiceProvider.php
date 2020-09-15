@@ -56,6 +56,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'RunPackageConsole' => 'command.packages.runconsole',
         'InstallPackageRequire' => 'command.packages.installrequire',
         'InstallPackageAutoload' => 'command.packages.installautoload',
+        'UpdateTree' => 'command.updatetree',
     ];
 
     /**
@@ -344,6 +345,17 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.packages.installautoload', function () {
             return new Packages\InstallPackageAutoloadCommand();
+        });
+    }
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerUpdateTreeCommand()
+    {
+        $this->app->singleton('command.updatetree', function () {
+            return new Console\UpdateTreeCommand();
         });
     }
     /**
