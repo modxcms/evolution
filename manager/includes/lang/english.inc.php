@@ -296,26 +296,6 @@ $_lang["eventlog_viewer"] = 'System Events';
 $_lang["everybody"] = 'Everybody';
 $_lang["existing_category"] = 'Existing Category';
 $_lang["expand_tree"] = 'Expand Site Tree';
-$_lang["export_site"] = 'Export Static HTML';
-$_lang["export_site_cacheable"] = 'Include non-cacheable files:';
-$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
-$_lang["export_site_failed"] = 'Failed!';
-$_lang["export_site_failed_no_open"] = 'Cannot open file: ';
-$_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';
-$_lang["export_site_failed_no_write"] = 'Cannot write file.';
-$_lang["export_site_html"] = 'Export site to HTML';
-$_lang["export_site_maxtime"] = 'Max export time:';
-$_lang["export_site_maxtime_message"] = 'Specify the number of seconds Evolution CMS can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
-$_lang["export_site_message"] = '<p>Use this to export the entire site to static HTML files. Please note, however, that you will lose a lot of the Evolution CMS functionality should you do so:</p><ul><li>Page reads on the exported files will not be recorded.</li><li>Interactive Snippets will NOT work in exported files</li><li>Only regular Resources will be exported, Weblinks will not be exported.</li><li>The export process may fail if your Resources contain Snippets which send redirection headers.</li><li>Depending on how you\'ve written your Resources, style sheets and images, the design of your site may be broken. To fix this, save/move your exported files to the same directory where the main Evolution CMS index.php file is located.</li></ul><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the /assets/export directory, using the Resources\' URL aliases as filenames when possible. While exporting your site, it\'s best to have the Evolution CMS configuration item \'Friendly URL aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><em>Any existing files will be overwritten by the new files if their names are identical!</em></p>';
-$_lang["export_site_numberdocs"] = '<p><b>Found %s Resources to export...</b></p>';
-$_lang["export_site_prefix"] = 'File prefix:';
-$_lang["export_site_start"] = 'Start export';
-$_lang["export_site_success"] = 'Success!';
-$_lang["export_site_success_skip_dir"] = 'Skip this directory.';
-$_lang["export_site_success_skip_doc"] = 'Skip this document.';
-$_lang["export_site_suffix"] = 'File suffix:';
-$_lang["export_site_target_unwritable"] = 'Target directory isn\'t writable. Please ensure the directory is writable, and try again.';
-$_lang["export_site_time"] = 'Export finished. Export took %s seconds to complete.';
 $_lang["failed_login_message"] = 'Enter the number of failed login attempts allowed before blocking a user.';
 $_lang["failed_login_title"] = 'Failed Login Attempts';
 $_lang["fe_editor_lang_message"] = 'Choose a language for the editor to use when used as a front-end editor.';
@@ -423,7 +403,7 @@ $_lang["update_tree_description"] = '<ul>
                      <li> - It is also possible to perform this operation in CLI mode via the \'php artisan closuretable: rebuild \' command </li> 
                      </ul>';
 $_lang["update_tree_danger"] = 'If you have more than 1000 resources, it is better to perform this operation in CLI mode using the \'php artisan closuretable: rebuild command\'';
-$_lang["import_site_time"] = 'Rebuild tree finished. Documents processed: <b>%s</b><br>Import took <b>%s</b> seconds to complete.';
+$_lang["update_tree_time"] = 'Rebuild tree finished. Documents processed: <b>%s</b><br>Import took <b>%s</b> seconds to complete.';
 $_lang["inbox"] = 'Inbox';
 $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';
@@ -1328,21 +1308,6 @@ $_lang["settings_friendlyurls_alert2"] = 'Since Evolution CMS was installed in a
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
-
-$_lang["import_site.static.php1"] = 'Reset resource tree';
-$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
-$_lang["import_site.static.php5"] = 'Whole file content';
-
-$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
-$_lang["export_site.static.php4"] = 'Search for';
-$_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
-$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
 
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on Evolution CMS errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
