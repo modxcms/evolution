@@ -116,7 +116,6 @@
                 edit_plugin: <?= $modx->hasPermission('edit_plugin') ? 1 : 0 ?>,
                 edit_snippet: <?= $modx->hasPermission('edit_snippet') ? 1 : 0 ?>,
                 edit_template: <?= $modx->hasPermission('edit_template') ? 1 : 0 ?>,
-                messages: <?= $modx->hasPermission('messages') ? 1 : 0 ?>,
                 new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
                 publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
                 dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
@@ -243,9 +242,7 @@
                                 <i id="msgCounter"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                @if($modx->hasPermission('messages'))
-                                <li id="newMail"></li>
-                                @endif
+
                                 @if($modx->hasPermission('change_password'))
                                 <li>
                                     <a onclick="" href="index.php?a=28" target="main">

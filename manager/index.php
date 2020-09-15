@@ -199,10 +199,6 @@ if ($action === null) {
         EvolutionCMS\Tracy\Debugger::$showBar = false;
         // this looks to be a top-level frameset request, so let's serve up a frameset
         $output = ManagerTheme::handle(1, ['frame' => 1]);
-    } else {
-        if ($modx->hasPermission('messages')) {
-            include_once __DIR__ . '/includes/messageCount.inc.php';
-        }
     }
 } else {
     $output = ManagerTheme::handle($action);

@@ -11,24 +11,6 @@
 
     // set placeholders
     $ph = $_lang;
-    $_SESSION['nrtotalmessages'] = 0;
-    $_SESSION['nrnewmessages'] = 0;
-
-    // setup message info
-    if($modx->hasPermission('messages')) {
-        include_once(MODX_MANAGER_PATH . 'includes/messageCount.inc.php');
-        $_SESSION['nrtotalmessages'] = $nrtotalmessages;
-        $_SESSION['nrnewmessages'] = $nrnewmessages;
-
-        $msg = array();
-        $msg[] = sprintf('<a href="index.php?a=10" target="main"><img src="%s" /></a>', $_style['icon_mail']);
-        $nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? ' (<span style="color:red">' . $_SESSION['nrnewmessages'] . '</span>)' : '';
-        $msg[] = sprintf('<span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10" target="main">[%%inbox%%]</a>%s</span><br />', $nrnewmessages);
-        $nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>' : '0';
-        $welcome_messages = sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages);
-        $msg[] = sprintf('<span class="comment">%s</span>', $welcome_messages);
-        $ph['MessageInfo'] = implode("\n", $msg);
-    }
 
     $iconTpl = $modx->getChunk('manager#welcome\WrapIcon');
     // setup icons
@@ -135,14 +117,11 @@
 	</tr>
 </table>';
 
-    $nrnewmessages = '<span class="text-danger">' . $_SESSION['nrnewmessages'] . '</span>';
-
     $ph['UserInfo'] = $modx->parseText($tpl, array(
         'username' => $modx->getLoginUserName(),
         'role' => $_SESSION['mgrPermissions']['name'],
         'lastlogin' => $modx->toDateFormat($modx->timestamp($_SESSION['mgrLastlogin'])),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
-        'msginfo' => sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages)
     ));
 
     $activeUsers = \EvolutionCMS\Models\ActiveUserSession::query()
@@ -373,10 +352,7 @@
                         <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
                     </tr>' .
                     ($modx->hasPermission("change_password") ? '
-                    <tr>
-                        <td>[%inbox%]</td>
-                        <td><a href="index.php?a=10" target="main"><b>' . ($_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], '<span style="color:red;">' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"]) . '</b></a></td>
-                    </tr>
+
                     ' : '') . '
                 </table>
             </div>

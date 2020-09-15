@@ -5040,45 +5040,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     }
 
     /**
-     * Sends a message to a user's message box.
-     *
-     * @param string $type Type of the message
-     * @param string $to The recipient of the message
-     * @param string $from The sender of the message
-     * @param string $subject The subject of the message
-     * @param string $msg The message body
-     * @param int $private Whether it is a private message, or not
-     *                     Default : 0
-     * @throws InvalidFieldException
-     * @throws TableNotDefinedException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\GetDataException
-     * @throws \AgelxNash\Modx\Evo\Database\Exceptions\TooManyLoopsException
-     */
-    public function sendAlert($type, $to, $from, $subject, $msg, $private = 0)
-    {
-        $private = ($private) ? 1 : 0;
-        if (!is_numeric($to)) {
-            // Query for the To ID
-            $to =  \EvolutionCMS\Models\ManagerUser::select('id')->where('username',$to)->first()->id;;
-        }
-        if (!is_numeric($from)) {
-            // Query for the From ID
-            $from =\EvolutionCMS\Models\ManagerUser::select('id')->where('username',$from)->first()->id;;
-        }
-        // insert a new message into user_messages
-        \EvolutionCMS\Models\UserMessage::insert(array(
-            'type' => $type,
-            'subject' => $subject,
-            'message' => $msg,
-            'sender' => $from,
-            'recipient' => $to,
-            'private' => $private,
-            'postdate' => $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time'),
-            'messageread' => 0,
-        ));
-    }
-
-    /**
      * Returns current user id.
      *
      * @param string $context . Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)

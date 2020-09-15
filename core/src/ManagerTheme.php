@@ -135,12 +135,6 @@ class ManagerTheme implements ManagerThemeInterface
         999,
         /** Empty recycle bin */
         64,
-        /** Messages */
-        10,
-        /** Delete a message */
-        65,
-        /** Send a message */
-        66,
         /** Remove locks */
         67,
         /** Site schedule */
