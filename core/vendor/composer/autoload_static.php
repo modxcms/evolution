@@ -16,7 +16,6 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         '151a7554673bf152d8415507113eb8bd' => __DIR__ . '/../..' . '/functions/actions/bkmanager.php',
         '2e022a7f691ec661a7e3ad68fbbba284' => __DIR__ . '/../..' . '/functions/actions/files.php',
         'd7eb36dc9b2d925e0a67c454bf4dc743' => __DIR__ . '/../..' . '/functions/actions/help.php',
-        'af5e57a2a95574f1a737ab86c150a1ef' => __DIR__ . '/../..' . '/functions/actions/import.php',
         '8a31f799d32015352e986a5a4a6fb663' => __DIR__ . '/../..' . '/functions/actions/logging.php',
         '49f1569cdf7bea9d800525688bcf4cd9' => __DIR__ . '/../..' . '/functions/actions/mutate_content.php',
         '2dbe0991bced9a12c1c6cf653b62170e' => __DIR__ . '/../..' . '/functions/actions/mutate_plugin.php',
@@ -77,6 +76,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         ),
         'L' => 
         array (
+            'League\\MimeTypeDetection\\' => 25,
             'League\\Flysystem\\' => 17,
         ),
         'J' => 
@@ -219,6 +219,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'League\\MimeTypeDetection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -352,6 +356,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Tracy\\ILogger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Logger/ILogger.php',
         'Tracy\\Logger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Logger/Logger.php',
         'Tracy\\OutputDebugger' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 

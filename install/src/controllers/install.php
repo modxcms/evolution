@@ -117,7 +117,6 @@ try {
         $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
         $configFileFailed = false;
         if (@ !$handle = fopen($filename, 'w')) {
-            echo 111;
             $configFileFailed = true;
         }
 
@@ -167,7 +166,6 @@ try {
         }
 
         include(MODX_BASE_PATH . '/index.php');
-        $modx->setConfig('migrations', 'migrations');
         if ($database_type == 'pgsql') {
 
             $result = \DB::table('migrations_install')->select('id')->orderBy('id', 'DESC')->first();

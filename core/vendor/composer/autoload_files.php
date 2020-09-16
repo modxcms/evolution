@@ -15,7 +15,6 @@ return array(
     '151a7554673bf152d8415507113eb8bd' => $baseDir . '/functions/actions/bkmanager.php',
     '2e022a7f691ec661a7e3ad68fbbba284' => $baseDir . '/functions/actions/files.php',
     'd7eb36dc9b2d925e0a67c454bf4dc743' => $baseDir . '/functions/actions/help.php',
-    'af5e57a2a95574f1a737ab86c150a1ef' => $baseDir . '/functions/actions/import.php',
     '8a31f799d32015352e986a5a4a6fb663' => $baseDir . '/functions/actions/logging.php',
     '49f1569cdf7bea9d800525688bcf4cd9' => $baseDir . '/functions/actions/mutate_content.php',
     '2dbe0991bced9a12c1c6cf653b62170e' => $baseDir . '/functions/actions/mutate_plugin.php',
