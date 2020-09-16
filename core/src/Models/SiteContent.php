@@ -6,7 +6,7 @@ use EvolutionCMS\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
+use EvolutionCMS\Extensions\Collection;
 use Rocky\Eloquent\HasDynamicRelation;
 
 /**
