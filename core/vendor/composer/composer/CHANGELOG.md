@@ -1,3 +1,31 @@
+### [1.10.13] 2020-09-09
+
+  * Fixed regressions with old version validation
+  * Fixed invalid root aliases not being reported
+
+### [1.10.12] 2020-09-08
+
+  * Fixed regressions with old version validation
+
+### [1.10.11] 2020-09-08
+
+  * Fixed more PHP 8 compatibility issues
+  * Fixed regression in handling of CTRL-C when xdebug is loaded
+  * Fixed `status` handling of broken symlinks
+
+### [1.10.10] 2020-08-03
+
+  * Fixed `create-project` not triggering events while installing the root package
+  * Fixed PHP 8 compatibility issue
+  * Fixed `self-update` to avoid automatically upgrading to the next major version once it becomes stable
+
+### [1.10.9] 2020-07-16
+
+  * Fixed Bitbucket redirect loop when credentials are outdated
+  * Fixed GitLab auth prompt wording
+  * Fixed `self-update` handling of files requiring admin permissions to write to on Windows (it now does a UAC prompt)
+  * Fixed parsing issues in funding.yml files
+
 ### [1.10.8] 2020-06-24
 
   * Fixed compatibility issue with git being configured to show signatures by default
@@ -866,6 +894,11 @@
 
   * Initial release
 
+[1.10.13]: https://github.com/composer/composer/compare/1.10.12...1.10.13
+[1.10.12]: https://github.com/composer/composer/compare/1.10.11...1.10.12
+[1.10.11]: https://github.com/composer/composer/compare/1.10.10...1.10.11
+[1.10.10]: https://github.com/composer/composer/compare/1.10.9...1.10.10
+[1.10.9]: https://github.com/composer/composer/compare/1.10.8...1.10.9
 [1.10.8]: https://github.com/composer/composer/compare/1.10.7...1.10.8
 [1.10.7]: https://github.com/composer/composer/compare/1.10.6...1.10.7
 [1.10.6]: https://github.com/composer/composer/compare/1.10.5...1.10.6

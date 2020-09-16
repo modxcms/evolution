@@ -13,12 +13,14 @@ use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Schema\PostgreSqlSchemaManager;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
+
+use function assert;
 use function preg_match;
 use function strpos;
 use function version_compare;
 
 /**
- * Abstract base implementation of the {@link Doctrine\DBAL\Driver} interface for PostgreSQL based drivers.
+ * Abstract base implementation of the {@link Driver} interface for PostgreSQL based drivers.
  */
 abstract class AbstractPostgreSQLDriver implements Driver, ExceptionConverterDriver, VersionAwarePlatformDriver
 {
@@ -29,10 +31,13 @@ abstract class AbstractPostgreSQLDriver implements Driver, ExceptionConverterDri
      */
     public function convertException($message, DriverException $exception)
     {
-        switch ($exception->getSQLState()) {
+        $sqlState = $exception->getSQLState();
+
+        switch ($sqlState) {
             case '40001':
             case '40P01':
                 return new Exception\DeadlockException($message, $exception);
+
             case '0A000':
                 // Foreign key constraint violations during a TRUNCATE operation
                 // are considered "feature not supported" in PostgreSQL.
@@ -41,6 +46,7 @@ abstract class AbstractPostgreSQLDriver implements Driver, ExceptionConverterDri
                 }
 
                 break;
+
             case '23502':
                 return new Exception\NotNullConstraintViolationException($message, $exception);
 
@@ -65,9 +71,13 @@ abstract class AbstractPostgreSQLDriver implements Driver, ExceptionConverterDri
             case '42P07':
                 return new Exception\TableExistsException($message, $exception);
 
+            case '08006':
+                return new Exception\ConnectionException($message, $exception);
+
             case '7':
-                // In some case (mainly connection errors) the PDO exception does not provide a SQLSTATE via its code.
-                // The exception code is always set to 7 here.
+                // Prior to fixing https://bugs.php.net/bug.php?id=64705 (PHP 7.3.22 and PHP 7.4.10),
+                // in some cases (mainly connection errors) the PDO exception wouldn't provide a SQLSTATE via its code.
+                // The exception code would be always set to 7 here.
                 // We have to match against the SQLSTATE in the error message in these cases.
                 if (strpos($exception->getMessage(), 'SQLSTATE[08006]') !== false) {
                     return new Exception\ConnectionException($message, $exception);
@@ -117,7 +127,15 @@ abstract class AbstractPostgreSQLDriver implements Driver, ExceptionConverterDri
     {
         $params = $conn->getParams();
 
-        return $params['dbname'] ?? $conn->query('SELECT CURRENT_DATABASE()')->fetchColumn();
+        if (isset($params['dbname'])) {
+            return $params['dbname'];
+        }
+
+        $database = $conn->query('SELECT CURRENT_DATABASE()')->fetchColumn();
+
+        assert($database !== false);
+
+        return $database;
     }
 
     /**

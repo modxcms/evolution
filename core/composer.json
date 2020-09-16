@@ -94,7 +94,6 @@
       "functions/actions/bkmanager.php",
       "functions/actions/files.php",
       "functions/actions/help.php",
-      "functions/actions/import.php",
       "functions/actions/logging.php",
       "functions/actions/mutate_content.php",
       "functions/actions/mutate_plugin.php",

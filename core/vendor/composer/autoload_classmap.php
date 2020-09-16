@@ -24,5 +24,6 @@ return array(
     'Tracy\\ILogger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/ILogger.php',
     'Tracy\\Logger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/Logger.php',
     'Tracy\\OutputDebugger' => $vendorDir . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );
