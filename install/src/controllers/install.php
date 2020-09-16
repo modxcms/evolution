@@ -116,6 +116,9 @@ try {
 
         $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
         $configFileFailed = false;
+
+        @chmod($filename, 0777);
+
         if (@ !$handle = fopen($filename, 'w')) {
             $configFileFailed = true;
         }
@@ -818,42 +821,9 @@ try {
     }
 
     if ($installLevel === 7) {
-        // call back function
-        /*if ($callBackFnc != "") {
-            $callBackFnc($sqlParser);
-        }*/
-
-        // Setup the MODX API -- needed for the cache processor
-        if (file_exists(dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
-            require_once dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php';
-        }
-
 
         file_put_contents(EVO_CORE_PATH . '.install', time());
-        $modx = evolutionCMS();
 
-        // always empty cache after install
-        $modx->clearCache();
-//        $sync = new \EvolutionCMS\Legacy\Cache();
-//        $sync->setCachepath(dirname(__DIR__, 3) . '/assets/cache/');
-//        $sync->setReport(false);
-//        $sync->emptyCache(); // first empty the cache
-
-        // try to chmod the cache go-rwx (for suexeced php)
-        @chmod(dirname(__DIR__, 3) . '/assets/cache/siteCache.idx.php', 0600);
-        @chmod(dirname(__DIR__, 3) . '/assets/cache/sitePublishing.idx.php', 0600);
-
-        // remove any locks on the manager functions so initial manager login is not blocked
-        \EvolutionCMS\Models\ActiveUser::query()->truncate();
-
-        // close db connection
-//        $sqlParser->close();
-
-        // andrazk 20070416 - release manager access
-        if (file_exists(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php')) {
-            @chmod(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php', 0755);
-            unlink(dirname(__DIR__, 3) . '/assets/cache/installProc.inc.php');
-        }
     }
 
 } catch (PDOException $e) {
