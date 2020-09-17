@@ -34,6 +34,8 @@ if(!is_null($username)) {
 // end check for lock
 $userdata = [
     'fullname' => '',
+    'middle_name' => '',
+    'last_name' => '',
     'verified' => 0,
     'blocked' => 0,
     'blockeduntil' => 0,
@@ -305,11 +307,22 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 							</fieldset>
 							</span></td>
 					</tr>
+                    <tr>
+                        <th><?php echo $_lang['user_last_name']; ?>:</th>
+                        <td>&nbsp;</td>
+                        <td><input type="text" name="last_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['last_name']); ?>" onChange="documentDirty=true;" /></td>
+                    </tr>
 					<tr>
 						<th><?php echo $_lang['user_full_name']; ?>:</th>
 						<td>&nbsp;</td>
 						<td><input type="text" name="fullname" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange="documentDirty=true;" /></td>
 					</tr>
+                    <tr>
+                        <th><?php echo $_lang['user_middle_name']; ?>:</th>
+                        <td>&nbsp;</td>
+                        <td><input type="text" name="middle_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['middle_name']); ?>" onChange="documentDirty=true;" /></td>
+                    </tr>
+
 					<tr>
 						<th><?php echo $_lang['user_email']; ?>:</th>
 						<td>&nbsp;</td>
