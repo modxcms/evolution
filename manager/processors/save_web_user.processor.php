@@ -18,6 +18,8 @@ $id = (int)$input['id'];
 $oldusername = isset($input['oldusername'])? $input['oldusername'] : '';
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $fullname = $input['fullname'];
+$last_name = $input['last_name'];
+$middle_name = $input['middle_name'];
 $genpassword = $input['newpassword'];
 $passwordgenmethod = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
@@ -98,7 +100,7 @@ switch ($input['mode']) {
 		$field['password'] = md5($newpassword);
 		$webUser= EvolutionCMS\Models\WebUser::create($field);
 		$internalKey = $webUser->getKey();
-		$field = compact( 'fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
+		$field = compact( 'fullname', 'middle_name', 'last_name', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$webUser->attributes()->create($field);
 
 		// Save User Settings
@@ -228,7 +230,7 @@ switch ($input['mode']) {
 		}
 		$webUser = EvolutionCMS\Models\WebUser::find($id);
 		$webUser->update($field);
-        $field = compact('fullname', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
+        $field = compact('fullname', 'middle_name', 'last_name', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
             'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil',
             'blockedafter', 'verified');
 		$webUser->attributes->update($field);

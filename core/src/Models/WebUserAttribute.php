@@ -10,6 +10,8 @@ use Rocky\Eloquent\HasDynamicRelation;
  * @property int $id
  * @property int $internalKey
  * @property string $fullname
+ * @property string $middle_name
+ * @property string $last_name
  * @property int $role
  * @property string $email
  * @property string $phone
@@ -73,6 +75,8 @@ class WebUserAttribute extends Eloquent\Model
 	protected $fillable = [
 		'internalKey',
 		'fullname',
+		'middle_name',
+		'last_name',
 		'role',
 		'email',
 		'phone',
