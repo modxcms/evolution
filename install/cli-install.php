@@ -1,1541 +1,684 @@
 <?php
-/**
- * EVO Cli Installer
- * php cli-install.php --database_server=localhost --database=db --database_user=dbuser --database_password=dbpass
- * --table_prefix=evo_ --cmsadmin=admin --cmsadminemail=dmi3yy@gmail.com --cmspassword=123456 --language=ru --mode=new
- * --installData=n --removeInstall=y
- */
 
-$self = 'install/cli-install.php';
-$path = __DIR__ . '/';
+use EvolutionCMS\Facades\Console;
+
+
 $base_path = dirname(__DIR__) . '/';
 define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 define('MODX_SITE_URL', '/');
-define('EVO_CORE_PATH', $base_path .'core/');
-
+define('EVO_CORE_PATH', $base_path . 'core/');
+define('IN_MANAGER_MODE', true);
+define('IN_INSTALL_MODE', true);
+define('MODX_CLI', true);
 require_once 'src/functions.php';
+/**
+ * EVO Cli Installer
+ * php cli-install.php --typeInstall=1 --databaseType=pgsql --databaseServer=localhost --database=db_name --databaseUser=serious --databasePassword=serious  --tablePrefix=evo_ --cmsAdmin=admin --cmsAdminEmail=serious2008@gmail.com --cmsPassword=123456 --language=ru --removeInstall=y
+ **/
 
-// set error reporting
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+$install = new InstallEvo($argv);
+$install->start();
 
-if (is_file($base_path . "assets/cache/siteManager.php")) {
-    include_once($base_path . "assets/cache/siteManager.php");
-}
-if (!defined('MGR_DIR') && is_dir($base_path . "manager")) {
-    define('MGR_DIR', 'manager');
-}
+class InstallEvo
+{
+    public $typeInstall = '';
+    public $databaseType = '';
+    public $databaseServer = '';
+    public $database = '';
+    public $databaseUser = '';
+    public $databasePassword = '';
+    public $tablePrefix = '';
+    public $cmsAdmin = '';
+    public $cmsAdminEmail = '';
+    public $cmsPassword = '';
+    public $language = '';
+    public $removeInstall = '';
+    public $database_charset = 'utf8mb4';
+    public $database_collation = 'utf8mb4_unicode_520_ci';
+    public $dbh;
+    public $evo;
 
-require_once 'src/lang.php';
-require_once($base_path . MGR_DIR . '/includes/version.inc.php');
+    function __construct($argv)
+    {
+        $args = array_slice($argv, 1);
+        foreach ($args as $arg) {
+            $tmp = array_map('trim', explode('=', $arg));
+            if (count($tmp) === 2) {
+                $k = ltrim($tmp[0], '-');
 
-$moduleName = "Evolution CMS";
-$moduleVersion = $modx_branch . ' ' . $modx_version;
-$moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = $path . 'stubs/sql/setup.sql';
-$moduleSQLDataFile = $path . 'stubs/sql/setup.data.sql';
-$moduleSQLResetFile = $path . 'stubs/sql/setup.data.reset.sql';
+                $cli_variables[$k] = $tmp[1];
+                if (isset($this->{$k})) {
+                    $this->{$k} = $tmp[1];
+                }
+            }
+        }
 
-$moduleChunks = array(); // chunks - array : name, description, type - 0:file or 1:content, file or content
-$moduleTemplates = array(); // templates - array : name, description, type - 0:file or 1:content, file or content
-$moduleSnippets = array(); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
-$modulePlugins = array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties, events,guid
-$moduleModules = array(); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
-$moduleTemplates = array(); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
-$moduleTVs = array(); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
-$moduleDependencies = array(); // module depedencies - array : module, table, column, type, name
-$errors = 0;
+    }
 
-
-$installMode = 0;
-$installData = 0;
-$tableprefixauto = base_convert(rand(10, 20), 10, 36) . substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'),
-        rand(0, 33), 3) . '_';
-
-$args = array_slice($argv, 1);
-
-if (empty($args)) {
-    echo 'Install Evolution CMS' . PHP_EOL;
-    //$installYes = readline("Type 'y' to continue: ");
-    //if ($installYes != 'y') return;
-
-    //set param manual
-    $databasehost = readline($_lang['connection_screen_database_host'] . ' [localhost] ');
-    $databaseloginname = readline($_lang['connection_screen_database_login'] . ' ');
-    $databaseloginpassword = readline($_lang['connection_screen_database_pass'] . ' ');
-    $database_name = readline($_lang['connection_screen_database_name'] . ' ');
-    $tableprefix = readline($_lang['connection_screen_table_prefix'] . ' [' . $tableprefixauto . '] ');
-    $database_connection_method = readline($_lang['connection_screen_connection_method'] . ' [SET CHARACTER SET] ');
-    $database_collation = readline($_lang['connection_screen_collation'] . ' [utf8mb4_general_ci] ');
-    $cmsadmin = readline($_lang['connection_screen_default_admin_login'] . ' [admin] ');
-    $cmsadminemail = readline($_lang['connection_screen_default_admin_email'] . ' ');
-    $cmspassword = readline($_lang['connection_screen_default_admin_password'] . ' ');
-    $managerlanguage = readline('Мanager language:' . ' [en] ');
-    $installData = readline('Instal demo-site (y/n):' . ' [n] ');
-
-} else {
-
-    $cli_variables = [];
-    foreach ($args as $arg) {
-        $tmp = array_map('trim', explode('=', $arg));
-        if (count($tmp) === 2) {
-            $k = ltrim($tmp[0], '-');
-
-            $cli_variables[$k] = $tmp[1];
-
+    public function start()
+    {
+        if ($this->typeInstall != 1 && $this->typeInstall != 2) {
+            $this->typeInstall = $this->read_line("Please choose you variant of install." . "\n" . "1) Install" . "\n" . "2) Update" . "\n", "Chose: ");
+        }
+        switch ($this->typeInstall) {
+            case 1:
+                $this->install();
+                break;
+            case 2:
+                $this->update();
+                break;
+            default:
+                $this->start();
         }
     }
 
-    $databasehost = $cli_variables['database_server'];
-    $databaseloginname = $cli_variables['database_user'];
-    $databaseloginpassword = $cli_variables['database_password'];
-    $database_name = $cli_variables['database'];
-    $tableprefix = $cli_variables['table_prefix'];
+    public function read_line($message, $message2 = "")
+    {
+        echo $message;
+        return readline($message2);
+    }
 
-    $cmsadmin = $cli_variables['cmsadmin'];
-    $cmsadminemail = $cli_variables['cmsadminemail'];
-    $cmspassword = $cli_variables['cmspassword'];
+    public function initEvo()
+    {
 
-    $managerlanguage = $cli_variables['language'];
-    $installData = $cli_variables['installData'];
-    $mode = $cli_variables['mode'];
-    $removeInstall = $cli_variables['removeInstall'];
+        include '../index.php';
+        $this->evo = EvolutionCMS();
+    }
 
-}
+    public function update()
+    {
+        $this->initEvo();
+        Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
+        echo 'Evolution CMS updated!' . "\n";
+    }
 
+    public function install()
+    {
+        $this->checkDatabaseType();
+        $this->checkDatabaseServer();
+        $this->checkDatabaseUser();
+        $this->checkDatabasePassword();
+        $this->checkConnectToDatabase();
+        $this->checkDatabase();
+        $this->checkConnectToDatabaseWithBase();
+        $this->checkTablePrefix();
+        $this->checkIssetTablePrefix();
 
-if ($databasehost == '') {
-    $databasehost = 'localhost';
-}
-if ($tableprefix == '') {
-    $tableprefix = $tableprefixauto;
-}
-if ($database_connection_method == '') {
-    $database_connection_method = 'SET CHARACTER SET';
-}
-if ($database_collation == '') {
-    $database_collation = 'utf8mb4_general_ci';
-}
-if ($cmsadmin == '') {
-    $cmsadmin = 'admin';
-}
-if ($managerlanguage == '') {
-    $managerlanguage = 'en';
-}
-if ($installData == 'y') {
-    $installData = 1;
-}
-if ($mode == 'upgrade') {
-    $installMode = 1;
-}
+        $this->checkCmsAdmin();
+        $this->checkCmsAdminEmail();
+        $this->checkCmsPassword();
+        $this->checkLanguage();
+        $this->realInstall();
+        $this->checkRemoveInstall();
+    }
 
-//добавить обработку языка
+    public function checkDatabaseType()
+    {
+        if ($this->databaseType != 'pgsql' && $this->databaseType != 'mysql') {
+            $this->databaseType = $this->read_line("Please enter your database type: ");
+        }
+        if ($this->databaseType != 'pgsql' && $this->databaseType != 'mysql') {
+            $this->checkDatabaseType();
+        }
+    }
 
-switch ($managerlanguage) {
-    case 'ru':
-        $managerlanguage = 'russian-UTF8';
-        break;
+    public function checkDatabaseServer()
+    {
+        if ($this->databaseServer == '') {
+            $this->databaseServer = $this->read_line("Please enter database server: ");
+        }
+        if ($this->databaseServer == '') {
+            $this->checkDatabaseServer();
+        }
+    }
 
-    case 'en':
-    default:
-        $managerlanguage = 'english';
-        break;
-}
+    public function checkDatabase()
+    {
+        if ($this->database == '') {
+            $this->database = $this->read_line("Please enter database: ");
+        }
+        if ($this->database == '') {
+            $this->checkDatabase();
+        }
+    }
 
-//////////////////////////////////////////////////////////////////////////////////////
-if (!function_exists('f_owc')) {
-    /**
-     * @param $path
-     * @param $data
-     * @param null|int $mode
-     */
-    function f_owc($path, $data, $mode = null)
+    public function checkDatabaseUser()
+    {
+        if ($this->databaseUser == '') {
+            $this->databaseUser = $this->read_line("Please enter database user: ");
+        }
+        if ($this->databaseUser == '') {
+            $this->checkDatabaseUser();
+        }
+    }
+
+    public function checkDatabasePassword()
+    {
+        if ($this->databasePassword == '') {
+            $this->databasePassword = $this->read_line("Please enter database password: ");
+        }
+        if ($this->databasePassword == '') {
+            $this->checkDatabasePassword();
+        }
+    }
+
+    public function checkTablePrefix()
+    {
+        if ($this->tablePrefix == '') {
+            $this->tablePrefix = $this->read_line("Please enter table_prefix(default evo_): ");
+        }
+        if ($this->tablePrefix == '') {
+            $this->tablePrefix = 'evo_';
+        }
+    }
+
+    public function checkCmsAdmin()
+    {
+        if ($this->cmsAdmin == '') {
+            $this->cmsAdmin = $this->read_line("Please enter you login for access to manager: ");
+        }
+        if ($this->cmsAdmin == '') {
+            $this->checkCmsAdmin();
+        }
+    }
+
+    public function checkCmsAdminEmail()
+    {
+        if ($this->cmsAdminEmail == '') {
+            $this->cmsAdminEmail = $this->read_line("Please enter you email: ");
+        }
+        if ($this->cmsAdminEmail == '') {
+            $this->checkCmsAdminEmail();
+        }
+    }
+
+    public function checkCmsPassword()
+    {
+        if ($this->cmsPassword == '') {
+            $this->cmsPassword = $this->read_line("Please enter you password for access to manager: ");
+        }
+        if ($this->database == '') {
+            $this->checkCmsPassword();
+        }
+    }
+
+    public function checkLanguage()
+    {
+        if ($this->language != 'ru' && $this->language != 'en') {
+            $this->language = $this->read_line("Enter you language(ru/en): ");
+        }
+        if ($this->language != 'ru' && $this->language != 'en') {
+            $this->checkLanguage();
+        }
+    }
+
+    public function checkRemoveInstall()
+    {
+        if ($this->removeInstall != 'y' && $this->removeInstall != 'n') {
+            $this->removeInstall = $this->read_line("Do you want remove install directory (y/n)? ");
+        }
+        if ($this->removeInstall != 'y' && $this->removeInstall != 'n') {
+            $this->checkRemoveInstall();
+        }
+    }
+
+    public function checkConnectToDatabase()
     {
         try {
-            // make an attempt to create the file
-            $hnd = fopen($path, 'w');
-            fwrite($hnd, $data);
-            fclose($hnd);
-
-            if (null !== $mode) {
-                chmod($path, $mode);
-            }
-        } catch (Exception $e) {
-            // Nothing, this is NOT normal
-            unset($e);
+            $this->dbh = new PDO($this->databaseType . ':host=' . $this->databaseServer, $this->databaseUser, $this->databasePassword);
+        } catch (PDOException $e) {
+            echo $e->getMessage() . "\n";
+            $this->dbh = false;
+        }
+        if ($this->dbh === false) {
+            $this->databaseType = '';
+            $this->databaseServer = '';
+            $this->databaseUser = '';
+            $this->databasePassword = '';
+            $this->database = '';
+            $this->install();
         }
     }
-}
 
-// check PHP version
-define('PHP_MIN_VERSION', '7.1.3');
-$phpMinVersion = PHP_MIN_VERSION; // Maybe not necessary. For backward compatibility
-echo PHP_EOL . $_lang['checking_php_version'];
-// -1 if left is less, 0 if equal, +1 if left is higher
-if (version_compare(phpversion(), PHP_MIN_VERSION) < 0) {
-    $errors++;
-    $tmp = $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', PHP_MIN_VERSION,
-            $_lang['modx_requires_php']);
-    echo $_lang['failed'] . ' ' . $tmp . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-// check directories
-// cache exists?
-echo strip_tags($_lang['checking_if_cache_exist']);
-if (!file_exists($path . '../assets/cache')) {
-    echo $_lang['failed'] . PHP_EOL;
-    $errors++;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// cache writable?
-echo strip_tags($_lang['checking_if_cache_writable']);
-if (!is_writable($path . '../assets/cache')) {
-    $errors++;
-    echo $_lang['failed'] . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// cache files writable?
-echo strip_tags($_lang['checking_if_cache_file_writable']);
-$tmp = $path . '../assets/cache/siteCache.idx.php';
-if (!file_exists($tmp)) {
-    f_owc($tmp, '<?php //EVO site cache file ?>');
-}
-if (!is_writable($tmp)) {
-    $errors++;
-    echo $_lang['failed'] . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-
-// File Browser directories exists?
-echo strip_tags($_lang['checking_if_images_exist']);
-switch (true) {
-    case !file_exists($path . '../assets/images'):
-    case !file_exists($path . '../assets/files'):
-    case !file_exists($path . '../assets/backup'):
-        //case !file_exists("../assets/.thumbs"):
-        $errors++;
-        echo $_lang['failed'] . PHP_EOL;
-        break;
-    default:
-        echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// File Browser directories writable?
-echo strip_tags($_lang['checking_if_images_writable']);
-switch (true) {
-    case !is_writable($path . '../assets/images'):
-    case !is_writable($path . '../assets/files'):
-    case !is_writable($path . '../assets/backup'):
-        //case !is_writable("../assets/.thumbs"):
-        $errors++;
-        echo $_lang['failed'] . PHP_EOL;
-        break;
-    default:
-        echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// export exists?
-echo strip_tags($_lang['checking_if_export_exists']);
-if (!file_exists($path . '../assets/export')) {
-    echo $_lang['failed'] . PHP_EOL;
-    $errors++;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// export writable?
-echo strip_tags($_lang['checking_if_export_writable']);
-if (!is_writable($path . '../assets/export')) {
-    echo $_lang['failed'] . PHP_EOL;
-    $errors++;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// config.inc.php writable?
-echo strip_tags($_lang['checking_if_config_exist_and_writable']);
-$tmp = $path . '../' . MGR_DIR . '/includes/config.inc.php';
-if (!is_file($tmp)) {
-    f_owc($tmp, '<?php //EVO configuration file ?>', 0666);
-} else {
-    @chmod($tmp, 0666);
-}
-$isWriteable = is_writable($tmp);
-if (!$isWriteable) {
-    $errors++;
-    echo $_lang['failed'] . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// connect to the database
-if ($installMode == 1) {
-    include $path . '../' . MGR_DIR . '/includes/config.inc.php';
-} else {
-    // get db info from post
-    $database_server = $databasehost;
-    $database_user = $databaseloginname;
-    $database_password = $databaseloginpassword;
-    $database_collation = $database_collation;
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
-    $database_connection_charset = $database_collation;
-    $database_connection_method = $database_connection_method;
-    $dbase = '`' . $database_name . '`';
-    $table_prefix = $tableprefix;
-}
-echo $_lang['creating_database_connection'];
-$host = explode(':', $database_server, 2);
-if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
-    $errors++;
-    echo $_lang['database_connection_failed'] . PHP_EOL;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-
-// make sure we can use the database
-if ($installMode > 0 && !mysqli_query($conn, "USE {$dbase}")) {
-    $errors++;
-    echo $_lang['database_use_failed'] . PHP_EOL;
-}
-
-// check the database collation if not specified in the configuration
-if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
-    if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
-        $rs = mysqli_query($conn, "show session variables like 'collation_server'");
-    }
-    if ($rs && $collation = mysqli_fetch_row($rs)) {
-        $database_collation = $collation[1];
-    }
-    if (empty ($database_collation)) {
-        $database_collation = 'utf8_unicode_ci';
-    }
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
-    $database_connection_charset = $database_charset;
-}
-
-// determine the database connection method if not specified in the configuration
-if (!isset($database_connection_method) || empty($database_connection_method)) {
-    $database_connection_method = 'SET CHARACTER SET';
-}
-
-// check table prefix
-if ($conn && $installMode == 0) {
-    echo $_lang['checking_table_prefix'] . $table_prefix . '`: ';
-    if ($rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo $_lang['failed'] . ' ' . $_lang['table_prefix_already_inuse_note'] . PHP_EOL;
-        $errors++;
-
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-} elseif ($conn && $installMode == 2) {
-    echo $_lang['checking_table_prefix'] . $table_prefix . '`: ';
-    if (!$rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo $_lang['failed'] . ' ' . $_lang['table_prefix_not_exist'] . PHP_EOL;
-        $errors++;
-
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}
-
-// check mysql version
-if ($conn) {
-    echo $_lang['checking_mysql_version'];
-    if (version_compare(mysqli_get_server_info($conn), '5.0.51', '=')) {
-        echo $_lang['warning'] . ' ' . $_lang['mysql_5051'] . PHP_EOL;
-        echo $_lang['mysql_5051_warning'] . PHP_EOL;
-    } else {
-        echo $_lang['ok'] . ' ' . $_lang['mysql_version_is'] . mysqli_get_server_info($conn) . PHP_EOL;
-    }
-}
-
-// check for strict mode
-/*
-if ($conn) {
-    echo $_lang['checking_mysql_strict_mode'];
-    $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
-    if (mysqli_num_rows($mysqlmode) > 0) {
-        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
-        //$modes = array("STRICT_TRANS_TABLES"); // for testing
-        // print_r($modes);
-        foreach ($modes as $mode) {
-            if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) {
-                echo $_lang['warning'] . ' ' . $_lang['strict_mode'] . PHP_EOL;
-                echo $_lang['strict_mode_error'] . PHP_EOL;
-            } else {
-                echo $_lang['ok'] . PHP_EOL;
-            }
-        }
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}*/
-// Version and strict mode check end
-
-// andrazk 20070416 - add install flag and disable manager login
-// assets/cache writable?
-if (is_writable($path . '../assets/cache')) {
-    if (file_exists($path . '../assets/cache/installProc.inc.php')) {
-        @chmod($path . '../assets/cache/installProc.inc.php', 0755);
-        unlink($path . '../assets/cache/installProc.inc.php');
-    }
-
-    f_owc($path . '../assets/cache/installProc.inc.php', '<?php $installStartTime = ' . time() . '; ?>');
-}
-
-if ($installMode > 0 && $_POST['installdata'] == '1') {
-    echo $_lang['sample_web_site'] . ': ' . $_lang['sample_web_site_note'] . PHP_EOL;
-}
-
-if ($errors > 0) {
-    echo $_lang['setup_cannot_continue'] . ' ';
-
-    if ($errors > 1) {
-        echo $errors . ' ' . $_lang['errors'] . $_lang['please_correct_errors'] . $_lang['and_try_again_plural'];
-    } else {
-        echo $_lang['error'] . $_lang['please_correct_error'] . $_lang['and_try_again'] . PHP_EOL;
-    }
-
-    die();
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-$create = false;
-
-// set timout limit
-@ set_time_limit(120); // used @ to prevent warning when using safe mode?
-
-//echo $_lang['setup_database'].PHP_EOL;
-
-
-if ($installMode == 1) {
-    include $path . '../' . MGR_DIR . '/includes/config.inc.php';
-} else {
-    // get db info from post
-    $database_server = $databasehost;
-    $database_user = $databaseloginname;
-    $database_password = $databaseloginpassword;
-    $database_collation = $database_collation;
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
-    $database_connection_charset = $database_charset;
-    $database_connection_method = $database_connection_method;
-    $dbase = '`' . $database_name . '`';
-    $table_prefix = $tableprefix;
-    $adminname = $cmsadmin;
-    $adminemail = $cmsadminemail;
-    $adminpass = $cmspassword;
-    $managerlanguage = $managerlanguage;
-    $custom_placeholders = array();
-}
-
-// set session name variable
-if (!isset ($site_sessionname)) {
-    $site_sessionname = 'SN' . uniqid('');
-}
-
-// get base path and url
-$a = explode('install', str_replace("\\", '/', dirname($_SERVER['PHP_SELF'])));
-if (count($a) > 1) {
-    array_pop($a);
-}
-$url = implode('install', $a);
-reset($a);
-$a = explode('install', str_replace("\\", '/', realpath(__DIR__)));
-if (count($a) > 1) {
-    array_pop($a);
-}
-$pth = implode('install', $a);
-unset ($a);
-$base_url = $url . (substr($url, -1) != '/' ? '/' : '');
-$base_path = $pth . (substr($pth, -1) != '/' ? '/' : '');
-
-// connect to the database
-echo $_lang['setup_database_create_connection'] . ': ';
-$host = explode(':', $database_server, 2);
-if (!$conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
-    echo $_lang['setup_database_create_connection_failed'] . ' ' . $_lang['setup_database_create_connection_failed_note'] . PHP_EOL;
-
-    return;
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-// select database
-echo $_lang['setup_database_selection'] . str_replace('`', '', $dbase) . '`: ';
-if (!mysqli_select_db($conn, str_replace('`', '', $dbase))) {
-    echo $_lang['setup_database_selection_failed'] . ' ' . $_lang['setup_database_selection_failed_note'] . PHP_EOL;
-    $create = true;
-} else {
-    if (function_exists('mysqli_set_charset')) {
-        mysqli_set_charset($conn, $database_charset);
-    }
-    mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-// try to create the database
-if ($create) {
-    echo $_lang['setup_database_creation'] . str_replace('`', '', $dbase) . '`: ';
-    //  if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
-    if (!mysqli_query($conn,
-        "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-        echo $_lang['setup_database_creation_failed'] . ' ' . $_lang['setup_database_creation_failed_note'] . PHP_EOL;
-        $errors += 1;
-
-        echo 'database charset: ' . $database_charset . PHP_EOL;
-        echo 'database collation: ' . $database_collation . PHP_EOL;
-
-        echo $_lang['setup_database_creation_failed_note2'] . PHP_EOL;
-
-        die();
-
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}
-
-// check table prefix
-if ($installMode == 0) {
-    echo $_lang['checking_table_prefix'] . $table_prefix . '`: ';
-    if (@ $rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo $_lang['failed'] . " " . $_lang['table_prefix_already_inuse'] . PHP_EOL;
-        $errors += 1;
-        echo $_lang['table_prefix_already_inuse_note'] . PHP_EOL;
-
-        return;
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}
-
-if (!function_exists('propertiesNameValue')) {
-    /**
-     * parses a resource property string and returns the result as an array
-     * duplicate of method in documentParser class
-     *
-     * @param string $propertyString
-     * @return array
-     */
-    function propertiesNameValue($propertyString)
+    public function checkConnectToDatabaseWithBase()
     {
-        $parameter = array();
-        if (!empty ($propertyString)) {
-            $tmpParams = explode('&', $propertyString);
-            $countParams = count($tmpParams);
-            for ($x = 0; $x < $countParams; $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp = explode('=', $tmpParams[$x]);
-                    $pvTmp = explode(';', trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != '') {
-                        $parameter[trim($pTmp[0])] = $pvTmp[3];
-                    } //list default
-                    else {
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != '') {
-                            $parameter[trim($pTmp[0])] = $pvTmp[2];
-                        }
-                    }
-                }
+        $error = 0;
+        try {
+            $dbh_alt = new PDO($this->databaseType . ':host=' . $this->databaseServer . ';dbname=' . $this->database, $this->databaseUser, $this->databasePassword);
+        } catch (PDOException $e) {
+            $error = $e->getCode();
+            if ($error != 7 && $error != 1049) {
+                echo $e->getMessage() . "\n";
+
+                $dbh_alt = false;
             }
         }
+        if ($error == 7 && $this->databaseType == 'pgsql') {
+            $this->database_charset = 'utf8';
+            $this->database_collation = 'utf8';
+            try {
+                $this->dbh->query('CREATE DATABASE "' . $this->database . '" ENCODING \'' . $this->database_charset . '\';');
+                if ($this->dbh->errorCode() > 0) {
 
-        return $parameter;
-    }
-}
+                    echo '<span id="database_fail" style="color:#FF0000;">' . print_r($this->dbh->errorInfo(), true) . '</span>';
+                }
+                $error = -1;
+            } catch (Exception $exception) {
+                echo $exception->getMessage();
+            }
+        }
+        if ($error == 1049 && $this->databaseType == 'mysql') {
 
-// check status of Inherit Parent Template plugin
-$auto_template_logic = 'sibling';
-if ($installMode != 0) {
-    $rs = mysqli_query($conn,
-        "SELECT properties, disabled FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'");
-    $row = mysqli_fetch_row($rs);
-    if (!$row) {
-        // not installed
-        $auto_template_logic = 'system';
-    } else {
-        if ($row[1] == 1) {
-            // installed but disabled
-            $auto_template_logic = 'system';
+            try {
+                $query = 'CREATE DATABASE `' . $this->database . '` CHARACTER SET ' . $this->database_charset . ' COLLATE ' . $this->database_collation . ";";
+                if ($this->dbh->query($query)) {
+                    $error = -1;
+                }
+
+            } catch (Exception $exception) {
+                echo $exception->getMessage();
+            }
+        }
+        if ($error == -1) {
+            try {
+                $dbh_alt = new PDO($this->databaseType . ':host=' . $this->databaseServer . ';dbname=' . $this->database, $this->databaseUser, $this->databasePassword);
+            } catch (PDOException $e) {
+                echo $e->getMessage() . "\n";
+                $error = $e->getCode();
+                $dbh_alt = false;
+            }
+        }
+        if ($this->dbh === false) {
+            $this->database = '';
+            $this->checkDatabase();
+            $this->checkConnectToDatabaseWithBase();
         } else {
-            // installed, enabled .. see how it's configured
-            $properties = parseProperties($row[0]);
-            if (isset($properties['inheritTemplate'])) {
-                if ($properties['inheritTemplate'] == 'From First Sibling') {
-                    $auto_template_logic = 'sibling';
+            $this->dbh = $dbh_alt;
+        }
+    }
+
+    public function checkIssetTablePrefix()
+    {
+        $result = $this->dbh->query("SELECT COUNT(*) FROM {$this->tablePrefix}site_content");
+        if ($this->dbh->errorCode() == 0) {
+            echo 'table prefix already exists';
+            $this->tablePrefix = '';
+            $this->checkTablePrefix();
+            $this->checkIssetTablePrefix();
+        }
+    }
+
+    public function realInstall()
+    {
+        $this->writeConfig();
+        $this->initEvo();
+        $this->migrationAndSeed();
+        $this->installModulesAndPlugins();
+        $this->clearCacheAfterInstall();
+    }
+
+    public function writeConfig()
+    {
+        $confph = array();
+        $confph['database_server'] = $this->databaseServer;
+        $confph['database_type'] = $this->databaseType;
+        $confph['user_name'] = $this->databaseUser;
+        $confph['password'] = $this->databasePassword;
+        $confph['connection_charset'] = $this->database_charset;
+        $confph['connection_collation'] = $this->database_collation;
+        $confph['connection_method'] = 'SET CHARACTER SET';
+        $confph['dbase'] = str_replace('`', '', $this->database);
+        $confph['table_prefix'] = $this->tablePrefix;
+        $confph['lastInstallTime'] = time();
+        switch ($this->databaseType) {
+            case 'pgsql':
+                $confph['database_port'] = '5432';
+                $confph['connection_charset'] = 'utf8';
+                break;
+            case 'mysql':
+                $confph['database_port'] = '3306';
+                break;
+        }
+        $configString = file_get_contents('stubs/files/config/database/connections/default.tpl');
+        $configString = parse($configString, $confph);
+
+        $filename = EVO_CORE_PATH . 'config/database/connections/default.php';
+        $configFileFailed = false;
+
+        @chmod($filename, 0777);
+
+        if (@ !$handle = fopen($filename, 'w')) {
+            $configFileFailed = true;
+        }
+
+        // write $somecontent to our opened file.
+        if (@ fwrite($handle, $configString) === false) {
+            $configFileFailed = true;
+        }
+        @ fclose($handle);
+
+        // try to chmod the config file go-rwx (for suexeced php)
+        @chmod($filename, 0404);
+
+    }
+
+    public function migrationAndSeed()
+    {
+
+        $_POST['database_type'] = $this->databaseType; //костыль для адекватной миграции
+        Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
+
+        foreach (glob("stubs/seeds/*.php") as $filename) {
+            include $filename;
+            $classes = get_declared_classes();
+            $class = end($classes);
+            if ($class == 'Illuminate\\Database\\Seeder') {
+                $count = count($classes) - 2;
+                $class = $classes[$count];
+            }
+            Console::call('db:seed', ['--class' => $class]);
+        }
+        $field = array();
+        $field['password'] = $this->evo->getPasswordHash()->HashPassword($this->cmsPassword);
+        $field['username'] = $this->cmsAdmin;
+        $managerUser = EvolutionCMS\Models\ManagerUser::create($field);
+        $internalKey = $managerUser->getKey();
+        $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
+        $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role];
+        $managerUser->attributes()->create($field);
+        if($this->language=='ru'){
+            $this->language = 'russian-UTF8';
+        }elseif ($this->language == 'en'){
+            $this->language = 'english';
+        }
+        $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $this->language];
+        $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
+        $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $this->cmsAdminEmail];
+        $systemSettings[] = ['setting_name' => 'fe_editor_lang', 'setting_value' => $this->language];
+        \EvolutionCMS\Models\SystemSetting::insert($systemSettings);
+
+    }
+
+    public function installModulesAndPlugins()
+    {
+        $pluginPath =  'assets/plugins';
+        $modulePath =  'assets/modules';
+        $modulePlugins = [];
+        // setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
+        $mp = &$modulePlugins;
+        if (is_dir($pluginPath) && is_readable($pluginPath)) {
+            $d = dir($pluginPath);
+            while (false !== ($tplfile = $d->read())) {
+                if (substr($tplfile, -4) != '.tpl') {
+                    continue;
+                }
+                $params = parse_docblock($pluginPath, $tplfile);
+                if (is_array($params) && count($params) > 0) {
+                    $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
+                    $mp[] = array(
+                        $params['name'],
+                        $description,
+                        "$pluginPath/{$params['filename']}",
+                        $params['properties'],
+                        $params['events'],
+                        $params['guid'],
+                        $params['modx_category'],
+                        $params['legacy_names'],
+                        array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                        (int)$params['disabled']
+                    );
                 }
             }
+            $d->close();
         }
-    }
-}
+        if (count($modulePlugins )>0) {
 
+            foreach ($modulePlugins as $k=>$modulePlugin) {
 
-// open db connection
-$setupPath = realpath(__DIR__);
-$chunkPath = $path . 'assets/chunks';
-$snippetPath = $path . 'assets/snippets';
-$pluginPath = $path . 'assets/plugins';
-$modulePath = $path . 'assets/modules';
-$templatePath = $path . 'assets/templates';
-$tvPath = $path . 'assets/tvs';
-
-// setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
-$mt = &$moduleTemplates;
-if (is_dir($templatePath) && is_readable($templatePath)) {
-    $d = dir($templatePath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($templatePath, $tplfile);
-        if (is_array($params) && (count($params) > 0)) {
-            $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $mt[] = array
-            (
-                $params['name'],
-                $description,
-                // Don't think this is gonna be used ... but adding it just in case 'type'
-                $params['type'],
-                "$templatePath/{$params['filename']}",
-                $params['modx_category'],
-                $params['lock_template'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : null
-                // Nessecary to fix template-ID for demo-site
-            );
-        }
-    }
-    $d->close();
-}
-
-// setup Template Variable template files
-$mtv = &$moduleTVs;
-if (is_dir($tvPath) && is_readable($tvPath)) {
-    $d = dir($tvPath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($tvPath, $tplfile);
-        if (is_array($params) && (count($params) > 0)) {
-            $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $mtv[] = array(
-                $params['name'],
-                $params['caption'],
-                $description,
-                $params['input_type'],
-                $params['input_options'],
-                $params['input_default'],
-                $params['output_widget'],
-                $params['output_widget_params'],
-                "$templatePath/{$params['filename']}",
-                /* not currently used */
-                $params['template_assignments'] != "*" ?
-                    $params['template_assignments'] :
-                    implode(',', array_map(function($value){return isset($value[0]) && is_scalar($value[0]);},$mt)),
-                /* comma-separated list of template names */
-                $params['modx_category'],
-                $params['lock_tv'],
-                /* value should be 1 or 0 */
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
-            );
-        }
-    }
-    $d->close();
-}
-
-// setup chunks template files - array : name, description, type - 0:file or 1:content, file or content
-$mc = &$moduleChunks;
-if (is_dir($chunkPath) && is_readable($chunkPath)) {
-    $d = dir($chunkPath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($chunkPath, $tplfile);
-        if (is_array($params) && count($params) > 0) {
-            $mc[] = array(
-                $params['name'],
-                $params['description'],
-                "$chunkPath/{$params['filename']}",
-                $params['modx_category'],
-                array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true',
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
-            );
-        }
-    }
-    $d->close();
-}
-
-// setup snippets template files - array : name, description, type - 0:file or 1:content, file or content,properties
-$ms = &$moduleSnippets;
-if (is_dir($snippetPath) && is_readable($snippetPath)) {
-    $d = dir($snippetPath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($snippetPath, $tplfile);
-        if (is_array($params) && count($params) > 0) {
-            $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $ms[] = array(
-                $params['name'],
-                $description,
-                "$snippetPath/{$params['filename']}",
-                $params['properties'],
-                $params['modx_category'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
-            );
-        }
-    }
-    $d->close();
-}
-
-// setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
-$mp = &$modulePlugins;
-if (is_dir($pluginPath) && is_readable($pluginPath)) {
-    $d = dir($pluginPath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($pluginPath, $tplfile);
-        if (is_array($params) && count($params) > 0) {
-            $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $mp[] = array(
-                $params['name'],
-                $description,
-                "$pluginPath/{$params['filename']}",
-                $params['properties'],
-                $params['events'],
-                $params['guid'],
-                $params['modx_category'],
-                $params['legacy_names'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                (int)$params['disabled']
-            );
-        }
-    }
-    $d->close();
-}
-
-// setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
-$mm = &$moduleModules;
-$mdp = &$moduleDependencies;
-if (is_dir($modulePath) && is_readable($modulePath)) {
-    $d = dir($modulePath);
-    while (false !== ($tplfile = $d->read())) {
-        if (substr($tplfile, -4) != '.tpl') {
-            continue;
-        }
-        $params = parse_docblock($modulePath, $tplfile);
-        if (is_array($params) && count($params) > 0) {
-            $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $mm[] = array(
-                $params['name'],
-                $description,
-                "$modulePath/{$params['filename']}",
-                $params['properties'],
-                $params['guid'],
-                (int)$params['shareparams'],
-                $params['modx_category'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
-            );
-        }
-        if ((int)$params['shareparams'] || !empty($params['dependencies'])) {
-            $dependencies = explode(',', $params['dependencies']);
-            foreach ($dependencies as $dependency) {
-                $dependency = explode(':', $dependency);
-                switch (trim($dependency[0])) {
-                    case 'template':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'templates',
-                            'column' => 'templatename',
-                            'type'   => 50,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
-                    case 'tv':
-                    case 'tmplvar':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'tmplvars',
-                            'column' => 'name',
-                            'type'   => 60,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
-                    case 'chunk':
-                    case 'htmlsnippet':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'htmlsnippets',
-                            'column' => 'name',
-                            'type'   => 10,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
-                    case 'snippet':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'snippets',
-                            'column' => 'name',
-                            'type'   => 40,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
-                    case 'plugin':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'plugins',
-                            'column' => 'name',
-                            'type'   => 30,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
-                    case 'resource':
-                        $mdp[] = array(
-                            'module' => $params['name'],
-                            'table'  => 'content',
-                            'column' => 'pagetitle',
-                            'type'   => 20,
-                            'name'   => trim($dependency[1])
-                        );
-                        break;
+                $name = $modulePlugin[0];
+                $desc = $modulePlugin[1];
+                $filecontent = $modulePlugin[2];
+                $properties = $modulePlugin[3];
+                $events = explode(",", $modulePlugin[4]);
+                $guid = $modulePlugin[5];
+                $category = $modulePlugin[6];
+                $leg_names = [];
+                $disabled = $modulePlugin[9];
+                if(array_key_exists(7, $modulePlugin)) {
+                    // parse comma-separated legacy names and prepare them for sql IN clause
+                    $leg_names = preg_split('/\s*,\s*/', $modulePlugin[7]);
                 }
-            }
-        }
-    }
-    $d->close();
-}
-
-// setup callback function
-$callBackFnc = 'clean_up';
-
-include $path . 'src/sqlParser.class.php';
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase),
-    $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage,
-    $database_connection_method, $auto_template_logic);
-$sqlParser->mode = ($installMode < 1) ? 'new' : 'upd';
-/* image and file manager paths now handled via settings screen in Manager
-$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
-$sqlParser->imageUrl = "assets/";
-$sqlParser->imagePath = $base_path . "assets/";
-$sqlParser->fileManagerPath = $base_path;
-*/
-$sqlParser->ignoreDuplicateErrors = true;
-$sqlParser->connect();
-
-// install/update database
-echo $_lang['setup_database_creating_tables'];
-if ($moduleSQLBaseFile) {
-    $sqlParser->process($moduleSQLBaseFile);
-    // display database results
-    if ($sqlParser->installFailed == true) {
-        $errors += 1;
-        echo $_lang['database_alerts'] . PHP_EOL;
-        echo $_lang['setup_couldnt_install'] . PHP_EOL;
-        echo $_lang['installation_error_occured'] . PHP_EOL;
-        for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-            echo $sqlParser->mysqlErrors[$i]["error"] . " " . $_lang['during_execution_of_sql'] . " " . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . PHP_EOL;
-        }
-        echo $_lang['some_tables_not_updated'] . PHP_EOL;
-        die();
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}
-
-// custom or not
-if (file_exists($path . "../assets/cache/siteManager.php")) {
-    $mgrdir = 'include_once(__DIR__."/../../assets/cache/siteManager.php");';
-} else {
-    $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
-}
-
-// write the config.inc.php file if new installation
-echo $_lang['writing_config_file'];
-
-$confph = array();
-$confph['database_server'] = $database_server;
-$confph['user_name'] = mysqli_real_escape_string($conn, $database_user);
-$confph['password'] = mysqli_real_escape_string($conn, $database_password);
-$confph['connection_charset'] = $database_connection_charset;
-$confph['connection_method'] = $database_connection_method;
-$confph['connection_collation'] = $database_collation;
-$confph['dbase'] = str_replace('`', '', $dbase);
-$confph['table_prefix'] = $table_prefix;
-$confph['lastInstallTime'] = time();
-$confph['site_sessionname'] = $site_sessionname;
-
-
-$configString = file_get_contents($path . '/stubs/files/config/database/connections/default.tpl');
-$configString = parse($configString, $confph);
-
-$filename = EVO_CORE_PATH . 'config/database/connections/default.php';
-$configFileFailed = false;
-if (@ !$handle = fopen($filename, 'w')) {
-    $configFileFailed = true;
-}
-
-// write $somecontent to our opened file.
-if (@ fwrite($handle, $configString) === false) {
-    $configFileFailed = true;
-}
-@ fclose($handle);
-
-// try to chmod the config file go-rwx (for suexeced php)
-@chmod($filename, 0404);
-
-if ($configFileFailed == true) {
-    echo $_lang['failed'] . PHP_EOL;
-    $errors += 1;
-
-    echo $_lang['cant_write_config_file'] . ' ' . EVO_CORE_PATH . 'config/database/connections/default.php' . PHP_EOL;
-    echo ' ' . PHP_EOL;
-    echo ' ' . PHP_EOL;
-    echo $configString;
-    echo ' ' . PHP_EOL;
-    echo ' ' . PHP_EOL;
-    echo $_lang['cant_write_config_file_note'] . PHP_EOL;
-    die();
-
-} else {
-    echo $_lang['ok'] . PHP_EOL;
-}
-
-// generate new site_id and set manager theme to default
-if ($installMode == 0) {
-    $siteid = uniqid('');
-    mysqli_query($sqlParser->conn,
-        "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')");
-} else {
-    // update site_id if missing
-    $ds = mysqli_query($sqlParser->conn,
-        "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'");
-    if ($ds) {
-        $r = mysqli_fetch_assoc($ds);
-        $siteid = $r['setting_value'];
-        if ($siteid == '' || $siteid = 'MzGeQ2faT4Dw06+U49x3') {
-            $siteid = uniqid('');
-            mysqli_query($sqlParser->conn,
-                "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid')");
-        }
-    }
-}
-
-// Reset database for installation of demo-site
-if ($installData == 1 && $moduleSQLDataFile && $moduleSQLResetFile) {
-    echo $_lang['resetting_database'];
-    $sqlParser->process($moduleSQLResetFile);
-    // display database results
-    if ($sqlParser->installFailed == true) {
-        $errors += 1;
-        echo $_lang['database_alerts'] . PHP_EOL;
-        echo $_lang['setup_couldnt_install'] . PHP_EOL;
-        echo $_lang['installation_error_occured'] . PHP_EOL . PHP_EOL;
-        /*
-        for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-            echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
-        }
-        echo "</p>";*/
-        echo $_lang['some_tables_not_updated'] . PHP_EOL;
-        die();
-    } else {
-        echo $_lang['ok'] . PHP_EOL;
-    }
-}
-
-// Install Templates
-$moduleTemplate = $mt;
-if (!empty($moduleTemplate) || $installData == 1) {
-    echo PHP_EOL . $_lang['templates'] . ":" . PHP_EOL;
-    //$selTemplates = $_POST['template'];
-    foreach ($moduleTemplates as $k => $moduleTemplate) {
-        $installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
-        if ($installSample || is_array($moduleTemplate)) {
-            $name = mysqli_real_escape_string($conn, $moduleTemplate[0]);
-            $desc = mysqli_real_escape_string($conn, $moduleTemplate[1]);
-            $category = mysqli_real_escape_string($conn, $moduleTemplate[4]);
-            $locked = mysqli_real_escape_string($conn, $moduleTemplate[5]);
-            $filecontent = $moduleTemplate[3];
-            $save_sql_id_as = $moduleTemplate[7]; // Nessecary for demo-site
-            if (!file_exists($filecontent)) {
-                echo "  $name: " . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . PHP_EOL;
-            } else {
-                // Create the category if it does not already exist
-                $category_id = getCreateDbCategory($category, $sqlParser);
-
-                // Strip the first comment up top
-                $template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $template = mysqli_real_escape_string($conn, $template);
-
-                // See if the template already exists
-                $rs = mysqli_query($sqlParser->conn,
-                    "SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'");
-
-                if (mysqli_num_rows($rs)) {
-                    if (!mysqli_query($sqlParser->conn,
-                        "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name' LIMIT 1;")) {
-                        $errors += 1;
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
+                if (!file_exists($filecontent))
+                    echo $name." ".$filecontent." not found ";
+                else {
+                    // disable legacy versions based on legacy_names provided
+                    if(count($leg_names)) {
+                        \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $leg_names)->update(['disabled'=>1]);
                     }
-                    if (!is_null($save_sql_id_as)) {
-                        $sql_id = @mysqli_insert_id($sqlParser->conn);
-                        if (!$sql_id) {
-                            $idQuery = mysqli_fetch_assoc(mysqli_query($sqlParser->conn,
-                                "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name' LIMIT 1;"));
-                            $sql_id = $idQuery['id'];
-                        }
-                        $custom_placeholders[$save_sql_id_as] = $sql_id;
-                    }
-                    echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-                } else {
-                    if (!@ mysqli_query($sqlParser->conn,
-                        "INSERT INTO $dbase.`" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template',$category_id,'$locked');")) {
-                        $errors += 1;
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-                        die();
-                    }
-                    if (!is_null($save_sql_id_as)) {
-                        $custom_placeholders[$save_sql_id_as] = @mysqli_insert_id($sqlParser->conn);
-                    }
-                    echo "  $name: " . $_lang['installed'] . PHP_EOL;
-                }
-            }
-        }
-    }
-}
+                    // Create the category if it does not already exist
+                    $category = getCreateDbCategory($category);
+                    $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    // remove installer docblock
+                    $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
+                    $pluginDbRecord = \EvolutionCMS\Models\SitePlugin::where('name', $name)->orderBy('id');
+                    $prev_id = null;
+                    if ($pluginDbRecord->count() > 0) {
+                        $insert = true;
+                        foreach ($pluginDbRecord->get()->toArray() as $row) {
+                            $props = propUpdate($properties,$row['properties']);
+                            if($row['description'] == $desc){
+                                \EvolutionCMS\Models\SitePlugin::query()->where('id', $row['id'])->update(['plugincode' => $plugin, 'description' => $desc, 'properties' => $props]);
 
-// Install Template Variables
-$moduleTVs = $mtv;
-if (is_array($moduleTVs) || $installData == 1) {
-    echo PHP_EOL . $_lang['tvs'] . ': ' . PHP_EOL;
-    //$selTVs = $_POST['tv'];
-    foreach ($moduleTVs as $k => $moduleTV) {
-        $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
-        if ($installSample || is_array($moduleTVs)) {
-            $name = mysqli_real_escape_string($conn, $moduleTV[0]);
-            $caption = mysqli_real_escape_string($conn, $moduleTV[1]);
-            $desc = mysqli_real_escape_string($conn, $moduleTV[2]);
-            $input_type = mysqli_real_escape_string($conn, $moduleTV[3]);
-            $input_options = mysqli_real_escape_string($conn, $moduleTV[4]);
-            $input_default = mysqli_real_escape_string($conn, $moduleTV[5]);
-            $output_widget = mysqli_real_escape_string($conn, $moduleTV[6]);
-            $output_widget_params = mysqli_real_escape_string($conn, $moduleTV[7]);
-            $filecontent = $moduleTV[8];
-            $assignments = $moduleTV[9];
-            $category = mysqli_real_escape_string($conn, $moduleTV[10]);
-            $locked = mysqli_real_escape_string($conn, $moduleTV[11]);
-
-
-            // Create the category if it does not already exist
-            $category = getCreateDbCategory($category, $sqlParser);
-
-            $rs = mysqli_query($sqlParser->conn,
-                "SELECT * FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name'");
-            if (mysqli_num_rows($rs)) {
-                $insert = true;
-                while ($row = mysqli_fetch_assoc($rs)) {
-                    if (!mysqli_query($sqlParser->conn,
-                        "UPDATE $dbase.`" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category=$category, locked=$locked, elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id={$row['id']};")) {
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    $insert = false;
-                }
-                echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-            } else {
-                $q = "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',$category,$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
-                if (!mysqli_query($sqlParser->conn, $q)) {
-                    echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                    return;
-                }
-                echo "  $name: " . $_lang['installed'] . PHP_EOL;
-            }
-
-            // add template assignments
-            $assignments = explode(',', $assignments);
-
-            if (count($assignments) > 0) {
-
-                // remove existing tv -> template assignments
-                $ds = mysqli_query($sqlParser->conn,
-                    "SELECT id FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name' AND description='$desc';");
-                $row = mysqli_fetch_assoc($ds);
-                $id = $row["id"];
-                mysqli_query($sqlParser->conn,
-                    'DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
-
-                // add tv -> template assignments
-                foreach ($assignments as $assignment) {
-                    $template = mysqli_real_escape_string($conn, $assignment);
-                    $ts = mysqli_query($sqlParser->conn,
-                        "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$template';");
-                    if ($ds && $ts) {
-                        $tRow = mysqli_fetch_assoc($ts);
-                        $templateId = $tRow['id'];
-                        mysqli_query($sqlParser->conn,
-                            "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-$moduleChunks = $mc;
-// Install Chunks
-if (is_array($moduleChunks) || $installData == 1) {
-    echo PHP_EOL . $_lang['chunks'] . ": " . PHP_EOL;
-    foreach ($moduleChunks as $k => $moduleChunk) {
-        $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
-        $count_new_name = 0;
-        if ($installSample || is_array($moduleChunks)) {
-
-            $name = mysqli_real_escape_string($conn, $moduleChunk[0]);
-            $desc = mysqli_real_escape_string($conn, $moduleChunk[1]);
-            $category = mysqli_real_escape_string($conn, $moduleChunk[3]);
-            $overwrite = mysqli_real_escape_string($conn, $moduleChunk[4]);
-            $filecontent = $moduleChunk[2];
-
-            if (!file_exists($filecontent)) {
-                echo "  $name: " . $_lang['unable_install_chunk'] . " '$filecontent' " . $_lang['not_found'] . PHP_EOL;
-            } else {
-
-                // Create the category if it does not already exist
-                $category_id = getCreateDbCategory($category, $sqlParser);
-
-                $chunk = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $chunk = mysqli_real_escape_string($conn, $chunk);
-                $rs = mysqli_query($sqlParser->conn,
-                    "SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'");
-                $count_original_name = mysqli_num_rows($rs);
-                if ($overwrite == 'false') {
-                    $newname = $name . '-' . str_replace('.', '_', $modx_version);
-                    $rs = mysqli_query($sqlParser->conn,
-                        "SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'");
-                    $count_new_name = mysqli_num_rows($rs);
-                }
-                $update = $count_original_name > 0 && $overwrite == 'true';
-                if ($update) {
-                    if (!mysqli_query($sqlParser->conn,
-                        "UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category=$category_id WHERE name='$name';")) {
-                        $errors += 1;
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-                } elseif ($count_new_name == 0) {
-                    if ($count_original_name > 0 && $overwrite == 'false') {
-                        $name = $newname;
-                    }
-                    if (!mysqli_query($sqlParser->conn,
-                        "INSERT INTO $dbase.`" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk',$category_id);")) {
-                        $errors += 1;
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['installed'] . PHP_EOL;
-                }
-            }
-        }
-    }
-}
-
-// Install Modules
-$moduleModules = $mm;
-if (is_array($moduleModules) || $installData == 1) {
-    echo PHP_EOL . $_lang['modules'] . ":" . PHP_EOL;
-    //$selModules = $_POST['module'];
-    foreach ($moduleModules as $k => $moduleModule) {
-        $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
-        if ($installSample || is_array($moduleModules)) {
-            $name = mysqli_real_escape_string($conn, $moduleModule[0]);
-            $desc = mysqli_real_escape_string($conn, $moduleModule[1]);
-            $filecontent = $moduleModule[2];
-            $properties = $moduleModule[3];
-            $guid = mysqli_real_escape_string($conn, $moduleModule[4]);
-            $shared = mysqli_real_escape_string($conn, $moduleModule[5]);
-            $category = mysqli_real_escape_string($conn, $moduleModule[6]);
-            if (!file_exists($filecontent)) {
-                echo "  $name: " . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . PHP_EOL;
-            } else {
-
-                // Create the category if it does not already exist
-                $category = getCreateDbCategory($category, $sqlParser);
-
-                $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
-                $module = mysqli_real_escape_string($conn, $module);
-                $rs = mysqli_query($sqlParser->conn,
-                    "SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'");
-                if (mysqli_num_rows($rs)) {
-                    $row = mysqli_fetch_assoc($rs);
-                    $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
-                    if (!mysqli_query($sqlParser->conn,
-                        "UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-                } else {
-                    if ($properties != null) {
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
-                    }
-                    if (!mysqli_query($sqlParser->conn,
-                        "INSERT INTO $dbase.`" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', $category);")) {
-                        echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['installed'] . PHP_EOL;
-                }
-            }
-        }
-    }
-}
-
-// Install Plugins
-$modulePlugins = $mp;
-if (is_array($modulePlugins) || $installData == 1) {
-    echo PHP_EOL . $_lang['plugins'] . ":" . PHP_EOL;
-    $selPlugs = $_POST['plugin'];
-    foreach ($modulePlugins as $k => $modulePlugin) {
-        //$installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
-        if ($installSample || is_array($modulePlugins)) {
-            $name = mysqli_real_escape_string($conn, $modulePlugin[0]);
-            $desc = mysqli_real_escape_string($conn, $modulePlugin[1]);
-            $filecontent = $modulePlugin[2];
-            $properties = $modulePlugin[3];
-            $events = explode(",", $modulePlugin[4]);
-            $guid = mysqli_real_escape_string($conn, $modulePlugin[5]);
-            $category = mysqli_real_escape_string($conn, $modulePlugin[6]);
-            $leg_names = '';
-            $disabled = $modulePlugin[9];
-            if (array_key_exists(7, $modulePlugin)) {
-                // parse comma-separated legacy names and prepare them for sql IN clause
-                $leg_names = "'" . implode("','",
-                        preg_split('/\s*,\s*/', mysqli_real_escape_string($conn, $modulePlugin[7]))) . "'";
-            }
-            if (!file_exists($filecontent)) {
-                echo "  $name: " . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . PHP_EOL;
-            } else {
-
-                // disable legacy versions based on legacy_names provided
-                if (!empty($leg_names)) {
-                    $update_query = "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);";
-                    $rs = mysqli_query($sqlParser->conn, $update_query);
-                }
-
-                // Create the category if it does not already exist
-                $category = getCreateDbCategory($category, $sqlParser);
-
-                $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                $plugin = removeDocblock($plugin, 'plugin');
-                $plugin = mysqli_real_escape_string($conn, $plugin);
-                $rs = mysqli_query($sqlParser->conn,
-                    "SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'");
-                if (mysqli_num_rows($rs)) {
-                    $insert = true;
-                    while ($row = mysqli_fetch_assoc($rs)) {
-                        $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
-                        if ($row['description'] == $desc) {
-                            if (!mysqli_query($sqlParser->conn,
-                                "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id={$row['id']};")) {
-                                echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                                return;
+                                $insert = false;
+                            } else {
+                                \EvolutionCMS\Models\SitePlugin::query()->where('id', $row['id'])->update(['disabled' => 1]);
                             }
-                            $insert = false;
-                        } else {
-                            if (!mysqli_query($sqlParser->conn,
-                                "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE id={$row['id']};")) {
-                                echo mysqli_error($sqlParser->conn) . PHP_EOL;
+                            $prev_id = $row['id'];
+                        }
+                        if($insert === true) {
+                            $props = propUpdate($properties,$row['properties']);
+                            \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid'=>$guid, 'disabled'=>0, 'category'=>$category]);
+                        }
+                    } else {
+                        $properties = parseProperties($properties, true);
+                        \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $properties, 'moduleguid'=>$guid, 'disabled'=>$disabled, 'category'=>$category]);
+                    }
+                    // add system events
+                    if (count($events) > 0) {
+                        $sitePlugin = \EvolutionCMS\Models\SitePlugin::where('name', $name)->where('description', $desc)->first();
+                        if (!is_null($sitePlugin)) {
+                            $id = $sitePlugin->id;
 
-                                return;
+                            // add new events
+                            foreach ($events as $event) {
+                                $eventName = \EvolutionCMS\Models\SystemEventname::where('name', $event)->first();
+                                if (!is_null($eventName)) {
+                                    $prev_priority = null;
+                                    if ($prev_id) {
+                                        $pluginEvent = \EvolutionCMS\Models\SitePluginEvent::query()
+                                            ->where('pluginid', $prev_id)
+                                            ->where('evtid', $eventName->getKey())->first();
+                                        if (!is_null($pluginEvent)) {
+                                            $prev_priority = $pluginEvent->priority;
+                                        }
+                                    }
+                                    if (is_null($prev_priority)) {
+                                        $pluginEvent = \EvolutionCMS\Models\SitePluginEvent::query()
+                                            ->where('evtid', $eventName->getKey())
+                                            ->orderBy('priority', 'DESC')->first();
+                                        if (!is_null($pluginEvent)) {
+                                            $prev_priority = $pluginEvent->priority;
+                                            $prev_priority++;
+                                        }
+                                    }
+                                    if (is_null($prev_priority)) {
+                                        $prev_priority = 0;
+                                    }
+                                    $arrInsert = ['pluginid' => $id, 'evtid' => $eventName->getKey(), 'priority' => $prev_priority];
+                                    \EvolutionCMS\Models\SitePluginEvent::query()
+                                        ->firstOrCreate($arrInsert);
+                                }
                             }
+
+                            // remove absent events
+                            \EvolutionCMS\Models\SitePluginEvent::query()->join('system_eventnames', function ($join) use ($events) {
+                                $join->on('site_plugin_events.evtid', '=', 'system_eventnames.id')
+                                    ->whereIn('name', $events);
+                            })
+                                ->whereNull('name')
+                                ->where('pluginid', $id)->delete();
+
                         }
                     }
-                    if ($insert === true) {
-                        if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0',$category);")) {
-                            echo mysqli_error($sqlParser->conn) . PHP_EOL;
 
-                            return;
+
+                }
+
+            }
+        }
+        $moduleModules = [];
+        $moduleDependencies = [];
+        $mm = &$moduleModules;
+        $mdp = &$moduleDependencies;
+        if (is_dir($modulePath) && is_readable($modulePath)) {
+            $d = dir($modulePath);
+            while (false !== ($tplfile = $d->read())) {
+                if (substr($tplfile, -4) != '.tpl') {
+                    continue;
+                }
+                $params = parse_docblock($modulePath, $tplfile);
+                if (is_array($params) && count($params) > 0) {
+                    $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
+                    $mm[] = array(
+                        $params['name'],
+                        $description,
+                        "$modulePath/{$params['filename']}",
+                        $params['properties'],
+                        $params['guid'],
+                        (int)$params['shareparams'],
+                        $params['modx_category'],
+                        array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                    );
+                }
+                if ((int)$params['shareparams'] || !empty($params['dependencies'])) {
+                    $dependencies = explode(',', $params['dependencies']);
+                    foreach ($dependencies as $dependency) {
+                        $dependency = explode(':', $dependency);
+                        switch (trim($dependency[0])) {
+                            case 'template':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'templates',
+                                    'column' => 'templatename',
+                                    'type' => 50,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
+                            case 'tv':
+                            case 'tmplvar':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'tmplvars',
+                                    'column' => 'name',
+                                    'type' => 60,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
+                            case 'chunk':
+                            case 'htmlsnippet':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'htmlsnippets',
+                                    'column' => 'name',
+                                    'type' => 10,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
+                            case 'snippet':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'snippets',
+                                    'column' => 'name',
+                                    'type' => 40,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
+                            case 'plugin':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'plugins',
+                                    'column' => 'name',
+                                    'type' => 30,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
+                            case 'resource':
+                                $mdp[] = array(
+                                    'module' => $params['name'],
+                                    'table' => 'content',
+                                    'column' => 'pagetitle',
+                                    'type' => 20,
+                                    'name' => trim($dependency[1])
+                                );
+                                break;
                         }
                     }
-                    echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-                } else {
-                    if ($properties != null) {
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
-                    }
-                    if (!mysqli_query($sqlParser->conn,
-                        "INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category,disabled) VALUES('$name','$desc','$plugin','$properties','$guid',$category,$disabled);")) {
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['installed'] . PHP_EOL;
-                }
-                // add system events
-                if (count($events) > 0) {
-                    $ds = mysqli_query($sqlParser->conn,
-                        "SELECT id FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name' AND description='$desc';");
-                    if ($ds) {
-                        $row = mysqli_fetch_assoc($ds);
-                        $id = $row["id"];
-                        $_events = implode("','", $events);
-                        // add new events
-                        $sql = "INSERT IGNORE INTO $dbase.`" . $table_prefix . "site_plugin_events` (pluginid, evtid, priority) SELECT '$id' as 'pluginid', se.id as 'evtid', IF(spe.priority IS NULL, 0, MAX(spe.priority) + 1) as 'priority' FROM $dbase.`" . $table_prefix . "system_eventnames` se LEFT JOIN $dbase.`" . $table_prefix . "site_plugin_events` spe ON spe.evtid = se.id WHERE name IN ('{$_events}') GROUP BY se.id, priority";
-                        mysqli_query($sqlParser->conn, $sql);
-                        // remove absent events
-                        $sql = "DELETE `pe` FROM {$dbase}.`{$table_prefix}site_plugin_events` `pe` LEFT JOIN {$dbase}.`{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}";
-                        mysqli_query($sqlParser->conn, $sql);
-                    }
                 }
             }
+            $d->close();
         }
-    }
-}
+        // Install Modules
+        if (count($moduleModules )>0) {
+            foreach ($moduleModules as $k=>$moduleModule) {
+                $name = $moduleModule[0];
+                $desc = $moduleModule[1];
+                $filecontent = $moduleModule[2];
+                $properties = $moduleModule[3];
+                $guid = $moduleModule[4];
+                $shared = $moduleModule[5];
+                $category = $moduleModule[6];
+                if (!file_exists($filecontent))
+                    echo $name." ".$filecontent." not found ";
+                else {
 
-// Install Snippets
-$moduleSnippet = $ms;
-if (is_array($moduleSnippet) || $installData == 1) {
-    echo PHP_EOL . $_lang['snippets'] . ":" . PHP_EOL;
-    //$selSnips = $_POST['snippet'];
-    foreach ($moduleSnippets as $k => $moduleSnippet) {
-        $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
-        if ($installSample || is_array($moduleSnippet)) {
-            $name = mysqli_real_escape_string($conn, $moduleSnippet[0]);
-            $desc = mysqli_real_escape_string($conn, $moduleSnippet[1]);
-            $filecontent = $moduleSnippet[2];
-            $properties = $moduleSnippet[3];
-            $category = mysqli_real_escape_string($conn, $moduleSnippet[4]);
-            if (!file_exists($filecontent)) {
-                echo "  $name: " . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . PHP_EOL;
-            } else {
+                    // Create the category if it does not already exist
+                    $category = getCreateDbCategory($category);
 
-                // Create the category if it does not already exist
-                $category = getCreateDbCategory($category, $sqlParser);
+                    $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    // remove installer docblock
+                    $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
+                    $moduleDb = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->first();
+                    if (!is_null($moduleDb)) {
+                        $props = propUpdate($properties,$moduleDb->properties);
+                        \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode'=>$module, 'description'=>$desc,'properties'=>$props, 'enable_sharedparams'=>$shared]);
 
-                $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
-                $snippet = removeDocblock($snippet, 'snippet');
-                $snippet = mysqli_real_escape_string($conn, $snippet);
-                $rs = mysqli_query($sqlParser->conn,
-                    "SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'");
-                if (mysqli_num_rows($rs)) {
-                    $row = mysqli_fetch_assoc($rs);
-                    $props = mysqli_real_escape_string($conn, propUpdate($properties, $row['properties']));
-                    if (!mysqli_query($sqlParser->conn,
-                        "UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
+                    } else {
+                        $properties = parseProperties($properties, true);
+                        \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $props, 'enable_sharedparams' => $shared]);
                     }
-                    echo "  $name: " . $_lang['upgraded'] . PHP_EOL;
-                } else {
-                    if ($properties != null) {
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
-                    }
-                    if (!mysqli_query($sqlParser->conn,
-                        "INSERT INTO $dbase.`" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
-                        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                        return;
-                    }
-                    echo "  $name: " . $_lang['installed'] . PHP_EOL;
                 }
+
             }
         }
+
     }
-}
 
-// Install demo-site
-if ($installData == 1 && $moduleSQLDataFile) {
-    echo PHP_EOL . $_lang['installing_demo_site'];
-    $sqlParser->process($moduleSQLDataFile);
-    // display database results
-    if ($sqlParser->installFailed == true) {
-        $errors += 1;
-        echo $_lang['database_alerts'] . PHP_EOL;
-        echo $_lang['setup_couldnt_install'] . PHP_EOL;
-        echo $_lang['installation_error_occured'] . PHP_EOL . PHP_EOL;
-        for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-            echo $sqlParser->mysqlErrors[$i]["error"] . " " . $_lang['during_execution_of_sql'] . " " . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . PHP_EOL;
-        }
-
-        echo $_lang['some_tables_not_updated'] . PHP_EOL;
-
-        return;
-    } else {
-        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='Evolution CMS startup - Bootstrap'",
-            $sqlParser->prefix);
-        $rs = mysqli_query($sqlParser->conn, $sql);
-        if (mysqli_num_rows($rs)) {
-            $row = mysqli_fetch_assoc($rs);
-            $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix, $row['id']);
-            mysqli_query($sqlParser->conn, $sql);
-        }
-        echo $_lang['ok'] . PHP_EOL;
+    public function clearCacheAfterInstall()
+    {
+        file_put_contents(EVO_CORE_PATH . '.install', time());
+        $this->evo->clearCache('full');
     }
-}
 
-// Install Dependencies
-$moduleDependencies = $mdp;
-foreach ($moduleDependencies as $dependency) {
-    $ds = mysqli_query($sqlParser->conn,
-        'SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"');
-    if (!$ds) {
-        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-        return;
-    } else {
-        $row = mysqli_fetch_assoc($ds);
-        $moduleId = $row["id"];
-        $moduleGuid = $row["guid"];
-    }
-    // get extra id
-    $ds = mysqli_query($sqlParser->conn,
-        'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"');
-    if (!$ds) {
-        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-        return;
-    } else {
-        $row = mysqli_fetch_assoc($ds);
-        $extraId = $row["id"];
-    }
-    // setup extra as module dependency
-    $ds = mysqli_query($sqlParser->conn,
-        'SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1');
-    if (!$ds) {
-        echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-        return;
-    } else {
-        if (mysqli_num_rows($ds) === 0) {
-            mysqli_query($sqlParser->conn,
-                'INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')');
-            echo $dependency['module'] . ' Module: ' . $_lang['depedency_create'] . PHP_EOL;
-        } else {
-            mysqli_query($sqlParser->conn,
-                'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type']);
-            echo $dependency['module'] . ' Module: ' . $_lang['depedency_update'] . PHP_EOL;
-        }
-        if ($dependency['type'] == 30 || $dependency['type'] == 40) {
-            // set extra guid for plugins and snippets
-            $ds = mysqli_query($sqlParser->conn,
-                'SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1');
-            if (!$ds) {
-                echo mysqli_error($sqlParser->conn) . PHP_EOL;
-
-                return;
-            } else {
-                if (mysqli_num_rows($ds) != 0) {
-                    mysqli_query($sqlParser->conn,
-                        'UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId);
-                    echo $dependency['name'] . ': ' . $_lang['guid_set'] . PHP_EOL;
-                }
-            }
+    public function removeInstall(){
+        if ($this->removeInstall == 'y') {
+            $path = __DIR__ . '/';
+            removeFolder($path);
+            removeFolder(MODX_BASE_PATH . '.tx');
+            unlink(MODX_BASE_PATH . 'README.md');
+            echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
         }
     }
 }
 
-// call back function
-if ($callBackFnc != "") {
-    $callBackFnc ($sqlParser);
-}
-
-// Setup the MODX API -- needed for the cache processor
-if (file_exists(dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php')) {
-    require_once dirname(__DIR__, 3) . '/' . MGR_DIR . '/includes/config_mutator.php';
-}
-define('MODX_API_MODE', true);
-if (!defined('MODX_BASE_PATH')) {
-    define('MODX_BASE_PATH', $base_path);
-}
-if (!defined('MODX_MANAGER_PATH')) {
-    define('MODX_MANAGER_PATH', $base_path . MGR_DIR . '/');
-}
-$database_type = 'mysqli';
-// initiate a new document parser
-if (!defined('EVO_BOOTSTRAP_FILE')) {
-    define('EVO_BOOTSTRAP_FILE', EVO_CORE_PATH . 'bootstrap.php');
-    require_once EVO_CORE_PATH . 'bootstrap.php';
-}
-
-if (! defined('MODX_CLASS')) {
-    define('MODX_CLASS', '\DocumentParser');
-}
-
-file_put_contents(EVO_CORE_PATH . '.install', time());
-$modx = evolutionCMS();
-$modx->getDatabase()->connect();
-
-// always empty cache after install
-$modx->clearCache();
-
-// try to chmod the cache go-rwx (for suexeced php)
-@chmod(dirname(__DIR__, 3) . '/assets/cache/siteCache.idx.php', 0600);
-@chmod(dirname(__DIR__, 3) . '/assets/cache/sitePublishing.idx.php', 0600);
-
-// remove any locks on the manager functions so initial manager login is not blocked
-mysqli_query($conn, "TRUNCATE TABLE `" . $table_prefix . "active_users`");
-
-// close db connection
-$sqlParser->close();
-
-// andrazk 20070416 - release manager access
-if (file_exists($path . '../assets/cache/installProc.inc.php')) {
-    @chmod($path . '../assets/cache/installProc.inc.php', 0755);
-    unlink($path . '../assets/cache/installProc.inc.php');
-}
-
-// setup completed!
-echo PHP_EOL . $_lang['installation_successful'] . PHP_EOL . PHP_EOL;
-//echo "<p>" . $_lang['to_log_into_content_manager'] . "</p>";
-if ($installMode == 0) {
-    echo strip_tags($_lang['installation_note']) . PHP_EOL;
-} else {
-    echo strip_tags($_lang['upgrade_note']) . PHP_EOL;
-}
-
-
-if (empty($args)) {
-    echo PHP_EOL . 'Remove install folder?' . PHP_EOL;
-    $removeInstall = readline("Type 'y' or 'n' to continue: ");
-}
-//remove installFolder
-if ($removeInstall === 'y') {
-    removeFolder($path);
-    removeFolder($base_path . '.tx');
-    unlink($base_path . 'README.md');
-    echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
-}
-
+exit();
