@@ -15,7 +15,7 @@ class SiteUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'make:site {command_site}';
+    protected $signature = 'make:site {command_site=update}';
     /**
      * The console command description.
      *
@@ -25,16 +25,6 @@ class SiteUpdateCommand extends Command
 
     public function __construct()
     {
-
-        $this->evo = EvolutionCMS();
-        //echo $this->evo->getConfig('migrations');
-
-        $this->evo->setConfig('migrations', 'migrations_install');
-
-        //$this->evo->getDatabase()->setConfig('migrations', 'migrations_install');
-        //echo $this->evo->getConfig('migrations');
-
-
         parent::__construct();
     }
     /**
@@ -57,10 +47,7 @@ class SiteUpdateCommand extends Command
 
     public function startUpdate()
     {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-        $url = 'https://raw.githubusercontent.com/Ser1ous/testevoupdate/master/upd.txtt';
+
         $url = 'https://github.com/evolution-cms/evolution/archive/2.1.x.zip';
         echo "Start download EvolutionCMS\n";
         $url = file_get_contents($url);
