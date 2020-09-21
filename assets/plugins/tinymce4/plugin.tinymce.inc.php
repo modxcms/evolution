@@ -4,7 +4,11 @@
 if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
 // Init
-require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
+if( !file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")) { // Add Fall-Back for now
+    require_once(MODX_BASE_PATH."assets/plugins/tinymce4/class.modxRTEbridge.php");
+} else {
+    require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
+}
 require_once(MODX_BASE_PATH."assets/plugins/tinymce4/bridge.tinymce4.inc.php");
 
 $e = &$modx->event;

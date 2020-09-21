@@ -36,7 +36,6 @@ class CheckOutdated
 
         $this->tpl = DLTemplate::getInstance($this->modx);
 
-        include_once MODX_BASE_PATH . 'assets/snippets/FormLister/__autoload.php';
         $this->setLang($lang);
     }
 
@@ -75,12 +74,12 @@ class CheckOutdated
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                     '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
-                    '[%snippet%] <b>[+name+]</b> (version [+currentVersion+]) ' .
-                    ' [+isSecurity:empty:then=`[%isoutdated%] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[%security_reason%]</b></u>.`+]' .
-                    '<br />[%please_update%] <b>[+name+]</b> [%to_latest%]' .
-                    ' ([%min_required%] [+minVersion+]) [%from%]' .
-                    ' <a target="main" href="[+extrasURL+]">[%extras_module%]</a> ' .
-                    ' [+replaced:isnotempty=`[%or_move_to%]: <b>[+replaced+]</b>`+]' .
+                    '[+snippet+] <b>[+name+]</b> (version [+currentVersion+]) ' .
+                    ' [+isSecurity:empty:then=`[+isoutdated+] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[+security_reason+]</b></u>.`+]' .
+                    '<br />[+please_update+] <b>[+name+]</b> [+to_latest+]' .
+                    ' ([+min_required+] [+minVersion+]) [+from+]' .
+                    ' <a target="main" href="[+extrasURL+]">[+extras_module+]</a> ' .
+                    ' [+replaced:isnotempty=`[+or_move_to+]: <b>[+replaced+]</b>`+]' .
                 '</div>';
 
             $minVersion = isset($options['version']) ? $options['version'] : 0;
@@ -126,12 +125,12 @@ class CheckOutdated
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                 '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
-                '[%plugin%] <b>[+name+]</b> (version [+currentVersion+]) ' .
-                ' [+isSecurity:empty:then=`[%isoutdated%] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[%security_reason%]</b></u>.`+]' .
-                '<br />[%please_update%] <b>[+name+]</b> [%to_latest%]' .
-                ' ([%min_required%] [+minVersion+]) [%from%]' .
-                ' <a target="main" href="[+extrasURL+]">[%extras_module%]</a> ' .
-                ' [+replaced:isnotempty=`[%or_move_to%]: <b>[+replaced+]</b>`+]' .
+                '[+plugin+] <b>[+name+]</b> (version [+currentVersion+]) ' .
+                ' [+isSecurity:empty:then=`[+isoutdated+] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[+security_reason+]</b></u>.`+]' .
+                '<br />[+please_update+] <b>[+name+]</b> [+to_latest+]' .
+                ' ([+min_required+] [+minVersion+]) [+from+]' .
+                ' <a target="main" href="[+extrasURL+]">[+extras_module+]</a> ' .
+                ' [+replaced:isnotempty=`[+or_move_to+]: <b>[+replaced+]</b>`+]' .
                 '</div>';
 
             $minVersion = isset($options['version']) ? $options['version'] : 0;
@@ -176,12 +175,12 @@ class CheckOutdated
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                 '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
-                '[%lock_element_type_6%] <b>[+name+]</b> (version [+currentVersion+]) ' .
-                ' [+isSecurity:empty:then=`[%isoutdated%] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[%security_reason%]</b></u>.`+]' .
-                '<br />[%please_update%] <b>[+name+]</b> [%to_latest%]' .
-                ' ([%min_required%] [+minVersion+]) [%from%]' .
-                ' <a target="main" href="[+extrasURL+]">[%extras_module%]</a> ' .
-                ' [+replaced:isnotempty=`[%or_move_to%]: <b>[+replaced+]</b>`+]' .
+                '[+lock_element_type_6+] <b>[+name+]</b> (version [+currentVersion+]) ' .
+                ' [+isSecurity:empty:then=`[+isoutdated+] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[+security_reason+]</b></u>.`+]' .
+                '<br />[+please_update+] <b>[+name+]</b> [+to_latest+]' .
+                ' ([+min_required+] [+minVersion+]) [+from+]' .
+                ' <a target="main" href="[+extrasURL+]">[+extras_module+]</a> ' .
+                ' [+replaced:isnotempty=`[+or_move_to+]: <b>[+replaced+]</b>`+]' .
                 '</div>';
 
             $minVersion = isset($options['version']) ? $options['version'] : 0;
@@ -227,8 +226,8 @@ class CheckOutdated
                 '@CODE:<div class="widget-wrapper alert alert-danger">' .
                     '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
                     '<b>[+path+]</b> ' .
-                    ' [+isSecurity:empty:then=`[%isoutdated%] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[%security_reason%]</b></u>.`+]' .
-                    '<br />[%please_delete%]. [%if_dont_use%]' .
+                    ' [+isSecurity:empty:then=`[+isoutdated+] <b>Evolution [+evo_cms_version+]</b>`:else=`<u><b>[+security_reason+]</b></u>.`+]' .
+                    '<br />[+please_delete+]. [+if_dont_use+]' .
                 '</div>';
 
             $out = $this->parseTemplate($tpl, compact('path', 'isSecurity'));
@@ -251,9 +250,9 @@ class CheckOutdated
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE: <div class="widget-wrapper alert alert-danger">' .
                     '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
-                    '[%manager_theme%] <b>[+theme+]</b> ' .
-                    '[+isSecurity:empty:then=`[%isoutdated%] <b>Evolution [+evo_cms_version+]</b>`:else=`- <u><b>[%security_reason%]</b></u>.`+]' .
-                    '<br />[%please_delete%] [%from_folder%] [+path+]. [%if_dont_use%]' .
+                    '[+manager_theme+] <b>[+theme+]</b> ' .
+                    '[+isSecurity:empty:then=`[+isoutdated+] <b>Evolution [+evo_cms_version+]</b>`:else=`- <u><b>[+security_reason+]</b></u>.`+]' .
+                    '<br />[+please_delete+] [+from_folder+] [+path+]. [+if_dont_use+]' .
                 '</div>';
 
             $out = $this->parseTemplate(
@@ -281,10 +280,10 @@ class CheckOutdated
             $tpl = isset($options['template']) ? $options['template'] :
                 '@CODE:<div class="widget-wrapper alert alert-warning">' .
                     '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' .
-                    '<b>[+settings_config+] > [%' . $key . '_title%]</b> ' .
-                    '([+oldUrl+]) [%outdated%]. ' .
-                    '[%please_download_and_install%] <b>UpdateEvoRss</b>  [%from%]' .
-                    ' <a target="main" href="index.php?a=112&id=[+extrasID+]">[%extras_module%]</a>' .
+                    '<b>[+settings_config+] > [+' . $key . '_title+]</b> ' .
+                    '([+oldUrl+]) [+outdated+]. ' .
+                    '[+please_download_and_install+] <b>UpdateEvosRss</b>  [+from+]' .
+                    ' <a target="main" href="index.php?a=112&id=[+extrasID+]">[+extras_module+]</a>' .
                 '</div>';
 
             $out = $this->parseTemplate(
@@ -399,6 +398,13 @@ class CheckOutdated
     public function setLang($lexicon = array())
     {
         $lang = $this->modx->getConfig('manager_language');
+        if (file_exists( __DIR__ .  '/lang/'.$lang.'/core.inc.php')){
+            include_once(__DIR__ .  '/lang/'.$lang.'/core.inc.php');
+        } else {
+            include_once(__DIR__ .  '/lang/english/core.inc.php');
+        }
+        $this->lang = $_lang;
+        /*
         $this->lang = new Helpers\Lexicon($this->modx, array(
             'lang' => $lang,
             'langDir' => 'assets/plugins/extrascheck/lang/'
@@ -407,7 +413,7 @@ class CheckOutdated
         if (!empty($lang)) {
             $this->lang->fromArray(array($lang => $lexicon));
         }
-        $this->lang->loadLang();
+        $this->lang->loadLang();*/
     }
 
     /**
@@ -434,10 +440,11 @@ class CheckOutdated
     public function parseTemplate($tpl, $data = array())
     {
         return $this->tpl->parseChunk(
-            $this->lang->parseLang($tpl),
+            ($tpl),
             array_merge(
                 array('evo_cms_version' => $this->modx->getVersionData('version')),
-                $data
+                $data,
+                $this->lang
             ),
             true,
             false
@@ -454,7 +461,8 @@ class CheckOutdated
     {
         $content = "/<$tag>(.*?)<\/$tag>/";
         preg_match($content, $string, $text);
-
+        if(isset($text[1]))
         return $text[1];
+        else return false;
     }
 }

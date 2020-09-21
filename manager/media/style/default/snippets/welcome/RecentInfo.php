@@ -39,6 +39,7 @@ $output = array();
 foreach ($contents->get()->toArray() as $ph) {
     $docid = $ph['id'];
     $_ = $modx->getUserInfo($ph['editedby']);
+    if(isset($_['username']))
     $ph['username'] = $_['username'];
 
     if ($ph['deleted'] == 1) {
