@@ -91,6 +91,8 @@ class InstallEvo
         $this->initEvo();
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
         echo 'Evolution CMS updated!' . "\n";
+        $this->checkRemoveInstall();
+        $this->removeInstall();
     }
 
     public function install()
@@ -111,6 +113,7 @@ class InstallEvo
         $this->checkLanguage();
         $this->realInstall();
         $this->checkRemoveInstall();
+        $this->removeInstall();
     }
 
     public function checkDatabaseType()
