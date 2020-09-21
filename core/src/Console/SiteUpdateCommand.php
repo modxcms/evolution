@@ -1,6 +1,9 @@
 <?php namespace EvolutionCMS\Console;
 
+use EvolutionCMS\Facades\Console;
+use Composer\Console\Application;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * @see: https://github.com/laravel-zero/foundation/blob/5.6/src/Illuminate/Foundation/Console/ClearCompiledCommand.php
@@ -22,6 +25,16 @@ class SiteUpdateCommand extends Command
 
     public function __construct()
     {
+
+        $this->evo = EvolutionCMS();
+        //echo $this->evo->getConfig('migrations');
+
+        $this->evo->setConfig('migrations', 'migrations_install');
+
+        //$this->evo->getDatabase()->setConfig('migrations', 'migrations_install');
+        //echo $this->evo->getConfig('migrations');
+
+
         parent::__construct();
     }
     /**
@@ -75,7 +88,16 @@ class SiteUpdateCommand extends Command
 
         SELF::moveFiles($temp_dir.'/'.$dir, MODX_BASE_PATH);
         SELF::rmdirs($temp_dir);
-        echo 'Unzip end';
+        echo "Run Migrations\n";
+
+        exec('php  ../install/cli-install.php --typeInstall=2 --removeInstall=y');
+        echo "Remove Install Directory\n";
+        self::rmdirs(MODX_BASE_PATH.'install');
+        putenv('COMPOSER_HOME=' . EVO_CORE_PATH . 'composer');
+        $input = new ArrayInput(array('command' => 'update'));
+        $application = new Application();
+        $application->setAutoExit(false);
+        $application->run($input);
     }
     static public function moveFiles($src, $dest) {
         $path = realpath($src);
