@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
 use TemplateProcessor;
 use UrlProcessor;
+use HelperProcessor;
 
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php
@@ -219,6 +220,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getSettings();
         $this->getService('UrlProcessor');
         $this->getService('TemplateProcessor');
+        $this->getService('HelperProcessor');
         $this->getService('DLTemplate');
         $this->getService('Console');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
