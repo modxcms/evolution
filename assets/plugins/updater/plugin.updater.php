@@ -201,8 +201,10 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
                     }
                 }
             }
-
+            if(isset($git['version']))
             $_SESSION['updateversion'] = $git['version'];
+            else
+                $git['version'] = $currentVersion['version'];
 
             if (version_compare($git['version'], $currentVersion['version'], '>') && $git['version'] != '') {
                 // get manager role
