@@ -20,7 +20,7 @@ class CreateSitePluginsTable extends Migration {
 			$table->integer('editor_type')->default(0)->comment('0-plain text,1-rich text,2-code editor');
 			$table->integer('category')->default(0)->comment('category id');
 			$table->boolean('cache_type')->default(0)->comment('Cache option');
-			$table->text('plugincode', 16777215)->nullable();
+			$table->mediumText('plugincode')->nullable();
 			$table->boolean('locked')->default(0);
 			$table->text('properties', 65535)->nullable()->comment('Default Properties');
 			$table->boolean('disabled')->default(0)->comment('Disables the plugin');

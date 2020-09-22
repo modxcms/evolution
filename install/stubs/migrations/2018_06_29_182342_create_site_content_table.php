@@ -28,7 +28,7 @@ class CreateSiteContentTable extends Migration {
 			$table->integer('parent')->default(0)->index('parent');
 			$table->integer('isfolder')->default(0);
 			$table->text('introtext', 65535)->nullable()->comment('Used to provide quick summary of the document');
-			$table->text('content', 16777215)->nullable();
+			$table->longText('content')->nullable();
 			$table->boolean('richtext')->default(1);
 			$table->integer('template')->default(0);
 			$table->integer('menuindex')->default(0);

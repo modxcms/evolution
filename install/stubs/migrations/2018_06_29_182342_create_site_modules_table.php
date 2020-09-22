@@ -30,7 +30,7 @@ class CreateSiteModulesTable extends Migration {
 			$table->string('guid', 32)->default('')->comment('globally unique identifier');
 			$table->boolean('enable_sharedparams')->default(0);
 			$table->text('properties', 65535)->nullable();
-			$table->text('modulecode', 16777215)->nullable()->comment('module boot up code');
+			$table->mediumText('modulecode')->nullable()->comment('module boot up code');
 		});
 	}
 

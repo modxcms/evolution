@@ -17,7 +17,7 @@ class CreateSiteTmplvarContentvaluesTable extends Migration {
 			$table->integer('id', true);
 			$table->integer('tmplvarid')->default(0)->index('idx_tmplvarid')->comment('Template Variable id');
 			$table->integer('contentid')->default(0)->index('idx_id')->comment('Site Content Id');
-			$table->text('value', 16777215)->nullable();
+			$table->mediumText('value')->nullable();
 			$table->unique(['tmplvarid','contentid'], 'ix_tvid_contentid');
         });
         $prefix = DB::getTablePrefix();
