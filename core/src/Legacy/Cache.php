@@ -265,7 +265,7 @@ class Cache
         if ($config['aliaslistingfolder'] == 1) {
             $resources = $resources->where(function ($query) {
                 $query->where('site_content.isfolder', 1)
-                    ->orWhere('p.alias_visible', 1);
+                    ->orWhere('site_content.alias_visible', 1);
             });
 
         }
