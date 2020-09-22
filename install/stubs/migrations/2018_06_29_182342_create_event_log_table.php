@@ -21,7 +21,7 @@ class CreateEventLogTable extends Migration {
 			$table->integer('user')->default(0)->index()->comment('link to user table');
 			$table->integer('usertype')->default(0)->comment('0 - manager, 1 - web');
 			$table->string('source', 50)->default('');
-			$table->text('description', 65535)->nullable();
+			$table->longText('description')->nullable();
 		});
 	}
 

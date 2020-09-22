@@ -22,7 +22,7 @@ class CreateSiteTemplatesTable extends Migration {
 			$table->integer('category')->default(0)->comment('category id');
 			$table->string('icon')->default('')->comment('url to icon file');
 			$table->integer('template_type')->default(0)->comment('0-page,1-content');
-			$table->text('content', 16777215)->nullable();
+			$table->mediumText('content')->nullable();
 			$table->boolean('locked')->default(0);
 			$table->boolean('selectable')->default(1);
 			$table->integer('createdon')->default(0);

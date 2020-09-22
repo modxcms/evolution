@@ -21,7 +21,7 @@ class CreateSiteHtmlsnippetsTable extends Migration {
 			$table->string('editor_name', 50)->default('none');
 			$table->integer('category')->default(0)->comment('category id');
 			$table->boolean('cache_type')->default(0)->comment('Cache option');
-			$table->text('snippet', 16777215)->nullable();
+			$table->mediumText('snippet')->nullable();
 			$table->boolean('locked')->default(0);
 			$table->integer('createdon')->default(0);
 			$table->integer('editedon')->default(0);
