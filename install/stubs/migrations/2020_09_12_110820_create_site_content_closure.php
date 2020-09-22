@@ -20,15 +20,6 @@ class CreateSiteContentClosure extends Migration
             $table->integer('descendant', false, true);
             $table->integer('depth', false, true);
 
-            $table->foreign('ancestor')
-                ->references('id')
-                ->on('site_content')
-                ->onDelete('cascade');
-
-            $table->foreign('descendant')
-                ->references('id')
-                ->on('site_content')
-                ->onDelete('cascade');
         });
     }
 

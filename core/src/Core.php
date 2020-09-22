@@ -3967,49 +3967,60 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (is_string($ids)) {
-            if (strpos($ids, ',') !== false) {
-                $ids = array_filter(array_map('intval', explode(',', $ids)));
-            } else {
-                $ids = array($ids);
-            }
+        $documentChildes = SiteContent::query()->where('site_content.id', $ids);
+        if ($published !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.published', $published);
         }
-        if (count($ids) == 0) {
-            $this->tmpCache[__FUNCTION__][$cacheKey] = false;
-
-            return false;
+        if ($deleted !== 'all') {
+            $documentChildes = $documentChildes->where('site_content.deleted', $deleted);
         }
 
-// modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        $sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
-        if ($where != '') {
-            $where = 'AND ' . $where;
+        if (is_string($where) && $where != '') {
+            $documentChildes = $documentChildes->whereRaw($where);
+        } elseif (is_array($where)) {
+            $documentChildes = $documentChildes->where($where);
         }
-
-        $published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
-        $deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
+        if (!is_array($fields)) {
+            $documentChildes = $documentChildes->select(explode(',', $fields));
+        }
+        // modify field names to use sc. table reference
+        if ($sort != '') {
+            $sort = explode(',', $sort);
+            foreach ($sort as $item)
+                $documentChildes = $documentChildes->orderBy($item, $dir);
+        }
 
         // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(',', $docgrp);
+        $docgrp = $this->getUserDocGroups();
+
+        // build query
+
+        if ($this->isFrontend()) {
+            if (!$docgrp) {
+                $documentChildes = $documentChildes->where('privateweb', 0);
+            } else {
+                $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                    $query->where('privateweb', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
+            }
+        } else {
+            if ($_SESSION['mgrRole'] != 1) {
+                if (!$docgrp) {
+                    $documentChildes = $documentChildes->where('privatemgr', 0);
+                } else {
+                    $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                        $query->where('privatemgr', 0)
+                            ->orWhereIn('document_groups.document_group', $docgrp);
+                    });
+                }
+            }
         }
 
-        $access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0') . (!$docgrp ? '' : ' OR dg.document_group IN (' . $docgrp . ')');
-
-
-        $result = \DB::table('site_content as sc')
-            ->selectRaw( 'DISTINCT ' . $fields)
-            ->leftJoin('document_groups as dg')
-            ->on('dg.document','=','sc.id')
-            ->whereIn('sc.id',$ids)
-            ->whereRaw(" ( {$published} {$deleted} {$where}) AND ({$access})")
-            ->groupBy('sc.id')
-            ->orderBy( $sort ? "{$sort} {$dir}" : "")
-            ->limit($limit)
-            ->get();
-
-        $resourceArray =$result->toArray();
+        if (is_numeric($limit)) {
+            $documentChildes = $documentChildes->take($limit);
+        }
+        $resourceArray = $documentChildes->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
