@@ -82,6 +82,17 @@
 
              <div class="split my-1"></div>
 
+             @include('manager::form.input', [
+                        'name' => 'UpgradeRepository',
+                        'label' => ManagerTheme::getLexicon('update_repository'),
+                        'small' => '[(UpgradeRepository)]',
+                        'value' => (isset($settings['UpgradeRepository']))? $settings['UpgradeRepository'] : '',
+                        'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                        'comment' => ManagerTheme::getLexicon('update_repository_message')
+                  ])
+
+             <div class="split my-1"></div>
+
         @if(! isset($fileSetting['site_unavailable_page']))
             @include('manager::form.input', [
                 'name' => 'site_unavailable_page',
