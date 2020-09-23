@@ -177,13 +177,12 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 $cssFiles = include_once $themeDir . 'CSSMinify.php';
                 if (is_array($cssFiles) && count($cssFiles))
                 {
-                    require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
-                    $minifier = new \Formatter\CSSMinify();
-                    foreach ($cssFiles as $item)
-                    {
-                        $minifier->addFile($item);
-                    }
-                    file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
+                        $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify();
+                        foreach ($cssFiles as $item) {
+                            $minifier->addFile($item);
+                        }
+                        file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
+
                 }
             }
 

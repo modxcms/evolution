@@ -781,13 +781,14 @@ class ManagerTheme implements ManagerThemeInterface
                         sprintf($this->getLexicon('invalid_event_response'), 'OnBeforeMinifyManagerCss')
                     );
             }
-            require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
-            $minifier = new \Formatter\CSSMinify($files);
-            $css = $minifier->minify();
-            file_put_contents(
-                $this->getThemeDir() . $minCssName,
-                $css
-            );
+
+                $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify($files);
+                $css = $minifier->minify();
+                file_put_contents(
+                    $this->getThemeDir() . $minCssName,
+                    $css
+                );
+
         }
         if (file_exists($this->getThemeDir() . $minCssName)) {
             $css = $this->getThemeUrl() . $minCssName;
