@@ -24,6 +24,8 @@ class TracyServiceProvider extends ServiceProvider
         Debugger::enable($this->isHiddenTracyHandler(), $this->logPath());
         Debugger::$strictMode = $this->isStrictMode();
         Debugger::$showLocation = $this->isShowLocation();
+        Debugger::$maxDepth = 20;
+        Debugger::$maxLength = 200;
 
         $this->registerErrorTpl();
         $this->registerPanels($this->listPanels());
