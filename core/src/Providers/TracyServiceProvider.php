@@ -70,10 +70,33 @@ class TracyServiceProvider extends ServiceProvider
     {
         $flag = $this->app['config']->get('tracy.active');
         if (\is_string($flag)) {
-            $this->app['config']->set(
-                'tracy.active',
-                $flag === 'manager' && $this->app->isLoggedIn('mgr')
-            );
+            $newFlag = false;
+
+            switch ($flag){
+                case 'manager':
+                    if($this->app->isLoggedIn('mgr')){
+                        $newFlag = true;
+                    }
+                    break;
+                case 'admin':
+                    if($this->app->isLoggedIn('mgr') && $_SESSION['mgrRole'] == 1){
+                        $newFlag = true;
+                    }
+                    break;
+                case 'adminfrontonly':
+                    if ($this->app->isLoggedIn('mgr') && $_SESSION['mgrRole'] == 1 && ($_SERVER['SCRIPT_NAME'] != '/manager/index.php' &&  $_SERVER['SCRIPT_NAME'] !='/manager/media/browser/mcpuk/browse.php')) {
+                        $newFlag = true;
+                    }
+                    break;
+                case 'managerfrontonly':
+                    if ($this->app->isLoggedIn('mgr')  && ($_SERVER['SCRIPT_NAME'] != '/manager/index.php' &&  $_SERVER['SCRIPT_NAME'] !='/manager/media/browser/mcpuk/browse.php')) {
+                        $newFlag = true;
+                    }
+                    break;
+
+            }
+
+            $this->app['config']->set('tracy.active', $newFlag);
         }
     }
 
