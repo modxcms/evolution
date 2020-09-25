@@ -5,7 +5,6 @@ die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager
 if (!$modx->hasPermission('bk_manager')) {
 $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-require_once MODX_BASE_PATH . 'assets/lib/Helpers/FS.php';
 
 $dbase = $modx->getDatabase()->getConfig('database');
 
@@ -17,9 +16,8 @@ $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'assets/backup/');
 }
 }
 
-$FS = \Helpers\FS::getInstance();
 $tempFile = $modx->getConfig('snapshot_path').'temp.php';
-if($FS->checkFile($tempFile)){
+if(file_exists($tempFile)){
     unlink($tempFile);
 }
 
