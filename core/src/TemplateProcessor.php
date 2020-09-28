@@ -20,7 +20,11 @@ class TemplateProcessor
     {
         $template = false;
         $doc = $this->core->documentObject;
-        $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+        if(isset($this->core->documentObject['templatealias']) && $this->core->documentObject['templatealias'] != ''){
+            $templateAlias = $this->core->documentObject['templatealias'];
+        }else {
+            $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+        }
 
         switch (true) {
             case $this->core['view']->exists('tpl-' . $doc['template'] . '_doc-' . $doc['id']):

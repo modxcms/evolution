@@ -11,6 +11,7 @@ use EvolutionCMS\Models\EventLog;
 use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SitePlugin;
+use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -2389,12 +2390,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
-        $cacheKey = md5(print_r(func_get_args(), true));
-        //@TODO: need use correct cache key
-        //$cachedData = Cache::get($cacheKey);
-        //if (!is_null($cachedData)) {
-        //    return $cachedData;
-        //}
+        $cacheKey = $this->makePageCacheKey($identifier);
+
+        $cachedData = Cache::get($cacheKey);
+        if (!is_null($cachedData)) {
+            return $cachedData;
+        }
 
         // allow alias to be full path
         if ($method === 'alias') {
@@ -2508,6 +2509,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 );
             }
             $documentObject = array_merge($documentObject, $tmplvars);
+
+            $documentObject['templatealias'] = SiteTemplate::select('templatealias')->where('id', $documentObject['template'])->first()->templatealias;
         }
 
         $out = $this->invokeEvent(
@@ -2518,6 +2521,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_array($out) && array_key_exists(0, $out) !== false && is_array($out[0])) {
             $documentObject = $out[0];
         }
+        Cache::forever($cacheKey, $documentObject);
 
         return $documentObject;
     }
