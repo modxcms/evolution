@@ -2510,7 +2510,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             $documentObject = array_merge($documentObject, $tmplvars);
 
-            $documentObject['templatealias'] = SiteTemplate::select('templatealias')->where('id', $documentObject['id'])->first()->templatealias;
+            $documentObject['templatealias'] = SiteTemplate::select('templatealias')->where('id', $documentObject['template'])->first()->templatealias;
         }
 
         $out = $this->invokeEvent(
