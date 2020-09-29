@@ -1,0 +1,14 @@
+preset: PSR2
+
+risky: false
+
+enabled:
+  - binary_operator_spaces
+  - short_array_syntax
+  - no_unused_imports
+
+finder:
+  path:
+    - "example"
+    - "tests"
+    - "install"

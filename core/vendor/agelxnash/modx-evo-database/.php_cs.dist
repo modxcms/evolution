@@ -1,0 +1,22 @@
+<?php
+/**
+ * @see: http://cs.sensiolabs.org/
+ */
+$finder = PhpCsFixer\Finder::create()
+    ->exclude(array(
+        'vendor/',
+    ))->in(__DIR__);
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        '@Symfony:risky' => false,
+        'concat_space' => array('spacing' => 'one'),
+        'array_syntax' => array('syntax' => 'short'),
+        'method_argument_space' => true,
+        'no_unused_imports' => true,
+        'protected_to_private' => false,
+    ])
+    ->setIndent("    ")
+    ->setLineEnding("\r\n")
+    ->setFinder($finder);

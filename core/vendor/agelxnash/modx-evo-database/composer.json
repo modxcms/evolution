@@ -1,0 +1,62 @@
+{
+  "name": "agelxnash/modx-evo-database",
+  "keywords": ["modx", "database", "mysqli"],
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "agel_nash",
+      "email": "modx@agel-nash.ru",
+      "homepage": "https://agel-nash.ru"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.7.*|7.2.*",
+    "php-coveralls/php-coveralls": "2.1.*",
+    "illuminate/database": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
+    "illuminate/events": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*"
+  },
+  "suggest": {
+    "illuminate/database": "to use the IlluminateDriver",
+    "illuminate/events": "to use observers with Eloquent",
+    "illuminate/pagination": "to use paginate"
+  },
+  "autoload":{
+    "psr-4": {
+      "AgelxNash\\Modx\\Evo\\Database\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AgelxNash\\Modx\\Evo\\Database\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "phpmd": "phpmd src/ text phpmd.xml",
+    "phpcs": "phpcs",
+    "php-cs-fix": "php-cs-fixer fix",
+    "phpunit": "phpunit --coverage-text --colors",
+    "coverage": "phpunit --colors --coverage-html ./coverage"
+  },
+  "scripts-descriptions": {
+    "phpmd": "Run PHP Mess Detector",
+    "phpcs": "Run PHP CodeSniffer",
+    "php-cs-fix": "Run PHP Coding Standards Fixer",
+    "phpunit": "Run PhpUnit test",
+    "coverage": "Generating code coverage report in HTML format"
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prestissimo": {
+      "maxConnections": 6,
+      "minConnections": 3
+    },
+    "sort-packages": false,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
