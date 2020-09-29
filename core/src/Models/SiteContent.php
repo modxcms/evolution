@@ -1,6 +1,5 @@
 <?php namespace EvolutionCMS\Models;
 
-use EvolutionCMS\Interfaces\EntityInterface;
 use Illuminate\Database\Eloquent;
 use EvolutionCMS\Traits;
 use Illuminate\Database\Eloquent\Builder;
@@ -602,27 +601,6 @@ class SiteContent extends Eloquent\Model
         return $this->getTable() . '.' . $this->getRealDepthColumn();
     }
 
-    /**
-     * Gets the short name of the "real depth" column.
-     *
-     * @return string
-     * @deprecated since 6.0
-     */
-    public function getRealDepthColumn()
-    {
-        return 'real_depth';
-    }
-
-    /**
-     * Gets the "children" relation index.
-     *
-     * @return string
-     * @deprecated since 6.0
-     */
-    public function getChildrenRelationIndex()
-    {
-        return static::CHILDREN_RELATION_NAME;
-    }
 
     /**
      * Indicates whether the model is a parent.
@@ -741,33 +719,6 @@ class SiteContent extends Eloquent\Model
     }
 
     /**
-     * Retrieves tree structured ancestors of a model.
-     *
-     * @param array $columns
-     * @return Collection
-     * @deprecated since 6.0, use {@link Collection::toTree()} instead
-     */
-    public function getAncestorsTree(array $columns = ['*'])
-    {
-        return $this->getAncestors($columns)->toTree();
-    }
-
-    /**
-     * Retrieves ancestors applying given conditions.
-     *
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @param array $columns
-     * @return Collection
-     * @deprecated since 6.0, use {@link Entity::ancestors()} scope instead
-     */
-    public function getAncestorsWhere($column, $operator = null, $value = null, array $columns = ['*'])
-    {
-        return $this->ancestors()->where($column, $operator, $value)->get($columns);
-    }
-
-    /**
      * Returns a number of model's ancestors.
      *
      * @return int
@@ -874,33 +825,6 @@ class SiteContent extends Eloquent\Model
     }
 
     /**
-     * Retrieves tree structured descendants of a model.
-     *
-     * @param array $columns
-     * @return Collection
-     * @deprecated since 6.0, use {@link Collection::toTree()} instead
-     */
-    public function getDescendantsTree(array $columns = ['*'])
-    {
-        return $this->getDescendants($columns)->toTree();
-    }
-
-    /**
-     * Retrieves descendants applying given conditions.
-     *
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @param array $columns
-     * @return Collection
-     * @deprecated since 6.0, use {@link Entity::descendants()} scope instead
-     */
-    public function getDescendantsWhere($column, $operator = null, $value = null, array $columns = ['*'])
-    {
-        return $this->descendants()->where($column, $operator, $value)->get($columns);
-    }
-
-    /**
      * Returns a number of model's descendants.
      *
      * @return int
@@ -950,17 +874,6 @@ class SiteContent extends Eloquent\Model
     public function hasChildren()
     {
         return (bool) $this->countChildren();
-    }
-
-    /**
-     * Indicates whether a model has children as a relation.
-     *
-     * @return bool
-     * @deprecated from 6.0
-     */
-    public function hasChildrenRelation()
-    {
-        return $this->relationLoaded($this->getChildrenRelationIndex());
     }
 
     /**
@@ -1166,12 +1079,12 @@ class SiteContent extends Eloquent\Model
     /**
      * Appends a child to the model.
      *
-     * @param EntityInterface $child
+     * @param SiteContent $child
      * @param int $position
      * @param bool $returnChild
-     * @return EntityInterface
+     * @return SiteContent
      */
-    public function addChild(EntityInterface $child, $position = null, $returnChild = false)
+    public function addChild(SiteContent $child, $position = null, $returnChild = false)
     {
         if ($this->exists) {
             $position = $position !== null ? $position : $this->getLatestChildPosition();
@@ -1879,12 +1792,12 @@ class SiteContent extends Eloquent\Model
     /**
      * Appends a sibling within the current depth.
      *
-     * @param EntityInterface $sibling
+     * @param SiteContent $sibling
      * @param int|null $position
      * @param bool $returnSibling
-     * @return EntityInterface
+     * @return SiteContent
      */
-    public function addSibling(EntityInterface $sibling, $position = null, $returnSibling = false)
+    public function addSibling(SiteContent $sibling, $position = null, $returnSibling = false)
     {
         if ($this->exists) {
             $position = $position === null ? static::getLatestPosition($this) : $position;
@@ -1966,79 +1879,15 @@ class SiteContent extends Eloquent\Model
     }
 
     /**
-     * Retrieves entire tree.
-     *
-     * @param array $columns
-     *
-     * @return Collection
-     * @deprecated since 6.0
-     */
-    public static function getTree(array $columns = ['*'])
-    {
-        /**
-         * @var Entity $instance
-         */
-        $instance = new static;
-
-        return $instance
-            ->load(static::CHILDREN_RELATION_NAME)
-            ->orderBy($instance->getParentIdColumn())
-            ->orderBy($instance->getPositionColumn())
-            ->get($instance->prepareTreeQueryColumns($columns))
-            ->toTree();
-    }
-
-    /**
-     * Retrieves tree by condition.
-     *
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @param array $columns
-     *
-     * @return Collection
-     * @deprecated since 6.0
-     */
-    public static function getTreeWhere($column, $operator = null, $value = null, array $columns = ['*'])
-    {
-        /**
-         * @var Entity $instance
-         */
-        $instance = new static;
-        $columns = $instance->prepareTreeQueryColumns($columns);
-
-        return $instance->where($column, $operator, $value)->get($columns)->toTree();
-    }
-
-    /**
-     * Retrieves tree with any conditions using QueryBuilder
-     *
-     * @param Builder $query
-     * @param array $columns
-     *
-     * @return Collection
-     * @deprecated since 6.0
-     */
-    public static function getTreeByQuery(Builder $query, array $columns = ['*'])
-    {
-        /**
-         * @var Entity $instance
-         */
-        $instance = new static;
-        $columns = $instance->prepareTreeQueryColumns($columns);
-        return $query->get($columns)->toTree();
-    }
-
-    /**
      * Saves models from the given attributes array.
      *
      * @param array $tree
-     * @param EntityInterface $parent
+     * @param SiteContent $parent
      *
      * @return Collection
      * @throws Throwable
      */
-    public static function createFromArray(array $tree, EntityInterface $parent = null)
+    public static function createFromArray(array $tree, SiteContent $parent = null)
     {
         $entities = [];
 
@@ -2066,7 +1915,7 @@ class SiteContent extends Eloquent\Model
      * Makes the model a child or a root with given position. Do not use moveTo to move a node within the same ancestor (call position = value and save instead).
      *
      * @param int $position
-     * @param EntityInterface|int $ancestor
+     * @param SiteContent|int $ancestor
      * @return Entity
      * @throws InvalidArgumentException
      */
