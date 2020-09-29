@@ -8,6 +8,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 
+use function array_filter;
 use function array_key_exists;
 use function array_keys;
 use function array_unshift;
@@ -196,9 +197,6 @@ class QueryBuilder
     /**
      * Executes this query using the bound parameters and their types.
      *
-     * Uses {@see Connection::executeQuery} for select statements and {@see Connection::executeUpdate}
-     * for insert, update and delete statements.
-     *
      * @return ResultStatement|int
      */
     public function execute()
@@ -207,7 +205,7 @@ class QueryBuilder
             return $this->connection->executeQuery($this->getSQL(), $this->params, $this->paramTypes);
         }
 
-        return $this->connection->executeUpdate($this->getSQL(), $this->params, $this->paramTypes);
+        return $this->connection->executeStatement($this->getSQL(), $this->params, $this->paramTypes);
     }
 
     /**
@@ -457,6 +455,8 @@ class QueryBuilder
      * Specifies an item that is to be returned in the query result.
      * Replaces any previously specified selections, if any.
      *
+     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
+     *
      * <code>
      *     $qb = $conn->createQueryBuilder()
      *         ->select('u.id', 'p.id')
@@ -464,11 +464,12 @@ class QueryBuilder
      *         ->leftJoin('u', 'phonenumbers', 'p', 'u.id = p.user_id');
      * </code>
      *
-     * @param mixed $select The selection expressions.
+     * @param string|string[]|null $select The selection expression. USING AN ARRAY OR NULL IS DEPRECATED.
+     *                                     Pass each value as an individual argument.
      *
      * @return $this This QueryBuilder instance.
      */
-    public function select($select = null)
+    public function select($select = null/*, string ...$selects*/)
     {
         $this->type = self::SELECT;
 
@@ -503,6 +504,8 @@ class QueryBuilder
     /**
      * Adds an item that is to be returned in the query result.
      *
+     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
+     *
      * <code>
      *     $qb = $conn->createQueryBuilder()
      *         ->select('u.id')
@@ -511,11 +514,12 @@ class QueryBuilder
      *         ->leftJoin('u', 'phonenumbers', 'u.id = p.user_id');
      * </code>
      *
-     * @param mixed $select The selection expression.
+     * @param string|string[]|null $select The selection expression. USING AN ARRAY OR NULL IS DEPRECATED.
+     *                                     Pass each value as an individual argument.
      *
      * @return $this This QueryBuilder instance.
      */
-    public function addSelect($select = null)
+    public function addSelect($select = null/*, string ...$selects*/)
     {
         $this->type = self::SELECT;
 
@@ -799,7 +803,7 @@ class QueryBuilder
     public function where($predicates)
     {
         if (! (func_num_args() === 1 && $predicates instanceof CompositeExpression)) {
-            $predicates = new CompositeExpression(CompositeExpression::TYPE_AND, func_get_args());
+            $predicates = CompositeExpression::and(...func_get_args());
         }
 
         return $this->add('where', $predicates);
@@ -826,13 +830,14 @@ class QueryBuilder
     public function andWhere($where)
     {
         $args  = func_get_args();
+        $args  = array_filter($args); // https://github.com/doctrine/dbal/issues/4282
         $where = $this->getQueryPart('where');
 
         if ($where instanceof CompositeExpression && $where->getType() === CompositeExpression::TYPE_AND) {
-            $where->addMultiple($args);
+            $where = $where->with(...$args);
         } else {
             array_unshift($args, $where);
-            $where = new CompositeExpression(CompositeExpression::TYPE_AND, $args);
+            $where = CompositeExpression::and(...$args);
         }
 
         return $this->add('where', $where, true);
@@ -859,13 +864,14 @@ class QueryBuilder
     public function orWhere($where)
     {
         $args  = func_get_args();
+        $args  = array_filter($args); // https://github.com/doctrine/dbal/issues/4282
         $where = $this->getQueryPart('where');
 
         if ($where instanceof CompositeExpression && $where->getType() === CompositeExpression::TYPE_OR) {
-            $where->addMultiple($args);
+            $where = $where->with(...$args);
         } else {
             array_unshift($args, $where);
-            $where = new CompositeExpression(CompositeExpression::TYPE_OR, $args);
+            $where = CompositeExpression::or(...$args);
         }
 
         return $this->add('where', $where, true);
@@ -875,6 +881,8 @@ class QueryBuilder
      * Specifies a grouping over the results of the query.
      * Replaces any previously specified groupings, if any.
      *
+     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
+     *
      * <code>
      *     $qb = $conn->createQueryBuilder()
      *         ->select('u.name')
@@ -882,11 +890,12 @@ class QueryBuilder
      *         ->groupBy('u.id');
      * </code>
      *
-     * @param mixed $groupBy The grouping expression.
+     * @param string|string[] $groupBy The grouping expression. USING AN ARRAY IS DEPRECATED.
+     *                                 Pass each value as an individual argument.
      *
      * @return $this This QueryBuilder instance.
      */
-    public function groupBy($groupBy)
+    public function groupBy($groupBy/*, string ...$groupBys*/)
     {
         if (empty($groupBy)) {
             return $this;
@@ -900,6 +909,8 @@ class QueryBuilder
     /**
      * Adds a grouping expression to the query.
      *
+     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
+     *
      * <code>
      *     $qb = $conn->createQueryBuilder()
      *         ->select('u.name')
@@ -908,11 +919,12 @@ class QueryBuilder
      *         ->addGroupBy('u.createdAt');
      * </code>
      *
-     * @param mixed $groupBy The grouping expression.
+     * @param string|string[] $groupBy The grouping expression. USING AN ARRAY IS DEPRECATED.
+     *                                 Pass each value as an individual argument.
      *
      * @return $this This QueryBuilder instance.
      */
-    public function addGroupBy($groupBy)
+    public function addGroupBy($groupBy/*, string ...$groupBys*/)
     {
         if (empty($groupBy)) {
             return $this;
@@ -984,7 +996,7 @@ class QueryBuilder
     public function having($having)
     {
         if (! (func_num_args() === 1 && $having instanceof CompositeExpression)) {
-            $having = new CompositeExpression(CompositeExpression::TYPE_AND, func_get_args());
+            $having = CompositeExpression::and(...func_get_args());
         }
 
         return $this->add('having', $having);
@@ -1001,13 +1013,14 @@ class QueryBuilder
     public function andHaving($having)
     {
         $args   = func_get_args();
+        $args   = array_filter($args); // https://github.com/doctrine/dbal/issues/4282
         $having = $this->getQueryPart('having');
 
         if ($having instanceof CompositeExpression && $having->getType() === CompositeExpression::TYPE_AND) {
-            $having->addMultiple($args);
+            $having = $having->with(...$args);
         } else {
             array_unshift($args, $having);
-            $having = new CompositeExpression(CompositeExpression::TYPE_AND, $args);
+            $having = CompositeExpression::and(...$args);
         }
 
         return $this->add('having', $having);
@@ -1024,13 +1037,14 @@ class QueryBuilder
     public function orHaving($having)
     {
         $args   = func_get_args();
+        $args   = array_filter($args); // https://github.com/doctrine/dbal/issues/4282
         $having = $this->getQueryPart('having');
 
         if ($having instanceof CompositeExpression && $having->getType() === CompositeExpression::TYPE_OR) {
-            $having->addMultiple($args);
+            $having = $having->with(...$args);
         } else {
             array_unshift($args, $having);
-            $having = new CompositeExpression(CompositeExpression::TYPE_OR, $args);
+            $having = CompositeExpression::or(...$args);
         }
 
         return $this->add('having', $having);

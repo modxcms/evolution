@@ -195,17 +195,17 @@
     },
     {
         "name": "composer/semver",
-        "version": "1.7.0",
-        "version_normalized": "1.7.0.0",
+        "version": "1.7.1",
+        "version_normalized": "1.7.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/semver.git",
-            "reference": "114f819054a2ea7db03287f5efb757e2af6e4079"
+            "reference": "38276325bd896f90dfcfe30029aa5db40df387a7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/semver/zipball/114f819054a2ea7db03287f5efb757e2af6e4079",
-            "reference": "114f819054a2ea7db03287f5efb757e2af6e4079",
+            "url": "https://api.github.com/repos/composer/semver/zipball/38276325bd896f90dfcfe30029aa5db40df387a7",
+            "reference": "38276325bd896f90dfcfe30029aa5db40df387a7",
             "shasum": ""
         },
         "require": {
@@ -214,7 +214,7 @@
         "require-dev": {
             "phpunit/phpunit": "^4.5 || ^5.0.5"
         },
-        "time": "2020-09-09T09:34:06+00:00",
+        "time": "2020-09-27T13:13:07+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -484,31 +484,31 @@
     },
     {
         "name": "doctrine/dbal",
-        "version": "2.10.4",
-        "version_normalized": "2.10.4.0",
+        "version": "2.11.1",
+        "version_normalized": "2.11.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/doctrine/dbal.git",
-            "reference": "47433196b6390d14409a33885ee42b6208160643"
+            "reference": "6e6903cd5e3a5be60a79439e3ee8fe126f78fe86"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/dbal/zipball/47433196b6390d14409a33885ee42b6208160643",
-            "reference": "47433196b6390d14409a33885ee42b6208160643",
+            "url": "https://api.github.com/repos/doctrine/dbal/zipball/6e6903cd5e3a5be60a79439e3ee8fe126f78fe86",
+            "reference": "6e6903cd5e3a5be60a79439e3ee8fe126f78fe86",
             "shasum": ""
         },
         "require": {
             "doctrine/cache": "^1.0",
             "doctrine/event-manager": "^1.0",
             "ext-pdo": "*",
-            "php": "^7.2"
+            "php": "^7.3"
         },
         "require-dev": {
             "doctrine/coding-standard": "^8.1",
             "jetbrains/phpstorm-stubs": "^2019.1",
             "nikic/php-parser": "^4.4",
             "phpstan/phpstan": "^0.12.40",
-            "phpunit/phpunit": "^8.5.5",
+            "phpunit/phpunit": "^9.3",
             "psalm/plugin-phpunit": "^0.10.0",
             "symfony/console": "^2.0.5|^3.0|^4.0|^5.0",
             "vimeo/psalm": "^3.14.2"
@@ -516,15 +516,14 @@
         "suggest": {
             "symfony/console": "For helpful console commands such as SQL execution and import of files."
         },
-        "time": "2020-09-12T21:20:41+00:00",
+        "time": "2020-09-27T04:09:41+00:00",
         "bin": [
             "bin/doctrine-dbal"
         ],
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.10.x-dev",
-                "dev-develop": "3.0.x-dev"
+                "dev-master": "4.0.x-dev"
             }
         },
         "installation-source": "dist",
@@ -1596,17 +1595,17 @@
     },
     {
         "name": "league/mime-type-detection",
-        "version": "1.4.0",
-        "version_normalized": "1.4.0.0",
+        "version": "1.5.0",
+        "version_normalized": "1.5.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/thephpleague/mime-type-detection.git",
-            "reference": "fda190b62b962d96a069fcc414d781db66d65b69"
+            "reference": "ea2fbfc988bade315acd5967e6d02274086d0f28"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/fda190b62b962d96a069fcc414d781db66d65b69",
-            "reference": "fda190b62b962d96a069fcc414d781db66d65b69",
+            "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/ea2fbfc988bade315acd5967e6d02274086d0f28",
+            "reference": "ea2fbfc988bade315acd5967e6d02274086d0f28",
             "shasum": ""
         },
         "require": {
@@ -1617,7 +1616,7 @@
             "phpstan/phpstan": "^0.12.36",
             "phpunit/phpunit": "^8.5.8"
         },
-        "time": "2020-08-09T10:34:01+00:00",
+        "time": "2020-09-21T18:10:53+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1722,17 +1721,17 @@
     },
     {
         "name": "nesbot/carbon",
-        "version": "2.40.0",
-        "version_normalized": "2.40.0.0",
+        "version": "2.40.1",
+        "version_normalized": "2.40.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d"
+            "reference": "d9a76d8b7eb0f97cf3a82529393245212f40ba3b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/6c7646154181013ecd55e80c201b9fd873c6ee5d",
-            "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d9a76d8b7eb0f97cf3a82529393245212f40ba3b",
+            "reference": "d9a76d8b7eb0f97cf3a82529393245212f40ba3b",
             "shasum": ""
         },
         "require": {
@@ -1751,7 +1750,7 @@
             "phpunit/phpunit": "^7.5 || ^8.0",
             "squizlabs/php_codesniffer": "^3.4"
         },
-        "time": "2020-09-11T19:00:58+00:00",
+        "time": "2020-09-23T08:17:37+00:00",
         "bin": [
             "bin/carbon"
         ],
@@ -2079,12 +2078,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "34a7a7aa563809d603e12e34f0608d5f2da94f7f"
+            "reference": "0749ceaf15c136d085b722a5bb88141398a54142"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/34a7a7aa563809d603e12e34f0608d5f2da94f7f",
-            "reference": "34a7a7aa563809d603e12e34f0608d5f2da94f7f",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0749ceaf15c136d085b722a5bb88141398a54142",
+            "reference": "0749ceaf15c136d085b722a5bb88141398a54142",
             "shasum": ""
         },
         "conflict": {
@@ -2114,7 +2113,7 @@
             "composer/composer": "<=1-alpha.11",
             "contao-components/mediaelement": ">=2.14.2,<2.21.1",
             "contao/core": ">=2,<3.5.39",
-            "contao/core-bundle": ">=4,<4.4.46|>=4.5,<4.8.6",
+            "contao/core-bundle": ">=4,<4.4.52|>=4.5,<4.9.6|= 4.10.0",
             "contao/listing-bundle": ">=4,<4.4.8",
             "datadog/dd-trace": ">=0.30,<0.30.2",
             "david-garcia/phpwhois": "<=4.3.1",
@@ -2130,8 +2129,8 @@
             "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
             "dolibarr/dolibarr": "<11.0.4",
             "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
-            "drupal/drupal": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
+            "drupal/core": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
+            "drupal/drupal": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
             "endroid/qr-code-bundle": "<3.4.2",
             "enshrined/svg-sanitize": "<0.13.1",
             "erusev/parsedown": "<1.7.2",
@@ -2178,6 +2177,7 @@
             "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
             "league/commonmark": "<0.18.3",
             "librenms/librenms": "<1.53",
+            "livewire/livewire": ">2.2.4,<2.2.6",
             "magento/community-edition": ">=2,<2.2.10|>=2.3,<2.3.3",
             "magento/magento1ce": "<1.9.4.3",
             "magento/magento1ee": ">=1,<1.14.4.3",
@@ -2224,10 +2224,13 @@
             "pusher/pusher-php-server": "<2.2.1",
             "rainlab/debugbar-plugin": "<3.1",
             "robrichards/xmlseclibs": "<3.0.4",
+            "sabberworm/php-css-parser": ">=1,<1.0.1|>=2,<2.0.1|>=3,<3.0.1|>=4,<4.0.1|>=5,<5.0.9|>=5.1,<5.1.3|>=5.2,<5.2.1|>=6,<6.0.2|>=7,<7.0.4|>=8,<8.0.1|>=8.1,<8.1.1|>=8.2,<8.2.1|>=8.3,<8.3.1",
             "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
             "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
             "sensiolabs/connect": "<4.2.3",
             "serluck/phpwhois": "<=4.2.6",
+            "shopware/core": "<=6.3.1",
+            "shopware/platform": "<=6.3.1",
             "shopware/shopware": "<5.3.7",
             "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
             "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -2344,7 +2347,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2020-09-15T19:01:50+00:00",
+        "time": "2020-09-24T17:02:11+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -2363,6 +2366,141 @@
             }
         ],
         "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
+    },
+    {
+        "name": "rosell-dk/image-mime-type-guesser",
+        "version": "0.3",
+        "version_normalized": "0.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/rosell-dk/image-mime-type-guesser.git",
+            "reference": "204fd61ca81e3b0ba46c6165dab8f74816b1fe99"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/rosell-dk/image-mime-type-guesser/zipball/204fd61ca81e3b0ba46c6165dab8f74816b1fe99",
+            "reference": "204fd61ca81e3b0ba46c6165dab8f74816b1fe99",
+            "shasum": ""
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.11",
+            "phpunit/phpunit": "^5.7.27",
+            "squizlabs/php_codesniffer": "3.*"
+        },
+        "time": "2019-03-29T09:33:28+00:00",
+        "type": "library",
+        "extra": {
+            "scripts-descriptions": {
+                "ci": "Run tests before CI",
+                "phpcs": "Checks coding styles (PSR2) of file/dir, which you must supply. To check all, supply 'src'",
+                "phpcbf": "Fix coding styles (PSR2) of file/dir, which you must supply. To fix all, supply 'src'",
+                "cs-fix-all": "Fix the coding style of all the source files, to comply with the PSR-2 coding standard",
+                "cs-fix": "Fix the coding style of a PHP file or directory, which you must specify.",
+                "test": "Launches the preconfigured PHPUnit"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ImageMimeTypeGuesser\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bjørn Rosell",
+                "homepage": "https://www.bitwise-it.dk/contact",
+                "role": "Project Author"
+            }
+        ],
+        "description": "Guess mime type of images",
+        "keywords": [
+            "image",
+            "images",
+            "mime",
+            "mime type"
+        ]
+    },
+    {
+        "name": "rosell-dk/webp-convert",
+        "version": "2.3.2",
+        "version_normalized": "2.3.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/rosell-dk/webp-convert.git",
+            "reference": "5da7989e87cc0b6c61a5fd73262ed28999be27ab"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/rosell-dk/webp-convert/zipball/5da7989e87cc0b6c61a5fd73262ed28999be27ab",
+            "reference": "5da7989e87cc0b6c61a5fd73262ed28999be27ab",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.6 | ^7.0",
+            "rosell-dk/image-mime-type-guesser": "^0.3"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.11",
+            "phpunit/phpunit": "5.7.27",
+            "squizlabs/php_codesniffer": "3.*"
+        },
+        "suggest": {
+            "ext-gd": "to use GD extension for converting. Note: Gd must be compiled with webp support",
+            "ext-imagick": "to use Imagick extension for converting. Note: Gd must be compiled with webp support",
+            "ext-vips": "to use Vips extension for converting.",
+            "php-stan/php-stan": "Suggested for dev, in order to analyse code before committing"
+        },
+        "time": "2020-04-18T14:41:50+00:00",
+        "type": "library",
+        "extra": {
+            "scripts-descriptions": {
+                "ci": "Run tests before CI",
+                "phpcs": "Checks coding styles (PSR2) of file/dir, which you must supply. To check all, supply 'src'",
+                "phpcbf": "Fix coding styles (PSR2) of file/dir, which you must supply. To fix all, supply 'src'",
+                "cs-fix-all": "Fix the coding style of all the source files, to comply with the PSR-2 coding standard",
+                "cs-fix": "Fix the coding style of a PHP file or directory, which you must specify.",
+                "test": "Launches the preconfigured PHPUnit"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "WebPConvert\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bjørn Rosell",
+                "homepage": "https://www.bitwise-it.dk/contact",
+                "role": "Project Author"
+            },
+            {
+                "name": "Martin Folkers",
+                "homepage": "https://twobrain.io",
+                "role": "Collaborator"
+            }
+        ],
+        "description": "Convert JPEG & PNG to WebP with PHP",
+        "keywords": [
+            "Webp",
+            "cwebp",
+            "gd",
+            "image conversion",
+            "images",
+            "imagick",
+            "jpg",
+            "jpg2webp",
+            "png",
+            "png2webp"
+        ]
     },
     {
         "name": "seld/jsonlint",
@@ -2463,17 +2601,17 @@
     },
     {
         "name": "symfony/console",
-        "version": "v4.4.13",
-        "version_normalized": "4.4.13.0",
+        "version": "v4.4.14",
+        "version_normalized": "4.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/console.git",
-            "reference": "b39fd99b9297b67fb7633b7d8083957a97e1e727"
+            "reference": "90933b39c7b312fc3ceaa1ddeac7eb48cb953124"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/console/zipball/b39fd99b9297b67fb7633b7d8083957a97e1e727",
-            "reference": "b39fd99b9297b67fb7633b7d8083957a97e1e727",
+            "url": "https://api.github.com/repos/symfony/console/zipball/90933b39c7b312fc3ceaa1ddeac7eb48cb953124",
+            "reference": "90933b39c7b312fc3ceaa1ddeac7eb48cb953124",
             "shasum": ""
         },
         "require": {
@@ -2507,7 +2645,7 @@
             "symfony/lock": "",
             "symfony/process": ""
         },
-        "time": "2020-09-02T07:07:21+00:00",
+        "time": "2020-09-15T07:58:55+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2542,17 +2680,17 @@
     },
     {
         "name": "symfony/debug",
-        "version": "v4.4.13",
-        "version_normalized": "4.4.13.0",
+        "version": "v4.4.14",
+        "version_normalized": "4.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/debug.git",
-            "reference": "aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e"
+            "reference": "726b85e69342e767d60e3853b98559a68ff74183"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/debug/zipball/aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e",
-            "reference": "aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e",
+            "url": "https://api.github.com/repos/symfony/debug/zipball/726b85e69342e767d60e3853b98559a68ff74183",
+            "reference": "726b85e69342e767d60e3853b98559a68ff74183",
             "shasum": ""
         },
         "require": {
@@ -2566,7 +2704,7 @@
         "require-dev": {
             "symfony/http-kernel": "^3.4|^4.0|^5.0"
         },
-        "time": "2020-08-10T07:47:39+00:00",
+        "time": "2020-09-09T05:20:36+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2601,24 +2739,24 @@
     },
     {
         "name": "symfony/filesystem",
-        "version": "v5.1.5",
-        "version_normalized": "5.1.5.0",
+        "version": "v5.1.6",
+        "version_normalized": "5.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/filesystem.git",
-            "reference": "f7b9ed6142a34252d219801d9767dedbd711da1a"
+            "reference": "f3194303d3077829dbbc1d18f50288b2a01146f2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/filesystem/zipball/f7b9ed6142a34252d219801d9767dedbd711da1a",
-            "reference": "f7b9ed6142a34252d219801d9767dedbd711da1a",
+            "url": "https://api.github.com/repos/symfony/filesystem/zipball/f3194303d3077829dbbc1d18f50288b2a01146f2",
+            "reference": "f3194303d3077829dbbc1d18f50288b2a01146f2",
             "shasum": ""
         },
         "require": {
             "php": ">=7.2.5",
             "symfony/polyfill-ctype": "~1.8"
         },
-        "time": "2020-08-21T17:19:47+00:00",
+        "time": "2020-09-02T16:23:27+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2653,23 +2791,23 @@
     },
     {
         "name": "symfony/finder",
-        "version": "v4.4.13",
-        "version_normalized": "4.4.13.0",
+        "version": "v4.4.14",
+        "version_normalized": "4.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/finder.git",
-            "reference": "2a78590b2c7e3de5c429628457c47541c58db9c7"
+            "reference": "5ef0f6c609c1a36f723880dfe78301199bc96868"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/finder/zipball/2a78590b2c7e3de5c429628457c47541c58db9c7",
-            "reference": "2a78590b2c7e3de5c429628457c47541c58db9c7",
+            "url": "https://api.github.com/repos/symfony/finder/zipball/5ef0f6c609c1a36f723880dfe78301199bc96868",
+            "reference": "5ef0f6c609c1a36f723880dfe78301199bc96868",
             "shasum": ""
         },
         "require": {
             "php": ">=7.1.3"
         },
-        "time": "2020-08-17T09:56:45+00:00",
+        "time": "2020-09-02T16:08:58+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2965,23 +3103,23 @@
     },
     {
         "name": "symfony/process",
-        "version": "v4.4.13",
-        "version_normalized": "4.4.13.0",
+        "version": "v4.4.14",
+        "version_normalized": "4.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/process.git",
-            "reference": "65e70bab62f3da7089a8d4591fb23fbacacb3479"
+            "reference": "9b887acc522935f77555ae8813495958c7771ba7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/65e70bab62f3da7089a8d4591fb23fbacacb3479",
-            "reference": "65e70bab62f3da7089a8d4591fb23fbacacb3479",
+            "url": "https://api.github.com/repos/symfony/process/zipball/9b887acc522935f77555ae8813495958c7771ba7",
+            "reference": "9b887acc522935f77555ae8813495958c7771ba7",
             "shasum": ""
         },
         "require": {
             "php": ">=7.1.3"
         },
-        "time": "2020-07-23T08:31:43+00:00",
+        "time": "2020-09-02T16:08:58+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3080,17 +3218,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v5.1.5",
-        "version_normalized": "5.1.5.0",
+        "version": "v5.1.6",
+        "version_normalized": "5.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "917b02cdc5f33e0309b8e9d33ee1480b20687413"
+            "reference": "e3cdd5119b1b5bf0698c351b8ee20fb5a4ea248b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/917b02cdc5f33e0309b8e9d33ee1480b20687413",
-            "reference": "917b02cdc5f33e0309b8e9d33ee1480b20687413",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/e3cdd5119b1b5bf0698c351b8ee20fb5a4ea248b",
+            "reference": "e3cdd5119b1b5bf0698c351b8ee20fb5a4ea248b",
             "shasum": ""
         },
         "require": {
@@ -3125,7 +3263,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2020-08-17T10:01:29+00:00",
+        "time": "2020-09-27T03:44:28+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

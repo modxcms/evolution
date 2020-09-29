@@ -40,6 +40,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'W' => 
         array (
             'Wikimedia\\Composer\\' => 19,
+            'WebPConvert\\' => 12,
         ),
         'S' => 
         array (
@@ -85,6 +86,7 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         ),
         'I' => 
         array (
+            'ImageMimeTypeGuesser\\' => 21,
             'Illuminate\\View\\' => 16,
             'Illuminate\\Translation\\' => 23,
             'Illuminate\\Support\\' => 19,
@@ -134,6 +136,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'Wikimedia\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/wikimedia/composer-merge-plugin/src',
+        ),
+        'WebPConvert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rosell-dk/webp-convert/src',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -230,6 +236,10 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         'JsonSchema\\' => 
         array (
             0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
+        'ImageMimeTypeGuesser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rosell-dk/image-mime-type-guesser/src',
         ),
         'Illuminate\\View\\' => 
         array (

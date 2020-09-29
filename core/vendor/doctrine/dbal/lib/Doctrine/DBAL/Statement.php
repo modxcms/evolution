@@ -2,12 +2,15 @@
 
 namespace Doctrine\DBAL;
 
+use Doctrine\DBAL\Abstraction\Result;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Driver\Statement as DriverStatement;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use IteratorAggregate;
 use PDO;
 use Throwable;
+use Traversable;
 
 use function is_array;
 use function is_string;
@@ -16,7 +19,7 @@ use function is_string;
  * A thin wrapper around a Doctrine\DBAL\Driver\Statement that adds support
  * for logging, DBAL mapping types, etc.
  */
-class Statement implements IteratorAggregate, DriverStatement
+class Statement implements IteratorAggregate, DriverStatement, Result
 {
     /**
      * The SQL statement.
@@ -62,6 +65,8 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * Creates a new <tt>Statement</tt> for the given SQL and <tt>Connection</tt>.
+     *
+     * @internal The statement can be only instantiated by {@link Connection}.
      *
      * @param string     $sql  The SQL of the statement.
      * @param Connection $conn The connection on which the statement should be executed.
@@ -138,7 +143,7 @@ class Statement implements IteratorAggregate, DriverStatement
      *
      * @return bool TRUE on success, FALSE on failure.
      *
-     * @throws DBALException
+     * @throws Exception
      */
     public function execute($params = null)
     {
@@ -158,12 +163,7 @@ class Statement implements IteratorAggregate, DriverStatement
                 $logger->stopQuery();
             }
 
-            throw DBALException::driverExceptionDuringQuery(
-                $this->conn->getDriver(),
-                $ex,
-                $this->sql,
-                $this->conn->resolveParams($this->params, $this->types)
-            );
+            $this->conn->handleExceptionDuringQuery($ex, $this->sql, $this->params, $this->types);
         }
 
         if ($logger) {
@@ -175,6 +175,8 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * Closes the cursor, freeing the database resources used by this statement.
+     *
+     * @deprecated Use Result::free() instead.
      *
      * @return bool TRUE on success, FALSE on failure.
      */
@@ -196,6 +198,8 @@ class Statement implements IteratorAggregate, DriverStatement
     /**
      * Fetches the SQLSTATE associated with the last operation on the statement.
      *
+     * @deprecated The error information is available via exceptions.
+     *
      * @return string|int|bool
      */
     public function errorCode()
@@ -205,6 +209,8 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated The error information is available via exceptions.
      */
     public function errorInfo()
     {
@@ -213,6 +219,8 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated Use one of the fetch- or iterate-related methods.
      */
     public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)
     {
@@ -230,6 +238,8 @@ class Statement implements IteratorAggregate, DriverStatement
     /**
      * Required by interface IteratorAggregate.
      *
+     * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
+     *
      * {@inheritdoc}
      */
     public function getIterator()
@@ -239,6 +249,8 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
      */
     public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
     {
@@ -247,18 +259,210 @@ class Statement implements IteratorAggregate, DriverStatement
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
      */
     public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
     {
-        return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
+        if ($ctorArgs !== null) {
+            return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
+        }
+
+        if ($fetchArgument !== null) {
+            return $this->stmt->fetchAll($fetchMode, $fetchArgument);
+        }
+
+        return $this->stmt->fetchAll($fetchMode);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated Use fetchOne() instead.
      */
     public function fetchColumn($columnIndex = 0)
     {
         return $this->stmt->fetchColumn($columnIndex);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function fetchNumeric()
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchNumeric();
+            }
+
+            return $this->stmt->fetch(FetchMode::NUMERIC);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function fetchAssociative()
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchAssociative();
+            }
+
+            return $this->stmt->fetch(FetchMode::ASSOCIATIVE);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @throws Exception
+     */
+    public function fetchOne()
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchOne();
+            }
+
+            return $this->stmt->fetch(FetchMode::COLUMN);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function fetchAllNumeric(): array
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchAllNumeric();
+            }
+
+            return $this->stmt->fetchAll(FetchMode::NUMERIC);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function fetchAllAssociative(): array
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchAllAssociative();
+            }
+
+            return $this->stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function fetchFirstColumn(): array
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchFirstColumn();
+            }
+
+            return $this->stmt->fetchAll(FetchMode::COLUMN);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Traversable<int,array<int,mixed>>
+     *
+     * @throws Exception
+     */
+    public function iterateNumeric(): Traversable
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                while (($row = $this->stmt->fetchNumeric()) !== false) {
+                    yield $row;
+                }
+            } else {
+                while (($row = $this->stmt->fetch(FetchMode::NUMERIC)) !== false) {
+                    yield $row;
+                }
+            }
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Traversable<int,array<string,mixed>>
+     *
+     * @throws Exception
+     */
+    public function iterateAssociative(): Traversable
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                while (($row = $this->stmt->fetchAssociative()) !== false) {
+                    yield $row;
+                }
+            } else {
+                while (($row = $this->stmt->fetch(FetchMode::ASSOCIATIVE)) !== false) {
+                    yield $row;
+                }
+            }
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Traversable<int,mixed>
+     *
+     * @throws Exception
+     */
+    public function iterateColumn(): Traversable
+    {
+        try {
+            if ($this->stmt instanceof Result) {
+                while (($value = $this->stmt->fetchOne()) !== false) {
+                    yield $value;
+                }
+            } else {
+                while (($value = $this->stmt->fetch(FetchMode::COLUMN)) !== false) {
+                    yield $value;
+                }
+            }
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
     }
 
     /**
@@ -269,6 +473,17 @@ class Statement implements IteratorAggregate, DriverStatement
     public function rowCount()
     {
         return $this->stmt->rowCount();
+    }
+
+    public function free(): void
+    {
+        if ($this->stmt instanceof Result) {
+            $this->stmt->free();
+
+            return;
+        }
+
+        $this->stmt->closeCursor();
     }
 
     /**

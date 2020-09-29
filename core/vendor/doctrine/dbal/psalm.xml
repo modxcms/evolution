@@ -37,6 +37,7 @@
                 <!--
                     Fixing these issues requires an API change
                 -->
+                <file name="lib/Doctrine/DBAL/Driver/PDOSqlsrv/Connection.php"/>
                 <file name="lib/Doctrine/DBAL/Driver/SQLAnywhere/SQLAnywhereConnection.php"/>
                 <file name="lib/Doctrine/DBAL/Driver/SQLSrv/SQLSrvConnection.php"/>
             </errorLevel>
