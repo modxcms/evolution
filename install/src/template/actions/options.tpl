@@ -29,13 +29,9 @@
 
     <h2>[%optional_items%]</h2>
     <p>[%optional_items_note%]</p>
-    <img src="img/sample_site.png" class="options" alt="Sample Data" />
-    
-        <h3>[%sample_web_site%]</h3>
-        <p><input type="checkbox" name="installdata" id="installdata_field" value="1" [+checked+] />&nbsp;<label for="installdata_field">[%install_overwrite%] <span class="comname">[%sample_web_site%]</span></label></p>
-        <p><em>&nbsp;[%sample_web_site_note%]</em></p>
-        <hr />
-            
+
+
+
             <h4>[%checkbox_select_options%]</h4>
             <p class="actions">
             <a class="toggle_check_all" href="#">[%all%]</a>
@@ -74,22 +70,8 @@
                 case a.is('.toggle_check_toggle'):  i.prop('checked', function(){ return !$(this).prop('checked');}); break;
             }
         });
-        $('#installdata_field').click(function(){
-            handleSampleDataCheckbox();
-        });
-        var handleSampleDataCheckbox = function(){
-            demo = $('#installdata_field').prop('checked');
-            $('input:checkbox.toggle.demo').each(function(ix, el){
-                if(demo) {
-                    $(this).prop('checked', true).prop('disabled', true);
-                } else {
-                    $(this).prop('disabled', false);
-                }
-            });
-        };
-        
-        // handle state of demo content checkbox on page load
-        handleSampleDataCheckbox();
+
+
     })(jQuery);
     
 </script>
