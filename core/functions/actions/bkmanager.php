@@ -90,6 +90,7 @@ if(!function_exists('dumpSql')) {
             header("Content-Disposition: attachment; filename={$today}_database_backup.sql");
         }
         readfile($dumpTempFilePath);
+        unlink($dumpTempFilePath);
         exit;
     }
 }
