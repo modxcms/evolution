@@ -169,7 +169,7 @@ try {
         }
 
         include(MODX_BASE_PATH . '/index.php');
-        if ($database_type == 'pgsql') {
+        if ($installMode != 0 && $database_type == 'pgsql') {
 
             $result = \DB::table('migrations_install')->select('id')->orderBy('id', 'DESC')->first();
             if (!is_null($result)) {

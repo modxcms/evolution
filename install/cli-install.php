@@ -8,7 +8,6 @@ define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 define('MODX_SITE_URL', '/');
 define('EVO_CORE_PATH', $base_path . 'core/');
-define('IN_MANAGER_MODE', true);
 define('IN_INSTALL_MODE', true);
 define('MODX_CLI', true);
 require_once 'src/functions.php';

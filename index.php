@@ -84,9 +84,10 @@ if (! defined('IN_INSTALL_MODE')) {
 @ini_set('session.use_only_cookies',1);
 
 require $config['core'] . '/bootstrap.php';
-
-header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
-header('Cache-Control: private, must-revalidate');
+if (IN_INSTALL_MODE == false) {
+    header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
+    header('Cache-Control: private, must-revalidate');
+}
 ob_start();
 
 /**
@@ -103,9 +104,6 @@ if (! defined('MODX_API_MODE')) {
 }
 if (! defined('MODX_CLI')) {
     define('MODX_CLI', false);
-}
-if (! defined('IN_INSTALL_MODE')) {
-    define('IN_INSTALL_MODE', false);
 }
 
 // initiate a new document parser
