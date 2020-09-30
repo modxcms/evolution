@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Providers;
 
 use AgelxNash\Modx\Evo\Database\Drivers\IlluminateDriver;
+use EvolutionCMS\PgSqlDatabase;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use EvolutionCMS\Database;
@@ -18,10 +19,21 @@ class DatabaseServiceProvider extends ServiceProvider
             $capsule = new Capsule($app);
             $capsule->setAsGlobal();
             $capsule->setEventDispatcher($app['events']);
-            return new Database(
-                $app['config']->get('database.connections.default', []),
-                $app['config']->get('database.connections.default.driverClass', IlluminateDriver::class)
-            );
+            switch ($app['config']->get('database.connections.default.driver')){
+                case 'pgsql':
+                     return new PgSqlDatabase(
+                         $app['config']->get('database.connections.default', []),
+                         IlluminateDriver::class
+                     );
+                    break;
+                default:
+                    return new Database(
+                        $app['config']->get('database.connections.default', []),
+                        IlluminateDriver::class
+                    );
+                    break;
+            }
+
         });
 
         $this->app->setEvolutionProperty('DBAPI', 'db');

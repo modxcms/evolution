@@ -106,7 +106,6 @@ try {
             case 'pgsql':
                 $confph['database_port'] = '5432';
                 $confph['connection_charset'] = 'utf8';
-                $confph['driverClass'] = 'AgelxNash\\Modx\\Evo\\Database\\Drivers\\PgSqlDriver';
                 break;
             case 'mysql':
                 $confph['database_port'] = '3306';
