@@ -18,10 +18,9 @@ class DatabaseServiceProvider extends ServiceProvider
             $capsule = new Capsule($app);
             $capsule->setAsGlobal();
             $capsule->setEventDispatcher($app['events']);
-
             return new Database(
                 $app['config']->get('database.connections.default', []),
-                IlluminateDriver::class
+                $app['config']->get('database.connections.default.driverClass', IlluminateDriver::class)
             );
         });
 
