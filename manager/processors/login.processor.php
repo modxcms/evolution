@@ -282,12 +282,12 @@ $modx->invokeEvent('OnManagerLogin', array(
 		'userpassword' => $givenPassword,
 		'rememberme' => $rememberme
 	));
-
+$id = 0;
 // check if we should redirect user to a web page
-$id = (int)\EvolutionCMS\Models\UserSetting::where('user', $internalKey)
+$setting = \EvolutionCMS\Models\UserSetting::where('user', $internalKey)
     ->where('setting_name', 'manager_login_startup')->first();
-if (!is_null($id)) {
-    $id = $id->setting_value;
+if (!is_null($setting)) {
+    $id = (int)$setting->setting_value;
 }
 $ajax = (int)get_by_key($_POST, 'ajax', 0, 'is_scalar');
 if ($id > 0) {
