@@ -284,10 +284,13 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 
 // check if we should redirect user to a web page
-$id = (int)\EvolutionCMS\Models\UserSetting::where('user',$internalKey)
-    ->where('setting_name','manager_login_startup')->first()->setting_value;
+$id = (int)\EvolutionCMS\Models\UserSetting::where('user', $internalKey)
+    ->where('setting_name', 'manager_login_startup')->first();
+if (!is_null($id)) {
+    $id = $id->setting_value;
+}
 $ajax = (int)get_by_key($_POST, 'ajax', 0, 'is_scalar');
-if($id > 0) {
+if ($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');
 	if($ajax === 1) {
 		echo $header;
