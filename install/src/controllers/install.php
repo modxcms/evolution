@@ -821,7 +821,10 @@ try {
     }
 
     if ($installLevel === 7) {
-
+        if (file_exists(MODX_BASE_PATH.'assets/cache/installProc.inc.php')) {
+            @chmod(MODX_BASE_PATH.'assets/cache/installProc.inc.php', 0755);
+            unlink(MODX_BASE_PATH.'assets/cache/installProc.inc.php');
+        }
         file_put_contents(EVO_CORE_PATH . '.install', time());
 
     }
