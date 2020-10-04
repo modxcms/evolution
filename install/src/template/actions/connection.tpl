@@ -157,7 +157,7 @@
       return false;
     }
 
-    var url = 'index.php?self=1&action=connection/collation';
+    var url = 'index.php?s=1&action=connection/collation';
 
     new Ajax(url, {
       data: {
@@ -182,7 +182,7 @@
       return false;
     }
 
-    var url = 'index.php?self=1&action=connection/databasetest';
+    var url = 'index.php?s=1&action=connection/databasetest';
 
     new Ajax(url, {
       data: {
@@ -259,7 +259,7 @@
       document.getElementById('collation').innerHTML = arguments[0];
     }
     // get the server test status as soon as collation received
-    var url = 'index.php?self=1&action=connection/servertest';
+    var url = 'index.php?s=1&action=connection/servertest';
 
     new Ajax(url, {
       data: {
