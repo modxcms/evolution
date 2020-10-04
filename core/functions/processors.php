@@ -353,7 +353,7 @@ if (!function_exists('incrementFailedLoginCount')) {
         {
             $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
         }
-        \EvolutionCMS\Models\UserAttribute::where('internalKey', (int)$internalKey)->update($fields);
+        \EvolutionCMS\Models\WebUserAttribute::where('internalKey', (int)$internalKey)->update($fields);
 
         if ($failedlogins < $failed_allowed) {
             //sleep to help prevent brute force attacks
@@ -605,6 +605,7 @@ if (!function_exists('saveWebUserSettings')) {
             'allowed_ip',
             'allowed_days'
         );
+
         \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n) {
@@ -637,11 +638,15 @@ if (!function_exists('saveManagerUserSettings')) {
         $modx = evolutionCMS();
 
         $ignore = array(
+            'a',
             'id',
             'oldusername',
             'oldemail',
             'newusername',
             'fullname',
+            'middle_name',
+            'last_name',
+            'verified',
             'newpassword',
             'newpasswordcheck',
             'passwordgenmethod',
@@ -699,7 +704,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        \EvolutionCMS\Models\UserSetting::where('user', $id)->delete();
+        \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -707,10 +712,10 @@ if (!function_exists('saveManagerUserSettings')) {
             }
             if ($vl != '') {
                 $f = array();
-                $f['user'] = $id;
+                $f['webuser'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
+                \EvolutionCMS\Models\WebUserSetting::create($f);
             }
         }
     }

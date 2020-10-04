@@ -15,7 +15,7 @@ if($id==1){
 	$modx->webAlertAndQuit("The role you are trying to delete is the admin role. This role cannot be deleted!");
 }
 
-$count = EvolutionCMS\Models\UserAttribute::where('role',$id)->count();
+$count = EvolutionCMS\Models\WebUserAttribute::where('role',$id)->count();
 if($count>0){
 	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");
 }

@@ -37,6 +37,7 @@ $userdata = [
     'middle_name' => '',
     'last_name' => '',
     'verified' => 0,
+    'role' => 0,
     'blocked' => 0,
     'blockeduntil' => 0,
     'blockedafter' => 0,
@@ -59,8 +60,13 @@ $usersettings = [
     'allowed_days' => '',
     'login_home' => '',
     'allowed_ip' => '',
+    'manager_login_startup' => '',
+    'which_browser' => 'default'
 ];
-$usernamedata = [];
+
+$usernamedata = [
+    'username' => ''
+];
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
@@ -74,7 +80,6 @@ if($modx->getManagerApi()->action == '88') {
 	// get user settings
     $usersettings = \EvolutionCMS\Models\WebUserSetting::where('webuser', $user)->pluck('setting_value', 'setting_name')->toArray();
 	extract($usersettings, EXTR_OVERWRITE);
-
 	// get user name
 	$usernamedata = \EvolutionCMS\Models\WebUser::find($user)->toArray();
 	if(!$usernamedata) {
@@ -329,6 +334,32 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<td><input type="text" name="email" class="inputBox" value="<?php echo isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onChange="documentDirty=true;" />
 							<input type="hidden" name="oldemail" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail'] : $userdata['email']); ?>" /></td>
 					</tr>
+                    <tr>
+                        <th><?php echo $_lang['user_role']; ?>:</th>
+                        <td>&nbsp;</td>
+                        <td><?php
+                            $roles = \EvolutionCMS\Models\UserRole::query()->select('name', 'id');
+
+                            if(!$modx->hasPermission('save_role')){
+                                $roles = $roles->where('id', '!=', 1);
+                            }
+                            ?>
+                            <select name="role" class="inputBox" onChange='documentDirty=true;' style="width:300px">
+                                <option value="0" <?php $userdata['role'] == 0 ? "selected='selected'" : '' ?>><?php echo $_lang['no_user_role']; ?></option>
+                                <?php
+                                foreach($roles->get()->toArray() as $row) {
+                                    if($modx->getManagerApi()->action == '11') {
+                                        $selectedtext = $row['id'] == '1' ? ' selected="selected"' : '';
+                                    } else {
+                                        $selectedtext = $row['id'] == $userdata['role'] ? "selected='selected'" : '';
+                                    }
+                                    ?>
+                                    <option value="<?php echo $row['id']; ?>"<?php echo $selectedtext; ?>><?php echo $row['name']; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select></td>
+                    </tr>
 					<tr>
 						<th><?php echo $_lang['user_phone']; ?>:</th>
 						<td>&nbsp;</td>
@@ -444,64 +475,299 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				</table>
 			</div>
 
-			<!-- Settings -->
-			<div class="tab-page" id="tabSettings">
-				<h2 class="tab"><?php echo $_lang["settings_users"] ?></h2>
-				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabSettings"));</script>
-				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
-					<tr>
-						<th><?php echo $_lang["login_homepage"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : (isset($usersettings['login_home']) ? $usersettings['login_home'] : ""); ?>"></td>
-					</tr>
-					<tr>
-						<td width="200">&nbsp;</td>
-						<td class='comment'><?php echo $_lang["login_homepage_message"] ?></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang["login_allowed_ip"] ?></th>
-						<td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : (isset($usersettings['allowed_ip']) ? $usersettings['allowed_ip'] : ""); ?>" /></td>
-					</tr>
-					<tr>
-						<td width="200">&nbsp;</td>
-						<td class='comment'><?php echo $_lang["login_allowed_ip_message"] ?></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang["login_allowed_days"] ?></th>
-						<td><label><?php if(!isset($usersettings['allowed_days'])) $usersettings['allowed_days'] = ''; ?>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'], '1') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['sunday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="2" <?php echo strpos($usersettings['allowed_days'], '2') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['monday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="3" <?php echo strpos($usersettings['allowed_days'], '3') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['tuesday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="4" <?php echo strpos($usersettings['allowed_days'], '4') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['wednesday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="5" <?php echo strpos($usersettings['allowed_days'], '5') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['thursday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="6" <?php echo strpos($usersettings['allowed_days'], '6') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['friday']; ?></label>
-							<br />
-							<label>
-								<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="7" <?php echo strpos($usersettings['allowed_days'], '7') !== false ? "checked='checked'" : ""; ?> />
-								<?php echo $_lang['saturday']; ?></label>
-							<br /></td>
-					</tr>
-					<tr>
-						<td width="200">&nbsp;</td>
-						<td class='comment'><?php echo $_lang["login_allowed_days_message"] ?></td>
-					</tr>
-				</table>
-			</div>
+            <!-- Settings -->
+            <div class="tab-page" id="tabSettings">
+                <h2 class="tab"><?php echo $_lang["settings_users"] ?></h2>
+                <script type="text/javascript">tpUser.addTabPage(document.getElementById("tabSettings"));</script>
+                <table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
+                    <tr>
+                        <th><?php echo $_lang["language_title"] ?></th>
+                        <td><select name="manager_language" class="inputBox" onChange="documentDirty=true">
+                                <option value=""></option>
+                                <?php
+                                $activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : '';
+                                $dir = dir("includes/lang");
+                                while($file = $dir->read()) {
+                                    if(strpos($file, ".inc.php") > 0) {
+                                        $endpos = strpos($file, ".");
+                                        $languagename = substr($file, 0, $endpos);
+                                        $selectedtext = $languagename == $activelang ? "selected='selected'" : "";
+                                        ?>
+                                        <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                                        <?php
+
+                                    }
+                                }
+                                $dir->close();
+                                ?>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["language_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["mgr_login_start"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='50' name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : (isset($usersettings['manager_login_startup']) ? $usersettings['manager_login_startup'] : ""); ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["mgr_login_start_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["login_homepage"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='50' name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : (isset($usersettings['login_home']) ? $usersettings['login_home'] : ""); ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["login_homepage_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["allow_mgr_access"] ?></th>
+                        <td><input onChange="documentDirty=true;" type="radio" name="allow_manager_access" value="1" <?php echo !isset($usersettings['allow_manager_access']) || $usersettings['allow_manager_access'] == 1 ? 'checked="checked"' : ''; ?> />
+                            <?php echo $_lang['yes']; ?>
+                            <br />
+                            <input onChange="documentDirty=true;" type="radio" name="allow_manager_access" value="0" <?php echo isset($usersettings['allow_manager_access']) && $usersettings['allow_manager_access'] == 0 ? 'checked="checked"' : ''; ?> />
+                            <?php echo $_lang['no']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["allow_mgr_access_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["login_allowed_ip"] ?></th>
+                        <td><input onChange="documentDirty=true;" type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($usersettings['allowed_ip']) ? $usersettings['allowed_ip'] : ""; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["login_allowed_ip_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["login_allowed_days"] ?></th>
+                        <td><label> <?php if(!isset($usersettings['allowed_days'])) $usersettings['allowed_days'] = ''; ?>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'], '1') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['sunday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="2" <?php echo strpos($usersettings['allowed_days'], '2') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['monday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="3" <?php echo strpos($usersettings['allowed_days'], '3') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['tuesday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="4" <?php echo strpos($usersettings['allowed_days'], '4') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['wednesday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="5" <?php echo strpos($usersettings['allowed_days'], '5') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['thursday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="6" <?php echo strpos($usersettings['allowed_days'], '6') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['friday']; ?></label>
+                            <br />
+                            <label>
+                                <input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="7" <?php echo strpos($usersettings['allowed_days'], '7') !== false ? "checked='checked'" : ""; ?> />
+                                <?php echo $_lang['saturday']; ?></label>
+                            <br /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["login_allowed_days_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["manager_theme"] ?></th>
+                        <td><select name="manager_theme" class="inputBox" onChange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date());">
+                                <option value=""></option>
+                                <?php
+                                $dir = dir("media/style/");
+                                while($file = $dir->read()) {
+                                    if($file != "." && $file != ".." && is_dir("media/style/$file") && substr($file, 0, 1) != '.') {
+                                        $themename = $file;
+                                        if($themename === 'common') {
+                                            continue;
+                                        }
+                                        $attr = 'value="' . $themename . '" ';
+                                        if(isset($usersettings['manager_theme']) && $themename == $usersettings['manager_theme']) {
+                                            $attr .= 'selected="selected" ';
+                                        }
+                                        echo "\t\t<option " . rtrim($attr) . '>' . ucwords(str_replace("_", " ", $themename)) . "</option>\n";
+                                    }
+                                }
+                                $dir->close();
+                                ?>
+                            </select>
+                            <input type="hidden" name="theme_refresher" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["manager_theme_message"] ?></td>
+                    </tr>
+
+                    <tr>
+                        <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
+                            <small>[(manager_theme_mode)]</small>
+                        </td>
+                        <td>
+                            <label><input type="radio" name="manager_theme_mode" value="" <?= $modx->getConfig('manager_theme_mode') === 0 ? 'checked="checked"' : "" ?> />
+                                <?= $_lang['option_default'] ?></label>
+                            <br />
+
+                            <label><input type="radio" name="manager_theme_mode" value="1" <?= $modx->getConfig('manager_theme_mode') === 1 ? 'checked="checked"' : "" ?> />
+                                <?= $_lang['manager_theme_mode1'] ?></label>
+                            <br />
+                            <label><input type="radio" name="manager_theme_mode" value="2" <?= $modx->getConfig('manager_theme_mode') === 2 ? 'checked="checked"' : "" ?> />
+                                <?= $_lang['manager_theme_mode2'] ?></label>
+                            <br />
+                            <label><input type="radio" name="manager_theme_mode" value="3" <?= $modx->getConfig('manager_theme_mode') === 3 ? 'checked="checked"' : "" ?> />
+                                <?= $_lang['manager_theme_mode3'] ?></label>
+                            <br />
+                            <label><input type="radio" name="manager_theme_mode" value="4" <?= ($modx->getConfig('manager_theme_mode') === 4) ? 'checked="checked"' : "" ?> />
+                                <?= $_lang['manager_theme_mode4'] ?></label>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><?php echo $_lang["which_browser_title"] ?></th>
+                        <td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">
+                                <?php
+                                $selected = 'default' == $usersettings['which_browser'] || !$usersettings['which_browser'] ? ' selected="selected"' : '';
+                                echo '<option value="default"' . $selected . '>' . $_lang['option_default'] . "</option>\n";
+                                foreach(glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
+                                    $dir = str_replace('\\', '/', $dir);
+                                    $browser_name = substr($dir, strrpos($dir, '/') + 1);
+                                    $selected = $browser_name == $usersettings['which_browser'] ? ' selected="selected"' : '';
+                                    echo '<option value="' . $browser_name . '"' . $selected . '>' . "{$browser_name}</option>\n";
+                                }
+                                ?>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["which_browser_msg"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["filemanager_path_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path'] : ""); ?>"></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["filemanager_path_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["uploadable_images_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_images" value="<?php echo isset($usersettings['upload_images']) ? $usersettings['upload_images'] : ""; ?>">
+                            &nbsp;&nbsp;
+                            <input onChange="documentDirty=true;" type="checkbox" name="default_upload_images" value="1" <?php echo isset($usersettings['upload_images']) && $usersettings['upload_images'] != '' ? '' : 'checked'; ?> />
+                            <?php echo $_lang["user_use_config"]; ?>
+                            <br /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["uploadable_images_message"] . $_lang["user_upload_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["uploadable_media_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_media" value="<?php echo isset($usersettings['upload_media']) ? $usersettings['upload_media'] : ""; ?>">
+                            &nbsp;&nbsp;
+                            <input onChange="documentDirty=true;" type="checkbox" name="default_upload_media" value="1" <?php echo isset($usersettings['upload_media']) && $usersettings['upload_media'] != '' ? '' : 'checked'; ?> />
+                            <?php echo $_lang["user_use_config"]; ?>
+                            <br /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["uploadable_media_message"] . $_lang["user_upload_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["uploadable_flash_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : ""; ?>">
+                            &nbsp;&nbsp;
+                            <input onChange="documentDirty=true;" type="checkbox" name="default_upload_flash" value="1" <?php echo isset($usersettings['upload_flash']) && $usersettings['upload_flash'] != '' ? '' : 'checked'; ?> />
+                            <?php echo $_lang["user_use_config"]; ?>
+                            <br /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["uploadable_flash_message"] . $_lang["user_upload_message"] ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang["uploadable_files_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : ""; ?>">
+                            &nbsp;&nbsp;
+                            <input onChange="documentDirty=true;" type="checkbox" name="default_upload_files" value="1" <?php echo isset($usersettings['upload_files']) && $usersettings['upload_files'] != '' ? '' : 'checked'; ?> />
+                            <?php echo $_lang["user_use_config"]; ?>
+                            <br /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["uploadable_files_message"] . $_lang["user_upload_message"] ?></td>
+                    </tr>
+                    <tr class='row2'>
+                        <th><?php echo $_lang["upload_maxsize_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($usersettings['upload_maxsize']) ? $usersettings['upload_maxsize'] : ""; ?>"></td>
+                    </tr>
+                    <tr class='row2'>
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["upload_maxsize_message"] ?></td>
+                    </tr>
+                    <tr id='editorRow0' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                        <th><?php echo $_lang["which_editor_title"] ?></th>
+                        <td><select name="which_editor" onChange="documentDirty=true;">
+                                <option value=""></option>
+                                <?php
+
+                                $edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : '';
+                                // invoke OnRichTextEditorRegister event
+                                $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+                                echo "<option value='none'" . ($edt == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
+                                if(is_array($evtOut)) {
+                                    for($i = 0; $i < count($evtOut); $i++) {
+                                        $editor = $evtOut[$i];
+                                        echo "<option value='$editor'" . ($edt == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
+                                    }
+                                }
+                                ?>
+                            </select></td>
+                    </tr>
+                    <tr id='editorRow1' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["which_editor_message"] ?></td>
+                    </tr>
+                    <tr id='editorRow14' class="row3" style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                        <th><?php echo $_lang["editor_css_path_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="editor_css_path" value="<?php echo isset($usersettings["editor_css_path"]) ? $usersettings["editor_css_path"] : ""; ?>" /></td>
+                    </tr>
+                    <tr id='editorRow15' class='row3' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["editor_css_path_message"] ?></td>
+                    </tr>
+                    <tr id='rbRow1' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                        <th><?php echo $_lang["rb_base_dir_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"] : ""; ?>" /></td>
+                    </tr>
+                    <tr id='rbRow2' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["rb_base_dir_message"] ?></td>
+                    </tr>
+                    <tr id='rbRow4' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                        <th><?php echo $_lang["rb_base_url_title"] ?></th>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"] : ""; ?>" /></td>
+                    </tr>
+                    <tr id='rbRow5' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                        <td>&nbsp;</td>
+                        <td class='comment'><?php echo $_lang["rb_base_url_message"] ?></td>
+                    </tr>
+                </table>
+                <?php
+                // invoke OnInterfaceSettingsRender event
+                $evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
+                if(is_array($evtOut)) {
+                    echo implode("", $evtOut);
+                }
+                ?>
+            </div>
 
 			<!-- Photo -->
 			<div class="tab-page" id="tabPhoto">
@@ -572,7 +838,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '88') { // only do this bit if the user is being edited
-				$groupsarray = \EvolutionCMS\Models\WebGroup::query()->where('webuser', $user)->pluck('webgroup');
+				$groupsarray = \EvolutionCMS\Models\WebGroup::query()->pluck('webgroup')->toArray();
 			}
 			// retain selected user groups between post
 			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
