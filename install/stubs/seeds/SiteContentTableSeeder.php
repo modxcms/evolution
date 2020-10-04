@@ -40,7 +40,6 @@ class SiteContentTableSeeder extends Seeder
 ',
                 'richtext' => 1,
                 'template' => 1,
-                'menuindex' => 0,
                 'searchable' => 1,
                 'cacheable' => 1,
                 'createdby' => 1,

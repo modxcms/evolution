@@ -196,7 +196,7 @@ try {
             $field = array();
             $field['password'] = $modx->getPasswordHash()->HashPassword($adminpass);
             $field['username'] = $adminname;
-            $managerUser = EvolutionCMS\Models\ManagerUser::create($field);
+            $managerUser = EvolutionCMS\Models\WebUser::create($field);
             $internalKey = $managerUser->getKey();
             $verified = 1;
             $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
