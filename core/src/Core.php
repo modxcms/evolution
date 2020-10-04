@@ -13,6 +13,7 @@ use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SitePlugin;
 use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
+use EvolutionCMS\Models\WebUser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -5156,9 +5157,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$uid];
         }
 
-        $row = ManagerUser::select('manager_users.username', 'manager_users.password', 'user_attributes.*')
-            ->join('user_attributes', 'manager_users.id', '=', 'user_attributes.internalKey')
-            ->where('manager_users.id', $uid)->first();
+        $row = WebUser::select('web_users.username', 'web_users.password', 'web_user_attributes.*')
+            ->join('web_user_attributes', 'web_users.id', '=', 'web_user_attributes.internalKey')
+            ->where('web_users.id', $uid)->first();
 
 
         if (is_null($row)) {
@@ -5187,19 +5188,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getWebUserInfo($uid)
     {
-        $rs = \DB::table('web_users as wu')
-            ->selectRaw('wu.username, wu.password, wua.*')
-            ->leftJoin('web_user_attributes as wua')
-            ->on(' wua.internalkey', 'wu.id')
-            ->where('wu.id', $uid)
-            ->first();
-
-        if ($row = $rs->toArray()) {
-            if (!isset($row['usertype']) or !$row['usertype']) {
-                $row['usertype'] = 'web';
-            }
-            return $row;
-        }
+        return $this->getUserInfo($uid);
     }
 
     /**

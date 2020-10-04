@@ -208,10 +208,8 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->menuCategories()
             ->menuNewModule()
             ->menuRunModules()
-            ->menuUserManagment()
             ->menuWebUserManagment()
             ->menuRoleManagment()
-            ->menuPermissions()
             ->menuWebPermissions()
             ->menuRefreshSite()
             ->menuSearch()
@@ -653,29 +651,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         return $this;
     }
 
-    protected function menuUserManagment()
-    {
-        if ($this->managerTheme->getCore()->hasPermission('edit_user')) {
-            $this->sitemenu['user_management_title'] = [
-                'user_management_title',
-                'users',
-                sprintf(
-                    '<i class="' . $this->managerTheme->getStyle('icon_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
-                    , $this->managerTheme->getLexicon('user_management_title')
-                ),
-                'index.php?a=75',
-                $this->managerTheme->getLexicon('user_management_title'),
-                '',
-                'edit_user',
-                'main',
-                0,
-                10,
-                'dropdown-toggle'
-            ];
-        }
-
-        return $this;
-    }
 
     protected function menuWebUserManagment()
     {
@@ -725,29 +700,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         return $this;
     }
 
-    protected function menuPermissions()
-    {
-        if ($this->managerTheme->getCore()->hasPermission('access_permissions')) {
-            $this->sitemenu['manager_permissions'] = [
-                'manager_permissions',
-                'users',
-                sprintf(
-                    '<i class="' . $this->managerTheme->getStyle('icon_user_access') . '"></i>%s'
-                    , $this->managerTheme->getLexicon('manager_permissions')
-                ),
-                'index.php?a=40',
-                $this->managerTheme->getLexicon('manager_permissions'),
-                '',
-                'access_permissions',
-                'main',
-                0,
-                40,
-                ''
-            ];
-        }
-
-        return $this;
-    }
 
     protected function menuWebPermissions()
     {
