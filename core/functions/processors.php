@@ -726,18 +726,18 @@ if (!function_exists('webAlertAndQuit')) {
      * Web alert -  sends an alert to web browser
      *
      * @param $msg
+     * @param $action int
+     * @param $id int|bool
      */
-    function webAlertAndQuit($msg, $action)
+    function webAlertAndQuit($msg, $action, $id = false)
     {
-        global $id, $modx;
+        $modx = EvolutionCMS();
         $mode = $_POST['mode'];
         $modx->getManagerApi()->saveFormValues($mode);
-        $modx->webAlertAndQuit($msg,
-            sprintf(
-                "index.php?a=%s%s"
-                , $mode
-                , $mode === $action ? "&id=" . (int)$id : ''
-            )
-        );
+        $url = 'index.php?a=' . $action;
+        if ($id != false) {
+            $url .= '&id=' . $id;
+        }
+        $modx->webAlertAndQuit($msg, $url);
     }
 }

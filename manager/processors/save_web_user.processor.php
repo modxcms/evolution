@@ -2,9 +2,7 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('save_web_user')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
-}
+
 
 $input = $_POST;
 foreach ($input as $k => $v) {
@@ -50,43 +48,47 @@ $newpassword = '';
 $websignupemail_message = $modx->config['websignupemail_message'];
 $site_url = $modx->config['site_url'];
 
+if (!$modx->hasPermission('save_web_user')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"], $id);
+}
+
 // verify password
 if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
-	webAlertAndQuit("Password typed is mismatched", 88);
+	webAlertAndQuit("Password typed is mismatched", 88, $id);
 }
 
 // verify email
 if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
-	webAlertAndQuit("E-mail address doesn't seem to be valid!", 88);
+	webAlertAndQuit("E-mail address doesn't seem to be valid!", 88, $id);
 }
 
 switch ($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
 		if (EvolutionCMS\Models\WebUser::where('username', '=', $newusername)->first()) {
-			webAlertAndQuit("User name is already in use!", 88);
+			webAlertAndQuit("User name is already in use!", 88, $id);
 		}
 
 		// check if the email address already exist
 		if ($modx->config['allow_multiple_emails'] != 1) {
 			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
-				webAlertAndQuit("Email is already in use!", 88);
+				webAlertAndQuit("Email is already in use!", 88, $id);
 			}
 		}
 
 		// generate a new password for this user
         if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
             if (strlen($specifiedpassword) < 6) {
-				webAlertAndQuit("Password is too short!", 88);
+				webAlertAndQuit("Password is too short!", 88, $id);
 			} else {
 				$newpassword = $specifiedpassword;
 			}
         } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-			webAlertAndQuit("You didn't specify a password for this user!", 88);
+			webAlertAndQuit("You didn't specify a password for this user!", 88, $id);
         } elseif ($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
-			webAlertAndQuit("No password generation method specified!", 88);
+			webAlertAndQuit("No password generation method specified!", 88, $id);
 		}
 
 		// invoke OnBeforeWUsrFormSave event
@@ -188,16 +190,16 @@ switch ($input['mode']) {
         if ($genpassword == 1) {
             if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
                 if (strlen($specifiedpassword) < 6) {
-					webAlertAndQuit("Password is too short!", 88);
+					webAlertAndQuit("Password is too short!", 88, $id);
 				} else {
 					$newpassword = $specifiedpassword;
 				}
             } elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-				webAlertAndQuit("You didn't specify a password for this user!", 88);
+				webAlertAndQuit("You didn't specify a password for this user!", 88, $id);
             } elseif ($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
-				webAlertAndQuit("No password generation method specified!", 88);
+				webAlertAndQuit("No password generation method specified!", 88, $id);
 			}
 		}
         if ($passwordnotifymethod == 'e') {
@@ -206,13 +208,13 @@ switch ($input['mode']) {
 
 		// check if the username already exist
 		if (EvolutionCMS\Models\WebUser::where('id', '!=', $id)->where('username', '=', $newusername)->first()) {
-			webAlertAndQuit("User name is already in use!", 88);
+			webAlertAndQuit("User name is already in use!", 88, $id);
 		}
 
 		// check if the email address already exists
 		if ($modx->config['allow_multiple_emails'] != 1) {
 			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
-				webAlertAndQuit("Email is already in use!", 88);
+				webAlertAndQuit("Email is already in use!", 88, $id);
 			}
 		}
 
@@ -327,5 +329,5 @@ switch ($input['mode']) {
 		}
 		break;
 	default :
-		webAlertAndQuit("No operation set in request.", 88);
+		webAlertAndQuit("No operation set in request.", 88, $id);
 }

@@ -104,6 +104,7 @@ $usernamedata['username'] = html_entity_decode(
 $formRestored = false;
 if($modx->getManagerApi()->hasFormValues()) {
 	$modx->getManagerApi()->loadFormValues();
+    unset($_POST['a']);
 	// restore post values
 	$userdata = array_merge($userdata, $_POST);
 	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
