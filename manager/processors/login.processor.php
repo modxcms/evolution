@@ -55,9 +55,9 @@ $modx->invokeEvent('OnBeforeManagerLogin', array(
 		'rememberme' => $rememberme
 	));
 
-$user = \EvolutionCMS\Models\ManagerUser::query()
-    ->join('user_attributes', 'user_attributes.internalKey','=','manager_users.id')
-    ->where('manager_users.username', $username);
+$user = \EvolutionCMS\Models\WebUser::query()
+    ->join('web_user_attributes', 'web_user_attributes.internalKey','=','web_users.id')
+    ->where('web_users.username', $username)->where('role', '>', 0);
 
 
 if($user->count() == 0 || $user->count() > 1) {
@@ -218,10 +218,12 @@ $_SESSION['mgrFailedlogins'] = $failedlogins;
 $_SESSION['mgrLastlogin'] = $lastlogin;
 $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
-$_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $role)->first()->toArray();
-
+$_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $role)->first();
+if(!is_null($_SESSION['mgrPermissions'])){
+    $_SESSION['mgrPermissions'] = $_SESSION['mgrPermissions']->toArray();
+}
 // successful login so reset fail count and update key values
-$userAttribute = \EvolutionCMS\Models\UserAttribute::where('internalKey', $internalKey)->first();
+$userAttribute = \EvolutionCMS\Models\WebUserAttribute::where('internalKey', $internalKey)->first();
 $userAttribute->failedlogincount = 0;
 $userAttribute->logincount = $userAttribute->logincount+1;
 $userAttribute->lastlogin = $userAttribute->thislogin;
@@ -284,7 +286,7 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 $id = 0;
 // check if we should redirect user to a web page
-$setting = \EvolutionCMS\Models\UserSetting::where('user', $internalKey)
+$setting = \EvolutionCMS\Models\WebUserSetting::where('webuser', $internalKey)
     ->where('setting_name', 'manager_login_startup')->first();
 if (!is_null($setting)) {
     $id = (int)$setting->setting_value;

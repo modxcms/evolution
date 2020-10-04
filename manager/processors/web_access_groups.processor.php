@@ -32,7 +32,7 @@ switch ($operation) {
         if (empty($newgroup)) {
             $modx->webAlertAndQuit("No group name specified.");
         } else {
-            $id = \EvolutionCMS\Models\DocumentgroupName::query()->insertGetId(['name' => $newgroupname]);
+            $id = \EvolutionCMS\Models\DocumentgroupName::query()->insertGetId(['name' => $newgroup]);
 
             // invoke OnCreateDocGroup event
             $modx->invokeEvent('OnCreateDocGroup', array(
