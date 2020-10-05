@@ -8,12 +8,11 @@ use EvolutionCMS\Models\ActiveUserLock;
 use EvolutionCMS\Models\ActiveUserSession;
 use EvolutionCMS\Models\DocumentGroup;
 use EvolutionCMS\Models\EventLog;
-use EvolutionCMS\Models\ManagerUser;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SitePlugin;
 use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
-use EvolutionCMS\Models\WebUser;
+use EvolutionCMS\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -3281,7 +3280,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->cleanupExpiredLocks();
             $rs = ActiveUserLock::query()
                 ->select('sid', 'internalKey', 'elementType', 'elementId', 'lasthit', 'username')
-                ->leftJoin('web_users', 'active_user_locks.internalKey', '=', 'web_users.id')
+                ->leftJoin('users', 'active_user_locks.internalKey', '=', 'users.id')
                 ->get();
             foreach ($rs->toArray() as $row) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
@@ -5157,9 +5156,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$uid];
         }
 
-        $row = WebUser::select('web_users.username', 'web_users.password', 'web_user_attributes.*')
-            ->join('web_user_attributes', 'web_users.id', '=', 'web_user_attributes.internalKey')
-            ->where('web_users.id', $uid)->first();
+        $row = User::select('users.username', 'users.password', 'user_attributes.*')
+            ->join('user_attributes', 'users.id', '=', 'user_attributes.internalKey')
+            ->where('users.id', $uid)->first();
 
 
         if (is_null($row)) {
@@ -5255,7 +5254,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($_SESSION['webValidated'] != 1) {
             return false;
         }
-        $ds = \EvolutionCMS\Models\WebUser::selectRaw('id, username, password')
+        $ds = \EvolutionCMS\Models\User::selectRaw('id, username, password')
             ->where('id', (int)$this->getLoginUserID())
             ->first();
 
@@ -5275,7 +5274,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return "You didn't specify a password for this user!";
         }
 
-        \EvolutionCMS\Models\WebUser::where('id', (int)$this->getLoginUserID())
+        \EvolutionCMS\Models\User::where('id', (int)$this->getLoginUserID())
             ->update(array(
                 'password' => $newPwd
             ));
@@ -6145,7 +6144,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             if ($usrType === 'web') {
-                $usrSettings = Models\UserSetting::where('webuser', '=', $id)->get()
+                $usrSettings = Models\UserSetting::where('user', '=', $id)->get()
                     ->pluck('setting_value', 'setting_name')
                     ->toArray();
             } else {

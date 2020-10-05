@@ -384,7 +384,7 @@ class InstallEvo
         $field = array();
         $field['password'] = $this->evo->getPasswordHash()->HashPassword($this->cmsPassword);
         $field['username'] = $this->cmsAdmin;
-        $managerUser = EvolutionCMS\Models\WebUser::create($field);
+        $managerUser = EvolutionCMS\Models\User::create($field);
         $internalKey = $managerUser->getKey();
         $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
         $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role];

@@ -46,7 +46,7 @@ use Rocky\Eloquent\HasDynamicRelation;
  *
  * @mixin \Eloquent
  */
-class WebUserAttribute extends Eloquent\Model
+class UserAttribute extends Eloquent\Model
 {
     use Traits\Models\TimeMutator,
         HasDynamicRelation;
@@ -114,6 +114,6 @@ class WebUserAttribute extends Eloquent\Model
 
     public function user()
     {
-        return $this->belongsTo(WebUser::class,'internalKey','id');
+        return $this->belongsTo(User::class,'internalKey','id');
     }
 }

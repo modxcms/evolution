@@ -123,16 +123,16 @@ echo $cm->render();
 			<div class="row">
 				<div class="table-responsive">
 					<?php
-                    $managerUsers = \EvolutionCMS\Models\WebUser::query()
-                        ->select('web_users.id', 'web_users.username', 'web_user_attributes.fullname', 'web_user_attributes.email', 'web_user_attributes.blocked', 'web_user_attributes.thislogin', 'web_user_attributes.logincount')
-                        ->join('web_user_attributes', 'web_user_attributes.internalKey', '=', 'web_users.id')
-                        ->orderBy('web_users.username', 'ASC');
+                    $managerUsers = \EvolutionCMS\Models\User::query()
+                        ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount')
+                        ->join('user_attributes', 'user_attributes.internalKey', '=', 'users.id')
+                        ->orderBy('users.username', 'ASC');
                     $where = "";
                     if (!empty($query)) {
                         $managerUsers = $managerUsers->where(function ($q) use ($query) {
-                            $q->where('web_users.username', 'LIKE', $query.'%')
-                                ->orWhere('web_user_attributes.fullname', 'LIKE', '%'.$query.'%')
-                                ->orWhere('web_user_attributes.email', 'LIKE', '%'.$query.'%');
+                            $q->where('users.username', 'LIKE', $query.'%')
+                                ->orWhere('user_attributes.fullname', 'LIKE', '%'.$query.'%')
+                                ->orWhere('user_attributes.email', 'LIKE', '%'.$query.'%');
                         });
                     }
 

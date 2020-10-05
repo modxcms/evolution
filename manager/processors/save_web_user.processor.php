@@ -65,13 +65,13 @@ if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", 
 switch ($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		if (EvolutionCMS\Models\WebUser::where('username', '=', $newusername)->first()) {
+		if (EvolutionCMS\Models\User::where('username', '=', $newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88, $id);
 		}
 
 		// check if the email address already exist
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
+			if (EvolutionCMS\Models\UserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88, $id);
 			}
 		}
@@ -100,7 +100,7 @@ switch ($input['mode']) {
 		$field = array();
 		$field['username'] = $newusername;
 		$field['password'] = md5($newpassword);
-		$webUser= EvolutionCMS\Models\WebUser::create($field);
+		$webUser= EvolutionCMS\Models\User::create($field);
 		$internalKey = $webUser->getKey();
 		$field = compact( 'fullname', 'middle_name', 'last_name', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state', 'country', 'gender', 'dob', 'photo', 'comment', 'blocked', 'blockeduntil', 'blockedafter');
 		$webUser->attributes()->create($field);
@@ -207,13 +207,13 @@ switch ($input['mode']) {
 		}
 
 		// check if the username already exist
-		if (EvolutionCMS\Models\WebUser::where('id', '!=', $id)->where('username', '=', $newusername)->first()) {
+		if (EvolutionCMS\Models\User::where('id', '!=', $id)->where('username', '=', $newusername)->first()) {
 			webAlertAndQuit("User name is already in use!", 88, $id);
 		}
 
 		// check if the email address already exists
 		if ($modx->config['allow_multiple_emails'] != 1) {
-			if (EvolutionCMS\Models\WebUserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
+			if (EvolutionCMS\Models\UserAttribute::where('internalKey', '!=', $id)->where('email', '=', $email)->first()) {
 				webAlertAndQuit("Email is already in use!", 88, $id);
 			}
 		}
@@ -230,7 +230,7 @@ switch ($input['mode']) {
         if ($genpassword == 1) {
 			$field['password'] = md5($newpassword);
 		}
-		$webUser = EvolutionCMS\Models\WebUser::find($id);
+		$webUser = EvolutionCMS\Models\User::find($id);
 		$webUser->update($field);
         $field = compact('fullname', 'middle_name', 'last_name', 'role', 'email', 'phone', 'mobilephone', 'fax', 'zip', 'street', 'city', 'state',
             'country', 'gender', 'dob', 'photo', 'comment', 'failedlogincount', 'blocked', 'blockeduntil',

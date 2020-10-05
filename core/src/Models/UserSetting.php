@@ -28,6 +28,6 @@ class UserSetting extends Eloquent\Model
 
     public function user()
     {
-        return $this->belongsTo(WebUser::class, 'user','id');
+        return $this->belongsTo(User::class, 'user','id');
     }
 }
