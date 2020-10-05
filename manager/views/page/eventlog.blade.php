@@ -132,14 +132,10 @@
                 <div class="row">
                     <div class="table-responsive">
                         <?php
-                        $eventLog = \EvolutionCMS\Models\EventLog::query()->select('event_log.id', 'event_log.type as icon', 'event_log.createdon', 'event_log.source', 'event_log.eventid', 'manager_users.username as username', 'web_users.username as web_username')
-                            ->leftJoin('manager_users', function($join)
+                        $eventLog = \EvolutionCMS\Models\EventLog::query()->select('event_log.id', 'event_log.type as icon', 'event_log.createdon', 'event_log.source', 'event_log.eventid', 'users.username as username')
+                           ->leftJoin('users', function($join)
                         {
-                            $join->on('manager_users.id', '=', 'event_log.user');
-                            $join->on('event_log.usertype', '=', \DB::raw(0));
-                        })->leftJoin('web_users', function($join)
-                        {
-                            $join->on('web_users.id', '=', 'event_log.user');
+                            $join->on('users.id', '=', 'event_log.user');
                             $join->on('event_log.usertype', '=', \DB::raw(1));
                         })->orderBy('createdon', 'ASC');
 

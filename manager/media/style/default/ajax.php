@@ -233,7 +233,7 @@ if (isset($action)) {
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 
-            $sql = \EvolutionCMS\Models\ManagerUser::select('manager_users.*', 'user_attributes.blocked')
+            $sql = \EvolutionCMS\Models\User::select('manager_users.*', 'user_attributes.blocked')
                 ->leftJoin('user_attributes', 'manager_users.id','=','user_attributes.internalKey')
                 ->orderBy('manager_users.username')->take($limit);
             if($filter != ''){
@@ -274,11 +274,11 @@ if (isset($action)) {
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 
-            $sql = \EvolutionCMS\Models\WebUser::select('web_users.*', 'web_user_attributes.blocked')
-                ->leftJoin('web_user_attributes', 'web_users.id','=','web_user_attributes.internalKey')
-                ->orderBy('web_users.username')->take($limit);
+            $sql = \EvolutionCMS\Models\User::select('users.*', 'user_attributes.blocked')
+                ->leftJoin('user_attributes', 'users.id','=','user_attributes.internalKey')
+                ->orderBy('users.username')->take($limit);
             if($filter != ''){
-                $sql = $sql->where('web_users.username', 'LIKE', '%'.$filter.'%');
+                $sql = $sql->where('users.username', 'LIKE', '%'.$filter.'%');
             }
 
             if ($modx->hasPermission('new_web_user')) {

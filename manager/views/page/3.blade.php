@@ -47,10 +47,10 @@
      * "General" tab setup
      */
     // Get Creator's username
-    $createdbyname = \EvolutionCMS\Models\ManagerUser::find($content['createdby'])->username;
+    $createdbyname = \EvolutionCMS\Models\User::find($content['createdby'])->username;
 
     // Get Editor's username
-    $editedbyname = \EvolutionCMS\Models\ManagerUser::find($content['editedby'])->username;
+    $editedbyname = \EvolutionCMS\Models\User::find($content['editedby'])->username;
 
     // Get Template name
     $templatename = \EvolutionCMS\Models\SiteTemplate::find($content['template'])->templatename;

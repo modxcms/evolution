@@ -14,7 +14,7 @@ use Rocky\Eloquent\HasDynamicRelation;
  *
  * @mixin \Eloquent
  */
-class WebUser extends Eloquent\Model
+class User extends Eloquent\Model
 {
     use Traits\Models\ManagerActions,
         HasDynamicRelation;
@@ -33,7 +33,7 @@ class WebUser extends Eloquent\Model
 
     public function attributes()
     {
-        return $this->hasOne(WebUserAttribute::class,'internalKey','id');
+        return $this->hasOne(UserAttribute::class,'internalKey','id');
     }
 
     public function memberGroups()

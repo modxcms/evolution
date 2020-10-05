@@ -24,7 +24,7 @@ class WebgroupName extends Eloquent\Model
 
     public function users(): Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(WebUser::class, 'web_groups', 'webgroup', 'webuser');
+        return $this->belongsToMany(User::class, 'web_groups', 'webgroup', 'webuser');
     }
 
     public function documentGroups(): Eloquent\Relations\BelongsToMany

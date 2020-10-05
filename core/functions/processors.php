@@ -330,7 +330,7 @@ if (!function_exists('updateNewHash')) {
 
         $field = array();
         $field['password'] = $modx->getPasswordHash()->HashPassword($password);
-        \EvolutionCMS\Models\ManagerUser::where('username', $username)->update($field);
+        \EvolutionCMS\Models\User::where('username', $username)->update($field);
 
     }
 }
@@ -353,7 +353,7 @@ if (!function_exists('incrementFailedLoginCount')) {
         {
             $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
         }
-        \EvolutionCMS\Models\WebUserAttribute::where('internalKey', (int)$internalKey)->update($fields);
+        \EvolutionCMS\Models\UserAttribute::where('internalKey', (int)$internalKey)->update($fields);
 
         if ($failedlogins < $failed_allowed) {
             //sleep to help prevent brute force attacks

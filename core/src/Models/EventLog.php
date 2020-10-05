@@ -17,7 +17,7 @@ use EvolutionCMS\Traits;
  *
  * BelongsTo
  * @property null|ManagerUser $mgruser
- * @property null|WebUser $webuser
+ * @property null|User $webuser
  *
  * Virtual
  * @property-read \Carbon\Carbon $created_at
@@ -95,11 +95,11 @@ class EventLog extends Eloquent\Model
 
     public function webuser() : Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(WebUser::class, 'user', 'id');
+        return $this->belongsTo(User::class, 'user', 'id');
     }
 
     public function mgruser() : Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(ManagerUser::class, 'user', 'id');
+        return $this->belongsTo(User::class, 'user', 'id');
     }
 }
