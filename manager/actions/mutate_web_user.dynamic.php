@@ -774,36 +774,11 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			<div class="tab-page" id="tabPhoto">
 				<h2 class="tab"><?php echo $_lang["settings_photo"] ?></h2>
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabPhoto"));</script>
-				<script type="text/javascript">
-					function OpenServerBrowser(url, width, height) {
-						var iLeft = (screen.width - width) / 2;
-						var iTop = (screen.height - height) / 2;
-
-						var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
-						sOptions += ",width=" + width;
-						sOptions += ",height=" + height;
-						sOptions += ",left=" + iLeft;
-						sOptions += ",top=" + iTop;
-
-						var oWindow = window.open(url, "FCKBrowseWindow", sOptions);
-					}
-
-					function BrowseServer() {
-						var w = screen.width * 0.7;
-						var h = screen.height * 0.7;
-						OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/<?php echo $modx->getConfig('which_browser');?>/browser.php?Type=images", w, h);
-					}
-
-					function SetUrl(url, width, height, alt) {
-						document.userform.photo.value = url;
-						document.images['iphoto'].src = "<?php echo MODX_BASE_URL; ?>" + url;
-					}
-				</script>
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<th><?php echo $_lang["user_photo"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
-							<input type="button" value="<?php echo $_lang['insert']; ?>" onClick="BrowseServer();" /></td>
+						<td><input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" id="photo" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
+							<input type="button" value="<?php echo $_lang['insert']; ?>" onClick="BrowseServer('photo');" /></td>
 					</tr>
 					<tr>
 						<td width="200">&nbsp;</td>

@@ -22,6 +22,9 @@
         if (!evo) {
             var evo = {};
         }
+        if (!evo.config) {
+          evo.config = {};
+        }
         var actions,
             actionStay = [],
             dontShowWorker = false,
@@ -37,7 +40,8 @@
             ManagerTheme::getStyle(),
             ['icon_file', 'icon_pencil', 'icon_reply', 'icon_plus']
         )) !!};
-        evo.urlCheckConnectionToServer = '{{  MODX_MANAGER_URL }}';
+        evo.MODX_MANAGER_URL = '{{  MODX_MANAGER_URL }}';
+        evo.config.which_browser = '{{ $modx->getConfig('which_browser') }}';
     </script>
     <script src="media/script/main.js"></script>
     @if (get_by_key($_REQUEST, 'r', '', 'is_numeric'))

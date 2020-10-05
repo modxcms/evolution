@@ -386,28 +386,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		return false;
 	}
 
-	// Resource browser
-	function OpenServerBrowser(url, width, height) {
-		var iLeft = (screen.width - width) / 2;
-		var iTop = (screen.height - height) / 2;
-		var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
-		sOptions += ",width=" + width;
-		sOptions += ",height=" + height;
-		sOptions += ",left=" + iLeft;
-		sOptions += ",top=" + iTop;
-		var oWindow = window.open(url, "FCKBrowseWindow", sOptions);
-	}
-
-	function BrowseServer() {
-		var w = screen.width * 0.7;
-		var h = screen.height * 0.7;
-		OpenServerBrowser("<?= MODX_MANAGER_URL;?>media/browser/<?= $which_browser;?>/browser.php?Type=images", w, h);
-	}
-
-	function SetUrl(url, width, height, alt) {
-		document.mutate.icon.value = url;
-	}
-
 	document.addEventListener('DOMContentLoaded', function() {
 		var h1help = document.querySelector('h1 > .help');
 		h1help.onclick = function() {
