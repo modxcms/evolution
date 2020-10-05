@@ -164,7 +164,7 @@ class ManagerTheme implements ManagerThemeInterface
         302,
         303,
         304,
-        305,
+        305 => Controllers\TmplvarRank::class,
         /** Event viewer: show event message log */
         114 => Controllers\EventLog::class,
         115 => Controllers\EventLogDetails::class,
