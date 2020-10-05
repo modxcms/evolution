@@ -20,7 +20,6 @@ class ComposerStaticInit2a583dc22237041ee77b455c6f1352ca
         '49f1569cdf7bea9d800525688bcf4cd9' => __DIR__ . '/../..' . '/functions/actions/mutate_content.php',
         '2dbe0991bced9a12c1c6cf653b62170e' => __DIR__ . '/../..' . '/functions/actions/mutate_plugin.php',
         '5068ae0cff6d33dd59f4e583b12d814b' => __DIR__ . '/../..' . '/functions/actions/mutate_role.php',
-        'fed89643fc359d0354040dd78b25d0ce' => __DIR__ . '/../..' . '/functions/actions/search.php',
         '376f0aaba4a82256accaa61b7a25de82' => __DIR__ . '/../..' . '/functions/actions/settings.php',
         '8714227116b25ef570999a362f526ab3' => __DIR__ . '/../..' . '/functions/helper.php',
         'e582acf487e2f86fac24c8019cd1778e' => __DIR__ . '/../..' . '/functions/laravel.php',

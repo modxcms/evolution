@@ -99,7 +99,6 @@
       "functions/actions/mutate_content.php",
       "functions/actions/mutate_plugin.php",
       "functions/actions/mutate_role.php",
-      "functions/actions/search.php",
       "functions/actions/settings.php",
       "functions/helper.php",
       "functions/laravel.php",

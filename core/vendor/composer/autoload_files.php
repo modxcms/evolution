@@ -19,7 +19,6 @@ return array(
     '49f1569cdf7bea9d800525688bcf4cd9' => $baseDir . '/functions/actions/mutate_content.php',
     '2dbe0991bced9a12c1c6cf653b62170e' => $baseDir . '/functions/actions/mutate_plugin.php',
     '5068ae0cff6d33dd59f4e583b12d814b' => $baseDir . '/functions/actions/mutate_role.php',
-    'fed89643fc359d0354040dd78b25d0ce' => $baseDir . '/functions/actions/search.php',
     '376f0aaba4a82256accaa61b7a25de82' => $baseDir . '/functions/actions/settings.php',
     '8714227116b25ef570999a362f526ab3' => $baseDir . '/functions/helper.php',
     'e582acf487e2f86fac24c8019cd1778e' => $baseDir . '/functions/laravel.php',
