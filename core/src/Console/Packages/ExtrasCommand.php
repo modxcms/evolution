@@ -186,6 +186,7 @@ class ExtrasCommand extends Command
         foreach ($tagsInfo as $tag) {
             $getTags[] = $tag['name'];
         }
+        $getTags = array_slice($getTags, 0, 5);
         $this->tags = $getTags;
         return $this->choice('Select version', $getTags);
 
