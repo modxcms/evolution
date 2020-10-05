@@ -181,12 +181,12 @@ class ExtrasCommand extends Command
         $tagsUrl = $this->fullPackage[$this->selectPackage]['tags_url'];
 
         $tagsInfo = $this->getGithubInfo($tagsUrl);
-        $getTags[] = $this->fullPackage[$this->selectPackage]['default_branch'];
-        $getTags[] = 'last published';
+        $getTags[] = 'Current and updated';
         foreach ($tagsInfo as $tag) {
             $getTags[] = $tag['name'];
         }
-        $getTags = array_slice($getTags, 0, 5);
+        $getTags = array_slice($getTags, 0, 4);
+        $getTags[] = $this->fullPackage[$this->selectPackage]['default_branch'];
         $this->tags = $getTags;
         return $this->choice('Select version', $getTags);
 
