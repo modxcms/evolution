@@ -129,7 +129,7 @@ class ExtrasCommand extends Command
     {
         $version = $this->getPackages('https://api.github.com/orgs/evolution-cms-extras/repos');
         switch ($version) {
-            case 'last published';
+            case 'Current and updated';
                 $this->version = '*';
                 break;
             default:
@@ -153,7 +153,7 @@ class ExtrasCommand extends Command
     {
         $version = $this->getPackages('https://api.github.com/orgs/evolution-cms-packages/repos');
         switch ($version) {
-            case 'last published';
+            case 'Current and updated';
                 if (count($this->tags) > 2) {
                     $this->version = $this->tags[2];
                 } else {
