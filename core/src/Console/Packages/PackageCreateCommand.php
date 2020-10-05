@@ -96,10 +96,6 @@ class PackageCreateCommand extends Command
         }
     }
 
-    public function updateArray()
-    {
-        $this->composerArray['require'][$this->argument('key')] = $this->argument('value');
-    }
 
 
 }
