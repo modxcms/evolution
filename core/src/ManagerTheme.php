@@ -140,7 +140,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** Site schedule */
         70 => Controllers\SiteSchedule::class,
         /** Search */
-        71,
+        71 => Controllers\Search::class,
         /** @deprecated About */
         59 => Controllers\Help::class,
         /** Add weblink */
