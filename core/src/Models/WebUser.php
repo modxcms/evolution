@@ -43,7 +43,7 @@ class WebUser extends Eloquent\Model
 
     public function settings()
     {
-        return $this->hasMany(WebUserSetting::class,'webuser','id');
+        return $this->hasMany(UserSetting::class,'user','id');
     }
 
     public function delete()

@@ -3281,7 +3281,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->cleanupExpiredLocks();
             $rs = ActiveUserLock::query()
                 ->select('sid', 'internalKey', 'elementType', 'elementId', 'lasthit', 'username')
-                ->leftJoin('manager_users', 'active_user_locks.internalKey', '=', 'manager_users.id')
+                ->leftJoin('web_users', 'active_user_locks.internalKey', '=', 'web_users.id')
                 ->get();
             foreach ($rs->toArray() as $row) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
@@ -6145,7 +6145,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
             if ($usrType === 'web') {
-                $usrSettings = Models\WebUserSetting::where('webuser', '=', $id)->get()
+                $usrSettings = Models\UserSetting::where('webuser', '=', $id)->get()
                     ->pluck('setting_value', 'setting_name')
                     ->toArray();
             } else {

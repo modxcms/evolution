@@ -11,23 +11,23 @@ use Illuminate\Database\Eloquent;
  *
  * @mixin \Eloquent
  */
-class WebUserSetting extends Eloquent\Model
+class UserSetting extends Eloquent\Model
 {
     public $incrementing = false;
     public $timestamps = false;
 
     protected $casts = [
-        'webuser' => 'int'
+        'user' => 'int'
     ];
 
     protected $fillable = [
-        'webuser',
+        'user',
         'setting_name',
         'setting_value'
     ];
 
     public function user()
     {
-        return $this->belongsTo(WebUser::class, 'webuser','id');
+        return $this->belongsTo(WebUser::class, 'user','id');
     }
 }
