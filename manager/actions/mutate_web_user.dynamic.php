@@ -78,7 +78,7 @@ if($modx->getManagerApi()->action == '88') {
 	unset($userdatatmp);
 
 	// get user settings
-    $usersettings = \EvolutionCMS\Models\WebUserSetting::where('webuser', $user)->pluck('setting_value', 'setting_name')->toArray();
+    $usersettings = \EvolutionCMS\Models\UserSetting::where('user', $user)->pluck('setting_value', 'setting_name')->toArray();
 	extract($usersettings, EXTR_OVERWRITE);
 	// get user name
 	$usernamedata = \EvolutionCMS\Models\WebUser::find($user)->toArray();

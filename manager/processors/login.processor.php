@@ -286,7 +286,7 @@ $modx->invokeEvent('OnManagerLogin', array(
 	));
 $id = 0;
 // check if we should redirect user to a web page
-$setting = \EvolutionCMS\Models\WebUserSetting::where('webuser', $internalKey)
+$setting = \EvolutionCMS\Models\UserSetting::where('webuser', $internalKey)
     ->where('setting_name', 'manager_login_startup')->first();
 if (!is_null($setting)) {
     $id = (int)$setting->setting_value;

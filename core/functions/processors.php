@@ -606,7 +606,7 @@ if (!function_exists('saveWebUserSettings')) {
             'allowed_days'
         );
 
-        \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
+        \EvolutionCMS\Models\UserSetting::where('webuser', $id)->delete();
 
         foreach ($settings as $n) {
             if (!isset($_POST[$n])) {
@@ -621,7 +621,7 @@ if (!function_exists('saveWebUserSettings')) {
                 $f['webuser'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\WebUserSetting::create($f);
+                \EvolutionCMS\Models\UserSetting::create($f);
             }
         }
     }
@@ -633,9 +633,8 @@ if (!function_exists('saveManagerUserSettings')) {
      *
      * @param int $id
      */
-    function saveManagerUserSettings($id)
+    function saveUserSettings($id)
     {
-        $modx = evolutionCMS();
 
         $ignore = array(
             'a',
@@ -704,7 +703,7 @@ if (!function_exists('saveManagerUserSettings')) {
             unset($settings['default_' . $k]);
         }
 
-        \EvolutionCMS\Models\WebUserSetting::where('webuser', $id)->delete();
+        \EvolutionCMS\Models\UserSetting::where('user', $id)->delete();
 
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
@@ -712,10 +711,10 @@ if (!function_exists('saveManagerUserSettings')) {
             }
             if ($vl != '') {
                 $f = array();
-                $f['webuser'] = $id;
+                $f['user'] = $id;
                 $f['setting_name'] = $n;
                 $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\WebUserSetting::create($f);
+                \EvolutionCMS\Models\UserSetting::create($f);
             }
         }
     }

@@ -52,8 +52,6 @@ class ManagerTheme implements ManagerThemeInterface
         88,
         89,
         90,
-        //11,
-        //12,
         32,
         28 => Controllers\Password::class,
         34,
@@ -146,7 +144,6 @@ class ManagerTheme implements ManagerThemeInterface
         /** Add weblink */
         72,
         /** User management */
-        //75,
         99,
         86 => Controllers\RoleManagment::class,
         /** template/ snippet management */

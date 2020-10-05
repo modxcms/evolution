@@ -106,7 +106,7 @@ switch ($input['mode']) {
 		$webUser->attributes()->create($field);
 
 		// Save User Settings
-        saveManagerUserSettings($internalKey);
+        saveUserSettings($internalKey);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
@@ -238,7 +238,7 @@ switch ($input['mode']) {
 		$webUser->attributes->update($field);
 
 		// Save User Settings
-        saveManagerUserSettings($id);
+        saveUserSettings($id);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
