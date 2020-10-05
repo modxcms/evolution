@@ -45,6 +45,11 @@ class PackageCommand extends Command
     public $evo = '';
 
     /**
+     * @var array
+     */
+    public $require = [];
+
+    /**
      * PackageCommand constructor.
      */
     public function __construct()
@@ -72,6 +77,9 @@ class PackageCommand extends Command
         if (file_exists($this->composer)) {
             $this->parseComposer($this->composer);
         }
+        if (count($this->require) > 0) {
+            $this->loadRequire();
+        }
     }
 
     /**
@@ -90,6 +98,7 @@ class PackageCommand extends Command
                 $composer = EVO_CORE_PATH . 'vendor/' . $key . '/composer.json';
                 $this->packagePath = EVO_CORE_PATH . 'vendor/' . $key . '/';
                 if (file_exists($composer)) {
+                    $this->checkRequired($composer);
                     $this->parseComposerServiceProvider($composer);
                 }
             }
@@ -146,5 +155,26 @@ class PackageCommand extends Command
     protected function copyFiles(array $copyArray)
     {
         File::copyDirectory($this->packagePath . $copyArray['source'], $this->load_dir . $copyArray['destination']);
+    }
+
+    protected function checkRequired($composer)
+    {
+        $composerArray = json_decode(file_get_contents($composer), true);
+        if (isset($composerArray['require']) && is_array($composerArray['require'])) {
+            foreach ($composerArray['require'] as $key => $item) {
+                $this->require[] = $key;
+            }
+        }
+    }
+
+    protected function loadRequire()
+    {
+        foreach ($this->require as $require) {
+            $composer = EVO_CORE_PATH . 'vendor/' . $require . '/composer.json';
+            $this->packagePath = EVO_CORE_PATH . 'vendor/' . $require . '/';
+            if (file_exists($composer)) {
+                $this->parseComposerServiceProvider($composer);
+            }
+        }
     }
 }
