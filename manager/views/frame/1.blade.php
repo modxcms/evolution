@@ -158,7 +158,7 @@
         echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
         ?>
     </script>
-    <script src="{{ ManagerTheme::getThemeUrl() }}js/modx.min.js?v={{ EVO_INSTALL_TIME }}"></script>
+    <script src="{{ ManagerTheme::getThemeUrl() }}js/modx.min.js?v={{ ManagerTheme::getCore()->getVersionData('version') }}"></script>
     @if($modx->getConfig('show_picker'))
     <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>

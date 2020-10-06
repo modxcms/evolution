@@ -791,7 +791,7 @@ class ManagerTheme implements ManagerThemeInterface
             $css = $this->getThemeUrl() . $minCssName;
         }
 
-        return $css . '?v=' . EVO_INSTALL_TIME;
+        return $css . '?v=' . $this->getCore()->getVersionData('version');
     }
 
     public function getMainFrameHeaderHTMLBlock(): string
