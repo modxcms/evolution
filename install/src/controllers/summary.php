@@ -42,7 +42,7 @@ $errors = 0;
 
 
 // check PHP version
-define('PHP_MIN_VERSION', '5.4.0');
+define('PHP_MIN_VERSION', '7.2.0');
 $phpMinVersion = PHP_MIN_VERSION; // Maybe not necessary. For backward compatibility
 echo '<p>' . $_lang['checking_php_version'];
 // -1 if left is less, 0 if equal, +1 if left is higher
@@ -275,24 +275,21 @@ if (!is_null($dbh)) {
     switch ($database_type) {
         case 'pgsql':
             echo '<p>' . $_lang['checking_pgsql_version'];
-            if (version_compare($serverVersion, '10.0', '=')) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_5051'] . '</strong></p>';
-                echo '<p><span class="notok">' . $_lang['pgsql_5051_warning'] . '</span></p>';
+            if (version_compare($serverVersion, '10.0', '<')) {
+                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
             } else {
                 echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
             }
             break;
         case 'mysql':
             echo '<p>' . $_lang['checking_mysql_version'];
-            if (version_compare($serverVersion, '5.6.0', '=')) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_5051'] . '</strong></p>';
-                echo '<p><span class="notok">' . $_lang['mysql_5051_warning'] . '</span></p>';
+            if (version_compare($serverVersion, '5.6.0', '<')) {
+                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
             } else {
                 echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
             }
             break;
     }
-
 
 
 }
