@@ -1125,6 +1125,7 @@ $_lang["user_failedlogincount"] = 'Failed logins';
 $_lang["user_fax"] = 'Fax';
 $_lang["user_female"] = 'Female';
 $_lang["user_full_name"] = 'Full name';
+$_lang["user_first_name"] = 'First name';
 $_lang["user_last_name"] = 'Last Name';
 $_lang["user_middle_name"] = 'Middle Name';
 $_lang["user_gender"] = 'Gender';

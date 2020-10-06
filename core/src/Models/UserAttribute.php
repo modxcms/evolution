@@ -75,6 +75,7 @@ class UserAttribute extends Eloquent\Model
 	protected $fillable = [
 		'internalKey',
 		'fullname',
+		'first_name',
 		'middle_name',
 		'last_name',
 		'role',

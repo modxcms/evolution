@@ -643,6 +643,7 @@ if (!function_exists('saveManagerUserSettings')) {
             'oldemail',
             'newusername',
             'fullname',
+            'first_name',
             'middle_name',
             'last_name',
             'verified',
