@@ -124,6 +124,7 @@ $_lang["modx_install"] = 'Evolution CMS &raquo; Install';
 $_lang["modx_requires_php"] = ', and Evolution CMS requires PHP [+min_version+] or later';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
+$_lang["mysql_old_version"] = 'When you use version oldest then 5.7.6 engine will be MyISAM in newest version use engine InnoDB.<br> We recommend that you update your MySQL';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
 $_lang["mysql_version_is"] = ' Your PostgerSQL version is: ';
 $_lang["no"] = 'No';

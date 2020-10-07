@@ -12,7 +12,7 @@ return [
     'prefix' => env('DB_PREFIX', '[+table_prefix+]'), //$table_prefix
     'method' => env('DB_METHOD', '[+connection_method+]'), //$database_connection_method
     'strict' => env('DB_STRICT', false),
-    'engine' => env('DB_ENGINE'),
+    'engine' => env('DB_ENGINE'[+database_engine+]),
     'options' => [
         PDO::ATTR_STRINGIFY_FETCHES => true,
     ]
