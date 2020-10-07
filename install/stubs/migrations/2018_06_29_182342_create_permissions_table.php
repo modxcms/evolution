@@ -19,6 +19,7 @@ class CreatePermissionsTable extends Migration {
 			$table->string('key');
 			$table->string('lang_key')->default('');
 			$table->integer('group_id')->nullable();
+			$table->integer('disabled')->nullable();
 			$table->timestamps();
 		});
 	}

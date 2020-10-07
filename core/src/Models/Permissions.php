@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS\Models;
 
+use EvolutionCMS\Traits\Models\ManagerActions;
 use Illuminate\Database\Eloquent;
 
 /**
@@ -21,12 +22,24 @@ use Illuminate\Database\Eloquent;
  */
 class Permissions extends Eloquent\Model
 {
+    use ManagerActions;
+
+    protected $managerActionsMap = [
+        'actions.cancel' => 86,
+        'actions.new' => 135,
+        'id' => [
+            'actions.edit' => 135,
+            'actions.save' => 135,
+            'actions.delete' => 135
+        ]
+    ];
 
 	protected $fillable = [
 		'name',
 		'key',
 		'lang_key',
 		'group_id',
+		'disabled',
 	];
 
 
