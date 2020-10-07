@@ -39,6 +39,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'CacheClear' => 'command.cache.clear',
         'CacheForget' => 'command.cache.forget',
         'ClearCompiled' => 'command.clear-compiled',
+        'ClearCacheFull' => 'command.clear-cache-full',
         'Migrate' => 'command.migrate',
         'MigrateFresh' => 'command.migrate.fresh',
         'MigrateInstall' => 'command.migrate.install',
@@ -382,6 +383,19 @@ class ArtisanServiceProvider extends ServiceProvider
             return new Packages\ExtrasCommand();
         });
     }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerClearCacheFullCommand()
+    {
+        $this->app->singleton('command.clear-cache-full', function () {
+            return new Console\ClearCacheFullCommand();
+        });
+    }
+
     /**
      * Register the command.
      *
