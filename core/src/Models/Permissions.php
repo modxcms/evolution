@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent;
  *
  * @property int $id
  * @property string $name
+ * @property string $key
  * @property string $lang_key
  * @property int $group_id
  * @property int $createdon
@@ -23,6 +24,7 @@ class Permissions extends Eloquent\Model
 
 	protected $fillable = [
 		'name',
+		'key',
 		'lang_key',
 		'group_id',
 	];
