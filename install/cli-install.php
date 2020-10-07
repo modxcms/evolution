@@ -333,6 +333,7 @@ class InstallEvo
         $confph['dbase'] = str_replace('`', '', $this->database);
         $confph['table_prefix'] = $this->tablePrefix;
         $confph['lastInstallTime'] = time();
+        $confph['database_engine'] = '';
         switch ($this->databaseType) {
             case 'pgsql':
                 $confph['database_port'] = '5432';
@@ -340,6 +341,12 @@ class InstallEvo
                 break;
             case 'mysql':
                 $confph['database_port'] = '3306';
+                $serverVersion = $this->dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
+                if (version_compare($serverVersion, '5.7.6', '<')) {
+                    $confph['database_engine'] = ", 'myisam'";
+                } else {
+                    $confph['database_engine'] = ", 'innodb'";
+                }
                 break;
         }
         $configString = file_get_contents('stubs/files/config/database/connections/default.tpl');

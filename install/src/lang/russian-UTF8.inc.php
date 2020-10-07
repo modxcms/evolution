@@ -128,6 +128,7 @@ $_lang["modx_install"] = 'Evolution CMS &raquo; Установка';
 $_lang["modx_requires_php"] = ', а Evolution CMS необходим PHP [+min_version+] или более поздний';
 $_lang["mysql_5051"] = ' версия MySQL - 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Известны проблемы с MySQL 5.0.51. Настоятельно рекомендуем обновить базу данных перед продолжением установки.';
+$_lang["mysql_old_version"] = 'Если вы используете версию MySQL ниже чем 5.7.6 то движок таблиц будет MyISAM, в новейших версиях движок будет InnoDB. <br> Рекомендуем обновить ваш MySQL';
 $_lang["pgsql_5051_warning"] = 'Рекомендуемая версия PostgeSQL 10.0 и выше. Настоятельно рекомендуем обновить базу данных перед продолжением установки.';
 $_lang["mysql_version_is"] = ' Ваша версия MySQL: ';
 $_lang["pgsql_version_is"] = ' Ваша версия PostgreSQL: ';

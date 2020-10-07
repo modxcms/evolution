@@ -102,6 +102,7 @@ try {
         $confph['table_prefix'] = $_POST['tableprefix'];
         $confph['lastInstallTime'] = time();
         $confph['site_sessionname'] = $site_sessionname;
+        $confph['database_engine'] = '';
         switch ($database_type) {
             case 'pgsql':
                 $confph['database_port'] = '5432';
@@ -109,6 +110,12 @@ try {
                 break;
             case 'mysql':
                 $confph['database_port'] = '3306';
+                $serverVersion = $dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
+                if (version_compare($serverVersion, '5.7.6', '<')) {
+                    $confph['database_engine'] = ", 'myisam'";
+                } else {
+                    $confph['database_engine'] = ", 'innodb'";
+                }
                 break;
         }
         $configString = file_get_contents(dirname(__DIR__, 2) . '/stubs/files/config/database/connections/default.tpl');
@@ -179,6 +186,7 @@ try {
                 \DB::statement('ALTER SEQUENCE '.$table.' RESTART WITH ' . $new_id);
             }
         }
+
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
 
         if ($installMode == 0) {

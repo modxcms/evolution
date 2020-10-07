@@ -283,8 +283,8 @@ if (!is_null($dbh)) {
             break;
         case 'mysql':
             echo '<p>' . $_lang['checking_mysql_version'];
-            if (version_compare($serverVersion, '5.6.0', '<')) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
+            if (version_compare($serverVersion, '5.7.6', '<')) {
+                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong><br> <span class="notok">' . $_lang['mysql_old_version'] . '</span></p>';
             } else {
                 echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
             }
