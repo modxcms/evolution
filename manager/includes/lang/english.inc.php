@@ -483,6 +483,7 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manage_documents"] = 'Documents';
+$_lang["manage_permission"] = 'Permissions';
 $_lang["manager"] = 'Manager';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'Manager Permissions';
@@ -558,6 +559,7 @@ $_lang["new_file_permissions_message"] = 'When uploading a new file in the File 
 $_lang["new_file_permissions_title"] = 'New File Permissions';
 $_lang["new_folder_permissions_message"] = 'When creating a new directory in the File Manager, the File Manager will attempt to change the directory permissions to those entered in this setting. This may not work on some setups, such as IIS, in which case you will need to manually change the permissions.';
 $_lang["new_folder_permissions_title"] = 'New Directory Permissions';
+$_lang["new_permission"] = 'New Permission';
 $_lang["new_htmlsnippet"] = 'New Chunk';
 $_lang["new_keyword"] = 'Add new keyword:';
 $_lang["new_module"] = 'New Module';
@@ -1468,3 +1470,9 @@ $_lang['invalid_event_response'] = 'The %s event has ivalid output';
 $_lang['chunk_processor'] = 'Chunks processing class';
 $_lang['enable_mootools'] = 'Enable Mootools in manager';
 $_lang['enable_mootools_message'] = 'Load Mootools.js in manager for backward compatibility';
+
+
+$_lang["permission_title"] = 'Create / edit permission';
+$_lang["groups_permission_title"] = 'Create / edit category';
+$_lang["lang_key_desc"] = 'Key language from array $_lang';
+$_lang["key_desc"] = 'Key for checked permission';
