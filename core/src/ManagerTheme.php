@@ -1,5 +1,9 @@
 <?php namespace EvolutionCMS;
 
+use EvolutionCMS\Controllers\UserRoles\Permission;
+use EvolutionCMS\Controllers\UserRoles\PermissionsGroups;
+use EvolutionCMS\Controllers\UserRoles\RoleManagment;
+use EvolutionCMS\Controllers\UserRoles\UserRole;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
 use EvolutionCMS\Models\ActiveUser;
@@ -57,10 +61,11 @@ class ManagerTheme implements ManagerThemeInterface
         34,
         33,
         /** role management */
-        38,
-        35,
-        36,
-        37,
+        38 => UserRole::class,
+        35 => UserRole::class,
+        36 => UserRole::class,
+        135 => Permission::class,
+        136 => PermissionsGroups::class,
         /** category management */
         120,
         121,
@@ -145,7 +150,7 @@ class ManagerTheme implements ManagerThemeInterface
         72,
         /** User management */
         99,
-        86 => Controllers\RoleManagment::class,
+        86 => RoleManagment::class,
         /** template/ snippet management */
         76 => Controllers\Resources::class,
         /** Resource Selector  */

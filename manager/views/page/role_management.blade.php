@@ -1,59 +1,38 @@
 @extends('manager::template.page')
+
+@push('scripts.bot')
+    <script>
+        var trans = {!! json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) !!},
+            mraTrans = {!! json_encode($mraTranslations, JSON_UNESCAPED_UNICODE) !!};
+    </script>
+    <script src="media/script/jquery.quicksearch.js"></script>
+    <script src="media/script/jquery.nucontextmenu.js"></script>
+    <script src="media/script/bootstrap/js/bootstrap.min.js"></script>
+    <script src="actions/resources/functions.js"></script>
+@endpush
+
 @section('content')
     <h1>
         <i class="{{ $_style['icon_role'] }}"></i>{{ ManagerTheme::getLexicon('role_management_title') }}
     </h1>
 
-    <div class="tab-page">
-        <div class="container container-body">
-            <div class="form-group">
-                {!! ManagerTheme::getLexicon('role_management_msg') !!}
-                <a class="btn btn-secondary btn-sm" href="{{ (new EvolutionCMS\Models\UserRole)->makeUrl('actions.new') }}">
-                    <i class="{{ $_style['icon_add'] }} hide4desktop"></i> {{ ManagerTheme::getLexicon('new_role') }}
-                </a>
-            </div>
-            <div class="form-group">
-                @if($roles->count() === 0)
-                    <p>{{ ManagerTheme::getLexicon('no_records_found') }}</p>
+    <div class="sectionBody">
+        <div class="tab-pane" id="resourcesPane">
+            <script type="text/javascript">
+                tpResources = new WebFXTabPane(document.getElementById('resourcesPane'), false);
+            </script>
+
+            @foreach($tabs as $tab)
+                @if($tab instanceof EvolutionCMS\Interfaces\ManagerTheme\TabControllerInterface)
+                    @include(ManagerTheme::getViewName($tab->getView()), $tab->getParameters())
                 @else
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="table data">
-                                <thead>
-                                <tr>
-                                    <td>{{ ManagerTheme::getLexicon('role') }}</td>
-                                    <td>{{ ManagerTheme::getLexicon('description') }}</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <?php /** @var EvolutionCMS\Models\UserRole $role */ ?>
-                                    @foreach($roles as $role)
-                                        @if($role->getKey() === 1)
-                                            <tr class="text-muted disabled">
-                                                <td>
-                                                    <b>{{ $role->name }}</b>
-                                                </td>
-                                                <td>
-                                                    <span>{{ ManagerTheme::getLexicon('administrator_role_message') }}</span>
-                                                </td>
-                                            </tr>
-                                        @else
-                                            <tr>
-                                                <td>
-                                                    <a class="text-primary" href="{{ $role->makeUrl('actions.edit') }}">
-                                                       {{ $role->name }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ $role->description }}</td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    {!! $tab !!}
                 @endif
-            </div>
+            @endforeach
+
+            @if($activeTab !== '')
+                <script> tpResources.setSelectedTab('{{ $activeTab }}');</script>
+            @endif
         </div>
     </div>
 @endsection

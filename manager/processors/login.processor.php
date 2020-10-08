@@ -222,7 +222,12 @@ $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
 $_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $role)->first();
 if(!is_null($_SESSION['mgrPermissions'])){
-    $_SESSION['mgrPermissions'] = $_SESSION['mgrPermissions']->toArray();
+    $permissionsRole = [];
+    $roleArray = \EvolutionCMS\Models\RolePermissions::query()->where('role_id', $role)->pluck('permission')->toArray();
+    foreach ($roleArray as $role) {
+        $permissionsRole[$role] = 1;
+    }
+    $_SESSION['mgrPermissions'] = $permissionsRole;
 }
 // successful login so reset fail count and update key values
 $userAttribute = \EvolutionCMS\Models\UserAttribute::where('internalKey', $internalKey)->first();
