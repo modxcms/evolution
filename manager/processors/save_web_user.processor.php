@@ -49,7 +49,7 @@ $newpassword = '';
 $websignupemail_message = $modx->config['websignupemail_message'];
 $site_url = $modx->config['site_url'];
 
-if (!$modx->hasPermission('save_web_user')) {
+if (!$modx->hasPermission('save_user')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"], $id);
 }
 

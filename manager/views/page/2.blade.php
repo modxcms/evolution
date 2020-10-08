@@ -18,7 +18,7 @@
         $icon = '<i class="'. $_style['icon_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%user_management_title%]"> </i>[%user_management_title%]';
         $ph['SecurityIcon'] = sprintf($iconTpl,$icon, 75);
     }
-    if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
+    if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
         $icon = '<i class="'. $_style['icon_web_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
         $ph['WebUserIcon'] = sprintf($iconTpl,$icon, 99);
     }

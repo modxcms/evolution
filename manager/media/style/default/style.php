@@ -195,7 +195,7 @@ switch($action) {
 		}
 		break;
 	case '88':
-		if($modx->hasPermission('new_web_user')) {
+		if($modx->hasPermission('new_user')) {
 			$addnew = 1;
 		}
 		break;

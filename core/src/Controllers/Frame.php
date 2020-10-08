@@ -344,7 +344,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         if (!$this->managerTheme->getCore()
             ->hasAnyPermissions([
                     'edit_user',
-                    'edit_web_user',
                     'edit_role',
                     'access_permissions',
                     'web_access_permissions'
@@ -654,7 +653,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function menuWebUserManagment()
     {
-        if ($this->managerTheme->getCore()->hasPermission('edit_web_user')) {
+        if ($this->managerTheme->getCore()->hasPermission('edit_user')) {
             $this->sitemenu['web_user_management_title'] = [
                 'web_user_management_title',
                 'users',
@@ -665,7 +664,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'index.php?a=99',
                 $this->managerTheme->getLexicon('web_user_management_title'),
                 '',
-                'edit_web_user',
+                'edit_user',
                 'main',
                 0,
                 20,
