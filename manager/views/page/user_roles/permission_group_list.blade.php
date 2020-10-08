@@ -30,7 +30,7 @@
                                     <tr>
                                         <td>
                                             <a class="text-primary" href="{{ $group->makeUrl('actions.edit') }}">
-                                                {{ $group->name }}
+                                                {{ManagerTheme::getLexicon($group->lang_key, $group->name ) }}
                                             </a>
                                         </td>
                                     </tr>

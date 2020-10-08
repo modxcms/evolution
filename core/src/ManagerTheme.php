@@ -63,8 +63,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** role management */
         38 => UserRole::class,
         35 => UserRole::class,
-        36,
-        37,
+        36 => UserRole::class,
         135 => Permission::class,
         136 => PermissionsGroups::class,
         /** category management */

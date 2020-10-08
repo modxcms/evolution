@@ -28,7 +28,7 @@
                 @component('manager::partials.panelCollapse', ['name' => $tabIndexPageName . '_content', 'id' => 0, 'title' => ManagerTheme::getLexicon('no_category')])
                     <ul class="elements">
                         @foreach($outCategory as $item)
-                            @include('manager::page.resources.elements.chunk', compact('item', 'tabIndexPageName'))
+                            @include('manager::page.user_roles.element_permission', compact('item', 'tabIndexPageName'))
                         @endforeach
                     </ul>
                 @endcomponent
@@ -36,7 +36,7 @@
 
             @if(isset($groups))
                 @foreach($groups as $group)
-                    @component('manager::partials.panelCollapse', ['name' => $tabIndexPageName . '_content', 'id' => $group->id, 'title' => $group->name])
+                    @component('manager::partials.panelCollapse', ['name' => $tabIndexPageName . '_content', 'id' => $group->id, 'title' => ManagerTheme::getLexicon($group->lang_key, $group->name ) ])
                         <ul class="elements">
                             @foreach($group->permissions as $item)
                                 @include('manager::page.user_roles.element_permission', compact('item', 'tabIndexPageName'))

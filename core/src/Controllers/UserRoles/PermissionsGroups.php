@@ -22,7 +22,7 @@ class PermissionsGroups extends AbstractController implements ManagerTheme\PageC
      */
     public function canView(): bool
     {
-        return $this->managerTheme->getCore()->hasPermission('edit_user');
+        return $this->managerTheme->getCore()->hasPermission('edit_role');
     }
 
     public function process(): bool

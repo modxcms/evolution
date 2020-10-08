@@ -11,13 +11,13 @@
                 </div>
             @endif
             <div class="mainCell elements_description">
-                <span @if($item->disabled)class="disabledPlugin" @endif>
+                <span>
                     <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
                         <i class="fa fa-user-tag"></i>
                         @if($item->locked)
                             <i class="{{ $_style['icon_lock'] }}"></i>
                         @endif
-                        {{ $item->name }}
+                        {{ ManagerTheme::getLexicon($item->lang_key, $item->name ) }}
                         <small>({{ $item->id }})</small>
                         <span class="elements_descr">
                             {{ $item->caption }}

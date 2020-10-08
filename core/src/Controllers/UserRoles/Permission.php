@@ -21,7 +21,7 @@ class Permission extends AbstractController implements ManagerTheme\PageControll
      */
     public function canView(): bool
     {
-        return $this->managerTheme->getCore()->hasPermission('edit_user');
+        return $this->managerTheme->getCore()->hasPermission('edit_role');
     }
 
     public function process() : bool
