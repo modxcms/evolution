@@ -25,9 +25,9 @@ class PermissionsGroups extends AbstractController implements ManagerTheme\PageC
         return $this->managerTheme->getCore()->hasPermission('edit_user');
     }
 
-    public function process() : bool
+    public function process(): bool
     {
-        if(isset($_GET['action']) && $_GET['action'] == 'delete' ){
+        if (isset($_GET['action']) && $_GET['action'] == 'delete') {
             Models\Permissions::query()->where('group_id', $this->getElementId())->delete();
             Models\PermissionsGroups::query()->where('id', $this->getElementId())->delete();
             header('Location: index.php?a=86&tab=1');
@@ -43,14 +43,18 @@ class PermissionsGroups extends AbstractController implements ManagerTheme\PageC
     public function updateOrCreate()
     {
         $id = $this->getElementId();
-        $group = Models\PermissionsGroups::findOrNew($id);
+        $group = Models\PermissionsGroups::query()->firstOrNew($id);
         $group->name = $_POST['name'];
         $group->lang_key = $_POST['lang_key'];
         $group->save();
         header('Location: index.php?a=136&id=' . $group->getKey() . '&r=9');
-
     }
 
+    public static function findCategoryOrNew($name){
+        $group = Models\PermissionsGroups::query()->firstOrNew(['name' => $name]);
+        $group->save();
+        return $group->getKey();
+    }
     /**
      * {@inheritdoc}
      */

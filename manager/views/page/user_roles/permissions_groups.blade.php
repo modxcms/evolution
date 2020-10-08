@@ -56,7 +56,7 @@
                 document.userform.save.click();
             },
             delete: function () {
-                if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_role') }}") === true) {
+                if (confirm("{{ ManagerTheme::getLexicon('confirm_delete_category') }}") === true) {
                     document.location.href = "index.php?id=" + document.userform.id.value + "&a=136&action=delete";
                 }
             },
