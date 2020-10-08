@@ -6,12 +6,12 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 
 switch($modx->getManagerApi()->action) {
 	case 88:
-		if(!$modx->hasPermission('edit_web_user')) {
+		if(!$modx->hasPermission('edit_user')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;
 	case 87:
-		if(!$modx->hasPermission('new_web_user')) {
+		if(!$modx->hasPermission('new_user')) {
 			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;

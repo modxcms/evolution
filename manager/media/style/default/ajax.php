@@ -281,7 +281,7 @@ if (isset($action)) {
                 $sql = $sql->where('users.username', 'LIKE', '%'.$filter.'%');
             }
 
-            if ($modx->hasPermission('new_web_user')) {
+            if ($modx->hasPermission('new_user')) {
                 $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_web_user'] . '</a></li>';
             }
 
