@@ -130,6 +130,7 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'save_chunk', 'role_id' => 2],
             ['permission' => 'remove_locks', 'role_id' => 2],
             ['permission' => 'display_locks', 'role_id' => 2],
+            ['permission' => 'access_permissions', 'role_id' => 2],
         ];
         \DB::table('role_permissions')->insert($insertArray);
 
@@ -176,6 +177,7 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'bk_manager', 'role_id' => 3],
             ['permission' => 'remove_locks', 'role_id' => 3],
             ['permission' => 'display_locks', 'role_id' => 3],
+            ['permission' => 'access_permissions', 'role_id' => 3],
         ];
         \DB::table('role_permissions')->insert($insertArray);
         
