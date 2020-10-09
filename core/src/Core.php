@@ -2639,17 +2639,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
     public function processRoutes()
     {
+        $request = Request::createFromGlobals();
+        $this->instance('request', $request);
+
         if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
             with(new \Illuminate\Routing\RoutingServiceProvider($this))->register();
 
             include EVO_CORE_PATH . 'custom/routes.php';
 
-            Route::fallback(function() {
+            Route::match(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], '{any}', function() {
                 $this->executeParser();
-            });
-
-            $request = Request::createFromGlobals();
-            $this->instance('request', $request);
+            })->where('any', '.*')->fallback();
 
             $response = $this['router']->dispatch($request);
             $response->send();
