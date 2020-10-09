@@ -58,7 +58,7 @@ $modx->invokeEvent('OnBeforeManagerLogin', array(
 
 $user = \EvolutionCMS\Models\User::query()
     ->join('user_attributes', 'user_attributes.internalKey','=','users.id')
-    ->where('users.username', $username)->where('role', '>', 0);
+    ->where('users.username', $username);
 
 
 if($user->count() == 0 || $user->count() > 1) {
