@@ -19,7 +19,9 @@ class Panel extends AbstractPanel
         ];
         if ($this->hasEvolutionCMS() === true) {
 
-            $currentRoute = Route::getCurrentRoute();
+            $currentRoute = is_readable(EVO_CORE_PATH . 'custom/routes.php')
+                ? Route::getCurrentRoute()
+                : null;
             if (is_null($currentRoute) === false) {
                 $rows = array_merge([
                     'route' => $currentRoute->uri(),
