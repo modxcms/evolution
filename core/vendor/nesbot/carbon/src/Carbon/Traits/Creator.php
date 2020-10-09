@@ -59,8 +59,8 @@ trait Creator
             $time = $this->constructTimezoneFromDateTime($time, $tz)->format('Y-m-d H:i:s.u');
         }
 
-        if (is_int($time)) {
-            $time = "@$time";
+        if (is_numeric($time)) {
+            $time = static::createFromTimestampUTC($time)->format('Y-m-d\TH:i:s.uP');
         }
 
         // If the class has a test now set and we are trying to create a now()
@@ -564,7 +564,7 @@ trait Creator
         }
 
         $tz = is_int($originalTz)
-            ? @timezone_name_from_abbr('', (int) ($originalTz * 3600), 1)
+            ? @timezone_name_from_abbr('', (int) ($originalTz * static::MINUTES_PER_HOUR * static::SECONDS_PER_MINUTE), 1)
             : $originalTz;
 
         $tz = static::safeCreateDateTimeZone($tz, $originalTz);
