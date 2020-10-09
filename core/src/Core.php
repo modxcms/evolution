@@ -2866,8 +2866,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
                 $data = array_merge($data, $this->dataForView);
 
-                $tpl = $this['view']->make($template, $data);
+                $this['view']->share($data);
+                
+                if ($this->isChunkProcessor('DLTemplate')) {
+                    $this->tpl->blade->share($data);
+                }
 
+                $tpl = $this['view']->make($template);
                 $templateCode = $tpl->render();
             } else {
                 // get the template and start parsing!
