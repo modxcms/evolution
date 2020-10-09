@@ -65,6 +65,7 @@
     "roave/security-advisories": "dev-master"
   },
   "config": {
+    "optimize-autoloader": true,
     "preferred-install": "dist",
     "prestissimo": {
       "maxConnections": 6,
