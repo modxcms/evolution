@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Arr;
 use EvolutionCMS\Tracy\Panels\AbstractPanel;
+use Illuminate\Support\Facades\Route;
 use ManagerTheme;
 
 class Panel extends AbstractPanel
@@ -17,7 +18,13 @@ class Panel extends AbstractPanel
             'route' => 404,
         ];
         if ($this->hasEvolutionCMS() === true) {
-            if ($this->evolution->isBackend()) {
+
+            $currentRoute = Route::getCurrentRoute();
+            if (is_null($currentRoute) === false) {
+                $rows = array_merge([
+                    'route' => $currentRoute->uri(),
+                ], $currentRoute->getAction());
+            }elseif ($this->evolution->isBackend()) {
                 $action = Arr::get($_REQUEST, 'a');
                 if ($action !== null) {
                     $rows['route'] = 'action: ' . $action;
