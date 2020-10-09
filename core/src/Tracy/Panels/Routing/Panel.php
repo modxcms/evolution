@@ -24,7 +24,9 @@ class Panel extends AbstractPanel
                 $rows = array_merge([
                     'route' => $currentRoute->uri(),
                 ], $currentRoute->getAction());
-            }elseif ($this->evolution->isBackend()) {
+            }
+
+            if ($this->evolution->isBackend()) {
                 $action = Arr::get($_REQUEST, 'a');
                 if ($action !== null) {
                     $rows['route'] = 'action: ' . $action;
