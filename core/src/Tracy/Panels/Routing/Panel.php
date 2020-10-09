@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Arr;
 use EvolutionCMS\Tracy\Panels\AbstractPanel;
-use Illuminate\Support\Facades\Route;
 use ManagerTheme;
+use Illuminate\Support\Facades\Route;
 
 class Panel extends AbstractPanel
 {
@@ -19,15 +19,6 @@ class Panel extends AbstractPanel
         ];
         if ($this->hasEvolutionCMS() === true) {
 
-            $currentRoute = is_readable(EVO_CORE_PATH . 'custom/routes.php')
-                ? Route::getCurrentRoute()
-                : null;
-            if (is_null($currentRoute) === false) {
-                $rows = array_merge([
-                    'route' => $currentRoute->uri(),
-                ], $currentRoute->getAction());
-            }
-
             if ($this->evolution->isBackend()) {
                 $action = Arr::get($_REQUEST, 'a');
                 if ($action !== null) {
@@ -41,6 +32,17 @@ class Panel extends AbstractPanel
                     $rows['controller'] = $controller;
                 }
             } else {
+                $currentRoute = is_readable(EVO_CORE_PATH . 'custom/routes.php')
+                    ? Route::getCurrentRoute()
+                    : null;
+
+                if (is_null($currentRoute) === false) {
+                    $rows = array_merge([
+                        'route' => $currentRoute->uri(),
+                    ], $currentRoute->getAction());
+                }
+
+
                 if (!empty($this->evolution->documentMethod) && !empty($this->evolution->documentIdentifier)) {
                     $rows['route'] = $this->evolution->documentMethod . ' : ' . $this->evolution->documentIdentifier;
                 }
