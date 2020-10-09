@@ -132,5 +132,5 @@ if (is_cli()) {
 
 // execute the parser if index.php was not included
 if (!MODX_API_MODE && !MODX_CLI) {
-    $modx->executeParser();
+    $modx->processRoutes();
 }

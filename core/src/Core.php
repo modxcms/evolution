@@ -15,6 +15,7 @@ use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
 use TemplateProcessor;
@@ -2633,6 +2634,27 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         return $source;
+    }
+
+    public function processRoutes()
+    {
+        if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
+            with(new \Illuminate\Routing\RoutingServiceProvider($this))->register();
+
+            include EVO_CORE_PATH . 'custom/routes.php';
+
+            Route::fallback(function() {
+                $this->executeParser();
+            });
+
+            $request = Request::createFromGlobals();
+            $this->instance('request', $request);
+
+            $response = $this['router']->dispatch($request);
+            $response->send();
+        } else {
+            $this->executeParser();
+        }
     }
 
     /**
