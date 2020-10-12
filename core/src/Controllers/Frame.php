@@ -837,10 +837,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function menuUpdateTree()
     {
-        if (!$this->managerTheme->getCore()->hasPermission('import_static')) {
-            return $this;
-        }
-
         $this->sitemenu['update_tree'] = [
             'update_tree',
             'tools',

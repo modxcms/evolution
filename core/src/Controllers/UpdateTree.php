@@ -28,7 +28,7 @@ class UpdateTree extends AbstractController implements ManagerTheme\PageControll
      */
     public function canView(): bool
     {
-        return $this->managerTheme->getCore()->hasPermission('export_static');
+        return true;
     }
 
     public function process() : bool

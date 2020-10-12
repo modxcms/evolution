@@ -245,16 +245,14 @@ class SiteContent extends Eloquent\Model
         });
 
         // add in custom deleting
-        static::deleting(function($model)
-        {
+        static::deleting(function ($model) {
             // save custom delete value
             $model->deleted = 1;
             $model->save();
         });
 
         // add in custom restoring
-        static::restoring(function($model)
-        {
+        static::restoring(function ($model) {
             // save custom delete value
             $model->deleted = 0;
             $model->save();
@@ -487,10 +485,6 @@ class SiteContent extends Eloquent\Model
     }
 
 
-
-
-
-
     public function newFromBuilder($attributes = [], $connection = null)
     {
         $instance = parent::newFromBuilder($attributes);
@@ -568,7 +562,7 @@ class SiteContent extends Eloquent\Model
 
         $position = $this->getPositionColumn();
         $this->previousPosition = isset($this->original[$position]) ? $this->original[$position] : null;
-        $this->attributes[$position] = max(0, (int) $value);
+        $this->attributes[$position] = max(0, (int)$value);
     }
 
     /**
@@ -735,7 +729,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasAncestors()
     {
-        return (bool) $this->countAncestors();
+        return (bool)$this->countAncestors();
     }
 
     /**
@@ -841,7 +835,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasDescendants()
     {
-        return (bool) $this->countDescendants();
+        return (bool)$this->countDescendants();
     }
 
     /**
@@ -873,7 +867,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasChildren()
     {
-        return (bool) $this->countChildren();
+        return (bool)$this->countChildren();
     }
 
     /**
@@ -1313,7 +1307,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasSiblings()
     {
-        return (bool) $this->countSiblings();
+        return (bool)$this->countSiblings();
     }
 
     /**
@@ -1581,7 +1575,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasPrevSiblings()
     {
-        return (bool) $this->countPrevSiblings();
+        return (bool)$this->countPrevSiblings();
     }
 
     /**
@@ -1686,7 +1680,7 @@ class SiteContent extends Eloquent\Model
      */
     public function hasNextSiblings()
     {
-        return (bool) $this->countNextSiblings();
+        return (bool)$this->countNextSiblings();
     }
 
     /**
@@ -2013,7 +2007,7 @@ class SiteContent extends Eloquent\Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param  array $models
+     * @param array $models
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function newCollection(array $models = array())
@@ -2050,7 +2044,6 @@ class SiteContent extends Eloquent\Model
     }
 
 
-
     public function scopeWithTVs($query, $tvList = array(), $sep = ':')
     {
         if (!empty($tvList)) {
@@ -2066,7 +2059,7 @@ class SiteContent extends Eloquent\Model
                 $query = $query->leftJoin('site_tmplvar_contentvalues as tv_' . $tvname, function ($join) use ($tvid, $tvname) {
                     $join->on('site_content.id', '=', 'tv_' . $tvname . '.contentid')->where('tv_' . $tvname . '.tmplvarid', '=', $tvid);
                 });
-                $query = $query->addSelect('tv_' . $tvname . '.value as '.$tvname);
+                $query = $query->addSelect('tv_' . $tvname . '.value as ' . $tvname);
                 $query = $query->groupBy('tv_' . $tvname . '.value');
                 if (!empty($tvListWithDefaults[$tvname]) && $tvListWithDefaults[$tvname] == 'd') {
                     $query = $query->leftJoin('site_tmplvars as tvd_' . $tvname, function ($join) use ($tvid, $tvname) {
@@ -2096,7 +2089,7 @@ class SiteContent extends Eloquent\Model
             if ($type == 'tvd') {
                 $field = DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
             }
-            switch(true) {
+            switch (true) {
                 case ($op == 'in'):
                     $query = $query->whereIn($field, explode(',', $value));
                     break;
@@ -2174,6 +2167,21 @@ class SiteContent extends Eloquent\Model
         return $query;
     }
 
+    /**
+     * @param $query
+     * @param int $depth
+     */
+    public function scopeGetRootTree($query, $depth = 0)
+    {
+        return $query->select('t2.*')
+            ->leftJoin('site_content_closure', function($join) use ($depth) {
+                $join->on('site_content.id', '=', 'site_content_closure.ancestor');
+                $join->on('site_content_closure.depth', '<', \DB::raw($depth));
+            })
+            ->join('site_content as t2', 't2.id', '=', 'site_content_closure.descendant' )
+            ->where('site_content.parent', 0)->get()->toTree();
+    }
+
     //return tvs array [$docid => tvs array()]
     public static function getTvList($docs, $tvList = array())
     {
@@ -2189,16 +2197,16 @@ class SiteContent extends Eloquent\Model
             $tvIds = $tvs->pluck('name', 'id')->toArray();
             $tvValues = SiteTmplvarContentvalue::whereIn('contentid', $ids)->whereIn('tmplvarid', array_keys($tvIds))->get()->toArray();
             foreach ($tvValues as $tv) {
-                if (empty($tv['value']) && !empty($tvNames[$tvIds [$tv['tmplvarid']] ] )) {
-                    $tv['value'] = $tvNames[ $tvIds[ $tv['tmplvarid'] ] ];
+                if (empty($tv['value']) && !empty($tvNames[$tvIds [$tv['tmplvarid']]])) {
+                    $tv['value'] = $tvNames[$tvIds[$tv['tmplvarid']]];
                 }
                 unset($tv['id']);
-                $docsTV[ $tv['contentid'] ][ $tv['tmplvarid'] ] = $tv;
+                $docsTV[$tv['contentid']][$tv['tmplvarid']] = $tv;
             }
             foreach ($ids as $docid) {
                 foreach ($tvIds as $tvid => $tvname) {
                     if (empty($docsTV[$docid][$tvid])) {
-                        $docsTV[$docid][$tvid] = array('tmplvarid' => $tvid, 'contentid' => $docid, 'value' => $tvNames[$tvIds [$tvid] ]);
+                        $docsTV[$docid][$tvid] = array('tmplvarid' => $tvid, 'contentid' => $docid, 'value' => $tvNames[$tvIds [$tvid]]);
                     }
                 }
             }
@@ -2207,7 +2215,7 @@ class SiteContent extends Eloquent\Model
             $tmp = array();
             foreach ($docsTV as $docid => $tvs) {
                 foreach ($tvs as $tvid => $tv) {
-                    $tmp[$docid][ $tvIds[$tvid] ] = $tv['value'];
+                    $tmp[$docid][$tvIds[$tvid]] = $tv['value'];
                 }
             }
             $docsTV = $tmp;
