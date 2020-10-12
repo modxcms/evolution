@@ -2173,7 +2173,7 @@ class SiteContent extends Eloquent\Model
      */
     public function scopeGetRootTree($query, $depth = 0)
     {
-        $query->select('t2.*')
+        return $query->select('t2.*')
             ->leftJoin('site_content_closure', function($join) use ($depth) {
                 $join->on('site_content.id', '=', 'site_content_closure.ancestor');
                 $join->on('site_content_closure.depth', '<', \DB::raw($depth));
