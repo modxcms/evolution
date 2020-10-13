@@ -1548,9 +1548,9 @@
           this.page.id = 'evo-tab-page-' + this.uid;
           this.page.className = 'evo-tab-page iframe-scroller show';
           if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>';
-			  } else {
-              this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
+            this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>';
+          } else {
+            this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
           };
           d.getElementById('main').appendChild(this.page);
           //console.time('load-tab');
@@ -1813,6 +1813,7 @@
             if (o.draggable) {
               modx.dragging(o.el, {wrap: o.wrap, resize: o.resize});
             }
+            o.el.classList.add('show');
           },
           close: function(e) {
             o.event = e || o.event || w.event;
@@ -1943,7 +1944,7 @@
           o.el.style.height = !/[^[0-9]/.test(o.height) ? o.height + 'px' : o.height;
           o.el.style.zIndex = o.zIndex;
           o.el.style.margin = o.margin;
-          o.el.className = o.className + ' show alert alert-' + o.type + ' ' + o.addclass + (o.animation ? ' animation ' + o.animation : '');
+          o.el.className = o.className + ' alert alert-' + o.type + ' ' + o.addclass + (o.animation ? ' animation ' + o.animation : '');
           o.el.dataset.position = o.position.join(':');
           if (o.showclose) {
             o.el.innerHTML += '<div class="evo-popup-close close">&times;</div>';
@@ -2080,7 +2081,7 @@
         modx.tree.ctx = null;
       }
       if (!/dropdown\-item/.test(e.target.className)
-      //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
+          //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
       ) {
         var els = d.querySelectorAll('.dropdown.show'),
             n = null,
