@@ -14,6 +14,7 @@ use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RoutingServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -2641,9 +2642,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $request = Request::createFromGlobals();
         $this->instance('request', $request);
+        $this->instance('Illuminate\Http\Request', $request);
 
         if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
-            with(new \Illuminate\Routing\RoutingServiceProvider($this))->register();
+            with(new RoutingServiceProvider($this))->register();
 
             include EVO_CORE_PATH . 'custom/routes.php';
 
@@ -2888,7 +2890,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
 
                 $this['view']->share($data);
-                
+
                 if ($this->isChunkProcessor('DLTemplate')) {
                     $this->tpl->blade->share($data);
                 }
