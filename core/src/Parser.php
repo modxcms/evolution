@@ -240,25 +240,17 @@ class Parser
                     break;
                 case '@B_FILE':
                     if ($subTmp != '' && $this->bladeEnabled) {
-                        $real = realpath(MODX_BASE_PATH . $this->templatePath);
-                        $path = realpath(MODX_BASE_PATH . $this->templatePath . $this->cleanPath($subTmp) . '.' . $this->templateExtension);
-                        if (basename($path, '.' . $this->templateExtension) !== '' &&
-                            0 === strpos($path, $real) &&
-                            file_exists($path)
-                        ) {
-                            $tpl = $this->cleanPath($subTmp);
-                        }
+                        $tpl = $this->blade->make($this->cleanPath($subTmp));
                     }
                     break;
                 case '@B_CODE':
-                    $tpl = trim($tmp[3]);
                     $cache = md5($name) . '-' . sha1($subTmp);
                     $filesystem = $this->modx['filesystem']->drive('storage');
                     if (!$filesystem->exists('blade/' . $cache . '.blade.php')) {
-                        $filesystem->put('blade/' . $cache . '.blade.php', $tpl);
+                        $filesystem->put('blade/' . $cache . '.blade.php', $subTmp);
                     }
                     $this->blade->addNamespace('cache', $filesystem->path('blade/'));
-                    $tpl = 'cache::' . $cache;
+                    $tpl = $this->blade->make('cache::' . $cache);
                     break;
                 case '@FILE':
                     if ($subTmp != '') {
@@ -446,10 +438,14 @@ class Parser
         $blade = strpos($name, '@B_') === 0 && $this->bladeEnabled;
         switch (true) {
             case $twig:
-                $out = $out->render($this->getTemplateData($data));
+                if (!empty($out)) {
+                    $out = $out->render($this->getTemplateData($data));
+                }
                 break;
             case $blade:
-                $out = $this->blade->make($out)->with($this->getTemplateData($data))->render();
+                if (!empty($out)) {
+                    $out = $out->with($this->getTemplateData($data))->render();
+                }
                 break;
             case is_array($data) && ($out != ''):
                 if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
