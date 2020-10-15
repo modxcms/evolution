@@ -220,9 +220,10 @@ $_SESSION['mgrFailedlogins'] = $failedlogins;
 $_SESSION['mgrLastlogin'] = $lastlogin;
 $_SESSION['mgrLogincount'] = $nrlogins; // login count
 $_SESSION['mgrRole'] = $role;
-$_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $role)->first();
-if(!is_null($_SESSION['mgrPermissions'])){
-    $permissionsRole = [];
+$_SESSION['mgrPermissions'] = [];
+$mgrPermissions = \EvolutionCMS\Models\UserRole::find($role);
+if($mgrPermissions){
+    $permissionsRole = $mgrPermissions->toArray();
     $roleArray = \EvolutionCMS\Models\RolePermissions::query()->where('role_id', $role)->pluck('permission')->toArray();
     foreach ($roleArray as $role) {
         $permissionsRole[$role] = 1;
