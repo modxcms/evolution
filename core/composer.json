@@ -53,6 +53,7 @@
     "illuminate/support": "6.*",
     "illuminate/translation": "6.*",
     "illuminate/view": "6.*",
+    "illuminate/validation": "6.*",
     "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.*",
     "tracy/tracy": "~2.5",

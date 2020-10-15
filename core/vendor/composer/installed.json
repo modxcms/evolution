@@ -113,17 +113,17 @@
     },
     {
         "name": "composer/composer",
-        "version": "1.10.13",
-        "version_normalized": "1.10.13.0",
+        "version": "1.10.15",
+        "version_normalized": "1.10.15.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/composer.git",
-            "reference": "47c841ba3b2d3fc0b4b13282cf029ea18b66d78b"
+            "reference": "547c9ee73fe26c77af09a0ea16419176b1cdbd12"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/composer/zipball/47c841ba3b2d3fc0b4b13282cf029ea18b66d78b",
-            "reference": "47c841ba3b2d3fc0b4b13282cf029ea18b66d78b",
+            "url": "https://api.github.com/repos/composer/composer/zipball/547c9ee73fe26c77af09a0ea16419176b1cdbd12",
+            "reference": "547c9ee73fe26c77af09a0ea16419176b1cdbd12",
             "shasum": ""
         },
         "require": {
@@ -153,7 +153,7 @@
             "ext-zip": "Enabling the zip extension allows you to unzip archives",
             "ext-zlib": "Allow gzip compression of HTTP requests"
         },
-        "time": "2020-09-09T09:46:34+00:00",
+        "time": "2020-10-13T13:59:09+00:00",
         "bin": [
             "bin/composer"
         ],
@@ -736,6 +736,130 @@
         ]
     },
     {
+        "name": "doctrine/lexer",
+        "version": "1.2.1",
+        "version_normalized": "1.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/lexer.git",
+            "reference": "e864bbf5904cb8f5bb334f99209b48018522f042"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/lexer/zipball/e864bbf5904cb8f5bb334f99209b48018522f042",
+            "reference": "e864bbf5904cb8f5bb334f99209b48018522f042",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.2 || ^8.0"
+        },
+        "require-dev": {
+            "doctrine/coding-standard": "^6.0",
+            "phpstan/phpstan": "^0.11.8",
+            "phpunit/phpunit": "^8.2"
+        },
+        "time": "2020-05-25T17:44:05+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Doctrine\\Common\\Lexer\\": "lib/Doctrine/Common/Lexer"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
+        "homepage": "https://www.doctrine-project.org/projects/lexer.html",
+        "keywords": [
+            "annotations",
+            "docblock",
+            "lexer",
+            "parser",
+            "php"
+        ]
+    },
+    {
+        "name": "egulias/email-validator",
+        "version": "2.1.22",
+        "version_normalized": "2.1.22.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/egulias/EmailValidator.git",
+            "reference": "68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5",
+            "reference": "68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/lexer": "^1.0.1",
+            "php": ">=5.5",
+            "symfony/polyfill-intl-idn": "^1.10"
+        },
+        "require-dev": {
+            "dominicsayers/isemail": "^3.0.7",
+            "phpunit/phpunit": "^4.8.36|^7.5.15",
+            "satooshi/php-coveralls": "^1.0.1"
+        },
+        "suggest": {
+            "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
+        },
+        "time": "2020-09-26T15:48:38+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Egulias\\EmailValidator\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Eduardo Gulias Davis"
+            }
+        ],
+        "description": "A library for validating emails against several RFCs",
+        "homepage": "https://github.com/egulias/EmailValidator",
+        "keywords": [
+            "email",
+            "emailvalidation",
+            "emailvalidator",
+            "validation",
+            "validator"
+        ]
+    },
+    {
         "name": "i-rocky/eloquent-dynamic-relation",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -772,8 +896,8 @@
     },
     {
         "name": "illuminate/cache",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/cache.git",
@@ -825,8 +949,8 @@
     },
     {
         "name": "illuminate/config",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/config.git",
@@ -871,8 +995,8 @@
     },
     {
         "name": "illuminate/console",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/console.git",
@@ -927,8 +1051,8 @@
     },
     {
         "name": "illuminate/container",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/container.git",
@@ -973,8 +1097,8 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -1019,17 +1143,17 @@
     },
     {
         "name": "illuminate/database",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/database.git",
-            "reference": "da9fbe1895ecd7c94082267d04e09a4889773217"
+            "reference": "f5a9f7de61cb634733f03e0b942749b1d629cd5e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/database/zipball/da9fbe1895ecd7c94082267d04e09a4889773217",
-            "reference": "da9fbe1895ecd7c94082267d04e09a4889773217",
+            "url": "https://api.github.com/repos/illuminate/database/zipball/f5a9f7de61cb634733f03e0b942749b1d629cd5e",
+            "reference": "f5a9f7de61cb634733f03e0b942749b1d629cd5e",
             "shasum": ""
         },
         "require": {
@@ -1048,7 +1172,7 @@
             "illuminate/pagination": "Required to paginate the result set (^6.0).",
             "symfony/finder": "Required to use Eloquent model factories (^4.3.4)."
         },
-        "time": "2020-09-23T15:05:46+00:00",
+        "time": "2020-10-11T14:30:01+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1082,8 +1206,8 @@
     },
     {
         "name": "illuminate/events",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/events.git",
@@ -1129,8 +1253,8 @@
     },
     {
         "name": "illuminate/filesystem",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/filesystem.git",
@@ -1184,8 +1308,8 @@
     },
     {
         "name": "illuminate/http",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/http.git",
@@ -1236,8 +1360,8 @@
     },
     {
         "name": "illuminate/log",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/log.git",
@@ -1283,8 +1407,8 @@
     },
     {
         "name": "illuminate/pagination",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/pagination.git",
@@ -1330,26 +1454,26 @@
     },
     {
         "name": "illuminate/pipeline",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/pipeline.git",
-            "reference": "521567a1ea206535ab18c2b575026b8f1373e44f"
+            "reference": "2bbdad280e5d6ed20c6145aabc8a61913641c4a7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/pipeline/zipball/521567a1ea206535ab18c2b575026b8f1373e44f",
-            "reference": "521567a1ea206535ab18c2b575026b8f1373e44f",
+            "url": "https://api.github.com/repos/illuminate/pipeline/zipball/2bbdad280e5d6ed20c6145aabc8a61913641c4a7",
+            "reference": "2bbdad280e5d6ed20c6145aabc8a61913641c4a7",
             "shasum": ""
         },
         "require": {
             "illuminate/contracts": "^6.0",
             "illuminate/support": "^6.0",
             "php": "^7.2",
-            "symfony/debug": "^4.3"
+            "symfony/debug": "^4.3.4"
         },
-        "time": "2020-08-13T14:33:00+00:00",
+        "time": "2020-10-12T00:30:01+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1377,8 +1501,8 @@
     },
     {
         "name": "illuminate/routing",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/routing.git",
@@ -1437,8 +1561,8 @@
     },
     {
         "name": "illuminate/session",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/session.git",
@@ -1490,8 +1614,8 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
@@ -1553,8 +1677,8 @@
     },
     {
         "name": "illuminate/translation",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/translation.git",
@@ -1600,9 +1724,63 @@
         "homepage": "https://laravel.com"
     },
     {
+        "name": "illuminate/validation",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/illuminate/validation.git",
+            "reference": "6ccb1290a21f3d14cb80f791423cf5de36e035f3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/illuminate/validation/zipball/6ccb1290a21f3d14cb80f791423cf5de36e035f3",
+            "reference": "6ccb1290a21f3d14cb80f791423cf5de36e035f3",
+            "shasum": ""
+        },
+        "require": {
+            "egulias/email-validator": "^2.1.10",
+            "ext-json": "*",
+            "illuminate/container": "^6.0",
+            "illuminate/contracts": "^6.0",
+            "illuminate/support": "^6.0",
+            "illuminate/translation": "^6.0",
+            "php": "^7.2",
+            "symfony/http-foundation": "^4.3.4"
+        },
+        "suggest": {
+            "illuminate/database": "Required to use the database presence verifier (^6.0)."
+        },
+        "time": "2020-08-25T13:27:43+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "6.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Illuminate\\Validation\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylor@laravel.com"
+            }
+        ],
+        "description": "The Illuminate Validation package.",
+        "homepage": "https://laravel.com"
+    },
+    {
         "name": "illuminate/view",
-        "version": "v6.18.42",
-        "version_normalized": "6.18.42.0",
+        "version": "v6.18.43",
+        "version_normalized": "6.18.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/view.git",
@@ -1933,17 +2111,17 @@
     },
     {
         "name": "nesbot/carbon",
-        "version": "2.41.0",
-        "version_normalized": "2.41.0.0",
+        "version": "2.41.3",
+        "version_normalized": "2.41.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "8690b13ad4da6d54d692afea15aab30b36fee52e"
+            "reference": "e148788eeae9b9b7b87996520358b86faad37b52"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8690b13ad4da6d54d692afea15aab30b36fee52e",
-            "reference": "8690b13ad4da6d54d692afea15aab30b36fee52e",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e148788eeae9b9b7b87996520358b86faad37b52",
+            "reference": "e148788eeae9b9b7b87996520358b86faad37b52",
             "shasum": ""
         },
         "require": {
@@ -1962,7 +2140,7 @@
             "phpunit/phpunit": "^7.5 || ^8.0",
             "squizlabs/php_codesniffer": "^3.4"
         },
-        "time": "2020-10-04T09:11:05+00:00",
+        "time": "2020-10-12T20:36:09+00:00",
         "bin": [
             "bin/carbon"
         ],
@@ -2014,21 +2192,21 @@
     },
     {
         "name": "paragonie/random_compat",
-        "version": "v9.99.99",
-        "version_normalized": "9.99.99.0",
+        "version": "v9.99.100",
+        "version_normalized": "9.99.100.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/random_compat.git",
-            "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
+            "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
-            "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+            "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
             "shasum": ""
         },
         "require": {
-            "php": "^7"
+            "php": ">= 7"
         },
         "require-dev": {
             "phpunit/phpunit": "4.*|5.*",
@@ -2037,7 +2215,7 @@
         "suggest": {
             "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
         },
-        "time": "2018-07-02T15:55:56+00:00",
+        "time": "2020-10-15T08:29:30+00:00",
         "type": "library",
         "installation-source": "dist",
         "notification-url": "https://packagist.org/downloads/",
@@ -2061,22 +2239,23 @@
     },
     {
         "name": "phpmailer/phpmailer",
-        "version": "v6.1.7",
-        "version_normalized": "6.1.7.0",
+        "version": "v6.1.8",
+        "version_normalized": "6.1.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/PHPMailer/PHPMailer.git",
-            "reference": "2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0"
+            "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0",
-            "reference": "2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0",
+            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
+            "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
             "shasum": ""
         },
         "require": {
             "ext-ctype": "*",
             "ext-filter": "*",
+            "ext-hash": "*",
             "php": ">=5.5.0"
         },
         "require-dev": {
@@ -2092,7 +2271,7 @@
             "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
             "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
         },
-        "time": "2020-07-14T18:50:27+00:00",
+        "time": "2020-10-09T14:55:58+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -3301,17 +3480,17 @@
     },
     {
         "name": "symfony/http-client-contracts",
-        "version": "v2.2.0",
-        "version_normalized": "2.2.0.0",
+        "version": "v2.3.1",
+        "version_normalized": "2.3.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/http-client-contracts.git",
-            "reference": "3a5d0fe7908daaa23e3dbf4cee3ba4bfbb19fdd3"
+            "reference": "41db680a15018f9c1d4b23516059633ce280ca33"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/3a5d0fe7908daaa23e3dbf4cee3ba4bfbb19fdd3",
-            "reference": "3a5d0fe7908daaa23e3dbf4cee3ba4bfbb19fdd3",
+            "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/41db680a15018f9c1d4b23516059633ce280ca33",
+            "reference": "41db680a15018f9c1d4b23516059633ce280ca33",
             "shasum": ""
         },
         "require": {
@@ -3320,11 +3499,12 @@
         "suggest": {
             "symfony/http-client-implementation": ""
         },
-        "time": "2020-09-07T11:33:47+00:00",
+        "time": "2020-10-14T17:08:19+00:00",
         "type": "library",
         "extra": {
+            "branch-version": "2.3",
             "branch-alias": {
-                "dev-master": "2.2-dev"
+                "dev-main": "2.3-dev"
             },
             "thanks": {
                 "name": "symfony/contracts",
