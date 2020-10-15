@@ -12,7 +12,7 @@ class ExtrasCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'extras';
+    protected $signature = 'extras {typePackage?} {packageName?} {versionPackage?} {namePackage?}';
 
     /**
      * The console command description.
@@ -108,13 +108,18 @@ class ExtrasCommand extends Command
             $this->getOutput()->write('<error>ERROR CREATE CONFIG DIR</error>');
             exit();
         }
-
-        $this->typePackage = $this->choice('Select type', ['Extras(install via composer)', 'Package(install in custom/packages)']);
+        if ($this->argument('typePackage') == 'extras' || $this->argument('typePackage') == 'package') {
+            $this->typePackage = $this->argument('typePackage');
+        } else {
+            $this->typePackage = $this->choice('Select type', ['Extras(install via composer)', 'Package(install in custom/packages)']);
+        }
         switch ($this->typePackage) {
             case 'Extras(install via composer)':
+            case 'extras':
                 $this->workWithExtras();
                 break;
             case 'Package(install in custom/packages)':
+            case 'package':
                 $this->workWithPackage();
                 break;
         }
@@ -177,7 +182,11 @@ class ExtrasCommand extends Command
             $packageForChose[$key] = $package['name'];
             $this->fullPackage[$package['name']] = $package;
         }
-        $this->selectPackage = $this->choice('Select package', $packageForChose);
+        if (!is_null($this->argument('packageName')) && in_array($this->argument('packageName'), $packageForChose)) {
+            $this->selectPackage = $this->argument('packageName');
+        } else {
+            $this->selectPackage = $this->choice('Select package', $packageForChose);
+        }
         $tagsUrl = $this->fullPackage[$this->selectPackage]['tags_url'];
 
         $tagsInfo = $this->getGithubInfo($tagsUrl);
@@ -188,7 +197,11 @@ class ExtrasCommand extends Command
         $getTags = array_slice($getTags, 0, 4);
         $getTags[] = $this->fullPackage[$this->selectPackage]['default_branch'];
         $this->tags = $getTags;
-        return $this->choice('Select version', $getTags);
+        if (!is_null($this->argument('versionPackage')) && in_array($this->argument('versionPackage'), $getTags)) {
+            return $this->argument('versionPackage');
+        } else {
+            return $this->choice('Select version', $getTags);
+        }
 
     }
 
@@ -266,7 +279,11 @@ class ExtrasCommand extends Command
 
     public function enterName($message = '')
     {
-        $this->namePackage = $this->ask($message . 'Enter u package name: ');
+        if (!is_null($this->argument('namePackage'))) {
+            $this->namePackage =  $this->argument('namePackage');
+        } else {
+            $this->namePackage = $this->ask($message . 'Enter u package name: ');
+        }
         $this->namePackage = strtolower($this->namePackage);
         $this->checkPath();
     }
