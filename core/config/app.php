@@ -61,6 +61,7 @@ return [
         'Evolution_TemplateProcessor' => EvolutionCMS\Providers\TemplateProcessorServiceProvider::class,
         'Evolution_HelperProcessor' => EvolutionCMS\Providers\HelperProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
+        'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
@@ -94,5 +95,6 @@ return [
         'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class,
         'TemplateProcessor' => EvolutionCMS\Facades\TemplateProcessor::class,
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
+        'UserManager' => EvolutionCMS\Facades\UserManager::class,
     ]
 ];
