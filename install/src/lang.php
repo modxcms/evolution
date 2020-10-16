@@ -50,7 +50,7 @@ if (isset($_POST['language']) && false === strpos($_POST['language'], '..')) {
     }
 }
 # load language file
-require_once 'lang/english.inc.php'; // As fallback
+require_once 'lang/en.inc.php'; // As fallback
 require_once 'lang/' . $install_language . '.inc.php';
 
 $manager_language = $install_language;
