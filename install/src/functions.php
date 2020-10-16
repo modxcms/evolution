@@ -4,7 +4,7 @@ if (! function_exists('getLangOptions')) {
      * @param string $install_language
      * @return string
      */
-    function getLangOptions($install_language = 'english')
+    function getLangOptions($install_language = 'en')
     {
         $langs = array();
         if ($handle = opendir(__DIR__ . '/lang/')) {
