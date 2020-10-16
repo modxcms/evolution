@@ -110,12 +110,10 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     protected function parameterLang()
     {
         $lang_keys_select = [];
-        $dir = dir(MODX_MANAGER_PATH . 'includes/lang');
+        $dir = dir(EVO_CORE_PATH . 'lang');
         while ($file = $dir->read()) {
-            if (strpos($file, '.inc.php') > 0) {
-                $endpos = strpos($file, '.');
-                $languagename = substr($file, 0, $endpos);
-                $lang_keys_select[$languagename] = $languagename;
+            if(is_dir(EVO_CORE_PATH.'lang/'.$file) && ($file != '.' && $file != '..')) {
+                $lang_keys_select[$file] = $file;
             }
         }
         $dir->close();

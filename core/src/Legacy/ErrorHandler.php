@@ -71,14 +71,14 @@ class ErrorHandler
         }
 
         if ($context === 'common') {
-            $lang_path = MODX_MANAGER_PATH . 'includes/lang/';
+            $lang_path = EVO_CORE_PATH . 'lang/';
         } else {
-            $lang_path = MODX_MANAGER_PATH . 'includes/lang/{$context}/';
+            $lang_path = EVO_CORE_PATH . 'lang/{$context}/';
         }
-        include_once($lang_path . 'english.inc.php');
+        include_once($lang_path . 'en/global.php');
         $manager_language = $modx->getConfig('manager_language');
-        if (is_file("{$lang_path}{$manager_language}.inc.php")) {
-            include_once("{$lang_path}{$manager_language}.inc.php");
+        if (is_file($lang_path.$manager_language."/global.php")) {
+            include_once($lang_path.$manager_language."/global.php");
         }
 
         return is_array($_lang) ? $_lang : array();
