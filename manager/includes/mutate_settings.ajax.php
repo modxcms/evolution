@@ -17,8 +17,8 @@ $emptyCache = false;
 
 switch (true) {
     case ($action == 'get' && preg_match('/^[A-z0-9_-]+$/',
-            $lang) && file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')): {
-        include MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php';
+            $lang) && file_exists(EVO_CORE_PATH . 'lang/' . $lang . '/global.php')): {
+        include EVO_CORE_PATH . 'lang/' . $lang . '/global.php';
         $str = isset($key, $_lang, $_lang[$key]) ? $_lang[$key] : "";
         break;
     }

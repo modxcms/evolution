@@ -58,11 +58,10 @@ $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb
 
 if (isset($data) && count($data) > 0) {
 	if(isset($data['manager_language'])) {
-		$lang_path = MODX_MANAGER_PATH . 'includes/lang/' . $data['manager_language'] . '.inc.php';
+	    $lang_path = EVO_CORE_PATH . 'lang/' . $data['manager_language'] . '/global.php';
 		if(is_file($lang_path)) {
 			include $lang_path;
-            global $modx_lang_attribute;
-            $data['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+            $data['lang_code'] = $data['manager_language'];
 		}
 	}
 	$data['sys_files_checksum'] = $modx->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
@@ -95,11 +94,11 @@ if (isset($data) && count($data) > 0) {
 				$v = rtrim($v,'/') . '/';
 				break;
             case 'manager_language':
-                $langDir = realpath(MODX_MANAGER_PATH . 'includes/lang');
-                $langFile = realpath(MODX_MANAGER_PATH . 'includes/lang/' . $v . '.inc.php');
+                $langDir = realpath(EVO_CORE_PATH . 'lang/'.$v);
+                $langFile = realpath(EVO_CORE_PATH . 'lang/' . $v . '/global.php');
                 $langFileDir = dirname($langFile);
                 if($langDir !== $langFileDir || !file_exists($langFile)) {
-                    $v = 'english';
+                    $v = 'en';
                 }
 				break;
 			case 'smtppw':

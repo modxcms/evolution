@@ -121,7 +121,7 @@ $_country_lang = array();
 if($manager_language != "english" && file_exists(MODX_MANAGER_PATH . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
 	include_once MODX_MANAGER_PATH . "includes/lang/country/" . $manager_language . "_country.inc.php";
 } else {
-	include_once MODX_MANAGER_PATH . "includes/lang/country/english_country.inc.php";
+	include_once MODX_MANAGER_PATH . "includes/lang/country/en_country.inc.php";
 }
 asort($_country_lang);
 
@@ -493,18 +493,16 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 <option value=""></option>
                                 <?php
                                 $activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : '';
-                                $dir = dir("includes/lang");
-                                while($file = $dir->read()) {
-                                    if(strpos($file, ".inc.php") > 0) {
-                                        $endpos = strpos($file, ".");
-                                        $languagename = substr($file, 0, $endpos);
-                                        $selectedtext = $languagename == $activelang ? "selected='selected'" : "";
+                                $dir = dir(EVO_CORE_PATH . 'lang');
+                                while ($file = $dir->read()) {
+                                    if(is_dir(EVO_CORE_PATH.'lang/'.$file) && ($file != '.' && $file != '..')) {
+                                        $selectedtext = $file == $activelang ? "selected='selected'" : "";
                                         ?>
-                                        <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                                        <option value="<?php echo $file; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $file)); ?></option>
                                         <?php
-
                                     }
                                 }
+
                                 $dir->close();
                                 ?>
                             </select></td>

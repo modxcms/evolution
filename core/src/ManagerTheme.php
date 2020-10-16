@@ -207,24 +207,20 @@ class ManagerTheme implements ManagerThemeInterface
         $modx_manager_charset = $this->getCharset();
         $modx_textdir = $this->getTextDir();
 
-        include MODX_MANAGER_PATH . 'includes/lang/english.inc.php';
+        include EVO_CORE_PATH . 'lang/en/global.php';
 
         // now include_once different language file as english
-        if (!isset($lang) || !file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
+        if (!isset($lang) || !file_exists(EVO_CORE_PATH . 'lang/' . $lang . '/global.php')) {
             $lang = 'english'; // if not set, get the english language file.
         }
 
         // $length_eng_lang = count($_lang);
         //// Not used for now, required for difference-check with other languages than english (i.e. inside installer)
 
-        if ($lang !== 'english' && file_exists(MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php')) {
-            include MODX_MANAGER_PATH . 'includes/lang/' . $lang . '.inc.php';
+        if ($lang !== 'english' && file_exists(EVO_CORE_PATH . 'lang/' . $lang . '/global.php')) {
+            include EVO_CORE_PATH . 'lang/' . $lang . '/global.php';
         }
 
-        // allow custom language overrides not altered by future EVO-updates
-        if (file_exists(MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php')) {
-            include MODX_MANAGER_PATH . 'includes/lang/override/' . $lang . '.inc.php';
-        }
 
         foreach ($_lang as $k => $v) {
             if (strpos($v, '[+') !== false) {

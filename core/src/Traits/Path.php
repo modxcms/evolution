@@ -45,7 +45,7 @@ trait Path
      */
     public function langPath()
     {
-        return $this->path('lang-laravel');
+        return $this->path('lang');
     }
 
     /**

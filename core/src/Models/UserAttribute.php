@@ -72,13 +72,20 @@ class UserAttribute extends Eloquent\Model
 		'editedon' => 'int'
 	];
 
+    protected $hidden = [
+        'role'
+    ];
+
+    protected $attributes = [
+        'role' => 0
+    ];
+
 	protected $fillable = [
 		'internalKey',
 		'fullname',
 		'first_name',
 		'middle_name',
 		'last_name',
-		'role',
 		'email',
 		'phone',
 		'mobilephone',
