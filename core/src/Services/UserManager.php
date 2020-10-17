@@ -1,6 +1,5 @@
 <?php namespace EvolutionCMS\Services;
 
-use EvolutionCMS\Exceptions\ServiceValidationException;
 use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserRegistration;
 
@@ -15,13 +14,7 @@ class UserManager
     public function create(array $userData)
     {
         $registration = new UserRegistration($userData);
-        try {
-            $registration->process();
-        } catch (ServiceValidationException $e) {
-            $exception = new ServiceValidationException();
-            $exception->setValidationErrors($e->getValidationErrors());
-            throw $exception;
-        }
+        return $registration->process();
     }
 
     public function edit($id, $userData)
@@ -49,7 +42,7 @@ class UserManager
 
     }
 
-    public function setGroup($userData)
+    public function setGroups($userData)
     {
 
     }

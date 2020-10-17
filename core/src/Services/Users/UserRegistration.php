@@ -1,68 +1,150 @@
 <?php namespace EvolutionCMS\Services\Users;
 
+use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
+use Illuminate\Support\Facades\Lang;
 
 class UserRegistration implements ServiceInterface
 {
+    /**
+     * @var \string[][]
+     */
     public $validate;
 
+    /**
+     * @var array
+     */
     public $messages;
 
+    /**
+     * @var array
+     */
     public $userData;
 
-    public function __construct($userData)
+    /**
+     * @var bool
+     */
+    public $events;
+
+    /**
+     * @var bool
+     */
+    public $cache;
+
+    /**
+     * @var array $validateErrors
+     */
+    public $validateErrors;
+
+    /**
+     * UserRegistration constructor.
+     * @param array $userData
+     * @param bool $events
+     * @param bool $cache
+     */
+    public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
         $this->validate = $this->getValidationRules();
         $this->messages = $this->getValidationMessages();
         $this->userData = $userData;
+        $this->events = $events;
+        $this->cache = $cache;
     }
 
+    /**
+     * @return \string[][]
+     */
     public function getValidationRules(): array
     {
         return $validate = [
             'username' => ['required', 'unique:users'],
+            'password' => ['required', 'min:6'],
             'email' => ['required', 'unique:user_attributes'],
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getValidationMessages(): array
     {
         return $messages = [
-            'required' => 'Поле обязательно',
-            'username.min' => 'Имя не меньше 5 символов',
-            'username.unique' => 'Имя пользователя должно быть уникальным',
-            'email.unique' => 'Email должен быть уникальным',
+            'username.required' => Lang::get("global.required_field", ['field' => 'username']),
+            'password.required' => Lang::get("global.required_field", ['field' => 'password']),
+            'email.required' => Lang::get("global.required_field", ['field' => 'email']),
+            'password.min' => Lang::get("global.password_gen_length"),
+            'username.unique' => Lang::get('global.username_unique'),
+            'email.unique' => Lang::get('global.email_unique'),
         ];
     }
 
-    public function process()
+    /**
+     * @return \Illuminate\Database\Eloquent\Model
+     * @throws ServiceActionException
+     * @throws ServiceValidationException
+     */
+    public function process(): \Illuminate\Database\Eloquent\Model
     {
-        try {
-            $this->validation();
-        } catch (ServiceValidationException $e) {
+        if (!$this->checkRules()) {
+            throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
+        }
+        if (!$this->validation()) {
             $exception = new ServiceValidationException();
-            $exception->setValidationErrors($e->getValidationErrors());
+            $exception->setValidationErrors($this->validateErrors);
             throw $exception;
         }
+
+        // invoke OnBeforeUserFormSave event
+        if ($this->events) {
+            EvolutionCMS()->invokeEvent("OnBeforeUserFormSave", array(
+                "mode" => "new",
+                "user" => &$this->userData,
+            ));
+        }
+
+        $this->userData['clearPassword'] = $this->userData['password'];
+        $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
+        $user = User::create($this->userData);
+        $this->userData['internalKey'] = $user->getKey();
+        $user->attributes()->create($this->userData);
+
+        // invoke OnWebSaveUser event
+        if ($this->events) {
+            EvolutionCMS()->invokeEvent("OnUserFormSave", array(
+                "mode" => "new",
+                "userid" => $user->getKey(),
+                "username" => $user->username,
+                "userpassword" => $this->userData['clearPassword'],
+                "useremail" => $user->attributes()->email,
+                "userfullname" => $user->attributes()->fullname
+            ));
+        }
+
+        if ($this->cache) {
+            EvolutionCMS()->clearCache('full');
+        }
+
+        return $user;
     }
 
+    /**
+     * @return bool
+     */
     public function checkRules(): bool
     {
-
+        return true;
     }
 
-    public function validation(): void
+    /**
+     * @return bool
+     */
+    public function validation(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
-
-        if ($validator->fails()) {
-            $exception = new ServiceValidationException();
-            $exception->setValidationErrors($validator->messages()->toArray());
-            throw $exception;
-        }
+        $this->validateErrors = $validator->messages()->toArray();
+        return !$validator->fails();
     }
-
 
 }
