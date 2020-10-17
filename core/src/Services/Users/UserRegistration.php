@@ -64,50 +64,5 @@ class UserRegistration implements ServiceInterface
         }
     }
 
-    public function create(array $userData): User
-    {
-
-
-    }
-
-    public function edit($id, $userData)
-    {
-
-    }
-
-    public function delete($id)
-    {
-
-    }
-
-    public function dropPassword($userData)
-    {
-
-    }
-
-    public function changePassword($userData)
-    {
-
-    }
-
-    public function setRole($userData)
-    {
-
-    }
-
-    public function setGroup($userData)
-    {
-
-    }
-
-    public function login($userData)
-    {
-
-    }
-
-    public function logout($userData)
-    {
-
-    }
 
 }

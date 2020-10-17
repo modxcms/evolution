@@ -6,20 +6,6 @@ use EvolutionCMS\Services\Users\UserRegistration;
 
 class UserManager
 {
-    public $validate = [
-        'username' => ['required', 'unique:users'],
-        'email' => ['required', 'unique:user_attributes'],
-    ];
-
-    /**
-     * @var array
-     */
-    public $messages = [
-        'required' => 'Поле обязательно',
-        'username.min' => 'Имя не меньше 5 символов',
-        'username.unique' => 'Имя пользователя должно быть уникальным',
-        'email.unique' => 'Email должен быть уникальным',
-    ];
 
     public function get($id)
     {
