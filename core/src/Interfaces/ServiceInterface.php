@@ -2,12 +2,13 @@
 
 interface ServiceInterface
 {
-    public function get(int $id);
+    public function process();
 
-    public function create(array $data);
+    public function getValidationRules(): array;
 
-    public function delete(int $id);
+    public function getValidationMessages(): array;
 
-    public function edit(int $id, array $data);
+    public function checkRules(): bool;
 
+    public function validation(): void;
 }

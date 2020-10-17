@@ -1,11 +1,10 @@
 <?php namespace EvolutionCMS\Services;
 
-use EvolutionCMS\Exceptions\ServiceValidateException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserRegistration;
 
-class UserManager implements ServiceInterface
+class UserManager
 {
     public $validate = [
         'username' => ['required', 'unique:users'],
@@ -27,16 +26,16 @@ class UserManager implements ServiceInterface
         return User::find($id);
     }
 
-    public function create(array $userData): User
+    public function create(array $userData)
     {
-        $validator = \Validator::make($userData, $this->validate, $this->messages);
-
-        if ($validator->fails()) {
+        $registration = new UserRegistration($userData);
+        try {
+            $registration->process();
+        } catch (ServiceValidationException $e) {
             $exception = new ServiceValidationException();
-            $exception->setValidationErrors($validator->messages()->toArray());
+            $exception->setValidationErrors($e->getValidationErrors());
             throw $exception;
         }
-
     }
 
     public function edit($id, $userData)
