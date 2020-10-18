@@ -90,19 +90,21 @@ class UserRegistration implements ServiceInterface
         if (!$this->checkRules()) {
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
+
+        // invoke OnBeforeUserFormSave event
+        if ($this->events) {
+            EvolutionCMS()->invokeEvent("OnBeforeUserSave", array(
+                "mode" => "new",
+                "user" => &$this->userData,
+            ));
+        }
+
         if (!$this->validation()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
         }
 
-        // invoke OnBeforeUserFormSave event
-        if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnBeforeUserFormSave", array(
-                "mode" => "new",
-                "user" => &$this->userData,
-            ));
-        }
 
         $this->userData['clearPassword'] = $this->userData['password'];
         $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
@@ -143,7 +145,7 @@ class UserRegistration implements ServiceInterface
     public function validation(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
-        $this->validateErrors = $validator->messages()->toArray();
+        $this->validateErrors = $validator->errors()->toArray();
         return !$validator->fails();
     }
 

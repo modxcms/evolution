@@ -397,63 +397,27 @@ class SystemEventnamesTableSeeder extends Seeder
             ),
             63 => 
             array (
-                'name' => 'OnBeforeUserFormSave',
+                'name' => 'OnBeforeUserSave',
                 'service' => 1,
                 'groupname' => 'Users',
             ),
             64 => 
             array (
-                'name' => 'OnUserFormSave',
+                'name' => 'OnUserSave',
                 'service' => 1,
                 'groupname' => 'Users',
             ),
             65 => 
             array (
-                'name' => 'OnBeforeUserFormDelete',
+                'name' => 'OnBeforeUserDelete',
                 'service' => 1,
                 'groupname' => 'Users',
             ),
             66 => 
             array (
-                'name' => 'OnUserFormDelete',
+                'name' => 'OnUserDelete',
                 'service' => 1,
                 'groupname' => 'Users',
-            ),
-            67 => 
-            array (
-                'name' => 'OnWUsrFormPrerender',
-                'service' => 1,
-                'groupname' => 'Web Users',
-            ),
-            68 => 
-            array (
-                'name' => 'OnWUsrFormRender',
-                'service' => 1,
-                'groupname' => 'Web Users',
-            ),
-            69 => 
-            array (
-                'name' => 'OnBeforeWUsrFormSave',
-                'service' => 1,
-                'groupname' => 'Web Users',
-            ),
-            70 => 
-            array (
-                'name' => 'OnWUsrFormSave',
-                'service' => 1,
-                'groupname' => 'Web Users',
-            ),
-            71 => 
-            array (
-                'name' => 'OnBeforeWUsrFormDelete',
-                'service' => 1,
-                'groupname' => 'Web Users',
-            ),
-            72 => 
-            array (
-                'name' => 'OnWUsrFormDelete',
-                'service' => 1,
-                'groupname' => 'Web Users',
             ),
             73 => 
             array (
