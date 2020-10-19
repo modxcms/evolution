@@ -24,7 +24,7 @@ class MembergroupName extends Eloquent\Model
 
     public function users(): Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(ManagerUser::class, 'member_groups', 'user_group', 'member');
+        return $this->belongsToMany(User::class, 'member_groups', 'user_group', 'member');
     }
 
     public function documentGroups(): Eloquent\Relations\BelongsToMany

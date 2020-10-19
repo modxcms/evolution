@@ -85,7 +85,7 @@ class UserSetRole implements ServiceInterface
 
         $user = User::find($this->userData['id']);
         if (is_null($user)) {
-            throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
+            throw new ServiceActionException(\Lang::get('global.user_doesnt_exist'));
         }
         $user->attributes->role = $this->userData['role'];
         $user->attributes->save();

@@ -38,7 +38,7 @@ class User extends Eloquent\Model
 
     public function memberGroups()
     {
-        return $this->hasMany(WebGroup::class,'webuser','id');
+        return $this->hasMany(MemberGroup::class,'member','id');
     }
 
     public function settings()

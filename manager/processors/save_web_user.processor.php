@@ -119,12 +119,12 @@ switch ($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['webgroup'] = (int)$user_groups[$i];
+					$field['user_group'] = (int)$user_groups[$i];
 					$webUser->memberGroups()->create($field);
 				}
 			}
 		}
-		// end of user_groups stuff!
+        // end of user_groups stuff!
 
         // invoke OnWebSaveUser event
         $modx->invokeEvent("OnWebSaveUser", array(
@@ -253,7 +253,7 @@ switch ($input['mode']) {
             if (!empty($user_groups)) {
                 for ($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['webgroup'] = (int)$user_groups[$i];
+                    $field['user_group'] = (int)$user_groups[$i];
 					$webUser->memberGroups()->create($field);
 				}
 			}

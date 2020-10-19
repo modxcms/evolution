@@ -2,6 +2,7 @@
 
 use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserRegistration;
+use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
 
 class UserManager
@@ -44,9 +45,10 @@ class UserManager
         return $user->process();
     }
 
-    public function setGroups($userData)
+    public function setGroups(int $id, array $groups = [])
     {
-
+        $user = new UserSetGroups(['id' => $id, 'groups' => $groups]);
+        return $user->process();
     }
 
     public function login($userData)
