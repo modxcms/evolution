@@ -2,6 +2,7 @@
 
 use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserRegistration;
+use EvolutionCMS\Services\Users\UserSetRole;
 
 class UserManager
 {
@@ -37,9 +38,10 @@ class UserManager
 
     }
 
-    public function setRole($userData)
+    public function setRole(int $id, int $role = 0)
     {
-
+        $user = new UserSetRole(['id' => $id, 'role' => $role]);
+        return $user->process();
     }
 
     public function setGroups($userData)

@@ -58,7 +58,7 @@ class UserRegistration implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return $validate = [
+        return [
             'username' => ['required', 'unique:users'],
             'password' => ['required', 'min:6'],
             'email' => ['required', 'unique:user_attributes'],
@@ -70,7 +70,7 @@ class UserRegistration implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return $messages = [
+        return [
             'username.required' => Lang::get("global.required_field", ['field' => 'username']),
             'password.required' => Lang::get("global.required_field", ['field' => 'password']),
             'email.required' => Lang::get("global.required_field", ['field' => 'email']),
