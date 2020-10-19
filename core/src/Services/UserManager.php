@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserRegistration;
 use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
@@ -51,9 +52,10 @@ class UserManager
         return $user->process();
     }
 
-    public function login($userData)
+    public function login(string $login, string $password, int $remember = 0, string $captcha = '')
     {
-
+        $user = new UserLogin(['username' => $login, 'password' => $password, 'remember' => $remember, 'captcha' => $captcha]);
+        return $user->process();
     }
 
     public function logout($userData)
