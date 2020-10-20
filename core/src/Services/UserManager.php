@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserDelete;
 use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserRegistration;
 use EvolutionCMS\Services\Users\UserSetGroups;
@@ -14,51 +15,52 @@ class UserManager
         return User::find($id);
     }
 
-    public function create(array $userData)
+    public function create(array $userData, $events = true, $cache = true)
     {
-        $registration = new UserRegistration($userData);
+        $registration = new UserRegistration($userData, $events, $cache);
         return $registration->process();
     }
 
-    public function edit($id, $userData)
+    public function edit(array $userData, $events = true, $cache = true)
     {
 
     }
 
-    public function delete($id)
+    public function delete(array $userData, $events = true, $cache = true)
+    {
+        $username = new UserDelete($userData, $events, $cache);
+        return $username->process();
+    }
+
+    public function dropPassword($userData, $events = true, $cache = true)
     {
 
     }
 
-    public function dropPassword($userData)
+    public function changePassword($userData, $events = true, $cache = true)
     {
 
     }
 
-    public function changePassword($userData)
+    public function setRole(array $userData, $events = true, $cache = true)
     {
-
-    }
-
-    public function setRole(int $id, int $role = 0)
-    {
-        $user = new UserSetRole(['id' => $id, 'role' => $role]);
+        $user = new UserSetRole($userData, $events, $cache);
         return $user->process();
     }
 
-    public function setGroups(int $id, array $groups = [])
+    public function setGroups(array $userData, $events = true, $cache = true)
     {
-        $user = new UserSetGroups(['id' => $id, 'groups' => $groups]);
+        $user = new UserSetGroups($userData, $events, $cache);
         return $user->process();
     }
 
-    public function login(string $login, string $password, int $remember = 0, string $captcha = '')
+    public function login(array $userData, $events = true, $cache = true)
     {
-        $user = new UserLogin(['username' => $login, 'password' => $password, 'remember' => $remember, 'captcha' => $captcha]);
+        $user = new UserLogin($userData, $events, $cache);
         return $user->process();
     }
 
-    public function logout($userData)
+    public function logout()
     {
 
     }

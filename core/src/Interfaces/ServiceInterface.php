@@ -14,7 +14,7 @@ interface ServiceInterface
     /**
      * @return Model
      */
-    public function process(): \Illuminate\Database\Eloquent\Model;
+    public function process();
 
     /**
      * @return array
