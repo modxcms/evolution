@@ -111,7 +111,7 @@ class UserLogin implements ServiceInterface
             EvolutionCMS()->invokeEvent('OnBeforeManagerLogin', array(
                 'username' => $this->userData['username'],
                 'userpassword' => $this->userData['password'],
-                'rememberme' => $this->userData['remember']
+                'rememberme' => $this->userData['rememberme']
             ));
         }
 
@@ -135,7 +135,7 @@ class UserLogin implements ServiceInterface
                 'userid' => $this->user->getKey(),
                 'username' => $this->user->username,
                 'userpassword' => $this->userData['password'],
-                'rememberme' => $this->userData['remember']
+                'rememberme' => $this->userData['rememberme']
             ));
         }
 
@@ -215,18 +215,6 @@ class UserLogin implements ServiceInterface
         return true;
     }
 
-    public function captchaValidate()
-    {
-        if (EvolutionCMS()->getConfig('use_captcha') == 1) {
-            if (!isset ($_SESSION['veriword'])) {
-                throw new ServiceActionException(\Lang::get('global.login_processor_captcha_config'));
-            } elseif ($_SESSION['veriword'] != $this->userData['captcha']) {
-                $this->incrementFailedLoginCount();
-                throw new ServiceActionException(\Lang::get('global.login_processor_bad_code'));
-            }
-        }
-
-    }
 
     public function authProcess()
     {
@@ -248,9 +236,10 @@ class UserLogin implements ServiceInterface
         $_SESSION['mgrLastlogin'] = $this->user->attributes->lastlogin;
         $_SESSION['mgrLogincount'] = $this->user->attributes->logincount; // login count
         $_SESSION['mgrRole'] = $this->user->attributes->role;
-        $_SESSION['mgrPermissions'] = \EvolutionCMS\Models\UserRole::where('id', $this->user->attributes->role)->first();
-        if (!is_null($_SESSION['mgrPermissions'])) {
-            $permissionsRole = [];
+        $_SESSION['mgrPermissions'] = [];
+        $mgrPermissions = \EvolutionCMS\Models\UserRole::find($this->user->attributes->role);
+        if (!is_null($mgrPermissions)) {
+            $permissionsRole = $mgrPermissions->toArray();
             $roleArray = \EvolutionCMS\Models\RolePermissions::query()->where('role_id', $this->user->attributes->role)->pluck('permission')->toArray();
             foreach ($roleArray as $role) {
                 $permissionsRole[$role] = 1;
@@ -281,7 +270,7 @@ class UserLogin implements ServiceInterface
     public function checkRemember()
     {
 
-        if ($this->userData['remember'] == 1) {
+        if ($this->userData['rememberme'] == 1) {
             $_SESSION['modx.mgr.session.cookie.lifetime'] = (int)EvolutionCMS()->getConfig('session.cookie.lifetime');
 
             // Set a cookie separate from the session cookie with the username in it.
@@ -352,7 +341,7 @@ class UserLogin implements ServiceInterface
                 'username' => $this->user->username,
                 'userpassword' => $this->userData['password'],
                 'savedpassword' => $this->user->password,
-                'rememberme' => $this->userData['remember']
+                'rememberme' => $this->userData['rememberme']
             ));
         }
 

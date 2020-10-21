@@ -92,7 +92,7 @@ class UserLogout implements ServiceInterface
      * @throws ServiceActionException
      * @throws ServiceValidationException
      */
-    public function process(): \Illuminate\Database\Eloquent\Model
+    public function process(): string
     {
         if (!$this->checkRules()) {
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
