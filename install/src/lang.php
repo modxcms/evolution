@@ -13,34 +13,12 @@
 $_lang = array();
 
 #default fallback language file - english
-$install_language = 'english';
+$install_language = 'en';
 
-$_langFiles = array(
-    'en' => 'english',
-    'bg' => 'bulgarian',
-    'cs' => 'czech',
-    'da' => 'danish',
-    'fi' => 'finnish-utf8',
-    'fr' => 'francais-utf8',
-    'de' => 'german',
-    'he' => 'hebrew',
-    'it' => 'italian',
-    'ja' => 'japanese-utf8',
-    'nl' => 'nederlands-utf8',
-    'no' => 'norwegian',
-    'fa' => 'persian',
-    'pl' => 'polish-utf8',
-    'pt' => 'portuguese-br-utf8',
-// 'pt' => 'portuguese',
-    'ru' => 'russian-UTF8',
-    'es' => 'spanish-utf8',
-    'sv' => 'svenska'
-);
 $_langISO6391 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-if (! empty($_langFiles[$_langISO6391])) {
-    $install_language = $_langFiles[$_langISO6391];
+if (file_exists(__DIR__ . '/lang/' . $_langISO6391 . '.inc.php')) {
+    $install_language = $_langISO6391;
 }
-
 
 if (isset($_POST['language']) && false === strpos($_POST['language'], '..')) {
     $install_language = $_POST['language'];
