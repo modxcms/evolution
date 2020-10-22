@@ -71,7 +71,8 @@ $usernamedata = [
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
-	$userdatatmp = \EvolutionCMS\Models\UserAttribute::query()->where('internalKey', $user)->first()->toArray();
+	$userdatatmp = \EvolutionCMS\Models\UserAttribute::query()->where('internalKey', $user)->first();
+    $userdatatmp = $userdatatmp->makeVisible('role')->toArray();
 	if(!$userdatatmp) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
@@ -346,7 +347,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <td>&nbsp;</td>
                         <td><?php
                             $roles = \EvolutionCMS\Models\UserRole::query()->select('name', 'id');
-
                             if(!$modx->hasPermission('save_role')){
                                 $roles = $roles->where('id', '!=', 1);
                             }
@@ -798,7 +798,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 $out.=$_POST['photo'];
                             }else {
                                 if(!empty($userdata['photo'])){
-                                    if((strpos($_POST['photo'], "http://") === false)){
+                                    if((strpos($userdata['photo'], "http://") === false)){
                                     $out = MODX_SITE_URL;
                                 }
                                 $out.=$userdata['photo'];

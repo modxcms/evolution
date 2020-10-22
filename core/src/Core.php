@@ -2459,9 +2459,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // method may still be alias, while identifier is not full path alias, e.g. id not found above
             if ($this->getConfig('unauthorized_page')) {
                 if ($method !== 'alias') {
-                    $count =\EvolutionCMS\Models\DocumentGroup::where('document',$identifier)->exists();
+                    $count = \EvolutionCMS\Models\DocumentGroup::where('document', $identifier)->exists();
                 } else {
-                    $count =DB::table('document_groups as dg' )->join('site_content as sc')->on('dg.document','=','sc.id')->where('sc.alias',$identifier)->exists();
+                    $count = DB::table('document_groups as dg')->join('site_content as sc')->on('dg.document', '=', 'sc.id')->where('sc.alias', $identifier)->exists();
                 }
                 // check if file is not public
                 if ($count) {
@@ -2544,7 +2544,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $documentObject;
         }
 
-        $documentObject= \EvolutionCMS\Models\SiteContent::findOrFail((int)$id)->toArray();
+        $documentObject = \EvolutionCMS\Models\SiteContent::findOrFail((int)$id)->toArray();
         if ($documentObject === null) {
             return array();
         }
@@ -2552,15 +2552,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $rs = \DB::table('site_tmplvars as tv')
             ->select('tv.*', 'tvc.value', 'tv.default_text')
             ->join('site_tmplvar_templates as tvtpl', 'tvtpl.tmplvarid', '=', 'tv.id')
-            ->leftJoin('site_tmplvar_contentvalues as tvc', function($join) use ($documentObject) {
+            ->leftJoin('site_tmplvar_contentvalues as tvc', function ($join) use ($documentObject) {
                 $join->on('tvc.tmplvarid', '=', 'tv.id');
                 $join->on('tvc.contentid', '=', \DB::raw((int)$documentObject['id']));
             })->where('tvtpl.templateid', (int)$documentObject['template'])->get();
 
         $tmplvars = array();
-        foreach ($rs as $row){
+        foreach ($rs as $row) {
 
-            if($row->value == ''){
+            if ($row->value == '') {
                 $row->value = $row->default_text;
             }
             $tmplvars[$row->name] = array(
@@ -2650,7 +2650,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             include EVO_CORE_PATH . 'custom/routes.php';
 
-            Route::match(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], '{any}', function() {
+            Route::match(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], '{any}', function () {
                 $this->executeParser();
             })->where('any', '.*')->fallback();
 
@@ -3057,16 +3057,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->getConfig('aliaslistingfolder') == 1) {
 
             $res = \EvolutionCMS\Models\SiteContent::destroy()
-            ->selectRaw("id,alias,isfolder,parent")
-            ->where([
-                    ['parent', 'IN', $id],
-                    ['deleted', '=', '0']
-                ]
-            )->get()->toArray();
+                ->selectRaw("id,alias,isfolder,parent")
+                ->where([
+                        ['parent', 'IN', $id],
+                        ['deleted', '=', '0']
+                    ]
+                )->get()->toArray();
 
 
             $idx = array();
-            foreach ($res as $row){
+            foreach ($res as $row) {
                 $pAlias = '';
                 if (isset(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']])) {
                     if (UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']]['path']) {
@@ -3472,7 +3472,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 ->delete();
         }
 
-        return  \EvolutionCMS\Models\ActiveUserLock::where(['elementType'=>$type,'elementId'=>$id])->delete();
+        return \EvolutionCMS\Models\ActiveUserLock::where(['elementType' => $type, 'elementId' => $id])->delete();
     }
 
     /**
@@ -3497,14 +3497,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // web users are stored with negative keys
         $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
-        Models\ActiveUserSession::where('internalKey', $userId)->forceDelete();
-        Models\ActiveUserSession::updateOrCreate([
-            'internalKey' => $userId,
-            'sid' => $this->sid,
-        ], [
-            'lasthit' => $this->time,
-            'ip' => $_SESSION['ip'],
-        ]);
+        if ($userId != false) {
+            Models\ActiveUserSession::where('internalKey', $userId)->forceDelete();
+            Models\ActiveUserSession::where('sid', $this->sid)->forceDelete();
+            Models\ActiveUserSession::updateOrCreate([
+                'internalKey' => $userId,
+                'sid' => $this->sid,
+            ], [
+                'lasthit' => $this->time,
+                'ip' => $_SESSION['ip'],
+            ]);
+        }
     }
 
     /**
@@ -3764,10 +3767,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         $result = \DB::table('site_content as sc')
-            ->selectRaw( 'DISTINCT ' . $fields)
+            ->selectRaw('DISTINCT ' . $fields)
             ->leftJoin('document_groups as dg')
-            ->on('dg.document','=','sc.id')
-            ->where('sc.parent',(int)$id)
+            ->on('dg.document', '=', 'sc.id')
+            ->where('sc.parent', (int)$id)
             ->whereRaw($access)
             ->groupBy('sc.id')
             ->orderBy($sort . ' ' . $dir)
@@ -3833,12 +3836,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $result = \DB::table('site_content as sc')
-            ->selectRaw(  'DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields)))))
+            ->selectRaw('DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields)))))
             ->leftJoin('document_groups as dg')
-            ->on('dg.document','=','sc.id')
-            ->where('sc.parent',(int)$id)
-            ->where('sc.published',1)
-            ->where('sc.deleted',0)
+            ->on('dg.document', '=', 'sc.id')
+            ->where('sc.parent', (int)$id)
+            ->where('sc.published', 1)
+            ->where('sc.deleted', 0)
             ->whereRaw($access)
             ->groupBy('sc.id')
             ->orderBy('sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort)))) . ' ' . $dir)
@@ -4174,21 +4177,21 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $pageInfo = SiteContent::query()->select($fields)
             ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
             ->where('site_content.id', $pageid);
-        if($active == 1){
+        if ($active == 1) {
             $pageInfo = $pageInfo->where('site_content.published', 1)->where('site_content.deleted', 0);
         }
         if ($docgrp = $this->getUserDocGroups() && $_SESSION['mgrRole'] != 1) {
-            if($this->isFrontend()){
+            if ($this->isFrontend()) {
                 $pageInfo = $pageInfo->where('site_content.privateweb', 0);
-            }else {
+            } else {
                 $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
                     $query->where('site_content.privatemgr', '=', 0)
-                    ->orWhereIn('document_groups.document_group', $docgrp);
+                        ->orWhereIn('document_groups.document_group', $docgrp);
                 });
             }
         }
         $pageInfo = $pageInfo->first();
-        if(!is_null($pageInfo)){
+        if (!is_null($pageInfo)) {
             $pageInfo = $pageInfo->toArray();
         }
 
@@ -4244,7 +4247,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getSnippetId()
     {
         if ($this->currentSnippet) {
-            $snippetId = \EvolutionCMS\Models\SiteSnippet::select('id')->where('name',$this->currentSnippet)->first()->id;
+            $snippetId = \EvolutionCMS\Models\SiteSnippet::select('id')->where('name', $this->currentSnippet)->first()->id;
             if ($snippetId) {
                 return $snippetId;
             }
@@ -4752,15 +4755,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $docid = $doc['id'];
 
             $rs = \DB::table('site_tmplvars as tv')
-                ->selectRaw( "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ")
+                ->selectRaw("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ")
                 ->leftJoin('site_tmplvar_templates as tvtpl')
-                ->on(['tvtpl.tmplvarid'=>'tv.id','tvc.contentid'=>$docid])
+                ->on(['tvtpl.tmplvarid' => 'tv.id', 'tvc.contentid' => $docid])
                 ->whereRaw("{$query} AND tvtpl.templateid = '{$doc['template']}")
                 ->orderBy($tvsort ? "{$tvsort} {$tvsortdir}" : "")
                 ->get();
 
             $tvs = $rs->toArray();
-
 
 
             // get default/built-in template variables
@@ -4939,12 +4941,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $rs = \DB::table('site_tmplvars as tv')
             ->selectRaw("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value")
             ->join('site_tmplvar_templates as tvtpl')
-            ->on('tvtpl.tmplvarid' ,'tv.id')
+            ->on('tvtpl.tmplvarid', 'tv.id')
             ->leftJoin('site_tmplvar_contentvalues as tvc')
             ->on(['tvc.tmplvarid' => 'tv.id', 'tvc.contentid' => $docid])
             ->whereRaw($query . " AND tvtpl.templateid = '" . $docRow['template'] . "'")
             ->orderBy($sort ? ($sort . ' ' . $dir) : '')
-        ->get();
+            ->get();
 
         $result = $rs->toArray();
 
@@ -5254,10 +5256,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // resolve ids to names
             $dgn = array();
             $ds = \EvolutionCMS\Models\DocumentgroupName::select('name')
-                ->whereIn('id',$dg)
+                ->whereIn('id', $dg)
                 ->get();
 
-            foreach ($ds as $row){
+            foreach ($ds as $row) {
                 $dgn[] = $row->name;
             }
             // cache docgroup names to session
@@ -5336,10 +5338,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $rs = \DB::table('webgroup_names as wgn')
                 ->select('wgn.name')
                 ->join('web_groups as wg')
-                ->on(['wg.webgroup'=>'wgn.id','wg.webuser'=>$this->getLoginUserID()])
+                ->on(['wg.webgroup' => 'wgn.id', 'wg.webuser' => $this->getLoginUserID()])
                 ->get();
 
-            $grpNames =$rs->toArray();
+            $grpNames = $rs->toArray();
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
         }

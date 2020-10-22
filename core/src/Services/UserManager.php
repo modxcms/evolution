@@ -2,6 +2,7 @@
 
 use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserDelete;
+use EvolutionCMS\Services\Users\UserEdit;
 use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserLogout;
 use EvolutionCMS\Services\Users\UserRegistration;
@@ -24,7 +25,8 @@ class UserManager
 
     public function edit(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $userEdit = new UserEdit($userData, $events, $cache);
+        return $userEdit->process();
     }
 
     public function delete(array $userData, bool $events = true, bool $cache = true)

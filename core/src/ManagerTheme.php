@@ -55,8 +55,8 @@ class ManagerTheme implements ManagerThemeInterface
         /** user management */
         87,
         88,
-        89,
-        90,
+        89 => Controllers\Users\EditOrNewUser::class,
+        90 => Controllers\Users\DeleteUser::class,
         32,
         28 => Controllers\Password::class,
         34,

@@ -5,8 +5,9 @@ use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Validation\Rule;
 
-class UserRegistration implements ServiceInterface
+class UserEdit implements ServiceInterface
 {
     /**
      * @var \string[][]
@@ -46,11 +47,11 @@ class UserRegistration implements ServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
-        $this->validate = $this->getValidationRules();
-        $this->messages = $this->getValidationMessages();
         $this->userData = $userData;
         $this->events = $events;
         $this->cache = $cache;
+        $this->validate = $this->getValidationRules();
+        $this->messages = $this->getValidationMessages();
     }
 
     /**
@@ -59,9 +60,9 @@ class UserRegistration implements ServiceInterface
     public function getValidationRules(): array
     {
         return [
-            'username' => ['required', 'unique:users'],
-            'password' => ['required', 'min:6', 'confirmed'],
-            'email' => ['required', 'unique:user_attributes'],
+            'username' => ['required', Rule::unique('users')->ignore($this->userData['id'])],
+            'password' => ['min:6', 'confirmed'],
+            'email' => ['required', Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
         ];
     }
 
@@ -74,7 +75,6 @@ class UserRegistration implements ServiceInterface
             'username.required' => Lang::get("global.required_field", ['field' => 'username']),
             'password.required' => Lang::get("global.required_field", ['field' => 'password']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
-            'email.required' => Lang::get("global.required_field", ['field' => 'email']),
             'password.min' => Lang::get("global.password_gen_length"),
             'username.unique' => Lang::get('global.username_unique'),
             'email.unique' => Lang::get('global.email_unique'),
@@ -95,7 +95,7 @@ class UserRegistration implements ServiceInterface
         // invoke OnBeforeUserFormSave event
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnBeforeUserSave", array(
-                "mode" => "new",
+                "mode" => "upd",
                 "user" => &$this->userData,
             ));
         }
@@ -106,20 +106,25 @@ class UserRegistration implements ServiceInterface
             throw $exception;
         }
 
-
-        $this->userData['clearPassword'] = $this->userData['password'];
-        $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
-        $user = User::create($this->userData);
+        if (isset($this->userData['password'])) {
+            $this->userData['clearPassword'] = $this->userData['password'];
+            $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
+        }
+        $user = User::find($this->userData['id']);
         $this->userData['internalKey'] = $user->getKey();
-        $user->attributes()->create($this->userData);
-
+        foreach ($this->userData as $attribute => $value) {
+            if (isset($user->attributes->{$attribute}) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
+                $user->attributes->{$attribute} = $value;
+            }
+        }
+        $user->attributes->save();
         // invoke OnWebSaveUser event
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnUserFormSave", array(
-                "mode" => "new",
+                "mode" => "upd",
                 "userid" => $user->getKey(),
                 "username" => $user->username,
-                "userpassword" => $this->userData['clearPassword'],
+                "userpassword" => isset($this->userData['clearPassword']) ? $this->userData['clearPassword'] : '',
                 "useremail" => $user->attributes->email,
                 "userfullname" => $user->attributes->fullname
             ));
@@ -137,7 +142,7 @@ class UserRegistration implements ServiceInterface
      */
     public function checkRules(): bool
     {
-        return true;
+        return ($_SESSION['mgrInternalKey'] == $this->userData['id'] || EvolutionCMS()->hasPermission('save_user'));
     }
 
     /**
