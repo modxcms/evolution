@@ -25,7 +25,7 @@ class WebAccessPermissions extends AbstractController implements ManagerTheme\Pa
 
     public function process() : bool
     {
-        $this->parameters['userGroups'] = Models\WebgroupName::with(['users', 'documentGroups'])
+        $this->parameters['userGroups'] = Models\MembergroupName::with(['users', 'documentGroups'])
             ->orderBy('name', 'ASC')
             ->get();
 

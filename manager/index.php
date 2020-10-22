@@ -168,6 +168,7 @@ if (!isset($_SESSION['SystemAlertMsgQueque'])) {
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
 $_lang = ManagerTheme::getLexicon();
+\Lang::setLocale(ManagerTheme::getLang());
 
 // send the charset header
 header('Content-Type: text/html; charset=' . ManagerTheme::getCharset());
@@ -176,13 +177,13 @@ header('Content-Type: text/html; charset=' . ManagerTheme::getCharset());
 $action = ManagerTheme::getActionId();
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-if (ManagerTheme::isAuthManager() === false) {
+if (0 !== $action && ManagerTheme::isAuthManager() === false) {
     echo ManagerTheme::renderLoginPage();
     exit;
 }
 
-/** Ignore Logout action */
-if (8 !== $action && ManagerTheme::hasManagerAccess() === false) {
+/** Ignore Logout and LogIn action */
+if (8 !== $action && 0 !== $action && ManagerTheme::hasManagerAccess() === false) {
     echo ManagerTheme::renderAccessPage();
     exit;
 }

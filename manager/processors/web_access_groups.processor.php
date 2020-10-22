@@ -19,7 +19,7 @@ switch ($operation) {
         if (empty($newgroup)) {
             $modx->webAlertAndQuit("No group name specified.");
         } else {
-            $id = \EvolutionCMS\Models\WebgroupName::query()->insertGetId(['name' => $newgroup]);
+            $id = \EvolutionCMS\Models\MembergroupName::query()->insertGetId(['name' => $newgroup]);
             // invoke OnWebCreateGroup event
             $modx->invokeEvent('OnWebCreateGroup', array(
                 'groupid' => $id,
@@ -47,11 +47,11 @@ switch ($operation) {
         if (empty($usergroup)) {
             $modx->webAlertAndQuit("No user group id specified for deletion.");
         } else {
-            \EvolutionCMS\Models\WebgroupName::where('id', $usergroup)->delete();
+            \EvolutionCMS\Models\MembergroupName::where('id', $usergroup)->delete();
 
-            \EvolutionCMS\Models\WebgroupAccess::where('webgroup', $usergroup)->delete();
+            \EvolutionCMS\Models\MembergroupAccess::where('membergroup', $usergroup)->delete();
 
-            \EvolutionCMS\Models\WebGroup::where('webuser', $usergroup)->delete();
+            \EvolutionCMS\Models\MemberGroup::where('member', $usergroup)->delete();
         }
         break;
     case "delete_document_group" :
@@ -61,7 +61,7 @@ switch ($operation) {
         } else {
             \EvolutionCMS\Models\DocumentgroupName::where('id', $group)->delete();
 
-            \EvolutionCMS\Models\WebgroupAccess::where('documentgroup', $group)->delete();
+            \EvolutionCMS\Models\MembergroupAccess::where('documentgroup', $group)->delete();
 
             \EvolutionCMS\Models\DocumentGroup::where('document_group', $group)->delete();
         }
@@ -75,7 +75,7 @@ switch ($operation) {
         if (empty($groupid)) {
             $modx->webAlertAndQuit("No user group id specified for rename.");
         }
-        \EvolutionCMS\Models\WebgroupName::where('id', $groupid)->update(['name' => $newgroupname]);
+        \EvolutionCMS\Models\MembergroupName::where('id', $groupid)->update(['name' => $newgroupname]);
         break;
     case "rename_document_group" :
         $newgroupname = $_REQUEST['newgroupname'];
@@ -92,8 +92,8 @@ switch ($operation) {
         $updategroupaccess = true;
         $usergroup = (int)$_REQUEST['usergroup'];
         $docgroup = (int)$_REQUEST['docgroup'];
-        if (\EvolutionCMS\Models\WebgroupAccess::where('webgroup', $usergroup)->where('documentgroup', $docgroup)->count() <= 0) {
-            \EvolutionCMS\Models\WebgroupAccess::create(array('webgroup' => $usergroup, 'documentgroup' => $docgroup));
+        if (\EvolutionCMS\Models\MembergroupAccess::where('membergroup', $usergroup)->where('documentgroup', $docgroup)->count() <= 0) {
+            \EvolutionCMS\Models\MembergroupAccess::create(array('membergroup' => $usergroup, 'documentgroup' => $docgroup));
         } else {
             //alert user that coupling already exists?
         }
@@ -102,7 +102,7 @@ switch ($operation) {
         $updategroupaccess = true;
         $coupling = (int)$_REQUEST['coupling'];
         $document_group = (int)$_REQUEST['document_group'];
-        \EvolutionCMS\Models\WebgroupAccess::where('webgroup', $coupling)->where('documentgroup', $document_group)->delete();
+        \EvolutionCMS\Models\MembergroupAccess::where('membergroup', $coupling)->where('documentgroup', $document_group)->delete();
         break;
     default :
         $modx->webAlertAndQuit("No operation set in request.");

@@ -442,7 +442,7 @@
 <body class="[+manager_theme_style+] [+login_form_position_class+]">
 <div class="page">
     <div class="tab-page loginbox [+login_form_style_class+]">
-        <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="processors/login.processor.php">
+        <form method="post" name="loginfrm" id="loginfrm" class="container container-body" action="?a=0">
 
             <!-- OnManagerLoginFormPrerender -->
             [+OnManagerLoginFormPrerender+]
@@ -511,7 +511,7 @@
   form.onsubmit = function(e) {
     document.getElementById('mainloader').classList.add('show');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'processors/login.processor.php', true);
+    xhr.open('POST', '?a=0', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
     xhr.onload = function() {
       if (this.readyState === 4) {
