@@ -1,13 +1,38 @@
 <?php namespace EvolutionCMS\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface ServiceInterface
 {
-    public function get(int $id);
+    /**
+     * @param array $data
+     * @param bool $events
+     * @param bool $cache
+     */
+    public function __construct(array $data, bool $events, bool $cache);
 
-    public function create(array $data);
+    /**
+     * @return Model
+     */
+    public function process();
 
-    public function delete(int $id);
+    /**
+     * @return array
+     */
+    public function getValidationRules(): array;
 
-    public function edit(int $id, array $data);
+    /**
+     * @return array
+     */
+    public function getValidationMessages(): array;
 
+    /**
+     * @return bool
+     */
+    public function checkRules(): bool;
+
+    /**
+     * @return bool
+     */
+    public function validation(): bool;
 }

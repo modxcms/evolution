@@ -1,82 +1,72 @@
 <?php namespace EvolutionCMS\Services;
 
-use EvolutionCMS\Exceptions\ServiceValidateException;
-use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserDelete;
+use EvolutionCMS\Services\Users\UserEdit;
+use EvolutionCMS\Services\Users\UserLogin;
+use EvolutionCMS\Services\Users\UserLogout;
+use EvolutionCMS\Services\Users\UserRegistration;
+use EvolutionCMS\Services\Users\UserSetGroups;
+use EvolutionCMS\Services\Users\UserSetRole;
 
-class UserManager implements ServiceInterface
+class UserManager
 {
-    public $validate = [
-        'username' => ['required', 'unique:users'],
-        'email' => ['required', 'unique:user_attributes'],
-    ];
-
-    /**
-     * @var array
-     */
-    public $messages = [
-        'required' => 'Поле обязательно',
-        'username.min' => 'Имя не меньше 5 символов',
-        'username.unique' => 'Имя пользователя должно быть уникальным',
-        'email.unique' => 'Email должен быть уникальным',
-    ];
 
     public function get($id)
     {
         return User::find($id);
     }
 
-    public function create(array $userData): User
+    public function create(array $userData, bool $events = true, bool $cache = true)
     {
-        $validator = \Validator::make($userData, $this->validate, $this->messages);
-
-        if ($validator->fails()) {
-            $exception = new ServiceValidationException();
-            $exception->setValidationErrors($validator->messages()->toArray());
-            throw $exception;
-        }
-
+        $registration = new UserRegistration($userData, $events, $cache);
+        return $registration->process();
     }
 
-    public function edit($id, $userData)
+    public function edit(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $userEdit = new UserEdit($userData, $events, $cache);
+        return $userEdit->process();
     }
 
-    public function delete($id)
+    public function delete(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $username = new UserDelete($userData, $events, $cache);
+        return $username->process();
     }
 
-    public function dropPassword($userData)
+    public function dropPassword($userData, bool $events = true, bool $cache = true)
     {
 
     }
 
-    public function changePassword($userData)
+    public function changePassword($userData, bool $events = true, bool $cache = true)
     {
 
     }
 
-    public function setRole($userData)
+    public function setRole(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $user = new UserSetRole($userData, $events, $cache);
+        return $user->process();
     }
 
-    public function setGroup($userData)
+    public function setGroups(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $user = new UserSetGroups($userData, $events, $cache);
+        return $user->process();
     }
 
-    public function login($userData)
+    public function login(array $userData, bool $events = true, bool $cache = true)
     {
-
+        $user = new UserLogin($userData, $events, $cache);
+        return $user->process();
     }
 
-    public function logout($userData)
+    public function logout(array $userData = [], bool $events = true, bool $cache = true)
     {
-
+        $user = new UserLogout([], $events, $cache);
+        $user->process();
     }
 
 }

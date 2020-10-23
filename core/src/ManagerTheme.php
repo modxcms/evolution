@@ -50,12 +50,13 @@ class ManagerTheme implements ManagerThemeInterface
         /** show the wait page - gives the tree time to refresh (hopefully) */
         7,
         /** let the user log out */
-        8,
+        8 => Controllers\Users\LogInOut::class,
+        0 => Controllers\Users\LogInOut::class,
         /** user management */
         87,
         88,
-        89,
-        90,
+        89 => Controllers\Users\EditOrNewUser::class,
+        90 => Controllers\Users\DeleteUser::class,
         32,
         28 => Controllers\Password::class,
         34,

@@ -71,7 +71,8 @@ $usernamedata = [
 
 if($modx->getManagerApi()->action == '88') {
 	// get user attributes
-	$userdatatmp = \EvolutionCMS\Models\UserAttribute::query()->where('internalKey', $user)->first()->toArray();
+	$userdatatmp = \EvolutionCMS\Models\UserAttribute::query()->where('internalKey', $user)->first();
+    $userdatatmp = $userdatatmp->makeVisible('role')->toArray();
 	if(!$userdatatmp) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
@@ -346,7 +347,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <td>&nbsp;</td>
                         <td><?php
                             $roles = \EvolutionCMS\Models\UserRole::query()->select('name', 'id');
-
                             if(!$modx->hasPermission('save_role')){
                                 $roles = $roles->where('id', '!=', 1);
                             }
@@ -798,7 +798,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 $out.=$_POST['photo'];
                             }else {
                                 if(!empty($userdata['photo'])){
-                                    if((strpos($_POST['photo'], "http://") === false)){
+                                    if((strpos($userdata['photo'], "http://") === false)){
                                     $out = MODX_SITE_URL;
                                 }
                                 $out.=$userdata['photo'];
@@ -818,7 +818,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			$groupsarray = array();
 
 			if($modx->getManagerApi()->action == '88') { // only do this bit if the user is being edited
-				$groupsarray = \EvolutionCMS\Models\WebGroup::query()->pluck('webgroup')->toArray();
+				$groupsarray = \EvolutionCMS\Models\MemberGroup::query()->where('member', $user)->pluck('user_group')->toArray();
 			}
 			// retain selected user groups between post
 			if(isset($_POST['user_groups']) && is_array($_POST['user_groups'])) {
@@ -830,7 +830,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabPermissions"));</script>
 				<p><?php echo $_lang['access_permissions_user_message'] ?></p>
 				<?php
-				$webgroupnames = \EvolutionCMS\Models\WebgroupName::query()->orderBy('name')->get();
+				$webgroupnames = \EvolutionCMS\Models\MembergroupName::query()->orderBy('name')->get();
 				foreach ($webgroupnames->toArray() as $row) {
 					echo '<label><input type="checkbox" name="user_groups[]" value="' . $row['id'] . '"' . (in_array($row['id'], $groupsarray) ? ' checked="checked"' : '') . ' />' . $row['name'] . '</label><br />';
 				}

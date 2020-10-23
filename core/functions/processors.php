@@ -238,7 +238,6 @@ if (!function_exists('jsAlert')) {
      */
     function jsAlert($msg)
     {
-        $modx = evolutionCMS();
         if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
             echo sprintf(
                 '<script>window.setTimeout("alert(\'%s\')",10);history.go(-1)</script>'
