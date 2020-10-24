@@ -482,7 +482,7 @@
 
             <!-- OnManagerLoginFormRender -->
             [+OnManagerLoginFormRender+]
-
+            [+repair_password+]
         </form>
     </div>
 

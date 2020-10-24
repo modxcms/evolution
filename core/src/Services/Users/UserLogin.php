@@ -41,7 +41,7 @@ class UserLogin implements ServiceInterface
     /**
      * @var User
      */
-    private $user;
+    public $user;
     /**
      * @var int
      */

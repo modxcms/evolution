@@ -3,9 +3,11 @@
 use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserDelete;
 use EvolutionCMS\Services\Users\UserEdit;
+use EvolutionCMS\Services\Users\UserHashLogin;
 use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserLogout;
 use EvolutionCMS\Services\Users\UserRegistration;
+use EvolutionCMS\Services\Users\UserRepairPassword;
 use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
 
@@ -35,9 +37,10 @@ class UserManager
         return $username->process();
     }
 
-    public function dropPassword($userData, bool $events = true, bool $cache = true)
+    public function repairPassword($userData, bool $events = true, bool $cache = true)
     {
-
+        $userHash = new UserRepairPassword($userData, $events, $cache);
+        return $userHash->process();
     }
 
     public function changePassword($userData, bool $events = true, bool $cache = true)
@@ -60,6 +63,12 @@ class UserManager
     public function login(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserLogin($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function hashLogin(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserHashLogin($userData, $events, $cache);
         return $user->process();
     }
 
