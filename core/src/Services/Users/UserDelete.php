@@ -85,7 +85,7 @@ class UserDelete implements ServiceInterface
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -137,7 +137,7 @@ class UserDelete implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();

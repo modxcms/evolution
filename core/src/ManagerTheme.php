@@ -60,7 +60,6 @@ class ManagerTheme implements ManagerThemeInterface
         32,
         28 => Controllers\Password::class,
         34,
-        33,
         /** role management */
         38 => UserRole::class,
         35 => UserRole::class,
