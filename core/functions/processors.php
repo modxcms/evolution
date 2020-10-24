@@ -334,41 +334,6 @@ if (!function_exists('updateNewHash')) {
     }
 }
 
-if (!function_exists('incrementFailedLoginCount')) {
-    /**
-     * @param int $internalKey
-     * @param int $failedlogins
-     * @param int $failed_allowed
-     * @param int $blocked_minutes
-     */
-    function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes)
-    {
-        $modx = evolutionCMS();
-
-        $failedlogins += 1;
-
-        $fields = array('failedlogincount' => $failedlogins);
-        if ($failedlogins >= $failed_allowed) //block user for too many fail attempts
-        {
-            $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
-        }
-        \EvolutionCMS\Models\UserAttribute::where('internalKey', (int)$internalKey)->update($fields);
-
-        if ($failedlogins < $failed_allowed) {
-            //sleep to help prevent brute force attacks
-            $sleep = (int)$failedlogins / 2;
-            if ($sleep > 5) {
-                $sleep = 5;
-            }
-            sleep($sleep);
-        }
-        @session_destroy();
-        session_unset();
-
-        return;
-    }
-}
-
 if (!function_exists('saveUserGroupAccessPermissons')) {
     /**
      * saves module user group access
@@ -595,36 +560,6 @@ if (!function_exists('sendMailMessageForUser')) {
     }
 }
 
-if (!function_exists('saveWebUserSettings')) {
-// Save User Settings
-    function saveWebUserSettings($id)
-    {
-        $settings = array(
-            'login_home',
-            'allowed_ip',
-            'allowed_days'
-        );
-
-        \EvolutionCMS\Models\UserSetting::where('webuser', $id)->delete();
-
-        foreach ($settings as $n) {
-            if (!isset($_POST[$n])) {
-                continue;
-            }
-            $vl = $_POST[$n];
-            if (is_array($vl)) {
-                $vl = implode(',', $vl);
-            }
-            if ($vl != '') {
-                $f = array();
-                $f['webuser'] = $id;
-                $f['setting_name'] = $n;
-                $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
-            }
-        }
-    }
-}
 
 if (!function_exists('saveManagerUserSettings')) {
     /**
