@@ -100,7 +100,7 @@ class UserEdit implements ServiceInterface
             ));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -148,7 +148,7 @@ class UserEdit implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();

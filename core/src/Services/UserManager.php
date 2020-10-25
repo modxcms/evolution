@@ -1,11 +1,15 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserChangePassword;
 use EvolutionCMS\Services\Users\UserDelete;
 use EvolutionCMS\Services\Users\UserEdit;
+use EvolutionCMS\Services\Users\UserHashLogin;
 use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserLogout;
 use EvolutionCMS\Services\Users\UserRegistration;
+use EvolutionCMS\Services\Users\UserRepairPassword;
+use EvolutionCMS\Services\Users\UserSaveSettings;
 use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
 
@@ -35,14 +39,16 @@ class UserManager
         return $username->process();
     }
 
-    public function dropPassword($userData, bool $events = true, bool $cache = true)
+    public function repairPassword($userData, bool $events = true, bool $cache = true)
     {
-
+        $userHash = new UserRepairPassword($userData, $events, $cache);
+        return $userHash->process();
     }
 
     public function changePassword($userData, bool $events = true, bool $cache = true)
     {
-
+        $user = new UserChangePassword($userData, $events, $cache);
+        return $user->process();
     }
 
     public function setRole(array $userData, bool $events = true, bool $cache = true)
@@ -63,9 +69,21 @@ class UserManager
         return $user->process();
     }
 
+    public function hashLogin(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserHashLogin($userData, $events, $cache);
+        return $user->process();
+    }
+
     public function logout(array $userData = [], bool $events = true, bool $cache = true)
     {
-        $user = new UserLogout([], $events, $cache);
+        $user = new UserLogout($userData, $events, $cache);
+        $user->process();
+    }
+
+    public function saveSettings(array $userData = [], bool $events = true, bool $cache = true)
+    {
+        $user = new UserSaveSettings($userData, $events, $cache);
         $user->process();
     }
 

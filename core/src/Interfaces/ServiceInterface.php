@@ -34,5 +34,5 @@ interface ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool;
+    public function validate(): bool;
 }

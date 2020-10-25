@@ -4,9 +4,12 @@ use EvolutionCMS\Controllers\UserRoles\Permission;
 use EvolutionCMS\Controllers\UserRoles\PermissionsGroups;
 use EvolutionCMS\Controllers\UserRoles\RoleManagment;
 use EvolutionCMS\Controllers\UserRoles\UserRole;
+use EvolutionCMS\Controllers\Users\ChangePassword;
+use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
 use EvolutionCMS\Models\ActiveUser;
+use EvolutionCMS\Models\UserAttribute;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -59,8 +62,7 @@ class ManagerTheme implements ManagerThemeInterface
         90 => Controllers\Users\DeleteUser::class,
         32,
         28 => Controllers\Password::class,
-        34,
-        33,
+        34 => ChangePassword::class,
         /** role management */
         38 => UserRole::class,
         35 => UserRole::class,
@@ -178,7 +180,7 @@ class ManagerTheme implements ManagerThemeInterface
         501
     ];
 
-    public function __construct(CoreInterface $core,String $theme)
+    public function __construct(CoreInterface $core, string $theme)
     {
         $this->core = $core;
 
@@ -190,8 +192,8 @@ class ManagerTheme implements ManagerThemeInterface
         $this->loadLang(
             $this->getCore()->getConfig('manager_language')
         );
-        if(IN_INSTALL_MODE === false)
-        $this->loadStyle();
+        if (IN_INSTALL_MODE === false)
+            $this->loadStyle();
 
         if ($this->getCore()->getConfig('mgr_jquery_path', '') === '') {
             $this->getCore()->setConfig('mgr_jquery_path', 'media/script/jquery/jquery.min.js');
@@ -679,6 +681,9 @@ class ManagerTheme implements ManagerThemeInterface
             , $this->getCore()->getConfig('login_form_style')
         );
 
+        $plh['repair_password'] = $this->repairPassword($plh);
+
+
         return $this->makeTemplate('login', 'manager_login_tpl', $plh, false);
     }
 
@@ -781,12 +786,12 @@ class ManagerTheme implements ManagerThemeInterface
                     );
             }
 
-                $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify($files);
-                $css = $minifier->minify();
-                file_put_contents(
-                    $this->getThemeDir() . $minCssName,
-                    $css
-                );
+            $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify($files);
+            $css = $minifier->minify();
+            file_put_contents(
+                $this->getThemeDir() . $minCssName,
+                $css
+            );
 
         }
         if (file_exists($this->getThemeDir() . $minCssName)) {
@@ -821,5 +826,57 @@ class ManagerTheme implements ManagerThemeInterface
         }
 
         return $out;
+    }
+
+    public function repairPassword($plh)
+    {
+        $output = '';
+        if (isset($_GET['repair_password'])) {
+            return $this->makeTemplate('repair_form', 'manager_login_tpl', $plh, false);
+        }
+        if (isset($_GET['email'])) {
+            $user = UserAttribute::where('email', $_GET['email'])->first();
+            if (is_null($user)) {
+                $output .= '<span class="error">' . \Lang::get('global.could_not_find_user') . '</span>';
+            }
+            if ($user->blocked == 1) {
+                $output .= '<span class="error">' . \Lang::get('global.user_is_blocked') . '</span>';
+            } else {
+                $hash = '';
+                try {
+                    $hash = \UserManager::repairPassword(['id' => $user->internalKey, 'mode' => 'hash']);
+                } catch (ServiceValidationException $exception) {
+                    foreach ($exception->getValidationErrors() as $errors) {
+                        foreach ($errors as $error) {
+                            $output .= '<span class="error">' . $error . '</span>';
+                        }
+                    }
+                }
+                if ($output == '')
+                    $output .= $this->sendRepairMail($_GET['email'], $hash, 'hash');
+            }
+
+        }
+        return $output . $this->makeTemplate('repair_button', 'manager_login_tpl', $plh, false);
+
+    }
+
+    public function sendRepairMail($email, $hash, $mode)
+    {
+        $body = '
+                <p>' . \Lang::get('global.forgot_password_email_intro') . ' <a href="' . MODX_MANAGER_URL . '?a=0&hash=' . $hash . '&mode=' . $mode . '">' . \Lang::get('global.forgot_password_email_link') . '</a></p>
+                <p>' . \Lang::get('global.forgot_password_email_instructions') . '</p>
+                <p><small>' . \Lang::get('global.forgot_password_email_fine_print') . '</small></p>';
+
+        $param = array();
+        $param['from'] = $this->getCore()->getConfig('site_name') . '<' . $this->getCore()->getConfig('emailsender') . '>';
+        $param['to'] = $email;
+        $param['subject'] = \Lang::get('global.password_change_request');
+        $param['body'] = $body;
+        $rs = $this->getCore()->sendmail($param); //ignore mail errors in this case
+
+        if (!$rs) return '<span class="error">' . \Lang::get('global.error_sending_email') . '</span>';
+
+        return '<p><b>' . \Lang::get('global.email_sent') . '</b></p>';
     }
 }

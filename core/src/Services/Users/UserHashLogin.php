@@ -4,8 +4,9 @@ use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
+use Illuminate\Support\Facades\Lang;
 
-class UserSetRole implements ServiceInterface
+class UserHashLogin extends UserLogin
 {
     /**
      * @var \string[][]
@@ -38,33 +39,15 @@ class UserSetRole implements ServiceInterface
     public $validateErrors;
 
     /**
-     * UserRegistration constructor.
-     * @param array $userData
-     * @param bool $events
-     * @param bool $cache
+     * @var User
      */
-    public function __construct(array $userData, bool $events = true, bool $cache = true)
-    {
-        $this->userData = $userData;
-        $this->events = $events;
-        $this->cache = $cache;
-    }
+    public $user;
 
     /**
-     * @return \string[][]
+     * @var
      */
-    public function getValidationRules(): array
-    {
-        return [];
-    }
+    private $userSettings;
 
-    /**
-     * @return array
-     */
-    public function getValidationMessages(): array
-    {
-        return [];
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Model
@@ -83,30 +66,35 @@ class UserSetRole implements ServiceInterface
             throw $exception;
         }
 
-        $user = User::find($this->userData['id']);
-        if (is_null($user)) {
-            throw new ServiceActionException(\Lang::get('global.user_doesnt_exist'));
+
+        $this->user = \EvolutionCMS\Models\User::query()
+            ->where('cachepwd', $this->userData['hash'])->first();
+        if (is_null($this->user)) {
+            throw new ServiceActionException(\Lang::get('global.login_processor_unknown_user'));
         }
-        $user->attributes->role = $this->userData['role'];
-        $user->attributes->save();
 
-        return $user;
+        $this->userSettings = $this->user->settings->pluck('setting_value', 'setting_name')->toArray();
+
+        $this->validateAuth();
+
+        $this->authProcess();
+        $this->checkRemember();
+        $this->clearActiveUsers();
+        $this->writeLog();
+
+        if ($this->events) {
+            // invoke OnManagerLogin event
+            EvolutionCMS()->invokeEvent('OnManagerLogin', array(
+                'userid' => $this->user->getKey(),
+                'username' => $this->user->username,
+                'userpassword' => $this->userData['password'],
+                'rememberme' => $this->userData['rememberme']
+            ));
+        }
+        $this->user->cachepwd = '';
+        $this->user->save();
+        return $this->user;
     }
 
-    /**
-     * @return bool
-     */
-    public function checkRules(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function validate(): bool
-    {
-        return true;
-    }
 
 }
