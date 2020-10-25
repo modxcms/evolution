@@ -27,13 +27,13 @@
                 <input type="hidden" name="a" value="34">
                 <p>{{ ManagerTheme::getLexicon('change_password_message') }}</p>
                 @include('manager::form.input', [
-                    'name' => 'pass1',
+                    'name' => 'password',
                     'type' => 'password',
                     'label' => ManagerTheme::getLexicon('change_password_new'),
                     'value' => ''
                 ])
                 @include('manager::form.input', [
-                    'name' => 'pass2',
+                    'name' => 'password_confirmation',
                     'type' => 'password',
                     'label' => ManagerTheme::getLexicon('change_password_confirm'),
                     'value' => ''

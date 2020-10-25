@@ -4,6 +4,7 @@ use EvolutionCMS\Controllers\UserRoles\Permission;
 use EvolutionCMS\Controllers\UserRoles\PermissionsGroups;
 use EvolutionCMS\Controllers\UserRoles\RoleManagment;
 use EvolutionCMS\Controllers\UserRoles\UserRole;
+use EvolutionCMS\Controllers\Users\ChangePassword;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
@@ -61,7 +62,7 @@ class ManagerTheme implements ManagerThemeInterface
         90 => Controllers\Users\DeleteUser::class,
         32,
         28 => Controllers\Password::class,
-        34,
+        34 => ChangePassword::class,
         /** role management */
         38 => UserRole::class,
         35 => UserRole::class,
