@@ -4152,7 +4152,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @throws TableNotDefinedException
      * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
-    public function getPageInfo($pageid = -1, $active = 1, $fields = 'id, pagetitle, description, alias')
+    public function getPageInfo($pageid = -1, $active = 1, $fields = 'site_content.id, site_content.pagetitle, site_content.description, site_content.alias')
     {
 
         $cacheKey = md5(print_r(func_get_args(), true));
@@ -4926,27 +4926,31 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $fields = array_filter(array_map('trim', $fields), function ($value) {
                 return $value !== 'value';
             });
-            $fields = 'tv.' . implode(',tv.', $fields);
+            $fields = 'site_tmplvars.' . implode(',site_tmplvars.', $fields);
         } else {
-            $fields = 'tv.*';
+            $fields = 'site_tmplvars.*';
         }
-        $sort = ($sort == '') ? '' : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
+        $sort = ($sort == '') ? '' : 'site_tmplvars.' . implode(',site_tmplvars.', array_filter(array_map('trim', explode(',', $sort))));
 
         if ($idnames === '*') {
-            $query = 'tv.id<>0';
+            $query = ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.id<>0';
         } else {
-            $query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name') . " IN ('" . implode("','", $idnames) . "')";
+            $query = (is_numeric($idnames[0]) ? ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.id' : ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.name') . " IN ('" . implode("','", $idnames) . "')";
         }
 
-        $rs = \DB::table('site_tmplvars as tv')
-            ->selectRaw("{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value")
-            ->join('site_tmplvar_templates as tvtpl')
-            ->on('tvtpl.tmplvarid', 'tv.id')
-            ->leftJoin('site_tmplvar_contentvalues as tvc')
-            ->on(['tvc.tmplvarid' => 'tv.id', 'tvc.contentid' => $docid])
-            ->whereRaw($query . " AND tvtpl.templateid = '" . $docRow['template'] . "'")
-            ->orderBy($sort ? ($sort . ' ' . $dir) : '')
-            ->get();
+        $rs = SiteTmplvar::query()
+            ->select($fields)
+            ->selectRaw(" IF(".$this->getDatabase()->getConfig('prefix')."site_tmplvar_contentvalues.value != '', ".$this->getDatabase()->getConfig('prefix')."site_tmplvar_contentvalues.value, ".$this->getDatabase()->getConfig('prefix')."site_tmplvars.default_text) as value")
+            ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
+            ->leftJoin('site_tmplvar_contentvalues', function($join) use ($docid) {
+                $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
+                $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($docid));
+            })
+            ->whereRaw($query . " AND ".$this->getDatabase()->getConfig('prefix')."site_tmplvar_templates.templateid = '" . $docRow['template'] . "'");
+        if($sort != ''){
+            $rs = $rs->orderBy($sort);
+        }
+        $rs = $rs->get();
 
         $result = $rs->toArray();
 
