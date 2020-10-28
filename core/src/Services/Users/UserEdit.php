@@ -105,12 +105,8 @@ class UserEdit implements ServiceInterface
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
         }
-
-        if (isset($this->userData['password'])) {
-            $this->userData['clearPassword'] = $this->userData['password'];
-            $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
-        }
         $user = User::find($this->userData['id']);
+
         $this->userData['internalKey'] = $user->getKey();
         foreach ($this->userData as $attribute => $value) {
             if (isset($user->attributes->{$attribute}) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
