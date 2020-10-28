@@ -81,7 +81,7 @@ class UserManager
         $user->process();
     }
 
-    public function saveSettings(array $userData = [], bool $events = true, bool $cache = true)
+    public function saveSettings(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserSaveSettings($userData, $events, $cache);
         $user->process();
