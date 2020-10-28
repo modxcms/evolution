@@ -43,11 +43,18 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             }
         }
         $userData['username'] = $userData['newusername'];
+
         try {
             if ($userData['mode'] == 87) {
                 $user = \UserManager::create($userData);
             } else {
                 $user = \UserManager::edit($userData);
+                if (isset($userData['password'])) {
+                    $userData['clearPassword'] = $userData['password'];
+                    $user->password =  EvolutionCMS()->getPasswordHash()->HashPassword($userData['password']);
+                    $user->cachepwd = '';
+                    $user->save();
+                }
             }
         } catch (\EvolutionCMS\Exceptions\ServiceValidationException $exception) {
             foreach ($exception->getValidationErrors() as $errors) {
