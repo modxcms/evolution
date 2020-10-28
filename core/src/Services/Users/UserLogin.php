@@ -78,7 +78,8 @@ class UserLogin implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return ['username' => ['required'],
+                'password' => ['required']];
     }
 
     /**
@@ -86,7 +87,8 @@ class UserLogin implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return [];
+        return ['username.required' => Lang::get("global.required_field", ['field' => 'username']),
+                'password.required' => Lang::get("global.required_field", ['field' => 'password'])];
     }
 
     /**
@@ -155,7 +157,9 @@ class UserLogin implements ServiceInterface
      */
     public function validate(): bool
     {
-        return true;
+        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
+        $this->validateErrors = $validator->errors()->toArray();
+        return !$validator->fails();
     }
 
     /**

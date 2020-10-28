@@ -60,9 +60,10 @@ class UserEdit implements ServiceInterface
     public function getValidationRules(): array
     {
         return [
-            'username' => ['required', Rule::unique('users')->ignore($this->userData['id'])],
+            'id' => ['required'],
+            'username' => [Rule::unique('users')->ignore($this->userData['id'])],
             'password' => ['min:6', 'confirmed'],
-            'email' => ['required', Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
+            'email' => [Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
         ];
     }
 
@@ -72,8 +73,7 @@ class UserEdit implements ServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'username.required' => Lang::get("global.required_field", ['field' => 'username']),
-            'password.required' => Lang::get("global.required_field", ['field' => 'password']),
+            'id.required' => Lang::get("global.required_field", ['field' => 'username']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
             'password.min' => Lang::get("global.password_gen_length"),
             'username.unique' => Lang::get('global.username_unique'),
