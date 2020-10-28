@@ -6,7 +6,7 @@ use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
 
-class UserChangePassword implements ServiceInterface
+class UserHashChangePassword implements ServiceInterface
 {
     /**
      * @var \string[][]
@@ -60,8 +60,7 @@ class UserChangePassword implements ServiceInterface
     public function getValidationRules(): array
     {
         return [
-            'id' => ['required'],
-            'old_password' => ['required'],
+            'hash' => ['required'],
             'password' => ['required', 'min:6', 'confirmed'],
         ];
     }
@@ -72,8 +71,7 @@ class UserChangePassword implements ServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'id.required' => Lang::get("global.required_field", ['field' => 'password']),
-            'old_password.required' => Lang::get("global.required_field", ['field' => 'password']),
+            'hash.required' => Lang::get("global.required_field", ['field' => 'hash']),
             'password.required' => Lang::get("global.required_field", ['field' => 'password']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
             'password.min' => Lang::get("global.password_gen_length"),
@@ -98,27 +96,11 @@ class UserChangePassword implements ServiceInterface
             throw $exception;
         }
 
-
-
-        $password = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
-        $user = \EvolutionCMS\Models\User::find($this->userData['id']);
-
-        $hashType = EvolutionCMS()->getManagerApi()->getHashType($user->password);
-
-        if ($hashType == 'phpass') {
-            $matchPassword = login($user->username, $this->userData['old_password'], $user->password);
-        } elseif ($hashType == 'md5') {
-            $matchPassword = loginMD5($user->getKey(), $this->userData['old_password'], $user->password, $user->username);
-        } elseif ($hashType == 'v1') {
-            $matchPassword = loginV1($user->getKey(), $this->userData['old_password'], $user->password, $user->username);
-        } else {
-            $matchPassword = false;
+        $user = \EvolutionCMS\Models\User::where('cachepwd', $this->userData['hash'])->first();
+        if (is_null($user)) {
+            throw new ServiceActionException(\Lang::get('global.could_not_find_user'));
         }
-        if($matchPassword == false){
-            throw new ServiceActionException(\Lang::get('global.login_processor_wrong_password'));
-        }
-
-        $user->password = $password;
+        $user->password = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
         $user->cachepwd = '';
         $user->save();
 
