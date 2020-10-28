@@ -29,7 +29,7 @@ class ChangePassword extends AbstractController implements ManagerTheme\PageCont
     public function process() : bool
     {
         try {
-            \UserManager::changePassword($_POST);
+            \UserManager::changeManagerPassword($_POST);
         }catch (ServiceValidationException $exception){
             foreach ($exception->getValidationErrors() as $errors){
                 if(is_array($errors)){

@@ -1,6 +1,8 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserHashChangePassword;
+use EvolutionCMS\Services\Users\UserManagerChangePassword;
 use EvolutionCMS\Services\Users\UserChangePassword;
 use EvolutionCMS\Services\Users\UserDelete;
 use EvolutionCMS\Services\Users\UserEdit;
@@ -45,9 +47,21 @@ class UserManager
         return $userHash->process();
     }
 
+    public function changeManagerPassword($userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserManagerChangePassword($userData, $events, $cache);
+        return $user->process();
+    }
+
     public function changePassword($userData, bool $events = true, bool $cache = true)
     {
         $user = new UserChangePassword($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function hashChangePassword($userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserHashChangePassword($userData, $events, $cache);
         return $user->process();
     }
 
