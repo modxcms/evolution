@@ -2179,7 +2179,7 @@ class SiteContent extends Eloquent\Model
                 $join->on('site_content_closure.depth', '<', \DB::raw($depth));
             })
             ->join('site_content as t2', 't2.id', '=', 'site_content_closure.descendant' )
-            ->where('site_content.parent', 0)->get()->toTree();
+            ->where('site_content.parent', 0);
     }
 
     //return tvs array [$docid => tvs array()]
