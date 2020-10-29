@@ -419,10 +419,6 @@ switch ($actionToTake) {
         include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
         secureWebDocument($key);
 
-        // secure manager documents - flag as private
-        include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
-        secureMgrDocument($key);
-
         // Set the item name for logger
         $_SESSION['itemname'] = $no_esc_pagetitle;
 
@@ -631,9 +627,6 @@ switch ($actionToTake) {
             include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
             secureWebDocument($id);
 
-            // secure manager documents - flag as private
-            include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
-            secureMgrDocument($id);
 
             // Set the item name for logger
             $_SESSION['itemname'] = $no_esc_pagetitle;
