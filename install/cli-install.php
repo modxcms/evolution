@@ -396,6 +396,8 @@ class InstallEvo
         $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
         $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role];
         $managerUser->attributes()->create($field);
+        $managerUser->attributes->role = $role;
+        $managerUser->attributes->save();
         $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $this->language];
         $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
         $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $this->cmsAdminEmail];
