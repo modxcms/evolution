@@ -114,12 +114,12 @@ if ($updategroupaccess == true) {
     secureWebDocument();
 
     // Update the private group column
-    $resp = \EvolutionCMS\Models\DocumentgroupName::query()->select('documentgroup_names.id', 'webgroup_access.webgroup')
-        ->join('webgroup_access', 'webgroup_access.documentgroup', '=', 'documentgroup_names.id')
+    $resp = \EvolutionCMS\Models\DocumentgroupName::query()->select('documentgroup_names.id', 'membergroup_access.membergroup')
+        ->join('membergroup_access', 'membergroup_access.documentgroup', '=', 'documentgroup_names.id')
         ->get();
     foreach ($resp as $item) {
-        if (!is_null($item->webgroup))
-            \EvolutionCMS\Models\DocumentgroupName::find($item->id)->update(['private_webgroup' => $item->webgroup]);
+        if (!is_null($item->membergroup))
+            \EvolutionCMS\Models\DocumentgroupName::find($item->id)->update(['private_memgroup' => $item->membergroup]);
     }
 }
 

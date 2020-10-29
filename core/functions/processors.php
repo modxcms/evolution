@@ -122,6 +122,7 @@ if (!function_exists('duplicateTVs')) {
     {
         $oldTvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->where('contentid', $oldid)->get();
         foreach ($oldTvs->toArray() as $oldTv) {
+            unset($oldTv['id']);
             $oldTv['contentid'] = $newid;
             SiteTmplvarTemplate::query()->insert($oldTv);
         }
@@ -140,6 +141,7 @@ if (!function_exists('duplicateAccess')) {
         $modx = evolutionCMS();
         $oldDocGroups = \EvolutionCMS\Models\DocumentGroup::query()->where('document', $oldid)->get();
         foreach ($oldDocGroups->toArray() as $oldDocGroup) {
+            unset($oldDocGroup['id']);
             $oldDocGroup['document'] = $newid;
             \EvolutionCMS\Models\DocumentGroup::query()->insert($oldDocGroup);
         }

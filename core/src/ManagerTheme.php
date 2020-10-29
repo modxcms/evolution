@@ -119,10 +119,8 @@ class ManagerTheme implements ManagerThemeInterface
         /** file manager */
         31,
         /** access permissions */
-        40 => Controllers\AccessPermissions::class,
         91 => Controllers\WebAccessPermissions::class,
         /** access groups processor */
-        41,
         92,
         /** settings editor */
         17 => Controllers\SystemSettings::class,
