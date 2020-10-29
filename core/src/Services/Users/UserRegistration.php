@@ -109,6 +109,8 @@ class UserRegistration implements ServiceInterface
 
         $this->userData['clearPassword'] = $this->userData['password'];
         $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
+        if(!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+
         $user = User::create($this->userData);
         $this->userData['internalKey'] = $user->getKey();
         $user->attributes()->create($this->userData);
