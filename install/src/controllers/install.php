@@ -210,6 +210,8 @@ try {
             $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
             $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role];
             $managerUser->attributes()->create($field);
+            $managerUser->attributes->role = $role;
+            $managerUser->attributes->save();
             $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $managerlanguage];
             $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
             $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $adminemail];
