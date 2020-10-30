@@ -33,6 +33,28 @@ if ($templatename == "") {
     $templatename = "Untitled template";
 }
 
+function createBladeFile($templatealias)
+{
+    $filename = $templatealias;
+    $filename = preg_replace('/\s*/', '', $filename);
+    $filename = preg_replace('/[^a-zA-Z0-9_-]+/', '', $filename);
+
+    if (!empty($filename) && $filename == $templatealias) {
+        $filename .= '.blade.php';
+        $views = MODX_BASE_PATH . 'views';
+
+        if (!file_exists($views . '/' . $filename)) {
+            if (!is_dir($views)) {
+                mkdir($views);
+            }
+
+            if (is_writeable($views)) {
+                file_put_contents($views . '/' . $filename, '');
+            }
+        }
+    }
+}
+
 switch ($_POST['mode']) {
     case '19':
 
@@ -79,6 +101,10 @@ switch ($_POST['mode']) {
         ));
         // Set new assigned Tvs
         saveTemplateAccess($newid);
+
+        if (!empty($_POST['createbladefile'])) {
+            createBladeFile($templatealias);
+        }
 
         // Set the item name for logger
         $_SESSION['itemname'] = $templatename;
@@ -135,6 +161,10 @@ switch ($_POST['mode']) {
         ));
         // Set new assigned Tvs
         saveTemplateAccess($id);
+
+        if (!empty($_POST['createbladefile'])) {
+            createBladeFile($templatealias);
+        }
 
         // invoke OnTempFormSave event
         $modx->invokeEvent("OnTempFormSave", array(

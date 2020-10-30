@@ -1010,6 +1010,9 @@ $_lang["template_no_tv"] = 'Цьому шаблону не присвоєно н
 $_lang["template_notassigned_tv"] = 'Ці TV доступні для вибору.';
 $_lang["template_reset_all"] = 'Скинути всі шаблони (буде встановлено шаблон за замовчуванням)';
 $_lang["template_reset_specific"] = 'Скинути тільки сторінки з шаблоном \'%s\'';
+$_lang["template_assigned_blade_file"] = 'Відповідний blade-файл';
+$_lang["template_create_blade_file"] = 'Створити файл шаблону при збереженні
+';
 $_lang["template_selectable"] = 'Шаблон вибирається при створенні або редагуванні ресурсів.';
 $_lang["template_title"] = 'Створити / редагувати шаблон';
 $_lang["template_tv_edit"] = 'Редагувати порядок TV';
