@@ -676,7 +676,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function menuRoleManagment()
     {
-
         if ($this->managerTheme->getCore()->hasPermission('edit_role')) {
             $this->sitemenu['role_management_title'] = [
                 'role_management_title',

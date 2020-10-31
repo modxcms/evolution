@@ -2893,7 +2893,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $this['view']->share($data);
 
                 if ($this->isChunkProcessor('DLTemplate')) {
-                    $this->tpl->blade->share($data);
+                    app('DLTemplate')->blade->share($data);
                 }
 
                 $tpl = $this['view']->make($template, $this->dataForView);
@@ -4439,13 +4439,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (empty($chunkName)) {
             // nop
         } elseif ($this->isChunkProcessor('DLTemplate')) {
-            $out = $this->tpl->getChunk($chunkName);
+            $out = app('DLTemplate')->getChunk($chunkName);
         } elseif (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
         } elseif (stripos($chunkName, '@FILE') === 0) {
             $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $out = $this->tpl->getBaseChunk($chunkName);
+            $out = app('DLTemplate')->getBaseChunk($chunkName);
         }
         return $out;
     }
@@ -4552,7 +4552,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         return $prefix === '[+' && $suffix === '+]' && $this->isChunkProcessor('DLTemplate') ?
-            $this->tpl->parseChunk($chunkName, $chunkArr) :
+            app('DLTemplate')->parseChunk($chunkName, $chunkArr) :
             $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
     }
 
