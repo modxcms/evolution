@@ -252,7 +252,7 @@ $_lang["doc_data_title"] = 'リソースの詳細情報';
 $_lang["documentation"] = '参考ドキュメント';
 $_lang["duplicate"] = '複製';
 $_lang["duplicate_alias_found"] = 'リソース「%s」が「%s」というエイリアスをすでに使用しています。エイリアスを変更してください。';
-$_lang["duplicate_template_alias_found"] = 'テンプレート「 %s」が 「%s」というエイリアスをすでに使用しています。エイリアスを変更してください。';
+$_lang["duplicate_template_alias_found"] = 'テンプレート「%s」が 「%s」というエイリアスをすでに使用しています。エイリアスを変更してください。';
 $_lang["duplicate_alias_message"] = '同じ階層内でエイリアス名の重複を許可します。この場合、エイリアス名をURL表現に用いると問題が発生する可能性があるため、ご注意ください。';
 $_lang["duplicate_alias_title"] = '重複エイリアスを許可';
 $_lang["duplicate_name_found_general"] = '%sにはすでに「%s」という名前が存在します。重複しない名前を指定してください。';
@@ -400,7 +400,7 @@ $_lang["import_params_msg"] = 'ドロップダウンメニューからモジュ�
 $_lang["import_parent_resource"] = '親リソース';
 $_lang["update_tree"] = 'ツリーの再構築';
 $_lang["update_tree_description"] = '<ul>
-                   <li> - ドキュメントツリーをより便利で高速にする クロージャーテーブルのデーターベースのデザインパターンです。 </li>
+                   <li> - ドキュメントツリーをより便利で高速にするクロージャーテーブルのデーターベースのデザインパターンです。 </li>
                      <li> - ツリー内のデータがモデルを通さずに更新された場合、データベース内のドキュメントに誤ったリンクが発生する可能性があります。 </li>
                      <li> - この操作により site_content がモデル（保存、作成）を通して更新されず、リンク（クロージャーテーブル）が更新されない場合の問題が修正されます。 </li>
                      <li> - この操作は CLI モード（\'php artisan closuretable: rebuild \'）でも実行可能です。</li> 
@@ -958,7 +958,7 @@ $_lang["siteunavailable_page_message"] = 'メンテナンスモード設定時�
 $_lang["siteunavailable_page_title"] = 'メンテナンス中ページ';
 $_lang["siteunavailable_title"] = 'メンテナンス中メッセージ';
 $_lang["controller_namespace"] = 'コントローラーネームスペース';
-$_lang["controller_namespace_message"] = 'コントローラを取得できる完全なネームスペースを指定してください。 例： <b>EvolutionCMS\\Main\\Controllers\\</b>';
+$_lang["controller_namespace_message"] = 'コントローラーを取得できる完全なネームスペースを指定してください。 例： <b>EvolutionCMS\\Main\\Controllers\\</b>';
 $_lang["update_repository"] = 'Git Hub パス';
 $_lang["update_repository_message"] = 'Git Hub リポジトリのパスを入力してください。例： <b>evolution-cms/evolution</b>';
 $_lang["snippet"] = 'スニペット';
