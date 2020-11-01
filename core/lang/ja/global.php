@@ -252,6 +252,7 @@ $_lang["doc_data_title"] = 'リソースの詳細情報';
 $_lang["documentation"] = '参考ドキュメント';
 $_lang["duplicate"] = '複製';
 $_lang["duplicate_alias_found"] = 'リソース「%s」が「%s」というエイリアスをすでに使用しています。エイリアスを変更してください。';
+$_lang["duplicate_template_alias_found"] = 'テンプレート「 %s」が 「%s」というエイリアスをすでに使用しています。エイリアスを変更してください。';
 $_lang["duplicate_alias_message"] = '同じ階層内でエイリアス名の重複を許可します。この場合、エイリアス名をURL表現に用いると問題が発生する可能性があるため、ご注意ください。';
 $_lang["duplicate_alias_title"] = '重複エイリアスを許可';
 $_lang["duplicate_name_found_general"] = '%sにはすでに「%s」という名前が存在します。重複しない名前を指定してください。';
@@ -318,7 +319,7 @@ $_lang["file_saved"] = 'ファイルを更新しました。';
 $_lang["file_unzip"] = '解凍しました。';
 $_lang["file_unzip_fail"] = '解凍できません。';
 $_lang["filemanager_path_message"] = '<a href="index.php?a=31">「ファイル管理」</a>で扱える範囲を決定します。コンテンツ編集に利用するファイルブラウザと違い、同じサーバ内で権限を持つ領域であればどのディレクトリでも管理できます。ドキュメントルート外の指定も可能です。';
-$_lang["filemanager_path_title"] = 'ファイル管理機能の<br />管理対象ディレクトリ<br />[(filemanager_path)]';
+$_lang["filemanager_path_title"] = 'ファイル管理機能の<br />管理対象ディレクトリ';
 $_lang["files_access_denied"] = 'このアカウントは休止中です。';
 $_lang["files_data"] = 'データ';
 $_lang["files_dir_listing"] = 'ディレクトリ一覧';
@@ -397,7 +398,15 @@ $_lang["import_files_found"] = '<b>インポート対象のリソースが %s個
 $_lang["import_params"] = 'パラメータの関連付け';
 $_lang["import_params_msg"] = 'ドロップダウンメニューからモジュール名を選択することにより、モジュール側から設定値を与えることができます。<br />※対象モジュール側で共有パラメータの設定と関連付けをしておく必要があります。';
 $_lang["import_parent_resource"] = '親リソース';
-$_lang["update_tree"] = 'ツリーを再構築する';
+$_lang["update_tree"] = 'ツリーの再構築';
+$_lang["update_tree_description"] = '<ul>
+                   <li> - ドキュメントツリーをより便利で高速にする クロージャーテーブルのデーターベースのデザインパターンです。 </li>
+                     <li> - ツリー内のデータがモデルを通さずに更新された場合、データベース内のドキュメントに誤ったリンクが発生する可能性があります。 </li>
+                     <li> - この操作により site_content がモデル（保存、作成）を通して更新されず、リンク（クロージャーテーブル）が更新されない場合の問題が修正されます。 </li>
+                     <li> - この操作は CLI モード（\'php artisan closuretable: rebuild \'）でも実行可能です。</li> 
+                     </ul>';
+$_lang["update_tree_danger"] = '1000以上のリソースがある場合、CLIモード（\'php artisan closuretable: rebuild command\'）による操作で実行する方が良いです。';
+$_lang["update_tree_time"] = 'ツリーの再構築が終了しました。ドキュメント処理: <b>%s</b><br>インポートに <b>%s</b> 秒かかりました。';
 $_lang["inbox"] = '受信トレイ';
 $_lang["info"] = '情報';
 $_lang["information"] = '情報';
@@ -482,6 +491,7 @@ $_lang["manage_plugins"] = 'プラグイン';
 $_lang["manage_snippets"] = 'スニペット';
 $_lang["manage_templates"] = 'テンプレート';
 $_lang["manage_documents"] = 'ドキュメント';
+$_lang["manage_permission"] = 'パーミッション';
 $_lang["manager"] = '管理画面';
 $_lang["manager_lockout_message"] = '管理画面にログインしています。セッションを閉じたいときは「ログアウト」ボタンをクリックしてください。<br />管理画面のホームあるいはスタート画面に行きたいときは「ホーム」ボタンをクリックします。';
 $_lang["manager_permissions"] = 'グループ管理';
@@ -557,6 +567,7 @@ $_lang["new_file_permissions_message"] = '管理画面を通じて新しいフ�
 $_lang["new_file_permissions_title"] = '新規ファイルのパーミッション';
 $_lang["new_folder_permissions_message"] = '管理画面を通じて新しいディレクトリを作成したとき、ここで設定したパーミッションに変更します。この機能はIIS上など一部の環境では動作しません。';
 $_lang["new_folder_permissions_title"] = '新規ディレクトリのパーミッション';
+$_lang["new_permission"] = 'パーミッションを追加';
 $_lang["new_htmlsnippet"] = 'チャンクを作成';
 $_lang["new_keyword"] = 'キーワードを追加';
 $_lang["new_module"] = 'モジュールを作成';
@@ -925,6 +936,7 @@ $_lang["settings_templvars"] = 'カスタムフィールド(テンプレート�
 $_lang["settings_title"] = 'グローバル設定';
 $_lang["settings_ui"] = '管理画面の設定';
 $_lang["settings_users"] = 'ユーザー';
+$_lang["settings_email_templates"] = 'Eメールとテンプレート';
 $_lang["show_meta"] = 'METAタグ管理機能の有効<br />(※非推奨)';
 $_lang["show_meta_message"] = 'リソース編集画面にMETA Keywordsタブを表示します。(※この機能は将来廃止される可能性があります)';
 $_lang["show_tree"] = 'リソースツリーの表示';
@@ -945,6 +957,10 @@ $_lang["siteunavailable_message_default"] = 'ただいま調整中です。し�
 $_lang["siteunavailable_page_message"] = 'メンテナンスモード設定時に表示するリソースのIDをここに入力してください。<br /><strong>※非公開またはウェブユーザー限定のリソースは指定できません。</strong>';
 $_lang["siteunavailable_page_title"] = 'メンテナンス中ページ';
 $_lang["siteunavailable_title"] = 'メンテナンス中メッセージ';
+$_lang["controller_namespace"] = 'コントローラーネームスペース';
+$_lang["controller_namespace_message"] = 'コントローラを取得できる完全なネームスペースを指定してください。 例： <b>EvolutionCMS\\Main\\Controllers\\</b>';
+$_lang["update_repository"] = 'Git Hub パス';
+$_lang["update_repository_message"] = 'Git Hub リポジトリのパスを入力してください。例： <b>evolution-cms/evolution</b>';
 $_lang["snippet"] = 'スニペット';
 $_lang["snippets"] = 'スニペット';
 $_lang["snippet_code"] = 'スニペット コード (php)';
@@ -1122,6 +1138,9 @@ $_lang["user_failedlogincount"] = 'ログイン失敗';
 $_lang["user_fax"] = 'Fax';
 $_lang["user_female"] = '女性';
 $_lang["user_full_name"] = 'フルネーム';
+$_lang["user_first_name"] = 'ファーストネーム（名）';
+$_lang["user_last_name"] = 'ラストネーム（氏）';
+$_lang["user_middle_name"] = 'ミドルネーム';
 $_lang["user_gender"] = '性別';
 $_lang["user_is_blocked"] = 'このアカウントは休止状態になっています。';
 $_lang["user_logincount"] = 'ログイン回数';
@@ -1134,10 +1153,12 @@ $_lang["user_photo"] = 'ユーザーの写真';
 $_lang["user_photo_message"] = 'このユーザーのイメージ画像のURLを入力してください。または、挿入ボタンをクリックしファイルマネージャーでファイルを選択してください。';
 $_lang["user_prevlogin"] = '今回のログイン日時';
 $_lang["user_role"] = 'ロール(役割)';
+$_lang["no_user_role"] = '未設定';
 $_lang["user_state"] = '都道府県';
 $_lang["user_title"] = 'ユーザーの作成/編集';
 $_lang["user_upload_message"] = ' このユーザーに対してこのカテゴリーに含まれるファイルタイプのアップロードを禁じたい場合、「グローバル設定を使用」をチェックせず、このフィールドを空白にしておいてください。';
 $_lang["user_use_config"] = 'グローバル設定を使用';
+$_lang["user_verification"] = '認証済みのユーザー';
 $_lang["user_zip"] = '郵便番号';
 $_lang["username"] = 'ログイン名';
 $_lang["users"] = '権限管理';
@@ -1460,5 +1481,11 @@ $_lang['invalid_event_response'] = 'この %s の出力は無効です';
 $_lang['chunk_processor'] = 'チャンクプロセッサークラス';
 $_lang['enable_mootools'] = '管理画面内で Mootools を有効にする';
 $_lang['enable_mootools_message'] = '下位互換のために管理画面内で Mootools.js を読み込む';
+
+
+$_lang["permission_title"] = 'パーミッションの作成 / 編集';
+$_lang["groups_permission_title"] = 'カテゴリーの作成 / 編集';
+$_lang["lang_key_desc"] = 'Key language from array $_lang';
+$_lang["key_desc"] = 'Key for checked permission';
 
 return $_lang;
