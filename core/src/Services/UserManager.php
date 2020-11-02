@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserGeneratePassword;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
 use EvolutionCMS\Services\Users\UserManagerChangePassword;
 use EvolutionCMS\Services\Users\UserChangePassword;
@@ -105,6 +106,12 @@ class UserManager
     public function refreshToken(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserRefreshToken($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function generateAndSavePassword(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserGeneratePassword($userData, $events, $cache);
         return $user->process();
     }
 
