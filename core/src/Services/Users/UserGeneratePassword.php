@@ -70,7 +70,7 @@ class UserGeneratePassword implements ServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'id.required' => Lang::get("global.required_field", ['field' => 'username']),
+            'id.required' => Lang::get("global.required_field", ['field' => 'id']),
             'id.exists' => Lang::get("global.could_not_find_user"),
         ];
     }

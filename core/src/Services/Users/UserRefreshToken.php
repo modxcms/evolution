@@ -78,7 +78,7 @@ class UserRefreshToken implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return ['refresh_token' => ['required']];
+        return ['refresh_token' => ['required', 'exists:users']];
     }
 
     /**
