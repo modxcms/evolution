@@ -11,6 +11,9 @@ use Rocky\Eloquent\HasDynamicRelation;
  * @property string $username
  * @property string $password
  * @property string $cachepwd
+ * @property string $refresh_token
+ * @property string $access_token
+ * @property string $valid_to
  *
  * @mixin \Eloquent
  */
@@ -28,7 +31,10 @@ class User extends Eloquent\Model
 	protected $fillable = [
 		'username',
 		'password',
-		'cachepwd'
+		'cachepwd',
+		'refresh_token',
+		'access_token',
+		'valid_to'
 	];
 
     public function attributes()

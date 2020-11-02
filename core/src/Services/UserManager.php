@@ -9,6 +9,7 @@ use EvolutionCMS\Services\Users\UserEdit;
 use EvolutionCMS\Services\Users\UserHashLogin;
 use EvolutionCMS\Services\Users\UserLogin;
 use EvolutionCMS\Services\Users\UserLogout;
+use EvolutionCMS\Services\Users\UserRefreshToken;
 use EvolutionCMS\Services\Users\UserRegistration;
 use EvolutionCMS\Services\Users\UserRepairPassword;
 use EvolutionCMS\Services\Users\UserSaveSettings;
@@ -92,13 +93,19 @@ class UserManager
     public function logout(array $userData = [], bool $events = true, bool $cache = true)
     {
         $user = new UserLogout($userData, $events, $cache);
-        $user->process();
+        return $user->process();
     }
 
     public function saveSettings(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserSaveSettings($userData, $events, $cache);
-        $user->process();
+        return $user->process();
+    }
+
+    public function refreshToken(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserRefreshToken($userData, $events, $cache);
+        return $user->process();
     }
 
 }
