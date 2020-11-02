@@ -4,8 +4,11 @@ use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
+use Illuminate\Support\Facades\Lang;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
-class UserLogout implements ServiceInterface
+class UserRefreshToken implements ServiceInterface
 {
     /**
      * @var \string[][]
@@ -40,7 +43,7 @@ class UserLogout implements ServiceInterface
     /**
      * @var User
      */
-    private $user;
+    public $user;
     /**
      * @var int
      */
@@ -56,7 +59,7 @@ class UserLogout implements ServiceInterface
     private $userSettings;
 
     /**
-     * UserRegistration constructor.
+     * UserRefreshToken constructor.
      * @param array $userData
      * @param bool $events
      * @param bool $cache
@@ -75,7 +78,7 @@ class UserLogout implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return ['refresh_token' => ['required']];
     }
 
     /**
@@ -83,7 +86,7 @@ class UserLogout implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return [];
+        return ['refresh_token.required' => Lang::get("global.required_field", ['field' => 'refresh_token'])];
     }
 
     /**
@@ -91,7 +94,7 @@ class UserLogout implements ServiceInterface
      * @throws ServiceActionException
      * @throws ServiceValidationException
      */
-    public function process(): string
+    public function process(): \Illuminate\Database\Eloquent\Model
     {
         if (!$this->checkRules()) {
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
@@ -104,40 +107,17 @@ class UserLogout implements ServiceInterface
         }
 
 
-        $internalKey = EvolutionCMS()->getLoginUserID();
-        $user = User::query()->find($internalKey);
-        $user->refresh_token = '';
-        $user->access_token = '';
-        $user->valid_to = NULL;
+        $user = \EvolutionCMS\Models\User::query()
+            ->where('refresh_token', $this->userData['refresh_token'])->first();
+        if (is_null($user)) {
+            throw new ServiceActionException(\Lang::get('global.could_not_find_user'));
+        }
+
+        $user->access_token = hash('sha256', Str::random(32));
+        $user->valid_to = Carbon::now()->addHours(11);
         $user->save();
-        $username = $_SESSION['mgrShortname'];
-        $sid = EvolutionCMS()->sid;
-        if ($this->events) {
-            // invoke OnBeforeManagerLogout event
-            EvolutionCMS()->invokeEvent("OnBeforeManagerLogout",
-                array(
-                    "userid" => $internalKey,
-                    "username" => $username
-                ));
-        }
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', 0, MODX_BASE_URL);
-        }
-        @session_destroy(); // this sometimes generate an error in iis
 
-        \EvolutionCMS\Models\ActiveUserLock::query()->where('sid', $sid)->delete();
-
-        \EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
-
-        if ($this->events) {
-        // invoke OnManagerLogout event
-            EvolutionCMS()->invokeEvent("OnManagerLogout",
-                array(
-                    "userid" => $internalKey,
-                    "username" => $username
-                ));
-        }
-        return $username;
+        return $user;
     }
 
     /**
@@ -153,7 +133,9 @@ class UserLogout implements ServiceInterface
      */
     public function validate(): bool
     {
-        return true;
+        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
+        $this->validateErrors = $validator->errors()->toArray();
+        return !$validator->fails();
     }
 
 

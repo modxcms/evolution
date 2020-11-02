@@ -5,6 +5,8 @@ use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class UserLogin implements ServiceInterface
 {
@@ -258,6 +260,10 @@ class UserLogin implements ServiceInterface
         $this->user->attributes->sessionid = $currentsessionid;
         $this->user->attributes->save();
 
+        $this->user->refresh_token = hash('sha256', Str::random(32));
+        $this->user->access_token = hash('sha256', Str::random(32));
+        $this->user->valid_to = Carbon::now()->addHours(11);
+        $this->user->save();
 
         // get user's document groups
         $i = 0;
