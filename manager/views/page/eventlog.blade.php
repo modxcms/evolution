@@ -137,7 +137,7 @@
                         {
                             $join->on('users.id', '=', 'event_log.user');
                             $join->on('event_log.usertype', '=', \DB::raw(1));
-                        })->orderBy('createdon', 'ASC');
+                        })->orderBy('createdon', 'DESC');
 
                         if($sqlQuery!=''){
                             if(is_numeric($sqlQuery))
