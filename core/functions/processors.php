@@ -124,7 +124,7 @@ if (!function_exists('duplicateTVs')) {
         foreach ($oldTvs->toArray() as $oldTv) {
             unset($oldTv['id']);
             $oldTv['contentid'] = $newid;
-            SiteTmplvarTemplate::query()->insert($oldTv);
+            \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->insert($oldTv);
         }
     }
 }
