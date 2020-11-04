@@ -4003,7 +4003,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $documentChildes = SiteContent::query()->where('site_content.id', $ids);
+        $documentChildes = SiteContent::query()->whereIn('site_content.id', $ids);
         if ($published !== 'all') {
             $documentChildes = $documentChildes->where('site_content.published', $published);
         }
