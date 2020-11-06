@@ -15,7 +15,7 @@ class Panel extends AbstractPanel
     {
         $attributes = [];
         if ($this->hasEvolutionCMS() === true) {
-            $attributes = $this->evolution->isBackend() ? $this->getMgrUser() : $this->getWebUser();
+            $attributes = $this->getMgrUser();
         }
         return $this->identifier($attributes);
     }
@@ -34,20 +34,6 @@ class Panel extends AbstractPanel
         return $attributes;
     }
 
-    protected function getWebUser() : array
-    {
-        $attributes = [];
-
-        $id = $this->evolution->getLoginUserID('web');
-        if ($id > 0) {
-            $attributes = [
-                'id' => $id,
-                'rows' => $this->evolution->getWebUserInfo($id)
-            ];
-        }
-
-        return $attributes;
-    }
 
     /**
      * identifier.
