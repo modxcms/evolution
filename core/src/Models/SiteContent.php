@@ -2044,10 +2044,14 @@ class SiteContent extends Eloquent\Model
     }
 
 
-    public function scopeWithTVs($query, $tvList = array(), $sep = ':')
+    public function scopeWithTVs($query, $tvList = array(), $sep = ':', $tree = false)
     {
+        $main_table = 'site_content';
+        if($tree){
+            $main_table = 't2';
+        }
         if (!empty($tvList)) {
-            $query->select('site_content.*');
+            $query->addSelect($main_table.'.*');
             $tvList = array_unique($tvList);
             $tvListWithDefaults = [];
             foreach ($tvList as $v) {
@@ -2056,8 +2060,8 @@ class SiteContent extends Eloquent\Model
             }
             $tvs = SiteTmplvar::whereIn('name', array_keys($tvListWithDefaults))->get()->pluck('id', 'name')->toArray();
             foreach ($tvs as $tvname => $tvid) {
-                $query = $query->leftJoin('site_tmplvar_contentvalues as tv_' . $tvname, function ($join) use ($tvid, $tvname) {
-                    $join->on('site_content.id', '=', 'tv_' . $tvname . '.contentid')->where('tv_' . $tvname . '.tmplvarid', '=', $tvid);
+                $query = $query->leftJoin('site_tmplvar_contentvalues as tv_' . $tvname, function ($join) use ($main_table, $tvid, $tvname) {
+                    $join->on($main_table.'.id', '=', 'tv_' . $tvname . '.contentid')->where('tv_' . $tvname . '.tmplvarid', '=', $tvid);
                 });
                 $query = $query->addSelect('tv_' . $tvname . '.value as ' . $tvname);
                 $query = $query->groupBy('tv_' . $tvname . '.value');
@@ -2068,7 +2072,7 @@ class SiteContent extends Eloquent\Model
 
                 }
             }
-            $query->groupBy('site_content.id');
+            $query->groupBy($main_table.'.id');
         }
         return $query;
     }
@@ -2179,7 +2183,7 @@ class SiteContent extends Eloquent\Model
                 $join->on('site_content_closure.depth', '<', \DB::raw($depth));
             })
             ->join('site_content as t2', 't2.id', '=', 'site_content_closure.descendant' )
-            ->where('site_content.parent', 0)->get()->toTree();
+            ->where('site_content.parent', 0);
     }
 
     //return tvs array [$docid => tvs array()]
