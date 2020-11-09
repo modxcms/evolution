@@ -4929,21 +4929,21 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $sort = ($sort == '') ? '' : 'site_tmplvars.' . implode(',site_tmplvars.', array_filter(array_map('trim', explode(',', $sort))));
 
         if ($idnames === '*') {
-            $query = ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.id<>0';
+            $query = '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.id<>0';
         } else {
-            $query = (is_numeric($idnames[0]) ? ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.id' : ''.$this->getDatabase()->getConfig('prefix').'site_tmplvars.name') . " IN ('" . implode("','", $idnames) . "')";
+            $query = (is_numeric($idnames[0]) ? '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.id' : '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.name') . " IN ('" . implode("','", $idnames) . "')";
         }
 
         $rs = SiteTmplvar::query()
             ->select($fields)
-            ->selectRaw(" IF(".$this->getDatabase()->getConfig('prefix')."site_tmplvar_contentvalues.value != '', ".$this->getDatabase()->getConfig('prefix')."site_tmplvar_contentvalues.value, ".$this->getDatabase()->getConfig('prefix')."site_tmplvars.default_text) as value")
+            ->selectRaw(" IF(" . $this->getDatabase()->getConfig('prefix') . "site_tmplvar_contentvalues.value != '', " . $this->getDatabase()->getConfig('prefix') . "site_tmplvar_contentvalues.value, " . $this->getDatabase()->getConfig('prefix') . "site_tmplvars.default_text) as value")
             ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
-            ->leftJoin('site_tmplvar_contentvalues', function($join) use ($docid) {
+            ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($docid) {
                 $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
                 $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($docid));
             })
-            ->whereRaw($query . " AND ".$this->getDatabase()->getConfig('prefix')."site_tmplvar_templates.templateid = '" . $docRow['template'] . "'");
-        if($sort != ''){
+            ->whereRaw($query . " AND " . $this->getDatabase()->getConfig('prefix') . "site_tmplvar_templates.templateid = '" . $docRow['template'] . "'");
+        if ($sort != '') {
             $rs = $rs->orderBy($sort);
         }
         $rs = $rs->get();
@@ -5096,26 +5096,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getLoginUserID($context = '')
     {
         $out = false;
-
-        if (!empty($context)) {
-            if (\is_string($context) && isset($_SESSION[$context . 'Validated'])) {
-                $out = $_SESSION[$context . 'InternalKey'];
-            }
-        } else {
-            switch (true) {
-                case ($this->isFrontend() && isset ($_SESSION['webValidated'])):
-                {
-                    $out = $_SESSION['webInternalKey'];
-                    break;
-                }
-                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):
-                {
-                    $out = $_SESSION['mgrInternalKey'];
-                    break;
-                }
-            }
+        if (isset ($_SESSION['mgrValidated'])) {
+            $out = $_SESSION['mgrInternalKey'];
         }
-        return $out === false ? false : (int)$out;
+        return $out;
     }
 
     /**
@@ -5128,23 +5112,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         $out = false;
 
-        if (!empty($context)) {
-            if (is_scalar($context) && isset($_SESSION[$context . 'Validated'])) {
-                $out = $_SESSION[$context . 'Shortname'];
-            }
-        } else {
-            switch (true) {
-                case ($this->isFrontend() && isset ($_SESSION['webValidated'])):
-                {
-                    $out = $_SESSION['webShortname'];
-                    break;
-                }
-                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):
-                {
-                    $out = $_SESSION['mgrShortname'];
-                    break;
-                }
-            }
+        if (isset ($_SESSION['mgrValidated'])) {
+            $out = $_SESSION['mgrShortname'];
         }
         return $out;
     }
@@ -5156,11 +5125,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getLoginUserType()
     {
-        if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
-            return 'web';
-        }
 
-        if ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
+        if (isset ($_SESSION['mgrValidated'])) {
             return 'manager';
         }
 
