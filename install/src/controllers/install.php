@@ -208,7 +208,7 @@ try {
             $internalKey = $managerUser->getKey();
             $verified = 1;
             $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
-            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role];
+            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role, 'verified' => 1];
             $managerUser->attributes()->create($field);
             $managerUser->attributes->role = $role;
             $managerUser->attributes->save();

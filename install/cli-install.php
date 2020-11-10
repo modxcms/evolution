@@ -394,7 +394,7 @@ class InstallEvo
         $managerUser = EvolutionCMS\Models\User::create($field);
         $internalKey = $managerUser->getKey();
         $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
-        $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role];
+        $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role, 'verified' => 1];
         $managerUser->attributes()->create($field);
         $managerUser->attributes->role = $role;
         $managerUser->attributes->save();
