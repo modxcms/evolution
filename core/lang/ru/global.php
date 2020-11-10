@@ -1323,6 +1323,7 @@ $_lang["error_internet_connection"]   = "Сервер недоступен, пр
 $_lang["login_processor_unknown_user"]       = "Неверно указан логин или пароль!";
 $_lang["login_processor_wrong_password"]     = "Неверно указан логин или пароль!";
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
+$_lang["login_processor_verified"]           = "Вам необходимо подтвердить себя!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
 $_lang["login_processor_blocked3"]           = "Вы заблокированы автоматические после указанной даты, и вы не можете войти!";
