@@ -633,7 +633,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         else {
             $docObj = unserialize($a[0]); // rebuild document object
             // check page security
-            if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
+            if ($docObj['privatemgr'] && isset ($docObj['__MODxDocGroups__'])) {
                 $pass = false;
                 $usrGrps = $this->getUserDocGroups();
                 $docGrps = explode(',', $docObj['__MODxDocGroups__']);
@@ -2429,7 +2429,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // get document
         if (!$docgrp) {
             if ($this->isFrontend()) {
-                $documentObjectQuery->where('privateweb', 0);
+                $documentObjectQuery->where('privatemgr', 0);
             } else {
                 if ($_SESSION['mgrRole'] != 1) {
                     $documentObjectQuery->where('privatemgr', 0);
@@ -2437,7 +2437,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         } else if ($this->isFrontend()) {
             $documentObjectQuery->where(function ($query) use ($docgrp) {
-                $query->where('privateweb', 0)
+                $query->where('privatemgr', 0)
                     ->orWhereIn('document_groups.document_group', $docgrp);
             });
 
@@ -2450,6 +2450,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
 
         }
+
         $rs = $documentObjectQuery->first();
         if (is_null($rs)) {
             // method may still be alias, while identifier is not full path alias, e.g. id not found above
@@ -3744,9 +3745,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // build query
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $access = 'sc.privateweb=0';
+                $access = 'sc.privatemgr=0';
             } else {
-                $access = sprintf('sc.privateweb=0 OR dg.document_group IN (%s)', $docgrp);
+                $access = sprintf('sc.privatemgr=0 OR dg.document_group IN (%s)', $docgrp);
             }
         } else {
             if (!$docgrp) {
@@ -3810,11 +3811,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->isFrontend()) {
             if ($docgrp) {
                 $access = sprintf(
-                    'sc.privateweb=0 OR dg.document_group IN (%s)'
+                    'sc.privatemgr=0 OR dg.document_group IN (%s)'
                     , $docgrp = implode(',', $docgrp)
                 );
             } else {
-                $access = 'sc.privateweb=0';
+                $access = 'sc.privatemgr=0';
             }
         } else {
             if ($docgrp) {
@@ -3924,10 +3925,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $documentChildes = $documentChildes->where('privateweb', 0);
+                $documentChildes = $documentChildes->where('privatemgr', 0);
             } else {
                 $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
-                    $query->where('privateweb', 0)
+                    $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
             }
@@ -4029,10 +4030,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $documentChildes = $documentChildes->where('privateweb', 0);
+                $documentChildes = $documentChildes->where('privatemgr', 0);
             } else {
                 $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
-                    $query->where('privateweb', 0)
+                    $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
             }
@@ -4160,14 +4161,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        //$activeSql = $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
-        // modify field names to use sc. table reference
-        //$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
         // get document groups for current user
         if ($docgrp = $this->getUserDocGroups()) {
             $docgrp = implode(",", $docgrp);
         }
-        //$access = ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") . (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
         $fields = array_filter(array_map('trim', explode(',', $fields)));
 
         $pageInfo = SiteContent::query()->select($fields)
@@ -4178,7 +4175,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         if ($docgrp = $this->getUserDocGroups() && $_SESSION['mgrRole'] != 1) {
             if ($this->isFrontend()) {
-                $pageInfo = $pageInfo->where('site_content.privateweb', 0);
+                $pageInfo = $pageInfo->where('site_content.privatemgr', 0);
             } else {
                 $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
                     $query->where('site_content.privatemgr', '=', 0)
