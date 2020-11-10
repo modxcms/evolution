@@ -105,6 +105,9 @@ class UserLogout implements ServiceInterface
 
 
         $internalKey = EvolutionCMS()->getLoginUserID();
+        if(!$internalKey){
+            return false;
+        }
         $user = User::query()->find($internalKey);
         $user->refresh_token = '';
         $user->access_token = '';
