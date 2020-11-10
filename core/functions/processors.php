@@ -86,7 +86,7 @@ if (!function_exists('duplicateDocument')) {
 
 
         // Duplicate the Document
-        $newparent = \EvolutionCMS\Models\SiteContent::query()->insertGetId($content);
+        $newparent = \EvolutionCMS\Models\SiteContent::query()->create($content)->getKey();
 
         // duplicate document's TVs
         duplicateTVs($docid, $newparent);
