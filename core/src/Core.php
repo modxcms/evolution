@@ -2428,13 +2428,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // get document
         if (!$docgrp) {
-            if ($this->isFrontend()) {
+            if ($_SESSION['mgrRole'] != 1) {
                 $documentObjectQuery->where('privatemgr', 0);
-            } else {
-                if ($_SESSION['mgrRole'] != 1) {
-                    $documentObjectQuery->where('privatemgr', 0);
-                }
             }
+
         } else if ($this->isFrontend()) {
             $documentObjectQuery->where(function ($query) use ($docgrp) {
                 $query->where('privatemgr', 0)
@@ -5198,9 +5195,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getUserDocGroups($resolveIds = false)
     {
-        if ($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
-            $dg = $_SESSION['webDocgroups'];
-            $dgn = isset($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
+        if ($this->isFrontend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
+            $dg = $_SESSION['mgrDocgroups'];
+            $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
         } else if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
             $dg = $_SESSION['mgrDocgroups'];
             $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
