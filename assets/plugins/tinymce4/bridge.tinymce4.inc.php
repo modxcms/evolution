@@ -17,7 +17,7 @@ class tinymce4bridge extends modxRTEbridge
             'editorLabel'   => 'TinyMCE4',           // Name displayed in Modx-Dropdowns - No HTML!
             'skinsDirectory'=> 'tinymce/skins',      // Relative to plugin-dir
             'skinthemeDirectory'=> 'tinymce/themes', // Relative to plugin-dir
-            'editorVersion' => '4.7.4',              // Version of TinyMCE4-Library
+            'editorVersion' => '4.9.11',              // Version of TinyMCE4-Library
             'editorLogo'    => 'tinymce/logo.png',   // Optional Image displayed in Modx-settings
 
             'bridgeParams'=>array('url_setup','style_formats','advanced_resizing','forced_root_block','contentsLangDirection','disabledButtons','selectorPrefix','selector','block_formats','theme'),
