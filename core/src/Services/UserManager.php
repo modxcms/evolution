@@ -5,6 +5,7 @@ use EvolutionCMS\Services\Users\UserClearSettings;
 use EvolutionCMS\Services\Users\UserGeneratePassword;
 use EvolutionCMS\Services\Users\UserGetVerifiedKey;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
+use EvolutionCMS\Services\Users\UserLoginById;
 use EvolutionCMS\Services\Users\UserManagerChangePassword;
 use EvolutionCMS\Services\Users\UserChangePassword;
 use EvolutionCMS\Services\Users\UserDelete;
@@ -88,6 +89,12 @@ class UserManager
         return $user->process();
     }
 
+    public function loginById(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserLoginById($userData, $events, $cache);
+        return $user->process();
+    }
+
     public function hashLogin(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserHashLogin($userData, $events, $cache);
@@ -105,7 +112,6 @@ class UserManager
         $user = new UserSaveSettings($userData, $events, $cache);
         return $user->process();
     }
-
 
     public function clearSettings(array $userData, bool $events = true, bool $cache = true)
     {
