@@ -156,18 +156,13 @@ class UserSaveSettings implements ServiceInterface
             unset($settings['default_' . $k]);
         }
 
-        \EvolutionCMS\Models\UserSetting::where('user', $this->userData['id'])->delete();
-
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
                 $vl = implode(',', $vl);
             }
             if ($vl != '') {
-                $f = array();
-                $f['user'] = $this->userData['id'];
-                $f['setting_name'] = $n;
-                $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
+                \EvolutionCMS\Models\UserSetting::updateOrCreate(['setting_name' => $n, 'user' => $this->userData['id']],
+                    ['setting_value' => $vl]);
             }
         }
 
