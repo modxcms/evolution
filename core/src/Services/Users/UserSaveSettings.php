@@ -160,7 +160,7 @@ class UserSaveSettings implements ServiceInterface
             if (is_array($vl)) {
                 $vl = implode(',', $vl);
             }
-            if ($vl != '') {
+            if ((string)$vl != '') {
                 \EvolutionCMS\Models\UserSetting::updateOrCreate(['setting_name' => $n, 'user' => $this->userData['id']],
                     ['setting_value' => $vl]);
             }
