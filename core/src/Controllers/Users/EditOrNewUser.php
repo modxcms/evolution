@@ -67,6 +67,7 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
         }
         // Save User Settings
         $userData['id'] = $user->getKey();
+        \UserManager::clearSettings($userData);
         \UserManager::saveSettings($userData);
 
         if (isset($userData['role'])

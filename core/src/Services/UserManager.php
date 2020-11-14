@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserClearSettings;
 use EvolutionCMS\Services\Users\UserGeneratePassword;
 use EvolutionCMS\Services\Users\UserGetVerifiedKey;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
@@ -102,6 +103,13 @@ class UserManager
     public function saveSettings(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserSaveSettings($userData, $events, $cache);
+        return $user->process();
+    }
+
+
+    public function clearSettings(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserClearSettings($userData, $events, $cache);
         return $user->process();
     }
 
