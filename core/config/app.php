@@ -62,6 +62,7 @@ return [
         'Evolution_HelperProcessor' => EvolutionCMS\Providers\HelperProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
         'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
+        'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,

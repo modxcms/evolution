@@ -14,7 +14,6 @@ use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\RoutingServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -2640,19 +2639,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->instance('Illuminate\Http\Request', $request);
 
         if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
-            with(new RoutingServiceProvider($this))->register();
-
             include EVO_CORE_PATH . 'custom/routes.php';
-
-            Route::match(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], '{any}', function () {
-                $this->executeParser();
-            })->where('any', '.*')->fallback();
-
-            $response = $this['router']->dispatch($request);
-            $response->send();
-        } else {
-            $this->executeParser();
         }
+
+        Route::fallbackToParser();
+
+        $response = $this['router']->dispatch($request);
+        $response->send();
     }
 
     /**
