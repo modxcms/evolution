@@ -97,3 +97,7 @@ $_CONFIG = array(
     //'_sessionDomain' => ".mysite.com",
     //'_sessionPath' => "/my/path",
 );
+
+$modx->invokeEvent('OnFileBrowserInit', [
+    'config' => &$_CONFIG,
+]);
