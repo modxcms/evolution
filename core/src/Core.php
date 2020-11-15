@@ -2635,8 +2635,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function processRoutes()
     {
         $request = Request::createFromGlobals();
-        $this->instance('request', $request);
-        $this->instance('Illuminate\Http\Request', $request);
+        $this->instance(Request::class, $request);
+        $this->alias(Request::class, 'request');
 
         if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
             include EVO_CORE_PATH . 'custom/routes.php';
