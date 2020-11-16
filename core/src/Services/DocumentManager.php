@@ -1,7 +1,7 @@
 <?php namespace EvolutionCMS\Services;
 
 use EvolutionCMS\Models\SiteContent;
-use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Documents\DocumentClearCart;
 use EvolutionCMS\Services\Documents\DocumentCreate;
 use EvolutionCMS\Services\Documents\DocumentDelete;
 use EvolutionCMS\Services\Documents\DocumentDuplicate;
@@ -10,23 +10,6 @@ use EvolutionCMS\Services\Documents\DocumentPublish;
 use EvolutionCMS\Services\Documents\DocumentSetGroups;
 use EvolutionCMS\Services\Documents\DocumentUndelete;
 use EvolutionCMS\Services\Documents\DocumentUnpublish;
-use EvolutionCMS\Services\Users\UserGeneratePassword;
-use EvolutionCMS\Services\Users\UserGetVerifiedKey;
-use EvolutionCMS\Services\Users\UserHashChangePassword;
-use EvolutionCMS\Services\Users\UserManagerChangePassword;
-use EvolutionCMS\Services\Users\UserChangePassword;
-use EvolutionCMS\Services\Users\UserDelete;
-use EvolutionCMS\Services\Users\UserEdit;
-use EvolutionCMS\Services\Users\UserHashLogin;
-use EvolutionCMS\Services\Users\UserLogin;
-use EvolutionCMS\Services\Users\UserLogout;
-use EvolutionCMS\Services\Users\UserRefreshToken;
-use EvolutionCMS\Services\Users\UserRegistration;
-use EvolutionCMS\Services\Users\UserRepairPassword;
-use EvolutionCMS\Services\Users\UserSaveSettings;
-use EvolutionCMS\Services\Users\UserSetGroups;
-use EvolutionCMS\Services\Users\UserSetRole;
-use EvolutionCMS\Services\Users\UserVerified;
 
 class DocumentManager
 {
@@ -87,7 +70,7 @@ class DocumentManager
 
     public function clearCart(array $userData = [], bool $events = true, bool $cache = true)
     {
-        $user = new DocumentClear($userData, $events, $cache);
+        $user = new DocumentClearCart($userData, $events, $cache);
         return $user->process();
     }
 
