@@ -2,6 +2,9 @@
 
 use EvolutionCMS\Models\SiteContent;
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Documents\DocumentCreate;
+use EvolutionCMS\Services\Documents\DocumentDuplicate;
+use EvolutionCMS\Services\Documents\DocumentEdit;
 use EvolutionCMS\Services\Users\UserGeneratePassword;
 use EvolutionCMS\Services\Users\UserGetVerifiedKey;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
@@ -30,14 +33,20 @@ class DocumentManager
 
     public function create(array $userData, bool $events = true, bool $cache = true)
     {
-        $registration = new UserRegistration($userData, $events, $cache);
-        return $registration->process();
+        $document = new DocumentCreate($userData, $events, $cache);
+        return $document->process();
     }
 
     public function edit(array $userData, bool $events = true, bool $cache = true)
     {
-        $userEdit = new UserEdit($userData, $events, $cache);
-        return $userEdit->process();
+        $document = new DocumentEdit($userData, $events, $cache);
+        return $document->process();
+    }
+
+    public function duplicate(array $userData, bool $events = true, bool $cache = true)
+    {
+        $document = new DocumentDuplicate($userData, $events, $cache);
+        return $document->process();
     }
 
     public function delete(array $userData, bool $events = true, bool $cache = true)
@@ -54,6 +63,12 @@ class DocumentManager
 
 
     public function publish(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserSetGroups($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function unpublished(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserSetGroups($userData, $events, $cache);
         return $user->process();

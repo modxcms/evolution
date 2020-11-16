@@ -167,7 +167,7 @@ class SiteContent extends Eloquent\Model
         'privatemgr' => 'bool',
         'content_dispo' => 'bool',
         'hidemenu' => 'bool',
-        'alias_visible' => 'int'
+        'alias_visible' => 'int',
     ];
 
     public function __construct(array $attributes = [])
@@ -200,6 +200,7 @@ class SiteContent extends Eloquent\Model
         parent::boot();
 
         static::saving(static function (SiteContent $entity) {
+            $entity->editedon = time();
             if ($entity->isDirty($entity->getPositionColumn())) {
                 $latest = static::getLatestPosition($entity);
 
@@ -213,6 +214,9 @@ class SiteContent extends Eloquent\Model
             }
         });
 
+        static::creating(static function (SiteContent $entity) {
+            $entity->createdon = time();
+        });
         // When entity is created, the appropriate
         // data will be put into the closure table.
         static::created(static function (SiteContent $entity) {
@@ -242,6 +246,7 @@ class SiteContent extends Eloquent\Model
             if ($parentIdChanged) {
                 $entity->closure->moveNodeTo($entity->parent);
             }
+
         });
 
         // add in custom deleting
@@ -399,7 +404,7 @@ class SiteContent extends Eloquent\Model
     /**
      * @return Collection
      */
-    public function getTvAttribute(): Collection
+    public function getTvAttribute()
     {
         /** @var Collection $docTv */
         if ($this->tpl->tvs === null) {
