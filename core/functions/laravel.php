@@ -53,6 +53,20 @@ if (! function_exists('base_path')) {
     }
 }
 
+if (! function_exists('public_path')) {
+    /**
+     * Get the path to the base of the install with assets.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function public_path($path = '')
+    {
+        $path = 'assets/' . $path;
+        return evolutionCMS()->publicPath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+}
+
 if (! function_exists('config')) {
     /**
      * Get / set the specified configuration value.
