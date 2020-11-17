@@ -20,6 +20,7 @@ use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryFactory;
 use Composer\Package\Version\VersionGuesser;
 use Composer\Package\Version\VersionParser;
+use Composer\Package\RootPackage;
 use Composer\Repository\RepositoryManager;
 use Composer\Util\ProcessExecutor;
 
@@ -47,19 +48,13 @@ class RootPackageLoader extends ArrayLoader
      */
     private $versionGuesser;
 
-    /**
-     * @var IOInterface
-     */
-    private $io;
-
     public function __construct(RepositoryManager $manager, Config $config, VersionParser $parser = null, VersionGuesser $versionGuesser = null, IOInterface $io = null)
     {
         parent::__construct($parser);
 
         $this->manager = $manager;
         $this->config = $config;
-        $this->versionGuesser = $versionGuesser ?: new VersionGuesser($config, new ProcessExecutor(), $this->versionParser);
-        $this->io = $io;
+        $this->versionGuesser = $versionGuesser ?: new VersionGuesser($config, new ProcessExecutor($io), $this->versionParser);
     }
 
     /**
@@ -72,10 +67,8 @@ class RootPackageLoader extends ArrayLoader
     {
         if (!isset($config['name'])) {
             $config['name'] = '__root__';
-        } elseif ($this->io) {
-            if ($err = ValidatingArrayLoader::hasPackageNamingError($config['name'])) {
-                $this->io->writeError('<warning>Deprecation warning: Your package name '.$err.' Make sure you fix this as Composer 2.0 will error.</warning>');
-            }
+        } elseif ($err = ValidatingArrayLoader::hasPackageNamingError($config['name'])) {
+            throw new \RuntimeException('Your package name '.$err);
         }
         $autoVersioned = false;
         if (!isset($config['version'])) {
@@ -120,7 +113,7 @@ class RootPackageLoader extends ArrayLoader
         }
 
         if ($autoVersioned) {
-            $realPackage->replaceVersion($realPackage->getVersion(), 'No version set (parsed as 1.0.0)');
+            $realPackage->replaceVersion($realPackage->getVersion(), RootPackage::DEFAULT_PRETTY_VERSION);
         }
 
         if (isset($config['minimum-stability'])) {
@@ -149,13 +142,11 @@ class RootPackageLoader extends ArrayLoader
             }
         }
 
-        if ($this->io) {
-            foreach (array_keys(BasePackage::$supportedLinkTypes) as $linkType) {
-                if (isset($config[$linkType])) {
-                    foreach ($config[$linkType] as $linkName => $constraint) {
-                        if ($err = ValidatingArrayLoader::hasPackageNamingError($linkName, true)) {
-                            $this->io->writeError('<warning>Deprecation warning: '.$linkType.'.'.$err.' Make sure you fix this as Composer 2.0 will error.</warning>');
-                        }
+        foreach (array_keys(BasePackage::$supportedLinkTypes) as $linkType) {
+            if (isset($config[$linkType])) {
+                foreach ($config[$linkType] as $linkName => $constraint) {
+                    if ($err = ValidatingArrayLoader::hasPackageNamingError($linkName, true)) {
+                        throw new \RuntimeException($linkType.'.'.$err);
                     }
                 }
             }
