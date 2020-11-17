@@ -44,8 +44,6 @@ return [
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
         'Laravel_Validator' => \Illuminate\Validation\ValidationServiceProvider::class,
 
-
-
         'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
         'Evolution_Pagination' => EvolutionCMS\Providers\PaginationServiceProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
