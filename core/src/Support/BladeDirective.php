@@ -2,6 +2,7 @@
 
 class BladeDirective
 {
+
     public static function evoParser($content) : string
     {
         return '<?php echo evo_parser(' . $content . ');?>';

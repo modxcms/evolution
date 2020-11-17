@@ -978,59 +978,6 @@
         "description": "Adds dynamic relationship capability to eloquent ORM models"
     },
     {
-        "name": "illuminate/auth",
-        "version": "v6.20.3",
-        "version_normalized": "6.20.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/illuminate/auth.git",
-            "reference": "7d18c9aa6507e0c0ab6ae1764c214f2461b05e16"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/auth/zipball/7d18c9aa6507e0c0ab6ae1764c214f2461b05e16",
-            "reference": "7d18c9aa6507e0c0ab6ae1764c214f2461b05e16",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/contracts": "^6.0",
-            "illuminate/http": "^6.0",
-            "illuminate/queue": "^6.0",
-            "illuminate/support": "^6.0",
-            "php": "^7.2.5|^8.0"
-        },
-        "suggest": {
-            "illuminate/console": "Required to use the auth:clear-resets command (^6.0).",
-            "illuminate/queue": "Required to fire login / logout events (^6.0).",
-            "illuminate/session": "Required to use the session based guard (^6.0)."
-        },
-        "time": "2020-10-27T15:05:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "6.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Illuminate\\Auth\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylor@laravel.com"
-            }
-        ],
-        "description": "The Illuminate Auth package.",
-        "homepage": "https://laravel.com"
-    },
-    {
         "name": "illuminate/cache",
         "version": "v6.20.3",
         "version_normalized": "6.20.3.0",
@@ -1475,52 +1422,6 @@
         }
     },
     {
-        "name": "illuminate/hashing",
-        "version": "v6.20.3",
-        "version_normalized": "6.20.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/illuminate/hashing.git",
-            "reference": "d1fcfd3acf9629708c00a6b4c946857a5f877bf2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/hashing/zipball/d1fcfd3acf9629708c00a6b4c946857a5f877bf2",
-            "reference": "d1fcfd3acf9629708c00a6b4c946857a5f877bf2",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/contracts": "^6.0",
-            "illuminate/support": "^6.0",
-            "php": "^7.2.5|^8.0"
-        },
-        "time": "2020-10-27T15:05:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "6.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Illuminate\\Hashing\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylor@laravel.com"
-            }
-        ],
-        "description": "The Illuminate Hashing package.",
-        "homepage": "https://laravel.com"
-    },
-    {
         "name": "illuminate/http",
         "version": "v6.20.3",
         "version_normalized": "6.20.3.0",
@@ -1728,68 +1629,6 @@
             "issues": "https://github.com/laravel/framework/issues",
             "source": "https://github.com/laravel/framework"
         }
-    },
-    {
-        "name": "illuminate/queue",
-        "version": "v6.20.3",
-        "version_normalized": "6.20.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/illuminate/queue.git",
-            "reference": "363e59dea88a36c8128e672a850ebad6080db5fa"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/queue/zipball/363e59dea88a36c8128e672a850ebad6080db5fa",
-            "reference": "363e59dea88a36c8128e672a850ebad6080db5fa",
-            "shasum": ""
-        },
-        "require": {
-            "ext-json": "*",
-            "illuminate/console": "^6.0",
-            "illuminate/container": "^6.0",
-            "illuminate/contracts": "^6.0",
-            "illuminate/database": "^6.0",
-            "illuminate/filesystem": "^6.0",
-            "illuminate/pipeline": "^6.0",
-            "illuminate/support": "^6.0",
-            "opis/closure": "^3.6",
-            "php": "^7.2.5|^8.0",
-            "symfony/debug": "^4.3.4",
-            "symfony/process": "^4.3.4"
-        },
-        "suggest": {
-            "aws/aws-sdk-php": "Required to use the SQS queue driver and DynamoDb failed job storage (^3.0).",
-            "ext-pcntl": "Required to use all features of the queue worker.",
-            "ext-posix": "Required to use all features of the queue worker.",
-            "illuminate/redis": "Required to use the Redis queue driver (^6.0).",
-            "pda/pheanstalk": "Required to use the Beanstalk queue driver (^4.0)."
-        },
-        "time": "2020-10-27T15:05:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "6.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Illuminate\\Queue\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylor@laravel.com"
-            }
-        ],
-        "description": "The Illuminate Queue package.",
-        "homepage": "https://laravel.com"
     },
     {
         "name": "illuminate/routing",
@@ -2532,69 +2371,6 @@
                 "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
                 "type": "tidelift"
             }
-        ]
-    },
-    {
-        "name": "opis/closure",
-        "version": "3.6.1",
-        "version_normalized": "3.6.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/opis/closure.git",
-            "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/opis/closure/zipball/943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
-            "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.4 || ^7.0 || ^8.0"
-        },
-        "require-dev": {
-            "jeremeamia/superclosure": "^2.0",
-            "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
-        },
-        "time": "2020-11-07T02:01:34+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.6.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Opis\\Closure\\": "src/"
-            },
-            "files": [
-                "functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Marius Sarca",
-                "email": "marius.sarca@gmail.com"
-            },
-            {
-                "name": "Sorin Sarca",
-                "email": "sarca_sorin@hotmail.com"
-            }
-        ],
-        "description": "A library that can be used to serialize closures (anonymous functions) and arbitrary objects.",
-        "homepage": "https://opis.io/closure",
-        "keywords": [
-            "anonymous functions",
-            "closure",
-            "function",
-            "serializable",
-            "serialization",
-            "serialize"
         ]
     },
     {
