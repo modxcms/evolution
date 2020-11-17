@@ -15,6 +15,7 @@ use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Exception\ConnectionLost;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
+use Doctrine\DBAL\Exception\NoKeyValue;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -24,6 +25,7 @@ use Throwable;
 use Traversable;
 
 use function array_key_exists;
+use function array_shift;
 use function assert;
 use function func_get_args;
 use function implode;
@@ -543,11 +545,11 @@ class Connection implements DriverConnection
      *
      * @deprecated Use fetchAssociative()
      *
-     * @param string         $sql    The query SQL
-     * @param mixed[]        $params The query parameters
-     * @param int[]|string[] $types  The query parameter types
+     * @param string                                                               $sql    SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
-     * @return mixed[]|false False is returned if no rows are found.
+     * @return array<string, mixed>|false False is returned if no rows are found.
      *
      * @throws Exception
      */
@@ -562,11 +564,11 @@ class Connection implements DriverConnection
      *
      * @deprecated Use fetchNumeric()
      *
-     * @param string         $sql    The query SQL
-     * @param mixed[]        $params The query parameters
-     * @param int[]|string[] $types  The query parameter types
+     * @param string                                                               $sql    SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
-     * @return mixed[]|false False is returned if no rows are found.
+     * @return array<int, mixed>|false False is returned if no rows are found.
      */
     public function fetchArray($sql, array $params = [], array $types = [])
     {
@@ -579,10 +581,10 @@ class Connection implements DriverConnection
      *
      * @deprecated Use fetchOne() instead.
      *
-     * @param string         $sql    The query SQL
-     * @param mixed[]        $params The query parameters
-     * @param int            $column The 0-indexed column number to retrieve
-     * @param int[]|string[] $types  The query parameter types
+     * @param string                                                               $sql    SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param int                                                                  $column 0-indexed column number
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return mixed|false False is returned if no rows are found.
      *
@@ -597,9 +599,9 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the first row of the result
      * as an associative array.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return array<string, mixed>|false False is returned if no rows are found.
      *
@@ -624,9 +626,9 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the first row of the result
      * as a numerically indexed array.
      *
-     * @param string                                           $query  The SQL query to be executed.
-     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return array<int, mixed>|false False is returned if no rows are found.
      *
@@ -651,9 +653,9 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the value of a single column
      * of the first row of the result.
      *
-     * @param string                                           $query  The SQL query to be executed.
-     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return mixed|false False is returned if no rows are found.
      *
@@ -695,24 +697,24 @@ class Connection implements DriverConnection
     }
 
     /**
-     * Adds identifier condition to the query components
+     * Adds condition based on the criteria to the query components
      *
-     * @param mixed[]  $identifier Map of key columns to their values
+     * @param mixed[]  $criteria   Map of key columns to their values
      * @param string[] $columns    Column names
      * @param mixed[]  $values     Column values
      * @param string[] $conditions Key conditions
      *
      * @throws Exception
      */
-    private function addIdentifierCondition(
-        array $identifier,
+    private function addCriteriaCondition(
+        array $criteria,
         array &$columns,
         array &$values,
         array &$conditions
     ): void {
         $platform = $this->getDatabasePlatform();
 
-        foreach ($identifier as $columnName => $value) {
+        foreach ($criteria as $columnName => $value) {
             if ($value === null) {
                 $conditions[] = $platform->getIsNullExpression($columnName);
                 continue;
@@ -729,23 +731,23 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string         $table      The expression of the table on which to delete.
-     * @param mixed[]        $identifier The deletion criteria. An associative array containing column-value pairs.
-     * @param int[]|string[] $types      The types of identifiers.
+     * @param string                                                               $table    Table name
+     * @param array<string, mixed>                                                 $criteria Deletion criteria
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
      *
      * @return int The number of affected rows.
      *
      * @throws Exception
      */
-    public function delete($table, array $identifier, array $types = [])
+    public function delete($table, array $criteria, array $types = [])
     {
-        if (empty($identifier)) {
+        if (empty($criteria)) {
             throw InvalidArgumentException::fromEmptyCriteria();
         }
 
         $columns = $values = $conditions = [];
 
-        $this->addIdentifierCondition($identifier, $columns, $values, $conditions);
+        $this->addCriteriaCondition($criteria, $columns, $values, $conditions);
 
         return $this->executeStatement(
             'DELETE FROM ' . $table . ' WHERE ' . implode(' AND ', $conditions),
@@ -797,16 +799,16 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string         $table      The expression of the table to update quoted or unquoted.
-     * @param mixed[]        $data       An associative array containing column-value pairs.
-     * @param mixed[]        $identifier The update criteria. An associative array containing column-value pairs.
-     * @param int[]|string[] $types      Types of the merged $data and $identifier arrays in that order.
+     * @param string                                                               $table    Table name
+     * @param array<string, mixed>                                                 $data     Column-value pairs
+     * @param array<string, mixed>                                                 $criteria Update criteria
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
      *
      * @return int The number of affected rows.
      *
      * @throws Exception
      */
-    public function update($table, array $data, array $identifier, array $types = [])
+    public function update($table, array $data, array $criteria, array $types = [])
     {
         $columns = $values = $conditions = $set = [];
 
@@ -816,7 +818,7 @@ class Connection implements DriverConnection
             $set[]     = $columnName . ' = ?';
         }
 
-        $this->addIdentifierCondition($identifier, $columns, $values, $conditions);
+        $this->addCriteriaCondition($criteria, $columns, $values, $conditions);
 
         if (is_string(key($types))) {
             $types = $this->extractTypeValues($columns, $types);
@@ -833,9 +835,9 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string         $table The expression of the table to insert data into, quoted or unquoted.
-     * @param mixed[]        $data  An associative array containing column-value pairs.
-     * @param int[]|string[] $types Types of the inserted data.
+     * @param string                                                               $table Table name
+     * @param array<string, mixed>                                                 $data  Column-value pairs
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types Parameter types
      *
      * @return int The number of affected rows.
      *
@@ -868,10 +870,10 @@ class Connection implements DriverConnection
     /**
      * Extract ordered type list from an ordered column list and type map.
      *
-     * @param int[]|string[] $columnList
-     * @param int[]|string[] $types
+     * @param array<int, string>                                                   $columnList
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types
      *
-     * @return int[]|string[]
+     * @return array<int, int|string|Type|null>|array<string, int|string|Type|null>
      */
     private function extractTypeValues(array $columnList, array $types)
     {
@@ -905,6 +907,8 @@ class Connection implements DriverConnection
 
     /**
      * {@inheritDoc}
+     *
+     * @param int|string|Type|null $type
      */
     public function quote($value, $type = ParameterType::STRING)
     {
@@ -934,9 +938,9 @@ class Connection implements DriverConnection
     /**
      * Prepares and executes an SQL query and returns the result as an array of numeric arrays.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return array<int,array<int,mixed>>
      *
@@ -960,9 +964,9 @@ class Connection implements DriverConnection
     /**
      * Prepares and executes an SQL query and returns the result as an array of associative arrays.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return array<int,array<string,mixed>>
      *
@@ -984,11 +988,64 @@ class Connection implements DriverConnection
     }
 
     /**
+     * Prepares and executes an SQL query and returns the result as an associative array with the keys
+     * mapped to the first column and the values mapped to the second column.
+     *
+     * @param string                                           $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
+     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
+     *
+     * @return array<mixed,mixed>
+     *
+     * @throws Exception
+     */
+    public function fetchAllKeyValue(string $query, array $params = [], array $types = []): array
+    {
+        $stmt = $this->executeQuery($query, $params, $types);
+
+        $this->ensureHasKeyValue($stmt);
+
+        $data = [];
+
+        foreach ($stmt->fetchAll(FetchMode::NUMERIC) as [$key, $value]) {
+            $data[$key] = $value;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Prepares and executes an SQL query and returns the result as an associative array with the keys mapped
+     * to the first column and the values being an associative array representing the rest of the columns
+     * and their values.
+     *
+     * @param string                                           $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
+     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
+     *
+     * @return array<mixed,array<string,mixed>>
+     *
+     * @throws Exception
+     */
+    public function fetchAllAssociativeIndexed(string $query, array $params = [], array $types = []): array
+    {
+        $stmt = $this->executeQuery($query, $params, $types);
+
+        $data = [];
+
+        foreach ($stmt->fetchAll(FetchMode::ASSOCIATIVE) as $row) {
+            $data[array_shift($row)] = $row;
+        }
+
+        return $data;
+    }
+
+    /**
      * Prepares and executes an SQL query and returns the result as an array of the first column values.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return array<int,mixed>
      *
@@ -1012,9 +1069,9 @@ class Connection implements DriverConnection
     /**
      * Prepares and executes an SQL query and returns the result as an iterator over rows represented as numeric arrays.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return Traversable<int,array<int,mixed>>
      *
@@ -1041,9 +1098,9 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the result as an iterator over rows represented
      * as associative arrays.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return Traversable<int,array<string,mixed>>
      *
@@ -1067,11 +1124,56 @@ class Connection implements DriverConnection
     }
 
     /**
+     * Prepares and executes an SQL query and returns the result as an iterator with the keys
+     * mapped to the first column and the values mapped to the second column.
+     *
+     * @param string                                           $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
+     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
+     *
+     * @return Traversable<mixed,mixed>
+     *
+     * @throws Exception
+     */
+    public function iterateKeyValue(string $query, array $params = [], array $types = []): Traversable
+    {
+        $stmt = $this->executeQuery($query, $params, $types);
+
+        $this->ensureHasKeyValue($stmt);
+
+        while (($row = $stmt->fetch(FetchMode::NUMERIC)) !== false) {
+            yield $row[0] => $row[1];
+        }
+    }
+
+    /**
+     * Prepares and executes an SQL query and returns the result as an iterator with the keys mapped
+     * to the first column and the values being an associative array representing the rest of the columns
+     * and their values.
+     *
+     * @param string                                           $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
+     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
+     *
+     * @return Traversable<mixed,array<string,mixed>>
+     *
+     * @throws Exception
+     */
+    public function iterateAssociativeIndexed(string $query, array $params = [], array $types = []): Traversable
+    {
+        $stmt = $this->executeQuery($query, $params, $types);
+
+        while (($row = $stmt->fetch(FetchMode::ASSOCIATIVE)) !== false) {
+            yield array_shift($row) => $row;
+        }
+    }
+
+    /**
      * Prepares and executes an SQL query and returns the result as an iterator over the first column values.
      *
-     * @param string                                           $query  The SQL query.
-     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
-     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
+     * @param string                                                               $query  SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return Traversable<int,mixed>
      *
@@ -1122,10 +1224,9 @@ class Connection implements DriverConnection
      * If the query is parametrized, a prepared statement is used.
      * If an SQLLogger is configured, the execution is logged.
      *
-     * @param string                 $sql    The SQL query to execute.
-     * @param mixed[]                $params The parameters to bind to the query, if any.
-     * @param int[]|string[]         $types  The types the previous parameters are in.
-     * @param QueryCacheProfile|null $qcp    The query cache profile, optional.
+     * @param string                                                               $sql    SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return ResultStatement The executed statement.
      *
@@ -1179,10 +1280,9 @@ class Connection implements DriverConnection
     /**
      * Executes a caching query.
      *
-     * @param string            $sql    The SQL query to execute.
-     * @param mixed[]           $params The parameters to bind to the query, if any.
-     * @param int[]|string[]    $types  The types the previous parameters are in.
-     * @param QueryCacheProfile $qcp    The query cache profile.
+     * @param string                                                               $sql    SQL query
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return ResultStatement
      *
@@ -1299,9 +1399,9 @@ class Connection implements DriverConnection
      *
      * @deprecated Use {@link executeStatement()} instead.
      *
-     * @param string                 $sql    The SQL query.
-     * @param array<mixed>           $params The query parameters.
-     * @param array<int|string|null> $types  The parameter types.
+     * @param string                                                               $sql    SQL statement
+     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return int The number of affected rows.
      *
@@ -1324,9 +1424,9 @@ class Connection implements DriverConnection
      *
      * This method supports PDO binding types as well as DBAL mapping types.
      *
-     * @param string                 $sql    The statement SQL
-     * @param array<mixed>           $params The query parameters
-     * @param array<int|string|null> $types  The parameter types
+     * @param string                                                               $sql    SQL statement
+     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return int The number of affected rows.
      *
@@ -1840,9 +1940,9 @@ class Connection implements DriverConnection
      * @internal Duck-typing used on the $stmt parameter to support driver statements as well as
      *           raw PDOStatement instances.
      *
-     * @param \Doctrine\DBAL\Driver\Statement $stmt   The statement to bind the values to.
-     * @param mixed[]                         $params The map/list of named/positional parameters.
-     * @param int[]|string[]                  $types  The parameter types (PDO binding types or DBAL mapping types).
+     * @param \Doctrine\DBAL\Driver\Statement                                      $stmt   Prepared statement
+     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
      * @return void
      */
@@ -1882,8 +1982,8 @@ class Connection implements DriverConnection
     /**
      * Gets the binding type of a given type. The given type can be a PDO or DBAL mapping type.
      *
-     * @param mixed           $value The value to bind.
-     * @param int|string|null $type  The type to bind (PDO or DBAL).
+     * @param mixed                $value The value to bind.
+     * @param int|string|Type|null $type  The type to bind (PDO or DBAL).
      *
      * @return mixed[] [0] => the (escaped) value, [1] => the binding type.
      */
@@ -1909,10 +2009,10 @@ class Connection implements DriverConnection
      * @internal This is a purely internal method. If you rely on this method, you are advised to
      *           copy/paste the code as this method may change, or be removed without prior notice.
      *
-     * @param mixed[]        $params
-     * @param int[]|string[] $types
+     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
-     * @return mixed[]
+     * @return array<int, int|string|Type|null>|array<string, int|string|Type|null>
      */
     public function resolveParams(array $params, array $types)
     {
@@ -2004,8 +2104,8 @@ class Connection implements DriverConnection
     /**
      * @internal
      *
-     * @param array<int, mixed>|array<string, mixed>           $params
-     * @param array<int, int|string>|array<string, int|string> $types
+     * @param array<int, mixed>|array<string, mixed>                               $params
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types
      *
      * @throws Exception
      *
@@ -2054,5 +2154,14 @@ class Connection implements DriverConnection
         }
 
         throw $e;
+    }
+
+    private function ensureHasKeyValue(ResultStatement $stmt): void
+    {
+        $columnCount = $stmt->columnCount();
+
+        if ($columnCount < 2) {
+            throw NoKeyValue::fromColumnCount($columnCount);
+        }
     }
 }

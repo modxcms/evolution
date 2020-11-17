@@ -532,7 +532,7 @@ SQL
                     );
                 } elseif ($hasFromComment && ! $hasComment) {
                     $commentsSql[] = $this->getDropColumnCommentSQL($diff->name, $column->getQuotedName($this));
-                } elseif ($hasComment) {
+                } elseif (! $hasFromComment && $hasComment) {
                     $commentsSql[] = $this->getCreateColumnCommentSQL(
                         $diff->name,
                         $column->getQuotedName($this),
@@ -1199,10 +1199,10 @@ SQL
         $length = $column['length'] ?? null;
 
         if (! isset($column['fixed'])) {
-            return sprintf('VARCHAR(%d)', $length);
+            return sprintf('VARCHAR(%d)', $length ?? 255);
         }
 
-        return sprintf('CHAR(%d)', $length);
+        return sprintf('CHAR(%d)', $length ?? 255);
     }
 
     /**
@@ -1574,7 +1574,7 @@ SQL
     {
         switch (true) {
             case $lockMode === LockMode::NONE:
-                return $fromClause . ' WITH (NOLOCK)';
+                return $fromClause;
 
             case $lockMode === LockMode::PESSIMISTIC_READ:
                 return $fromClause . ' WITH (HOLDLOCK, ROWLOCK)';
