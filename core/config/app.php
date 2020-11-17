@@ -87,6 +87,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Validator' => \Illuminate\Support\Facades\Validator::class,
         'Response' => \Illuminate\Support\Facades\Response::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
         /**
          * EvolutionCMS
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
