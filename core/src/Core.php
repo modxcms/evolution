@@ -4004,7 +4004,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildes = $documentChildes->where($where);
         }
         if (!is_array($fields)) {
-            $documentChildes = $documentChildes->select(explode(',', $fields));
+            $arr =  explode(',', $fields);
+            $new_arr = [];
+            foreach ($arr as $item){
+                $new_arr[] = 'site_content.'.$item;
+            }
+            $documentChildes = $documentChildes->select($new_arr);
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
@@ -4022,6 +4027,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (!$docgrp) {
                 $documentChildes = $documentChildes->where('privatemgr', 0);
             } else {
+                $documentChildes = $documentChildes->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
                 $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
                     $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
@@ -4032,6 +4038,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (!$docgrp) {
                     $documentChildes = $documentChildes->where('privatemgr', 0);
                 } else {
+                    $documentChildes = $documentChildes->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
                     $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
                         $query->where('privatemgr', 0)
                             ->orWhereIn('document_groups.document_group', $docgrp);
