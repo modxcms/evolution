@@ -213,7 +213,7 @@ try {
             $managerUser->attributes->role = $role;
             $managerUser->attributes->save();
             $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $managerlanguage];
-            $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
+            $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 'sibling'];
             $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $adminemail];
             $systemSettings[] = ['setting_name' => 'fe_editor_lang', 'setting_value' => $managerlanguage];
             \EvolutionCMS\Models\SystemSetting::insert($systemSettings);
