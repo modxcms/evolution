@@ -62,7 +62,6 @@ if (! function_exists('public_path')) {
      */
     function public_path($path = '')
     {
-        $path = 'assets/' . $path;
         return evolutionCMS()->publicPath().($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }
