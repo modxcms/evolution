@@ -27,7 +27,8 @@ class Helpers
 				$file = '...' . $m[0];
 			}
 			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
-			return self::formatHtml('<a href="%" title="%">%<b>%</b>%</a>',
+			return self::formatHtml(
+				'<a href="%" title="%">%<b>%</b>%</a>',
 				$editor,
 				$origFile . ($line ? ":$line" : ''),
 				rtrim(dirname($file), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
@@ -43,8 +44,13 @@ class Helpers
 	/**
 	 * Returns link to editor.
 	 */
-	public static function editorUri(string $file, int $line = null, string $action = 'open', string $search = '', string $replace = ''): ?string
-	{
+	public static function editorUri(
+		string $file,
+		int $line = null,
+		string $action = 'open',
+		string $search = '',
+		string $replace = ''
+	): ?string {
 		if (Debugger::$editor && $file && ($action === 'create' || is_file($file))) {
 			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
 			$file = strtr($file, Debugger::$editorMapping);
@@ -165,7 +171,7 @@ class Helpers
 				. $_SERVER['REQUEST_URI'];
 		} else {
 			return 'CLI (PID: ' . getmypid() . ')'
-				. ': ' . implode(' ', array_map([self::class, 'escapeArg'], $_SERVER['argv']));
+				. (isset($_SERVER['argv']) ? ': ' . implode(' ', array_map([self::class, 'escapeArg'], $_SERVER['argv'])) : '');
 		}
 	}
 
@@ -187,7 +193,7 @@ class Helpers
 			$message .= ", did you mean $hint()?";
 			$replace = ["$m[2](", "$hint("];
 
-		} elseif (preg_match('#^Undefined variable: (\w+)#', $message, $m) && !empty($e->context)) {
+		} elseif (preg_match('#^Undefined variable:? \$?(\w+)#', $message, $m) && !empty($e->context)) {
 			$hint = self::getSuggestion(array_keys($e->context), $m[1]);
 			$message = "Undefined variable $$m[1], did you mean $$hint?";
 			$replace = ["$$m[1]", "$$hint"];
@@ -199,7 +205,7 @@ class Helpers
 			$message .= ", did you mean $$hint?";
 			$replace = ["->$m[2]", "->$hint"];
 
-		} elseif (preg_match('#^Access to undeclared static property: ([\w\\\\]+)::\$(\w+)#', $message, $m)) {
+		} elseif (preg_match('#^Access to undeclared static property:? ([\w\\\\]+)::\$(\w+)#', $message, $m)) {
 			$rc = new \ReflectionClass($m[1]);
 			$items = array_intersect($rc->getProperties(\ReflectionProperty::IS_PUBLIC), $rc->getProperties(\ReflectionProperty::IS_STATIC));
 			$hint = self::getSuggestion($items, $m[2]);
@@ -222,9 +228,11 @@ class Helpers
 	/** @internal */
 	public static function improveError(string $message, array $context = []): string
 	{
-		if (preg_match('#^Undefined variable: (\w+)#', $message, $m) && $context) {
+		if (preg_match('#^Undefined variable:? \$?(\w+)#', $message, $m) && $context) {
 			$hint = self::getSuggestion(array_keys($context), $m[1]);
-			return $hint ? "Undefined variable $$m[1], did you mean $$hint?" : $message;
+			return $hint
+				? "Undefined variable $$m[1], did you mean $$hint?"
+				: $message;
 
 		} elseif (preg_match('#^Undefined property: ([\w\\\\]+)::\$(\w+)#', $message, $m)) {
 			$rc = new \ReflectionClass($m[1]);
@@ -267,8 +275,10 @@ class Helpers
 	{
 		$best = null;
 		$min = (strlen($value) / 4 + 1) * 10 + .1;
-		foreach (array_unique($items, SORT_REGULAR) as $item) {
-			$item = is_object($item) ? $item->getName() : $item;
+		$items = array_map(function ($item) {
+			return $item instanceof \Reflector ? $item->getName() : (string) $item;
+		}, $items);
+		foreach (array_unique($items) as $item) {
 			if (($len = levenshtein($item, $value, 10, 11, 10)) > 0 && $len < $min) {
 				$min = $len;
 				$best = $item;

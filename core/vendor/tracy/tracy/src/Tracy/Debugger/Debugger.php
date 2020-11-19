@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.7.5';
+	public const VERSION = '2.7.6';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -152,7 +152,9 @@ class Debugger
 	public static function enable($mode = null, string $logDirectory = null, $email = null): void
 	{
 		if ($mode !== null || self::$productionMode === null) {
-			self::$productionMode = is_bool($mode) ? $mode : !self::detectDebugMode($mode);
+			self::$productionMode = is_bool($mode)
+				? $mode
+				: !self::detectDebugMode($mode);
 		}
 
 		self::$reserved = str_repeat('t', self::$reservedMemorySize);
@@ -196,12 +198,12 @@ class Debugger
 			return;
 		}
 
-		register_shutdown_function([__CLASS__, 'shutdownHandler']);
+		register_shutdown_function([self::class, 'shutdownHandler']);
 		set_exception_handler(function (\Throwable $e) {
 			self::exceptionHandler($e);
 			exit(255);
 		});
-		set_error_handler([__CLASS__, 'errorHandler']);
+		set_error_handler([self::class, 'errorHandler']);
 
 		foreach (['Bar/Bar', 'Bar/DefaultBarPanel', 'BlueScreen/BlueScreen', 'Dumper/Dumper', 'Logger/Logger', 'Helpers'] as $path) {
 			require_once dirname(__DIR__) . "/$path.php";
@@ -356,8 +358,13 @@ class Debugger
 	 * @throws ErrorException
 	 * @internal
 	 */
-	public static function errorHandler(int $severity, string $message, string $file, int $line, array $context = null): ?bool
-	{
+	public static function errorHandler(
+		int $severity,
+		string $message,
+		string $file,
+		int $line,
+		array $context = null
+	): ?bool {
 		$error = error_get_last();
 		if (($error['type'] ?? null) === E_COMPILE_WARNING) {
 			error_clear_last();
@@ -368,9 +375,15 @@ class Debugger
 			error_reporting(E_ALL);
 		}
 
+		if ($context) {
+			$context = (array) (object) $context; // workaround for PHP bug #80234
+		}
+
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
 			if (Helpers::findTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), '*::__toString')) { // workaround for PHP < 7.4
-				$previous = isset($context['e']) && $context['e'] instanceof \Throwable ? $context['e'] : null;
+				$previous = isset($context['e']) && $context['e'] instanceof \Throwable
+					? $context['e']
+					: null;
 				$e = new ErrorException($message, 0, $severity, $file, $line, $previous);
 				$e->context = $context;
 				self::exceptionHandler($e);
@@ -431,7 +444,9 @@ class Debugger
 			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], true)) {
 				break;
 			}
-			$fnc = $status['chunk_size'] || !$errorOccurred ? 'ob_end_flush' : 'ob_end_clean';
+			$fnc = $status['chunk_size'] || !$errorOccurred
+				? 'ob_end_flush'
+				: 'ob_end_clean';
 			if (!@$fnc()) { // @ may be not removable
 				break;
 			}

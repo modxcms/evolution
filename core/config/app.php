@@ -35,7 +35,6 @@ return [
         'Console_Artisan' => EvolutionCMS\Providers\ArtisanServiceProvider::class,
         'Console_Migration' => Illuminate\Database\MigrationServiceProvider::class,
         'Console_Composer' => EvolutionCMS\Providers\ComposerServiceProvider::class,
-
         'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
         'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
@@ -87,6 +86,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Validator' => \Illuminate\Support\Facades\Validator::class,
         'Response' => \Illuminate\Support\Facades\Response::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
+        'Request' => Illuminate\Support\Facades\Request::class,
         /**
          * EvolutionCMS
          * @TODO DBAPI, MakeTable and other will be added at version 2.1

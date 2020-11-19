@@ -80,6 +80,7 @@ class PackageCommand extends Command
         if (count($this->require) > 0) {
             $this->loadRequire();
         }
+        unlink(EVO_CORE_PATH.'storage/bootstrap/services.php');
     }
 
     /**

@@ -32,6 +32,9 @@ class BlueScreen
 	/** @var string[] */
 	public $keysToHide = ['password', 'passwd', 'pass', 'pwd', 'creditcard', 'credit card', 'cc', 'pin'];
 
+	/** @var bool */
+	public $showEnvironment = true;
+
 	/** @var callable[] */
 	private $panels = [];
 
@@ -116,14 +119,16 @@ class BlueScreen
 
 	private function renderTemplate(\Throwable $exception, string $template, $toScreen = true): void
 	{
-		$showEnvironment = strpos($exception->getMessage(), 'Allowed memory size') === false;
+		$showEnvironment = $this->showEnvironment && (strpos($exception->getMessage(), 'Allowed memory size') === false);
 		$messageHtml = $this->formatMessage($exception);
 		$info = array_filter($this->info);
 		$source = Helpers::getSource();
 		$title = $exception instanceof \ErrorException
 			? Helpers::errorTypeToString($exception->getSeverity())
 			: Helpers::getClass($exception);
-		$lastError = $exception instanceof \ErrorException || $exception instanceof \Error ? null : error_get_last();
+		$lastError = $exception instanceof \ErrorException || $exception instanceof \Error
+			? null
+			: error_get_last();
 
 		if (function_exists('apache_request_headers')) {
 			$httpHeaders = apache_request_headers();
@@ -194,7 +199,11 @@ class BlueScreen
 			}
 		}
 
-		if (property_exists($ex, 'tracyAction') && !empty($ex->tracyAction['link']) && !empty($ex->tracyAction['label'])) {
+		if (
+			property_exists($ex, 'tracyAction')
+			&& !empty($ex->tracyAction['link'])
+			&& !empty($ex->tracyAction['label'])
+		) {
 			$actions[] = $ex->tracyAction;
 		}
 
@@ -244,8 +253,13 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightFile(string $file, int $line, int $lines = 15, array $vars = [], array $keysToHide = []): ?string
-	{
+	public static function highlightFile(
+		string $file,
+		int $line,
+		int $lines = 15,
+		array $vars = [],
+		array $keysToHide = []
+	): ?string {
 		$source = @file_get_contents($file); // @ file may not exist
 		if ($source === false) {
 			return null;
@@ -261,8 +275,13 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightPhp(string $source, int $line, int $lines = 15, array $vars = [], array $keysToHide = []): string
-	{
+	public static function highlightPhp(
+		string $source,
+		int $line,
+		int $lines = 15,
+		array $vars = [],
+		array $keysToHide = []
+	): string {
 		if (function_exists('ini_set')) {
 			ini_set('highlight.comment', '#998; font-style: italic');
 			ini_set('highlight.default', '#000');
@@ -363,7 +382,7 @@ class BlueScreen
 
 		return function ($v, $k = null) use ($keysToHide): string {
 			if (is_string($k) && isset($keysToHide[strtolower($k)])) {
-				$v = Dumper::HIDDEN_VALUE;
+				return '<pre class="tracy-dump">' . Helpers::escapeHtml(Dumper::hideValue($v)) . '</pre>';
 			}
 			return Dumper::toHtml($v, [
 				Dumper::DEPTH => $this->maxDepth,
@@ -396,7 +415,8 @@ class BlueScreen
 					$r = new \ReflectionMethod($m[1], $m[2]);
 				} elseif (class_exists($m[1], false) || interface_exists($m[1], false)) {
 					$r = new \ReflectionClass($m[1]);
-				} else {
+				}
+				if (empty($r) || !$r->getFileName()) {
 					return $m[0];
 				}
 				return '<a href="' . Helpers::escapeHtml(Helpers::editorUri($r->getFileName(), $r->getStartLine())) . '">' . $m[0] . '</a>';
@@ -416,5 +436,23 @@ class BlueScreen
 		);
 
 		return $msg;
+	}
+
+
+	private function renderPhpInfo(): void
+	{
+		ob_start();
+		@phpinfo(INFO_LICENSE); // @ phpinfo may be disabled
+		$license = ob_get_clean();
+		ob_start();
+		@phpinfo(INFO_CONFIGURATION | INFO_MODULES); // @ phpinfo may be disabled
+		$info = ob_get_clean();
+
+		if (strpos($license, '<body') === false) {
+			echo '<pre class="tracy-dump">', Helpers::escapeHtml($info), '</pre>';
+		} else {
+			$info = str_replace('<table', '<table class="tracy-sortable"', $info);
+			echo preg_replace('#^.+<body>|</body>.+\z#s', '', $info);
+		}
 	}
 }
