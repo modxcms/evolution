@@ -28,6 +28,16 @@ if (!function_exists('evolutionCMS')) {
     }
 }
 
+if (!function_exists('evo')) {
+    /**
+     * @return DocumentParser
+     */
+    function evo()
+    {
+        return evolutionCMS();
+    }
+}
+
 if (!function_exists('genEvoSessionName')) {
     /**
      * @return string
