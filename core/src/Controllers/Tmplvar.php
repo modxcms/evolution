@@ -98,6 +98,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'display'           => $this->parameterDisplay(),
             'categoriesWithTpl' => $this->parameterCategoriesWithTpl(),
             'tplOutCategory'    => $this->parameterTplOutCategory(),
+            'roles'             => $this->parameterRoles(),
             'action'            => $this->getIndex(),
             'events'            => $this->parameterEvents(),
             'actionButtons'     => $this->parameterActionButtons(),
@@ -230,6 +231,11 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             ->get();
     }
 
+    protected function parameterRoles(): Collection
+    {
+        return Models\UserRole::with('tvs')->orderBy('name', 'ASC')->get();
+    }
+
     protected function parameterEvents(): array
     {
         $out = [];
@@ -272,6 +278,11 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         return array_unique(array_map('intval', get_by_key($_POST, 'template', [], 'is_array')));
     }
 
+    private function getSelectedRoleFromRequest(): array
+    {
+        return array_unique(array_map('intval', get_by_key($_POST, 'role', [], 'is_array')));
+    }
+
     private function getGroupsArray()
     {
         $id = $this->getElementId();
@@ -285,6 +296,17 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             || \in_array(
                 $item->getKey(),
                 $this->getSelectedTplFromRequest(), true
+            )
+        );
+    }
+
+    public function isSelectedRole(Models\UserRole $item)
+    {
+        return (
+            $this->object->userRoles->contains('id', $item->getKey())
+            || \in_array(
+                $item->getKey(),
+                $this->getSelectedRoleFromRequest(), true
             )
         );
     }

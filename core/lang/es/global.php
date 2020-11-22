@@ -1452,4 +1452,9 @@ $_lang['chunk_processor'] = 'Clase de procesamiento de Chunks';
 $_lang['enable_mootools'] = 'Habilitar Mootools en el administrador';
 $_lang['enable_mootools_message'] = 'Cargue Mootools.js en el administrador para compatibilidad con versiones anteriores';
 
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
+
 return $_lang;

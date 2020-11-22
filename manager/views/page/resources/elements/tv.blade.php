@@ -11,7 +11,7 @@
                 </div>
             @endif
             <div class="mainCell elements_description">
-                <span @if($item->templates->count() == 0)class="disabledPlugin" @endif>
+                <span @if($item->templates->count() + $item->userRoles->count() == 0)class="disabledPlugin" @endif>
                     <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
                         <i class="{{ $_style['icon_tv'] }}"></i>
                         @if($item->locked)

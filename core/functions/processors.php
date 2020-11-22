@@ -359,6 +359,34 @@ if (!function_exists('saveTemplateVarAccess')) {
     }
 }
 
+if (!function_exists('saveVarRoles')) {
+    /**
+     * @return void
+     */
+    function saveVarRoles($id)
+    {
+        $modx = evolutionCMS();
+        $roles = isset($_POST['role']) ? $_POST['role'] : [];
+
+        $exists = EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->get();
+
+        $getRankArray = $exists->pluck('rank', 'roleid')->toArray();
+
+        EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->delete();
+        if (!$roles) {
+            return;
+        }
+        foreach ($roles as $i => $iValue) {
+            $field = [
+                'tmplvarid' => $id,
+                'roleid' => $roles[$i],
+                'rank' => get_by_key($getRankArray, $iValue, 0)
+            ];
+            EvolutionCMS\Models\UserRoleVar::create($field);
+        }
+    }
+}
+
 if (!function_exists('saveDocumentAccessPermissons')) {
     function saveDocumentAccessPermissons($id)
     {

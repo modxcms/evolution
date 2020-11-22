@@ -4,6 +4,7 @@ use \EvolutionCMS\Models\User;
 use EvolutionCMS\Services\Users\UserClearSettings;
 use EvolutionCMS\Services\Users\UserGeneratePassword;
 use EvolutionCMS\Services\Users\UserGetVerifiedKey;
+use EvolutionCMS\Services\Users\UserGetValues;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
 use EvolutionCMS\Services\Users\UserLoginById;
 use EvolutionCMS\Services\Users\UserManagerChangePassword;
@@ -17,6 +18,7 @@ use EvolutionCMS\Services\Users\UserRefreshToken;
 use EvolutionCMS\Services\Users\UserRegistration;
 use EvolutionCMS\Services\Users\UserRepairPassword;
 use EvolutionCMS\Services\Users\UserSaveSettings;
+use EvolutionCMS\Services\Users\UserSaveValues;
 use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
 use EvolutionCMS\Services\Users\UserVerified;
@@ -110,6 +112,18 @@ class UserManager
     public function saveSettings(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserSaveSettings($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function saveValues(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserSaveValues($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function getValues(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserGetValues($userData, $events, $cache);
         return $user->process();
     }
 

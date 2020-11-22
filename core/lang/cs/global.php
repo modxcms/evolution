@@ -1218,4 +1218,9 @@ $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
 
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
+
 return $_lang;

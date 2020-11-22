@@ -113,6 +113,21 @@ class UserRole extends Eloquent\Model
         ]
     ];
 
+    /**
+     * @return Eloquent\Relations\BelongsToMany
+     */
+    public function tvs() : Eloquent\Relations\BelongsToMany
+    {
+
+        return $this->belongsToMany(
+            SiteTmplvar::class,
+            (new UserRoleVar())->getTable(),
+            'roleid',
+            'tmplvarid'
+        )->withPivot('rank')
+            ->orderBy('pivot_rank', 'ASC');
+    }
+
     public static function getLockedElements()
     {
         return evolutionCMS()->getLockedElements(8);

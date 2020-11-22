@@ -1443,4 +1443,9 @@ $_lang['manager_menu_position_top'] = 'Oben';
 $_lang['manager_menu_position_left'] = 'links';
 $_lang['invalid_event_response'] = 'Der Event "%s" verursachte eine invalide Ausgabe.';
 
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
+
 return $_lang;

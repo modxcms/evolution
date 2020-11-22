@@ -1,4 +1,7 @@
 <?php
+
+use EvolutionCMS\Models\SiteContent;
+
 define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
 if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
@@ -93,7 +96,7 @@ if (isset($action)) {
 
                     // check for deleted documents on reload
                     if ($expandAll == 2) {
-                        if (!is_null(\EvolutionCMS\Models\SiteContent::query()->withTrashed()
+                        if (!is_null(SiteContent::query()->withTrashed()
                             ->where('deleted', 1)->first())) {
                             echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
                         }
@@ -134,10 +137,15 @@ if (isset($action)) {
 
                     case 'element_tplvars':
                         $a = 301;
-                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', 'site_tmplvar_templates.tmplvarid as disabled')
+                        $prefix = \DB::getTablePrefix();
+                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', \DB::raw("IFNULL({$prefix}site_tmplvar_templates.tmplvarid, {$prefix}user_role_vars.tmplvarid) as disabled"))
                             ->leftJoin('site_tmplvar_templates', function ($join) {
                                 $join->on('site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id');
                                 $join->on('site_tmplvar_templates.templateid', '>', \DB::raw(0));
+                            })
+                            ->leftJoin('user_role_vars', function ($join) {
+                                $join->on('user_role_vars.tmplvarid', '=', 'site_tmplvars.id');
+                                $join->on('user_role_vars.roleid', '>', \DB::raw(0));
                             })
                             ->orderBy('site_tmplvars.name')
                             ->groupBy(['site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid'])
@@ -541,7 +549,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = (int)\EvolutionCMS\Models\SiteContent::query()->find($id)->parent;
+                    $parentOld = (int) SiteContent::find($id)->parent;
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
@@ -585,39 +593,31 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            $resource = \EvolutionCMS\Models\SiteContent::find($id);
-                            $resource->parent = $parent;
-                            $resource->save();
+                            SiteContent::where('id', $id)->update([
+                                'parent' => $parent,
+                            ]);
 
                             if ($parent > 0) {
                                 // set parent isfolder = 1
-                                $parentResource = \EvolutionCMS\Models\SiteContent::find($parent);
-                                $parentResource->isfolder = 1;
-                                $parentResource->save();
+                                SiteContent::where('id', $parent)->update([
+                                    'isfolder' => 1,
+                                ]);
                             }
 
                             if ($parent != $parentOld) {
                                 // check children docs and set parent isfolder
-                                if (\EvolutionCMS\Models\SiteContent::query()->where('parent', $parentOld)->count() > 0) {
-                                    if ($parentOld > 0) {
-                                        $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
-                                        $parentResource->isfolder = 1;
-                                        $parentResource->save();
-                                    }
-                                } else {
-                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
-                                    $parentResource->isfolder = 0;
-                                    $parentResource->save();
-                                }
+                                SiteContent::where('id', $parentOld)->update([
+                                    'isfolder' => SiteContent::where('parent', $parentOld)->count() > 0 ? 1 : 0,
+                                ]);
                             }
 
                             // set menuindex
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($value);
-                                    $parentResource->menuindex = $key;
-                                    $parentResource->save();
+                                    SiteContent::where('id', $value)->update([
+                                        'menuindex' => $key,
+                                    ]);
                                 }
                             } else {
                                 // TODO: max(*) menuindex
@@ -652,7 +652,7 @@ if (isset($action)) {
             $output = !!$modx->elementIsLocked($type, $id, true);
 
             if (!$output) {
-                $searchQuery = \EvolutionCMS\Models\SiteContent::query()->where('site_content.id', $id);
+                $searchQuery = SiteContent::query()->where('site_content.id', $id);
                 if ($role != 1) {
                     if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
                         $searchQuery = $searchQuery->join('document_groups', 'site_content.id', '=', 'document_groups.document')

@@ -114,6 +114,20 @@ class SiteTmplvar extends Eloquent\Model
             ->orderBy('pivot_rank', 'ASC');
     }
 
+    /**
+     * @return Eloquent\Relations\BelongsToMany
+     */
+    public function userRoles() : Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            UserRole::class,
+            (new UserRoleVar())->getTable(),
+            'tmplvarid',
+            'roleid'
+        )->withPivot('rank')
+            ->orderBy('pivot_rank', 'ASC');
+    }
+
     public function getCreatedAtAttribute()
     {
         return $this->convertTimestamp($this->createdon);
@@ -158,6 +172,11 @@ class SiteTmplvar extends Eloquent\Model
     public function tmplvarTemplate()
     {
         return $this->hasMany(SiteTmplvarTemplate::class, 'tmplvarid', 'id');
+    }
+
+    public function tmplvarUserRole()
+    {
+        return $this->hasMany(UserRoleVar::class, 'tmplvarid', 'id');
     }
 
     public function delete()
