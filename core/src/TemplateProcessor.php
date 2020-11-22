@@ -56,7 +56,7 @@ class TemplateProcessor
                     )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
                         $className = $baseClassName;
                     }
-                    $customClass = new $className();
+                    $this->core->make($className);
                 }
                 $template = $templateAlias;
                 break;
