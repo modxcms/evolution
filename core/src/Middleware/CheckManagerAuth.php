@@ -6,7 +6,7 @@ class CheckManagerAuth
 {
     public function handle($request, Closure $next)
     {
-        if (ManagerTheme::hasManagerAccess() === false) {
+        if (\ManagerTheme::hasManagerAccess() === false) {
             return \Response::json(['error' => 'No Manager Access'], '403');
 
         }
