@@ -56,7 +56,7 @@ class TemplateProcessor
                     )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
                         $className = $baseClassName;
                     }
-                    $this->core->make($className);
+                    $controller = $this->core->make($className);
                     if (method_exists($controller, 'main')) {
                         $this->core->call([$controller, 'main']);
                     }
