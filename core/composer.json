@@ -57,7 +57,7 @@
     "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.*",
     "tracy/tracy": "~2.5",
-    "wikimedia/composer-merge-plugin": "dev-master",
+    "wikimedia/composer-merge-plugin": "dev-feature/composer-v2 as 1.5.0",
     "symfony/process": "^4.3",
     "i-rocky/eloquent-dynamic-relation": "^1.0",
     "dmitry-suffi/redis-session-handler": "*",
@@ -129,5 +129,11 @@
     "source": "https://github.com/evolution-cms/evolution/",
     "docs": "http://docs.evo.im",
     "telegram": "https://t.me/evolutioncms"
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mcaskill/composer-merge-plugin"
+    }
+  ]
 }
