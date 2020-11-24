@@ -1365,6 +1365,7 @@ return array(
     'Illuminate\\Contracts\\Queue\\QueueableCollection' => $vendorDir . '/illuminate/contracts/Queue/QueueableCollection.php',
     'Illuminate\\Contracts\\Queue\\QueueableEntity' => $vendorDir . '/illuminate/contracts/Queue/QueueableEntity.php',
     'Illuminate\\Contracts\\Queue\\ShouldBeUnique' => $vendorDir . '/illuminate/contracts/Queue/ShouldBeUnique.php',
+    'Illuminate\\Contracts\\Queue\\ShouldBeUniqueUntilProcessing' => $vendorDir . '/illuminate/contracts/Queue/ShouldBeUniqueUntilProcessing.php',
     'Illuminate\\Contracts\\Queue\\ShouldQueue' => $vendorDir . '/illuminate/contracts/Queue/ShouldQueue.php',
     'Illuminate\\Contracts\\Redis\\Connection' => $vendorDir . '/illuminate/contracts/Redis/Connection.php',
     'Illuminate\\Contracts\\Redis\\Connector' => $vendorDir . '/illuminate/contracts/Redis/Connector.php',
