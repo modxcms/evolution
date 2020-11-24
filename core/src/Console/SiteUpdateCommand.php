@@ -126,16 +126,16 @@ class SiteUpdateCommand extends Command
 
             SELF::moveFiles($temp_dir . '/' . $dir, MODX_BASE_PATH);
             SELF::rmdirs($temp_dir);
-            echo "Run Migrations\n";
-
-            exec('php  ../install/cli-install.php --typeInstall=2 --removeInstall=y');
-            echo "Remove Install Directory\n";
-            self::rmdirs(MODX_BASE_PATH . 'install');
             putenv('COMPOSER_HOME=' . EVO_CORE_PATH . 'composer');
             $input = new ArrayInput(array('command' => 'update'));
             $application = new Application();
             $application->setAutoExit(false);
             $application->run($input);
+            echo "Run Migrations\n";
+
+            exec('php  ../install/cli-install.php --typeInstall=2 --removeInstall=y');
+            echo "Remove Install Directory\n";
+            self::rmdirs(MODX_BASE_PATH . 'install');
         } else {
             echo 'You use almost current version';
         }
