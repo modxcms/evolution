@@ -3,14 +3,11 @@
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
-use \EvolutionCMS\Models\User;
+use EvolutionCMS\Models\UserValue;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Validation\Rule;
 
-class UserSaveSettings implements ServiceInterface
+class UserGetValues implements ServiceInterface
 {
-    use ExcludeStandardFieldsTrait;
-
     /**
      * @var \string[][]
      */
@@ -61,7 +58,7 @@ class UserSaveSettings implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return ['id' => ['required']];
     }
 
     /**
@@ -69,7 +66,7 @@ class UserSaveSettings implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return [];
+        return ['id.required' => Lang::get("global.required_field", ['field' => 'username'])];
     }
 
     /**
@@ -77,7 +74,7 @@ class UserSaveSettings implements ServiceInterface
      * @throws ServiceActionException
      * @throws ServiceValidationException
      */
-    public function process(): bool
+    public function process(): array
     {
         if (!$this->checkRules()) {
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
@@ -90,46 +87,22 @@ class UserSaveSettings implements ServiceInterface
             throw $exception;
         }
 
-        // determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
-        $defaults = array(
-            'upload_images',
-            'upload_media',
-            'upload_flash',
-            'upload_files'
-        );
-
-        // get user setting field names
-        $customFields = $this->excludeStandardFields($this->userData);
-
-        foreach ($customFields as $n => $v) {
-            if (!in_array($n, $defaults) && (is_scalar($v) && trim($v) == '' || is_array($v) && empty($v))) {
-                continue;
-            } // ignore blacklist and empties
-            $settings[$n] = $v; // this value should be saved
-        }
-
-        foreach ($defaults as $k) {
-            if (isset($settings['default_' . $k]) && $settings['default_' . $k] == '1') {
-                unset($settings[$k]);
-            }
-            unset($settings['default_' . $k]);
-        }
-
-        foreach ($settings as $n => $vl) {
-            if (is_array($vl)) {
-                $vl = implode(',', $vl);
-            }
-            if ((string)$vl != '') {
-                \EvolutionCMS\Models\UserSetting::updateOrCreate(['setting_name' => $n, 'user' => $this->userData['id']],
-                    ['setting_value' => $vl]);
-            }
-        }
+        $values = UserValue::query()
+            ->select('site_tmplvars.name', 'user_values.value')
+            ->join('site_tmplvars', 'site_tmplvars.id', '=', 'user_values.tmplvarid')
+            ->where('userid', $this->userData['id'])
+            ->when(!empty($this->userData['tvNames']), function($query) {
+                $query->whereIn('site_tmplvars.name', $this->userData['tvNames']);
+            })
+            ->get()
+            ->pluck('value', 'name')
+            ->toArray();
 
         if ($this->cache) {
             EvolutionCMS()->clearCache('full');
         }
 
-        return true;
+        return $values;
     }
 
     /**

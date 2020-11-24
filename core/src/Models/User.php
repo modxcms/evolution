@@ -55,6 +55,11 @@ class User extends Eloquent\Model
         return $this->hasMany(UserSetting::class,'user','id');
     }
 
+    public function values()
+    {
+        return $this->hasMany(UserValue::class);
+    }
+
     public function delete()
     {
         $this->memberGroups()->delete();

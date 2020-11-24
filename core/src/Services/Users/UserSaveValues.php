@@ -3,11 +3,13 @@
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
-use \EvolutionCMS\Models\User;
+use EvolutionCMS\Models\User;
+use EvolutionCMS\Models\UserValue;
+use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
-class UserSaveSettings implements ServiceInterface
+class UserSaveValues implements ServiceInterface
 {
     use ExcludeStandardFieldsTrait;
 
@@ -61,7 +63,7 @@ class UserSaveSettings implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return ['id' => ['required']];
     }
 
     /**
@@ -69,7 +71,7 @@ class UserSaveSettings implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return [];
+        return ['id.required' => Lang::get("global.required_field", ['field' => 'username'])];
     }
 
     /**
@@ -90,38 +92,36 @@ class UserSaveSettings implements ServiceInterface
             throw $exception;
         }
 
-        // determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
-        $defaults = array(
-            'upload_images',
-            'upload_media',
-            'upload_flash',
-            'upload_files'
-        );
+        $id = $this->userData['id'];
+        unset($this->userData['id']);
 
-        // get user setting field names
-        $customFields = $this->excludeStandardFields($this->userData);
+        $values = $this->excludeStandardFields($this->userData);
 
-        foreach ($customFields as $n => $v) {
-            if (!in_array($n, $defaults) && (is_scalar($v) && trim($v) == '' || is_array($v) && empty($v))) {
-                continue;
-            } // ignore blacklist and empties
-            $settings[$n] = $v; // this value should be saved
-        }
+        $tmplvars = SiteTmplvar::select('site_tmplvars.*', 'user_values.id AS value_id', 'user_values.value')
+            ->whereIn('name', array_keys($values))
+            ->leftJoin('user_values', function($query) use ($id) {
+                $query->on('user_values.userid', '=', \DB::raw($id));
+                $query->on('user_values.tmplvarid', '=', 'site_tmplvars.id');
+            })
+            ->get();
 
-        foreach ($defaults as $k) {
-            if (isset($settings['default_' . $k]) && $settings['default_' . $k] == '1') {
-                unset($settings[$k]);
-            }
-            unset($settings['default_' . $k]);
-        }
+        foreach ($tmplvars as $tmplvar) {
+            $value = (string) $values[$tmplvar->name];
 
-        foreach ($settings as $n => $vl) {
-            if (is_array($vl)) {
-                $vl = implode(',', $vl);
-            }
-            if ((string)$vl != '') {
-                \EvolutionCMS\Models\UserSetting::updateOrCreate(['setting_name' => $n, 'user' => $this->userData['id']],
-                    ['setting_value' => $vl]);
+            if ($value != '') {
+                if ($tmplvar->value_id) {
+                    UserValue::where('id', $tmplvar->value_id)->update([
+                        'value' => $value,
+                    ]);
+                } else {
+                    UserValue::create([
+                        'tmplvarid' => $tmplvar->id,
+                        'userid'    => $id,
+                        'value'     => $value,
+                    ]);
+                }
+            } else if ($tmplvar->value_id) {
+                UserValue::where('id', $tmplvar->value_id)->delete();
             }
         }
 
