@@ -72,7 +72,10 @@ return [
     ],
 
     'aliases' => [
+        'Arr' => Illuminate\Support\Arr::class,
+        'Artisan' => \Illuminate\Support\Facades\Artisan::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
+        'Cookie' => \Illuminate\Support\Facades\Cookie::class,
         'Config' => Illuminate\Support\Facades\Config::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
         'DB' => Illuminate\Support\Facades\DB::class,
@@ -86,8 +89,12 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Validator' => \Illuminate\Support\Facades\Validator::class,
         'Response' => \Illuminate\Support\Facades\Response::class,
+        'Redirect' => \Illuminate\Support\Facades\Redirect::class,
+        'Redis' => \Illuminate\Support\Facades\Redis::class,
         'Route' => Illuminate\Support\Facades\Route::class,
         'Request' => Illuminate\Support\Facades\Request::class,
+        'Session' => Illuminate\Support\Facades\Session::class,
+        'Str' => Illuminate\Support\Str::class,
         /**
          * EvolutionCMS
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
