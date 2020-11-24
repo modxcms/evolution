@@ -15,7 +15,7 @@ class SiteUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'make:site {command_site=update}';
+    protected $signature = 'make:site {command_site=update} {version=null}';
     /**
      * The console command description.
      *
@@ -90,13 +90,15 @@ class SiteUpdateCommand extends Command
                 }
             }
         }
-        $git['version'] = '';
-        if (isset($git['stable'])) {
-            if (version_compare($currentVersion['version'], $git['stable'], '!=')) {
-                $git['version'] = $git['stable'];
+        $git['version'] = $this->argument('version');
+
+        if ($git['version'] == 'null') {
+            if (isset($git['stable'])) {
+                if (version_compare($currentVersion['version'], $git['stable'], '!=')) {
+                    $git['version'] = $git['stable'];
+                }
             }
         }
-
         if ($git['version'] != '') {
             $url = 'https://github.com/evolution-cms/evolution/archive/' . $git['version'] . '.zip';
             echo "Start download EvolutionCMS\n";
