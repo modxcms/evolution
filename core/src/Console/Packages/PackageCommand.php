@@ -122,7 +122,7 @@ class PackageCommand extends Command
     public function parseComposerServiceProvider(string $composer)
     {
         $data = json_decode(file_get_contents($composer), true);
-        if (isset($data['extra']['laravel']['providers'])) {
+        if (isset($data['extra']['laravel']['providers']) && is_array($data['extra']['laravel']['providers'])) {
             foreach ($data['extra']['laravel']['providers'] as $value) {
                 $this->process($value);
             }
