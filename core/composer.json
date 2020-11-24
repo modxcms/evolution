@@ -39,6 +39,7 @@
     "doctrine/dbal": "~2.3",
     "phpoption/phpoption": "*",
     "vlucas/phpdotenv": "^5.2",
+    "guzzlehttp/guzzle": "^7.0.1",
     "composer/composer": "*",
     "illuminate/cache": "8.*",
     "illuminate/redis": "8.*",
