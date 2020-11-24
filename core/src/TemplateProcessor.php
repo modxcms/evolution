@@ -57,6 +57,9 @@ class TemplateProcessor
                         $className = $baseClassName;
                     }
                     $this->core->make($className);
+                    if (method_exists($controller, 'main')) {
+                        $this->core->call([$controller, 'main']);
+                    }
                 }
                 $template = $templateAlias;
                 break;
