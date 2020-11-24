@@ -199,10 +199,10 @@ trait InteractsWithIO
      * @param  array  $choices
      * @param  string|null  $default
      * @param  mixed|null  $attempts
-     * @param  bool|null  $multiple
-     * @return string
+     * @param  bool  $multiple
+     * @return string|array
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = false)
     {
         $question = new ChoiceQuestion($question, $choices, $default);
 
@@ -332,7 +332,18 @@ trait InteractsWithIO
         $this->comment('*     '.$string.'     *');
         $this->comment(str_repeat('*', $length));
 
-        $this->output->newLine();
+        $this->newLine();
+    }
+
+    /**
+     * Write a blank line.
+     *
+     * @param  int  $count
+     * @return void
+     */
+    public function newLine($count = 1)
+    {
+        $this->output->newLine($count);
     }
 
     /**

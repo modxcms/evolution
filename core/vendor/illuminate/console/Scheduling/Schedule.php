@@ -19,6 +19,14 @@ class Schedule
 {
     use Macroable;
 
+    const SUNDAY = 0;
+    const MONDAY = 1;
+    const TUESDAY = 2;
+    const WEDNESDAY = 3;
+    const THURSDAY = 4;
+    const FRIDAY = 5;
+    const SATURDAY = 6;
+
     /**
      * All of the events on the schedule.
      *
@@ -278,11 +286,11 @@ class Schedule
      */
     public function useCache($store)
     {
-        if ($this->eventMutex instanceof CacheEventMutex) {
+        if ($this->eventMutex instanceof CacheAware) {
             $this->eventMutex->useStore($store);
         }
 
-        if ($this->schedulingMutex instanceof CacheSchedulingMutex) {
+        if ($this->schedulingMutex instanceof CacheAware) {
             $this->schedulingMutex->useStore($store);
         }
 
