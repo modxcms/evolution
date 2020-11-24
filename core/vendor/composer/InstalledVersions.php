@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '83a6c0f344c5ab8dce07bd3e2f709008c0763a1a',
+    'reference' => 'bd62d51b413ee52375e447cc9c00d01aa1bc6654',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -148,7 +148,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '83a6c0f344c5ab8dce07bd3e2f709008c0763a1a',
+      'reference' => 'bd62d51b413ee52375e447cc9c00d01aa1bc6654',
     ),
     'graham-campbell/result-type' => 
     array (
@@ -302,6 +302,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'd406237ea39f6c655569551a8bfb2d00ace6e43d',
+    ),
+    'illuminate/redis' => 
+    array (
+      'pretty_version' => 'v8.15.0',
+      'version' => '8.15.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '478a8b15d05a7b0b068b6d3215424a6cfb231095',
     ),
     'illuminate/routing' => 
     array (

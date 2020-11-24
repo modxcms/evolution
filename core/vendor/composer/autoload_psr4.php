@@ -56,6 +56,7 @@ return array(
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/collections', $vendorDir . '/illuminate/macroable', $vendorDir . '/illuminate/support'),
     'Illuminate\\Session\\' => array($vendorDir . '/illuminate/session'),
     'Illuminate\\Routing\\' => array($vendorDir . '/illuminate/routing'),
+    'Illuminate\\Redis\\' => array($vendorDir . '/illuminate/redis'),
     'Illuminate\\Pipeline\\' => array($vendorDir . '/illuminate/pipeline'),
     'Illuminate\\Pagination\\' => array($vendorDir . '/illuminate/pagination'),
     'Illuminate\\Log\\' => array($vendorDir . '/illuminate/log'),

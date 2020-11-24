@@ -41,6 +41,7 @@
     "vlucas/phpdotenv": "^5.2",
     "composer/composer": "*",
     "illuminate/cache": "8.*",
+    "illuminate/redis": "8.*",
     "illuminate/config": "8.*",
     "illuminate/console": "8.*",
     "illuminate/container": "8.*",

@@ -120,6 +120,7 @@ class ComposerStaticInit9a0e7f1f9b7ed15b37b8fab870974589
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Session\\' => 19,
             'Illuminate\\Routing\\' => 19,
+            'Illuminate\\Redis\\' => 17,
             'Illuminate\\Pipeline\\' => 20,
             'Illuminate\\Pagination\\' => 22,
             'Illuminate\\Log\\' => 15,
@@ -369,6 +370,10 @@ class ComposerStaticInit9a0e7f1f9b7ed15b37b8fab870974589
         'Illuminate\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/routing',
+        ),
+        'Illuminate\\Redis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/redis',
         ),
         'Illuminate\\Pipeline\\' => 
         array (
@@ -2011,6 +2016,20 @@ class ComposerStaticInit9a0e7f1f9b7ed15b37b8fab870974589
         'Illuminate\\Pipeline\\Hub' => __DIR__ . '/..' . '/illuminate/pipeline/Hub.php',
         'Illuminate\\Pipeline\\Pipeline' => __DIR__ . '/..' . '/illuminate/pipeline/Pipeline.php',
         'Illuminate\\Pipeline\\PipelineServiceProvider' => __DIR__ . '/..' . '/illuminate/pipeline/PipelineServiceProvider.php',
+        'Illuminate\\Redis\\Connections\\Connection' => __DIR__ . '/..' . '/illuminate/redis/Connections/Connection.php',
+        'Illuminate\\Redis\\Connections\\PhpRedisClusterConnection' => __DIR__ . '/..' . '/illuminate/redis/Connections/PhpRedisClusterConnection.php',
+        'Illuminate\\Redis\\Connections\\PhpRedisConnection' => __DIR__ . '/..' . '/illuminate/redis/Connections/PhpRedisConnection.php',
+        'Illuminate\\Redis\\Connections\\PredisClusterConnection' => __DIR__ . '/..' . '/illuminate/redis/Connections/PredisClusterConnection.php',
+        'Illuminate\\Redis\\Connections\\PredisConnection' => __DIR__ . '/..' . '/illuminate/redis/Connections/PredisConnection.php',
+        'Illuminate\\Redis\\Connectors\\PhpRedisConnector' => __DIR__ . '/..' . '/illuminate/redis/Connectors/PhpRedisConnector.php',
+        'Illuminate\\Redis\\Connectors\\PredisConnector' => __DIR__ . '/..' . '/illuminate/redis/Connectors/PredisConnector.php',
+        'Illuminate\\Redis\\Events\\CommandExecuted' => __DIR__ . '/..' . '/illuminate/redis/Events/CommandExecuted.php',
+        'Illuminate\\Redis\\Limiters\\ConcurrencyLimiter' => __DIR__ . '/..' . '/illuminate/redis/Limiters/ConcurrencyLimiter.php',
+        'Illuminate\\Redis\\Limiters\\ConcurrencyLimiterBuilder' => __DIR__ . '/..' . '/illuminate/redis/Limiters/ConcurrencyLimiterBuilder.php',
+        'Illuminate\\Redis\\Limiters\\DurationLimiter' => __DIR__ . '/..' . '/illuminate/redis/Limiters/DurationLimiter.php',
+        'Illuminate\\Redis\\Limiters\\DurationLimiterBuilder' => __DIR__ . '/..' . '/illuminate/redis/Limiters/DurationLimiterBuilder.php',
+        'Illuminate\\Redis\\RedisManager' => __DIR__ . '/..' . '/illuminate/redis/RedisManager.php',
+        'Illuminate\\Redis\\RedisServiceProvider' => __DIR__ . '/..' . '/illuminate/redis/RedisServiceProvider.php',
         'Illuminate\\Routing\\AbstractRouteCollection' => __DIR__ . '/..' . '/illuminate/routing/AbstractRouteCollection.php',
         'Illuminate\\Routing\\CompiledRouteCollection' => __DIR__ . '/..' . '/illuminate/routing/CompiledRouteCollection.php',
         'Illuminate\\Routing\\Console\\ControllerMakeCommand' => __DIR__ . '/..' . '/illuminate/routing/Console/ControllerMakeCommand.php',

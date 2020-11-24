@@ -2036,6 +2036,63 @@
             "install-path": "../illuminate/pipeline"
         },
         {
+            "name": "illuminate/redis",
+            "version": "v8.15.0",
+            "version_normalized": "8.15.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/redis.git",
+                "reference": "478a8b15d05a7b0b068b6d3215424a6cfb231095"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/redis/zipball/478a8b15d05a7b0b068b6d3215424a6cfb231095",
+                "reference": "478a8b15d05a7b0b068b6d3215424a6cfb231095",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/collections": "^8.0",
+                "illuminate/contracts": "^8.0",
+                "illuminate/macroable": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3|^8.0"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the phpredis connector (^4.0|^5.0).",
+                "predis/predis": "Required to use the predis connector (^1.1.2)."
+            },
+            "time": "2020-10-29T15:17:19+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Redis\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Redis package.",
+            "homepage": "https://laravel.com",
+            "support": {
+                "issues": "https://github.com/laravel/framework/issues",
+                "source": "https://github.com/laravel/framework"
+            },
+            "install-path": "../illuminate/redis"
+        },
+        {
             "name": "illuminate/routing",
             "version": "v8.15.0",
             "version_normalized": "8.15.0.0",
