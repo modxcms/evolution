@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4e0e50fab5de8b730b018546f9d2bc4dbb0ddcc5',
+    'reference' => '42225d3df77d4f81fb2aa69fa33ef25aa1d2bbe1',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -135,7 +135,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4e0e50fab5de8b730b018546f9d2bc4dbb0ddcc5',
+      'reference' => '42225d3df77d4f81fb2aa69fa33ef25aa1d2bbe1',
     ),
     'graham-campbell/result-type' => 
     array (
