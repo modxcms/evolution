@@ -604,7 +604,7 @@ if (isset($action)) {
                                 ]);
                             }
 
-                            if ($parent != $parentOld) {
+                            if ($parent != $parentOld && $parentOld > 0) {
                                 // check children docs and set parent isfolder
                                 SiteContent::where('id', $parentOld)->update([
                                     'isfolder' => SiteContent::where('parent', $parentOld)->count() > 0 ? 1 : 0,
