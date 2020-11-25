@@ -2096,7 +2096,7 @@ class SiteContent extends Eloquent\Model
             $cast = !empty($parts[4]) ? $parts[4] : '';
             $field = 'tv_' . $tvname . '.value';
             if ($type == 'tvd') {
-                $field = DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
+                $field = \DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
             }
             switch (true) {
                 case ($op == 'in'):
