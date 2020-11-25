@@ -14,6 +14,7 @@ return [
         'evoAdminThemeUrl' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminThemeUrl'],
         'evoAdminThemeName' => [EvolutionCMS\Support\BladeDirective::class, 'evoAdminThemeName'],
         'makeUrl' => [EvolutionCMS\Support\BladeDirective::class, 'makeUrl'],
+        'csrf' => [EvolutionCMS\Support\BladeDirective::class, 'csrf'],
 
     ]
 ];

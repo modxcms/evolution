@@ -38,9 +38,13 @@ class BladeDirective
         return '<?php echo ManagerTheme::getTheme();?>';
     }
    
-   public static function makeUrl($id) : string
+    public static function makeUrl($id) : string
     {
         return '<?php echo app("UrlProcessor")->makeUrl(' . $id . ');?>';
+    }
+    public static function csrf() : string
+    {
+        return '<?php echo csrf_field();?>';
     }
 
 }
