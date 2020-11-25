@@ -173,10 +173,11 @@ if (! function_exists('csrf_token')) {
      */
     function csrf_token()
     {
-        $session = app('session');
-
-        if (isset($session)) {
-            return $session->token();
+        if (isset($_SESSION)) {
+            if (!$_SESSION['_token']) {
+                $_SESSION['_token'] = Str::random(40);
+            }
+            return $_SESSION['_token'];
         }
 
         throw new RuntimeException('Application session store not set.');

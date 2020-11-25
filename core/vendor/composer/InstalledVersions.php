@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '42225d3df77d4f81fb2aa69fa33ef25aa1d2bbe1',
+    'reference' => '0885c770680c30ca185ca40a70369a1f1da0c19f',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -148,7 +148,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '42225d3df77d4f81fb2aa69fa33ef25aa1d2bbe1',
+      'reference' => '0885c770680c30ca185ca40a70369a1f1da0c19f',
     ),
     'graham-campbell/result-type' => 
     array (
