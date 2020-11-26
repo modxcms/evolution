@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '0885c770680c30ca185ca40a70369a1f1da0c19f',
+    'reference' => 'a9cc2a6bd2afe1c033088eeb3458fd5ba18b3a20',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -148,7 +148,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '0885c770680c30ca185ca40a70369a1f1da0c19f',
+      'reference' => 'a9cc2a6bd2afe1c033088eeb3458fd5ba18b3a20',
     ),
     'graham-campbell/result-type' => 
     array (
@@ -197,8 +197,8 @@ private static $installed = array (
     ),
     'illuminate/bus' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -206,8 +206,8 @@ private static $installed = array (
     ),
     'illuminate/cache' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -215,8 +215,8 @@ private static $installed = array (
     ),
     'illuminate/collections' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -224,8 +224,8 @@ private static $installed = array (
     ),
     'illuminate/config' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -233,8 +233,8 @@ private static $installed = array (
     ),
     'illuminate/console' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -242,8 +242,8 @@ private static $installed = array (
     ),
     'illuminate/container' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -251,8 +251,8 @@ private static $installed = array (
     ),
     'illuminate/contracts' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -260,17 +260,17 @@ private static $installed = array (
     ),
     'illuminate/database' => 
     array (
-      'pretty_version' => 'v8.15.0',
-      'version' => '8.15.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b113e3e4ce6e17569739cc3bbdf7c92a0686a0b9',
+      'reference' => '2c20f8e96ab2f6b667e17fb3e6a7331f14dc3c97',
     ),
     'illuminate/events' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -278,8 +278,8 @@ private static $installed = array (
     ),
     'illuminate/filesystem' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -287,8 +287,8 @@ private static $installed = array (
     ),
     'illuminate/http' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -296,8 +296,8 @@ private static $installed = array (
     ),
     'illuminate/log' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -305,8 +305,8 @@ private static $installed = array (
     ),
     'illuminate/macroable' => 
     array (
-      'pretty_version' => 'v8.15.0',
-      'version' => '8.15.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -314,8 +314,8 @@ private static $installed = array (
     ),
     'illuminate/pagination' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -323,8 +323,8 @@ private static $installed = array (
     ),
     'illuminate/pipeline' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -332,8 +332,8 @@ private static $installed = array (
     ),
     'illuminate/redis' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -341,8 +341,8 @@ private static $installed = array (
     ),
     'illuminate/routing' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -350,8 +350,8 @@ private static $installed = array (
     ),
     'illuminate/session' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -359,8 +359,8 @@ private static $installed = array (
     ),
     'illuminate/support' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -368,8 +368,8 @@ private static $installed = array (
     ),
     'illuminate/translation' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -377,8 +377,8 @@ private static $installed = array (
     ),
     'illuminate/validation' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -386,8 +386,8 @@ private static $installed = array (
     ),
     'illuminate/view' => 
     array (
-      'pretty_version' => 'v8.16.0',
-      'version' => '8.16.0.0',
+      'pretty_version' => 'v8.16.1',
+      'version' => '8.16.1.0',
       'aliases' => 
       array (
       ),
@@ -440,12 +440,12 @@ private static $installed = array (
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.1.8',
-      'version' => '6.1.8.0',
+      'pretty_version' => 'v6.2.0',
+      'version' => '6.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '917ab212fa00dc6eacbb26e8bc387ebe40993bc1',
+      'reference' => 'e38888a75c070304ca5514197d4847a59a5c853f',
     ),
     'phpoption/phpoption' => 
     array (
@@ -571,7 +571,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '563faed0e5e24a5b639fbd30d8f3921bb11fccc0',
+      'reference' => 'fa05999280434eacf621cc78ab9179d9394c7998',
     ),
     'rosell-dk/image-mime-type-guesser' => 
     array (

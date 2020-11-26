@@ -1426,8 +1426,8 @@
         },
         {
             "name": "illuminate/bus",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
@@ -1482,8 +1482,8 @@
         },
         {
             "name": "illuminate/cache",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
@@ -1542,8 +1542,8 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1599,8 +1599,8 @@
         },
         {
             "name": "illuminate/config",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -1650,8 +1650,8 @@
         },
         {
             "name": "illuminate/console",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
@@ -1713,8 +1713,8 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -1767,8 +1767,8 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1818,17 +1818,17 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v8.15.0",
-            "version_normalized": "8.15.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "b113e3e4ce6e17569739cc3bbdf7c92a0686a0b9"
+                "reference": "2c20f8e96ab2f6b667e17fb3e6a7331f14dc3c97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/b113e3e4ce6e17569739cc3bbdf7c92a0686a0b9",
-                "reference": "b113e3e4ce6e17569739cc3bbdf7c92a0686a0b9",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/2c20f8e96ab2f6b667e17fb3e6a7331f14dc3c97",
+                "reference": "2c20f8e96ab2f6b667e17fb3e6a7331f14dc3c97",
                 "shasum": ""
             },
             "require": {
@@ -1850,7 +1850,7 @@
                 "illuminate/pagination": "Required to paginate the result set (^8.0).",
                 "symfony/finder": "Required to use Eloquent model factories (^5.1)."
             },
-            "time": "2020-11-17T14:53:20+00:00",
+            "time": "2020-11-24T16:13:01+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1889,8 +1889,8 @@
         },
         {
             "name": "illuminate/events",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
@@ -1947,8 +1947,8 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -2012,8 +2012,8 @@
         },
         {
             "name": "illuminate/http",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
@@ -2073,8 +2073,8 @@
         },
         {
             "name": "illuminate/log",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/log.git",
@@ -2125,8 +2125,8 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v8.15.0",
-            "version_normalized": "8.15.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2174,8 +2174,8 @@
         },
         {
             "name": "illuminate/pagination",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pagination.git",
@@ -2227,8 +2227,8 @@
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
@@ -2278,8 +2278,8 @@
         },
         {
             "name": "illuminate/redis",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/redis.git",
@@ -2335,8 +2335,8 @@
         },
         {
             "name": "illuminate/routing",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/routing.git",
@@ -2401,8 +2401,8 @@
         },
         {
             "name": "illuminate/session",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
@@ -2460,8 +2460,8 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -2530,8 +2530,8 @@
         },
         {
             "name": "illuminate/translation",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -2585,8 +2585,8 @@
         },
         {
             "name": "illuminate/validation",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
@@ -2647,8 +2647,8 @@
         },
         {
             "name": "illuminate/view",
-            "version": "v8.16.0",
-            "version_normalized": "8.16.0.0",
+            "version": "v8.16.1",
+            "version_normalized": "8.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
@@ -3127,17 +3127,17 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.8",
-            "version_normalized": "6.1.8.0",
+            "version": "v6.2.0",
+            "version_normalized": "6.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1"
+                "reference": "e38888a75c070304ca5514197d4847a59a5c853f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
-                "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e38888a75c070304ca5514197d4847a59a5c853f",
+                "reference": "e38888a75c070304ca5514197d4847a59a5c853f",
                 "shasum": ""
             },
             "require": {
@@ -3147,9 +3147,12 @@
                 "php": ">=5.5.0"
             },
             "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
                 "doctrine/annotations": "^1.2",
-                "friendsofphp/php-cs-fixer": "^2.2",
-                "phpunit/phpunit": "^4.8 || ^5.7"
+                "phpcompatibility/php-compatibility": "^9.3.5",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.5.6",
+                "yoast/phpunit-polyfills": "^0.2.0"
             },
             "suggest": {
                 "ext-mbstring": "Needed to send email in multibyte encoding charset",
@@ -3159,7 +3162,7 @@
                 "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
                 "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
             },
-            "time": "2020-10-09T14:55:58+00:00",
+            "time": "2020-11-25T15:24:57+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3191,11 +3194,11 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.1.8"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.2.0"
             },
             "funding": [
                 {
-                    "url": "https://github.com/synchro",
+                    "url": "https://github.com/Synchro",
                     "type": "github"
                 }
             ],
@@ -3707,12 +3710,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "563faed0e5e24a5b639fbd30d8f3921bb11fccc0"
+                "reference": "fa05999280434eacf621cc78ab9179d9394c7998"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/563faed0e5e24a5b639fbd30d8f3921bb11fccc0",
-                "reference": "563faed0e5e24a5b639fbd30d8f3921bb11fccc0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fa05999280434eacf621cc78ab9179d9394c7998",
+                "reference": "fa05999280434eacf621cc78ab9179d9394c7998",
                 "shasum": ""
             },
             "conflict": {
@@ -3836,7 +3839,7 @@
                 "paragonie/random_compat": "<2",
                 "passbolt/passbolt_api": "<2.11",
                 "paypal/merchant-sdk-php": "<3.12",
-                "pear/archive_tar": "<1.4.4",
+                "pear/archive_tar": "<1.4.11",
                 "personnummer/personnummer": "<3.0.2",
                 "phpfastcache/phpfastcache": ">=5,<5.0.13",
                 "phpmailer/phpmailer": "<6.1.6",
@@ -3985,7 +3988,7 @@
                 "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
                 "zfr/zfr-oauth2-server-module": "<0.1.2"
             },
-            "time": "2020-11-23T21:01:44+00:00",
+            "time": "2020-11-26T07:02:13+00:00",
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [

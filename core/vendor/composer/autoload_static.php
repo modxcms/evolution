@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
+class ComposerStaticInit54490a7f60bf043431313d0e500ccfe6
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -1446,6 +1446,7 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
         'EvolutionCMS\\Exceptions\\ServiceValidationException' => __DIR__ . '/../..' . '/src/Exceptions/ServiceValidationException.php',
         'EvolutionCMS\\Extensions\\Collection' => __DIR__ . '/../..' . '/src/Extensions/Collection.php',
         'EvolutionCMS\\Extensions\\Router' => __DIR__ . '/../..' . '/src/Extensions/Router.php',
+        'EvolutionCMS\\Facades\\AuthServices' => __DIR__ . '/../..' . '/src/Facades/AuthServices.php',
         'EvolutionCMS\\Facades\\Console' => __DIR__ . '/../..' . '/src/Facades/Console.php',
         'EvolutionCMS\\Facades\\DocBlock' => __DIR__ . '/../..' . '/src/Facades/DocBlock.php',
         'EvolutionCMS\\Facades\\DocumentManager' => __DIR__ . '/../..' . '/src/Facades/DocumentManager.php',
@@ -1499,6 +1500,7 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
         'EvolutionCMS\\ManagerTheme' => __DIR__ . '/../..' . '/src/ManagerTheme.php',
         'EvolutionCMS\\Middleware\\CheckAuthToken' => __DIR__ . '/../..' . '/src/Middleware/CheckAuthToken.php',
         'EvolutionCMS\\Middleware\\CheckManagerAuth' => __DIR__ . '/../..' . '/src/Middleware/CheckManagerAuth.php',
+        'EvolutionCMS\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/src/Middleware/VerifyCsrfToken.php',
         'EvolutionCMS\\Models\\ActiveUser' => __DIR__ . '/../..' . '/src/Models/ActiveUser.php',
         'EvolutionCMS\\Models\\ActiveUserLock' => __DIR__ . '/../..' . '/src/Models/ActiveUserLock.php',
         'EvolutionCMS\\Models\\ActiveUserSession' => __DIR__ . '/../..' . '/src/Models/ActiveUserSession.php',
@@ -1540,6 +1542,7 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
         'EvolutionCMS\\PgSqlDatabase' => __DIR__ . '/../..' . '/src/PgSqlDatabase.php',
         'EvolutionCMS\\ProviderRepository' => __DIR__ . '/../..' . '/src/ProviderRepository.php',
         'EvolutionCMS\\Providers\\ArtisanServiceProvider' => __DIR__ . '/../..' . '/src/Providers/ArtisanServiceProvider.php',
+        'EvolutionCMS\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/src/Providers/AuthServiceProvider.php',
         'EvolutionCMS\\Providers\\BladeServiceProvider' => __DIR__ . '/../..' . '/src/Providers/BladeServiceProvider.php',
         'EvolutionCMS\\Providers\\ComposerServiceProvider' => __DIR__ . '/../..' . '/src/Providers/ComposerServiceProvider.php',
         'EvolutionCMS\\Providers\\DLTemplateServiceProvider' => __DIR__ . '/../..' . '/src/Providers/DLTemplateServiceProvider.php',
@@ -1569,6 +1572,7 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
         'EvolutionCMS\\Providers\\UrlProcessorServiceProvider' => __DIR__ . '/../..' . '/src/Providers/UrlProcessorServiceProvider.php',
         'EvolutionCMS\\Providers\\UserManagerServiceProvider' => __DIR__ . '/../..' . '/src/Providers/UserManagerServiceProvider.php',
         'EvolutionCMS\\ServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider.php',
+        'EvolutionCMS\\Services\\AuthServices' => __DIR__ . '/../..' . '/src/Services/AuthServices.php',
         'EvolutionCMS\\Services\\DocumentManager' => __DIR__ . '/../..' . '/src/Services/DocumentManager.php',
         'EvolutionCMS\\Services\\Documents\\DocumentClearCart' => __DIR__ . '/../..' . '/src/Services/Documents/DocumentClearCart.php',
         'EvolutionCMS\\Services\\Documents\\DocumentCreate' => __DIR__ . '/../..' . '/src/Services/Documents/DocumentCreate.php',
@@ -1930,6 +1934,7 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
         'Illuminate\\Database\\Connectors\\PostgresConnector' => __DIR__ . '/..' . '/illuminate/database/Connectors/PostgresConnector.php',
         'Illuminate\\Database\\Connectors\\SQLiteConnector' => __DIR__ . '/..' . '/illuminate/database/Connectors/SQLiteConnector.php',
         'Illuminate\\Database\\Connectors\\SqlServerConnector' => __DIR__ . '/..' . '/illuminate/database/Connectors/SqlServerConnector.php',
+        'Illuminate\\Database\\Console\\DbCommand' => __DIR__ . '/..' . '/illuminate/database/Console/DbCommand.php',
         'Illuminate\\Database\\Console\\DumpCommand' => __DIR__ . '/..' . '/illuminate/database/Console/DumpCommand.php',
         'Illuminate\\Database\\Console\\Factories\\FactoryMakeCommand' => __DIR__ . '/..' . '/illuminate/database/Console/Factories/FactoryMakeCommand.php',
         'Illuminate\\Database\\Console\\Migrations\\BaseCommand' => __DIR__ . '/..' . '/illuminate/database/Console/Migrations/BaseCommand.php',
@@ -3421,9 +3426,9 @@ class ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit5cc5ed78365f94fc936c8e6a57657f58::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit54490a7f60bf043431313d0e500ccfe6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit54490a7f60bf043431313d0e500ccfe6::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit54490a7f60bf043431313d0e500ccfe6::$classMap;
 
         }, null, ClassLoader::class);
     }
