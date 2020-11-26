@@ -203,11 +203,6 @@ class SiteContent extends Eloquent\Model
             $entity->editedon = time();
             if ($entity->isDirty($entity->getPositionColumn())) {
                 $latest = static::getLatestPosition($entity);
-
-                if (!$entity->isMoved) {
-                    $latest--;
-                }
-
                 $entity->menuindex = max(0, min($entity->menuindex, $latest));
             } elseif (!$entity->exists) {
                 $entity->menuindex = static::getLatestPosition($entity);
