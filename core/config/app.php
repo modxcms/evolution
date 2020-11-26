@@ -43,6 +43,7 @@ return [
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
         'Laravel_Validator' => Illuminate\Validation\ValidationServiceProvider::class,
 
+        'Evolution_Auth' => EvolutionCMS\Providers\AuthServiceProvider::class,
         'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
         'Evolution_Pagination' => EvolutionCMS\Providers\PaginationServiceProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
@@ -100,6 +101,7 @@ return [
          * EvolutionCMS
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
          */
+        'Auth' => \EvolutionCMS\Facades\AuthServices::class,
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
         'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
