@@ -390,3 +390,16 @@ if (! function_exists('validator')) {
         return $factory->make($data, $rules, $messages, $customAttributes);
     }
 }
+
+if (! function_exists('database_path')) {
+    /**
+     * Get the database path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function database_path($path = '')
+    {
+        return app()->databasePath($path);
+    }
+}

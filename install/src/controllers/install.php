@@ -198,11 +198,13 @@ try {
                     $count = count($classes) - 2;
                     $class = $classes[$count];
                 }
-                Console::call('db:seed', ['--class' => $class]);
+
+                Console::call('db:seed', ['--class' => '\\'.$class]);
+
 
             }
             $field = array();
-            $field['password'] = $modx->getPasswordHash()->HashPassword($adminpass);
+            $field['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($adminpass);
             $field['username'] = $adminname;
             $managerUser = EvolutionCMS\Models\User::create($field);
             $internalKey = $managerUser->getKey();
