@@ -14,12 +14,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.x-dev',
-    'version' => '3.9999999.9999999.9999999-dev',
+    'pretty_version' => '1.0.0+no-version-set',
+    'version' => '1.0.0.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'a9cc2a6bd2afe1c033088eeb3458fd5ba18b3a20',
+    'reference' => NULL,
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -143,12 +143,12 @@ private static $installed = array (
     ),
     'evolutioncms/core' => 
     array (
-      'pretty_version' => '3.x-dev',
-      'version' => '3.9999999.9999999.9999999-dev',
+      'pretty_version' => '1.0.0+no-version-set',
+      'version' => '1.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a9cc2a6bd2afe1c033088eeb3458fd5ba18b3a20',
+      'reference' => NULL,
     ),
     'graham-campbell/result-type' => 
     array (
