@@ -19,7 +19,7 @@ $link_attributes = $_POST['link_attributes'];
 $isfolder = (int)$_POST['isfolder'];
 $richtext = (int)$_POST['richtext'];
 $published = (int)$_POST['published'];
-$parent = (int)get_by_key($_POST, 'parent', 0, 'is_scalar');
+$parentId = $parent = (int)get_by_key($_POST, 'parent', 0, 'is_scalar');
 $template = (int)$_POST['template'];
 $menuindex = !empty($_POST['menuindex']) ? (int)$_POST['menuindex'] : 0;
 $searchable = (int)$_POST['searchable'];
@@ -431,10 +431,10 @@ switch ($actionToTake) {
         if ($_POST['stay'] != '') {
             // weblink
             if ($_POST['mode'] == "72")
-                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "72&pid=$parent";
+                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "72&pid=$parentId";
             // document
             if ($_POST['mode'] == "4")
-                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
+                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parentId";
             $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
         } else {
             $header = "Location: index.php?a=3&id=$key&r=1";
@@ -646,10 +646,10 @@ switch ($actionToTake) {
                     $id = $_REQUEST['id'];
                     if ($type == "reference") {
                         // weblink
-                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "72&pid=$parent";
+                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "72&pid=$parentId";
                     } else {
                         // document
-                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
+                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parentId";
                     }
                     $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
                 } else {
