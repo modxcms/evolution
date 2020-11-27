@@ -3,6 +3,7 @@
 use Illuminate\Contracts\Container\Container;
 use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Exception;
+use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\ErrorHandler\Error\FatalError as FatalErrorException;
 use EvolutionCMS\Providers\TracyServiceProvider;
 /**
@@ -485,8 +486,7 @@ class ExceptionHandler
      */
     public function handleException(\Throwable $exception)
     {
-        echo $exception->getMessage();
-        exit();
+
         if (
             $exception instanceof ConnectException ||
             ($exception instanceof \PDOException && $exception->getCode() === 1045)
