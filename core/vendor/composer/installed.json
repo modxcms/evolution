@@ -3081,7 +3081,7 @@
                     ]
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Carbon\\": "src/Carbon/"
@@ -4345,7 +4345,7 @@
             },
             "time": "2020-11-28T11:24:18+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Console\\": ""
@@ -4493,7 +4493,7 @@
             },
             "time": "2020-10-28T21:46:03+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\ErrorHandler\\": ""
@@ -4581,7 +4581,7 @@
             },
             "time": "2020-11-01T16:14:45+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\EventDispatcher\\": ""
@@ -4728,7 +4728,7 @@
             },
             "time": "2020-11-12T09:58:18+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Filesystem\\": ""
@@ -4792,7 +4792,7 @@
             },
             "time": "2020-11-18T09:42:36+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Finder\\": ""
@@ -4950,7 +4950,7 @@
             },
             "time": "2020-11-27T06:13:25+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\HttpFoundation\\": ""
@@ -5065,7 +5065,7 @@
             },
             "time": "2020-11-30T05:54:18+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\HttpKernel\\": ""
@@ -5144,7 +5144,7 @@
             },
             "time": "2020-10-30T14:55:39+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Mime\\": ""
@@ -5886,7 +5886,7 @@
             },
             "time": "2020-11-02T15:47:15+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Process\\": ""
@@ -5973,7 +5973,7 @@
             },
             "time": "2020-11-27T00:39:34+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Routing\\": ""
@@ -6136,7 +6136,7 @@
             },
             "time": "2020-10-24T12:08:07+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\String\\": ""
@@ -6240,7 +6240,7 @@
             },
             "time": "2020-11-28T11:24:18+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "Resources/functions.php"
@@ -6408,7 +6408,7 @@
                 "Resources/bin/var-dump-server"
             ],
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "Resources/functions/dump.php"
@@ -6705,7 +6705,7 @@
             "version_normalized": "dev-feature/composer-v2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:mcaskill/composer-merge-plugin.git",
+                "url": "https://github.com/mcaskill/composer-merge-plugin.git",
                 "reference": "a8c5a89c6057c6861c79f232ef0b311dc2ec4aa6"
             },
             "dist": {
@@ -6756,6 +6756,9 @@
                 }
             ],
             "description": "Composer plugin to merge multiple composer.json files",
+            "support": {
+                "source": "https://github.com/mcaskill/composer-merge-plugin/tree/feature/composer-v2"
+            },
             "install-path": "../wikimedia/composer-merge-plugin"
         }
     ],
