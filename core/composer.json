@@ -57,7 +57,7 @@
     "illuminate/view": "8.*",
     "illuminate/validation": "8.*",
     "illuminate/http": "8.*",
-    "league/flysystem": "^2.0.0",
+    "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.*",
     "tracy/tracy": "~2.5",
     "wikimedia/composer-merge-plugin": "dev-feature/composer-v2 as 1.5.0",
