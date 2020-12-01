@@ -885,7 +885,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                 if ($group_tvs) {
                                     $tvs = $tvs->select('site_tmplvars.*',
-                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
+                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category_name', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
                                     $tvs = $tvs->leftJoin('categories', 'categories.id', '=', 'site_tmplvars.category');
                                     //$sort = 'category_rank,category_id,' . $sort;
                                     $tvs = $tvs->orderBy('category_rank', 'ASC');
@@ -913,6 +913,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $i = $ii = 0;
                                     $tab = '';
                                     foreach ($tvsArray as $row) {
+                                        $row['category'] = $row['category_name'];
                                         if(!isset($row['category_id'])){
                                             $row['category_id'] = 0;
                                             $row['category'] = $_lang['no_category'];
