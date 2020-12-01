@@ -149,13 +149,13 @@ try {
     if ($installLevel === 2) {
         // check table prefix
         if ($installMode === 0) {
-            $siteContent = \EvolutionCMS\Models\SiteContent::query()->count();
-
-            if ($siteContent > 0) {
+            try {
+                $siteContent = \EvolutionCMS\Models\SiteContent::query()->count();
                 $errors += 1;
-            } else {
+            }catch (PDOException $exception){
                 $installLevel = 3;
             }
+
         } else {
             $installLevel = 3;
         }
@@ -494,7 +494,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $module = end($array);
                     // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
                     $moduleRecord = \EvolutionCMS\Models\SiteModule::query()->where('name', $name);
 
@@ -577,7 +578,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array1 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $plugin = end($array1);
                     $plugin = removeDocblock($plugin, 'plugin');
                     $pluginRecords = \EvolutionCMS\Models\SitePlugin::query()->where('name', $name);
 
@@ -704,7 +706,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
+                    $array2 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent));
+                    $snippet = end($array2);
                     $snippet = removeDocblock($snippet, 'snippet');
                     $snippetRecord = \EvolutionCMS\Models\SiteSnippet::where('name', $name);
 
