@@ -302,12 +302,13 @@ class InstallEvo
 
     public function checkIssetTablePrefix()
     {
+        try {
         $result = $this->dbh->query("SELECT COUNT(*) FROM {$this->tablePrefix}site_content");
-        if ($this->dbh->errorCode() == 0) {
             echo 'table prefix already exists';
             $this->tablePrefix = '';
             $this->checkTablePrefix();
             $this->checkIssetTablePrefix();
+        } catch (\PDOException $exception) {
         }
     }
 
@@ -357,10 +358,9 @@ class InstallEvo
 
         @chmod($filename, 0777);
 
-        if (@ !$handle = fopen($filename, 'w')) {
+        if (!$handle = fopen($filename, 'w')) {
             $configFileFailed = true;
         }
-
         // write $somecontent to our opened file.
         if (@ fwrite($handle, $configString) === false) {
             $configFileFailed = true;

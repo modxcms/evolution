@@ -84,6 +84,7 @@ if (! defined('IN_INSTALL_MODE')) {
 @ini_set('session.use_only_cookies',1);
 
 require $config['core'] . '/bootstrap.php';
+
 if (IN_INSTALL_MODE == false) {
     header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
     header('Cache-Control: private, must-revalidate');
