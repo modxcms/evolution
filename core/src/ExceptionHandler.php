@@ -6,6 +6,7 @@ use Exception;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\ErrorHandler\Error\FatalError as FatalErrorException;
 use EvolutionCMS\Providers\TracyServiceProvider;
+
 /**
  * @see: https://github.com/laravel/framework/blob/5.6/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php
  */
@@ -14,14 +15,14 @@ class ExceptionHandler
     /**
      * Create a new exception handler instance.
      *
-     * @param  Container $container
+     * @param Container $container
      * @return void
      */
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->container->register(TracyServiceProvider::class);
-        if (! $this->container['config']->get('tracy.active')) {
+        if (!$this->container['config']->get('tracy.active')) {
             $this->registerHanlders();
         }
     }
@@ -36,8 +37,8 @@ class ExceptionHandler
     /**
      * Handle the PHP shutdown event.
      *
-     * @deprecated
      * @return void
+     * @deprecated
      */
     public function handleShutdown()
     {
@@ -50,21 +51,21 @@ class ExceptionHandler
     /**
      * Create a new fatal exception instance from an error array.
      *
-     * @param  array $error
-     * @param  int|null $traceOffset
-     * @return \Symfony\Component\Debug\Exception\FatalErrorException
+     * @param array $error
+     * @param int|null $traceOffset
+     * @return FatalErrorException
      */
     protected function fatalExceptionFromError(array $error, $traceOffset = null)
     {
         return new FatalErrorException(
-            $error['message'], $error['type'], 0, $error['file'], $error['line'], $traceOffset
+            $error['message'], $error['type'], $error
         );
     }
 
     /**
      * Determine if the error type is fatal.
      *
-     * @param  int $type
+     * @param int $type
      * @return bool
      */
     protected function isFatal($type)
@@ -73,6 +74,11 @@ class ExceptionHandler
     }
 
     /**
+     * @param int $nr The PHP error level as per http://www.php.net/manual/en/errorfunc.constants.php
+     * @param string $text Error message
+     * @param string $file File where the error was detected
+     * @param string $line Line number within $file
+     * @return boolean
      * @deprecated
      * PHP error handler set by http://www.php.net/manual/en/function.set-error-handler.php
      *
@@ -81,14 +87,14 @@ class ExceptionHandler
      *  - the PHP error level is 0, or
      *  - the PHP error level is 8 (E_NOTICE) and stopOnNotice is false
      *
-     * @param int $nr The PHP error level as per http://www.php.net/manual/en/errorfunc.constants.php
-     * @param string $text Error message
-     * @param string $file File where the error was detected
-     * @param string $line Line number within $file
-     * @return boolean
      */
     public function phpError($nr, $text, $file, $line)
     {
+        echo $nr;
+        echo $text;
+        echo $file;
+        echo $line;
+        exit();
         if (error_reporting() == 0 || $nr == 0) {
             return true;
         }
@@ -157,7 +163,8 @@ class ExceptionHandler
         $line = '',
         $output = '',
         $backtrace = array()
-    ) {
+    )
+    {
         if (0 < $this->container->messageQuitCount) {
             return;
         }
@@ -172,9 +179,13 @@ class ExceptionHandler
 
         $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
         $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
-        $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
-        $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES,
-            $this->container->getConfig('modx_charset'));
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
+            $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES,
+                $this->container->getConfig('modx_charset'));
+        } else {
+            $request_uri = '';
+        }
         $ua = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES,
             $this->container->getConfig('modx_charset'));
         $referer = $this->container->getPhpCompat()->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES,
@@ -194,21 +205,21 @@ class ExceptionHandler
         }
 
         $errortype = array(
-            E_ERROR             => "ERROR",
-            E_WARNING           => "WARNING",
-            E_PARSE             => "PARSING ERROR",
-            E_NOTICE            => "NOTICE",
-            E_CORE_ERROR        => "CORE ERROR",
-            E_CORE_WARNING      => "CORE WARNING",
-            E_COMPILE_ERROR     => "COMPILE ERROR",
-            E_COMPILE_WARNING   => "COMPILE WARNING",
-            E_USER_ERROR        => "USER ERROR",
-            E_USER_WARNING      => "USER WARNING",
-            E_USER_NOTICE       => "USER NOTICE",
-            E_STRICT            => "STRICT NOTICE",
+            E_ERROR => "ERROR",
+            E_WARNING => "WARNING",
+            E_PARSE => "PARSING ERROR",
+            E_NOTICE => "NOTICE",
+            E_CORE_ERROR => "CORE ERROR",
+            E_CORE_WARNING => "CORE WARNING",
+            E_COMPILE_ERROR => "COMPILE ERROR",
+            E_COMPILE_WARNING => "COMPILE WARNING",
+            E_USER_ERROR => "USER ERROR",
+            E_USER_WARNING => "USER WARNING",
+            E_USER_NOTICE => "USER NOTICE",
+            E_STRICT => "STRICT NOTICE",
             E_RECOVERABLE_ERROR => "RECOVERABLE ERROR",
-            E_DEPRECATED        => "DEPRECATED",
-            E_USER_DEPRECATED   => "USER DEPRECATED"
+            E_DEPRECATED => "DEPRECATED",
+            E_USER_DEPRECATED => "USER DEPRECATED"
         );
 
         if (!empty($nr) || !empty($file)) {
@@ -250,13 +261,13 @@ class ExceptionHandler
 
         if ($this->container->getManagerApi()->action) {
             $actionName = Legacy\LogHandler::getAction($this->container->getManagerApi()->action);
-            if (! empty($actionName)) {
+            if (!empty($actionName)) {
                 $actionName = ' - ' . $actionName;
             }
 
             $table[] = array('Manager action', $this->container->getManagerApi()->action . $actionName);
         }
-        
+
         if (preg_match('~^[1-9][0-9]*$~', $this->container->documentIdentifier)) {
             $resource = $this->container->getDocumentObject('id', $this->container->documentIdentifier);
             $url = $this->container->makeUrl($this->container->documentIdentifier, '', '', 'full');
@@ -267,7 +278,9 @@ class ExceptionHandler
         }
         $table[] = array('Referer', $referer);
         $table[] = array('User Agent', $ua);
-        $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $table[] = array('IP', $_SERVER['REMOTE_ADDR']);
+        }
         $table[] = array(
             'Current time',
             date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->container->getConfig('server_offset_time'))
@@ -369,7 +382,9 @@ class ExceptionHandler
         } else {
             echo 'Error';
         }
-        ob_end_flush();
+        if (!MODX_CLI) {
+            ob_end_flush();
+        }
         exit;
     }
 
@@ -420,40 +435,40 @@ class ExceptionHandler
                 $arg = $val['args'][$tmp - 1];
                 switch (true) {
                     case $arg === null:
-                        {
-                            $out = 'NULL';
-                            break;
-                        }
+                    {
+                        $out = 'NULL';
+                        break;
+                    }
                     case is_numeric($arg):
-                        {
-                            $out = $arg;
-                            break;
-                        }
+                    {
+                        $out = $arg;
+                        break;
+                    }
                     case is_scalar($arg):
-                        {
-                            $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->container->getPhpCompat()->htmlspecialchars(str_replace("'",
-                                    "\\'", $arg)) . "'");
-                            break;
-                        }
+                    {
+                        $out = strlen($arg) > 20 ? 'string $var' . $tmp : ("'" . $this->container->getPhpCompat()->htmlspecialchars(str_replace("'",
+                                "\\'", $arg)) . "'");
+                        break;
+                    }
                     case is_bool($arg):
-                        {
-                            $out = $arg ? 'TRUE' : 'FALSE';
-                            break;
-                        }
+                    {
+                        $out = $arg ? 'TRUE' : 'FALSE';
+                        break;
+                    }
                     case is_array($arg):
-                        {
-                            $out = 'array $var' . $tmp;
-                            break;
-                        }
+                    {
+                        $out = 'array $var' . $tmp;
+                        break;
+                    }
                     case is_object($arg):
-                        {
-                            $out = get_class($arg) . ' $var' . $tmp;
-                            break;
-                        }
+                    {
+                        $out = get_class($arg) . ' $var' . $tmp;
+                        break;
+                    }
                     default:
-                        {
-                            $out = '$var' . $tmp;
-                        }
+                    {
+                        $out = '$var' . $tmp;
+                    }
                 }
                 $tmp++;
 
@@ -472,7 +487,7 @@ class ExceptionHandler
     /**
      * Determine if the exception should be reported.
      *
-     * @param  \Throwable $exception
+     * @param \Throwable $exception
      * @return bool
      */
     public function shouldReport(\Throwable $exception)
@@ -481,8 +496,8 @@ class ExceptionHandler
     }
 
     /**
-     * @deprecated
      * @param \Throwable $exception
+     * @deprecated
      */
     public function handleException(\Throwable $exception)
     {
