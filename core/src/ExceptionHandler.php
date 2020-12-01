@@ -90,11 +90,6 @@ class ExceptionHandler
      */
     public function phpError($nr, $text, $file, $line)
     {
-        echo $nr;
-        echo $text;
-        echo $file;
-        echo $line;
-        exit();
         if (error_reporting() == 0 || $nr == 0) {
             return true;
         }
