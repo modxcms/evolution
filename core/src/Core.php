@@ -3677,7 +3677,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $over = $count - $limit;
         if (0 < $over) {
             $trim = ($over + $trim);
-            \DB::table($target)->delete()->take($trim);
+            \DB::table($target)->take($trim)->delete();
         }
     }
 
