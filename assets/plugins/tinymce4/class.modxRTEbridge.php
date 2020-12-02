@@ -684,7 +684,7 @@ class modxRTEbridge
         $entermode = !empty($ph[$this->editorKey . '_entermode']) ? $ph[$this->editorKey . '_entermode'] : 'p';
         $ph['entermode_options'] = '<label><input name="[+name+]" type="radio" value="p" ' . $this->checked($entermode == 'p') . '/>' . $this->lang('entermode_opt1') . '</label><br />';
         $ph['entermode_options'] .= '<label><input name="[+name+]" type="radio" value="br" ' . $this->checked($entermode == 'br') . '/>' . $this->lang('entermode_opt2') . '</label>';
-        switch ($this->modx->manager->action) {
+        switch ($this->mgrAction) {
             case '11':
             case '12':
             case '119':
