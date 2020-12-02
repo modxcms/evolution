@@ -36,8 +36,8 @@
 
     <!-- database -->
     <?php
-        $totaloverhead = 0;
-        $total = 0;
+    $totaloverhead = 0;
+    $total = 0;
     ?>
     <div class="tab-page">
         <div class="container container-body">
@@ -61,17 +61,23 @@
                         <?php $i = 0; ?>
                         @foreach ($tables as $table)
                             <tr>
-                                <td class="text-primary"><b>{{ $table['Name'] }}{{ $table['name'] }}</b></td>
+                                @if(isset($table['name']))
+                                    <td class="text-primary"><b>{{ $table['name'] }}</b></td>
+                                @else
+                                    <td class="text-primary"><b>{{ $table['Name'] }}</b></td>
+                                @endif
                                 <td class="text-xs-center">
                                     @if(!empty($table['Comment']))
-                                        <i class="{{ $_style['icon_question_circle'] }}" data-tooltip="{{ $table['Comment'] }}"></i>
+                                        <i class="{{ $_style['icon_question_circle'] }}"
+                                           data-tooltip="{{ $table['Comment'] }}"></i>
                                     @endif
                                 </td>
                                 <td class="text-xs-right">{{ $table['Rows'] }}</td>
 
                                 @if (evolutionCMS()->hasPermission('settings') && in_array($table['Name'], $truncateable))
                                     <td class="text-xs-right">
-                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('truncate_table') }}">
+                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $table['Name'] }}"
+                                           title="{{ ManagerTheme::getLexicon('truncate_table') }}">
                                             {{ nicesize($table['Data_length'] + $table['Data_free']) }}
                                         </a>
                                     </td>
@@ -84,7 +90,9 @@
                                 @if (evolutionCMS()->hasPermission('settings'))
                                     <td class="text-xs-right">
                                         @if($table['Data_free'] > 0)
-                                            <a class="text-danger" href="index.php?a=54&mode=$action&t={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('optimize_table') }}" >
+                                            <a class="text-danger"
+                                               href="index.php?a=54&mode=$action&t={{ $table['Name'] }}"
+                                               title="{{ ManagerTheme::getLexicon('optimize_table') }}">
                                                 <span> {{ nicesize($table['Data_free']) }}</span>
                                             </a>
                                         @else
@@ -112,8 +120,8 @@
                                 </td>
                             </tr>
                             <?php
-                                $total = $total + $table['Index_length'] + $table['Data_length'];
-                                $totaloverhead = $totaloverhead + $table['Data_free'];
+                            $total = $total + $table['Index_length'] + $table['Data_length'];
+                            $totaloverhead = $totaloverhead + $table['Data_free'];
                             ?>
                         @endforeach
                         <tr class="unstyled">
@@ -121,13 +129,15 @@
                             <td colspan="3">&nbsp;</td>
                             <td class="text-xs-right">
                                 @if($totaloverhead > 0)
-                                    <b class="text-danger">{{ nicesize($totaloverhead) }}</b><br />({{ number_format($totaloverhead) }} B)
+                                    <b class="text-danger">{{ nicesize($totaloverhead) }}</b><br/>
+                                    ({{ number_format($totaloverhead) }} B)
                                 @else
                                     -
                                 @endif
                             </td>
                             <td colspan="2">&nbsp;</td>
-                            <td class="text-xs-right"><b>{{ nicesize($total) }}</b><br />({{ number_format($total) }} B)</td>
+                            <td class="text-xs-right"><b>{{ nicesize($total) }}</b><br/>({{ number_format($total) }} B)
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -139,6 +149,6 @@
             @endif
         </div>
     </div>
-@push('scripts.bot')
-@endpush
+    @push('scripts.bot')
+    @endpush
 @endsection

@@ -63,19 +63,17 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
                 $sql = "SELECT *, tablename as Name
                  FROM pg_catalog.pg_tables WHERE 
             schemaname != 'information_schema' AND tablename LIKE '%".$prefix."%'";
+                $resultArray = json_decode(json_encode(\DB::select($sql)), true);
+                return $resultArray;
 
-                return $this->database->makeArray(
-                    $this->database->query($sql)
-                );
                 break;
 
             case 'mysql':
                 $prefix = $this->database->escape($this->database->getConfig('prefix'));
                 $sql = 'SHOW TABLE STATUS FROM `' . $this->database->getConfig('database') . '` LIKE "' . $prefix . '%"';
+                $resultArray = json_decode(json_encode(\DB::select($sql)), true);
+                return $resultArray;
 
-                return $this->database->makeArray(
-                    $this->database->query($sql)
-                );
                 break;
             default:
                 return [];

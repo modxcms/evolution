@@ -744,12 +744,20 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <th><?php echo $_lang["which_browser_title"] ?></th>
                         <td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">
                                 <?php
-                                $selected = 'default' == $usersettings['which_browser'] || !$usersettings['which_browser'] ? ' selected="selected"' : '';
+                                if(isset($usersettings['which_browser'])){
+                                    $selected = $usersettings['which_browser'];
+                                }else {
+                                    $selected = '';
+                                }
                                 echo '<option value="default"' . $selected . '>' . $_lang['option_default'] . "</option>\n";
                                 foreach(glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
                                     $dir = str_replace('\\', '/', $dir);
                                     $browser_name = substr($dir, strrpos($dir, '/') + 1);
-                                    $selected = $browser_name == $usersettings['which_browser'] ? ' selected="selected"' : '';
+                                    if(isset($usersettings['which_browser'])){
+                                        $selected = $usersettings['which_browser'];
+                                    }else {
+                                        $selected = '';
+                                    }
                                     echo '<option value="' . $browser_name . '"' . $selected . '>' . "{$browser_name}</option>\n";
                                 }
                                 ?>
