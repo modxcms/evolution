@@ -22,7 +22,7 @@ if (! function_exists('config_path')) {
      */
     function config_path($path = '', $custom = false)
     {
-        $prefix = ($custom ? implode(['', '..', 'custom', 'config'], DIRECTORY_SEPARATOR) : '');
+        $prefix = ($custom ? implode(DIRECTORY_SEPARATOR, ['', '..', 'custom', 'config']) : '');
         return app()->make('path.config') . $prefix . ($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }

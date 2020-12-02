@@ -59,7 +59,7 @@ class IlluminateDriver extends AbstractDriver
         /**
          * @var Capsule|null $capsule
          */
-        $capsule = $property->getValue(Capsule::class);
+        $capsule = $property->getValue(new Capsule);
         if ($capsule === null) {
             $this->capsule = new Capsule;
 
