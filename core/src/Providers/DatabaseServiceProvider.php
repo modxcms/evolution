@@ -31,7 +31,6 @@ class DatabaseServiceProvider extends ServiceProvider
                         $app['config']->get('database.connections.default', []),
                         IlluminateDriver::class
                     );
-                    break;
             }
 
         });

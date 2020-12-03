@@ -7,8 +7,6 @@ use AgelxNash\Modx\Evo\Database\Exceptions;
 
 class Database extends BaseDatabase implements Interfaces\DatabaseInterface
 {
-    public $config;
-
     public function __construct(array $config, $driver = Drivers\MySqliDriver::class)
     {
         parent::__construct($config, $driver);

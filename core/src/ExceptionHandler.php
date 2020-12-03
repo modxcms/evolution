@@ -376,7 +376,7 @@ class ExceptionHandler
         } else {
             echo 'Error';
         }
-        if (!MODX_CLI) {
+        if (!defined('MODX_CLI') || !MODX_CLI) {
             ob_end_flush();
         }
         exit;
