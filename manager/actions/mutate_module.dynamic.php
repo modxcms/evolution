@@ -619,7 +619,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
             <!-- HTML text editor start -->
             <div class="section-editor clearfix">
                 <textarea dir="ltr" name="properties" class="phptextarea" rows="20" wrap="soft"
-                          onChange="showParameters(this);documentDirty=true;"><?= isset($content['properties']) ?? $content['properties'] ?></textarea>
+                          onChange="showParameters(this);documentDirty=true;"><?= isset($content['properties']) ? $content['properties'] : '' ?></textarea>
             </div>
             <!-- HTML text editor end -->
         </div>
