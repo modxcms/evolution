@@ -53,6 +53,7 @@ class IlluminateDriver extends AbstractDriver
      */
     public function __construct(array $config = [], $connection = 'default')
     {
+        //var_dump(Capsule::connection());
         $reflection = new ReflectionClass(Capsule::class);
         $property = $reflection->getProperty('instance');
         $property->setAccessible(true);

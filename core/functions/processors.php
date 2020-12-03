@@ -205,7 +205,7 @@ if (!function_exists('saveUserGroupAccessPermissons')) {
         if ($newid) {
             $id = $newid;
         }
-        $usrgroups = $_POST['usrgroups'];
+        $usrgroups = get_by_key($_POST, 'usrgroups', []);
 
         // check for permission update access
         if ($use_udperms == 1) {
