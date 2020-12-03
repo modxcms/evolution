@@ -9,7 +9,8 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPerm
 $version = "0.1.3";
 $Store = new Store;
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-
+echo $action;
+exit();
 switch($action){
 case 'saveuser':
 	$_SESSION['STORE_USER'] = $_POST['res'];
