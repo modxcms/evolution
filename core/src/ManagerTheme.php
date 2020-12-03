@@ -533,6 +533,7 @@ class ManagerTheme implements ManagerThemeInterface
         $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
         $target = $this->getCore()->mergeSettingsContent($target);
 
+
         $content = $this->getCore()->getChunk($target);
         if (empty($content)) {
             if (is_file(MODX_BASE_PATH . $target)) {

@@ -76,8 +76,6 @@ class IlluminateDriver extends AbstractDriver
             }
         }
 
-        $this->connection = $connection;
-
         $this->useEloquent();
 
         $this->setConfig($config);
