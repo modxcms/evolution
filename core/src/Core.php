@@ -222,12 +222,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->getService('ExceptionHandler');
 
         $this->getSettings();
-        $this->getService('UrlProcessor');
-        $this->getService('TemplateProcessor');
-        $this->getService('HelperProcessor');
-        $this->getService('DLTemplate');
-        $this->getService('Console');
-        $this->getService('UserManager');
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
 
