@@ -2,7 +2,6 @@
 
 use Illuminate\Contracts\Container\Container;
 use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
-use Exception;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\ErrorHandler\Error\FatalError as FatalErrorException;
 use EvolutionCMS\Providers\TracyServiceProvider;

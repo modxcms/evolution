@@ -206,10 +206,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         parent::__construct();
 
         $this->initialize();
+
     }
 
     public function initialize()
     {
+
         if ($this->isLoggedIn()) {
             ini_set('display_errors', 1);
         }

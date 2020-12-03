@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! EvolutionCMS()->hasPermission('exec_module')) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
@@ -8,7 +8,9 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPerm
 //:::::::::::::::::::::::::::::::::::::::::
 require_once(MGR.'/includes/version.inc.php');
 $installPath = MODX_BASE_PATH .'assets/cache/store/install';
-
+if(!isset($modx_branch)) $modx_branch = '';
+if(!isset($modx_version)) $modx_version = '';
+if(!isset($modx_release_date)) $modx_release_date = '';
 $moduleName = "MODX";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
