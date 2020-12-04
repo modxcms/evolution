@@ -217,6 +217,7 @@ class InstallEvo
 
     public function checkRemoveInstall()
     {
+        ob_end_clean();
         if ($this->removeInstall != 'y' && $this->removeInstall != 'n') {
             $this->removeInstall = $this->read_line("Do you want remove install directory (y/n)? ");
         }
@@ -386,7 +387,7 @@ class InstallEvo
                 $count = count($classes) - 2;
                 $class = $classes[$count];
             }
-            Console::call('db:seed', ['--class' => $class]);
+            Console::call('db:seed', ['--class' => '\\'.$class]);
         }
         $field = array();
         $field['password'] = $this->evo->getPasswordHash()->HashPassword($this->cmsPassword);
@@ -428,11 +429,11 @@ class InstallEvo
                         "$pluginPath/{$params['filename']}",
                         $params['properties'],
                         $params['events'],
-                        $params['guid'],
+                        $params['guid'] ?? "",
                         $params['modx_category'],
-                        $params['legacy_names'],
+                        $params['legacy_names'] ?? "",
                         array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                        (int)$params['disabled']
+                        $params['disabled'] ?? 0
                     );
                 }
             }
@@ -464,7 +465,8 @@ class InstallEvo
                     }
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
-                    $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array1 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $plugin = end($array1);
                     // remove installer docblock
                     $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                     $pluginDbRecord = \EvolutionCMS\Models\SitePlugin::where('name', $name)->orderBy('id');
@@ -560,10 +562,10 @@ class InstallEvo
                         $params['name'],
                         $description,
                         "$modulePath/{$params['filename']}",
-                        $params['properties'],
-                        $params['guid'],
-                        (int)$params['shareparams'],
-                        $params['modx_category'],
+                        $params['properties'] ?? "",
+                        $params['guid'] ?? "",
+                        $params['shareparams'] ?? 0,
+                        $params['modx_category'] ?? "",
                         array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
                     );
                 }
@@ -651,7 +653,8 @@ class InstallEvo
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $module = end($array);
                     // remove installer docblock
                     $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
                     $moduleDb = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->first();
@@ -660,7 +663,7 @@ class InstallEvo
                         \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode'=>$module, 'description'=>$desc,'properties'=>$props, 'enable_sharedparams'=>$shared]);
 
                     } else {
-                        $properties = parseProperties($properties, true);
+                        $props = parseProperties($properties, true);
                         \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $props, 'enable_sharedparams' => $shared]);
                     }
                 }
@@ -684,8 +687,10 @@ class InstallEvo
         if ($this->removeInstall == 'y') {
             $path = __DIR__ . '/';
             removeFolder($path);
-            removeFolder(MODX_BASE_PATH . '.tx');
-            unlink(MODX_BASE_PATH . 'README.md');
+            if (file_exists(MODX_BASE_PATH . '.tx'))
+                removeFolder(MODX_BASE_PATH . '.tx');
+            if (file_exists(MODX_BASE_PATH . 'README.md'))
+                unlink(MODX_BASE_PATH . 'README.md');
             echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
         }
     }
