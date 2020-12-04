@@ -579,6 +579,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
                         'id' => $id
                     ));
+                                                        
+                    $group_tvs = $modx->getConfig('group_tvs');
+                    $templateVariables = '';
+                    $templateVariablesOutput = '';
+                                                        
                     if(is_array($evtOut)) {
                         echo implode('', $evtOut);
                     } else {
@@ -862,12 +867,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             <?php
 
-                            $templateVariables = '';
-                            $templateVariablesOutput = '';
-
                             if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = getDefaultTemplate();
-                                $group_tvs = $modx->getConfig('group_tvs');
                                 if (isset ($_REQUEST['newtemplate'])) {
                                     $template = $_REQUEST['newtemplate'];
                                 } else {
