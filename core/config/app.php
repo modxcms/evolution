@@ -64,6 +64,7 @@ return [
         'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
         'Evolution_DocumentManager' => EvolutionCMS\Providers\DocumentManagerServiceProvider::class,
         'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
+        'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
@@ -77,7 +78,6 @@ return [
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
-        'Config' => Illuminate\Support\Facades\Config::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
@@ -102,6 +102,7 @@ return [
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
          */
         'Auth' => \EvolutionCMS\Facades\AuthServices::class,
+        'Config' => \EvolutionCMS\Facades\ConfigService::class,
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
         'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
