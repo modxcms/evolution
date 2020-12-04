@@ -44,7 +44,7 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-if (! isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 $mstart = memory_get_usage();
@@ -58,7 +58,7 @@ $config = [
 if (file_exists(__DIR__ . '/config.php')) {
     $config = array_merge($config, require __DIR__ . '/config.php');
 }
-if (! defined('IN_INSTALL_MODE') && ! file_exists($config['core'] . '/.install')) {
+if (!defined('IN_INSTALL_MODE') && !file_exists($config['core'] . '/.install')) {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
     header('Status: 503 Service Temporarily Unavailable');
     header('Retry-After: 3600');
@@ -74,14 +74,15 @@ if (! defined('IN_INSTALL_MODE') && ! file_exists($config['core'] . '/.install')
     exit;
 }
 
-if (! defined('IN_INSTALL_MODE')) {
+if (!defined('IN_INSTALL_MODE')) {
     define('IN_INSTALL_MODE', false);
 }
-
+if (IN_INSTALL_MODE) {
 // set some settings, and address some IE issues
-@ini_set('url_rewriter.tags', '');
-@ini_set('session.use_trans_sid', 0);
-@ini_set('session.use_only_cookies',1);
+    @ini_set('url_rewriter.tags', '');
+    @ini_set('session.use_trans_sid', 0);
+    @ini_set('session.use_only_cookies', 1);
+}
 
 require $config['core'] . '/bootstrap.php';
 
@@ -92,18 +93,18 @@ if (IN_INSTALL_MODE == false) {
 ob_start();
 
 /**
- *	Filename: index.php
- *	Function: This file loads and executes the parser. *
+ *    Filename: index.php
+ *    Function: This file loads and executes the parser. *
  */
 
 define('IN_PARSER_MODE', true);
-if (! defined('IN_MANAGER_MODE')) {
-	define('IN_MANAGER_MODE', false);
+if (!defined('IN_MANAGER_MODE')) {
+    define('IN_MANAGER_MODE', false);
 }
-if (! defined('MODX_API_MODE')) {
+if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
-if (! defined('MODX_CLI')) {
+if (!defined('MODX_CLI')) {
     define('MODX_CLI', false);
 }
 
@@ -122,13 +123,13 @@ $modx->mstart = $mstart;
 $modx->stopOnNotice = false;
 
 // Don't show PHP errors to the public
-if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
-    @ini_set("display_errors","0");
+if (!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
+    @ini_set("display_errors", "0");
 }
 
 if (is_cli()) {
     @set_time_limit(0);
-    @ini_set('max_execution_time',0);
+    @ini_set('max_execution_time', 0);
 }
 
 // execute the parser if index.php was not included
