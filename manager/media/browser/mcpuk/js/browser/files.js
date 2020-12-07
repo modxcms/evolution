@@ -164,6 +164,7 @@ browser.returnFile = function(file) {
 
     if (this.opener.TinyMCE4) {
         var win = window.opener ? window.opener : window.parent;
+        win.tinymceCallBackURL = fileURL;
         $(win.document).find('#' + this.opener.TinyMCE4).val(fileURL);
         win.tinyMCE.activeEditor.windowManager.close();
 
