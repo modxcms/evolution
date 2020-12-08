@@ -40,7 +40,11 @@ class BladeDirective
    
     public static function makeUrl($id) : string
     {
-        return '<?php echo app("UrlProcessor")->makeUrl(' . $id . ');?>';
+        if(is_numeric($id)) {
+            return '<?php echo app("UrlProcessor")->makeUrl(' . $id . ');?>';
+        }else{
+            return '<?php echo $id;?>';
+        }
     }
     public static function csrf() : string
     {
