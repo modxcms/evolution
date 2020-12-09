@@ -99,7 +99,7 @@ if(!function_exists('propertiesNameValue')) {
 
 $setupPath = $modulePath;
 
-//include "{$setupPath}/setup.info.php";
+include "{$setupPath}/setup.info.php";
 
 include "sqlParser.class.php";
 
