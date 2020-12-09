@@ -70,8 +70,8 @@ if (! function_exists('ProcessTVCommand')) {
     {
         $modx = evolutionCMS();
         $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
-        $nvalue = trim($value);
-        if (substr($nvalue, 0, 1) != '@') {
+        $nvalue = is_array($value) ? $value : trim($value);
+        if (is_array($nvalue) || substr($nvalue, 0, 1) != '@') {
             return $value;
         } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
             return '@Bindings is disabled.';
