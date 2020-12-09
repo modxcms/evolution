@@ -679,4 +679,13 @@ class UrlProcessor
 
         return null;
     }
+
+    public function makeUrlWithString($id) : string
+    {
+        if(is_numeric($id)){
+            return $this->makeUrl($id);
+        }else{
+            return $id;
+        }
+    }
 }
