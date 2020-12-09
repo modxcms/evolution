@@ -118,7 +118,14 @@ class DocumentCreate implements ServiceInterface
                 "user" => $this->documentData['id'],
             ));
         }
-
+//var_dump($this->documentData);
+//        die();
+        if (isset($this->documentData['pub_date']) && !is_numeric($this->documentData['pub_date'])) {
+            unset($this->documentData['pub_date']);
+        }
+        if (isset($this->documentData['unpub_date']) && !is_numeric($this->documentData['unpub_date'])) {
+            unset($this->documentData['unpub_date']);
+        }
         $document = SiteContent::query()->create($this->documentData);
         $this->documentData['id'] = $document->getKey();
 
@@ -312,8 +319,8 @@ class DocumentCreate implements ServiceInterface
             ->where('templateid', $this->documentData['template'])
             ->join('site_tmplvars', 'site_tmplvars.id', '=', 'site_tmplvar_templates.tmplvarid')->get();
         foreach ($tmplvars as $tmplvar) {
-            if(isset($this->documentData[$tmplvar->name])){
-                $this->tvs[] = ['id'=> $tmplvar->id, 'value'=>$this->documentData[$tmplvar->name]];
+            if (isset($this->documentData[$tmplvar->name])) {
+                $this->tvs[] = ['id' => $tmplvar->id, 'value' => $this->documentData[$tmplvar->name]];
             }
         }
 
@@ -323,7 +330,7 @@ class DocumentCreate implements ServiceInterface
     {
 
         foreach ($this->tvs as $value) {
-            \EvolutionCMS\Models\SiteTmplvarContentvalue::updateOrCreate(['contentid' => $this->documentData['id'], 'tmplvarid'=>$value['id']],['value'=>$value['value']]);
+            \EvolutionCMS\Models\SiteTmplvarContentvalue::updateOrCreate(['contentid' => $this->documentData['id'], 'tmplvarid' => $value['id']], ['value' => $value['value']]);
         }
 
     }
