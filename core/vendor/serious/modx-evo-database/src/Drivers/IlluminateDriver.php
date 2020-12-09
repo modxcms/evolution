@@ -53,13 +53,22 @@ class IlluminateDriver extends AbstractDriver
      */
     public function __construct(array $config = [], $connection = 'default')
     {
+        $reflection = new ReflectionClass(Capsule::class);
+        $property = $reflection->getProperty('instance');
+        $property->setAccessible(true);
+        /**
+         * @var Capsule|null $capsule
+         */
+        $capsule = $property->getValue(new Capsule);
+        if ($capsule === null) {
+            $this->capsule = new Capsule;
 
-        $this->capsule = new Capsule;
-
-        $this->getCapsule()->setAsGlobal();
+            $this->getCapsule()->setAsGlobal();
+        } else {
+            $this->capsule = $capsule;
+        }
 
         if ($this->hasConnectionName($connection)) {
-
             if (empty($config)) {
                 $config = $this->getCapsule()->getConnection($connection)->getConfig();
                 unset($config['name'], $config['driver']);
@@ -75,6 +84,8 @@ class IlluminateDriver extends AbstractDriver
                 }
             }
         }
+
+        $this->connection = $connection;
 
         $this->useEloquent();
 

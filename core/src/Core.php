@@ -6114,8 +6114,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getUserSettings()
     {
-        $this->getDatabase();
 
+        $this->getDatabase();
+        //if (!$this->getDatabase()->getDriver()->isConnected()) {
+        //   $this->getDatabase()->connect();
+        //}
         // load user setting if user is logged in
         $usrSettings = array();
         if ($id = $this->getLoginUserID()) {
