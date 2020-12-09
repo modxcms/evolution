@@ -90,5 +90,5 @@ return array(
     'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
     'Composer\\' => array($vendorDir . '/composer/composer/src/Composer'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
-    'AgelxNash\\Modx\\Evo\\Database\\' => array($vendorDir . '/agelxnash/modx-evo-database/src'),
+    'AgelxNash\\Modx\\Evo\\Database\\' => array($vendorDir . '/serious/modx-evo-database/src'),
 );

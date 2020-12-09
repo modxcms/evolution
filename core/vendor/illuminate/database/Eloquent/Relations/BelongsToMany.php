@@ -128,13 +128,6 @@ class BelongsToMany extends Relation
     protected $accessor = 'pivot';
 
     /**
-     * The count of self joins.
-     *
-     * @var int
-     */
-    protected static $selfJoinCount = 0;
-
-    /**
      * Create a new belongs to many relationship instance.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -561,6 +554,18 @@ class BelongsToMany extends Relation
     public function orWherePivotNotNull($column)
     {
         return $this->orWherePivotNull($column, true);
+    }
+
+    /**
+     * Add an "order by" clause for a pivot table column.
+     *
+     * @param  string  $column
+     * @param  string  $direction
+     * @return $this
+     */
+    public function orderByPivot($column, $direction = 'asc')
+    {
+        return $this->orderBy($this->qualifyPivotColumn($column), $direction);
     }
 
     /**
@@ -1165,16 +1170,6 @@ class BelongsToMany extends Relation
     public function getExistenceCompareKey()
     {
         return $this->getQualifiedForeignPivotKeyName();
-    }
-
-    /**
-     * Get a relationship join table hash.
-     *
-     * @return string
-     */
-    public function getRelationCountHash()
-    {
-        return 'laravel_reserved_'.static::$selfJoinCount++;
     }
 
     /**
