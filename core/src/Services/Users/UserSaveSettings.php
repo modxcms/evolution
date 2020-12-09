@@ -9,6 +9,8 @@ use Illuminate\Validation\Rule;
 
 class UserSaveSettings implements ServiceInterface
 {
+    use ExcludeStandardFieldsTrait;
+
     /**
      * @var \string[][]
      */
@@ -88,49 +90,6 @@ class UserSaveSettings implements ServiceInterface
             throw $exception;
         }
 
-        $ignore = array(
-            'a',
-            'id',
-            'oldusername',
-            'oldemail',
-            'newusername',
-            'fullname',
-            'first_name',
-            'middle_name',
-            'last_name',
-            'verified',
-            'newpassword',
-            'newpasswordcheck',
-            'passwordgenmethod',
-            'passwordnotifymethod',
-            'specifiedpassword',
-            'confirmpassword',
-            'email',
-            'phone',
-            'mobilephone',
-            'fax',
-            'dob',
-            'country',
-            'street',
-            'city',
-            'state',
-            'zip',
-            'gender',
-            'photo',
-            'comment',
-            'role',
-            'failedlogincount',
-            'blocked',
-            'blockeduntil',
-            'blockedafter',
-            'user_groups',
-            'mode',
-            'blockedmode',
-            'stay',
-            'save',
-            'theme_refresher'
-        );
-
         // determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
         $defaults = array(
             'upload_images',
@@ -140,10 +99,10 @@ class UserSaveSettings implements ServiceInterface
         );
 
         // get user setting field names
-        $settings = array();
-        foreach ($this->userData as $n => $v) {
-            if (in_array($n, $ignore) || (!in_array($n, $defaults) && is_scalar($v) && trim($v) == '') || (!in_array($n,
-                        $defaults) && is_array($v) && empty($v))) {
+        $customFields = $this->excludeStandardFields($this->userData);
+
+        foreach ($customFields as $n => $v) {
+            if (!in_array($n, $defaults) && (is_scalar($v) && trim($v) == '' || is_array($v) && empty($v))) {
                 continue;
             } // ignore blacklist and empties
             $settings[$n] = $v; // this value should be saved
@@ -156,18 +115,13 @@ class UserSaveSettings implements ServiceInterface
             unset($settings['default_' . $k]);
         }
 
-        \EvolutionCMS\Models\UserSetting::where('user', $this->userData['id'])->delete();
-
         foreach ($settings as $n => $vl) {
             if (is_array($vl)) {
                 $vl = implode(',', $vl);
             }
-            if ($vl != '') {
-                $f = array();
-                $f['user'] = $this->userData['id'];
-                $f['setting_name'] = $n;
-                $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
+            if ((string)$vl != '') {
+                \EvolutionCMS\Models\UserSetting::updateOrCreate(['setting_name' => $n, 'user' => $this->userData['id']],
+                    ['setting_value' => $vl]);
             }
         }
 

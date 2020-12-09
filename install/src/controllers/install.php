@@ -149,13 +149,13 @@ try {
     if ($installLevel === 2) {
         // check table prefix
         if ($installMode === 0) {
-            $siteContent = \EvolutionCMS\Models\SiteContent::query()->count();
-
-            if ($siteContent > 0) {
+            try {
+                $siteContent = \EvolutionCMS\Models\SiteContent::query()->count();
                 $errors += 1;
-            } else {
+            }catch (PDOException $exception){
                 $installLevel = 3;
             }
+
         } else {
             $installLevel = 3;
         }
@@ -198,22 +198,24 @@ try {
                     $count = count($classes) - 2;
                     $class = $classes[$count];
                 }
-                Console::call('db:seed', ['--class' => $class]);
+
+                Console::call('db:seed', ['--class' => '\\'.$class]);
+
 
             }
             $field = array();
-            $field['password'] = $modx->getPasswordHash()->HashPassword($adminpass);
+            $field['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($adminpass);
             $field['username'] = $adminname;
             $managerUser = EvolutionCMS\Models\User::create($field);
             $internalKey = $managerUser->getKey();
             $verified = 1;
             $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
-            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role];
+            $field = ['internalKey' => $internalKey, 'email' => $adminemail, 'role' => $role, 'verified' => 1];
             $managerUser->attributes()->create($field);
             $managerUser->attributes->role = $role;
             $managerUser->attributes->save();
             $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $managerlanguage];
-            $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
+            $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 'sibling'];
             $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $adminemail];
             $systemSettings[] = ['setting_name' => 'fe_editor_lang', 'setting_value' => $managerlanguage];
             \EvolutionCMS\Models\SystemSetting::insert($systemSettings);
@@ -492,7 +494,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $module = end($array);
                     // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
                     $moduleRecord = \EvolutionCMS\Models\SiteModule::query()->where('name', $name);
 
@@ -575,7 +578,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array1 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $plugin = end($array1);
                     $plugin = removeDocblock($plugin, 'plugin');
                     $pluginRecords = \EvolutionCMS\Models\SitePlugin::query()->where('name', $name);
 
@@ -702,7 +706,8 @@ try {
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
+                    $array2 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent));
+                    $snippet = end($array2);
                     $snippet = removeDocblock($snippet, 'snippet');
                     $snippetRecord = \EvolutionCMS\Models\SiteSnippet::where('name', $name);
 

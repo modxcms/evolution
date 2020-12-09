@@ -1,5 +1,5 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! EvolutionCMS()->hasPermission('exec_module')) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
@@ -9,11 +9,13 @@ $moduleurl = 'assets/modules/store/installer/index.php';
 $modulePath = __DIR__;
 $self = $modulePath.'/index.php';
 require_once($modulePath."/functions.php");
-
 $_lang = array();
 $_params = array();
 require_once($modulePath."/lang/russian-UTF8.inc.php");
-
+if(!isset($modx_branch)) $modx_branch = '';
+if(!isset($modx_version)) $modx_version = '';
+if(!isset($modx_release_date)) $modx_release_date = '';
+if(!isset($installPath)) $installPath = '';
 // start session
 //session_start();
 $_SESSION['test'] = 1;
@@ -94,10 +96,16 @@ if(!function_exists('propertiesNameValue')) {
         return $parameter;
     }
 }
+
 $setupPath = $modulePath;
+
 include "{$setupPath}/setup.info.php";
+
 include "sqlParser.class.php";
-$sqlParser = new SqlParser($adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method, $auto_template_logic);
+
+$databaseConfig = EvolutionCMS()->app['config']['database']['connections']['default'];
+
+$sqlParser = new SqlParser('', '', '', $databaseConfig['charset'], \Lang::getLocale(), $databaseConfig['method'], 'sibling');
 $sqlParser->mode = "upd";
 $sqlParser->ignoreDuplicateErrors = true;
 

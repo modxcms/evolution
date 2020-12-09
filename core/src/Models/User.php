@@ -25,13 +25,16 @@ class User extends Eloquent\Model
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password'
+		'password',
+        'cachepwd',
+        'verified_key',
 	];
 
 	protected $fillable = [
 		'username',
 		'password',
 		'cachepwd',
+		'verified_key',
 		'refresh_token',
 		'access_token',
 		'valid_to'
@@ -50,6 +53,11 @@ class User extends Eloquent\Model
     public function settings()
     {
         return $this->hasMany(UserSetting::class,'user','id');
+    }
+
+    public function values()
+    {
+        return $this->hasMany(UserValue::class);
     }
 
     public function delete()

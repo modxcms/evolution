@@ -217,8 +217,9 @@ try {
     echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
 
 } catch (PDOException $e) {
+
     $errors++;
-    echo '<span class="notok">' . $_lang['database_connection_failed'] . '</span><p />' . $_lang['database_connection_failed_note'] . '</p>';
+    echo '<span class="notok">' . $_lang['database_connection_failed'] . '</span><p />' . $_lang['database_connection_failed_note'] . $e->getMessage() . '</p>';
     echo '<span class="notok">' . $_lang['database_use_failed'] . '</span><p />' . $_lang['database_use_failed_note'] . '</p>';
 
 }
@@ -246,25 +247,29 @@ if (!isset($database_connection_method) || empty($database_connection_method)) {
 // check table prefix
 if ($dbh->errorCode() == 0 && $installMode == 0) {
     echo '<p>' . $_lang['checking_table_prefix'] . $table_prefix . '`: ';
-    $result = $dbh->query("SELECT COUNT(*) FROM {$table_prefix}site_content");
-    if ($dbh->errorCode() == 0) {
-
-        echo '<span class="notok">' . $_lang['failed'] . '</span></b>' . $_lang['table_prefix_already_inuse'] . '</p>';
-        $errors++;
-        echo "<p>" . $_lang['table_prefix_already_inuse_note'] . '</p>';
-    } else {
-
+    try {
+        $result = $dbh->query("SELECT COUNT(*) FROM {$table_prefix}site_content");
+        if ($dbh->errorCode() == 0) {
+            echo '<span class="notok">' . $_lang['failed'] . '</span></b>' . $_lang['table_prefix_already_inuse'] . '</p>';
+            $errors++;
+            echo "<p>" . $_lang['table_prefix_already_inuse_note'] . '</p>';
+        } else {
+            echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+        }
+    } catch (\PDOException $exception) {
         echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+
     }
 } elseif ($dbh->errorCode() == 0 && $installMode == 2) {
     echo '<p>' . $_lang['checking_table_prefix'] . $table_prefix . '`: ';
-    $result = $dbh->query("SELECT COUNT(*) FROM {$table_prefix}site_content");
-    if ($dbh->errorCode() != 0) {
+    try {
+        $result = $dbh->query("SELECT COUNT(*) FROM {$table_prefix}site_content");
+        echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+    } catch (\PDOException $exception) {
         echo '<span class="notok">' . $_lang['failed'] . '</span></b>' . $_lang['table_prefix_not_exist'] . '</p>';
         $errors++;
         echo '<p>' . $_lang['table_prefix_not_exist_note'] . '</p>';
-    } else {
-        echo '<span class="ok">' . $_lang['ok'] . '</span></p>';
+
     }
 }
 

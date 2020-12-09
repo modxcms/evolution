@@ -12,7 +12,7 @@
             @endif
             <div class="mainCell elements_description">
                 <span>
-                    <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
+                    <a class="man_el_name" target="main" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
                         <i class="{{ $_style['icon_template'] }}"></i>
                         @if($item->locked)
                             <i class="{{ $_style['icon_lock'] }}"></i>

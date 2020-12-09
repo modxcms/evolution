@@ -138,11 +138,12 @@ class CacheManager implements FactoryContract
     /**
      * Create an instance of the array cache driver.
      *
+     * @param  array  $config
      * @return \Illuminate\Cache\Repository
      */
-    protected function createArrayDriver()
+    protected function createArrayDriver(array $config)
     {
-        return $this->repository(new ArrayStore);
+        return $this->repository(new ArrayStore($config['serialize'] ?? false));
     }
 
     /**
@@ -213,7 +214,11 @@ class CacheManager implements FactoryContract
 
         return $this->repository(
             new DatabaseStore(
-                $connection, $config['table'], $this->getPrefix($config)
+                $connection,
+                $config['table'],
+                $this->getPrefix($config),
+                $config['lock_table'] ?? 'cache_locks',
+                $config['lock_lottery'] ?? [2, 100]
             )
         );
     }
@@ -309,7 +314,11 @@ class CacheManager implements FactoryContract
      */
     protected function getConfig($name)
     {
-        return $this->app['config']["cache.stores.{$name}"];
+        if (! is_null($name) && $name !== 'null') {
+            return $this->app['config']["cache.stores.{$name}"];
+        }
+
+        return ['driver' => 'null'];
     }
 
     /**
@@ -350,6 +359,19 @@ class CacheManager implements FactoryContract
         }
 
         return $this;
+    }
+
+    /**
+     * Disconnect the given driver and remove from local cache.
+     *
+     * @param  string|null  $name
+     * @return void
+     */
+    public function purge($name = null)
+    {
+        $name = $name ?? $this->getDefaultDriver();
+
+        unset($this->stores[$name]);
     }
 
     /**

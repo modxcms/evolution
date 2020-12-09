@@ -43,7 +43,7 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             }
         }
         $userData['username'] = $userData['newusername'];
-        if (!is_numeric($userData['blockeduntil'])) {
+        if (isset($userData['blockeduntil']) && !is_numeric($userData['blockeduntil'])) {
             $userData['blockeduntil'] = strtotime($userData['blockeduntil']);
         }
         try {
@@ -73,7 +73,8 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
         $tvs = \EvolutionCMS\Models\SiteTmplvar::query()->distinct()
             ->select('site_tmplvars.*', 'user_values.value')
             ->join('user_role_vars', 'user_role_vars.tmplvarid', '=', 'site_tmplvars.id')
-            ->leftJoin('user_values', function ($query) use ($user) {
+            ->leftJoin('user_values', function($query) use ($user) {
+
                 $query->on('user_values.userid', '=', \DB::raw($user->id));
                 $query->on('user_values.tmplvarid', '=', 'site_tmplvars.id');
             })
@@ -89,8 +90,8 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
                 $value = $userData["tv" . $row['id']];
 
                 switch ($row['type']) {
-                    case 'url':
-                    {
+
+                    case 'url': {
                         if ($userData["tv" . $row['id'] . '_prefix'] != '--') {
                             $value = str_replace([
                                 "feed://",
@@ -106,6 +107,7 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
 
                     default:
                     {
+
                         if (is_array($value)) {
                             // handles checkboxes & multiple selects elements
                             $feature_insert = [];
@@ -124,6 +126,7 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
         }
 
         $userData = array_filter($userData, function ($key) {
+
             return !preg_match('/^tv\d/', $key);
         }, ARRAY_FILTER_USE_KEY);
 

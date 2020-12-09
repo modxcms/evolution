@@ -262,7 +262,7 @@ class Cache
             ->orderBy('site_content.parent', 'ASC')
             ->orderBy('site_content.menuindex', 'ASC');
 
-        if ($config['aliaslistingfolder'] == 1) {
+        if (isset($config['aliaslistingfolder']) && $config['aliaslistingfolder'] == 1) {
             $resources = $resources->where(function ($query) {
                 $query->where('site_content.isfolder', 1)
                     ->orWhere('site_content.alias_visible', 1);

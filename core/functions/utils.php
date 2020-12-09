@@ -1,11 +1,32 @@
 <?php
-if (! function_exists('var_debug')) {
+
+if (!function_exists('evo_guest')) {
+    function evo_guest($content)
+    {
+        if(!EvolutionCMS()->getLoginUserID()){
+            $content = '';
+        }
+        return $content;
+    }
+}
+
+if (!function_exists('evo_auth')) {
+    function evo_auth($content)
+    {
+        if (!EvolutionCMS()->getLoginUserID()) {
+            $content = '';
+        }
+        return $content;
+    }
+}
+
+if (!function_exists('var_debug')) {
     /**
      * Dumps information about a variable in Tracy Debug Bar.
      * @tracySkipLocation
-     * @param  mixed $var
-     * @param  string $title
-     * @param  array $options
+     * @param mixed $var
+     * @param string $title
+     * @param array $options
      * @return mixed  variable itself
      */
     function var_debug($var, $title = null, array $options = null)
@@ -14,7 +35,7 @@ if (! function_exists('var_debug')) {
     }
 }
 
-if (! function_exists('evo_parser')) {
+if (!function_exists('evo_parser')) {
     function evo_parser($content)
     {
         $core = evolutionCMS();
@@ -30,10 +51,10 @@ if (! function_exists('evo_parser')) {
     }
 }
 
-if (! function_exists('evo_raw_config_settings')) {
-    function evo_raw_config_settings() : array
+if (!function_exists('evo_raw_config_settings')) {
+    function evo_raw_config_settings(): array
     {
-        $configFile = config_path('cms/settings.php', ! app()->isProduction());
+        $configFile = config_path('cms/settings.php', !app()->isProduction());
 
         /** @var Illuminate\Filesystem\Filesystem $files */
         $files = app('files');
@@ -46,14 +67,14 @@ if (! function_exists('evo_raw_config_settings')) {
     }
 }
 
-if (! function_exists('evo_save_config_settings')) {
-    function evo_save_config_settings(array $config = []) : bool
+if (!function_exists('evo_save_config_settings')) {
+    function evo_save_config_settings(array $config = []): bool
     {
         /** @var Illuminate\Filesystem\Filesystem $files */
         $files = app('files');
 
         $data = $files->put(
-            config_path('cms/settings.php', ! app()->isProduction()),
+            config_path('cms/settings.php', !app()->isProduction()),
             '<?php return ' . var_export($config, true) . ';'
         );
 
@@ -61,8 +82,8 @@ if (! function_exists('evo_save_config_settings')) {
     }
 }
 
-if (! function_exists('evo_update_config_settings')) {
-    function evo_update_config_settings(string $key, $data = null) : bool
+if (!function_exists('evo_update_config_settings')) {
+    function evo_update_config_settings(string $key, $data = null): bool
     {
         $config = evo_raw_config_settings();
         $config[$key] = $data;
@@ -70,7 +91,7 @@ if (! function_exists('evo_update_config_settings')) {
     }
 }
 
-if (! function_exists('evo_delete_config_settings')) {
+if (!function_exists('evo_delete_config_settings')) {
     function evo_delete_config_settings(string $key)
     {
         $config = evo_raw_config_settings();

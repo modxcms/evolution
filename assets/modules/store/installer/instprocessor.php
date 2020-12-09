@@ -58,7 +58,7 @@ if(!function_exists('propertiesNameValue')) {
         return $parameter;
     }
 }
-$table_prefix = $modx->db->config['table_prefix'];
+$table_prefix = $modx->db->getConfig('table_prefix');
 $setupPath = $modulePath;
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
@@ -550,8 +550,8 @@ function isJson($string, $returnData=false) {
 function getCreateDbCategory($category, $sqlParser) {
 
     global $modx;
-    $dbase = $modx->db->config['dbase'];
-    $table_prefix = $modx->db->config['table_prefix'];
+    $dbase = $modx->db->getConfig('dbase');
+    $table_prefix = $modx->db->getConfig('table_prefix');
     $category_id = 0;
     if(!empty($category)) {
         $category = $modx->db->escape($category);

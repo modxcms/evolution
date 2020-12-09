@@ -3,8 +3,10 @@
 namespace Illuminate\Console\Scheduling;
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Reflector;
 use InvalidArgumentException;
 use LogicException;
+use Throwable;
 
 class CallbackEvent extends Event
 {
@@ -35,7 +37,7 @@ class CallbackEvent extends Event
      */
     public function __construct(EventMutex $mutex, $callback, array $parameters = [], $timezone = null)
     {
-        if (! is_string($callback) && ! is_callable($callback)) {
+        if (! is_string($callback) && ! Reflector::isCallable($callback)) {
             throw new InvalidArgumentException(
                 'Invalid scheduled callback event. Must be a string or callable.'
             );
@@ -76,6 +78,12 @@ class CallbackEvent extends Event
             $response = is_object($this->callback)
                         ? $container->call([$this->callback, '__invoke'], $this->parameters)
                         : $container->call($this->callback, $this->parameters);
+
+            $this->exitCode = $response === false ? 1 : 0;
+        } catch (Throwable $e) {
+            $this->exitCode = 1;
+
+            throw $e;
         } finally {
             $this->removeMutex();
 
@@ -163,6 +171,6 @@ class CallbackEvent extends Event
             return $this->description;
         }
 
-        return is_string($this->callback) ? $this->callback : 'Closure';
+        return is_string($this->callback) ? $this->callback : 'Callback';
     }
 }

@@ -26,17 +26,6 @@ class PendingMailFake extends PendingMail
      */
     public function send(Mailable $mailable)
     {
-        return $this->sendNow($mailable);
-    }
-
-    /**
-     * Send a mailable message immediately.
-     *
-     * @param  \Illuminate\Contracts\Mail\Mailable  $mailable;
-     * @return mixed
-     */
-    public function sendNow(Mailable $mailable)
-    {
         return $this->mailer->send($this->fill($mailable));
     }
 

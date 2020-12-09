@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Eloquent\Concerns;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -38,11 +39,33 @@ trait HasRelationships
     /**
      * The many to many relationship methods.
      *
-     * @var array
+     * @var string[]
      */
     public static $manyMethods = [
         'belongsToMany', 'morphToMany', 'morphedByMany',
     ];
+
+    /**
+     * The relation resolver callbacks.
+     *
+     * @var array
+     */
+    protected static $relationResolvers = [];
+
+    /**
+     * Define a dynamic relation resolver.
+     *
+     * @param  string  $name
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public static function resolveRelationUsing($name, Closure $callback)
+    {
+        static::$relationResolvers = array_replace_recursive(
+            static::$relationResolvers,
+            [static::class => [$name => $callback]]
+        );
+    }
 
     /**
      * Define a one-to-one relationship.
@@ -233,7 +256,7 @@ trait HasRelationships
         // If the type value is null it is probably safe to assume we're eager loading
         // the relationship. In this case we'll just pass in a dummy query where we
         // need to remove any eager loads that may already be defined on a model.
-        return empty($class = $this->{$type})
+        return is_null($class = $this->getAttributeFromArray($type))
                     ? $this->morphEagerTo($name, $type, $id, $ownerKey)
                     : $this->morphInstanceTo($class, $name, $type, $id, $ownerKey);
     }
@@ -369,8 +392,12 @@ trait HasRelationships
         $secondKey = $secondKey ?: $through->getForeignKey();
 
         return $this->newHasManyThrough(
-            $this->newRelatedInstance($related)->newQuery(), $this, $through,
-            $firstKey, $secondKey, $localKey ?: $this->getKeyName(),
+            $this->newRelatedInstance($related)->newQuery(),
+            $this,
+            $through,
+            $firstKey,
+            $secondKey,
+            $localKey ?: $this->getKeyName(),
             $secondLocalKey ?: $through->getKeyName()
         );
     }
@@ -488,7 +515,7 @@ trait HasRelationships
      * @param  string  $relatedPivotKey
      * @param  string  $parentKey
      * @param  string  $relatedKey
-     * @param  string  $relationName
+     * @param  string|null  $relationName
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     protected function newBelongsToMany(Builder $query, Model $parent, $table, $foreignPivotKey, $relatedPivotKey,
@@ -655,7 +682,7 @@ trait HasRelationships
      */
     public function touches($relation)
     {
-        return in_array($relation, $this->touches);
+        return in_array($relation, $this->getTouchedRelations());
     }
 
     /**
@@ -665,7 +692,7 @@ trait HasRelationships
      */
     public function touchOwners()
     {
-        foreach ($this->touches as $relation) {
+        foreach ($this->getTouchedRelations() as $relation) {
             $this->$relation()->touch();
 
             if ($this->$relation instanceof self) {

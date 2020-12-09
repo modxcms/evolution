@@ -16,7 +16,7 @@
                 <input class="form-control filterElements-form" type="text" id="{{ $tabIndexPageName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
                     @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
-                        <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteModule)->makeUrl('actions.new') }}">
+                        <a class="btn btn-success" target="main" href="{{ (new EvolutionCMS\Models\SiteModule)->makeUrl('actions.new') }}">
                             <i class="{{ $_style['icon_add'] }}"></i>
                             <span>{{ ManagerTheme::getLexicon('new_module') }}</span>
                         </a>

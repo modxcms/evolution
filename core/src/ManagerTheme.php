@@ -500,7 +500,7 @@ class ManagerTheme implements ManagerThemeInterface
     public function hasManagerAccess()
     {
         // check if user is allowed to access manager interface
-        return $this->getCore()->hasPermission('access_permissions') === 1;
+        return $this->getCore()->hasPermission('access_permissions') === 1 && $this->getCore()->getConfig('allow_manager_access');
     }
 
     public function getManagerStartupPageId()
@@ -532,6 +532,7 @@ class ManagerTheme implements ManagerThemeInterface
         $target = $this->getCore()->getConfig($config);
         $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
         $target = $this->getCore()->mergeSettingsContent($target);
+
 
         $content = $this->getCore()->getChunk($target);
         if (empty($content)) {

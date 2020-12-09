@@ -35,15 +35,15 @@ return [
         'Console_Artisan' => EvolutionCMS\Providers\ArtisanServiceProvider::class,
         'Console_Migration' => Illuminate\Database\MigrationServiceProvider::class,
         'Console_Composer' => EvolutionCMS\Providers\ComposerServiceProvider::class,
-
         'Laravel_View' => Illuminate\View\ViewServiceProvider::class,
         'Laravel_Database' => Illuminate\Database\DatabaseServiceProvider::class,
         'Laravel_Filesystem' => Illuminate\Filesystem\FilesystemServiceProvider::class,
         'Laravel_Cache' =>  Illuminate\Cache\CacheServiceProvider::class,
         'Laravel_Redis' => Illuminate\Redis\RedisServiceProvider::class,
         'Laravel_Lang' => Illuminate\Translation\TranslationServiceProvider::class,
-        'Laravel_Validator' => \Illuminate\Validation\ValidationServiceProvider::class,
+        'Laravel_Validator' => Illuminate\Validation\ValidationServiceProvider::class,
 
+        'Evolution_Auth' => EvolutionCMS\Providers\AuthServiceProvider::class,
         'Evolution_Observers' => EvolutionCMS\Providers\ObserversServiceProvider::class,
         'Evolution_Pagination' => EvolutionCMS\Providers\PaginationServiceProvider::class,
         'Evolution_Events' => EvolutionCMS\Providers\EventServiceProvider::class,
@@ -62,6 +62,9 @@ return [
         'Evolution_HelperProcessor' => EvolutionCMS\Providers\HelperProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
         'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
+        'Evolution_DocumentManager' => EvolutionCMS\Providers\DocumentManagerServiceProvider::class,
+        'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
+        'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
@@ -71,8 +74,10 @@ return [
     ],
 
     'aliases' => [
+        'Arr' => Illuminate\Support\Arr::class,
+        'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
-        'Config' => Illuminate\Support\Facades\Config::class,
+        'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
@@ -80,15 +85,24 @@ return [
         'File' => Illuminate\Support\Facades\File::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
+        'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Validator' => \Illuminate\Support\Facades\Validator::class,
-        'Response' => \Illuminate\Support\Facades\Response::class,
+        'Validator' => Illuminate\Support\Facades\Validator::class,
+        'Response' => Illuminate\Support\Facades\Response::class,
+        'Redirect' => Illuminate\Support\Facades\Redirect::class,
+        'Redis' => Illuminate\Support\Facades\Redis::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
+        'Request' => Illuminate\Support\Facades\Request::class,
+        'Session' => Illuminate\Support\Facades\Session::class,
+        'Str' => Illuminate\Support\Str::class,
         /**
          * EvolutionCMS
          * @TODO DBAPI, MakeTable and other will be added at version 2.1
          */
+        'Auth' => \EvolutionCMS\Facades\AuthServices::class,
+        'Config' => \EvolutionCMS\Facades\ConfigService::class,
         'Evo' => Illuminate\Support\Facades\App::class,
         'DocBlock' => EvolutionCMS\Facades\DocBlock::class,
         'ManagerTheme' => EvolutionCMS\Facades\ManagerTheme::class,
@@ -96,5 +110,6 @@ return [
         'TemplateProcessor' => EvolutionCMS\Facades\TemplateProcessor::class,
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
         'UserManager' => EvolutionCMS\Facades\UserManager::class,
+        'DocumentManager' => EvolutionCMS\Facades\DocumentManager::class,
     ]
 ];

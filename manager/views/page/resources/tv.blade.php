@@ -15,7 +15,7 @@
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control filterElements-form" id="{{ $tabIndexPageName }}_search" size="30" placeholder="{{ ManagerTheme::getLexicon('element_filter_msg') }}" />
                 <div class="input-group-btn">
-                    <a class="btn btn-success" href="{{ (new EvolutionCMS\Models\SiteTmplvar)->makeUrl('actions.new') }}">
+                    <a class="btn btn-success" target="main" href="{{ (new EvolutionCMS\Models\SiteTmplvar)->makeUrl('actions.new') }}">
                         <i class="{{ $_style['icon_add'] }}"></i>
                         <span>{{ ManagerTheme::getLexicon('new_tmplvars') }}</span>
                     </a>

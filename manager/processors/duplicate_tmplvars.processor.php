@@ -12,7 +12,7 @@ if ($id == 0) {
 }
 
 // count duplicates
-$tmplvar = EvolutionCMS\Models\SiteTmplvar::with(['tmplvarAccess', 'tmplvarTemplate'])->findOrFail($id);
+$tmplvar = EvolutionCMS\Models\SiteTmplvar::with(['tmplvarAccess', 'tmplvarTemplate', 'tmplvarUserRole'])->findOrFail($id);
 $name = $tmplvar->name;
 $count = EvolutionCMS\Models\SiteTmplvar::where('name', 'like', $name . ' ' . $_lang['duplicated_el_suffix'] . '%')->count();
 if ($count >= 1) $count = ' ' . ($count + 1);
@@ -28,6 +28,11 @@ foreach ($tmplvar->tmplvarTemplate as $tmplvarTemplate) {
     $field = $tmplvarTemplate->attributesToArray();
     Illuminate\Support\Arr::except($field, ['tmplvarid']);
     $newTmplvar->tmplvarTemplate()->create($field);
+}
+foreach ($tmplvar->tmplvarUserRole as $tmplvarUserRole) {
+    $field = $tmplvarUserRole->attributesToArray();
+    Illuminate\Support\Arr::except($field, ['tmplvarid']);
+    $newTmplvar->tmplvarUserRole()->create($field);
 }
 foreach ($tmplvar->tmplvarAccess as $tmplvarAccess) {
     $field = $tmplvarAccess->attributesToArray();

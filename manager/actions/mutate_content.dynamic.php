@@ -579,6 +579,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
                         'id' => $id
                     ));
+                                                        
+                    $group_tvs = $modx->getConfig('group_tvs');
+                    $templateVariables = '';
+                    $templateVariablesOutput = '';
+                                                        
                     if(is_array($evtOut)) {
                         echo implode('', $evtOut);
                     } else {
@@ -862,12 +867,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             <?php
 
-                            $templateVariables = '';
-                            $templateVariablesOutput = '';
-
                             if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = getDefaultTemplate();
-                                $group_tvs = $modx->getConfig('group_tvs');
                                 if (isset ($_REQUEST['newtemplate'])) {
                                     $template = $_REQUEST['newtemplate'];
                                 } else {
@@ -885,7 +886,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                 if ($group_tvs) {
                                     $tvs = $tvs->select('site_tmplvars.*',
-                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
+                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category_name', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
                                     $tvs = $tvs->leftJoin('categories', 'categories.id', '=', 'site_tmplvars.category');
                                     //$sort = 'category_rank,category_id,' . $sort;
                                     $tvs = $tvs->orderBy('category_rank', 'ASC');
@@ -913,6 +914,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $i = $ii = 0;
                                     $tab = '';
                                     foreach ($tvsArray as $row) {
+                                        $row['category'] = $row['category_name'];
                                         if(!isset($row['category_id'])){
                                             $row['category_id'] = 0;
                                             $row['category'] = $_lang['no_category'];

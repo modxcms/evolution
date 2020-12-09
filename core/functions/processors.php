@@ -3,150 +3,6 @@
 use EvolutionCMS\Models\SiteTmplvarAccess;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 
-if (!function_exists('duplicateDocument')) {
-    /**
-     * @param int $docid
-     * @param null|int $parent
-     * @param int $_toplevel
-     * @return int
-     */
-    function duplicateDocument($docid, $parent = null, $_toplevel = 0)
-    {
-        $modx = evolutionCMS();
-        global $_lang;
-
-        // invoke OnBeforeDocDuplicate event
-        $evtOut = $modx->invokeEvent('OnBeforeDocDuplicate', array(
-            'id' => $docid
-        ));
-
-        // if( !in_array( 'false', array_values( $evtOut ) ) ){}
-        // TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication
-        // [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
-
-        $userID = $modx->getLoginUserID();
-
-        // Grab the original document
-
-        $content = \EvolutionCMS\Models\SiteContent::query()->find($docid)->toArray();
-
-        // Handle incremental ID
-        switch ($modx->getConfig('docid_incrmnt_method')) {
-            case '1':
-                $minId = \EvolutionCMS\Models\SiteContent::query()
-                    ->leftJoin('site_content as T1', \DB::raw('(') . 'site_content.id' . \DB::raw('+1)'), '=', 'T1.id')
-                    ->whereNull('T1.id')->min('site_content.id');
-
-                $content['id'] = $minId + 1;
-                break;
-            case '2':
-                $content['id'] = \EvolutionCMS\Models\SiteContent::query()->max('id') + 1;
-                break;
-
-            default:
-                unset($content['id']); // remove the current id.
-        }
-
-        // Once we've grabbed the document object, start doing some modifications
-        if ($_toplevel == 0) {
-            // count duplicates
-            $pagetitle = \EvolutionCMS\Models\SiteContent::find($docid)->pagetitle;
-
-            $count = \EvolutionCMS\Models\SiteContent::query()->where('pagetitle', 'LIKE', '%'.$pagetitle.' Duplicate%')->count();
-
-            if ($count >= 1) {
-                $count = ' ' . ($count + 1);
-            } else {
-                $count = '';
-            }
-
-            $content['pagetitle'] = sprintf(
-                '%s%s %s'
-                , $_lang['duplicated_el_suffix']
-                , $count, $content['pagetitle']
-            );
-            $content['alias'] = null;
-        } elseif ($modx->getConfig('friendly_urls') == 0 || $modx->getConfig('allow_duplicate_alias') == 0) {
-            $content['alias'] = null;
-        }
-
-        // change the parent accordingly
-        if ($parent !== null) {
-            $content['parent'] = $parent;
-        }
-
-        // Change the author
-        $content['createdby'] = $userID;
-        $content['createdon'] = time();
-        // Remove other modification times
-        $content['editedby'] = $content['editedon'] = $content['deleted'] = $content['deletedby'] = $content['deletedon'] = 0;
-
-        // Set the published status to unpublished by default (see above ... commit #3388)
-        $content['published'] = $content['pub_date'] = 0;
-
-
-        // Duplicate the Document
-        $newparent = \EvolutionCMS\Models\SiteContent::query()->insertGetId($content);
-
-        // duplicate document's TVs
-        duplicateTVs($docid, $newparent);
-        duplicateAccess($docid, $newparent);
-
-        // invoke OnDocDuplicate event
-        $evtOut = $modx->invokeEvent('OnDocDuplicate', array(
-            'id' => $docid,
-            'new_id' => $newparent
-        ));
-
-        // Start duplicating all the child documents that aren't deleted.
-        $_toplevel++;
-        $documents = \EvolutionCMS\Models\SiteContent::where('parent', $docid)->where('deleted', 0)->orderBy('id')->get();
-
-        foreach ($documents as $document) {
-            duplicateDocument($document->id, $newparent, $_toplevel);
-        }
-
-        // return the new doc id
-        return $newparent;
-    }
-}
-
-if (!function_exists('duplicateTVs')) {
-    /**
-     * Duplicate Document TVs
-     *
-     * @param int $oldid
-     * @param int $newid
-     */
-    function duplicateTVs($oldid, $newid)
-    {
-        $oldTvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->where('contentid', $oldid)->get();
-        foreach ($oldTvs->toArray() as $oldTv) {
-            unset($oldTv['id']);
-            $oldTv['contentid'] = $newid;
-            \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->insert($oldTv);
-        }
-    }
-}
-
-if (!function_exists('duplicateAccess')) {
-    /**
-     * Duplicate Document Access Permissions
-     *
-     * @param int $oldid
-     * @param int $newid
-     */
-    function duplicateAccess($oldid, $newid)
-    {
-        $modx = evolutionCMS();
-        $oldDocGroups = \EvolutionCMS\Models\DocumentGroup::query()->where('document', $oldid)->get();
-        foreach ($oldDocGroups->toArray() as $oldDocGroup) {
-            unset($oldDocGroup['id']);
-            $oldDocGroup['document'] = $newid;
-            \EvolutionCMS\Models\DocumentGroup::query()->insert($oldDocGroup);
-        }
-    }
-}
 
 if (!function_exists('evalModule')) {
     /**
@@ -349,7 +205,7 @@ if (!function_exists('saveUserGroupAccessPermissons')) {
         if ($newid) {
             $id = $newid;
         }
-        $usrgroups = $_POST['usrgroups'];
+        $usrgroups = get_by_key($_POST, 'usrgroups', []);
 
         // check for permission update access
         if ($use_udperms == 1) {
@@ -499,6 +355,34 @@ if (!function_exists('saveTemplateVarAccess')) {
                 'rank' => get_by_key($getRankArray, $iValue, 0)
             ];
             EvolutionCMS\Models\SiteTmplvarTemplate::create($field);
+        }
+    }
+}
+
+if (!function_exists('saveVarRoles')) {
+    /**
+     * @return void
+     */
+    function saveVarRoles($id)
+    {
+        $modx = evolutionCMS();
+        $roles = isset($_POST['role']) ? $_POST['role'] : [];
+
+        $exists = EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->get();
+
+        $getRankArray = $exists->pluck('rank', 'roleid')->toArray();
+
+        EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->delete();
+        if (!$roles) {
+            return;
+        }
+        foreach ($roles as $i => $iValue) {
+            $field = [
+                'tmplvarid' => $id,
+                'roleid' => $roles[$i],
+                'rank' => get_by_key($getRankArray, $iValue, 0)
+            ];
+            EvolutionCMS\Models\UserRoleVar::create($field);
         }
     }
 }

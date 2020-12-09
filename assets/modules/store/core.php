@@ -1,6 +1,6 @@
 <?php
-//@ini_set("display_errors","0");
-//error_reporting(0);
+@ini_set("display_errors","0");
+error_reporting(0);
 
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
@@ -52,6 +52,7 @@ case 'install_file':
 	$zip = new ZipArchive;
 	$res = $zip->open(MODX_BASE_PATH."assets/cache/store/temp.zip");
 	if ($res === TRUE) {
+
 		// echo 'Archive open';
 		$zip->extractTo(MODX_BASE_PATH."assets/cache/store/tmp_install");
 		$zip->close();
@@ -60,6 +61,7 @@ case 'install_file':
 			while (false !== ($name = readdir($handle))) if ($name != "." && $name != "..") $dir = $name;
 			closedir($handle);
 		}
+
 		$name = strtolower($name);
 		$Store->copyFolder('../assets/cache/store/tmp_install/'.$dir, '../assets/cache/store/install');
 		$Store->removeFolder('../assets/cache/store/tmp_install/install/');

@@ -4,6 +4,8 @@ namespace Illuminate\Database\Console\Migrations;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\Events\DatabaseRefreshed;
 use Symfony\Component\Console\Input\InputOption;
 
 class RefreshCommand extends Command
@@ -27,12 +29,12 @@ class RefreshCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      */
     public function handle()
     {
         if (! $this->confirmToProceed()) {
-            return;
+            return 1;
         }
 
         // Next we'll gather some of the options so that we can have the right options
@@ -63,9 +65,17 @@ class RefreshCommand extends Command
             '--force' => true,
         ]));
 
+        if ($this->laravel->bound(Dispatcher::class)) {
+            $this->laravel[Dispatcher::class]->dispatch(
+                new DatabaseRefreshed
+            );
+        }
+
         if ($this->needsSeeding()) {
             $this->runSeeder($database);
         }
+
+        return 0;
     }
 
     /**
@@ -124,7 +134,7 @@ class RefreshCommand extends Command
     {
         $this->call('db:seed', array_filter([
             '--database' => $database,
-            '--class' => $this->option('seeder') ?: 'DatabaseSeeder',
+            '--class' => $this->option('seeder') ?: 'Database\\Seeders\\DatabaseSeeder',
             '--force' => true,
         ]));
     }

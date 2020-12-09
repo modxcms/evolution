@@ -14,11 +14,13 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  */
 function secureWebDocument($docid = '')
 {
+
     if (is_numeric($docid) && $docid > 0) {
         \EvolutionCMS\Models\SiteContent::find($docid)->update(['privatemgr' => 0]);
     } else {
         \EvolutionCMS\Models\SiteContent::where('privatemgr', 1)->update(['privatemgr' => 0]);
     }
+
     $documentIds = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id')->distinct()
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
         ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
@@ -28,6 +30,7 @@ function secureWebDocument($docid = '')
     }
 
     $ids = $documentIds->get()->pluck('id');
+
     if (count($ids) > 0) {
         \EvolutionCMS\Models\SiteContent::whereIn('id', $ids)->update(['privatemgr' => 1]);
     }

@@ -1,8 +1,12 @@
 <?php namespace EvolutionCMS\Services;
 
 use \EvolutionCMS\Models\User;
+use EvolutionCMS\Services\Users\UserClearSettings;
 use EvolutionCMS\Services\Users\UserGeneratePassword;
+use EvolutionCMS\Services\Users\UserGetVerifiedKey;
+use EvolutionCMS\Services\Users\UserGetValues;
 use EvolutionCMS\Services\Users\UserHashChangePassword;
+use EvolutionCMS\Services\Users\UserLoginById;
 use EvolutionCMS\Services\Users\UserManagerChangePassword;
 use EvolutionCMS\Services\Users\UserChangePassword;
 use EvolutionCMS\Services\Users\UserDelete;
@@ -14,8 +18,10 @@ use EvolutionCMS\Services\Users\UserRefreshToken;
 use EvolutionCMS\Services\Users\UserRegistration;
 use EvolutionCMS\Services\Users\UserRepairPassword;
 use EvolutionCMS\Services\Users\UserSaveSettings;
+use EvolutionCMS\Services\Users\UserSaveValues;
 use EvolutionCMS\Services\Users\UserSetGroups;
 use EvolutionCMS\Services\Users\UserSetRole;
+use EvolutionCMS\Services\Users\UserVerified;
 
 class UserManager
 {
@@ -85,6 +91,12 @@ class UserManager
         return $user->process();
     }
 
+    public function loginById(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserLoginById($userData, $events, $cache);
+        return $user->process();
+    }
+
     public function hashLogin(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserHashLogin($userData, $events, $cache);
@@ -103,6 +115,24 @@ class UserManager
         return $user->process();
     }
 
+    public function saveValues(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserSaveValues($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function getValues(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserGetValues($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function clearSettings(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserClearSettings($userData, $events, $cache);
+        return $user->process();
+    }
+
     public function refreshToken(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserRefreshToken($userData, $events, $cache);
@@ -112,6 +142,18 @@ class UserManager
     public function generateAndSavePassword(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new UserGeneratePassword($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function getVerifiedKey(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserGetVerifiedKey($userData, $events, $cache);
+        return $user->process();
+    }
+
+    public function verified(array $userData, bool $events = true, bool $cache = true)
+    {
+        $user = new UserVerified($userData, $events, $cache);
         return $user->process();
     }
 

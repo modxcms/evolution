@@ -15,7 +15,7 @@ class SiteUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'make:site {command_site=update}';
+    protected $signature = 'make:site {command_site=update} {version=null}';
     /**
      * The console command description.
      *
@@ -90,13 +90,15 @@ class SiteUpdateCommand extends Command
                 }
             }
         }
-        $git['version'] = '';
-        if (isset($git['stable'])) {
-            if (version_compare($currentVersion['version'], $git['stable'], '!=')) {
-                $git['version'] = $git['stable'];
+        $git['version'] = $this->argument('version');
+
+        if ($git['version'] == 'null') {
+            if (isset($git['stable'])) {
+                if (version_compare($currentVersion['version'], $git['stable'], '!=')) {
+                    $git['version'] = $git['stable'];
+                }
             }
         }
-
         if ($git['version'] != '') {
             $url = 'https://github.com/evolution-cms/evolution/archive/' . $git['version'] . '.zip';
             echo "Start download EvolutionCMS\n";
@@ -124,16 +126,16 @@ class SiteUpdateCommand extends Command
 
             SELF::moveFiles($temp_dir . '/' . $dir, MODX_BASE_PATH);
             SELF::rmdirs($temp_dir);
-            echo "Run Migrations\n";
-
-            exec('php  ../install/cli-install.php --typeInstall=2 --removeInstall=y');
-            echo "Remove Install Directory\n";
-            self::rmdirs(MODX_BASE_PATH . 'install');
             putenv('COMPOSER_HOME=' . EVO_CORE_PATH . 'composer');
             $input = new ArrayInput(array('command' => 'update'));
             $application = new Application();
             $application->setAutoExit(false);
             $application->run($input);
+            echo "Run Migrations\n";
+
+            exec('php  ../install/cli-install.php --typeInstall=2 --removeInstall=y');
+            echo "Remove Install Directory\n";
+            self::rmdirs(MODX_BASE_PATH . 'install');
         } else {
             echo 'You use almost current version';
         }

@@ -1126,9 +1126,9 @@ $_lang["user_email"] = 'Адрес e-mail';
 $_lang["user_failedlogincount"] = 'Отказы авторизации';
 $_lang["user_fax"] = 'Факс';
 $_lang["user_female"] = 'Женский';
-$_lang["user_full_name"] = 'Имя';
-$_lang["user_last_name"] = 'Полное имя';
-$_lang["user_first_name"] = 'Фамилия';
+$_lang["user_full_name"] = 'Полное имя';
+$_lang["user_first_name"] = 'Имя';
+$_lang["user_last_name"] = 'Фамилия';
 $_lang["user_middle_name"] = 'Отчество';
 $_lang["user_gender"] = 'Пол';
 $_lang["user_is_blocked"] = 'Этот пользователь заблокирован';
@@ -1323,6 +1323,7 @@ $_lang["error_internet_connection"]   = "Сервер недоступен, пр
 $_lang["login_processor_unknown_user"]       = "Неверно указан логин или пароль!";
 $_lang["login_processor_wrong_password"]     = "Неверно указан логин или пароль!";
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
+$_lang["login_processor_verified"]           = "Вам необходимо подтвердить себя!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
 $_lang["login_processor_blocked3"]           = "Вы заблокированы автоматические после указанной даты, и вы не можете войти!";
@@ -1477,5 +1478,10 @@ $_lang["permission_title"] = 'Создать / редактировать пра
 $_lang["groups_permission_title"] = 'Создать / редактировать категорию';
 $_lang["lang_key_desc"] = 'Ключ языка из массива $_lang';
 $_lang["key_desc"] = 'Ключь для проверки доступа';
+
+$_lang["role_no_tv"] = 'Этой роли еще не присвоены параметры.';
+$_lang["role_notassigned_tv"] = 'Эти параметры доступны для выбора.';
+$_lang["role_tv_msg"] = 'Ниже выводятся параметры, назначенные этой роли.';
+$_lang["tmplvar_roles_access_msg"] = 'Укажите роли, которые могут использовать этот Параметр (TV)';
 
 return $_lang;

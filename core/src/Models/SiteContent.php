@@ -167,7 +167,7 @@ class SiteContent extends Eloquent\Model
         'privatemgr' => 'bool',
         'content_dispo' => 'bool',
         'hidemenu' => 'bool',
-        'alias_visible' => 'int'
+        'alias_visible' => 'int',
     ];
 
     public function __construct(array $attributes = [])
@@ -200,19 +200,18 @@ class SiteContent extends Eloquent\Model
         parent::boot();
 
         static::saving(static function (SiteContent $entity) {
+            $entity->editedon = time();
             if ($entity->isDirty($entity->getPositionColumn())) {
                 $latest = static::getLatestPosition($entity);
-
-                if (!$entity->isMoved) {
-                    $latest--;
-                }
-
                 $entity->menuindex = max(0, min($entity->menuindex, $latest));
             } elseif (!$entity->exists) {
                 $entity->menuindex = static::getLatestPosition($entity);
             }
         });
 
+        static::creating(static function (SiteContent $entity) {
+            $entity->createdon = time();
+        });
         // When entity is created, the appropriate
         // data will be put into the closure table.
         static::created(static function (SiteContent $entity) {
@@ -242,6 +241,7 @@ class SiteContent extends Eloquent\Model
             if ($parentIdChanged) {
                 $entity->closure->moveNodeTo($entity->parent);
             }
+
         });
 
         // add in custom deleting
@@ -399,7 +399,7 @@ class SiteContent extends Eloquent\Model
     /**
      * @return Collection
      */
-    public function getTvAttribute(): Collection
+    public function getTvAttribute()
     {
         /** @var Collection $docTv */
         if ($this->tpl->tvs === null) {
@@ -2091,7 +2091,7 @@ class SiteContent extends Eloquent\Model
             $cast = !empty($parts[4]) ? $parts[4] : '';
             $field = 'tv_' . $tvname . '.value';
             if ($type == 'tvd') {
-                $field = DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
+                $field = \DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
             }
             switch (true) {
                 case ($op == 'in'):

@@ -184,6 +184,12 @@ class UserLogin implements ServiceInterface
             throw new ServiceActionException(\Lang::get('global.login_processor_blocked1'));
         }
 
+        if ($this->user->attributes->verified != 1) {
+            @session_destroy();
+            session_unset();
+            throw new ServiceActionException(\Lang::get('global.login_processor_verified'));
+        }
+
         // blockuntil: this user has a block until date
         if ($this->user->attributes->blockeduntil > time()) {
             @session_destroy();

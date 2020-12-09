@@ -1,4 +1,7 @@
 <?php
+
+use EvolutionCMS\Models\SiteTmplvar;
+
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
@@ -316,24 +319,24 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 							</span></td>
 					</tr>
                     <tr>
-                        <th><?php echo $_lang['user_last_name']; ?>:</th>
+                        <th><?php echo $_lang['user_full_name']; ?>:</th>
                         <td>&nbsp;</td>
-                        <td><input type="text" name="last_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['last_name']); ?>" onChange="documentDirty=true;" /></td>
+                        <td><input type="text" name="fullname" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
                     <tr>
                         <th><?php echo $_lang['user_first_name']; ?>:</th>
                         <td>&nbsp;</td>
                         <td><input type="text" name="first_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['first_name']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
-					<tr>
-						<th><?php echo $_lang['user_full_name']; ?>:</th>
-						<td>&nbsp;</td>
-						<td><input type="text" name="fullname" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange="documentDirty=true;" /></td>
-					</tr>
                     <tr>
                         <th><?php echo $_lang['user_middle_name']; ?>:</th>
                         <td>&nbsp;</td>
                         <td><input type="text" name="middle_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['middle_name']); ?>" onChange="documentDirty=true;" /></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $_lang['user_last_name']; ?>:</th>
+                        <td>&nbsp;</td>
+                        <td><input type="text" name="last_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['last_name']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
 
 					<tr>
@@ -479,6 +482,109 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<?php
 					}
 					?>
+
+                    <?php
+                        $tvs = SiteTmplvar::select('site_tmplvars.*', 'user_role_vars.rank as tvrank', 'user_role_vars.rank', 'site_tmplvars.id', 'site_tmplvars.rank', 'user_values.value')
+                            ->join('user_role_vars', 'user_role_vars.tmplvarid', '=', 'site_tmplvars.id')
+                            ->leftJoin('user_values', function($query) use ($user) {
+                                $query->on('user_values.userid', '=', \DB::raw($user));
+                                $query->on('user_values.tmplvarid', '=', 'site_tmplvars.id');
+                            })
+                            ->orderBy('user_role_vars.rank', 'ASC')
+                            ->orderBy('site_tmplvars.rank', 'ASC')
+                            ->orderBy('site_tmplvars.id', 'ASC')
+                            ->where('user_role_vars.roleid', $userdata['role'])
+                            ->get()
+                            ->toArray();
+
+                        $richtexteditorIds = $richtexteditorOptions = [];
+                        $richtextEditor = $modx->getConfig('which_editor');
+
+                        foreach ($tvs as $row) {
+                            $tvValue = '';
+                            $tvName  = 'tv' . $row['id'];
+
+                            if ($row['value'] == '') {
+                                $row['value'] = $row['default_text'];
+                            }
+
+                            // post back value
+                            if (array_key_exists($tvName, $_POST)) {
+                                if (is_array($_POST[$tvName])) {
+                                    $tvValue = implode('||', $_POST[$tvName]);
+                                } else {
+                                    $tvValue = $_POST[$tvName];
+                                }
+                            } else {
+                                $tvValue = $row['value'];
+                            }
+
+                            if ($row['type'] == 'richtext') {
+                                $tvOptions = $modx->parseProperties($row['elements']);
+
+                                if (!empty($tvOptions) && !empty($tvOptions['editor'])) {
+                                    $editor = $tvOptions['editor'];
+                                } else {
+                                    $editor = $richtextEditor;
+                                }
+
+                                // Add richtext editor to the list
+                                $richtexteditorIds[$editor][] = $tvName;
+                                $richtexteditorOptions[$editor][$tvName] = $tvOptions;
+                            }
+                            
+                            ?>
+                            
+                            <tr>
+                                <th>
+                                    <span class="warning"><?= $row['caption'] ?></span>
+                                    
+                                    <?php if (!empty($row['description'])): ?>
+                                        <br /><span class="comment"><?= $row['description'] ?></span>
+                                    <?php endif; ?>
+
+                                    <?php if (substr($tvValue, 0, 8) == '@INHERIT'): ?>
+                                        <br /><span class="comment inherited">(<?= $_lang['tmplvars_inherited'] ?>)</span>
+                                    <?php endif; ?>
+                                </th>
+
+                                <td>&nbsp;</td>
+                                
+                                <td>
+                                    <div style="position: relative;">
+                                        <?= renderFormElement(
+                                            $row['type'],
+                                            $row['id'],
+                                            $row['default_text'],
+                                            $row['elements'],
+                                            $tvValue,
+                                            '',
+                                            $row,
+                                            $tvsArray,
+                                            $role
+                                        ) ?>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <?php
+                        }
+
+                        if ($modx->getConfig('use_editor')) {
+                            foreach ($richtexteditorIds as $editor => $elements) {
+                                // invoke OnRichTextEditorInit event
+                                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', [
+                                    'editor'   => $editor,
+                                    'elements' => $elements,
+                                    'options'  => $richtexteditorOptions[$editor]
+                                ]);
+
+                                if (is_array($evtOut)) {
+                                    echo implode('', $evtOut);
+                                }
+                            }
+                        }
+                    ?>
 				</table>
 			</div>
 
@@ -638,12 +744,20 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <th><?php echo $_lang["which_browser_title"] ?></th>
                         <td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">
                                 <?php
-                                $selected = 'default' == $usersettings['which_browser'] || !$usersettings['which_browser'] ? ' selected="selected"' : '';
+                                if(isset($usersettings['which_browser'])){
+                                    $selected = $usersettings['which_browser'];
+                                }else {
+                                    $selected = '';
+                                }
                                 echo '<option value="default"' . $selected . '>' . $_lang['option_default'] . "</option>\n";
                                 foreach(glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
                                     $dir = str_replace('\\', '/', $dir);
                                     $browser_name = substr($dir, strrpos($dir, '/') + 1);
-                                    $selected = $browser_name == $usersettings['which_browser'] ? ' selected="selected"' : '';
+                                    if(isset($usersettings['which_browser'])){
+                                        $selected = $usersettings['which_browser'];
+                                    }else {
+                                        $selected = '';
+                                    }
                                     echo '<option value="' . $browser_name . '"' . $selected . '>' . "{$browser_name}</option>\n";
                                 }
                                 ?>
