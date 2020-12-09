@@ -43,7 +43,9 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             }
         }
         $userData['username'] = $userData['newusername'];
-
+        if (!is_numeric($userData['blockeduntil'])) {
+            $userData['blockeduntil'] = strtotime($userData['blockeduntil']);
+        }
         try {
             if ($userData['mode'] == 87) {
                 $user = \UserManager::create($userData);
@@ -51,7 +53,7 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
                 $user = \UserManager::edit($userData);
                 if (isset($userData['password'])) {
                     $userData['clearPassword'] = $userData['password'];
-                    $user->password =  EvolutionCMS()->getPasswordHash()->HashPassword($userData['password']);
+                    $user->password = EvolutionCMS()->getPasswordHash()->HashPassword($userData['password']);
                     $user->cachepwd = '';
                     $user->save();
                 }
@@ -65,8 +67,72 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             }
             exit();
         }
-        // Save User Settings
+
         $userData['id'] = $user->getKey();
+
+        $tvs = \EvolutionCMS\Models\SiteTmplvar::query()->distinct()
+            ->select('site_tmplvars.*', 'user_values.value')
+            ->join('user_role_vars', 'user_role_vars.tmplvarid', '=', 'site_tmplvars.id')
+            ->leftJoin('user_values', function ($query) use ($user) {
+                $query->on('user_values.userid', '=', \DB::raw($user->id));
+                $query->on('user_values.tmplvarid', '=', 'site_tmplvars.id');
+            })
+            ->where('user_role_vars.roleid', $userData['role'])
+            ->get();
+
+        $values = [];
+
+        foreach ($tvs->toArray() as $row) {
+            $value = '';
+
+            if (isset($userData['tv' . $row['id']])) {
+                $value = $userData["tv" . $row['id']];
+
+                switch ($row['type']) {
+                    case 'url':
+                    {
+                        if ($userData["tv" . $row['id'] . '_prefix'] != '--') {
+                            $value = str_replace([
+                                "feed://",
+                                "ftp://",
+                                "http://",
+                                "https://",
+                                "mailto:"
+                            ], "", $value);
+                            $value = $userData["tv" . $row['id'] . '_prefix'] . $value;
+                        }
+                        break;
+                    }
+
+                    default:
+                    {
+                        if (is_array($value)) {
+                            // handles checkboxes & multiple selects elements
+                            $feature_insert = [];
+                            foreach ($value as $featureValue => $feature_item) {
+                                $feature_insert[] = $feature_item;
+                            }
+                            $value = implode("||", $feature_insert);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            $values[$row['name']] = $value;
+        }
+
+        $userData = array_filter($userData, function ($key) {
+            return !preg_match('/^tv\d/', $key);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Save User Values
+        $values['id'] = $user->getKey();
+        \UserManager::saveValues($values);
+
+        // Save User Settings
+        \UserManager::clearSettings($userData);
         \UserManager::saveSettings($userData);
 
         if (isset($userData['role'])
