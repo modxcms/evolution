@@ -40,20 +40,30 @@
 
     $content = $resources->first();
     if (!$content) {
-        $modx->webAlertAndQuit(ManagerTheme::getLexicon('access_permission_denied'));
+        EvolutionCMS()->webAlertAndQuit(ManagerTheme::getLexicon('access_permission_denied'));
     }
     $content = $content->toArray();
     /**
      * "General" tab setup
      */
+
     // Get Creator's username
-    $createdbyname = \EvolutionCMS\Models\User::find($content['createdby'])->username;
+    $createdbyname = \EvolutionCMS\Models\User::find($content['createdby']);
+    if(!is_null($createdbyname)){
+        $createdbyname = $createdbyname->username;
+    }
 
     // Get Editor's username
-    $editedbyname = \EvolutionCMS\Models\User::find($content['editedby'])->username;
+    $editedbyname = \EvolutionCMS\Models\User::find($content['editedby']);
+    if(!is_null($editedbyname)){
+        $editedbyname = $editedbyname->username;
+    }
 
     // Get Template name
-    $templatename = \EvolutionCMS\Models\SiteTemplate::find($content['template'])->templatename;
+    $templatename = \EvolutionCMS\Models\User::find($content['template']);
+    if(!is_null($templatename)){
+        $templatename = $templatename->username;
+    }
 
     // Set the item name for logger
     $_SESSION['itemname'] = $content['pagetitle'];
@@ -111,9 +121,9 @@
             'text-center',
             'text-center'
         );
-        $this->table = new \EvolutionCMS\Support\MakeTable();
-        $this->table->setTableClass($tableClass);
-        $this->table->setColumnHeaderClass($columnHeaderClass);
+        $table = new \EvolutionCMS\Support\MakeTable();
+        $table->setTableClass($tableClass);
+        $table->setColumnHeaderClass($columnHeaderClass);
         //	$modx->getMakeTable()->setRowHeaderClass($rowHeaderClass);
         //	$modx->getMakeTable()->setRowRegularClass($rowRegularClass);
         //	$modx->getMakeTable()->setRowAlternateClass($rowAlternateClass);
@@ -135,7 +145,7 @@
             '1%',
             '1%'
         );
-        $this->table->setColumnWidths($tbWidth);
+        $table->setColumnWidths($tbWidth);
 
         $sd = isset($_REQUEST['dir']) ? '&amp;dir=' . $_REQUEST['dir'] : '&amp;dir=DESC';
         $sb = isset($_REQUEST['sort']) ? '&amp;sort=' . $_REQUEST['sort'] : '&amp;sort=createdon';
@@ -213,8 +223,8 @@
             );
         }
 
-        $this->table->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
-        $children_output = $this->table->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
+        $table->createPagingNavigation($numRecords, 'a=3&id=' . $content['id'] . '&dir=' . $dir . '&sort=' . $sort);
+        $children_output = $table->create($listDocs, $listTableHeader, 'index.php?a=3&amp;id=' . $content['id']);
     } else {
         // No Child documents
         $children_output = '<div class="container"><p>' . ManagerTheme::getLexicon('resources_in_container_no') . '</p></div>';

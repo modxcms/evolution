@@ -149,10 +149,6 @@ class DatabaseManager implements ConnectionResolverInterface
         $connections = $this->app['config']['database.connections'];
 
         if (is_null($config = Arr::get($connections, $name))) {
-            var_dump($this->app['config']);
-            var_dump($connections);
-            var_dump($name);
-            exit();
             throw new InvalidArgumentException("Database connection [{$name}] not configured.");
         }
 
@@ -176,6 +172,10 @@ class DatabaseManager implements ConnectionResolverInterface
         // used by the application. Once we're finished we'll return it back out.
         if ($this->app->bound('events')) {
             $connection->setEventDispatcher($this->app['events']);
+        }
+
+        if ($this->app->bound('db.transactions')) {
+            $connection->setTransactionManager($this->app['db.transactions']);
         }
 
         // Here we'll set a reconnector callback. This reconnector can be any callable

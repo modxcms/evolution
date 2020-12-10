@@ -35,7 +35,7 @@
     "ext-mbstring": "*",
     "lib-iconv": "*",
     "lib-libxml": "*",
-    "agelxnash/modx-evo-database": "~1.5",
+    "serious/modx-evo-database": "1.6.*",
     "doctrine/dbal": "~2.3",
     "phpoption/phpoption": "*",
     "vlucas/phpdotenv": "^5.2",
