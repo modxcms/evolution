@@ -44,7 +44,7 @@ if ($mode == 'restore1') {
                 $tempfile_path = MODX_BASE_PATH . 'assets/backup/temp.php';
                 file_put_contents($tempfile_path,  file_get_contents($_FILES['sqlfile']['tmp_name']));
 
-                $dump_request = 'psql --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $tempfile_path;
+                $dump_request = 'psql --host='.$modx->getDatabase()->getConfig('host').' --no-password --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $tempfile_path;
 
                 exec($dump_request, $data, $data_second);
                 unlink($tempfile_path);
@@ -63,7 +63,7 @@ if ($mode == 'restore1') {
 
         switch ($driver) {
             case 'pgsql':
-                $dump_request = 'psql --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $path;
+                $dump_request = 'psql --host='.$modx->getDatabase()->getConfig('host').' --no-password  --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $path;
                 exec($dump_request, $data, $data_second);
 
                 break;
@@ -100,7 +100,7 @@ if ($mode == 'restore1') {
                 $clean = '--clean';
             }
             $table_str = ' -t ' . implode(' -t ', $tables);
-            $dump_request = 'pg_dump ' . $clean . ' --inserts --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $table_str . ' ' . $dbase . ' > ' . $tempfile_path;
+            $dump_request = 'pg_dump ' . $clean . ' --inserts --host='.$modx->getDatabase()->getConfig('host').' --password='.$modx->getDatabase()->getConfig('password').'  --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $table_str . ' ' . $dbase . ' > ' . $tempfile_path;
             exec($dump_request, $data, $data_second);
             dumpSql($tempfile_path);
 
