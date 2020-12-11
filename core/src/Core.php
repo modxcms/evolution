@@ -14,6 +14,7 @@ use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -2639,7 +2640,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         Route::fallbackToParser();
 
-        $response = $this['router']->dispatch($request);
+        $middleware = array_merge(
+            config('app.middleware'),
+            config('middleware.global', [])
+        );
+
+        $response = (new Pipeline($this))
+            ->send($request)
+            ->through($middleware)
+            ->then(function ($request) {
+                return $this->router->dispatch($request);
+            });
+
         $response->send();
     }
 
