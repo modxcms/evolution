@@ -403,3 +403,19 @@ if (! function_exists('database_path')) {
         return app()->databasePath($path);
     }
 }
+
+if (! function_exists('url')) {
+    /**
+     * Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
+     * 
+     * @param int $id The document identifier. @required
+     * @param string $alias The alias name for the document. Default: ''.
+     * @param string $args The paramaters to add to the URL. Default: ''.
+     * @param string $scheme With full as valus, the site url configuration is used. Default: ''.
+     * @return string Result URL.
+     */
+    function url(int $id, string $alias = '', string $args = '', string $scheme = '')
+    {
+        return UrlProcessor::makeUrl($id, $alias, $args, $scheme);
+    }
+}
