@@ -5299,16 +5299,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (!is_array($groupNames)) {
             return false;
         }
-        // check cache
-        $grpNames = isset ($_SESSION['webUserGroupNames']) ? $_SESSION['webUserGroupNames'] : false;
-        if (!is_array($grpNames)) {
-            $rs = \DB::table('webgroup_names as wgn')
-                ->select('wgn.name')
-                ->join('web_groups as wg')
-                ->on(['wg.webgroup' => 'wgn.id', 'wg.webuser' => $this->getLoginUserID()])
-                ->get();
 
-            $grpNames = $rs->toArray();
+        $grpNames = isset ($_SESSION['mgrUserGroupNames']) ? $_SESSION['mgrUserGroupNames'] : false;
+        if (!is_array($grpNames)) {
+            $grpNames = MembergroupName::query()
+                ->join('member_groups', 'membergroup_names.id', '=', 'member_groups.user_group')
+                ->where('member_groups.member', $this->getLoginUserID())
+                ->pluck('membergroup_names.name')->toArray();
+
             // save to cache
             $_SESSION['webUserGroupNames'] = $grpNames;
         }
