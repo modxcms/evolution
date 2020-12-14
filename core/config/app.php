@@ -65,6 +65,7 @@ return [
         'Evolution_DocumentManager' => EvolutionCMS\Providers\DocumentManagerServiceProvider::class,
         'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
         'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
+        'Evolution_Session' => EvolutionCMS\Providers\SessionServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
@@ -111,5 +112,21 @@ return [
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
         'UserManager' => EvolutionCMS\Facades\UserManager::class,
         'DocumentManager' => EvolutionCMS\Facades\DocumentManager::class,
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The application's global HTTP middleware stack
+    |--------------------------------------------------------------------------
+    |
+    | These core middleware are run during every request to your application.
+    | You should not edit this list,
+    | for custom middleware see file core/custom/config/middleware.php.
+    |
+    */
+
+    'middleware' => [
+        Illuminate\Session\Middleware\StartSession::class,
+    ],
+
 ];
