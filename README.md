@@ -29,11 +29,11 @@ Most significant, though, is **Evolution CMS's** ability to empower you to quick
 ## Install
 Just use [Evolution CMS Installer](https://github.com/evolution-cms/installer)
 
-###Docker
-    
+## Docker
+
 To run **Evolution CMS** using docker make **docker-compose up -d** command in your terminal. Additional configs and access parameters you can find in **docker-compose.yml** file and **docker** folder 
 
-### Screenshots
+## Screenshots
 
 ![screenshot_1](https://user-images.githubusercontent.com/7342798/30167975-5ec146c0-93e8-11e7-8cf8-b324c2b09477.jpg)
 
@@ -41,7 +41,7 @@ To run **Evolution CMS** using docker make **docker-compose up -d** command in y
 
 ![screenshot_3](https://user-images.githubusercontent.com/7342798/30128638-b5b2cdc8-9343-11e7-8c75-0864d00fe28a.jpg)
 
-### References
+## References
 
 Official Website:
 https://evo.im/
