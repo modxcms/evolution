@@ -274,7 +274,7 @@ class DocumentCreate implements ServiceInterface
             elseif ($this->documentData['alias']) {
                 $this->documentData['alias'] = EvolutionCMS()->stripAlias($this->documentData['alias']);
                 $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
-                    ->where('id', '<>', EvolutionCMS())
+                    ->where('id', '<>', $this->documentData['id'])
                     ->where('alias', $this->documentData['alias'])->where('parent', $this->documentData['parent'])->first();
                 if (!is_null($docid)) {
                     throw new ServiceActionException(\Lang::get('global.duplicate_alias_found'));
