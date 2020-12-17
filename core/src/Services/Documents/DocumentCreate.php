@@ -177,9 +177,7 @@ class DocumentCreate implements ServiceInterface
         if (!isset($this->documentData['id'])) {
             $this->documentData['id'] = false;
         }
-        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
-        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
-
+      
 
         if (trim($this->documentData['pagetitle']) == "") {
             if ($this->documentData['type'] == "reference") {
@@ -287,6 +285,9 @@ class DocumentCreate implements ServiceInterface
 
     public function prepareCreateDocument()
     {
+        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
+        
+        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
         $this->documentData['createdby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['editedby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['createdon'] = $this->currentDate;
