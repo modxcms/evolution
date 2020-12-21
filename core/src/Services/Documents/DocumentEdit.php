@@ -74,8 +74,6 @@ class DocumentEdit extends DocumentCreate
     {
         return [
             'id' => ['required'],
-            'pagetitle' => ['required'],
-            'template' => ['required'],
         ];
     }
 
@@ -86,8 +84,6 @@ class DocumentEdit extends DocumentCreate
     {
         return [
             'id.required' => Lang::get("global.required_field", ['field' => 'id']),
-            'pagetitle.required' => Lang::get("global.required_field", ['field' => 'pagetitle']),
-            'template.required' => Lang::get("global.required_field", ['field' => 'template']),
         ];
 
     }
@@ -171,6 +167,12 @@ class DocumentEdit extends DocumentCreate
         $this->documentData['editedby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['editedon'] = $this->currentDate;
         $this->documentData['oldparent'] = $existingDocument['parent'];
+        if(!isset($this->documentData['parent'])){
+            $this->documentData['parent'] = $this->documentData['oldparent'];
+        }
+        if(!isset($this->documentData['template'])){
+            $this->documentData['template'] = $existingDocument['template'];
+        }
 
         if ($this->documentData['id'] == EvolutionCMS()->getConfig('site_start') && $this->documentData['published'] == 0) {
             throw new ServiceActionException("Document is linked to site_start variable and cannot be unpublished!");

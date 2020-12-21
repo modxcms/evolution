@@ -177,9 +177,7 @@ class DocumentCreate implements ServiceInterface
         if (!isset($this->documentData['id'])) {
             $this->documentData['id'] = false;
         }
-        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
-        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
-
+      
 
         if (trim($this->documentData['pagetitle']) == "") {
             if ($this->documentData['type'] == "reference") {
@@ -274,7 +272,7 @@ class DocumentCreate implements ServiceInterface
             elseif ($this->documentData['alias']) {
                 $this->documentData['alias'] = EvolutionCMS()->stripAlias($this->documentData['alias']);
                 $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
-                    ->where('id', '<>', EvolutionCMS())
+                    ->where('id', '<>', $this->documentData['id'])
                     ->where('alias', $this->documentData['alias'])->where('parent', $this->documentData['parent'])->first();
                 if (!is_null($docid)) {
                     throw new ServiceActionException(\Lang::get('global.duplicate_alias_found'));
@@ -287,6 +285,9 @@ class DocumentCreate implements ServiceInterface
 
     public function prepareCreateDocument()
     {
+        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
+        
+        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
         $this->documentData['createdby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['editedby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['createdon'] = $this->currentDate;
