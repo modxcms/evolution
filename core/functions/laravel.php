@@ -29,15 +29,15 @@ if (! function_exists('config_path')) {
 
 if (! function_exists('storage_path'))
 {
-  /**
-   * Get the path to the storage folder.
-   *
-   * @return  string
-   */
-  function storage_path($path = '')
-  {
-    return app('path.storage').($path ? '/'.$path : $path);
-  }
+    /**
+     * Get the path to the storage folder.
+     *
+     * @return  string
+     */
+    function storage_path($path = '')
+    {
+        return app('path.storage').($path ? '/'.$path : $path);
+    }
 }
 
 if (! function_exists('base_path')) {
@@ -63,6 +63,35 @@ if (! function_exists('public_path')) {
     function public_path($path = '')
     {
         return evolutionCMS()->publicPath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+}
+
+if (! function_exists('resource_path')) {
+    /**
+     * Get the path to the base of the install with assets.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function resource_path($path = '')
+    {
+        return evolutionCMS()->publicPath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+}
+
+if (! function_exists('asset')) {
+    /**
+     * Get the path to the base of the install with assets.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function asset($path = '')
+    {
+        $path = 'assets/' . $path;
+        return MODX_SITE_URL.($path ? DIRECTORY_SEPARATOR.$path : $path);
+
+
     }
 }
 
@@ -407,7 +436,7 @@ if (! function_exists('database_path')) {
 if (! function_exists('url')) {
     /**
      * Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
-     * 
+     *
      * @param int $id The document identifier. @required
      * @param string $alias The alias name for the document. Default: ''.
      * @param string $args The paramaters to add to the URL. Default: ''.
