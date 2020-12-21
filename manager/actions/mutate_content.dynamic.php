@@ -1209,8 +1209,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                 if(empty($content['contentType'])) {
                                                     $content['contentType'] = 'text/html';
                                                 }
-                                                $custom_contenttype = (isset ($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml");
-                                                $ct = explode(",", $custom_contenttype);
+                                                $custom_content_type = EvolutionCMS()->getConfig('custom_contenttype', 'text/html,text/plain,text/xml');
+                                                $ct = explode(",", $custom_content_type);
                                                 for($i = 0; $i < count($ct); $i++) {
                                                     echo "\t\t\t\t\t" . '<option value="' . $ct[$i] . '"' . ($content['contentType'] == $ct[$i] ? ' selected="selected"' : '') . '>' . $ct[$i] . "</option>\n";
                                                 }
