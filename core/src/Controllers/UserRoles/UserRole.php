@@ -37,7 +37,7 @@ class UserRole extends AbstractController implements ManagerTheme\PageController
         if(isset($_GET['action']) && $_GET['action'] == 'delete' ){
             $id = $this->getElementId();
             Models\RolePermissions::query()->where('role_id', $id)->delete();
-            Models\UserRoleVar::where('id', $id)->delete();
+            Models\UserRoleVar::where('roleid', $id)->delete();
             Models\UserRole::query()->where('id', $id)->delete();
             header('Location: index.php?a=86&tab=0');
         }
