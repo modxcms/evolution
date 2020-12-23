@@ -166,7 +166,8 @@ class DocumentDuplicate extends DocumentCreate
         }
         if ($this->events) {
             $evtOut = EvolutionCMS()->invokeEvent('OnDocDuplicate', array(
-                'id' => $this->documentData['id']
+                'id' => $this->documentData['id'],
+                'new_id' => $document->getKey()
             ));
         }
         $documents = \EvolutionCMS\Models\SiteContent::where('parent', $this->documentData['id'])->where('deleted', 0)->orderBy('id')->get();
