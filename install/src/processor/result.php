@@ -146,11 +146,11 @@ if (is_dir($pluginPath) && is_readable($pluginPath)) {
                 "$pluginPath/{$params['filename']}",
                 $params['properties'],
                 $params['events'],
-                $params['guid'],
+                $params['guid'] ?? '',
                 $params['modx_category'],
-                $params['legacy_names'],
+                $params['legacy_names'] ?? '',
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                (int)$params['disabled']
+                $params['disabled'] ?? 0
             );
         }
     }
@@ -173,7 +173,7 @@ if (is_dir($modulePath) && is_readable($modulePath)) {
                 $params['name'],
                 $description,
                 "$modulePath/{$params['filename']}",
-                $params['properties'],
+                $params['properties'] ?? '',
                 $params['guid'],
                 (int)$params['shareparams'],
                 $params['modx_category'],
