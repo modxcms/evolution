@@ -12,7 +12,7 @@ if (is_readable($envFile) && class_exists(Dotenv\Dotenv::class)) {
     /**
      * @see: https://github.com/vlucas/phpdotenv
      */
-    $dotenv = new Dotenv\Dotenv(__DIR__ . '/custom');
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/custom');
     $dotenv->load();
 }
 unset($envFile, $dotenv);

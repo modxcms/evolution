@@ -44,8 +44,7 @@ if ($mode == 'restore1') {
                 $tempfile_path = MODX_BASE_PATH . 'assets/backup/temp.php';
                 file_put_contents($tempfile_path,  file_get_contents($_FILES['sqlfile']['tmp_name']));
 
-                $dump_request = 'psql --host='.$modx->getDatabase()->getConfig('host').' --no-password --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $tempfile_path;
-
+                $dump_request = 'PGPASSWORD="'.$modx->getDatabase()->getConfig('password').'" psql --host '.$modx->getDatabase()->getConfig('host').' --username ' . $modx->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$tempfile_path;
                 exec($dump_request, $data, $data_second);
                 unlink($tempfile_path);
                 break;
@@ -63,8 +62,10 @@ if ($mode == 'restore1') {
 
         switch ($driver) {
             case 'pgsql':
-                $dump_request = 'psql --host='.$modx->getDatabase()->getConfig('host').' --no-password  --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' < ' . $path;
+
+                $dump_request = 'PGPASSWORD="'.$modx->getDatabase()->getConfig('password').'" psql --host '.$modx->getDatabase()->getConfig('host').' --username ' . $modx->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$path;
                 exec($dump_request, $data, $data_second);
+
 
                 break;
             default :
@@ -100,7 +101,9 @@ if ($mode == 'restore1') {
                 $clean = '--clean';
             }
             $table_str = ' -t ' . implode(' -t ', $tables);
-            $dump_request = 'pg_dump ' . $clean . ' --inserts --host='.$modx->getDatabase()->getConfig('host').' --password='.$modx->getDatabase()->getConfig('password').'  --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $table_str . ' ' . $dbase . ' > ' . $tempfile_path;
+
+            $dump_request = 'pg_dump postgresql://' . $modx->getDatabase()->getConfig('username') . ':'.$modx->getDatabase()->getConfig('password').'@'.$modx->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges '. $table_str .'> ' . $tempfile_path;
+
             exec($dump_request, $data, $data_second);
             dumpSql($tempfile_path);
 
@@ -138,22 +141,23 @@ if ($mode == 'restore1') {
     $path = "{$modx->getConfig('snapshot_path')}{$today}.sql";
     switch ($driver) {
         case 'pgsql':
-            $lf = "\n";
-            $version = $modx->getVersionData();
-            $output = "# " . addslashes($modx->getPhpCompat()->entities($modx->getConfig('site_name'))) . " Database Dump{$lf}";
-            $output .= "# Evolution CMS Version:{$version['version']}{$lf}";
-            $output .= "# {$lf}";
-            $output .= "# Host: {$modx->getDatabase()->getConfig('host')}{$lf}";
-            $output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
-            $output .= "# Server version: " . $modx->getDatabase()->getVersion() . $lf;
-            $output .= "# PHP Version: " . phpversion() . $lf;
-            $output .= "# Database: `{$modx->getDatabase()->getConfig('database')}`{$lf}";
-            $output .= "# Description: " . trim($_REQUEST['backup_title']) . "{$lf}";
-            $output .= "#";
-            $dump_request = 'pg_dump --clean --inserts --username=' . $modx->getDatabase()->getConfig('username') . ' ' . $dbase . ' > ' . $path;
+//            $lf = "\n";
+//            $version = $modx->getVersionData();
+//            $output = "# " . addslashes($modx->getPhpCompat()->entities($modx->getConfig('site_name'))) . " Database Dump{$lf}";
+//            $output .= "# Evolution CMS Version:{$version['version']}{$lf}";
+//            $output .= "# {$lf}";
+//            $output .= "# Host: {$modx->getDatabase()->getConfig('host')}{$lf}";
+//            $output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
+//            $output .= "# Server version: " . $modx->getDatabase()->getVersion() . $lf;
+//            $output .= "# PHP Version: " . phpversion() . $lf;
+//            $output .= "# Database: `{$modx->getDatabase()->getConfig('database')}`{$lf}";
+//            $output .= "# Description: " . trim($_REQUEST['backup_title']) . "{$lf}";
+//            $output .= "#";
+            $dump_request = 'pg_dump postgresql://' . $modx->getDatabase()->getConfig('username') . ':'.$modx->getDatabase()->getConfig('password').'@'.$modx->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges > ' . $path;
+
             exec($dump_request, $data, $data_second);
             if ($data_second == 0) {
-                $output .= file_get_contents($path);
+                $output = file_get_contents($path);
                 file_put_contents($path, $output);
                 $dumpfinished = true;
             }

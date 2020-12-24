@@ -53,7 +53,7 @@ class SqlParser {
 		}
 
 		// replace {} tags
-		$idata = str_replace('{PREFIX}', $modx->db->config['table_prefix'], $idata);
+		$idata = str_replace('{PREFIX}', $modx->db->getConfig('table_prefix'), $idata);
         $idata = str_replace('{TABLEENCODING}', $this->getTableEncoding(), $idata);
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
 		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
