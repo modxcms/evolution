@@ -43,18 +43,20 @@ class PermissionsGroups extends AbstractController implements ManagerTheme\PageC
     public function updateOrCreate()
     {
         $id = $this->getElementId();
-        $group = Models\PermissionsGroups::query()->firstOrNew($id);
+        $group = Models\PermissionsGroups::query()->firstOrNew(['id' => $id]);
         $group->name = $_POST['name'];
         $group->lang_key = $_POST['lang_key'];
         $group->save();
         header('Location: index.php?a=136&id=' . $group->getKey() . '&r=9');
     }
 
-    public static function findCategoryOrNew($name){
+    public static function findCategoryOrNew($name)
+    {
         $group = Models\PermissionsGroups::query()->firstOrNew(['name' => $name]);
         $group->save();
         return $group->getKey();
     }
+
     /**
      * {@inheritdoc}
      */

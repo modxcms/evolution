@@ -1,110 +1,133 @@
 <?php
 
 /** This file is part of KCFinder project
-  *
-  *      @desc Uploader class
-  *   @package KCFinder
-  *   @version 2.54
-  *    @author Pavel Tzonkov <sunhater@sunhater.com>
-  * @copyright 2010-2014 KCFinder Project
-  *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
-  *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
-  *      @link http://kcfinder.sunhater.com
-  */
+ *
+ * @desc Uploader class
+ * @package KCFinder
+ * @version 2.54
+ * @author Pavel Tzonkov <sunhater@sunhater.com>
+ * @copyright 2010-2014 KCFinder Project
+ * @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
+ * @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
+ * @link http://kcfinder.sunhater.com
+ */
 
-class uploader {
+class uploader
+{
 
-/** Release version */
+    /** Release version */
     const VERSION = "2.54";
 
-/** Config session-overrided settings
-  * @var array */
+    /** Config session-overrided settings
+     * @var array
+     */
     protected $config = array();
 
-/** Default image driver
-  * @var string */
+    /** Default image driver
+     * @var string
+     */
     protected $imageDriver = "gd";
 
-/** Opener applocation properties
-  *   $opener['name']                 Got from $_GET['opener'];
-  *   $opener['CKEditor']['funcNum']  CKEditor function number (got from $_GET)
-  *   $opener['TinyMCE']              Boolean
-  * @var array */
+    /** Opener applocation properties
+     *   $opener['name']                 Got from $_GET['opener'];
+     *   $opener['CKEditor']['funcNum']  CKEditor function number (got from $_GET)
+     *   $opener['TinyMCE']              Boolean
+     * @var array
+     */
     protected $opener = array();
 
-/** Got from $_GET['type'] or first one $config['types'] array key, if inexistant
-  * @var string */
+    /** Got from $_GET['type'] or first one $config['types'] array key, if inexistant
+     * @var string
+     */
     protected $type;
 
-/** Helper property. Local filesystem path to the Type Directory
-  * Equivalent: $config['uploadDir'] . "/" . $type
-  * @var string */
+    /** Helper property. Local filesystem path to the Type Directory
+     * Equivalent: $config['uploadDir'] . "/" . $type
+     * @var string
+     */
     protected $typeDir;
 
-/** Helper property. Web URL to the Type Directory
-  * Equivalent: $config['uploadURL'] . "/" . $type
-  * @var string */
+    /** Helper property. Web URL to the Type Directory
+     * Equivalent: $config['uploadURL'] . "/" . $type
+     * @var string
+     */
     protected $typeURL;
 
-/** Linked to $config['types']
-  * @var array */
+    /** Linked to $config['types']
+     * @var array
+     */
     protected $types = array();
 
-/** Settings which can override default settings if exists as keys in $config['types'][$type] array
-  * @var array */
+    /** Settings which can override default settings if exists as keys in $config['types'][$type] array
+     * @var array
+     */
     protected $typeSettings = array('disabled', 'theme', 'dirPerms', 'filePerms', 'denyZipDownload', 'maxImageWidth', 'maxImageHeight', 'thumbWidth', 'thumbHeight', 'jpegQuality', 'access', 'filenameChangeChars', 'dirnameChangeChars', 'denyExtensionRename', 'deniedExts', 'watermark');
 
-/** Got from language file
-  * @var string */
+    /** Got from language file
+     * @var string
+     */
     protected $charset;
 
-/** The language got from $_GET['lng'] or $_GET['lang'] or... Please see next property
-  * @var string */
+    /** The language got from $_GET['lng'] or $_GET['lang'] or... Please see next property
+     * @var string
+     */
     protected $lang = 'en';
 
-/** Possible language $_GET keys
-  * @var array */
+    /** Possible language $_GET keys
+     * @var array
+     */
     protected $langInputNames = array('lang', 'langCode', 'lng', 'language', 'lang_code');
 
-/** Uploaded file(s) info. Linked to first $_FILES element
-  * @var array */
+    /** Uploaded file(s) info. Linked to first $_FILES element
+     * @var array
+     */
     protected $file;
 
-/** Next three properties are got from the current language file
-  * @var string */
+    /** Next three properties are got from the current language file
+     * @var string
+     */
     protected $dateTimeFull;   // Currently not used
     protected $dateTimeMid;    // Currently not used
     protected $dateTimeSmall;
 
-/** Contain Specified language labels
-  * @var array */
+    /** Contain Specified language labels
+     * @var array
+     */
     protected $labels = array();
 
-/** Contain unprocessed $_GET array. Please use this instead of $_GET
-  * @var array */
+    /** Contain unprocessed $_GET array. Please use this instead of $_GET
+     * @var array
+     */
     protected $get;
 
-/** Contain unprocessed $_POST array. Please use this instead of $_POST
-  * @var array */
+    /** Contain unprocessed $_POST array. Please use this instead of $_POST
+     * @var array
+     */
     protected $post;
 
-/** Contain unprocessed $_COOKIE array. Please use this instead of $_COOKIE
-  * @var array */
+    /** Contain unprocessed $_COOKIE array. Please use this instead of $_COOKIE
+     * @var array
+     */
     protected $cookie;
 
-/** Session array. Please use this property instead of $_SESSION
-  * @var array */
+    /** Session array. Please use this property instead of $_SESSION
+     * @var array
+     */
     protected $session;
 
-/** CMS integration attribute (got from $_GET['cms'])
-  * @var string */
+    /** CMS integration attribute (got from $_GET['cms'])
+     * @var string
+     */
     protected $cms = "";
 
     protected $modx = null;
-/** Magic method which allows read-only access to protected or private class properties
-  * @param string $property
-  * @return mixed */
-    public function __get($property) {
+
+    /** Magic method which allows read-only access to protected or private class properties
+     * @param string $property
+     * @return mixed
+     */
+    public function __get($property)
+    {
         return property_exists($this, $property) ? $this->$property : null;
     }
 
@@ -112,7 +135,8 @@ class uploader {
      * uploader constructor.
      * @param DocumentParser $modx
      */
-    public function __construct(DocumentParser $modx) {
+    public function __construct(DocumentParser $modx)
+    {
 
         //MODX
         try {
@@ -136,7 +160,7 @@ class uploader {
         )
             $this->cms = $this->get['cms'];
 
-		// LINKING UPLOADED FILE
+        // LINKING UPLOADED FILE
         if (count($_FILES))
             $this->file = &$_FILES[key($_FILES)];
 
@@ -209,7 +233,7 @@ class uploader {
 
         // FULL URL
         if (preg_match('/^([a-z]+)\:\/\/([^\/^\:]+)(\:(\d+))?\/(.+)\/?$/',
-                $this->config['uploadURL'], $patt)
+            $this->config['uploadURL'], $patt)
         ) {
             list($unused, $protocol, $domain, $unused, $port, $path) = $patt;
             $path = path::normalize($path);
@@ -217,10 +241,10 @@ class uploader {
             $this->config['uploadDir'] = strlen($this->config['uploadDir'])
                 ? path::normalize($this->config['uploadDir'])
                 : path::url2fullPath("/$path");
-         $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
-         $this->typeURL = "{$this->config['siteURL']}/{$this->config['uploadURL']}/{$this->type}";
+            $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
+            $this->typeURL = "{$this->config['siteURL']}/{$this->config['uploadURL']}/{$this->type}";
 
-        // SITE ROOT
+            // SITE ROOT
         } elseif ($this->config['uploadURL'] == "/") {
             $this->config['uploadDir'] = strlen($this->config['uploadDir'])
                 ? path::normalize($this->config['uploadDir'])
@@ -228,7 +252,7 @@ class uploader {
             $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
             $this->typeURL = "/{$this->type}";
 
-        // ABSOLUTE & RELATIVE
+            // ABSOLUTE & RELATIVE
         } else {
             $this->config['uploadURL'] = (substr($this->config['uploadURL'], 0, 1) === "/")
                 ? path::normalize($this->config['uploadURL'])
@@ -290,45 +314,48 @@ class uploader {
     /**
      * @return array|bool|int|null|string|void
      */
-    protected function getTransaliasSettings() {
-		$modx = evolutionCMS();
+    protected function getTransaliasSettings()
+    {
+        $modx = evolutionCMS();
 
-		// Cleaning uploaded filename?
+        // Cleaning uploaded filename?
         $setting = \EvolutionCMS\Models\SystemSetting::query()->where('setting_name', 'clean_uploaded_filename')->where('setting_value', 1);
         if ($setting->count() > 0) {
-			// Transalias plugin active?
+            // Transalias plugin active?
 
             $property = \EvolutionCMS\Models\SitePlugin::query()->where('name', 'TransAlias')->where('disabled', 0)->first();
-			if (!is_null($property)) {
-				$properties = $modx->parseProperties($property->properties, 'TransAlias', 'plugin');
-			} else {
-				$properties = NULL;
-			}
-		} else {
-			$properties = NULL;
-		}
-		return $properties;
-	}
+            if (!is_null($property)) {
+                $properties = $modx->parseProperties($property->properties, 'TransAlias', 'plugin');
+            } else {
+                $properties = NULL;
+            }
+        } else {
+            $properties = NULL;
+        }
+        return $properties;
+    }
 
 
     /**
      * @param $filename
      * @return mixed|string
      */
-    protected function normalizeFilename($filename) {
-		if ($this->getTransaliasSettings()) {
-        		$format = strrchr($filename, ".");
-        		$filename = str_replace($format, "", $filename);
-            		$filename = $this->modx->stripAlias($filename).$format;
-        	}
-        	return $filename;
-	}
+    protected function normalizeFilename($filename)
+    {
+        if ($this->getTransaliasSettings()) {
+            $format = strrchr($filename, ".");
+            $filename = str_replace($format, "", $filename);
+            $filename = $this->modx->stripAlias($filename) . $format;
+        }
+        return $filename;
+    }
 
     /**
      * @param $dirname
      * @return string
      */
-    protected function normalizeDirname($dirname) {
+    protected function normalizeDirname($dirname)
+    {
         return $this->modx->stripAlias($dirname);
     }
 
@@ -336,7 +363,8 @@ class uploader {
      * @param array|null $aFile
      * @return bool|mixed
      */
-    protected function checkUploadedFile(array $aFile=null) {
+    protected function checkUploadedFile(array $aFile = null)
+    {
         $config = &$this->config;
         $file = ($aFile === null) ? $this->file : $aFile;
 
@@ -364,7 +392,7 @@ class uploader {
                 ($file['error'] == UPLOAD_ERR_CANT_WRITE) ?
                     $this->label("Failed to write file.") :
                     $this->label("Unknown error.")
-            )))));
+                )))));
 
         // HIDDEN FILENAMES CHECK
         elseif (substr($file['name'], 0, 1) == ".")
@@ -397,10 +425,10 @@ class uploader {
             return $this->label("The image is too big and/or cannot be resized.");
 
 
-	// CHECK FOR MODX MAX FILE SIZE
-	$actualfilesize=filesize($file['tmp_name']);
-	if (isset($this->config['maxfilesize']) && $actualfilesize > $this->config['maxfilesize'])
-	    return $this->label("File is too big: ".$actualfilesize." Bytes. (max ".$this->config['maxfilesize']." Bytes)");
+        // CHECK FOR MODX MAX FILE SIZE
+        $actualfilesize = filesize($file['tmp_name']);
+        if (isset($this->config['maxfilesize']) && $actualfilesize > $this->config['maxfilesize'])
+            return $this->label("File is too big: " . $actualfilesize . " Bytes. (max " . $this->config['maxfilesize'] . " Bytes)");
 
         return true;
     }
@@ -411,7 +439,8 @@ class uploader {
      * @param bool $existing
      * @return bool|string
      */
-    protected function checkInputDir($dir, $inclType=true, $existing=true) {
+    protected function checkInputDir($dir, $inclType = true, $existing = true)
+    {
         $dir = path::normalize($dir);
         if (substr($dir, 0, 1) == "/")
             $dir = substr($dir, 1);
@@ -442,7 +471,8 @@ class uploader {
      * @param $type
      * @return bool
      */
-    protected function validateExtension($ext, $type) {
+    protected function validateExtension($ext, $type)
+    {
         $ext = trim(strtolower($ext));
         if (!isset($this->types[$type]))
             return false;
@@ -471,7 +501,8 @@ class uploader {
      * @param $path
      * @return mixed
      */
-    protected function getTypeFromPath($path) {
+    protected function getTypeFromPath($path)
+    {
         return preg_match('/^([^\/]*)\/.*$/', $path, $patt)
             ? $patt[1] : $path;
     }
@@ -480,7 +511,8 @@ class uploader {
      * @param $path
      * @return string
      */
-    protected function removeTypeFromPath($path) {
+    protected function removeTypeFromPath($path)
+    {
         return preg_match('/^[^\/]*\/(.*)$/', $path, $patt)
             ? $patt[1] : "";
     }
@@ -490,7 +522,8 @@ class uploader {
      * @param null $file
      * @return bool
      */
-    protected function imageResize($image, $file=null) {
+    protected function imageResize($image, $file = null)
+    {
 
         if (!($image instanceof image)) {
             $img = image::factory($this->imageDriver, $image);
@@ -502,23 +535,20 @@ class uploader {
             $img = $image;
 
         $orientation = 1;
-        if (function_exists("exif_read_data")) {
-            $orientation = @exif_read_data($file);
-            $orientation = isset($orientation['Orientation']) ? $orientation['Orientation'] : 1;
-        }
+
 
         // IMAGE WILL NOT BE RESIZED WHEN NO WATERMARK AND SIZE IS ACCEPTABLE
         if ((
                 !isset($this->config['watermark']['file']) ||
                 (!strlen(trim($this->config['watermark']['file'])))
             ) && (
-            (
+                (
                     !$this->config['maxImageWidth'] &&
                     !$this->config['maxImageHeight']
                 ) || (
                     ($img->width <= $this->config['maxImageWidth']) &&
                     ($img->height <= $this->config['maxImageHeight'])
-            )
+                )
             ) &&
             ($orientation == 1)
         )
@@ -545,7 +575,7 @@ class uploader {
             if (isset($width) && isset($height) && !$img->resize($width, $height))
                 return false;
 
-        // RESIZE TO FIT
+            // RESIZE TO FIT
         } elseif (
             $this->config['maxImageWidth'] && $this->config['maxImageHeight'] &&
             !$img->resizeFit($this->config['maxImageWidth'], $this->config['maxImageHeight'])
@@ -565,7 +595,8 @@ class uploader {
         if (($orientation >= 2) && ($orientation <= 8) && ($this->imageDriver == "imagick"))
             try {
                 $img->image->setImageProperty('exif:Orientation', "1");
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
 
         // WATERMARK
         if (isset($this->config['watermark']['file']) &&
@@ -576,22 +607,22 @@ class uploader {
             $top = isset($this->config['watermark']['top'])
                 ? $this->config['watermark']['top'] : false;
             $img->watermark($this->config['watermark']['file'], $left, $top);
-		}
+        }
 
-        $options = array( 'file' => $file );
+        $options = array('file' => $file);
 
-        $type = exif_imagetype( $file );
+        $type = exif_imagetype($file);
 
-        switch ( $type ) {
+        switch ($type) {
             case IMAGETYPE_GIF:
-                return $img->output( 'gif', $options );
+                return $img->output('gif', $options);
 
             case IMAGETYPE_PNG:
-		$options['quality'] = 9;
-                return $img->output( 'png', $options );
+                $options['quality'] = 9;
+                return $img->output('png', $options);
 
             default:
-                return $img->output( 'jpeg', array_merge( $options, array( 'quality' => $this->config['jpegQuality'] ) ) );
+                return $img->output('jpeg', array_merge($options, array('quality' => $this->config['jpegQuality'])));
         }
 
     }
@@ -601,7 +632,8 @@ class uploader {
      * @param bool $overwrite
      * @return bool
      */
-    protected function makeThumb($file, $overwrite=true) {
+    protected function makeThumb($file, $overwrite = true)
+    {
         $img = image::factory($this->imageDriver, $file);
 
         // Drop files which are not images
@@ -632,15 +664,15 @@ class uploader {
         if (!$img->resizeFit($this->config['thumbWidth'], $this->config['thumbHeight']))
             return false;
 
-        if ( $this->imageDriver == 'gd' ) {
-            $width  = imagesx( $img->image );
-            $height = imagesy( $img->image );
-            $back   = image::factory( $this->imageDriver, array( $width, $height ) );
-            $tile   = image::factory( $this->imageDriver, __DIR__ . '/../themes/' . $this->config['theme'] . '/img/bg_transparent.png' );
+        if ($this->imageDriver == 'gd') {
+            $width = imagesx($img->image);
+            $height = imagesy($img->image);
+            $back = image::factory($this->imageDriver, array($width, $height));
+            $tile = image::factory($this->imageDriver, __DIR__ . '/../themes/' . $this->config['theme'] . '/img/bg_transparent.png');
 
-            imagesettile( $back->image, $tile->image );
-            imagefilledrectangle( $back->image, 0, 0, $width, $height, IMG_COLOR_TILED );
-            imagecopy( $back->image, $img->image, 0, 0, 0, 0, $width, $height );
+            imagesettile($back->image, $tile->image);
+            imagefilledrectangle($back->image, 0, 0, $width, $height, IMG_COLOR_TILED);
+            imagecopy($back->image, $img->image, 0, 0, 0, 0, $width, $height);
 
             $img = $back;
         }
@@ -655,7 +687,8 @@ class uploader {
     /**
      * @param $langCode
      */
-    protected function localize($langCode) {
+    protected function localize($langCode)
+    {
         require "lang/{$langCode}.php";
         setlocale(LC_ALL, $lang['_locale']);
         $this->charset = $lang['_charset'];
@@ -675,7 +708,8 @@ class uploader {
      * @param array|null $data
      * @return mixed
      */
-    protected function label($string, array $data=null) {
+    protected function label($string, array $data = null)
+    {
         $return = isset($this->labels[$string]) ? $this->labels[$string] : $string;
         if (is_array($data))
             foreach ($data as $key => $val)
@@ -687,7 +721,8 @@ class uploader {
      * @param $message
      * @param array|null $data
      */
-    protected function backMsg($message, array $data=null) {
+    protected function backMsg($message, array $data = null)
+    {
         $message = $this->label($message, $data);
         if (isset($this->file['tmp_name']) && file_exists($this->file['tmp_name']))
             @unlink($this->file['tmp_name']);
@@ -699,51 +734,54 @@ class uploader {
      * @param $url
      * @param string $message
      */
-    protected function callBack($url, $message="") {
+    protected function callBack($url, $message = "")
+    {
         $message = text::jsValue($message);
         $CKfuncNum = isset($this->opener['CKEditor']['funcNum'])
             ? $this->opener['CKEditor']['funcNum'] : 0;
         if (!$CKfuncNum) $CKfuncNum = 0;
         header("Content-Type: text/html; charset={$this->charset}");
 
-?><html>
-<body>
-<script type='text/javascript'>
-var kc_CKEditor = (window.parent && window.parent.CKEDITOR)
-    ? window.parent.CKEDITOR.tools.callFunction
-    : ((window.opener && window.opener.CKEDITOR)
-        ? window.opener.CKEDITOR.tools.callFunction
-        : false);
-var kc_FCKeditor = (window.opener && window.opener.OnUploadCompleted)
-    ? window.opener.OnUploadCompleted
-    : ((window.parent && window.parent.OnUploadCompleted)
-        ? window.parent.OnUploadCompleted
-        : false);
-var kc_Custom = (window.parent && window.parent.KCFinder)
-    ? window.parent.KCFinder.callBack
-    : ((window.opener && window.opener.KCFinder)
-        ? window.opener.KCFinder.callBack
-        : false);
-if (kc_CKEditor)
-    kc_CKEditor(<?php echo $CKfuncNum ?>, '<?php echo $url ?>', '<?php echo $message ?>');
-if (kc_FCKeditor)
-    kc_FCKeditor(<?php echo strlen($message) ? 1 : 0 ?>, '<?php echo $url ?>', '', '<?php echo $message ?>');
-if (kc_Custom) {
-    if (<?php echo strlen($message) ?>) alert('<?php echo $message ?>');
-    kc_Custom('<?php echo $url ?>');
-}
-if (!kc_CKEditor && !kc_FCKeditor && !kc_Custom)
-    alert("<?php echo $message ?>");
-</script>
-</body>
-</html><?php
+        ?>
+        <html>
+    <body>
+    <script type='text/javascript'>
+        var kc_CKEditor = (window.parent && window.parent.CKEDITOR)
+            ? window.parent.CKEDITOR.tools.callFunction
+            : ((window.opener && window.opener.CKEDITOR)
+                ? window.opener.CKEDITOR.tools.callFunction
+                : false);
+        var kc_FCKeditor = (window.opener && window.opener.OnUploadCompleted)
+            ? window.opener.OnUploadCompleted
+            : ((window.parent && window.parent.OnUploadCompleted)
+                ? window.parent.OnUploadCompleted
+                : false);
+        var kc_Custom = (window.parent && window.parent.KCFinder)
+            ? window.parent.KCFinder.callBack
+            : ((window.opener && window.opener.KCFinder)
+                ? window.opener.KCFinder.callBack
+                : false);
+        if (kc_CKEditor)
+            kc_CKEditor(<?php echo $CKfuncNum ?>, '<?php echo $url ?>', '<?php echo $message ?>');
+        if (kc_FCKeditor)
+            kc_FCKeditor(<?php echo strlen($message) ? 1 : 0 ?>, '<?php echo $url ?>', '', '<?php echo $message ?>');
+        if (kc_Custom) {
+            if (<?php echo strlen($message) ?>) alert('<?php echo $message ?>');
+            kc_Custom('<?php echo $url ?>');
+        }
+        if (!kc_CKEditor && !kc_FCKeditor && !kc_Custom)
+            alert("<?php echo $message ?>");
+    </script>
+    </body>
+        </html><?php
 
     }
 
     /**
      * @return string
      */
-    protected function get_htaccess() {
+    protected function get_htaccess()
+    {
         return "<IfModule mod_php4.c>
   php_value engine off
 </IfModule>

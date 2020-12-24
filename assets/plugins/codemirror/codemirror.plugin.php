@@ -73,7 +73,7 @@ switch($modx->event->name) {
 		$textarea_name = $modx->event->params['elements'];
 		$rte = 'none';
 		$tvMode = true;
-		$contentType = $content['contentType'] ? $content['contentType'] : $modx->event->params['contentType'];
+		$contentType = $content['contentType'] ?? $modx->event->params['contentType'];
 
 		/*
 		* Switch contentType for doc
