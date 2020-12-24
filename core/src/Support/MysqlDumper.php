@@ -107,7 +107,7 @@ class MysqlDumper implements MysqlDumperInterface
         $output .= "# Server version: " . $modx->getDatabase()->getVersion() . $lf;
         $output .= "# PHP Version: " . phpversion() . $lf;
         $output .= "# Database: `{$this->dbname}`{$lf}";
-        $output .= "# Description: " . trim($_REQUEST['backup_title']) . "{$lf}";
+        $output .= "# Description: " . trim($_REQUEST['backup_title'] ?? '') . "{$lf}";
         $output .= "#";
         file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
         $output = '';
