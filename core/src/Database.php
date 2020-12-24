@@ -664,8 +664,16 @@ class Database extends Manager
                 $this->query("INSERT INTO {$intotable} {$fields}");
             } else {
                 if (empty($fromtable)) {
-                    $fields = "(\"" . implode("\", \"", array_keys($fields)) . "\") VALUES('" . implode("', '",
-                            array_values($fields)) . "')";
+                    switch ($this->getConfig('driver')) {
+                        case 'pgsql':
+                            $fields = "(\"" . implode("\", \"", array_keys($fields)) . "\") VALUES('" . implode("', '",
+                                    array_values($fields)) . "')";
+                            break;
+                        default:
+                            $fields = "(`" . implode("`, `", array_keys($fields)) . "`) VALUES('" . implode("', '",
+                                    array_values($fields)) . "')";
+                            break;
+                    }
                     $this->query("INSERT INTO {$intotable} {$fields}");
                 } else {
                     $fromtable = $this->replaceFullTableName($fromtable);
@@ -720,7 +728,15 @@ class Database extends Manager
                     } else {
                         $f = "'" . $value . "'";
                     }
-                    $fields[$key] = "\"{$key}\" = " . $f;
+                    switch ($this->getConfig('driver')) {
+                        case 'pgsql':
+                            $fields[$key] = "\"{$key}\" = " . $f;
+                            break;
+                        default:
+                            $fields[$key] = "`{$key}` = " . $f;
+                            break;
+                    }
+
                 }
                 $fields = implode(',', $fields);
             }
