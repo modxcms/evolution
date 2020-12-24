@@ -461,7 +461,7 @@ if (substr($webstart_path, 0, 1) == '/') {
 
             <?php
             if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
-                @ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
+                @ini_set("upload_max_filesize", $upload_maxsize ?? 0); // modified by raymond
                 ?>
 
                 <form name="upload" enctype="multipart/form-data" action="index.php" method="post">
