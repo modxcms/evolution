@@ -12,8 +12,6 @@ class PgSqlDatabase extends Manager
 
     public function __construct(Container $container=null)
     {
-        var_dump($container);
-        exit();
         parent::__construct($container);
         $this->config['table_prefix'] = $this->getConfig('prefix');
     }

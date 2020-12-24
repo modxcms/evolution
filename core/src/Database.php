@@ -3,9 +3,7 @@
 
 use Exception;
 
-//use AgelxNash\Modx\Evo\Database\Exceptions;
-//use AgelxNash\Modx\Evo\Database\Drivers;
-use Illuminate\Container\Container;
+
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use PDOStatement;
@@ -25,6 +23,7 @@ class Database extends Manager
 
     protected $driver;
 
+    public $conn;
 
     /**
      * @param $tableName
@@ -68,7 +67,9 @@ class Database extends Manager
             } else {
                 $out = $pdo->prepare($this->replaceFullTableName($sql));
             }
-
+            $out->execute();
+            $this->conn = $pdo;
+            $this->saveAffectedRows($out);
             return $out;
         } catch (Exception $exception) {
             if ($watchError === true) {
@@ -248,6 +249,7 @@ class Database extends Manager
     {
         return $this->getConnection()->getConfig('prefix') . $table;
     }
+
     public function getTableName($table)
     {
         return $this->getFullTableName($table);
@@ -278,7 +280,7 @@ class Database extends Manager
      */
     public function getRow($result, $mode = 'assoc')
     {
-        $result->execute();
+
         switch ($mode) {
             case 'assoc':
                 $out = $result->fetch(\PDO::FETCH_ASSOC);
@@ -297,37 +299,10 @@ class Database extends Manager
                     "Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num', 'object' or 'both'."
                 );
         }
-        return $out;
-    }
-
-
-    /**
-     * @param mysqli_result $result
-     * {@inheritDoc}
-     */
-    public function getRow_2($result, $mode = 'assoc')
-    {
-        switch ($mode) {
-            case 'assoc':
-                $out = $result->fetch_assoc();
-                break;
-            case 'num':
-                $out = $result->fetch_row();
-                break;
-            case 'object':
-                $out = $result->fetch_object();
-                break;
-            case 'both':
-                $out = $result->fetch_array(MYSQLI_BOTH);
-                break;
-            default:
-                throw new Exceptions\UnknownFetchTypeException(
-                    "Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num' or 'both'."
-                );
-        }
 
         return $out;
     }
+
 
     /**
      * {@inheritDoc}
@@ -485,11 +460,340 @@ class Database extends Manager
                 }
             }
         } else {
-            if ($this->getConnection()->getDriverName() == 'mysqli') {
+            if (is_string($data)) {
                 $data = $this->getConnection()->getPdo()->quote($data);
+                $data = $str = substr($data, 1, -1);
             }
         }
 
         return $data;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    /**
+     * @param string $host
+     * @param string $dbase
+     * @param string $uid
+     * @param string $pwd
+     * @return \mysqli
+     */
+    public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
+    {
+        $uid = $uid ? $uid : EvolutionCMS()->getDatabase()->getConfig('user');
+        $pwd = $pwd ? $pwd : EvolutionCMS()->getDatabase()->getConfig('pass');
+        $host = $host ? $host : EvolutionCMS()->getDatabase()->getConfig('host');
+        $host = explode(':', $host, 2);
+        $dbase = $dbase ? $dbase : EvolutionCMS()->getDatabase()->getConfig('dbase');
+        $dbase = trim($dbase, '`'); // remove the `` chars
+        $charset = EvolutionCMS()->getDatabase()->getConfig('charset');
+        $connection_method = EvolutionCMS()->getDatabase()->getConfig('connection_method');
+        $tstart = EvolutionCMS()->getMicroTime();
+        $safe_count = 0;
+        do {
+            $this->conn = new \mysqli($host[0], $uid, $pwd, $dbase, isset($host[1]) ? $host[1] : null);
+            if ($this->conn->connect_error) {
+                $this->conn = null;
+                if (isset(EvolutionCMS()->config['send_errormail']) && EvolutionCMS()->config['send_errormail'] !== '0') {
+                    if (EvolutionCMS()->config['send_errormail'] <= 2) {
+                        $logtitle = 'Failed to create the database connection!';
+                        $request_uri = EvolutionCMS()->htmlspecialchars($_SERVER['REQUEST_URI']);
+                        $ua = EvolutionCMS()->htmlspecialchars($_SERVER['HTTP_USER_AGENT']);
+                        $referer = EvolutionCMS()->htmlspecialchars($_SERVER['HTTP_REFERER']);
+                        EvolutionCMS()->sendmail(array(
+                            'subject' => 'Missing to create the database connection! from ' . EvolutionCMS()->config['site_name'],
+                            'body' => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
+                            'type' => 'text'
+                        ));
+                    }
+                }
+                sleep(1);
+                $safe_count++;
+            }
+        } while (!$this->conn && $safe_count < 3);
+        if ($this->conn instanceof \mysqli) {
+            $this->conn->query("{$connection_method} {$charset}");
+            $tend = EvolutionCMS()->getMicroTime();
+            $totaltime = $tend - $tstart;
+            if (EvolutionCMS()->dumpSQL) {
+                EvolutionCMS()->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s",
+                        $totaltime) . "</fieldset><br />";
+            }
+            $this->conn->set_charset(EvolutionCMS()->getDatabase()->getConfig('charset'));
+            $this->isConnected = true;
+            EvolutionCMS()->queryTime += $totaltime;
+        } else {
+            EvolutionCMS()->getService('ExceptionHandler')->messageQuit("Failed to create the database connection!");
+            exit;
+        }
+        return $this->conn;
+    }
+
+    /**
+     * @param string $from
+     * @param string $where
+     * @param string $orderBy
+     * @param string $limit
+     * @return bool|mysqli_result
+     */
+    public function delete($from, $where = '', $orderBy = '', $limit = '')
+    {
+
+        $out = false;
+        if (!$from) {
+            evolutionCMS()->getService('ExceptionHandler')->messageQuit("Empty \$from parameters in DBAPI::delete().");
+        } else {
+            $from = $this->replaceFullTableName($from);
+            $where = trim($where);
+            $orderBy = trim($orderBy);
+            $limit = trim($limit);
+
+            if ($where !== '' && stripos($where, 'WHERE') === false) {
+                $where = "WHERE {$where}";
+            }
+            if ($orderBy !== '' && stripos($orderBy, 'ORDER BY') === false) {
+                $orderBy = "ORDER BY {$orderBy}";
+            }
+            if ($limit !== '' && stripos($limit, 'LIMIT') === false) {
+                $limit = "LIMIT {$limit}";
+            }
+
+            $out = \DB::statement("DELETE FROM {$from} {$where} {$orderBy} {$limit}");
+        }
+        return $out;
+    }
+
+    /**
+     * @return void
+     */
+    public function disconnect()
+    {
+        \DB::disconnect();
+    }
+
+    /**
+     * @param $name
+     * @param \mysqli_result|string $dsq
+     * @return array
+     */
+    public function getColumn($name, $dsq)
+    {
+        $col = array();
+
+        if (!$this->isResult($dsq)) {
+            $dsq = $this->query($dsq);
+        }
+        if ($dsq) {
+            while ($row = $this->getRow($dsq)) {
+                $col[] = $row[$name];
+            }
+        }
+
+        return $col;
+    }
+
+    /**
+     * @param \mysqli_result|string $dsq
+     * @return array
+     */
+    public function getColumnNames($dsq): array
+    {
+        $names = array();
+        if (!$this->isResult($dsq)) {
+            $dsq = $this->query($dsq);
+        }
+        if ($dsq) {
+            $limit = $this->numFields($dsq);
+            for ($i = 0; $i < $limit; $i++) {
+                $names[] = $this->fieldName($dsq, $i);
+            }
+        }
+
+        return $names;
+    }
+
+    /**
+     * @param \PDOStatement $rs
+     * @return mixed
+     */
+    public function numFields($rs)
+    {
+        return $rs->columnCount();
+    }
+
+    /**
+     * @param \PDOStatement $rs
+     * @param int $col
+     * @return string|null
+     */
+    public function fieldName($rs, $col = 0)
+    {
+        $meta = $rs->getColumnMeta($col);
+
+        return $meta['name'] ?? NULL;
+    }
+
+
+    public function getInsertId($conn = null)
+    {
+        if (!($conn instanceof PDOStatement)) {
+            $conn =& $this->conn;
+        }
+
+        return $conn->lastInsertId();
+    }
+
+    /**
+     * @param string|array $fields
+     * @param string $intotable
+     * @param string $fromfields
+     * @param string $fromtable
+     * @param string $where
+     * @param string $limit
+     * @return mixed
+     */
+    public function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "")
+    {
+        $out = false;
+        if (!$intotable) {
+            evolutionCMS()->getService('ExceptionHandler')->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
+        } else {
+            $intotable = $this->replaceFullTableName($intotable);
+            if (!is_array($fields)) {
+                $this->query("INSERT INTO {$intotable} {$fields}");
+            } else {
+                if (empty($fromtable)) {
+                    $fields = "(\"" . implode("\", \"", array_keys($fields)) . "\") VALUES('" . implode("', '",
+                            array_values($fields)) . "')";
+                    $this->query("INSERT INTO {$intotable} {$fields}");
+                } else {
+                    $fromtable = $this->replaceFullTableName($fromtable);
+                    $fields = "(" . implode(",", array_keys($fields)) . ")";
+                    $where = trim($where);
+                    $limit = trim($limit);
+                    if ($where !== '' && stripos($where, 'WHERE') !== 0) {
+                        $where = "WHERE {$where}";
+                    }
+                    if ($limit !== '' && stripos($limit, 'LIMIT') !== 0) {
+                        $limit = "LIMIT {$limit}";
+                    }
+                    $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
+                }
+            }
+            if (($lid = $this->getInsertId()) === false) {
+                evolutionCMS()->getService('ExceptionHandler')->messageQuit("Couldn't get last insert key!");
+            }
+
+            $out = $lid;
+        }
+        return $out;
+    }
+
+    /**
+     * @param PDOStatement $ds
+     * @return int
+     */
+    public function getRecordCount($ds)
+    {
+        return ($ds instanceof PDOStatement) ? $ds->rowCount() : 0;
+    }
+
+
+    /**
+     * @param array|string $fields
+     * @param $table
+     * @param string $where
+     * @return bool|mysqli_result
+     */
+    public function update($fields, $table, $where = "")
+    {
+        $out = false;
+        if (!$table) {
+            evolutionCMS()->getService('ExceptionHandler')->messageQuit('Empty ' . $table . ' parameter in DBAPI::update().');
+        } else {
+            $table = $this->replaceFullTableName($table);
+            if (is_array($fields)) {
+                foreach ($fields as $key => $value) {
+                    if ($value === null || strtolower($value) === 'null') {
+                        $f = 'NULL';
+                    } else {
+                        $f = "'" . $value . "'";
+                    }
+                    $fields[$key] = "\"{$key}\" = " . $f;
+                }
+                $fields = implode(',', $fields);
+            }
+            $where = trim($where);
+            if ($where !== '' && stripos($where, 'WHERE') !== 0) {
+                $where = 'WHERE ' . $where;
+            }
+
+            return $this->query('UPDATE ' . $table . ' SET ' . $fields . ' ' . $where);
+        }
+        return $out;
+    }
+
+    /**
+     * @param string $table
+     * @return array
+     */
+    public function getTableMetaData($table)
+    {
+        $metadata = array();
+        if (!empty($table) && is_scalar($table)) {
+            switch (EvolutionCMS()->getDatabase()->getConfig('driver')) {
+                case 'pgsql':
+                    $sql = " SELECT * FROM information_schema.columns WHERE table_name = '" . $table . "';";
+                    break;
+                default:
+                    $sql = 'SHOW FIELDS FROM ' . $table;
+                    break;
+            }
+            if ($ds = $this->query($sql)) {
+                while ($row = $this->getRow($ds)) {
+                    switch (EvolutionCMS()->getDatabase()->getConfig('driver')) {
+                        case 'pgsql':
+                            $fieldName = $row['column_name'];
+                            break;
+                        default:
+                            $fieldName = $row['Field'];
+                            break;
+                    }
+                    $metadata[$fieldName] = $row;
+                }
+            }
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @param int $timestamp
+     * @param string $fieldType
+     * @return false|string
+     */
+    public function prepareDate($timestamp, $fieldType = 'DATETIME')
+    {
+        $date = false;
+        if (!$timestamp === false && $timestamp > 0) {
+            switch ($fieldType) {
+                case 'DATE' :
+                    $date = date('Y-m-d', $timestamp);
+                    break;
+                case 'TIME' :
+                    $date = date('H:i:s', $timestamp);
+                    break;
+                case 'YEAR' :
+                    $date = date('Y', $timestamp);
+                    break;
+                default :
+                    $date = date('Y-m-d H:i:s', $timestamp);
+                    break;
+            }
+        }
+
+        return $date;
+    }
+
 }
