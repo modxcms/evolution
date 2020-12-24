@@ -914,7 +914,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $i = $ii = 0;
                                     $tab = '';
                                     foreach ($tvsArray as $row) {
-                                        $row['category'] = $row['category_name'];
+                                        $row['category'] = $row['category_name'] ?? '';
                                         if(!isset($row['category_id'])){
                                             $row['category_id'] = 0;
                                             $row['category'] = $_lang['no_category'];
