@@ -46,6 +46,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 			'showBar' => Expect::bool()->dynamic(),
 			'maxLength' => Expect::int()->dynamic(),
 			'maxDepth' => Expect::int()->dynamic(),
+			'dumpTheme' => Expect::string()->dynamic(),
 			'showLocation' => Expect::bool()->dynamic(),
 			'scream' => Expect::bool()->dynamic(),
 			'bar' => Expect::listOf('string|Nette\DI\Definitions\Statement'),
@@ -75,6 +76,8 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $this->initialization ?? $class->getMethod('initialize');
+		$initialize->addBody('if (!Tracy\Debugger::isEnabled()) { return; }');
+
 		$builder = $this->getContainerBuilder();
 
 		$options = (array) $this->config;

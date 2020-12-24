@@ -28,7 +28,7 @@ class Helpers
 			}
 			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
 			return self::formatHtml(
-				'<a href="%" title="%">%<b>%</b>%</a>',
+				'<a href="%" title="%" class="tracy-editor">%<b>%</b>%</a>',
 				$editor,
 				$origFile . ($line ? ":$line" : ''),
 				rtrim(dirname($file), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
@@ -70,14 +70,14 @@ class Helpers
 	{
 		$args = func_get_args();
 		return preg_replace_callback('#%#', function () use (&$args, &$count): string {
-			return self::escapeHtml($args[++$count]);
+			return str_replace("\n", '&#10;', self::escapeHtml($args[++$count]));
 		}, $mask);
 	}
 
 
 	public static function escapeHtml($s): string
 	{
-		return htmlspecialchars((string) $s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+		return htmlspecialchars((string) $s, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 	}
 
 
@@ -128,13 +128,6 @@ class Helpers
 			$ref->setValue($exception, $stack);
 		}
 		return $exception;
-	}
-
-
-	/** @internal */
-	public static function fixEncoding(string $s): string
-	{
-		return htmlspecialchars_decode(htmlspecialchars($s, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8'), ENT_NOQUOTES);
 	}
 
 
@@ -341,5 +334,157 @@ class Helpers
 			ob_end_clean();
 			throw $e;
 		}
+	}
+
+
+	/** @internal */
+	public static function encodeString(string $s, int $maxLength = null, &$utf = null): string
+	{
+		static $tableU, $tableB;
+		if ($tableU === null) {
+			foreach (range("\x00", "\x1F") as $ch) {
+				$tableU[$ch] = '<span>\x' . str_pad(strtoupper(dechex(ord($ch))), 2, '0', STR_PAD_LEFT) . '</span>';
+			}
+			$tableB = $tableU = [
+				"\r" => '<span>\r</span>',
+				"\n" => "<span>\\n</span>\n",
+				"\t" => "<span>\\t</span>\t",
+				"\e" => '<span>\e</span>',
+				'<' => '&lt;',
+				'&' => '&amp;',
+			] + $tableU;
+			foreach (range("\x7F", "\xFF") as $ch) {
+				$tableB[$ch] = '<span>\x' . str_pad(strtoupper(dechex(ord($ch))), 2, '0', STR_PAD_LEFT) . '</span>';
+			}
+		}
+
+		[$utf, $table, $len] = preg_match('##u', $s)
+			? [true, $tableU, strlen(utf8_decode($s))]
+			: [false, $tableB, strlen($s)];
+
+		$s = $maxLength && $len > $maxLength + 20
+			? strtr(self::truncateString($s, $maxLength, $utf), $table)
+				. ' <span>…</span> '
+				. strtr(self::truncateString($s, -10, $utf), $table)
+			: strtr($s, $table);
+
+		return str_replace('</span><span>', '', $s);
+	}
+
+
+	/** @internal */
+	public static function truncateString(string $s, int $len, bool $utf): string
+	{
+		if (!$utf) {
+			return $len < 0 ? substr($s, $len) : substr($s, 0, $len);
+		} elseif (function_exists('mb_substr')) {
+			return $len < 0
+				? mb_substr($s, $len, -$len, 'UTF-8')
+				: mb_substr($s, 0, $len, 'UTF-8');
+		} else {
+			$len < 0
+				? preg_match('#.{0,' . -$len . '}\z#us', $s, $m)
+				: preg_match("#^.{0,$len}#us", $s, $m);
+			return $m[0];
+		}
+	}
+
+
+	/** @internal */
+	public static function minifyJs(string $s): string
+	{
+		// author: Jakub Vrana https://php.vrana.cz/minifikace-javascriptu.php
+		$last = '';
+		return preg_replace_callback(
+			<<<'XX'
+			(
+				(?:
+					(^|[-+\([{}=,:;!%^&*|?~]|/(?![/*])|return|throw) # context before regexp
+					(?:\s|//[^\n]*+\n|/\*(?:[^*]|\*(?!/))*+\*/)* # optional space
+					(/(?![/*])(?:\\[^\n]|[^[\n/\\]|\[(?:\\[^\n]|[^]])++)+/) # regexp
+					|(^
+						|'(?:\\.|[^\n'\\])*'
+						|"(?:\\.|[^\n"\\])*"
+						|([0-9A-Za-z_$]+)
+						|([-+]+)
+						|.
+					)
+				)(?:\s|//[^\n]*+\n|/\*(?:[^*]|\*(?!/))*+\*/)* # optional space
+			())sx
+XX
+,
+			function ($match) use (&$last) {
+				[, $context, $regexp, $result, $word, $operator] = $match;
+				if ($word !== '') {
+					$result = ($last === 'word' ? ' ' : ($last === 'return' ? ' ' : '')) . $result;
+					$last = ($word === 'return' || $word === 'throw' || $word === 'break' ? 'return' : 'word');
+				} elseif ($operator) {
+					$result = ($last === $operator[0] ? ' ' : '') . $result;
+					$last = $operator[0];
+				} else {
+					if ($regexp) {
+						$result = $context . ($context === '/' ? ' ' : '') . $regexp;
+					}
+					$last = '';
+				}
+				return $result;
+			},
+			$s . "\n"
+		);
+	}
+
+
+	/** @internal */
+	public static function minifyCss(string $s): string
+	{
+		$last = '';
+		return preg_replace_callback(
+			<<<'XX'
+			(
+				(^
+					|'(?:\\.|[^\n'\\])*'
+					|"(?:\\.|[^\n"\\])*"
+					|([0-9A-Za-z_*#.%:()[\]-]+)
+					|.
+				)(?:\s|/\*(?:[^*]|\*(?!/))*+\*/)* # optional space
+			())sx
+XX
+,
+			function ($match) use (&$last) {
+				[, $result, $word] = $match;
+				if ($last === ';') {
+					$result = $result === '}' ? '}' : ';' . $result;
+					$last = '';
+				}
+				if ($word !== '') {
+					$result = ($last === 'word' ? ' ' : '') . $result;
+					$last = 'word';
+				} elseif ($result === ';') {
+					$last = ';';
+					$result = '';
+				} else {
+					$last = '';
+				}
+				return $result;
+			},
+			$s . "\n"
+		);
+	}
+
+
+	public static function detectColors(): bool
+	{
+		return (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg')
+			&& getenv('NO_COLOR') === false // https://no-color.org
+			&& (getenv('FORCE_COLOR')
+				|| @stream_isatty(STDOUT) // @ may trigger error 'cannot cast a filtered stream on this system'
+				|| (defined('PHP_WINDOWS_VERSION_BUILD')
+					&& (function_exists('sapi_windows_vt100_support') && sapi_windows_vt100_support(STDOUT))
+						|| getenv('ConEmuANSI') === 'ON' // ConEmu
+						|| getenv('ANSICON') !== false // ANSICON
+						|| getenv('term') === 'xterm' // MSYS
+						|| getenv('term') === 'xterm-256color' // MSYS
+					)
+			);
 	}
 }

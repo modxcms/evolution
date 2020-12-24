@@ -34,7 +34,6 @@ $nonceAttr = $nonce ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
 	<style class="tracy-debug">
 	<?= str_replace('</', '<\/', $css) ?>
 	</style>
-	<script<?= $nonceAttr ?>>document.documentElement.className+=' tracy-js'</script>
 </head>
 
 
@@ -42,13 +41,15 @@ $nonceAttr = $nonce ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
 <?php require __DIR__ . '/content.phtml' ?>
 
 <script<?= $nonceAttr ?>>
-(function() {
-	<?php readfile(__DIR__ . '/../../Toggle/toggle.js') ?>
-	<?php readfile(__DIR__ . '/../../TableSort/table-sort.js') ?>
-	<?php readfile(__DIR__ . '/../../Dumper/assets/dumper.js') ?>
-	<?php readfile(__DIR__ . '/bluescreen.js') ?>
-})();
-Tracy.Dumper.init();
+'use strict';
+<?php
+array_map(function ($file) { echo '(function(){', str_replace(['<!--', '</s'], ['<\!--', '<\/s'], Helpers::minifyJs(file_get_contents($file))), '})();'; }, [
+	__DIR__ . '/../../Toggle/toggle.js',
+	__DIR__ . '/../../TableSort/table-sort.js',
+	__DIR__ . '/../../Dumper/assets/dumper.js',
+	__DIR__ . '/bluescreen.js',
+]);
+?>
 Tracy.BlueScreen.init();
 </script>
 </body>
