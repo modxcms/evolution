@@ -170,7 +170,6 @@ class DocumentCreate implements ServiceInterface
         if (!isset($this->documentData['id'])) {
             $this->documentData['id'] = false;
         }
-        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
         $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
 
 
@@ -280,6 +279,7 @@ class DocumentCreate implements ServiceInterface
 
     public function prepareCreateDocument()
     {
+        $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
         $this->documentData['createdby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['editedby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['createdon'] = $this->currentDate;
@@ -321,7 +321,6 @@ class DocumentCreate implements ServiceInterface
 
     public function saveTVs()
     {
-
         foreach ($this->tvs as $value) {
             \EvolutionCMS\Models\SiteTmplvarContentvalue::updateOrCreate(['contentid' => $this->documentData['id'], 'tmplvarid'=>$value['id']],['value'=>$value['value']]);
         }

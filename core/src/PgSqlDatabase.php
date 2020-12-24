@@ -1,17 +1,20 @@
 <?php namespace EvolutionCMS;
 
-use AgelxNash\Modx\Evo\Database\Database as BaseDatabase;
 use AgelxNash\Modx\Evo\Database\Drivers;
 use Exception;
 use AgelxNash\Modx\Evo\Database\Exceptions;
+use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager;
 
-class PgSqlDatabase extends BaseDatabase implements Interfaces\DatabaseInterface
+class PgSqlDatabase extends Manager
 {
     public $config;
 
-    public function __construct(array $config, $driver = Drivers\MySqliDriver::class)
+    public function __construct(Container $container=null)
     {
-        parent::__construct($config, $driver);
+        var_dump($container);
+        exit();
+        parent::__construct($container);
         $this->config['table_prefix'] = $this->getConfig('prefix');
     }
 
