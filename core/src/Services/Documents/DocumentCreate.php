@@ -118,7 +118,14 @@ class DocumentCreate implements ServiceInterface
                 "user" => $this->documentData['id'],
             ));
         }
-
+//var_dump($this->documentData);
+//        die();
+        if (isset($this->documentData['pub_date']) && !is_numeric($this->documentData['pub_date'])) {
+            unset($this->documentData['pub_date']);
+        }
+        if (isset($this->documentData['unpub_date']) && !is_numeric($this->documentData['unpub_date'])) {
+            unset($this->documentData['unpub_date']);
+        }
         $document = SiteContent::query()->create($this->documentData);
         $this->documentData['id'] = $document->getKey();
 
@@ -170,9 +177,8 @@ class DocumentCreate implements ServiceInterface
         if (!isset($this->documentData['id'])) {
             $this->documentData['id'] = false;
         }
-        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
 
-
+      
         if (trim($this->documentData['pagetitle']) == "") {
             if ($this->documentData['type'] == "reference") {
                 $this->documentData['pagetitle'] = Lang::get('global.untitled_weblink');
@@ -266,7 +272,7 @@ class DocumentCreate implements ServiceInterface
             elseif ($this->documentData['alias']) {
                 $this->documentData['alias'] = EvolutionCMS()->stripAlias($this->documentData['alias']);
                 $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
-                    ->where('id', '<>', EvolutionCMS())
+                    ->where('id', '<>', $this->documentData['id'])
                     ->where('alias', $this->documentData['alias'])->where('parent', $this->documentData['parent'])->first();
                 if (!is_null($docid)) {
                     throw new ServiceActionException(\Lang::get('global.duplicate_alias_found'));
@@ -280,6 +286,10 @@ class DocumentCreate implements ServiceInterface
     public function prepareCreateDocument()
     {
         $this->documentData['parent'] = (int)get_by_key($this->documentData, 'parent', 0, 'is_scalar');
+
+        
+        $this->documentData['menuindex'] = !empty($this->documentData['menuindex']) ? (int)$this->documentData['menuindex'] : 0;
+
         $this->documentData['createdby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['editedby'] = EvolutionCMS()->getLoginUserID('mgr');
         $this->documentData['createdon'] = $this->currentDate;
@@ -312,8 +322,8 @@ class DocumentCreate implements ServiceInterface
             ->where('templateid', $this->documentData['template'])
             ->join('site_tmplvars', 'site_tmplvars.id', '=', 'site_tmplvar_templates.tmplvarid')->get();
         foreach ($tmplvars as $tmplvar) {
-            if(isset($this->documentData[$tmplvar->name])){
-                $this->tvs[] = ['id'=> $tmplvar->id, 'value'=>$this->documentData[$tmplvar->name]];
+            if (isset($this->documentData[$tmplvar->name])) {
+                $this->tvs[] = ['id' => $tmplvar->id, 'value' => $this->documentData[$tmplvar->name]];
             }
         }
 
@@ -322,7 +332,7 @@ class DocumentCreate implements ServiceInterface
     public function saveTVs()
     {
         foreach ($this->tvs as $value) {
-            \EvolutionCMS\Models\SiteTmplvarContentvalue::updateOrCreate(['contentid' => $this->documentData['id'], 'tmplvarid'=>$value['id']],['value'=>$value['value']]);
+            \EvolutionCMS\Models\SiteTmplvarContentvalue::updateOrCreate(['contentid' => $this->documentData['id'], 'tmplvarid' => $value['id']], ['value' => $value['value']]);
         }
 
     }
