@@ -25,7 +25,13 @@ If you are meeting Tracy for the first time, believe me, your life starts to be 
 
 Documentation can be found on the [website](https://tracy.nette.org).
 
-If you like Tracy, **[please make a donation now](https://nette.org/make-donation?to=tracy)**. Thank you!
+
+Support Project
+---------------
+
+Do you like Tracy? Are you looking forward to the new features?
+
+[![Donate](https://files.nette.org/icons/donation-1.svg?)](https://nette.org/make-donation?to=tracy)
 
 
 Installation and requirements
@@ -41,8 +47,9 @@ Alternatively, you can download the whole package or [tracy.phar](https://github
 
 | Tracy     | compatible with PHP | compatible with browsers
 |-----------|---------------|----------
+| Tracy 2.8 | PHP 7.2 – 8.0 | Chrome 55+, Firefox 53+, MS Edge 16+, Safari 11+ and iOS Safari 11+
 | Tracy 2.7 | PHP 7.1 – 8.0 | Chrome 55+, Firefox 53+, MS Edge 16+, Safari 11+ and iOS Safari 11+
-| Tracy 2.6 | PHP 7.1 – 7.4 | Chrome 49+, Firefox 45+, MS Edge 14+, Safari 10+ and iOS Safari 10.2+
+| Tracy 2.6 | PHP 7.1 – 8.0 | Chrome 49+, Firefox 45+, MS Edge 14+, Safari 10+ and iOS Safari 10.2+
 | Tracy 2.5 | PHP 5.4 – 7.4 | Chrome 49+, Firefox 45+, MS Edge 12+, Safari 10+ and iOS Safari 10.2+
 | Tracy 2.4 | PHP 5.4 – 7.2 | Chrome 29+, Firefox 28+, IE 11+ (except AJAX), MS Edge 12+, Safari 9+ and iOS Safari 9.2+
 
@@ -264,17 +271,17 @@ generates the output:
 You can also change the nesting depth by `Debugger::$maxDepth` and displayed strings length by `Debugger::$maxLength`. Naturally, lower values accelerate Tracy rendering.
 
 ```php
-Debugger::$maxDepth = 2; // default: 3
+Debugger::$maxDepth = 2; // default: 7
 Debugger::$maxLength = 50; // default: 150
+Debugger::$dumpTheme = 'dark'; // default: light
 ```
 
-The `dump()` function can display other useful information. `Tracy\Dumper::LOCATION_SOURCE` adds a tooltip with path to the file, where the function was called. `Tracy\Dumper::LOCATION_LINK` adds a link to the file. `Tracy\Dumper::LOCATION_CLASS` adds a tooltip to every dumped object containing path to the file, in which the object's class is defined. All these constants can be set in `Debugger::$showLocation` variable before calling the `dump()`. You can set multiple values at once using the `|` operator.
+The `dump()` function can display useful location information:
 
 ```php
-Debugger::$showLocation = Tracy\Dumper::LOCATION_SOURCE; // Shows path to where the dump() was called
-Debugger::$showLocation = Tracy\Dumper::LOCATION_CLASS | Tracy\Dumper::LOCATION_LINK; // Shows both paths to the classes and link to where the dump() was called
-Debugger::$showLocation = false; // Hides additional location information
-Debugger::$showLocation = true; // Shows all additional location information
+Debugger::$showLocation = true; // shows tooltip with path to the file, where the dump() was called, and tooltips for every dumped objects
+Debugger::$showLocation = Tracy\Dumper::LOCATION_CLASS; // shows only tooltips for every dumped object containing path to the file
+Debugger::$showLocation = false; // hides all location information
 ```
 
 Very handy alternative to `dump()` is `dumpe()` (ie. dump and exit) and `bdump()`. This allows us to dump variables in Debugger Bar. This is useful, because dumps don't mess up the output and we can also add a title to the dump.
@@ -400,10 +407,10 @@ try_files $uri $uri/ /index.php$is_args$args;
 ```
 
 
-Ports
------
+Integrations
+------------
 
-This is a list of unofficial ports to other frameworks and CMS:
+This is a list of unofficial integrations to other frameworks and CMS:
 
 - [Drupal 7](http://drupal.org/project/traced)
 - Laravel framework: [recca0120/laravel-tracy](https://github.com/recca0120/laravel-tracy), [whipsterCZ/laravel-tracy](https://github.com/whipsterCZ/laravel-tracy)
@@ -413,4 +420,4 @@ This is a list of unofficial ports to other frameworks and CMS:
 - Symfony framework: [kutny/tracy-bundle](https://github.com/kutny/tracy-bundle), [VasekPurchart/Tracy-Blue-Screen-Bundle](https://github.com/VasekPurchart/Tracy-Blue-Screen-Bundle)
 - [Wordpress](https://github.com/ktstudio/WP-Tracy)
 
-... feel free to be famous, create a port for your favourite platform!
+... feel free to be famous, create an integration for your favourite platform!

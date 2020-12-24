@@ -29,10 +29,10 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 	<a id="tracy-bs-toggle" href="#" class="tracy-toggle"></a>
 	<div class="tracy-bs-main">
 		<div id="tracy-bs-error" class="panel">
-			<?php if ($exception->getMessage()): ?><p><?= Helpers::escapeHtml(Dumper::encodeString($title . $code, self::MAX_MESSAGE_LENGTH)) ?></p><?php endif ?>
+			<?php if ($exception->getMessage()): ?><p><?= Helpers::encodeString($title . $code, self::MAX_MESSAGE_LENGTH) ?></p><?php endif ?>
 
 
-			<h1><span><?= $messageHtml ?: Helpers::escapeHtml(Dumper::encodeString($title . $code, self::MAX_MESSAGE_LENGTH)) ?></span>
+			<h1><span><?= $messageHtml ?: Helpers::encodeString($title . $code, self::MAX_MESSAGE_LENGTH) ?></span>
 			<?php foreach ($actions as $item): ?>
 			<a href="<?= Helpers::escapeHtml($item['link']) ?>" class="action"<?= empty($item['external']) ? '' : ' target="_blank" rel="noreferrer noopener"'?>><?= Helpers::escapeHtml($item['label']) ?>&#x25ba;</a>
 			<?php endforeach ?></h1>
@@ -83,7 +83,7 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 
 			<div class="<?= $collapsed ? 'tracy-collapsed ' : '' ?>inner">
 				<p><b>File:</b> <?= Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
-				<?php if (is_file($ex->getFile())): ?><?= self::highlightFile($ex->getFile(), $ex->getLine(), 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : [], $this->keysToHide) ?><?php endif ?>
+				<?php if (is_file($ex->getFile())): ?><?= self::highlightFile($ex->getFile(), $ex->getLine()) ?><?php endif ?>
 			</div></div>
 
 

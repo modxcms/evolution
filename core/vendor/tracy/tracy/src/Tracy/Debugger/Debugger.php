@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.7.6';
+	public const VERSION = '2.8.0';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -68,7 +68,10 @@ class Debugger
 	public static $maxLength = 150;
 
 	/** @var bool display location by dump()? */
-	public static $showLocation = false;
+	public static $showLocation;
+
+	/** @var string theme for dump() */
+	public static $dumpTheme = 'light';
 
 	/** @deprecated */
 	public static $maxLen;
@@ -534,6 +537,7 @@ class Debugger
 				Dumper::DEPTH => self::$maxDepth,
 				Dumper::TRUNCATE => self::$maxLength,
 				Dumper::LOCATION => self::$showLocation,
+				Dumper::THEME => self::$dumpTheme,
 			]);
 		}
 

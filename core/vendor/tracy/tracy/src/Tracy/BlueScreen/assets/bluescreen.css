@@ -21,6 +21,10 @@
 	margin: -2px -4px;
 }
 
+#tracy-bs a + a {
+	margin-left: 0;
+}
+
 #tracy-bs a:hover,
 #tracy-bs a:focus {
 	color: #085AA3;
@@ -58,6 +62,12 @@
 
 #tracy-bs-error a {
 	color: #ffefa1 !important;
+}
+
+#tracy-bs-error span span {
+	font-size: 80%;
+	color: rgba(255, 255, 255, 0.5);
+	text-shadow: none;
 }
 
 #tracy-bs-error a.action {
@@ -232,17 +242,13 @@
 	font-style: normal;
 }
 
-#tracy-bs pre:hover span[title] {
-	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-#tracy-bs a[href^=editor\:] {
+#tracy-bs a.tracy-editor {
 	color: inherit;
 	border-bottom: 1px dotted rgba(0, 0, 0, .3);
 	border-radius: 3px;
 }
 
-#tracy-bs a[href^=editor\:]:hover {
+#tracy-bs a.tracy-editor:hover {
 	background: #0001;
 }
 
