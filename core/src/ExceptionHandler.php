@@ -344,7 +344,7 @@ class ExceptionHandler
                 $error_level = 3;
         }
 
-        if ($this->container->getDatabase()->getDriver()->isConnected()) {
+        if ($this->container->getDatabase()->getConnection()->getDatabaseName()) {
             $this->container->logEvent(0, $error_level, $str, $source);
         }
 

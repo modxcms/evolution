@@ -8,6 +8,7 @@ use EvolutionCMS\Models\ActiveUserLock;
 use EvolutionCMS\Models\ActiveUserSession;
 use EvolutionCMS\Models\DocumentGroup;
 use EvolutionCMS\Models\EventLog;
+use EvolutionCMS\Models\MembergroupName;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SitePlugin;
 use EvolutionCMS\Models\SiteTemplate;
@@ -3521,7 +3522,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function logEvent($evtid, $type, $msg, $source = 'Parser')
     {
-        if (!$this->getDatabase()->getDriver()->isConnected()) {
+        if (!$this->getDatabase()->getConnection()->getDatabaseName()) {
             return;
         }
         if (strpos($this['config']->get('database.connections.default.charset'), 'utf8') === 0 && extension_loaded('mbstring')) {

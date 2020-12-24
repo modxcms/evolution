@@ -592,9 +592,9 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
     }
 
     /**
-     * @return DatabaseInterface
+     * @return Database
      */
-    public function getDatabase(): DatabaseInterface
+    public function getDatabase(): Database
     {
         return $this->getService('DBAPI');
     }

@@ -13,27 +13,29 @@ class DatabaseServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register2()
     {
         $this->app->singleton('DBAPI', function ($app) {
             $capsule = new Capsule($app);
             $capsule->setAsGlobal();
             $capsule->setEventDispatcher($app['events']);
-            switch ($app['config']->get('database.connections.default.driver')){
+            switch ($app['config']->get('database.connections.default.driver')) {
                 case 'pgsql':
-                     return new PgSqlDatabase(
-                         $app['config']->get('database.connections.default', []),
-                         IlluminateDriver::class
-                     );
+                    return PgSqlDatabase::class;
                     break;
                 default:
-                    return new Database(
-                        $app['config']->get('database.connections.default', []),
-                        IlluminateDriver::class
-                    );
+                    return Database::class;
             }
 
         });
+
+
+        $this->app->setEvolutionProperty('DBAPI', 'db');
+    }
+
+    public function register()
+    {
+        $this->app->singleton('DBAPI', Database::class);
 
         $this->app->setEvolutionProperty('DBAPI', 'db');
     }
