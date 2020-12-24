@@ -115,7 +115,6 @@ $sqlParser->ignoreDuplicateErrors = true;
 // Install Templates
 if (count($moduleTemplates) > 0) {
     echo "<h3>" . $_lang['templates'] . ":</h3> ";
-    $selTemplates = $_POST['template'];
     foreach ($moduleTemplates as $k => $moduleTemplate) {
         //$installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
         //  if(in_array($k, $selTemplates) || $installSample) {
@@ -157,7 +156,6 @@ if (count($moduleTemplates) > 0) {
 // Install Template Variables
 if (count($moduleTVs) > 0) {
     echo "<h3>" . $_lang['tvs'] . ":</h3> ";
-    $selTVs = $_POST['tv'];
     foreach ($moduleTVs as $k => $moduleTV) {
         //$installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
         //if(in_array($k, $selTVs) || $installSample) {
@@ -226,7 +224,6 @@ if (count($moduleTVs) > 0) {
 // Install Chunks
 if (count($moduleChunks) > 0) {
     echo "<h3>" . $_lang['chunks'] . ":</h3> ";
-    $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k => $moduleChunk) {
         //$installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
         //if(in_array($k, $selChunks) || $installSample) {
@@ -272,7 +269,6 @@ if (count($moduleChunks) > 0) {
 // Install Modules
 if (count($moduleModules) > 0) {
     echo "<h3>" . $_lang['modules'] . ":</h3> ";
-    $selModules = $_POST['module'];
     foreach ($moduleModules as $k => $moduleModule) {
         //$installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
         //if(in_array($k, $selModules) || $installSample) {
@@ -312,7 +308,7 @@ if (count($moduleModules) > 0) {
 // Install Plugins
 if (count($modulePlugins) > 0) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
-    $selPlugs = $_POST['plugin'];
+
     foreach ($modulePlugins as $k => $modulePlugin) {
         //$installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
         // if(in_array($k, $selPlugs) || $installSample) {
@@ -429,7 +425,7 @@ if (count($modulePlugins) > 0) {
 // Install Snippets
 if (count($moduleSnippets) > 0) {
     echo "<h3>" . $_lang['snippets'] . ":</h3> ";
-    $selSnips = $_POST['snippet'];
+
     foreach ($moduleSnippets as $k => $moduleSnippet) {
 
         //$installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
