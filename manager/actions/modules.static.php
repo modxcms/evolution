@@ -1,5 +1,8 @@
 <?php
-if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+
+use Illuminate\Support\Facades\DB;
+
+if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module'))) {
@@ -7,33 +10,33 @@ if (!($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') 
 }
 
 // initialize page view state - the $_PAGE object
-$modx->manager->initPageViewState();
+$modx->getManagerApi()->initPageViewState();
+
+$_PAGE = [];
 
 // get and save search string
-if ($_REQUEST['op'] == 'reset') {
+if (get_by_key($_REQUEST, 'op') == 'reset') {
     $query = '';
     $_PAGE['vs']['search'] = '';
 } else {
-    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : $_PAGE['vs']['search'];
-    $sqlQuery = $modx->db->escape($query);
+    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : get_by_key($_PAGE, 'vs.search');
     $_PAGE['vs']['search'] = $query;
 }
 
 // get & save listmode
-$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : $_PAGE['vs']['lm'];
+$listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode'] : get_by_key($_PAGE, 'vs.lm');
 $_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
-include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['actions_run'], (!$modx->hasPermission('exec_module') ? 1 : 0));
+$cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
+$cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['icon_play'], (!$modx->hasPermission('exec_module') ? 1 : 0));
 if ($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') || $modx->hasPermission('delete_module')) {
     $cm->addSeparator();
 }
-$cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['actions_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
-$cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['actions_duplicate'], (!$modx->hasPermission('new_module') ? 1 : 0));
-$cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['actions_delete'], (!$modx->hasPermission('delete_module') ? 1 : 0));
+$cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['icon_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
+$cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['icon_clone'], (!$modx->hasPermission('new_module') ? 1 : 0));
+$cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['icon_trash'], (!$modx->hasPermission('delete_module') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -41,18 +44,16 @@ echo $cm->render();
     var selectedItem;
     var contextm = <?= $cm->getClientScriptObject() ?>;
 
-    function showContentMenu(id, e)
-    {
+    function showContentMenu(id, e) {
         selectedItem = id;
-        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ($modx_textdir ? '-190' : '') ?>+ 'px'; //offset menu if RTL is selected
+        contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ManagerTheme::getTextDir('+10') ?>+ 'px'; //offset menu if RTL is selected
         contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop))) + 'px';
         contextm.style.visibility = 'visible';
         e.cancelBubble = true;
         return false;
     };
 
-    function menuAction(a)
-    {
+    function menuAction(a) {
         var id = selectedItem;
         switch (a) {
             case 1:		// run module
@@ -75,19 +76,19 @@ echo $cm->render();
         }
     }
 
-    document.addEventListener('click', function() {
+    document.addEventListener('click', function () {
         contextm.style.visibility = 'hidden';
     });
 
     var actions = {
-        new: function() {
+        new: function () {
             document.location.href = 'index.php?a=107';
         },
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var h1help = document.querySelector('h1 > .help');
-        h1help.onclick = function() {
+        h1help.onclick = function () {
             document.querySelector('.element-edit-message').classList.toggle('show');
         };
     });
@@ -95,10 +96,11 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="fa fa-cubes"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
+    <i class="<?= $_style['icon_modules'] ?>"></i><?= $_lang['module_management'] ?><i
+            class="<?= $_style['icon_question_circle'] ?> help"></i>
 </h1>
 
-<?= $_style['actionbuttons']['dynamic']['newmodule'] ?>
+<?= ManagerTheme::getStyle('actionbuttons.dynamic.newmodule') ?>
 
 <div class="container element-edit-message">
     <div class="alert alert-info"><?= $_lang['module_management_msg'] ?></div>
@@ -108,12 +110,17 @@ echo $cm->render();
     <div class="table-responsive">
         <?php
         if ($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-            $rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icons_modules'] . '") as icon
-				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
-				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
-				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
-                ORDER BY sm.name');
+            $siteModules = \EvolutionCMS\Models\SiteModule::query()
+                ->select('site_modules.id', 'site_modules.name', 'site_modules.description', 'member_groups.member', 'disabled', 'icon')
+                ->leftJoin('site_module_access', 'site_module_access.module', '=', 'site_modules.id')
+                ->leftJoin('member_groups', 'site_module_access.usergroup', '=', 'member_groups.user_group')
+                ->where('site_modules.disabled', '!=', 1)
+                ->where('site_modules.locked', '!=', 1)->where(function ($q) use ($modx) {
+                    $q->whereNull('member_groups.member')
+                        ->orWhere('member_groups.member', '=', $modx->getLoginUserID('mgr'));
+                })->orderBy("site_modules.name");
+
+
             if ($modx->hasPermission('edit_module')) {
                 $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
             } else if ($modx->hasPermission('exec_module')) {
@@ -122,11 +129,22 @@ echo $cm->render();
                 $title = '[+value+]';
             }
         } else {
-            $rs = $modx->db->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_module']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $siteModules = \EvolutionCMS\Models\SiteModule::query()
+                ->select('site_modules.id', 'site_modules.name', 'site_modules.description', 'locked', 'disabled', 'icon')
+                ->orderBy("site_modules.name");
+            if ($query != '') {
+
+                $siteModules = $siteModules->where(function ($q) use ($query) {
+                    $q->where('site_modules.name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('site_modules.description', 'LIKE', '%' . $query . '%');
+                });
+            }
+
+
             $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
         }
-        include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-        $grd = new DataGrid('', $rs, $number_of_results); // set page size to 0 t show all items
+        $grd = new \EvolutionCMS\Support\DataGrid('', $siteModules, 0); // set page size to 0 t show all items
+        $grd->prepareResult = ['disabled' => [1 => $_lang['yes'], 0 => '-'], 'locked' => [1 => $_lang['yes'], 0 => '-'], 'icon' => ['__' => $_style['icon_module']]];
         $grd->noRecordMsg = $_lang["no_records_found"];
         $grd->cssClass = "table data";
         $grd->columnHeaderClass = "tableHeader";
@@ -140,7 +158,7 @@ echo $cm->render();
         if ($listmode == '1') {
             $grd->pageSize = 0;
         }
-        if ($_REQUEST['op'] == 'reset') {
+        if (get_by_key($_REQUEST, 'op') === 'reset') {
             $grd->pageNumber = 1;
         }
         // render grid

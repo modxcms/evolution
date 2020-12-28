@@ -19,36 +19,16 @@
   *        here, they can be accessed in config.php via $GLOBALS array.
   *        It's recommended to use constants instead.
   */
-include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
-require_once('../../../includes/protect.inc.php');
-include_once('../../../includes/config.inc.php');
-include_once('../../../includes/document.parser.class.inc.php');
-$modx = new DocumentParser;
-$modx->db->connect();
-startCMSSession();
+define('IN_MANAGER_MODE', true);
+define('MODX_API_MODE', true);
+include_once(__DIR__."/../../../../../index.php");
+$mpdx = EvolutionCMS();
+
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-define('IN_MANAGER_MODE', true);
-$modx->getSettings();
-
-$manager_language = $modx->config['manager_language'];
-// Pass language code from MODX to KCFinder
-if(!file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
-    $manager_language = "english"; // if not set, get the english language file.
-}
-include_once "../../../includes/lang/".$manager_language.".inc.php";
-$_GET['langCode'] = $modx_lang_attribute;
-
-// PHP VERSION CHECK
-if (substr(PHP_VERSION, 0, strpos(PHP_VERSION, '.')) < 5)
-    die("You are using PHP " . PHP_VERSION . " when KCFinder require at least version 5! Some systems has an option to change the active PHP version. Please refer to your hosting provider or upgrade your PHP distribution.");
-
-
-// SAFE MODE CHECK
-if (ini_get("safe_mode"))
-    die("The \"safe_mode\" PHP ini setting is turned on! You cannot run KCFinder in safe mode.");
-
+$manager_language = ManagerTheme::getLangName();
+$_GET['langCode'] = ManagerTheme::getLang();
 
 // MAGIC AUTOLOAD CLASSES FUNCTION
 function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
@@ -75,63 +55,10 @@ function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
         );
     }
     if (isset($classes[$class])) {
-        require dirname(__FILE__) . $classes[$class];
+        require __DIR__ . $classes[$class];
     }
 }
 spl_autoload_register('autoloadda9d06472ccb71b84928677ce2a6ca89', true);
-
-
-// json_encode() IMPLEMENTATION IF JSON EXTENSION IS MISSING
-if (!function_exists("json_encode")) {
-
-    function kcfinder_json_string_encode($string) {
-        return '"' .
-            str_replace('/', "\\/",
-            str_replace("\t", "\\t",
-            str_replace("\r", "\\r",
-            str_replace("\n", "\\n",
-            str_replace('"', "\\\"",
-            str_replace("\\", "\\\\",
-        $string)))))) . '"';
-    }
-
-    function json_encode($data) {
-
-        if (is_array($data)) {
-            $ret = array();
-
-            // OBJECT
-            if (array_keys($data) !== range(0, count($data) - 1)) {
-                foreach ($data as $key => $val)
-                    $ret[] = kcfinder_json_string_encode($key) . ':' . json_encode($val);
-                return "{" . implode(",", $ret) . "}";
-
-            // ARRAY
-            } else {
-                foreach ($data as $val)
-                    $ret[] = json_encode($val);
-                return "[" . implode(",", $ret) . "]";
-            }
-
-        // BOOLEAN OR NULL
-        } elseif (is_bool($data) || ($data === null))
-            return ($data === null)
-                ? "null"
-                : ($data ? "true" : "false");
-
-        // FLOAT
-        elseif (is_float($data))
-            return rtrim(rtrim(number_format($data, 14, ".", ""), "0"), ".");
-
-        // INTEGER
-        elseif (is_int($data))
-            return $data;
-
-        // STRING
-        return kcfinder_json_string_encode($data);
-    }
-}
-
 
 // CUSTOM SESSION SAVE HANDLER CLASS EXAMPLE
 //

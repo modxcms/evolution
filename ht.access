@@ -15,15 +15,23 @@ RewriteBase /
 RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
 
+#Remove ///// in url
+#RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+#RewriteRule . %1/%2 [R=301,L]
+
 #redirect http to https
 #RewriteCond %{HTTP:SSL} !=1 [NC]
 #RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R=301]
+#or
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} !^$
 #RewriteCond %{HTTP_HOST} !^www\. [NC]
 #RewriteCond %{HTTP_HOST} (.+)$
-#RewriteRule ^(.*)$ http://www.%1/$1 [R=permanent,L] . 
+#RewriteRule ^(.*)$ http://www.%1/$1 [R=permanent,L] .
 
 # without www
 #RewriteCond %{HTTP_HOST} .

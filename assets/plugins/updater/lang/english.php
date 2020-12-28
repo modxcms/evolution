@@ -25,5 +25,5 @@ $_lang['table_titleauthor'] = 'Title (Author)';
 $_lang['error_curl'] = 'You need to enable CURL function in PHP';
 $_lang['error_zip'] = 'It is necessary to enable the ZIP in PHP';
 $_lang['error_openssl'] = 'You need to enable OpenSSL function in PHP';
-$_lang['error_overwrite'] = 'EVO files are not available for overwriting';
+$_lang['error_overwrite'] = 'Evolution CMS files are not available for overwriting';
 $_lang['error_failedtogetfeed'] = 'Failed to retrieve feed';

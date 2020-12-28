@@ -8,7 +8,7 @@ if(( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) && IN_PARSER_MODE
 }
 
 $parsedMessageString = "
-<html><head><title>EVO Content Manager $version &raquo; $release_date</title>
+<html><head><title>Evolution CMS Content Manager $version &raquo; $release_date</title>
 <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
 <script type='text/javascript'>
 	function copyToClip()

@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
+<?php $_style = ManagerTheme::getStyle();?>
 <head>
     <title>KCFinder: /
         <?php echo $this->session['dir'] ?></title>
@@ -22,7 +22,7 @@
             <div id="folders"></div>
         </div>
         <div id="right">
-            <div id="collapseSide"><a href="javascript:;" id="hide-side"><i id="hide-icon" class="fa fa-bars"></i></a>
+            <div id="collapseSide"><a href="javascript:;" id="hide-side"><i id="hide-icon" class="<?= $_style['icon_bars'] ?>"></i></a>
             </div>
             <div id="toolbar">
                 <div>

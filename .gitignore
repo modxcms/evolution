@@ -43,8 +43,14 @@
 !/assets/site/index.html
 !/assets/site/.htaccess
 
+# Core
+/core/composer.lock
+/core/vendor/bin
+/core/.install
+
 # Manager
 /manager/includes/config.inc.php
+/manager/media/style/default/css/styles.min.css
 
 # Composer
 /composer.phar
@@ -61,6 +67,9 @@ _ide_helper.php
 /node_modules
 npm-debug.log
 
+
+#docker
+/docker/nginx/logs/*
 # System
 ftpsync.settings
 Thumbs.db

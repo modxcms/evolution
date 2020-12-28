@@ -35,10 +35,16 @@ $_Lang['s2_1_up'] = "Discendente";
 $_Lang['s2_2_down'] = "Ascendente";
 $_Lang['search'] = "Cerca nella Categoria: ";
 
+/* Installazione tramite caricamento file */
+$_Lang ['install_file'] = "Installa per file";
+$_Lang ['choose_file_msg'] = "Scegli un file da caricare e installare";
+$_Lang ['install_file_btn'] = "Installa";
+$_Lang ['install_file_success'] = "Installazione riuscita";
+
 /* faq */
 $_Lang['faq'] = '
-<li><a href="http://extras.evolution-cms.com/faq/whatfor.html" target="_blank">A cosa serve la repository</a></li>⏎
-<li><a href="http://extras.evolution-cms.com/faq/howtoadd.html" target="_blank">Come aggiungere un pacchetto alla repository</a></li>⏎
-<li><a href="http://extras.evolution-cms.com/faq/howtocollect.html" target="_blank">Come creare un pacchetto per la installazione</a></li>';
+<li><a href="https://extras.evo.im/faq/whatfor.html" target="_blank">A cosa serve la repository</a></li>⏎
+<li><a href="https://extras.evo.im/faq/howtoadd.html" target="_blank">Come aggiungere un pacchetto alla repository</a></li>⏎
+<li><a href="https://extras.evo.im/faq/howtocollect.html" target="_blank">Come creare un pacchetto per la installazione</a></li>';
 
 ?>

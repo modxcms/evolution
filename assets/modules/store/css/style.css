@@ -17,8 +17,7 @@ body {
 }
 
 .pagetitle {
-  position: relative;
-  left: 10px
+  margin-left: 10px;
 }
 
 .github {
@@ -30,9 +29,10 @@ body {
 }
 .github::before {
   display: inline-block;
-  font-family: 'FontAwesome';
+  font-family: 'Font Awesome 5 Free';
   font-size: 28px;
   content: "\f09b";
+  font-weight: bold;
 }
 
 .typesbadge {
@@ -320,40 +320,40 @@ nav ul li {
 }
 
 .info .version:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
-  font-weight: normal;
   color: #3697cd;
   padding: 0 5px 0 0;
   content: '\f021 ';
+  font-weight: bold;
 }
 
 .info .autor:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
-  font-weight: normal;
   color: #3697cd;
   padding: 0 5px 0 0;
   content: '\f007';
+  font-weight: bold;
 }
 
 .info .date:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
-  font-weight: normal;
   color: #3697cd;
   padding: 0 5px 0 0;
   content: '\f017 ';
+  font-weight: bold;
 }
 
 .info .download:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-style: normal;
-  font-weight: normal;
   color: #3697cd;
   color: #3697cd;
   padding: 0 5px 0 0;
   content: '\f019';
+  font-weight: bold;
 }
 
 .descript {
@@ -523,14 +523,14 @@ body,
   padding: 7px;
 }
 
-.catalog_item.liststyle .row-category h3:before {
-  font-family: FontAwesome;
-  font-style: normal;
-  font-weight: normal;
-  color: #444;
-  padding: 0 12px 0 5px;
-  content: '\f09b';
-}
+/*.catalog_item.liststyle .row-category h3:before {*/
+/*  font-family: 'Font Awesome 5 Free';*/
+/*  font-style: normal;*/
+/*  color: #444;*/
+/*  padding: 0 12px 0 5px;*/
+/*  content: '\f09b';*/
+/*  font-weight: bold;*/
+/*}*/
 
 .catalog_item.liststyle .catalog_info .info_extras {
   position: absolute;
@@ -545,3 +545,156 @@ body,
   min-width: 40px;
   margin-right:8px;
 }
+
+.darkness .box, .darkness .item_content, .darkness .install_extras, .darkness .info, .darkness .catalog_item.liststyle .install_extras{
+  border: 1px solid #414449;
+  background: #202329;
+}
+.darkness #store_search{
+  border: #414449 1px solid!important;
+}
+
+
+
+
+.list-tools input#store_search{height:42px; margin-right:8px; text-indent:8px;}
+.list-tools .btn, 
+.list-tools button:not(.btn), 
+.list-tools input[type="button"]:not(.btn), 
+.list-tools input[type="submit"]:not(.btn){padding:1em;}
+
+
+/* RESTYLING EXTRAS */
+
+/* Give color to types of Extras */
+.type-snippets .catalog_thumb{background:#69ace0;}
+.type-modules .catalog_thumb{background:#f18048;}
+.type-plugins .catalog_thumb{background:#599f46;}
+.type-package .catalog_thumb{background:#a1c855;}
+.type-core .catalog_thumb{background:#76b94f;}
+
+.catalog_thumb img{display:none;}
+.catalog_thumb{height:120px; background:#454f59; position:relative; border-color:#fff;}
+.catalog_thumb:before{font-family:'Font Awesome 5 Free'; content:'\f058'; font-weight:600; color:#fff; z-index:1; position:absolute; left:0; right:0; top:30px; line-height:50px; font-size:50px; text-align:center;}
+.catalog_thumb:after{display:block; color:#fff; margin-top:88px; font-size:12px; line-height:12px; padding:0 10px;}
+
+/* Add FontAwesome icons */
+.type-chunk .catalog_thumb:before{content:'\f009';}
+.type-snippets .catalog_thumb:before{content:'\f121';}
+.type-modules .catalog_thumb:before{content:'\f1b3';}
+.type-plugins .catalog_thumb:before{content:'\f1e6';}
+.type-package .catalog_thumb:before{content:'\f187';}
+.type-core .catalog_thumb:before{content:'\f7a2';}
+
+/* Deprecated */
+.catalog_item.deprecated-1 .catalog_thumb{background:#d94444!important;}
+.catalog_item.deprecated-1 .catalog_thumb:after{content:'Deprecated!';}
+.catalog_item.deprecated-1 .catalog_thumb:before{content:'\f057';}
+
+.item-anythingRating .catalog_thumb:before{content:'\f005';}
+.item-AutoSplitBigArticle .catalog_thumb:before{content:'\f1ea';}
+.item-Breadcrumbs .catalog_thumb:before{content:'\f7ec';}
+.item-DLLastViews .catalog_thumb:before{content:'\f06e';}
+.item-DocInfo .catalog_thumb:before{content:'\f05a';}
+.item-DocLister .catalog_thumb:before{content:'\f03a';}
+.item-EasyPoll .catalog_thumb:before{content:'\f086';}
+.item-eFilter .catalog_thumb:before{content:'\f0b0';}
+.item-evoSearch .catalog_thumb:before{content:'\f002';}
+.item-FirstChildRedirect .catalog_thumb:before{content:'\f122';}
+.item-FirstWord .catalog_thumb:before{content:'\f033';}
+.item-HideContent .catalog_thumb:before{content:'\f070';}
+.item-ListIndexer .catalog_thumb:before{content:'\f0cb';}
+.item-MassiveMove .catalog_thumb:before{content:'\f31e';}
+.item-MultiCategories .catalog_thumb:before{content:'\f022';}
+.item-OpenGraphTags .catalog_thumb:before{content:'\f292';}
+.item-prevnextPage .catalog_thumb:before{content:'\f362';}
+.item-Quill .catalog_thumb:before{content:'\f1cd';}
+.item-sape_context .catalog_thumb:before{content:'\f0c1';}
+.item-sitemap .catalog_thumb:before{content:'\f0e8';}
+.item-summary .catalog_thumb:before{content:'\f022';}
+.item-tagLinks .catalog_thumb:before{content:'\f02c';}
+.item-TOC .catalog_thumb:before{content:'\f13d';}
+.item-TvTable .catalog_thumb:before{content:'\f0ce';}
+.item-TvTagCloud .catalog_thumb:before{content:'\f0c2';}
+.item-UltimateParent .catalog_thumb:before{content:'\f968';}
+.item-JoCo .catalog_thumb:before{content:'\f086';}
+.item-Jot .catalog_thumb:before{content:'\f086';}
+.item-JotX .catalog_thumb:before{content:'\f086';}
+.item-Loginza .catalog_thumb:before{content:'\f2f6';}
+.item-MemberCheck .catalog_thumb:before{content:'\f500';}
+.item-Personalize .catalog_thumb:before{content:'\f4fc';}
+.item-Protect .catalog_thumb:before{content:'\f505';}
+.item-userAuth .catalog_thumb:before{content:'\f4fc';}
+.item-UserInfo .catalog_thumb:before{content:'\f2b9';}
+.item-WebLogin .catalog_thumb:before{content:'\f2f6';}
+.item-WebloginPE .catalog_thumb:before{content:'\f2f6';}
+.item-Commerce .catalog_thumb:before{content:'\f54e';}
+.item-Shopkeeper .catalog_thumb:before{}
+.item-TSVshop .catalog_thumb:before{}
+.item-AlwaysStay .catalog_thumb:before{content:'\f14a';}
+.item-CfgTv .catalog_thumb:before{content:'\f0c7';}
+.item-ClientSettings .catalog_thumb:before{content:'\f085';}
+.item-Collection .catalog_thumb:before{content:'\f022';}
+.item-customSettings .catalog_thumb:before{content:'\f0ae';}
+.item-customTemplate .catalog_thumb:before{content:'\f1ea';}
+.item-diffplugin4modx .catalog_thumb:before{content:'\f02e';}
+.item-Doc.Finder .catalog_thumb:before{content:'\f002';}
+.item-Evo.File .catalog_thumb:before{content:'\f0ae';}
+.item-evoBabel .catalog_thumb:before{content:'\f7a2';}
+.item-EvoDashboard .catalog_thumb:before{content:'\f3fd';}
+.item-globalPlaceholders .catalog_thumb:before{content:'\f7a2';}
+.item-globalSettings .catalog_thumb:before{content:'\f7a2';}
+.item-ManagerColors .catalog_thumb:before{content:'\f53f';}
+.item-ManagerManager .catalog_thumb:before{content:'\f0ae';}
+.item-managerNav .catalog_thumb:before{content:'\f0c9';}
+.item-markItUp .catalog_thumb:before{content:'\f0cd';}
+.item-PageBuilder .catalog_thumb:before{content:'\f1b3';}
+.item-StaticElements .catalog_thumb:before{content:'\f550';}
+.item-SypexDumper .catalog_thumb:before{content:'\f0c7';}
+.item-systemField .catalog_thumb:before{content:'\f0c8';}
+.item-templatesEdit3 .catalog_thumb:before{content:'\f682';}
+.item-TinyMCE3 .catalog_thumb:before{}
+.item-TinyMCE4 .catalog_thumb:before{content:'\f1dd';}
+.item-Widget.Manager .catalog_thumb:before{content:'\f0ae';}
+.item-YAMS .catalog_thumb:before{content:'\f7a2';}
+.item-ZoomTree .catalog_thumb:before{content:'\f065';}
+.item-directResize .catalog_thumb:before{content:'\f302';}
+.item-FlexSlider-MultiTV .catalog_thumb:before{content:'\f302';}
+.item-FlickrGallery .catalog_thumb:before{content:'\f302';}
+.item-inWidget .catalog_thumb:before{content:'\f87c';}
+.item-picasa .catalog_thumb:before{content:'\f030';}
+.item-SimpleGallery .catalog_thumb:before{content:'\f302';}
+.item-morephoto .catalog_thumb:before{content:'\f302';}
+.item-SimpleTube .catalog_thumb:before{content:'\f03d';}
+.item-aDate .catalog_thumb:before{content:'\f073';}
+.item-ajaxSubmit .catalog_thumb:before{content:'\f1d8';}
+.item-alterTitle .catalog_thumb:before{content:'\f1dc';}
+.item-AutoEvoBackup .catalog_thumb:before{content:'\f0c7';}
+.item-CacheAccelerator .catalog_thumb:before{content:'\f3fd';}
+.item-Console .catalog_thumb:before{content:'\f120';}
+.item-CssJs .catalog_thumb:before{content:'\f121';}
+.item-desire-for-Modx-Evo .catalog_thumb:before{}
+.item-devStat .catalog_thumb:before{content:'\f1c0';}
+.item-EvoTwig .catalog_thumb:before{content:'\f121';}
+.item-Fancybox .catalog_thumb:before{content:'\f49e';}
+.item-HtmlInLine .catalog_thumb:before{content:'\f121';}
+.item-isMobile .catalog_thumb:before{content:'\f3cd';}
+.item-MinifyX .catalog_thumb:before{content:'\f121';}
+.item-MODxLetters .catalog_thumb:before{content:'\f658';}
+.item-multiCurrency .catalog_thumb:before{content:'\f53a';}
+.item-PHx .catalog_thumb:before{content:'\f121';}
+.item-splitPagination .catalog_thumb:before{content:'\f051';}
+.item-multiTV .catalog_thumb:before{content:'\f022';}
+.item-PlaceTV .catalog_thumb:before{content:'\f5a0';}
+.item-EvoFLAT .catalog_thumb:before{}
+.item-EvoRE3 .catalog_thumb:before{}
+.item-evoCheck .catalog_thumb:before{content:'\f46c';}
+.item-DashboardLastWebUsers Widget .catalog_thumb:before{content:'\f015';}
+.item-GoogleAnalitycsDashboardWidget .catalog_thumb:before{content:'\f201';}
+.item-ManagerNote .catalog_thumb:before{content:'\f658';}
+.item-Yandex .catalog_thumb:before{content:'\f414';}
+.item-Latest .catalog_thumb:before{content:'\f086';}
+.item-Share .catalog_thumb:before{content:'\f164';}
+.item-FormLister .catalog_thumb:before{content:'\f1d8';}
+.item-Blade .catalog_thumb:before{content:'\f121';}
+.item-bDebug .catalog_thumb:before{content:'\f188';}

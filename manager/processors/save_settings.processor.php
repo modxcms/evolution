@@ -6,14 +6,15 @@ if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $data = $_POST;
+
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 unset($_POST);
 
 if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===false)
 {
-	$htaccess        = $modx->config['base_path'] . '.htaccess';
-	$sample_htaccess = $modx->config['base_path'] . 'ht.access';
-	$dir = '/' . trim($modx->config['base_url'],'/');
+	$htaccess        = MODX_BASE_PATH . '.htaccess';
+	$sample_htaccess = MODX_BASE_PATH . 'ht.access';
+	$dir = '/' . trim(MODX_BASE_URL,'/');
 	if(is_file($htaccess))
 	{
 		$_ = file_get_contents($htaccess);
@@ -36,7 +37,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
         {
         	$warnings[] = $_lang["settings_friendlyurls_alert"];
 		}
-		elseif($modx->config['base_url']!=='/')
+		elseif(MODX_BASE_URL!=='/')
 		{
 			$_ = file_get_contents($htaccess);
 			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
@@ -57,15 +58,13 @@ $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb
 
 if (isset($data) && count($data) > 0) {
 	if(isset($data['manager_language'])) {
-		$lang_path = MODX_MANAGER_PATH . 'includes/lang/' . $data['manager_language'] . '.inc.php';
+	    $lang_path = EVO_CORE_PATH . 'lang/' . $data['manager_language'] . '/global.php';
 		if(is_file($lang_path)) {
-			include($lang_path);
-            global $modx_lang_attribute;
-            $data['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+			include $lang_path;
+            $data['lang_code'] = $data['manager_language'];
 		}
 	}
-	$savethese = array();
-	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
+	$data['sys_files_checksum'] = $modx->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {
@@ -95,11 +94,11 @@ if (isset($data) && count($data) > 0) {
 				$v = rtrim($v,'/') . '/';
 				break;
             case 'manager_language':
-                $langDir = realpath(MODX_MANAGER_PATH . 'includes/lang');
-                $langFile = realpath(MODX_MANAGER_PATH . 'includes/lang/' . $v . '.inc.php');
+                $langDir = realpath(EVO_CORE_PATH . 'lang/'.$v);
+                $langFile = realpath(EVO_CORE_PATH . 'lang/' . $v . '/global.php');
                 $langFileDir = dirname($langFile);
                 if($langDir !== $langFileDir || !file_exists($langFile)) {
-                    $v = 'english';
+                    $v = 'en';
                 }
 				break;
 			case 'smtppw':
@@ -110,15 +109,6 @@ if (isset($data) && count($data) > 0) {
 				} elseif ($v === '********************') {
 					$k = '';
 				}
-				break;
-            case 'valid_hostnames':
-				$v = str_replace(array(' ,', ', '), ',', $v);
-				if ($v !== ',') {
-					$v = ($v != 'MODX_SITE_HOSTNAMES') ? $v : '';
-					$configString = '<?php' . "\n" . 'define(\'MODX_SITE_HOSTNAMES\', \'' . $v . '\');' . "\n";
-					@file_put_contents(MODX_BASE_PATH . 'assets/cache/siteHostnames.php', $configString);
-				}
-				$k = '';
 				break;
 			case 'session_timeout':
 				$mail_check_timeperiod = $data['mail_check_timeperiod'];
@@ -131,22 +121,23 @@ if (isset($data) && count($data) > 0) {
 
 		$modx->config[$k] = $v;
 
-		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
+		if(!empty($k)) {
+		    \EvolutionCMS\Models\SystemSetting::query()->updateOrCreate(['setting_name'=>$k],['setting_value'=>$v]);
+        }
 	}
 
-	// Run a single query to save all the values
-	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
-		VALUES ".implode(', ', $savethese);
-	$modx->db->query($sql);
 
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
 		$newtemplate = (int)$data['default_template'];
 		$oldtemplate = (int)$data['old_template'];
-		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
-		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
-		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
+		if($reset==1) {
+		    \EvolutionCMS\Models\SiteContent::where('type', 'document')->update(array('template' => $newtemplate));
+        }
+		else if($reset==2) {
+            \EvolutionCMS\Models\SiteContent::where('template', $oldtemplate)->update(array('template' => $newtemplate));
+        }
 	}
 
 	// empty cache

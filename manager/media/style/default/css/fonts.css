@@ -5,6 +5,9 @@ html { font-size: 16px; }
 @media (max-width: 400px) {
 html { font-size: 16px; }
 }
+@supports (-webkit-overflow-scrolling: touch) {
+    html, body { -webkit-overflow-scrolling: touch; overflow: auto; height: 100%; /* ios iframe scroll jumping to top fix */ }
+}
 body { font-weight: normal; font-style: normal; font-size: 0.8125rem; line-height: 1.5; font-family: sans-serif; -webkit-font-smoothing: subpixel-antialiased }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
@@ -33,16 +36,17 @@ body, ul, li { padding: 0; margin: 0; }
 ul { margin-left: 1rem; margin-right: 1rem; }
 li { list-style: none }
 img { max-width: 100%; height: auto }
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit }
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit }
 .h1, h1 { font-size: 1.75rem }
 .h2, h2 { font-size: 1.5rem }
 .h3, h3 { font-size: 1.25rem }
 .h4, h4 { font-size: 1rem }
 .h5, h5 { font-size: 0.8125rem }
 .h6, h6 { font-size: 0.7rem }
-h1 .fa {display: none;}
+h1 .fa:first-child { color:#444; margin-right: 0.5em }
 a { color: #3481bc; text-decoration: none }
-.text-primary {color: #3481bc !important;}
+.text-primary { color: #3481bc !important; }
 a:focus, a:hover { color: #014c8c; text-decoration: underline }
 a[href=""], a:not([href]) { cursor: default }
 a:not([href]):not([tabindex]) { color: inherit; text-decoration: none }
@@ -88,9 +92,9 @@ a.text-gray-dark:focus, a.text-gray-dark:hover { color: #101112 !important }
 .clear { clear: both; }
 /* custom */
 #loadingmask { display: none !important; }
-.fa > .fa-lock { position: relative; float: left; width: auto !important; margin-top: -1em; font-size: 0.7em !important; color: #FFC107 !important; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
+.fa > .fa-lock { position: relative; float: left; width: auto !important; margin-top: -1em; font-size: 0.7em !important; color: #ffc107 !important; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
 .rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
-.disabledPlugin, .disabledPlugin a { color: #B68282; font-style: italic; }
+.disabledPlugin, .disabledPlugin a { color: #b68282; font-style: italic; }
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { margin-right: 0.25em; color: #1377c5; }
 h1 .help { margin: 0 0 0 0.25em; color: rgba(0, 0, 0, 0.15); font-size: 0.8em; cursor: pointer }
@@ -99,6 +103,10 @@ h1 small { margin-left: 0.5em; line-height: 1em }
 .split { height: 0; font-size: 0; clear: both; padding: 0; border-top: 1px dotted rgba(0, 0, 0, .1) }
 #previewIframe { width: 100%; height: 400px; }
 .messageRead { color: #333; }
-.messageUnread { color: #3CB371; font-weight: 500; }
+.messageUnread { color: #3cb371; font-weight: 500; }
 .element-edit-message { display: none }
 .element-edit-message p:last-child, .element-edit-message-tab p:last-child { margin-bottom: 0 }
+/* modes theme */
+/* darkness */
+.darkness h1 .help { color: #1976d2; opacity: .5; }
+.darkness h1 .help:hover { opacity: 1; }

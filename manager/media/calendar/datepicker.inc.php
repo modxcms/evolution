@@ -5,9 +5,9 @@ class DATEPICKER {
 	}
 
 	function getDP() {
-		global $modx, $_lang;
+		$modx = evolutionCMS(); global $_lang;
 
-		$tpl = file_get_contents(dirname(__FILE__) . '/datepicker.tpl');
+		$tpl = file_get_contents(__DIR__ . '/datepicker.tpl');
 		return $modx->parseText($tpl, $_lang, '[%', '%]');
 	}
 }

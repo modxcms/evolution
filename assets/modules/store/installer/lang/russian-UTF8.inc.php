@@ -39,7 +39,7 @@ $_lang["checking_if_cache_exist"] = 'Проверка существования
 $_lang["checking_if_cache_file_writable"] = 'Проверка возможности записи в файл <span class="mono">/assets/cache/siteCache.idx.php</span>: ';
 $_lang["checking_if_cache_file2_writable"] = 'Проверка возможности записи в файл <span class="mono">/assets/cache/sitePublishing.idx.php</span>: ';
 $_lang["checking_if_cache_writable"] = 'Проверка возможности записи в папки <span class="mono">/assets/cache</span> и <span class="mono">/assets/cache/rss</span>: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Проверка существования и возможности записи в файл <span class="mono">/manager/includes/config.inc.php</span>: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Проверка существования и возможности записи в файл <span class="mono">/core/config/database/connections/default.php</span>: ';
 $_lang["checking_if_export_exists"] = 'Проверка существования папки <span class="mono">/assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Проверка возможности записи в папку <span class="mono">/assets/export</span>: ';
 $_lang["checking_if_images_exist"] = 'Проверка существования папок <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> и <span class="mono">/assets/media</span>: ';

@@ -1,10 +1,7 @@
 <html>
-
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <meta content="jquery,ui,easy,easyui,web" name="keywords">
-    <meta content="easyui help you build your web page easily!" name="description">
-    <title>EVO Store</title>
+    <title>Evolution CMS Store</title>
     <link rel="stylesheet" type="text/css" href="media/style/[+manager_theme+]/style.css" />
     <link rel="stylesheet" type="text/css" href="[+site_url+]/assets/modules/store/css/style.css" />
     <!--- <link rel="stylesheet" type="text/css" href="media/style/[+manager_theme+]/store.css" /> -->
@@ -17,13 +14,13 @@
     [+onManagerMainFrameHeaderHTMLBlock+]
 </head>
 
-<body>
+<body class="[+body_class_name+]">
     <h1 class="pagetitle">
       <span class="pagetitle-icon">
         <i class="fa fa-archive"></i>
       </span>
       <span class="pagetitle-text">
-        [+store_name+] <span class="version">[+v+]</span> 
+        [+store_name+] <span class="version">[+v+]</span>
       </span>
     </h1>
     <div id="actions" style="display:none">
@@ -65,10 +62,10 @@
                                 <span class="error" style="display:none">[+login_errors+]</span>
                             </div>
                             <ul class="loginul">
-                                <li><a href="javascript:store.login()" class="btn btn-sm btn-success loginbut">[+enter+]</a>
+                                <li><a href="javascript:store.login()" class="btn btn-success loginbut">[+enter+]</a>
                                 </li>
                             </ul>
-                            <a href="http://extras.evolution-cms.com/my-repo/register.html" target="_blank" class="">[+register+]</a>
+                            <a href="https://extras.evo.im/my-repo/register.html" target="_blank" class="btn loginbut">[+register+]</a>
                         </div>
                         <!-- <div class="box logined" style="display:none;">
 <h4><span id="username"></span>:</h4>
@@ -97,9 +94,9 @@
                             </ul>
                         </div>
                         <p>
-                            Copyright 2017
+                            Copyright 2017 - 2020
                             <br>
-                            <a href="https://evo.im/" target="_blank">Bumkaka & Dmi3yy</a>
+                            <a href="https://evo.im/" target="_blank">Bumkaka &amp; Dmi3yy</a>
                         </p>
                     </div>
                 </div>
@@ -126,17 +123,17 @@
                             <div class="input-group">
                                 <span class="input-group-btn">
 					<button id="hide-side" type="button" class="btn btn-secondary"><i id="hide-icon" class="fa fa-bars"></i></button>
-				  </span>
+				</span>
                                 <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="">
-                                <span class="input-group-btn">
-                    <button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
-                  </span>
-                                <span class="input-group-btn">
-                    <button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
-                  </span>
-                                <span class="input-group-btn">
-                    <button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
-                  </span>
+				<span class="input-group-btn">
+			    		<button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
+				</span>
+				<span class="input-group-btn">
+					<button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
+				</span>
+				<span class="input-group-btn">
+					<button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
+				</span>
                             </div>
 
                         </div>
@@ -175,11 +172,10 @@
             </li>
         </div>
         <div id="tpl_list">
-            <div class="col-sm-4 catalog_item %cls%">
+            <div class="col-sm-4 catalog_item %cls% item-%title% type-%type% deprecated-%deprecated%">
                 <div class="item_content">
                     <div class="info_block">
                         <div id="catalog_img" class="catalog_thumb">
-                            <i class="%zip%"></i>
                             <span class="typesbadge">%type%</span>
                             <img class="img-fluid" src="" alt="">
                         </div>
@@ -275,7 +271,7 @@
                     localStorage.setItem('hide_xtraSidebar', HideExtraSide);
                 }
             });
-            // Get layout 
+            // Get layout
             var ExtraLayout;
             var xtras_layout = localStorage.getItem('xtras_layout');
             if (xtras_layout == '2columns') {
@@ -333,5 +329,4 @@
         });
     </script>
 </body>
-
 </html>

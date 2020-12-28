@@ -13,11 +13,12 @@ if (isset ($modx)) {
 
 if (!empty($user_id)) {
     // Raymond: grab the user settings from the database.
-    $rs = $modx->db->select('setting_name, setting_value', $modx->getFullTableName('user_settings'),
-        "user=" . $modx->getLoginUserID());
+    $userSettings = \EvolutionCMS\Models\UserSetting::query()
+        ->select('setting_name', 'setting_value')
+        ->where('user', $modx->getLoginUserID())->get()->toArray();
 
     $which_browser_default = $which_browser;
-    while ($row = $modx->db->getRow($rs)) {
+    foreach ($userSettings as $row) {
         if ($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') {
             $row['setting_value'] = $which_browser_default;
         }

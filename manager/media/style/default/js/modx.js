@@ -1,10 +1,12 @@
 (function($, w, d, u) {
   'use strict';
+  modx.tree_parent = modx.tree_parent || 0;
   modx.extended({
     frameset: 'frameset',
     minWidth: 840,
     isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
     typesactions: {'16': 1, '301': 2, '78': 3, '22': 4, '102': 5, '108': 6, '3': 7, '4': 7, '6': 7, '27': 7, '61': 7, '62': 7, '63': 7, '72': 7},
+    thememodes: ['', 'lightness', 'light', 'dark', 'darkness'],
     tabsTimer: 0,
     popupTimer: 0,
     init: function() {
@@ -125,7 +127,7 @@
                   modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', href, function(data) {
                     if (data) {
                       if (modx.isMobile || w.innerWidth < modx.minWidth) {
-                        data = '<li class="dropdown-back"><span class="dropdown-item"><i class="fa fa-arrow-left"></i>' + modx.lang.paging_prev + '</span></li>' + data;
+                        data = '<li class="dropdown-back"><span class="dropdown-item"><i class="' + modx.style.icon_angle_left + '"></i>' + modx.lang.paging_prev + '</span></li>' + data;
                       }
                       ul.id = 'parent_' + self.id;
                       ul.innerHTML = data;
@@ -254,7 +256,7 @@
           d.body.appendChild(this.result);
         }
         this.loader = d.createElement('i');
-        this.loader.className = 'fa fa-refresh fa-spin fa-fw';
+        this.loader.className = modx.style.icon_refresh + modx.style.icon_spin;
         this.input.parentNode.appendChild(this.loader);
         if (modx.config.global_tabs) {
           this.input.parentNode.onsubmit = function(e) {
@@ -392,7 +394,7 @@
           row.parentNode.insertBefore(rowContainer, row);
           rowContainer.appendChild(row);
           var p = d.createElement('i');
-          p.className = 'fa fa-angle-left prev disable';
+          p.className = modx.style.icon_angle_left + ' prev disable';
           p.onclick = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -404,7 +406,7 @@
           };
           rowContainer.appendChild(p);
           var n = d.createElement('i');
-          n.className = 'fa fa-angle-right next disable';
+          n.className = modx.style.icon_angle_right + ' next disable';
           n.onclick = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -768,15 +770,15 @@
             this.parentNode.classList.add('dragafter');
             this.parentNode.classList.remove('dragbefore');
             this.parentNode.classList.remove('dragenter');
-            e.dataTransfer.effectAllowed = 'link';
-            e.dataTransfer.dropEffect = 'link';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.dropEffect = 'move';
           } else if (c < this.offsetHeight / 3) {
             //this.parentNode.className = 'dragbefore';
             this.parentNode.classList.add('dragbefore');
             this.parentNode.classList.remove('dragafter');
             this.parentNode.classList.remove('dragenter');
-            e.dataTransfer.effectAllowed = 'link';
-            e.dataTransfer.dropEffect = 'link';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.dropEffect = 'move';
           } else {
             //this.parentNode.className = 'dragenter';
             this.parentNode.classList.add('dragenter');
@@ -826,7 +828,7 @@
             }
           } else {
             el.parentNode.removeChild(el);
-            d.querySelector('#node' + parent + ' .icon').innerHTML = parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder;
+            d.querySelector('#node' + parent + ' .icon').innerHTML = parseInt(this.dataset.private) ? modx.style.icon_folder : modx.style.icon_folder;
           }
           modx.tree.ondragupdate(this, id, parent, menuindex);
         }
@@ -890,28 +892,33 @@
         }
       },
       toggleTheme: function() {
-        var myCodeMirrors = w.main.myCodeMirrors, key;
-        if (d.body.classList.contains('dark')) {
-          d.body.classList.remove('dark');
-          w.main.document.body.classList.remove('dark');
-          d.cookie = 'MODX_themeColor=';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme);
-                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme);
-              }
-            }
+        var a, b = 1, myCodeMirrors = w.main.myCodeMirrors, key;
+        if (typeof localStorage['MODX_themeMode'] === 'undefined') {
+          localStorage['MODX_themeMode'] = modx.config.theme_mode;
+        }
+        if (modx.thememodes[parseInt(localStorage['MODX_themeMode']) + 1]) {
+          b = parseInt(localStorage['MODX_themeMode']) + 1;
+        }
+        a = modx.thememodes[b];
+        for (key in modx.thememodes) {
+          if (modx.thememodes[key]) {
+            d.body.classList.remove(modx.thememodes[key]);
+            w.main.document.body.classList.remove(modx.thememodes[key]);
           }
-        } else {
-          d.body.classList.add('dark');
-          w.main.document.body.classList.add('dark');
-          d.cookie = 'MODX_themeColor=dark';
-          if (myCodeMirrors) {
-            for (key in myCodeMirrors) {
-              if (myCodeMirrors.hasOwnProperty(key)) {
+        }
+        d.body.classList.add(a);
+        w.main.document.body.classList.add(a);
+        d.cookie = 'MODX_themeMode=' + b;
+        localStorage['MODX_themeMode'] = b;
+        if (typeof myCodeMirrors !== 'undefined') {
+          for (key in myCodeMirrors) {
+            if (myCodeMirrors.hasOwnProperty(key)) {
+              if (~a.indexOf('dark')) {
                 w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.darktheme);
                 w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.defaulttheme);
+              } else {
+                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme);
+                w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme);
               }
             }
           }
@@ -1023,7 +1030,7 @@
               this.restoreTree();
             } else {
               modx.tabs({url: modx.MODX_MANAGER_URL + href, title: title + '<small>(' + id + ')</small>'});
-              if (modx.isMobile) modx.resizer.toggle();
+              if (modx.isMobile && w.innerWidth < modx.minWidth) modx.resizer.toggle();
             }
           }
           this.itemToChange = id;
@@ -1186,7 +1193,7 @@
         }
         var f = d.getElementById('nameHolder');
         f.innerHTML = this.selectedObjectName;
-        el.style.left = a + (modx.config.textdir ? '-190' : '') + 'px';
+        el.style.left = a + (modx.config.textdir === 'rtl' ? '-190' : '') + 'px';
         el.style.top = b + 'px';
         el.classList.add('show');
       },
@@ -1293,7 +1300,7 @@
           d.getElementById('treeloader').classList.add('visible');
           this.setItemToChange();
           this.rpcNode = d.getElementById('treeRoot');
-          modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
+          modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=2&id=' + this.itemToChange, function(r) {
             modx.tree.rpcLoadData(r);
             modx.tree.draggable();
           });
@@ -1302,7 +1309,7 @@
       expandTree: function() {
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
-        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
+        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=1&id=' + this.itemToChange, function(r) {
           modx.tree.rpcLoadData(r);
           modx.tree.saveFolderState();
           modx.tree.draggable();
@@ -1311,7 +1318,7 @@
       collapseTree: function() {
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
-        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r) {
+        modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=0&id=' + this.itemToChange, function(r) {
           modx.openedArray = [];
           modx.tree.saveFolderState();
           modx.tree.rpcLoadData(r);
@@ -1322,7 +1329,7 @@
         this.rpcNode = d.getElementById('treeRoot');
         d.getElementById('treeloader').classList.add('visible');
         var a = d.sortFrm;
-        var b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
+        var b = 'a=1&f=nodes&indent=1&parent=' + modx.tree_parent + '&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
         modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', b, function(r) {
           modx.tree.rpcLoadData(r);
           modx.tree.draggable();
@@ -1369,7 +1376,7 @@
           if (a) {
             el.title = modx.lang.empty_recycle_bin;
             el.classList.remove('disabled');
-            el.innerHTML = modx.style.empty_recycle_bin;
+            el.innerHTML = modx.style.icon_trash;
             el.onclick = function() {
               modx.tree.emptyTrash();
             };
@@ -1380,7 +1387,7 @@
           } else {
             el.title = modx.lang.empty_recycle_bin_empty;
             el.classList.add('disabled');
-            el.innerHTML = modx.style.empty_recycle_bin_empty;
+            el.innerHTML = modx.style.icon_trash_alt;
             el.onclick = null;
           }
         }
@@ -1485,8 +1492,10 @@
         this.timer = null;
         this.olduid = '';
         this.closeactions = [6, 61, 62, 63, 94];
+        this.saveAndCloseActions = [75, 76, 86, 99, 106];
         this.reload = typeof a.reload !== 'undefined' ? a.reload : 1;
         this.action = modx.getActionFromUrl(a.url);
+        this.getTab = modx.main.getQueryVariable('tab', a.url);
         this.uid = modx.getActionFromUrl(a.url, 2) ? 'home' : modx.urlToUid(a.url);
         this.page = d.getElementById('evo-tab-page-' + this.uid);
         this.row = d.getElementsByClassName('evo-tab-row')[0].firstElementChild;
@@ -1537,13 +1546,17 @@
           }
           this.page = d.createElement('div');
           this.page.id = 'evo-tab-page-' + this.uid;
-          this.page.className = 'evo-tab-page show';
-          this.page.innerHTML = '<iframe src="' + this.url + '" name="' + this.name + '" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>';
+          this.page.className = 'evo-tab-page iframe-scroller show';
+          if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>';
+          } else {
+            this.page.innerHTML='<iframe class="tabframes" src="'+this.url+'" name="'+this.name+'" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>'
+          };
           d.getElementById('main').appendChild(this.page);
-          console.time('load-tab');
+          //console.time('load-tab');
           this.page.firstElementChild.onload = function(e) {
             s.onload.call(s, e);
-            console.timeEnd('load-tab');
+            //console.timeEnd('load-tab');
           };
           this.tab = d.createElement('h2');
           this.tab.id = 'evo-tab-' + this.uid;
@@ -1576,14 +1589,14 @@
           if (!!w.main.__alertQuit) {
             w.main.alert = function(a) { };
             var message = w.main.document.body.innerHTML;
-            w.main.document.body.innerHTML = '';
+            w.main.document.body.style.display = 'none';
             history.pushState(null, d.title, modx.getActionFromUrl(w.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.location.search);
             w.onpopstate = function() {
               history.go(1);
             };
             modx.popup({
               type: 'warning',
-              title: 'MODX :: Alert',
+              title: 'Evolution CMS :: Alert',
               position: 'top center alertQuit',
               content: message,
               wrap: 'body'
@@ -1598,7 +1611,7 @@
               }
             });
           } else {
-            if (modx.getActionFromUrl(this.url, 2)) {
+            if (modx.getActionFromUrl(this.url, 2) || (~this.saveAndCloseActions.indexOf(modx.getActionFromUrl(this.url)) && parseInt(modx.main.getQueryVariable('r', this.url)))) {
               this.close(e);
             } else if (this.olduid !== this.uid && d.getElementById('evo-tab-' + this.uid)) {
               this.close(e);
@@ -1629,7 +1642,6 @@
           }
         },
         show: function() {
-          var s = this;
           modx.tabs.selected = this.row.querySelector('.selected');
           if (modx.tabs.selected && modx.tabs.selected !== this.tab) {
             d.getElementById(modx.tabs.selected.id.replace('tab', 'tab-page')).classList.remove('show');
@@ -1639,14 +1651,21 @@
           this.tab.classList.add('selected');
           modx.tabs.selected = this.tab;
           w.main = this.page.firstElementChild.contentWindow;
-          w.history.replaceState(null, w.main.document.title, modx.getActionFromUrl(w.main.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
-          modx.tree.setItemToChange();
-          modx.main.tabRow.scroll(this.row, this.tab, 350);
+          if (this.getTab && this.action === 76 && !~w.main.frameElement.contentDocument.location.href.indexOf(this.url)) {
+            w.main.frameElement.src = this.url;
+          } else {
+            w.history.replaceState(null, w.main.document.title, modx.getActionFromUrl(w.main.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
+            modx.tree.setItemToChange();
+            modx.main.tabRow.scroll(this.row, this.tab, 350);
+          }
         },
         close: function(e) {
           var documentDirty = this.page.firstElementChild.contentWindow.documentDirty;
           var checkDirt = !!this.page.firstElementChild.contentWindow.checkDirt;
           if (documentDirty && checkDirt && confirm(this.page.firstElementChild.contentWindow.checkDirt(e)) || !documentDirty) {
+            if (modx.tabs.selected === this.tab) {
+              tree.ca = 'open';
+            }
             modx.tabs.selected = this.tab.classList.contains('selected') ? this.tab.previousElementSibling : this.row.querySelector('.selected');
             this.page.parentNode.removeChild(this.page);
             this.row.removeChild(this.tab);
@@ -1738,7 +1757,7 @@
           title: '',
           url: '',
           width: '20rem',
-          wrap: w.main.document.body, // parentNode
+          wrap: a.wrap || w.main.document.body, // parentNode
           zIndex: 10500,
           w: null,
           show: function() {
@@ -1794,6 +1813,7 @@
             if (o.draggable) {
               modx.dragging(o.el, {wrap: o.wrap, resize: o.resize});
             }
+            o.el.classList.add('show');
           },
           close: function(e) {
             o.event = e || o.event || w.event;
@@ -1924,7 +1944,7 @@
           o.el.style.height = !/[^[0-9]/.test(o.height) ? o.height + 'px' : o.height;
           o.el.style.zIndex = o.zIndex;
           o.el.style.margin = o.margin;
-          o.el.className = o.className + ' show alert alert-' + o.type + ' ' + o.addclass + (o.animation ? ' animation ' + o.animation : '');
+          o.el.className = o.className + ' alert alert-' + o.type + ' ' + o.addclass + (o.animation ? ' animation ' + o.animation : '');
           o.el.dataset.position = o.position.join(':');
           if (o.showclose) {
             o.el.innerHTML += '<div class="evo-popup-close close">&times;</div>';
@@ -1967,7 +1987,7 @@
                 if (!!e.target.contentWindow.__alertQuit) {
                   modx.popup({
                     type: 'warning',
-                    title: 'MODX :: Alert',
+                    title: 'Evolution CMS :: Alert',
                     position: 'top center alertQuit',
                     content: e.target.contentWindow.document.body.querySelector('p').innerHTML
                   });
@@ -2061,7 +2081,7 @@
         modx.tree.ctx = null;
       }
       if (!/dropdown\-item/.test(e.target.className)
-      //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
+          //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
       ) {
         var els = d.querySelectorAll('.dropdown.show'),
             n = null,
@@ -2382,28 +2402,28 @@
       var b = '';
       switch (this.typesactions[a]) {
         case 1:
-          b = 'fa fa-newspaper-o';
+          b = modx.style.icon_template;
           break;
         case 2:
-          b = 'fa fa-list-alt';
+          b = modx.style.icon_tv;
           break;
         case 3:
-          b = 'fa fa-th-large';
+          b = modx.style.icon_chunk;
           break;
         case 4:
-          b = 'fa fa-code';
+          b = modx.style.icon_code;
           break;
         case 5:
-          b = 'fa fa-plug';
+          b = modx.style.icon_plugin;
           break;
         case 6:
-          b = 'fa fa-cube';
+          b = modx.style.icon_element;
           break;
         case 7:
-          b = 'fa fa-pencil-square-o';
+          b = modx.style.icon_edit;
           break;
         default:
-          b = 'fa fa-circle';
+          b = modx.style.icon_circle;
       }
       return b;
     }

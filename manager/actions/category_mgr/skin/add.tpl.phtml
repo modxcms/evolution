@@ -1,11 +1,11 @@
 <form action="<?php $view->get('url'); ?>" method="post" id="add_form">
     <input name="<?php echo $view->get('request_key'); ?>[add][submit]" type="hidden" value="1" />
     <div class="form-group">
-        <a class="btn btn-success btn-sm" href="javascript:;" onclick="document.getElementById('add_form').submit();return false;"><i class="fa fa-plus-circle"></i> <?php echo $view->txt('cm_create_new_category'); ?></a>
-        <a class="btn btn-secondary btn-sm" href="javascript:;" id="add-help" onclick="document.querySelector('#add-info').classList.toggle('show')"><i class="fa fa-question-circle"></i> <?php echo $_lang['help']; ?></a>
+        <a class="btn btn-success btn-sm" href="javascript:;" onclick="document.getElementById('add_form').submit();return false;"><i class="<?= $_style['icon_add'] ?>"></i> <?php echo $view->txt('cm_create_new_category'); ?></a>
+        <a class="btn btn-secondary btn-sm" href="javascript:;" id="add-help" onclick="document.querySelector('#add-info').classList.toggle('show')"><i class="<?= $_style['icon_question_circle'] ?>"></i> <?php echo $_lang['help']; ?></a>
     </div>
     <p id="add-info" class="element-edit-message">
-        Add a new category to the Manager.
+        <?php echo $_lang["cm_add_new_category"]; ?>
     </p>
     <div class="row form-row">
         <div class="col-xs-12 col-sm-9">

@@ -1,0 +1,11 @@
+{
+  "name": "evolutioncms/custom",
+  "require": {
+    "barryvdh/laravel-ide-helper": "~2.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "EvolutionCMS\\Custom\\": "src/"
+    }
+  }
+}

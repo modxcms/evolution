@@ -1,0 +1,6 @@
+<?php
+return [
+    'database' => 'dev',
+    'timezone' => 'UTC',
+    'modes' => '' //If you have problem with NO_ENGINE_SUBSTITUTION mode in no strict
+];

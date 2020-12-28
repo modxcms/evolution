@@ -7,12 +7,13 @@ if (!$modx->hasPermission('save_template')) {
 }
 
 $id = (int)$_POST['id'];
-$template = $modx->db->escape($_POST['post']);
-$templatename = $modx->db->escape(trim($_POST['templatename']));
-$description = $modx->db->escape($_POST['description']);
-$locked = $_POST['locked'] == 'on' ? 1 : 0;
+$template = $_POST['post'];
+$templatename = trim($_POST['templatename']);
+$templatealias = trim($_POST['templatealias']);
+$description = $_POST['description'];
+$locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $selectable = $id == $modx->config['default_template'] ? 1 :    // Force selectable
-    $_POST['selectable'] == 'on' ? 1 : 0;
+    (isset($_POST['selectable']) && $_POST['selectable'] == 'on' ? 1 : 0);
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
@@ -32,6 +33,28 @@ if ($templatename == "") {
     $templatename = "Untitled template";
 }
 
+function createBladeFile($templatealias)
+{
+    $filename = $templatealias;
+    $filename = preg_replace('/\s*/', '', $filename);
+    $filename = preg_replace('/[^a-zA-Z0-9_-]+/', '', $filename);
+
+    if (!empty($filename) && $filename == $templatealias) {
+        $filename .= '.blade.php';
+        $views = MODX_BASE_PATH . 'views';
+
+        if (!file_exists($views . '/' . $filename)) {
+            if (!is_dir($views)) {
+                mkdir($views);
+            }
+
+            if (is_writeable($views)) {
+                file_put_contents($views . '/' . $filename, '');
+            }
+        }
+    }
+}
+
 switch ($_POST['mode']) {
     case '19':
 
@@ -42,16 +65,26 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for new templates
-        $rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
-        $count = $modx->db->getValue($rs);
+        $count = \EvolutionCMS\Models\SiteTemplate::where('templatename', $templatename)->count();
         if ($count > 0) {
-            $modx->manager->saveFormValues(19);
+            $modx->getManagerApi()->saveFormValues(19);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=19");
         }
 
+        if($templatealias == '')
+            $templatealias = $templatename;
+        $templatealias = strtolower($modx->stripAlias(trim($templatealias)));
+
+        $count = \EvolutionCMS\Models\SiteTemplate::where('templatealias', $templatealias)->count();
+
+        if ($count > 0) {
+            $modx->getManagerApi()->saveFormValues(19);
+            $modx->webAlertAndQuit(sprintf($_lang["duplicate_template_alias_found"], $docid, $templatealias), "index.php?a=19");
+        }
         //do stuff to save the new doc
-        $newid = $modx->db->insert(array(
+        $newid = \EvolutionCMS\Models\SiteTemplate::query()->insertGetId(array(
             'templatename' => $templatename,
+            'templatealias' => $templatealias,
             'description' => $description,
             'content' => $template,
             'locked' => $locked,
@@ -59,7 +92,7 @@ switch ($_POST['mode']) {
             'category' => $categoryid,
             'createdon' => $currentdate,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_templates'));
+        ));
 
         // invoke OnTempFormSave event
         $modx->invokeEvent("OnTempFormSave", array(
@@ -68,6 +101,10 @@ switch ($_POST['mode']) {
         ));
         // Set new assigned Tvs
         saveTemplateAccess($newid);
+
+        if (!empty($_POST['createbladefile'])) {
+            createBladeFile($templatealias);
+        }
 
         // Set the item name for logger
         $_SESSION['itemname'] = $templatename;
@@ -95,25 +132,39 @@ switch ($_POST['mode']) {
         ));
 
         // disallow duplicate names for templates
-        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
-        $count = $modx->db->getValue($rs);
+        $count = \EvolutionCMS\Models\SiteTemplate::where('templatename', $templatename)->where('id', '!=', $id)->count();
         if ($count > 0) {
-            $modx->manager->saveFormValues(16);
+            $modx->getManagerApi()->saveFormValues(16);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=16&id={$id}");
         }
 
+        if($templatealias == '')
+            $templatealias = $templatename;
+        $templatealias = strtolower($modx->stripAlias(trim($templatealias)));
+
+        $count = \EvolutionCMS\Models\SiteTemplate::where('templatealias', $templatealias)->where('id', '!=', $id)->count();
+
+        if ($count > 0) {
+            $modx->getManagerApi()->saveFormValues(16);
+            $modx->webAlertAndQuit(sprintf($_lang["duplicate_template_alias_found"], $docid, $templatealias), "index.php?a=16&id={$id}");
+        }
         //do stuff to save the edited doc
-        $modx->db->update(array(
+        \EvolutionCMS\Models\SiteTemplate::find($id)->update(array(
             'templatename' => $templatename,
+            'templatealias' => $templatealias,
             'description' => $description,
             'content' => $template,
             'locked' => $locked,
             'selectable' => $selectable,
             'category' => $categoryid,
             'editedon' => $currentdate
-        ), $modx->getFullTableName('site_templates'), "id='{$id}'");
+        ));
         // Set new assigned Tvs
         saveTemplateAccess($id);
+
+        if (!empty($_POST['createbladefile'])) {
+            createBladeFile($templatealias);
+        }
 
         // invoke OnTempFormSave event
         $modx->invokeEvent("OnTempFormSave", array(
@@ -142,40 +193,4 @@ switch ($_POST['mode']) {
         break;
     default:
         $modx->webAlertAndQuit("No operation set in request.");
-}
-
-/**
- * @param int $id
- */
-function saveTemplateAccess($id)
-{
-    global $modx;
-    if ($_POST['tvsDirty'] == 1) {
-        $newAssignedTvs = $_POST['assignedTv'];
-
-        // Preserve rankings of already assigned TVs
-        $rs = $modx->db->select("tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "");
-
-        $ranksArr = array();
-        $highest = 0;
-        while ($row = $modx->db->getRow($rs)) {
-            $ranksArr[$row['tmplvarid']] = $row['rank'];
-            $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
-        };
-
-        $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
-        if (empty($newAssignedTvs)) {
-            return;
-        }
-        foreach ($newAssignedTvs as $tvid) {
-            if (!$id || !$tvid) {
-                continue;
-            }    // Dont link zeros
-            $modx->db->insert(array(
-                'templateid' => $id,
-                'tmplvarid' => $tvid,
-                'rank' => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
-            ), $modx->getFullTableName('site_tmplvar_templates'));
-        }
-    }
 }
