@@ -425,10 +425,19 @@ if (!function_exists('sendMailMessageForUser')) {
         global $_lang;
         global $emailsubject, $emailsender;
         $message = sprintf($message, $uid, $pwd); // use old method
+        $last_name = '';
+        $first_name = '';
+        $middle_name = '';
+        $user = \EvolutionCMS\Models\UserAttribute::query()->where('email', $email)->first();
+        if (!is_null($user)) {
+            $last_name = $user->last_name;
+            $first_name = $user->first_name;
+            $middle_name = $user->middle_name;
+        }
         // replace placeholders
         $message = str_replace(
-            array('[+uid+]', '[+pwd+]', '[+ufn+]', '[+sname+]', '[+saddr+]', '[+semail+]', '[+surl+]')
-            , array($uid, $pwd, $ufn, $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $emailsender, $emailsender, $url)
+            array('[+uid+]', '[+pwd+]', '[+ufn+]', '[+sname+]', '[+saddr+]', '[+semail+]', '[+surl+]', '[+u_first_name+]', '[+u_last_name+]', '[+u_middle_name+]')
+            , array($uid, $pwd, $ufn, $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $emailsender, $emailsender, $url, $first_name, $last_name, $middle_name)
             , $message
         );
 
