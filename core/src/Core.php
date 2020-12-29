@@ -4042,7 +4042,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 });
             }
         } else {
-            if ($_SESSION['mgrRole'] != 1) {
+            if (isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] != 1) {
                 if (!$docgrp) {
                     $documentChildes = $documentChildes->where('privatemgr', 0);
                 } else {
