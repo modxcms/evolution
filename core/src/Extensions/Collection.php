@@ -200,7 +200,7 @@ class Collection extends EloquentCollection
      */
     protected function makeTreeParent(array $items, $parent = null)
     {
-        if($parent == null){
+        if($parent === null){
             return $this->makeTree($items);
         }
         /** @var SiteContent[] $result */
