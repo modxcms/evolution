@@ -105,24 +105,25 @@ class UserLogout implements ServiceInterface
 
 
         $internalKey = EvolutionCMS()->getLoginUserID();
-        if(!$internalKey){
+        if (!$internalKey) {
             return false;
         }
         $user = User::query()->find($internalKey);
-        if(is_null($user)) return false;
-        $user->refresh_token = '';
-        $user->access_token = '';
-        $user->valid_to = NULL;
-        $user->save();
-        $username = $_SESSION['mgrShortname'];
-        $sid = EvolutionCMS()->sid;
-        if ($this->events) {
-            // invoke OnBeforeManagerLogout event
-            EvolutionCMS()->invokeEvent("OnBeforeManagerLogout",
-                array(
-                    "userid" => $internalKey,
-                    "username" => $username
-                ));
+        if (!is_null($user)) {
+            $user->refresh_token = '';
+            $user->access_token = '';
+            $user->valid_to = NULL;
+            $user->save();
+            $username = $_SESSION['mgrShortname'];
+            $sid = EvolutionCMS()->sid;
+            if ($this->events) {
+                // invoke OnBeforeManagerLogout event
+                EvolutionCMS()->invokeEvent("OnBeforeManagerLogout",
+                    array(
+                        "userid" => $internalKey,
+                        "username" => $username
+                    ));
+            }
         }
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', 0, MODX_BASE_URL);
@@ -134,7 +135,7 @@ class UserLogout implements ServiceInterface
         \EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
 
         if ($this->events) {
-        // invoke OnManagerLogout event
+            // invoke OnManagerLogout event
             EvolutionCMS()->invokeEvent("OnManagerLogout",
                 array(
                     "userid" => $internalKey,
