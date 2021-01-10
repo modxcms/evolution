@@ -481,11 +481,11 @@ class Database extends Manager
      */
     public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
     {
-        $uid = $uid ? $uid : EvolutionCMS()->getDatabase()->getConfig('user');
-        $pwd = $pwd ? $pwd : EvolutionCMS()->getDatabase()->getConfig('pass');
+        $uid = $uid ? $uid : EvolutionCMS()->getDatabase()->getConfig('username');
+        $pwd = $pwd ? $pwd : EvolutionCMS()->getDatabase()->getConfig('password');
         $host = $host ? $host : EvolutionCMS()->getDatabase()->getConfig('host');
         $host = explode(':', $host, 2);
-        $dbase = $dbase ? $dbase : EvolutionCMS()->getDatabase()->getConfig('dbase');
+        $dbase = $dbase ? $dbase : EvolutionCMS()->getDatabase()->getConfig('database');
         $dbase = trim($dbase, '`'); // remove the `` chars
         $charset = EvolutionCMS()->getDatabase()->getConfig('charset');
         $connection_method = EvolutionCMS()->getDatabase()->getConfig('connection_method');

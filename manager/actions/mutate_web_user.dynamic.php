@@ -560,7 +560,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                             $tvValue,
                                             '',
                                             $row,
-                                            $tvsArray,
+                                            $tvsArray ?? [],
                                             $role
                                         ) ?>
                                     </div>
