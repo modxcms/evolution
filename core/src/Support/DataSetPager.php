@@ -188,13 +188,14 @@ class DataSetPager implements DataSetPagerInterface
             if ($isDataset) {
                 $results = $this->ds->skip(($minitems - 1))->take($this->pageSize)->get()->toArray();
                 $countResult = count($results);
+                $minitems = 0;
+                $maxitems = $this->pageSize;
             }else {
                 $countResult = count($this->ds);
             }
             $n = 0;
             while ($i <= $maxitems && $i<=$countResult) {
                 $row = ($isDataset) ? $results[$n] : $this->ds[$i - 1];
-
                 foreach ($this->prepareResult as $key => $value) {
                     if (isset($row[$key]) && isset($value[$row[$key]])) {
                         $row[$key] = $value[$row[$key]];
@@ -203,7 +204,6 @@ class DataSetPager implements DataSetPagerInterface
                         $row[$key] = $value['__'];
                     }
                 }
-                $n++;
                 if ($i >= $minitems && $i <= $maxitems) {
                     if ($fncObject) {
                         if ($args != "") {
