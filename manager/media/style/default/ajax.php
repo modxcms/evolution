@@ -138,7 +138,7 @@ if (isset($action)) {
                     case 'element_tplvars':
                         $a = 301;
                         $prefix = \DB::getTablePrefix();
-                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', \DB::raw("IFNULL({$prefix}site_tmplvar_templates.tmplvarid, {$prefix}user_role_vars.tmplvarid) as disabled"))
+                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', 'site_tmplvar_templates.tmplvarid as disabled')
                             ->leftJoin('site_tmplvar_templates', function ($join) {
                                 $join->on('site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id');
                                 $join->on('site_tmplvar_templates.templateid', '>', \DB::raw(0));
