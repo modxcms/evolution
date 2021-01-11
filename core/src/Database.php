@@ -48,7 +48,8 @@ class Database extends Manager
         } else {
             $result = $tableName;
         }
-
+        if($this->getConfig('driver') == 'pgsql')
+            $result = str_replace('"', "'", $result);
         return $result;
     }
 
@@ -309,6 +310,7 @@ class Database extends Manager
      */
     public function select($fields, $tables, $where = '', $orderBy = '', $limit = '')
     {
+
         $fields = $this->prepareFields($fields);
         $tables = $this->prepareFrom($tables, true);
         $where = $this->prepareWhere($where);
