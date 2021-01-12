@@ -4015,7 +4015,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $arr = explode(',', $fields);
             $new_arr = [];
             foreach ($arr as $item) {
-                $new_arr[] = 'site_content.' . $item;
+                if (stristr($item, '.') === false) {
+                    $new_arr[] = 'site_content.' . $item;
+                }else
+                    $new_arr[] = $item;
+
             }
             $documentChildes = $documentChildes->select($new_arr);
         }
