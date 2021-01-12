@@ -4012,10 +4012,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildes = $documentChildes->where($where);
         }
         if (!is_array($fields)) {
-            $arr =  explode(',', $fields);
+            $arr = explode(',', $fields);
             $new_arr = [];
-            foreach ($arr as $item){
-                $new_arr[] = 'site_content.'.$item;
+            foreach ($arr as $item) {
+                if (stristr($item, '.') === false) {
+                    $new_arr[] = 'site_content.' . $item;
+                }else
+                    $new_arr[] = $item;
+
             }
             $documentChildes = $documentChildes->select($new_arr);
         }
@@ -4171,7 +4175,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $docgrp = implode(",", $docgrp);
         }
         $fields = array_filter(array_map('trim', explode(',', $fields)));
-
+        foreach ($fields as $key => $value) {
+            if (stristr($value, '.') === false) {
+                $fields[$key] = 'site_content.' . $value;
+            }
+        }
         $pageInfo = SiteContent::query()->select($fields)
             ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
             ->where('site_content.id', $pageid);
