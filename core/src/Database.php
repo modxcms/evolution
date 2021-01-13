@@ -4,6 +4,7 @@
 use Exception;
 
 
+use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use PDOStatement;
@@ -24,6 +25,15 @@ class Database extends Manager
     protected $driver;
 
     public $conn;
+
+    public $config;
+
+    public function __construct(Container $container = null)
+    {
+
+        parent::__construct($container);
+        $this->prepareNativeConfig();
+    }
 
     /**
      * @param $tableName
@@ -48,7 +58,7 @@ class Database extends Manager
         } else {
             $result = $tableName;
         }
-        if($this->getConfig('driver') == 'pgsql')
+        if ($this->getConfig('driver') == 'pgsql')
             $result = str_replace('"', "'", $result);
         return $result;
     }
@@ -80,32 +90,6 @@ class Database extends Manager
     }
 
 
-    /**
-     * {@inheritDoc}
-     * @return bool|PDOStatement
-     */
-    public function _query($sql)
-    {
-        try {
-            $start = microtime(true);
-
-            $result = $this->prepare($sql);
-            $this->execute($result);
-
-            if ($this->saveAffectedRows($result) === 0 && $this->isResult($result) && !$this->isSelectQuery($sql)) {
-                $result = true;
-            }
-            $this->getConnect()->logQuery($sql, [], $this->getElapsedTime($start));
-        } catch (\Exception $exception) {
-            $this->lastError = $this->isResult($result) ? $result->errorInfo() : [];
-            $code = $this->isResult($result) ? $result->errorCode() : '';
-            $this->lastErrorNo = $this->isResult($result) ? (empty($code) ? $exception->getCode() : $code) : '';
-            throw (new Exceptions\QueryException($exception->getMessage(), $exception->getCode()))
-                ->setQuery($sql);
-        }
-
-        return $result;
-    }
 
 
     /**
@@ -310,7 +294,6 @@ class Database extends Manager
      */
     public function select($fields, $tables, $where = '', $orderBy = '', $limit = '')
     {
-
         $fields = $this->prepareFields($fields);
         $tables = $this->prepareFrom($tables, true);
         $where = $this->prepareWhere($where);
@@ -814,4 +797,9 @@ class Database extends Manager
         return $date;
     }
 
+    public function prepareNativeConfig()
+    {
+        $this->config = $this->getConfig();
+        $this->config['table_prefix'] = $this->getConfig('prefix');
+    }
 }
