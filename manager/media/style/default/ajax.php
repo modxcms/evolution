@@ -207,7 +207,7 @@ if (isset($action)) {
                 }
 
                 if ($sql->count() > 0) {
-                    if ($sql->count() > $limit) {
+                    if ($sql->get(['id'])->count() > $limit) {
                         $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
 
@@ -248,7 +248,7 @@ if (isset($action)) {
 
             $sql = \EvolutionCMS\Models\User::select('manager_users.*', 'user_attributes.blocked')
                 ->leftJoin('user_attributes', 'manager_users.id', '=', 'user_attributes.internalKey')
-                ->orderBy('manager_users.username')->take($limit);
+                ->orderBy('manager_users.username');
             if ($filter != '') {
                 $sql = $sql->where('manager_users.username', 'LIKE', '%' . $filter . '%');
             }
@@ -262,10 +262,10 @@ if (isset($action)) {
             }
 
             if ($count = $sql->count()) {
-                if ($count == $limit) {
+                if ($count > $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                foreach ($sql->get() as $row) {
+                foreach ($sql->take($limit)->get() as $row) {
                     $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
@@ -290,7 +290,7 @@ if (isset($action)) {
 
             $sql = \EvolutionCMS\Models\User::select('users.*', 'user_attributes.blocked')
                 ->leftJoin('user_attributes', 'users.id', '=', 'user_attributes.internalKey')
-                ->orderBy('users.username')->take($limit);
+                ->orderBy('users.username');
             if ($filter != '') {
                 $sql = $sql->where('users.username', 'LIKE', '%' . $filter . '%');
             }
@@ -300,10 +300,10 @@ if (isset($action)) {
             }
 
             if ($count = $sql->count()) {
-                if ($count == $limit) {
+                if ($count > $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                foreach ($sql->get() as $row) {
+                foreach ($sql->take($limit)->get() as $row) {
                     $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
