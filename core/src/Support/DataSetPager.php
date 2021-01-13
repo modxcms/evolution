@@ -208,7 +208,6 @@ class DataSetPager implements DataSetPagerInterface
                 if ($i >= $minitems && $i <= $maxitems) {
                     if ($fncObject) {
                         if ($args != "") {
-                            echo $i.'<br>';
                             $this->rows .= $fnc->RenderRowFnc($i, $row, $args);
                         } else {
                             $this->rows .= $fnc->RenderRowFnc($i, $row);
