@@ -193,6 +193,7 @@ class DataSetPager implements DataSetPagerInterface
             }else {
                 $countResult = count($this->ds);
             }
+
             $n = 0;
             while ($i <= $maxitems && $i<=$countResult) {
                 $row = ($isDataset) ? $results[$n] : $this->ds[$i - 1];
@@ -207,6 +208,7 @@ class DataSetPager implements DataSetPagerInterface
                 if ($i >= $minitems && $i <= $maxitems) {
                     if ($fncObject) {
                         if ($args != "") {
+                            echo $i.'<br>';
                             $this->rows .= $fnc->RenderRowFnc($i, $row, $args);
                         } else {
                             $this->rows .= $fnc->RenderRowFnc($i, $row);
@@ -222,6 +224,7 @@ class DataSetPager implements DataSetPagerInterface
 
                 }
                 $i++;
+                $n++;
             }
         }
     }
