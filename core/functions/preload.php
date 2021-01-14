@@ -80,26 +80,16 @@ if (!function_exists('startCMSSession')) {
 
         if (SESSION_STORAGE == 'redis' && class_exists('Redis')) {
             $redis = new Redis();
-            try {
-                if ($redis->connect(env('REDIS_HOST', '127.0.0.1'),
-                        env('REDIS_PORT', 6379),
-                        env('REDIS_TIMEOUT', 60),
-                        NULL,
-                        0,
-                        0,
-                        ['auth' => [env('REDIS_USER', null), env('REDIS_PASS', null)]])
-                    && $redis->select(env('REDIS_SESSION_DATABASE', 0))) {
-                    $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
-                    session_set_save_handler($handler);
-                }else {
-                    if (env('CACHE_DRIVER') == 'redis'){
-                        putenv('CACHE_DRIVER=file');
-                    }
-                }
-            } catch (Exception $exception) {
-                if (env('CACHE_DRIVER') == 'redis'){
-                    putenv('CACHE_DRIVER=file');
-                }
+            if ($redis->connect(env('REDIS_HOST', '127.0.0.1'),
+                    env('REDIS_PORT', 6379),
+                    env('REDIS_TIMEOUT', 60),
+                    NULL,
+                    0,
+                    0,
+                    ['auth' => [env('REDIS_USER', null), env('REDIS_PASS', null)]])
+                && $redis->select(env('REDIS_SESSION_DATABASE', 0))) {
+                $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
+                session_set_save_handler($handler);
             }
         }
 
