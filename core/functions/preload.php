@@ -91,6 +91,10 @@ if (!function_exists('startCMSSession')) {
                     && $redis->select(env('REDIS_SESSION_DATABASE', 0))) {
                     $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
                     session_set_save_handler($handler);
+                }else {
+                    if (env('CACHE_DRIVER') == 'redis'){
+                        putenv('CACHE_DRIVER=file');
+                    }
                 }
             } catch (Exception $exception) {
                 if (env('CACHE_DRIVER') == 'redis'){
