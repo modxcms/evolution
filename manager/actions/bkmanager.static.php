@@ -297,7 +297,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                             <table class="table data nowrap">
                                 <thead>
                                 <tr>
-                                    <td><label class="form-check-label"><input type="checkbox" name="chkselall"
+                                    <td><label class="form-check form-check-label"><input type="checkbox" name="chkselall"
                                                                                class="form-check-input"
                                                                                onclick="selectAll();"
                                                                                title="Select All Tables"/> <?= $_lang['database_table_tablename'] ?>
