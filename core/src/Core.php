@@ -3893,27 +3893,27 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $documentChildes = SiteContent::query()->where('site_content.parent', $parentid);
+        $documentChildren = SiteContent::query()->where('site_content.parent', $parentid);
         if ($published !== 'all') {
-            $documentChildes = $documentChildes->where('site_content.published', $published);
+            $documentChildren = $documentChildren->where('site_content.published', $published);
         }
         if ($deleted !== 'all') {
-            $documentChildes = $documentChildes->where('site_content.deleted', $deleted);
+            $documentChildren = $documentChildren->where('site_content.deleted', $deleted);
         }
 
         if (is_string($where) && $where != '') {
-            $documentChildes = $documentChildes->whereRaw($where);
+            $documentChildren = $documentChildren->whereRaw($where);
         } elseif (is_array($where)) {
-            $documentChildes = $documentChildes->where($where);
+            $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
-            $documentChildes = $documentChildes->select(explode(',', $fields));
+            $documentChildren = $documentChildren->select(explode(',', $fields));
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
             $sort = explode(',', $sort);
             foreach ($sort as $item)
-                $documentChildes = $documentChildes->orderBy($item, $dir);
+                $documentChildren = $documentChildren->orderBy($item, $dir);
         }
 
         // get document groups for current user
@@ -3923,9 +3923,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $documentChildes = $documentChildes->where('privatemgr', 0);
+                $documentChildren = $documentChildren->where('privatemgr', 0);
             } else {
-                $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                     $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
@@ -3933,9 +3933,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else {
             if ($_SESSION['mgrRole'] != 1) {
                 if (!$docgrp) {
-                    $documentChildes = $documentChildes->where('privatemgr', 0);
+                    $documentChildren = $documentChildren->where('privatemgr', 0);
                 } else {
-                    $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                    $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                         $query->where('privatemgr', 0)
                             ->orWhereIn('document_groups.document_group', $docgrp);
                     });
@@ -3944,9 +3944,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (is_numeric($limit)) {
-            $documentChildes = $documentChildes->take($limit);
+            $documentChildren = $documentChildren->take($limit);
         }
-        $resourceArray = $documentChildes->get()->toArray();
+        $resourceArray = $documentChildren->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
@@ -3998,18 +3998,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $documentChildes = SiteContent::query()->whereIn('site_content.id', $ids);
+        $documentChildren = SiteContent::query()->whereIn('site_content.id', $ids);
         if ($published !== 'all') {
-            $documentChildes = $documentChildes->where('site_content.published', $published);
+            $documentChildren = $documentChildren->where('site_content.published', $published);
         }
         if ($deleted !== 'all') {
-            $documentChildes = $documentChildes->where('site_content.deleted', $deleted);
+            $documentChildren = $documentChildren->where('site_content.deleted', $deleted);
         }
 
         if (is_string($where) && $where != '') {
-            $documentChildes = $documentChildes->whereRaw($where);
+            $documentChildren = $documentChildren->whereRaw($where);
         } elseif (is_array($where)) {
-            $documentChildes = $documentChildes->where($where);
+            $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
             $arr = explode(',', $fields);
@@ -4021,13 +4021,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $new_arr[] = $item;
 
             }
-            $documentChildes = $documentChildes->select($new_arr);
+            $documentChildren = $documentChildren->select($new_arr);
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
             $sort = explode(',', $sort);
             foreach ($sort as $item)
-                $documentChildes = $documentChildes->orderBy($item, $dir);
+                $documentChildren = $documentChildren->orderBy($item, $dir);
         }
 
         // get document groups for current user
@@ -4037,10 +4037,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $documentChildes = $documentChildes->where('privatemgr', 0);
+                $documentChildren = $documentChildren->where('privatemgr', 0);
             } else {
-                $documentChildes = $documentChildes->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
+                $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                     $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
@@ -4048,10 +4048,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else {
             if (isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] != 1) {
                 if (!$docgrp) {
-                    $documentChildes = $documentChildes->where('privatemgr', 0);
+                    $documentChildren = $documentChildren->where('privatemgr', 0);
                 } else {
-                    $documentChildes = $documentChildes->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                    $documentChildes = $documentChildes->where(function ($query) use ($docgrp) {
+                    $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
+                    $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                         $query->where('privatemgr', 0)
                             ->orWhereIn('document_groups.document_group', $docgrp);
                     });
@@ -4060,9 +4060,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         if (is_numeric($limit)) {
-            $documentChildes = $documentChildes->take($limit);
+            $documentChildren = $documentChildren->take($limit);
         }
-        $resourceArray = $documentChildes->get()->toArray();
+        $resourceArray = $documentChildren->get()->toArray();
 
         $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
 
