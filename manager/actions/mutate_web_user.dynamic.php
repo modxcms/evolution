@@ -895,8 +895,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<th><?php echo $_lang["user_photo"] ?></th>
-						<td><input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" id="photo" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
-							<input type="button" value="<?php echo $_lang['insert']; ?>" onClick="BrowseServer('photo');" /></td>
+                        <td>
+						<input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" id="photo" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
+                            <button type="button"  onClick="BrowseServer('photo');" /><?php echo $_lang['insert']; ?></button>
+                        </td>
 					</tr>
 					<tr>
 						<td width="200">&nbsp;</td>
