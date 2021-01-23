@@ -20,7 +20,7 @@ class Toggle
 				&& (el = e.target.closest('.tracy-toggle'))
 				&& Math.pow(start[0] - e.clientX, 2) + Math.pow(start[1] - e.clientY, 2) < MOVE_THRESHOLD
 			) {
-				Toggle.toggle(el);
+				Toggle.toggle(el, undefined, e);
 				e.stopImmediatePropagation();
 			}
 		});
@@ -29,15 +29,13 @@ class Toggle
 
 
 	// changes element visibility
-	static toggle(el, show) {
+	static toggle(el, expand, e) {
 		let collapsed = el.classList.contains('tracy-collapsed'),
 			ref = el.getAttribute('data-tracy-ref') || el.getAttribute('href', 2),
 			dest = el;
 
-		if (typeof show === 'undefined') {
-			show = collapsed;
-		} else if (!show === collapsed) {
-			return;
+		if (typeof expand === 'undefined') {
+			expand = collapsed;
 		}
 
 		if (!ref || ref === '#') {
@@ -51,12 +49,12 @@ class Toggle
 		dest = ref[3] ? Toggle.nextElement(dest.nextElementSibling, ref[4]) : dest;
 		dest = ref[5] ? dest.querySelector(ref[5]) : dest;
 
-		el.classList.toggle('tracy-collapsed', !show);
-		dest.classList.toggle('tracy-collapsed', !show);
+		el.classList.toggle('tracy-collapsed', !expand);
+		dest.classList.toggle('tracy-collapsed', !expand);
 
 		el.dispatchEvent(new CustomEvent('tracy-toggle', {
 			bubbles: true,
-			detail: {relatedTarget: dest, collapsed: !show}
+			detail: {relatedTarget: dest, collapsed: !expand, originalEvent: e}
 		}));
 	}
 
@@ -80,14 +78,14 @@ class Toggle
 					}
 				}
 				if (el.textContent === item.text) {
-					Toggle.toggle(el, item.show);
+					Toggle.toggle(el, item.expand);
 				}
 			});
 		}
 
 		window.addEventListener('unload', () => {
 			toggles = saved.map((el) => {
-				let item = {path: [], text: el.textContent, show: !el.classList.contains('tracy-collapsed')};
+				let item = {path: [], text: el.textContent, expand: !el.classList.contains('tracy-collapsed')};
 				do {
 					item.path.unshift(Array.from(el.parentNode.children).indexOf(el));
 					el = el.parentNode;
