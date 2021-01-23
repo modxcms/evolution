@@ -11,6 +11,10 @@ const
 	PROP_VIRTUAL = 4,
 	PROP_PRIVATE = 2;
 
+const
+	HINT_CTRL = 'Ctrl-Click to open in editor',
+	HINT_ALT = 'Alt-Click to expand/collapse all child nodes';
+
 class Dumper
 {
 	static init(context) {
@@ -59,9 +63,29 @@ class Dumper
 		});
 
 		document.documentElement.addEventListener('tracy-toggle', (e) => {
-			if (e.target.matches('.tracy-dump *')) {
-				e.detail.relatedTarget.classList.toggle('tracy-dump-flash', !e.detail.collapsed);
+			if (!e.target.matches('.tracy-dump *')) {
+				return;
 			}
+
+			let cont = e.detail.relatedTarget;
+			let origE = e.detail.originalEvent;
+
+			if (origE && origE.usedIds) { // triggered by expandChild()
+				toggleChildren(cont, origE.usedIds);
+				return;
+
+			} else if (origE && origE.altKey && cont.querySelector('.tracy-toggle')) { // triggered by alt key
+				if (e.detail.collapsed) { // reopen
+					e.target.classList.toggle('tracy-collapsed', false);
+					cont.classList.toggle('tracy-collapsed', false);
+					e.detail.collapsed = false;
+				}
+
+				let expand = e.target.tracyAltExpand = !e.target.tracyAltExpand;
+				toggleChildren(cont, expand ? {} : false);
+			}
+
+			cont.classList.toggle('tracy-dump-flash', !e.detail.collapsed);
 		});
 
 		document.documentElement.addEventListener('animationend', (e) => {
@@ -71,13 +95,23 @@ class Dumper
 		});
 
 		document.addEventListener('mouseover', (e) => {
-			let dump;
-			if (e.target.matches('.tracy-dump-hash') && (dump = e.target.closest('.tracy-dump'))) {
-				dump.querySelectorAll('.tracy-dump-hash').forEach((el) => {
+			if (!e.target.matches('.tracy-dump *')) {
+				return;
+			}
+
+			let el;
+
+			if (e.target.matches('.tracy-dump-hash') && (el = e.target.closest('.tracy-dump'))) {
+				el.querySelectorAll('.tracy-dump-hash').forEach((el) => {
 					if (el.textContent === e.target.textContent) {
 						el.classList.add('tracy-dump-highlight');
 					}
 				});
+				return;
+			}
+
+			if ((el = e.target.closest('.tracy-toggle')) && !el.title) {
+				el.title = HINT_ALT;
 			}
 		});
 
@@ -132,11 +166,15 @@ function build(data, repository, collapsed, parentIds, keyType) {
 				createEl(
 					'span',
 					{'class': 'tracy-dump-string'},
-					{html: '\'' + s.replace(/\n/g, '\n ') + '\''}
+					{html: '<span class="tracy-dump-lq">\'</span>' + s + '<span>\'</span>'}
 				),
 			]);
 
 		} else if (keyType !== undefined) {
+			if (type !== 'string') {
+				s = '<span class="tracy-dump-lq">\'</span>' + s + '<span>\'</span>';
+			}
+
 			const classes = [
 				'tracy-dump-public',
 				'tracy-dump-protected',
@@ -151,7 +189,24 @@ function build(data, repository, collapsed, parentIds, keyType) {
 						'class': classes[typeof keyType === 'string' ? PROP_PRIVATE : keyType],
 						'title': typeof keyType === 'string' ? 'declared in ' + keyType : null,
 					},
-					{html: s.replace(/\n/g, '\n ')}
+					{html: s}
+				),
+			]);
+		}
+
+		let count = (s.match(/\n/g) || []).length;
+		if (count) {
+			let collapsed = count >= COLLAPSE_COUNT;
+			return createEl(null, null, [
+				createEl('span', {'class': collapsed ? 'tracy-toggle tracy-collapsed' : 'tracy-toggle'}, ['string']),
+				'\n',
+				createEl(
+					'div',
+					{
+						'class': 'tracy-dump-string' + (collapsed ? ' tracy-collapsed' : ''),
+						'title': data.length + (data.bin ? ' bytes' : ' characters'),
+					},
+					{html: '<span class="tracy-dump-lq">\'</span>' + s + '<span>\'</span>'}
 				),
 			]);
 		}
@@ -163,9 +218,7 @@ function build(data, repository, collapsed, parentIds, keyType) {
 					'class': 'tracy-dump-string',
 					'title': data.length + (data.bin ? ' bytes' : ' characters'),
 				},
-				{html: s.indexOf('\n') < 0
-					? '\'' + s + '\''
-					: '\n   \'' + s.replace(/\n/g, '\n    ') + '\''}
+				{html: '<span>\'</span>' + s + '<span>\'</span>'}
 			),
 		]);
 
@@ -193,7 +246,7 @@ function build(data, repository, collapsed, parentIds, keyType) {
 				: [
 					createEl('span', {
 						'class': data.object ? 'tracy-dump-object' : 'tracy-dump-resource',
-						title: data.editor ? 'Declared in file ' + data.editor.file + ' on line ' + data.editor.line + (data.editor.url ? '\nCtrl-Click to open in editor' : '') : null,
+						title: data.editor ? 'Declared in file ' + data.editor.file + ' on line ' + data.editor.line + (data.editor.url ? '\n' + HINT_CTRL : '') + '\n' + HINT_ALT : null,
 						'data-tracy-href': data.editor ? data.editor.url : null
 					}, [data.object || data.resource]),
 					...(id ? [' ', createEl('span', {'class': 'tracy-dump-hash'}, [data.resource ? '@' + id.substr(1) : '#' + id])] : [])
@@ -227,13 +280,13 @@ function buildStruct(span, ellipsis, items, collapsed, cut, type, repository, pa
 	if (collapsed) {
 		toggle.addEventListener('tracy-toggle', handler = function() {
 			toggle.removeEventListener('tracy-toggle', handler);
-			createItems(div, items, type, repository, parentIds);
+			createItems(div, items, type, repository, parentIds, null);
 			if (cut) {
 				createEl(div, null, ['…\n']);
 			}
 		});
 	} else {
-		createItems(div, items, type, repository, parentIds);
+		createItems(div, items, type, repository, parentIds, true);
 		if (cut) {
 			createEl(div, null, ['…\n']);
 		}
@@ -267,7 +320,7 @@ function createEl(el, attrs, content) {
 }
 
 
-function createItems(el, items, type, repository, parentIds) {
+function createItems(el, items, type, repository, parentIds, collapsed) {
 	let key, val, vis, ref, i, tmp;
 
 	for (i = 0; i < items.length; i++) {
@@ -281,10 +334,27 @@ function createItems(el, items, type, repository, parentIds) {
 			build(key, null, null, null, type === TYPE_ARRAY ? TYPE_ARRAY : vis),
 			type === TYPE_ARRAY ? ' => ' : ': ',
 			...(ref ? [createEl('span', {'class': 'tracy-dump-hash'}, ['&' + ref]), ' '] : []),
-			tmp = build(val, repository, null, parentIds),
+			tmp = build(val, repository, collapsed, parentIds),
 			tmp.lastElementChild.tagName === 'DIV' ? '' : '\n',
 		]);
 	}
+}
+
+
+function toggleChildren(cont, usedIds) {
+	let hashEl, id;
+
+	cont.querySelectorAll(':scope > .tracy-toggle').forEach((el) => {
+		hashEl = (el.querySelector('.tracy-dump-hash') || el.previousElementSibling);
+		id = hashEl && hashEl.matches('.tracy-dump-hash') ? hashEl.textContent : null;
+
+		if (!usedIds || (id && usedIds[id])) {
+			Tracy.Toggle.toggle(el, false);
+		} else {
+			usedIds[id] = true;
+			Tracy.Toggle.toggle(el, true, {usedIds: usedIds});
+		}
+	});
 }
 
 
@@ -292,10 +362,10 @@ function UnknownEntityException() {}
 
 
 let Tracy = window.Tracy = window.Tracy || {};
-Tracy.Dumper = Dumper;
+Tracy.Dumper = Tracy.Dumper || Dumper;
 
 function init() {
-	Dumper.init();
+	Tracy.Dumper.init();
 }
 
 if (document.readyState === 'loading') {

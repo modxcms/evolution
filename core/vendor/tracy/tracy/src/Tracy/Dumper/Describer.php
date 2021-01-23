@@ -20,6 +20,9 @@ final class Describer
 {
 	public const HIDDEN_VALUE = '*****';
 
+	// Number.MAX_SAFE_INTEGER
+	private const JS_SAFE_INTEGER = 1 << 53 - 1;
+
 	/** @var int */
 	public $maxDepth = 7;
 
@@ -80,15 +83,22 @@ final class Describer
 	 */
 	private function describeVar($var, int $depth = 0, int $refId = null)
 	{
-		switch (true) {
-			case $var === null:
-			case is_bool($var):
-			case is_int($var):
-				return $var;
-			default:
-				$m = 'describe' . explode(' ', gettype($var))[0];
-				return $this->$m($var, $depth, $refId);
+		if ($var === null || is_bool($var)) {
+			return $var;
 		}
+		$m = 'describe' . explode(' ', gettype($var))[0];
+		return $this->$m($var, $depth, $refId);
+	}
+
+
+	/**
+	 * @return Value|int
+	 */
+	private function describeInteger(int $num)
+	{
+		return $num <= self::JS_SAFE_INTEGER && $num >= -self::JS_SAFE_INTEGER
+			? $num
+			: new Value(Value::TYPE_NUMBER, "$num");
 	}
 
 
@@ -232,21 +242,37 @@ final class Describer
 	 */
 	public function describeKey(string $key)
 	{
-		$simple = preg_match('#^[\w!\#$%&*+./;<>?@^{|}~-]{1,50}$#D', $key) && !preg_match('#^true|false|null$#iD', $key);
-		return $this->describeString($simple ? $key : "'$key'");
+		if (preg_match('#^[\w!\#$%&*+./;<>?@^{|}~-]{1,50}$#D', $key) && !preg_match('#^(true|false|null)$#iD', $key)) {
+			return $key;
+		}
+		$value = $this->describeString($key);
+		return is_string($value) // ensure result is Value
+			? new Value(Value::TYPE_STRING_HTML, $key, strlen(utf8_decode($key)))
+			: $value;
 	}
 
 
-	public function addPropertyTo(Value $value, string $k, $v, $type = Value::PROP_VIRTUAL, int $refId = null)
-	{
+	public function addPropertyTo(
+		Value $value,
+		string $k,
+		$v,
+		$type = Value::PROP_VIRTUAL,
+		int $refId = null,
+		string $class = null
+	) {
 		if ($value->depth && count($value->items ?? []) >= $this->maxItems) {
 			$value->length = ($value->length ?? count($value->items)) + 1;
 			return;
 		}
-		$v = $this->isSensitive($k, $v)
-			? new Value(Value::TYPE_TEXT, self::hideValue($v))
-			: $this->describeVar($v, $value->depth + 1, $refId);
-		$value->items[] = [$this->describeKey($k), $v, $type] + ($refId ? [3 => $refId] : []);
+
+		$class = $class ?? $value->value;
+		$value->items[] = [
+			$this->describeKey($k),
+			$type !== Value::PROP_VIRTUAL && $this->isSensitive($k, $v, $class)
+				? new Value(Value::TYPE_TEXT, self::hideValue($v))
+				: $this->describeVar($v, $value->depth + 1, $refId),
+			$type === Value::PROP_PRIVATE ? $class : $type,
+		] + ($refId ? [3 => $refId] : []);
 	}
 
 
@@ -267,11 +293,12 @@ final class Describer
 	}
 
 
-	private function isSensitive(string $k, $v): bool
+	private function isSensitive(string $key, $val, string $class = null): bool
 	{
 		return
-			($this->scrubber !== null && ($this->scrubber)($k, $v))
-			|| isset($this->keysToHide[strtolower($k)]);
+			($this->scrubber !== null && ($this->scrubber)($key, $val, $class))
+			|| isset($this->keysToHide[strtolower($key)])
+			|| isset($this->keysToHide[strtolower($class . '::$' . $key)]);
 	}
 
 

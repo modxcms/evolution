@@ -14,7 +14,7 @@
 }
 
 .tracy-dump.tracy-light div {
-	padding-left: 3ex;
+	padding-left: 2.5ex;
 }
 
 .tracy-dump.tracy-light div div {
@@ -49,13 +49,40 @@
 
 .tracy-light .tracy-dump-string {
 	color: #35D;
+	white-space: break-spaces;
+}
+
+.tracy-light div.tracy-dump-string {
+	position: relative;
+	padding-left: 3.5ex;
+}
+
+.tracy-light .tracy-dump-lq {
+	margin-left: -1ex;
+}
+
+.tracy-light div.tracy-dump-string:before {
+	content: '';
+	position: absolute;
+	left: 3ex;
+	top: 1.5em;
+	bottom: 0;
+	border-left: 1px solid rgba(0, 0, 0, .1);
 }
 
 .tracy-light .tracy-dump-virtual span,
 .tracy-light .tracy-dump-dynamic span,
 .tracy-light .tracy-dump-string span {
-	font-size: 80%;
 	color: rgba(0, 0, 0, 0.5);
+}
+
+.tracy-light .tracy-dump-virtual i,
+.tracy-light .tracy-dump-dynamic i,
+.tracy-light .tracy-dump-string i {
+	font-size: 80%;
+	font-style: normal;
+	color: rgba(0, 0, 0, 0.5);
+	user-select: none;
 }
 
 .tracy-light .tracy-dump-number {

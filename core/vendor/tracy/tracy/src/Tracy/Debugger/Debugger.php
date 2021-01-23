@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.8.0';
+	public const VERSION = '2.8.2';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -62,7 +62,7 @@ class Debugger
 	/********************* Debugger::dump() ****************d*g**/
 
 	/** @var int  how many nested levels of array/object properties display by dump() */
-	public static $maxDepth = 3;
+	public static $maxDepth = 7;
 
 	/** @var int  how long strings display by dump() */
 	public static $maxLength = 150;
@@ -525,12 +525,15 @@ class Debugger
 	public static function dump($var, bool $return = false)
 	{
 		if ($return) {
-			return Helpers::capture(function () use ($var) {
-				Dumper::dump($var, [
-					Dumper::DEPTH => self::$maxDepth,
-					Dumper::TRUNCATE => self::$maxLength,
-				]);
-			});
+			$options = [
+				Dumper::DEPTH => self::$maxDepth,
+				Dumper::TRUNCATE => self::$maxLength,
+			];
+			return PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg'
+				? Dumper::toText($var)
+				: Helpers::capture(function () use ($var, $options) {
+					Dumper::dump($var, $options);
+				});
 
 		} elseif (!self::$productionMode) {
 			Dumper::dump($var, [

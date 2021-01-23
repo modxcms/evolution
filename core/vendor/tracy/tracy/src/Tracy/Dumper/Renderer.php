@@ -18,6 +18,8 @@ use Tracy\Helpers;
  */
 final class Renderer
 {
+	private const TYPE_ARRAY_KEY = 'array';
+
 	/** @var int|bool */
 	public $collapseTop = 14;
 
@@ -112,11 +114,7 @@ final class Renderer
 			$this->parents = $this->snapshot = $this->above = [];
 		}
 
-		if ($colors) {
-			$s = preg_replace_callback('#<span class="tracy-dump-(\w+)"[^>]*>|</span>#', function ($m) use ($colors): string {
-				return "\033[" . (isset($m[1], $colors[$m[1]]) ? $colors[$m[1]] : '0') . 'm';
-			}, $s);
-		}
+		$s = $colors ? self::htmlToAnsi($s, $colors) : $s;
 		$s = htmlspecialchars_decode(strip_tags($s), ENT_QUOTES | ENT_HTML5);
 		$s = str_replace('…', '...', $s);
 		$s .= substr($s, -1) === "\n" ? '' : "\n";
@@ -131,6 +129,7 @@ final class Renderer
 
 	/**
 	 * @param  mixed  $value
+	 * @param  string|int|null  $keyType
 	 */
 	private function renderVar($value, int $depth = 0, $keyType = null): string
 	{
@@ -148,14 +147,14 @@ final class Renderer
 				return '<span class="tracy-dump-number">' . self::jsonEncode($value) . '</span>';
 
 			case is_string($value):
-				return $this->renderString($value, $keyType);
+				return $this->renderString($value, $depth, $keyType);
 
 			case is_array($value):
 			case $value->type === Value::TYPE_ARRAY:
 				return $this->renderArray($value, $depth);
 
 			case $value->type === Value::TYPE_REF:
-				return $this->renderVar($this->snapshot[$value->value], $depth);
+				return $this->renderVar($this->snapshot[$value->value], $depth, $keyType);
 
 			case $value->type === Value::TYPE_OBJECT:
 				return $this->renderObject($value, $depth);
@@ -168,7 +167,7 @@ final class Renderer
 
 			case $value->type === Value::TYPE_STRING_HTML:
 			case $value->type === Value::TYPE_BINARY_HTML:
-				return $this->renderString($value, $keyType);
+				return $this->renderString($value, $depth, $keyType);
 
 			case $value->type === Value::TYPE_RESOURCE:
 				return $this->renderResource($value, $depth);
@@ -181,13 +180,17 @@ final class Renderer
 
 	/**
 	 * @param  string|Value  $str
+	 * @param  string|int|null  $keyType
 	 */
-	private function renderString($str, $keyType): string
+	private function renderString($str, int $depth, $keyType): string
 	{
-		if ($keyType === 'array') {
-			return '<span class="tracy-dump-string">\''
-				. (is_string($str) ? Helpers::escapeHtml($str) : str_replace("\n", "\n ", $str->value))
-				. "'</span>";
+		if ($keyType === self::TYPE_ARRAY_KEY) {
+			$indent = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth - 1) . ' </span>';
+			return '<span class="tracy-dump-string">'
+				. "<span class='tracy-dump-lq'>'</span>"
+				. (is_string($str) ? Helpers::escapeHtml($str) : str_replace("\n", "\n" . $indent, $str->value))
+				. "<span>'</span>"
+				. '</span>';
 
 		} elseif ($keyType !== null) {
 			static $classes = [
@@ -196,27 +199,57 @@ final class Renderer
 				Value::PROP_DYNAMIC => 'tracy-dump-dynamic',
 				Value::PROP_VIRTUAL => 'tracy-dump-virtual',
 			];
+			$indent = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth - 1) . ' </span>';
 			$title = is_string($keyType)
 				? ' title="declared in ' . Helpers::escapeHtml($keyType) . '"'
 				: null;
 			return '<span class="'
 				. ($title ? 'tracy-dump-private' : $classes[$keyType]) . '"' . $title . '>'
-				. (is_string($str) ? Helpers::escapeHtml($str) : str_replace("\n", "\n ", $str->value))
+				. (is_string($str)
+					? Helpers::escapeHtml($str)
+					: "<span class='tracy-dump-lq'>'</span>" . str_replace("\n", "\n" . $indent, $str->value) . "<span>'</span>")
 				. '</span>';
 
 		} elseif (is_string($str)) {
 			$len = strlen(utf8_decode($str));
 			return '<span class="tracy-dump-string"'
 				. ($len > 1 ? ' title="' . $len . ' characters"' : '')
-				. ">'" . Helpers::escapeHtml($str) . "'</span>";
+				. '>'
+				. "<span>'</span>"
+				. Helpers::escapeHtml($str)
+				. "<span>'</span>"
+				. '</span>';
 
 		} else {
 			$unit = $str->type === Value::TYPE_STRING_HTML ? 'characters' : 'bytes';
+			$count = substr_count($str->value, "\n");
+			if ($count) {
+				$collapsed = $indent1 = $toggle = null;
+				$indent = '<span class="tracy-dump-indent"> </span>';
+				if ($depth) {
+					$collapsed = $count >= $this->collapseSub;
+					$indent1 = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth) . '</span>';
+					$indent = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth) . ' </span>';
+					$toggle = '<span class="tracy-toggle' . ($collapsed ? ' tracy-collapsed' : '') . '">string</span>' . "\n";
+				}
+				return $toggle
+					. '<div class="tracy-dump-string' . ($collapsed ? ' tracy-collapsed' : '')
+					. '" title="' . $str->length . ' ' . $unit . '">'
+					. $indent1
+					. '<span' . ($count ? ' class="tracy-dump-lq"' : '') . ">'</span>"
+					. str_replace("\n", "\n" . $indent, $str->value)
+					. "<span>'</span>"
+					. ($depth ? "\n" : '')
+					. '</div>';
+			}
+
 			return '<span class="tracy-dump-string"'
-				. ($str->length > 1 ? " title=\"$str->length $unit\">" : '>')
-				. (strpos($str->value, "\n") === false ? '' : "\n   ") . "'"
-				. str_replace("\n", "\n    ", $str->value)
-				. "'</span>";
+				. ($str->length > 1 ? " title=\"{$str->length} $unit\"" : '')
+				. '>'
+				. "<span>'</span>"
+				. $str->value
+				. "<span>'</span>"
+				. '</span>';
 		}
 	}
 
@@ -256,7 +289,7 @@ final class Renderer
 		}
 
 		$collapsed = $depth
-			? $count >= $this->collapseSub
+			? ($this->lazy === false || $depth === 1 ? $count >= $this->collapseSub : true)
 			: (is_int($this->collapseTop) ? $count >= $this->collapseTop : $this->collapseTop);
 
 		$span = '<span class="tracy-toggle' . ($collapsed ? ' tracy-collapsed' : '') . '"';
@@ -274,7 +307,7 @@ final class Renderer
 		foreach ($items as $info) {
 			[$k, $v, $ref] = $info + [2 => null];
 			$out .= $indent
-				. $this->renderVar($k, $depth + 1, 'array')
+				. $this->renderVar($k, $depth + 1, self::TYPE_ARRAY_KEY)
 				. ' => '
 				. ($ref ? '<span class="tracy-dump-hash">&' . $ref . '</span> ' : '')
 				. ($tmp = $this->renderVar($v, $depth + 1))
@@ -294,10 +327,11 @@ final class Renderer
 		$editorAttributes = '';
 		if ($this->classLocation && $object->editor) {
 			$editorAttributes = Helpers::formatHtml(
-				' title="Declared in file % on line %%" data-tracy-href="%"',
+				' title="Declared in file % on line %%%" data-tracy-href="%"',
 				$object->editor->file,
 				$object->editor->line,
 				$object->editor->url ? "\nCtrl-Click to open in editor" : '',
+				"\nAlt-Click to expand/collapse all child nodes",
 				$object->editor->url
 			);
 		}
@@ -326,7 +360,7 @@ final class Renderer
 		}
 
 		$collapsed = $object->collapsed ?? ($depth
-			? count($object->items) >= $this->collapseSub
+			? ($this->lazy === false || $depth === 1 ? count($object->items) >= $this->collapseSub : true)
 			: (is_int($this->collapseTop) ? count($object->items) >= $this->collapseTop : $this->collapseTop));
 
 		$span = '<span class="tracy-toggle' . ($collapsed ? ' tracy-collapsed' : '') . '"';
@@ -371,7 +405,7 @@ final class Renderer
 			if ($this->lazy !== false) {
 				$ref = new Value(Value::TYPE_REF, $resource->id);
 				$this->copySnapshot($ref);
-				return '<span class="tracy-toggle tracy-collapsed" data-tracy-dump=\'' . json_encode($ref) . "'>" . $out . "</span>\n";
+				return '<span class="tracy-toggle tracy-collapsed" data-tracy-dump=\'' . json_encode($ref) . "'>" . $out . '</span>';
 			}
 			return $out . ' <i>see above</i>';
 
@@ -421,7 +455,29 @@ final class Renderer
 		try {
 			return json_encode($snapshot, JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 		} finally {
-			@ini_set('serialize_precision', $old); // @ may be disabled
+			if ($old !== false) {
+				ini_set('serialize_precision', $old);
+			}
 		}
+	}
+
+
+	private static function htmlToAnsi(string $s, array $colors): string
+	{
+		$stack = ['0'];
+		$s = preg_replace_callback(
+			'#<\w+(?: class="tracy-dump-(\w+)")?[^>]*>|</\w+>#',
+			function ($m) use ($colors, &$stack): string {
+				if ($m[0][1] === '/') {
+					array_pop($stack);
+				} else {
+					$stack[] = isset($m[1], $colors[$m[1]]) ? $colors[$m[1]] : '0';
+				}
+				return "\033[" . end($stack) . 'm';
+			},
+			$s
+		);
+		$s = preg_replace('/\e\[0m(\n*)(?=\e)/', '$1', $s);
+		return $s;
 	}
 }
