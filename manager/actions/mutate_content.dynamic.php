@@ -72,7 +72,7 @@ if($_SESSION['mgrDocgroups']) {
 }
 
 if(!empty ($id)) {
-    $documentObjectQuery = SiteContent::query()
+    $documentObjectQuery = SiteContent::withTrashed()
         ->select('site_content.*')
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
         ->where('site_content.id', $id);
@@ -128,7 +128,7 @@ if($formRestored == true) {
 if(!isset($_REQUEST['id'])) {
     if ($modx->getConfig('auto_menuindex')) {
         $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
-        $content['menuindex'] = SiteContent::where('parent', $pid)->count();
+        $content['menuindex'] = SiteContent::withTrashed()->where('parent', $pid)->count();
     } else {
         $content['menuindex'] = 0;
     }
@@ -551,7 +551,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $parents = implode(',', $temp);
 
                     if(!empty($parents)) {
-                        $parentsResult = SiteContent::select('id','pagetitle')->whereIn('id', $temp)->get();
+                        $parentsResult = SiteContent::withTrashed()->select('id','pagetitle')->whereIn('id', $temp)->get();
                         foreach ($parentsResult->toArray() as $row) {
                             $out .= '<li class="breadcrumbs__li">
                                 <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->getConfig('modx_charset')) . '</a>
@@ -770,7 +770,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $content['parent'] = 0;
                                         }
                                         if($parentlookup !== false && is_numeric($parentlookup)) {
-                                            $parentname = SiteContent::select('pagetitle')->find($parentlookup)->pagetitle;
+                                            $parentname = SiteContent::withTrashed()->select('pagetitle')->find($parentlookup)->pagetitle;
                                             if(!$parentname) {
                                                 $modx->webAlertAndQuit($_lang["error_no_parent"]);
                                             }

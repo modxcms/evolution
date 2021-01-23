@@ -16,12 +16,12 @@ function secureWebDocument($docid = '')
 {
 
     if (is_numeric($docid) && $docid > 0) {
-        \EvolutionCMS\Models\SiteContent::find($docid)->update(['privatemgr' => 0]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->find($docid)->update(['privatemgr' => 0]);
     } else {
-        \EvolutionCMS\Models\SiteContent::where('privatemgr', 1)->update(['privatemgr' => 0]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->where('privatemgr', 1)->update(['privatemgr' => 0]);
     }
 
-    $documentIds = \EvolutionCMS\Models\SiteContent::query()->select('site_content.id')->distinct()
+    $documentIds = \EvolutionCMS\Models\SiteContent::withTrashed()->select('site_content.id')->distinct()
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
         ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
         ->where('membergroup_access.id', '>', 0);
@@ -32,6 +32,6 @@ function secureWebDocument($docid = '')
     $ids = $documentIds->get()->pluck('id');
 
     if (count($ids) > 0) {
-        \EvolutionCMS\Models\SiteContent::whereIn('id', $ids)->update(['privatemgr' => 1]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->whereIn('id', $ids)->update(['privatemgr' => 1]);
     }
 }
