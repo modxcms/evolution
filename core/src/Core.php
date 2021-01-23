@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TemplateProcessor;
 use UrlProcessor;
 use HelperProcessor;
@@ -2646,12 +2647,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             config('middleware.global', [])
         );
 
-        $response = (new Pipeline($this))
-            ->send($request)
-            ->through($middleware)
-            ->then(function ($request) {
-                return $this->router->dispatch($request);
-            });
+        try {
+            $response = (new Pipeline($this))
+                ->send($request)
+                ->through($middleware)
+                ->then(function ($request) {
+                    return $this->router->dispatch($request);
+                });
+        } catch (NotFoundHttpException $exception) {
+            EvolutionCMS()->executeParser();
+        }
 
         $response->send();
     }

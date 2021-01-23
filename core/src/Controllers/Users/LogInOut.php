@@ -2,6 +2,7 @@
 
 use EvolutionCMS\Controllers\AbstractController;
 use EvolutionCMS\Exceptions\ServiceActionException;
+use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
 
@@ -73,6 +74,11 @@ class LogInOut extends AbstractController implements ManagerTheme\PageController
         } catch (ServiceActionException $exception) {
             jsAlert($exception->getMessage());
             exit();
+        } catch (ServiceValidationException $exception) {
+            foreach ($exception->getValidationErrors() as $error){
+                jsAlert($error[0]);
+                exit();
+            }
         }
 
         $id = 0;
