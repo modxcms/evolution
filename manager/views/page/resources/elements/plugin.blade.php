@@ -12,7 +12,7 @@
             @endif
             <div class="mainCell elements_description">
                 <span @if($item->disabled)class="disabledPlugin" @endif>
-                    <a class="man_el_name" target="main" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
+                    <a class="man_el_name site_plugins" target="main" data-type="site_plugins" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl('actions.edit') }}">
                         <i class="{{ $_style['icon_plugin'] }}"></i>
                         @if($item->locked)
                             <i class="{{ $_style['icon_lock']  }}"></i>
