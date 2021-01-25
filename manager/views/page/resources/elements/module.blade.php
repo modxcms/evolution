@@ -15,7 +15,7 @@
                     @if(empty($action))
                         <span class="man_el_name">
                     @else
-                        <a class="man_el_name" data-type="{{ $tabIndexPageName }}" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
+                        <a class="man_el_name site_modules" data-type="site_modules" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
                     @endif
                         @if(empty($item->icon))
                             <i class="{{ $_style['icon_module'] }}"></i>
