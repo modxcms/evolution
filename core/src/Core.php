@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use TemplateProcessor;
 use UrlProcessor;
 use HelperProcessor;
@@ -2655,6 +2656,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     return $this->router->dispatch($request);
                 });
         } catch (NotFoundHttpException $exception) {
+            EvolutionCMS()->executeParser();
+        } catch (MethodNotAllowedException $exception) {
+            EvolutionCMS()->executeParser();
+        } catch (\Exception $exception) {
             EvolutionCMS()->executeParser();
         }
 
