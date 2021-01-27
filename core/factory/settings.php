@@ -112,7 +112,6 @@ return [
     'login_form_style' => 'dark',
     'manager_menu_position' => 'top',
     'tinymce4_skin' => 'lightgray',
-    'allow_manager_access' => 1,
     'manager_login_startup' => 0,
     'base_url' => '/',
     'virtual_dir' => '',
