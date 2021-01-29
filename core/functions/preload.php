@@ -88,8 +88,14 @@ if (!function_exists('startCMSSession')) {
                     0,
                     ['auth' => [env('REDIS_USER', null), env('REDIS_PASS', null)]])
                 && $redis->select(env('REDIS_SESSION_DATABASE', 0))) {
-                $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
-                session_set_save_handler($handler);
+                try {
+                    $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
+                    session_set_save_handler($handler);
+                } catch (RedisException $exception) {
+
+                } catch (\Exception $exception) {
+
+                }
             }
         }
 
