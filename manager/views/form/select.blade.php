@@ -50,14 +50,14 @@
                                             @if(isset($value) && $value == $option)
                                             selected="selected"
                                             @endif
-                                        >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                        >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@elseif(isset($str_to_upper) && $str_to_upper == true){{ strtoupper($option) }}@else{{ $option }}@endif</option>
                                     @endif
                                 @else
                                     <option value="{{ $key }}"
                                         @if(isset($value) && $value == $key)
                                         selected="selected"
                                         @endif
-                                    >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@else{{ $option }}@endif</option>
+                                    >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@elseif(isset($str_to_upper) && $str_to_upper == true){{ strtoupper($option) }}@else{{ $option }}@endif</option>
                                 @endif
                             @else
                                 <option value="{{ $option['value'] }}"

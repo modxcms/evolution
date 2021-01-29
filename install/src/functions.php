@@ -201,7 +201,7 @@ if (!function_exists('getLangs')) {
             $abrv_language = explode('.', $language);
             $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
             $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected,
-                ucwords($abrv_language[0]));
+                strtoupper($abrv_language[0]));
         }
 
         return implode("\n", $_);
