@@ -85,8 +85,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $documentOutput;
     public $tstart = 0;
     public $mstart = 0;
-    public $minParserPasses = 1;
+    public $minParserPasses = 2;
     public $maxParserPasses = 10;
+    public $maxSourcePasses = 10;
     public $documentObject = [];
     public $templateObject;
     public $snippetObjects;
@@ -721,7 +722,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $this->documentOutput = str_replace('[!', '[[', $this->documentOutput);
             $this->documentOutput = str_replace('!]', ']]', $this->documentOutput);
-
+            $this->minParserPasses = 2;
             // Parse document source
             $this->documentOutput = $this->parseDocumentSource($this->documentOutput);
         }
@@ -1941,9 +1942,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 continue;
             }
             $value = $this->_get_snip_result($call);
-            if ($value === null) {
-                continue;
-            }
 
             if (Str::contains($content, $s)) {
                 $content = str_replace($s, $value, $content);
@@ -2588,7 +2586,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // set the number of times we are to parse the document source
         $this->minParserPasses = !$this->minParserPasses ? 2 : $this->minParserPasses;
-        $this->maxParserPasses = !$this->maxParserPasses ? 10 : $this->maxParserPasses;
         $passes = $this->minParserPasses;
         for ($i = 0; $i < $passes; $i++) {
             // get source length if this is the final pass
@@ -2620,7 +2617,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($this->dumpSnippets == 1) {
                 $this->snippetsCode .= '</fieldset><br />';
             }
-            if ($i == ($passes - 1) && $i < ($this->maxParserPasses - 1)) {
+            if ($i == ($passes - 1) && $i < ($this->maxSourcePasses - 1)) {
                 // check if source content was changed
                 if ($st != md5($source)) {
                     $passes++;
@@ -2878,8 +2875,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             if ($template) {
                 $this->documentObject['cacheable'] = 0;
-                $this->minParserPasses = -1;
-                $this->maxParserPasses = -1;
                 /** @var \Illuminate\View\View $tpl */
 
                 if (isset($this->documentObject['id'])) {
