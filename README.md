@@ -1,10 +1,9 @@
-### Evolution CMS
+# Evolution CMS
 
 ![screenshot_1](https://user-images.githubusercontent.com/523389/105744390-5a720e00-5f3d-11eb-8405-7b0f7e28688a.jpg)
 
 [![CMS Evolution](https://img.shields.io/badge/CMS-Evolution-brightgreen.svg)](https://github.com/evolution-cms/evolution) [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/releases) ![PHP version](https://img.shields.io/badge/PHP->=v7.3-red.svg?php=7.3) [![Issues](https://img.shields.io/github/issues-closed-raw/evolution-cms/evolution.svg?maxAge=2592000)](https://github.com/evolution-cms/evolution/issues) [![Code quality](https://img.shields.io/scrutinizer/g/evolution-cms/evolution.svg?maxAge=2592000&b=develop)](https://scrutinizer-ci.com/g/evolution-cms/evolution/?branch=develop) [![Documentation](https://img.shields.io/badge/Documentation-processed-orange.svg)](https://github.com/evolution-cms/docs/)
 
-Evolution CMS requires **PHP >= 7.3**
 
 ## What is Evolution CMS
 
@@ -30,6 +29,7 @@ Most significant, though, is **Evolution CMS's** ability to empower you to quick
 
 ## Install
 You can use the single click installer: [Evolution CMS Installer](https://github.com/evolution-cms/installer)
+Evolution CMS 3.0 requires **PHP >= 7.3**
 
 ## Docker
 
