@@ -111,7 +111,9 @@ class UserEdit implements ServiceInterface
             $user->save();
         }
         $this->userData['internalKey'] = $user->getKey();
-        if (!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+        if (isset($this->userData['dob'])) {
+            if (!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+        }
         foreach ($this->userData as $attribute => $value) {
             if (isset($user->attributes->{$attribute}) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
                 $user->attributes->{$attribute} = $value;
