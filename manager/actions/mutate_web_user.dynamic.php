@@ -421,7 +421,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_dob']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;' readonly />
+						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob']) : ""); ?>" onBlur='documentDirty=true;' readonly />
 							<i onClick="document.userform.dob.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 					</tr>
 					<tr>
