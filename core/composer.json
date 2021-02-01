@@ -59,12 +59,12 @@
     "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.*",
     "tracy/tracy": "~2.5",
+    "wikimedia/composer-merge-plugin": "dev-feature/composer-v2 as 1.5.0",
     "symfony/process": "^5.1",
     "i-rocky/eloquent-dynamic-relation": "^1.0",
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
-    "predis/predis": "*",
-    "evolutioncms/custom": "*"
+    "predis/predis": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
@@ -77,6 +77,18 @@
       "minConnections": 3
     },
     "vendor-dir": "vendor"
+  },
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "custom/composer.json"
+      ],
+      "recurse": true,
+      "replace": true,
+      "merge-dev": false,
+      "merge-extra": true,
+      "merge-scripts": false
+    }
   },
   "autoload": {
     "psr-4": {
@@ -123,8 +135,8 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "custom"
+      "type": "vcs",
+      "url": "https://github.com/mcaskill/composer-merge-plugin"
     }
   ]
 }
