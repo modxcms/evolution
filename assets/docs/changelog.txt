@@ -1,6 +1,31 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.0.1 (Feb 01, 2021)
+* [GitHub:#6e9aa7b65] - extras (refactor) add version for store.js (Serious)
+* [GitHub:#121c40ea7] - extras (refactor) add check for plugins and snippet installed (Serious)
+* [GitHub:#fb66e044b] - manager (fix) fix save user data (Serious)
+* [GitHub:#a2961cf90] - Update README (Marc)
+* [GitHub:#59626b9ea] - core (fix) fix #1819 notice on dob field (Serious)
+* [GitHub:#04fb0bdad] - core (fix) fix #1818 error when use @csrf (Serious)
+* [GitHub:#7dc58973a] - install (fix) change language list to strtoupper (Serious)
+* [GitHub:#fd34dd2ab] - manager (fix) change language list to strtoupper (Serious)
+* [GitHub:#5ac0fd0e7] - core (fix) add exception for redis session handler (Serious)
+* [GitHub:#3dcdae6ae] - core (fix) fix legacy parser (Serious)
+* [GitHub:#889890b73] - core (fix) fix MGR_DIR in old file (v)
+* [GitHub:#ed4ef5f53] - core (fix) fix table name (Serious)
+* [GitHub:#fb4df776d] - core (fix) delete not used allow_manager_access (Serious)
+* [GitHub:#3837d4da0] - core (fix) run evolution cms parser when laravel route fail (Serious)
+* [GitHub:#0831360fd] - Update files.dynamic.php (Mr B)
+* [GitHub:#0fdf7e766] - Update Readme (Marc)
+* [GitHub:#50f522dde] - Added Youtube channel and Telegram (Marc)
+* [GitHub:#4f984ec72] - manager (fix) context menu fix #1793 (Serious)
+* [GitHub:#6e46c912d] - manager (fix) can edit trashed documents (Serious)
+* [GitHub:#71f740ec6] - manager (fix) check user before work with him (Serious)
+* [GitHub:#dd6dc20b6] - core (fix) fix laravel router (Serious)
+* [GitHub:#94dcc75e6] - manager (fix) fix login errors (Serious)
+
+
 Evolution CMS 3.0 (Jan 23, 2021)
 * [GitHub:#d73ad12ac] - install (fix) Fix check prefix table (Serious)
 * [GitHub:#0cab2c12f] - core (upd) Composer update (Serious)
