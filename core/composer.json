@@ -64,7 +64,8 @@
     "i-rocky/eloquent-dynamic-relation": "^1.0",
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
-    "predis/predis": "*"
+    "predis/predis": "*",
+    "evolutioncms/custom": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
@@ -77,18 +78,6 @@
       "minConnections": 3
     },
     "vendor-dir": "vendor"
-  },
-  "extra": {
-    "merge-plugin": {
-      "include": [
-        "custom/composer.json"
-      ],
-      "recurse": true,
-      "replace": true,
-      "merge-dev": false,
-      "merge-extra": true,
-      "merge-scripts": false
-    }
   },
   "autoload": {
     "psr-4": {
@@ -135,8 +124,8 @@
   },
   "repositories": [
     {
-      "type": "vcs",
-      "url": "https://github.com/mcaskill/composer-merge-plugin"
+      "type": "path",
+      "url": "custom"
     }
   ]
 }
