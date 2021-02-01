@@ -70,18 +70,71 @@ case 'install_file':
 		$Store->removeFolder('../install/');
 		$Store->removeFolder('../assets/cache/store/tmp_install/');
 
+        $arr_dependencies = [];
+        if (isset($_GET['dependencies']) && $_GET['dependencies'] != '') {
+            $arr_dependencies = explode(',', $_GET['dependencies']);
+            $result = \EvolutionCMS\Models\SiteSnippet::query()->whereIn('name', $arr_dependencies)->pluck('name');
+            foreach ($result as $value) {
+                $key = array_search($value, $arr_dependencies);
+                if ($key) {
+                    unset($arr_dependencies[$key]);
+                }
+            }
+            if(count($arr_dependencies) > 0){
+                $result = \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $arr_dependencies)->pluck('name');
+                foreach ($result as $value) {
+                    $key = array_search($value, $arr_dependencies);
+                    if ($key) {
+                        unset($arr_dependencies[$key]);
+                    }
+                }
+            }
+            if(count($arr_dependencies) > 0){
+                $result = \EvolutionCMS\Models\SiteModule::query()->whereIn('name', $arr_dependencies)->pluck('name');
+                foreach ($result as $value) {
+                    $key = array_search($value, $arr_dependencies);
+                    if ($key) {
+                        unset($arr_dependencies[$key]);
+                    }
+                }
+            }
+
+        }
+        $strError = '';
+        if(count($arr_dependencies) > 0){
+            $strError =  '<!DOCTYPE html>
+<html><head><title>Install</title>
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
+<link rel="stylesheet" href="'.MODX_SITE_URL.'assets/modules/store/installer/style.css" type="text/css" media="screen" /></head>
+<body><div id="contentarea"><div class="container_12"><br>';
 
 
-		if ($_GET['method']!= 'fast'){
-			header("Location: ".$modx->config['site_url']."assets/modules/store/installer/index.php?action=options");
-			die();
-		} else {
-			chdir('../assets/modules/store/installer/');
-			ob_start();
-			require "instprocessor-fast.php";
-			$content = ob_get_contents();
-			ob_end_clean();
-		}
+            $strError .= '<h2>Error installation</h2><br><br><p>Before install '.$_GET['name'].'<br> Please install this packages: <br>'.implode('<br>', $arr_dependencies).'</p>';
+
+            $strError .= "</div><!-- // content --></div><!-- // contentarea --><br /></body></html>";
+        }
+        if ($_GET['method'] != 'fast') {
+
+            if($strError != ''){
+                echo $strError;
+                exit();
+            }
+            $_GET['action'] = 'options';
+            require 'installer/index.php';
+            die();
+        } else {
+            if($strError != ''){
+                $data = ['result'=> 'error', 'data'=>$strError];
+                header('Content-Type: application/json');
+                echo json_encode($data);
+                exit();
+            }
+            chdir('../assets/modules/store/installer/');
+            ob_start();
+            require "instprocessor-fast.php";
+            $content = ob_get_contents();
+            ob_end_clean();
+        }
 	} else {
 
 	}
