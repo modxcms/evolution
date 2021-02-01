@@ -112,14 +112,15 @@ class UserEdit implements ServiceInterface
         }
         $this->userData['internalKey'] = $user->getKey();
         if (isset($this->userData['dob'])) {
-            if (!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+            $this->userData['dob'] = strtotime($this->userData['dob']);
         }
         foreach ($this->userData as $attribute => $value) {
-            if (isset($user->attributes->{$attribute}) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
+            if (in_array($attribute, $user->attributes->getFillable()) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
                 $user->attributes->{$attribute} = $value;
             }
         }
         $user->attributes->save();
+
         // invoke OnWebSaveUser event
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnUserFormSave", array(
