@@ -18,6 +18,10 @@ case 'saveuser':
 case 'exituser':
 	$_SESSION['STORE_USER'] = '';
 	break;
+case 'install2_step':
+    $_GET['action'] = 'install';
+    require 'installer/index.php';
+    break;
 
 case 'install':
 case 'install_file':
@@ -76,7 +80,7 @@ case 'install_file':
             $result = \EvolutionCMS\Models\SiteSnippet::query()->whereIn('name', $arr_dependencies)->pluck('name');
             foreach ($result as $value) {
                 $key = array_search($value, $arr_dependencies);
-                if ($key) {
+                if ($key !== false) {
                     unset($arr_dependencies[$key]);
                 }
             }
@@ -84,7 +88,7 @@ case 'install_file':
                 $result = \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $arr_dependencies)->pluck('name');
                 foreach ($result as $value) {
                     $key = array_search($value, $arr_dependencies);
-                    if ($key) {
+                    if ($key !== false) {
                         unset($arr_dependencies[$key]);
                     }
                 }
@@ -93,7 +97,7 @@ case 'install_file':
                 $result = \EvolutionCMS\Models\SiteModule::query()->whereIn('name', $arr_dependencies)->pluck('name');
                 foreach ($result as $value) {
                     $key = array_search($value, $arr_dependencies);
-                    if ($key) {
+                    if ($key !== false) {
                         unset($arr_dependencies[$key]);
                     }
                 }
