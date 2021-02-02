@@ -2451,7 +2451,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if ($method !== 'alias') {
                     $count = \EvolutionCMS\Models\DocumentGroup::where('document', $identifier)->exists();
                 } else {
-                    $count = DB::table('document_groups as dg')->join('site_content as sc')->on('dg.document', '=', 'sc.id')->where('sc.alias', $identifier)->exists();
+                    $count = \EvolutionCMS\Models\DocumentGroup::query()->join('site_content', function ($join) use ($identifier) {
+                        $join->on('document_groups.document', '=', 'site_content.id');
+                        $join->on('site_content.alias', '=', $identifier);
+                    })->exists();
                 }
                 // check if file is not public
                 if ($count) {
@@ -3730,57 +3733,38 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getAllChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
     {
-        static $cached = array();
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($cached[$cacheKey])) {
-            return $cached[$cacheKey];
+        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
+            return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
-
-        $cached[$cacheKey] = false;
 
         // modify field names to use sc. table reference
-        $fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-        $sort = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+        $fields = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(',', $docgrp);
+        $docgrp = $this->getUserDocGroups();
+        $content = SiteContent::query()
+            ->select(explode(',', $fields))
+            ->where('site_content.parent', $id)
+            ->groupBy('site_content.id')
+            ->orderBy($sort, $dir);
+        if ($this->isFrontend()) {
+            $content = $content->where('site_content.privateweb', 0);
+        } else {
+            if ($_SESSION['mgrRole'] != 1 && is_array($docgrp) && count($docgrp) > 0) {
+                $content->where(function ($query) use ($docgrp) {
+                    $query->where('site_content.privatemgr', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
+            }elseif($_SESSION['mgrRole'] != 1) {
+                $content = $content->where('site_content.privatemgr', 0);
+            }
         }
         // build query
-        if ($this->isFrontend()) {
-            if (!$docgrp) {
-                $access = 'sc.privatemgr=0';
-            } else {
-                $access = sprintf('sc.privatemgr=0 OR dg.document_group IN (%s)', $docgrp);
-            }
-        } else {
-            if (!$docgrp) {
-                $access = sprintf(
-                    "1='%s' OR sc.privatemgr=0"
-                    , $_SESSION['mgrRole']
-                );
-            } else {
-                $access = sprintf(
-                    "1='%s' OR sc.privatemgr=0 OR dg.document_group IN (%s)"
-                    , $_SESSION['mgrRole']
-                    , $docgrp
-                );
-            }
-        }
-        $result = \DB::table('site_content as sc')
-            ->selectRaw('DISTINCT ' . $fields)
-            ->leftJoin('document_groups as dg')
-            ->on('dg.document', '=', 'sc.id')
-            ->where('sc.parent', (int)$id)
-            ->whereRaw($access)
-            ->groupBy('sc.id')
-            ->orderBy($sort . ' ' . $dir)
-            ->get();
-
-
-        $resourceArray = $result->toArray();
-        $cached[$cacheKey] = $resourceArray;
-
+        $resourceArray = $content->get()->toArray();
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
         return $resourceArray;
+
     }
 
     /**
@@ -3799,58 +3783,37 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getActiveChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
     {
-        static $cached = array();
-
         $cacheKey = md5(print_r(func_get_args(), true));
-        if (isset($cached[$cacheKey])) {
-            return $cached[$cacheKey];
+        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
+            return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
-        $cached[$cacheKey] = false;
 
+        // modify field names to use sc. table reference
+        $fields = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
         $docgrp = $this->getUserDocGroups();
-
-        // build query
+        $content = SiteContent::query()
+            ->select(explode(',', $fields))
+            ->where('site_content.parent', $id)
+            ->active()
+            ->groupBy('site_content.id')
+            ->orderBy($sort, $dir);
         if ($this->isFrontend()) {
-            if ($docgrp) {
-                $access = sprintf(
-                    'sc.privatemgr=0 OR dg.document_group IN (%s)'
-                    , $docgrp = implode(',', $docgrp)
-                );
-            } else {
-                $access = 'sc.privatemgr=0';
-            }
+            $content = $content->where('site_content.privateweb', 0);
         } else {
-            if ($docgrp) {
-                $access = sprintf(
-                    "1='%s' OR sc.privatemgr=0 OR dg.document_group IN (%s)"
-                    , $_SESSION['mgrRole']
-                    , $docgrp = implode(',', $docgrp)
-                );
-            } else {
-                $access = sprintf(
-                    "1='%s' OR sc.privatemgr=0"
-                    , $_SESSION['mgrRole']
-                );
+            if ($_SESSION['mgrRole'] != 1 && is_array($docgrp) && count($docgrp) > 0) {
+                $content->where(function ($query) use ($docgrp) {
+                    $query->where('site_content.privatemgr', 0)
+                        ->orWhereIn('document_groups.document_group', $docgrp);
+                });
+            }elseif($_SESSION['mgrRole'] != 1) {
+                $content = $content->where('site_content.privatemgr', 0);
             }
         }
-
-        $result = \DB::table('site_content as sc')
-            ->selectRaw('DISTINCT ' . 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields)))))
-            ->leftJoin('document_groups as dg')
-            ->on('dg.document', '=', 'sc.id')
-            ->where('sc.parent', (int)$id)
-            ->where('sc.published', 1)
-            ->where('sc.deleted', 0)
-            ->whereRaw($access)
-            ->groupBy('sc.id')
-            ->orderBy('sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort)))) . ' ' . $dir)
-            ->get();
-
-        $resourceArray = $result->toArray();
-
-        $cached[$cacheKey] = $resourceArray;
-
+        // build query
+        $resourceArray = $content->get()->toArray();
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
         return $resourceArray;
     }
 
@@ -4765,21 +4728,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             $docid = $doc['id'];
 
-            $rs = \DB::table('site_tmplvars as tv')
-                ->selectRaw("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ")
-                ->leftJoin('site_tmplvar_templates as tvtpl')
-                ->on(['tvtpl.tmplvarid' => 'tv.id', 'tvc.contentid' => $docid])
-                ->whereRaw("{$query} AND tvtpl.templateid = '{$doc['template']}")
-                ->orderBy($tvsort ? "{$tvsort} {$tvsortdir}" : "")
-                ->get();
-
-            $tvs = $rs->toArray();
-
+            $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
+                        INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
+                        LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'", "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
+            $tvs = $this->db->makeArray($rs);
 
             // get default/built-in template variables
             ksort($doc);
             foreach ($doc as $key => $value) {
-                if ($tvidnames === '*' || in_array($key, $tvidnames)) {
+                if ($tvidnames == '*' || in_array($key, $tvidnames)) {
                     $tvs[] = array('name' => $key, 'value' => $value);
                 }
             }
