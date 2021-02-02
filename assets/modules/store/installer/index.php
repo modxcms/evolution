@@ -1,12 +1,13 @@
 <?php
+/*
 error_reporting(E_ALL & ~E_NOTICE);
 
 define('MODX_BASE_PATH',realpath('../../../../').'/');
-include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
+include_once(MODX_BASE_PATH."assets/cache/siteManager.php");*/
 define('MGR',MODX_BASE_PATH.MGR_DIR);
-define('MODX_API_MODE', true);
+/*define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
-include_once (MODX_BASE_PATH . 'index.php');
+include_once (MODX_BASE_PATH . '/index.php');*/
 $modx = EvolutionCMS();
 $modx->invokeEvent('OnManagerPageInit');
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
@@ -25,7 +26,7 @@ if (file_exists($modulePath.'/lang/'.$lang.'.inc.php')){
 	include_once($modulePath.'/lang/'.$lang.'.inc.php');
 
 } else {
-	include_once($modulePath.'/lang/english.inc.php');
+	include_once($modulePath.'/lang/en.inc.php');
 }
 include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 require_once(MGR.'/includes/version.inc.php');
