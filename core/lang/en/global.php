@@ -1287,6 +1287,9 @@ $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
 
 $_lang["enable_cache_title"] = 'Document caching';
+$_lang["disable_chunk_cache_title"] = 'Disable chunk caching';
+$_lang["disable_snippet_cache_title"] = 'Disable snippet caching';
+$_lang["disable_plugins_cache_title"] = 'Disable plugins caching';
 $_lang["disabled_at_login"] = 'Disabled at login';
 
 $_lang["cache_type_title"] = 'Document caching type';

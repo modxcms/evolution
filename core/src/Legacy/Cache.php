@@ -302,53 +302,58 @@ class Cache
                 $content .= '$c[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
             }
         }
-        // WRITE Chunks to cache file
-        $chunks = Models\SiteHtmlsnippet::all();
-        $content .= '$c=&$this->chunkCache;';
-        foreach ($chunks->toArray() as $doc) {
-            $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+        if (!isset($config['disable_chunk_cache']) || $config['disable_chunk_cache'] != 1) {
+            // WRITE Chunks to cache file
+            $chunks = Models\SiteHtmlsnippet::all();
+            $content .= '$c=&$this->chunkCache;';
+            foreach ($chunks->toArray() as $doc) {
+                $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+            }
         }
 
+        if (!isset($config['disable_snippet_cache']) || $config['disable_snippet_cache'] != 1) {
+            // WRITE snippets to cache file
+            $snippets = Models\SiteSnippet::query()->select('site_snippets.*', 'site_modules.properties as sharedproperties')
+                ->leftJoin('site_modules', 'site_snippets.moduleguid', '=', 'site_modules.guid')->get();
+            $content .= '$s=&$this->snippetCache;';
+            foreach ($snippets->toArray() as $row) {
+                if ($row['disabled']) {
+                    $content .= '$s[\'' . $row['name'] . '\']=\'return false;\';';
+                } else {
+                    $value = trim($row['snippet']);
+                    if ($modx->getConfig('minifyphp_incache')) {
+                        $value = $this->php_strip_whitespace($value);
+                    }
+                    $content .= '$s[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+                    $properties = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties, $properties);
+                    if (0 < count($properties)) {
+                        $content .= '$s[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    }
+                }
+            }
+        }
 
-        // WRITE snippets to cache file
-        $snippets = Models\SiteSnippet::query()->select('site_snippets.*', 'site_modules.properties as sharedproperties')
-            ->leftJoin('site_modules', 'site_snippets.moduleguid', '=', 'site_modules.guid')->get();
-        $content .= '$s=&$this->snippetCache;';
-        foreach ($snippets->toArray() as $row) {
-            if ($row['disabled']) {
-                $content .= '$s[\'' . $row['name'] . '\']=\'return false;\';';
-            } else {
-                $value = trim($row['snippet']);
+        if (!isset($config['disable_plugins_cache']) || $config['disable_plugins_cache'] != 1) {
+            // WRITE plugins to cache file
+            $plugins = Models\SitePlugin::query()->select('site_plugins.*', 'site_modules.properties as sharedproperties')
+                ->leftJoin('site_modules', 'site_plugins.moduleguid', '=', 'site_modules.guid')
+                ->where('site_plugins.disabled', 0)->get();
+            $content .= '$p=&$this->pluginCache;';
+            foreach ($plugins->toArray() as $row) {
+                $value = trim($row['plugincode']);
                 if ($modx->getConfig('minifyphp_incache')) {
                     $value = $this->php_strip_whitespace($value);
                 }
-                $content .= '$s[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
-                $properties = $modx->parseProperties($row['properties']);
-                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
-                $properties = array_merge($sharedproperties, $properties);
-                if (0 < count($properties)) {
-                    $content .= '$s[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
-                }
-            }
-        }
-
-        // WRITE plugins to cache file
-        $plugins = Models\SitePlugin::query()->select('site_plugins.*', 'site_modules.properties as sharedproperties')
-            ->leftJoin('site_modules', 'site_plugins.moduleguid', '=', 'site_modules.guid')
-            ->where('site_plugins.disabled', 0)->get();
-        $content .= '$p=&$this->pluginCache;';
-        foreach ($plugins->toArray() as $row) {
-            $value = trim($row['plugincode']);
-            if ($modx->getConfig('minifyphp_incache')) {
-                $value = $this->php_strip_whitespace($value);
-            }
-            $content .= '$p[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
-            if ($row['properties'] != '' || $row['sharedproperties'] != '') {
-                $properties = $modx->parseProperties($row['properties']);
-                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
-                $properties = array_merge($sharedproperties, $properties);
-                if (0 < count($properties)) {
-                    $content .= '$p[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                $content .= '$p[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+                if ($row['properties'] != '' || $row['sharedproperties'] != '') {
+                    $properties = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties, $properties);
+                    if (0 < count($properties)) {
+                        $content .= '$p[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    }
                 }
             }
         }
