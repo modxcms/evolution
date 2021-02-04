@@ -2971,7 +2971,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } elseif (Str::contains($url, '[~')) {
             $url = UrlProcessor::rewriteUrls($url); // if it's an internal docid tag, process it
         }
-        $this->sendRedirect($url, 0, '', 'HTTP/1.0 301 Moved Permanently');
+        $this->sendRedirect($url, 0, '', 'HTTP/1.0 302 Moved Temporarily');
         exit;
     }
 
