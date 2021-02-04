@@ -1291,6 +1291,7 @@ $_lang["cache_type_2"] = 'C учетом ID и $_GET';
 $_lang["seostrict_title"] = 'Использовать SEO Strict URLs';
 $_lang["seostrict_message"] = 'использование strict URLs удаляет дубли страниц по разным ссылкам';
 $_lang["aliaslistingfolder_title"] = 'Использовать AliasListing только для Папок';
+$_lang["full_aliaslisting_title"] = 'Выключить AliasListing для всех ресурсов';
 $_lang["aliaslistingfolder_message"] = 'Уменьшает потребление памяти и ускоряет работу сайта при большом количестве документов';
 
 $_lang["settings_friendlyurls_alert"] = 'Для использования дружественных URL, необходимо сменить имя файла ht.access в папке, в которую установлена Evolution CMS, на .htaccess.';
