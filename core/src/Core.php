@@ -2727,6 +2727,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
         if ($this->getConfig('use_alias_path') == 1) {
+
             $virtualDir = UrlProcessor::getFacadeRoot()->virtualDir;
             $alias = sprintf(
                 '%s%s'
@@ -2736,7 +2737,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
             } else {
-                if ($this->getConfig('aliaslistingfolder') == 1) {
+                if ($this->getConfig('aliaslistingfolder') == 1 || $this->getConfig('full_aliaslisting') == 1) {
                     $parent = $virtualDir ? UrlProcessor::getIdFromAlias($virtualDir) : 0;
                     $doc = SiteContent::select('id')
                         ->where('deleted', 0)

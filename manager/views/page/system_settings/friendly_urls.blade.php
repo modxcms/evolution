@@ -97,6 +97,20 @@
             <div class="split my-1"></div>
 
             @include('manager::form.radio', [
+                'name' => 'full_aliaslisting',
+                'label' => ManagerTheme::getLexicon('full_aliaslisting_title'),
+                'small' => '[(full_aliaslisting)]',
+                'value' => $settings['full_aliaslisting'] ?? 0,
+                'options' => [
+                    1 => ManagerTheme::getLexicon('yes'),
+                    0 => ManagerTheme::getLexicon('no'),
+                ],
+                'comment' => ManagerTheme::getLexicon('full_aliaslisting_title')
+            ])
+
+            <div class="split my-1"></div>
+
+            @include('manager::form.radio', [
                 'name' => 'aliaslistingfolder',
                 'label' => ManagerTheme::getLexicon('aliaslistingfolder_title'),
                 'small' => '[(aliaslistingfolder)]',

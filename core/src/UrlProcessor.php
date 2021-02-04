@@ -28,7 +28,7 @@ class UrlProcessor
         $this->build();
     }
 
-    protected function build() : void
+    protected function build(): void
     {
         $this->aliases = [];
         $this->isfolder = [];
@@ -61,7 +61,7 @@ class UrlProcessor
      * @param int $id Document id. Default: 0.
      * @return string Result URL.
      */
-    public function makeFriendlyURL($pre, $suff, $alias, bool $isfolder = false, int $id = 0) : string
+    public function makeFriendlyURL($pre, $suff, $alias, bool $isfolder = false, int $id = 0): string
     {
         if ($id === $this->core->getConfig('site_start') && $this->core->getConfig('seostrict')) {
             $url = $this->core->getConfig('base_url');
@@ -79,7 +79,7 @@ class UrlProcessor
         }
 
         $evtOut = $this->core->invokeEvent('OnMakeDocUrl', array(
-            'id'  => $id,
+            'id' => $id,
             'url' => $url
         ));
 
@@ -102,14 +102,17 @@ class UrlProcessor
         if ($this->core->getConfig('friendly_urls')) {
             $aliases = $this->getAliases();
             $isFolder = $this->getIsFolders();
-
-            if ($this->core->getConfig('aliaslistingfolder')) {
+            if ($this->core->getConfig('full_aliaslisting') == 1) {
                 preg_match_all($this->tagPattern, $input, $match);
-                $this->generateAliasListingFolder($match['1'], $aliases, $isFolder);
+                $this->generateAliasListingAll($match['1'], $aliases, $isFolder);
+            } else {
+                if (!$this->core->getConfig('aliaslistingfolder')) {
+                    preg_match_all($this->tagPattern, $input, $match);
+                    $this->generateAliasListingFolder($match['1'], $aliases, $isFolder);
+                }
+
             }
-
             $output = $this->replaceUrl($input, $aliases, $isFolder);
-
         } else {
             $output = $this->rewriteToNativeUrl($input);
         }
@@ -117,7 +120,7 @@ class UrlProcessor
         return $output;
     }
 
-    protected function replaceUrl($input, array $aliases, array $isFolder) : string
+    protected function replaceUrl($input, array $aliases, array $isFolder): string
     {
         $isFriendly = $this->core->getConfig('friendly_alias_urls');
         $pref = $this->core->getConfig('friendly_url_prefix');
@@ -150,7 +153,8 @@ class UrlProcessor
             $input
         );
     }
-    protected function generateAliasListingFolder(array $ids, &$aliases, &$isFolder) : void
+
+    protected function generateAliasListingFolder(array $ids, &$aliases, &$isFolder): void
     {
         $ids = array_unique($ids);
         if (!$ids) {
@@ -181,7 +185,37 @@ class UrlProcessor
         }
     }
 
-    public function rewriteToNativeUrl(string $content) : string
+    protected function generateAliasListingAll(array $ids, &$aliases, &$isFolder): void
+    {
+        $ids = array_unique($ids);
+        if (!$ids) {
+            return;
+        }
+
+        $useAliasPath = (bool)$this->core->getConfig('use_alias_path');
+
+        $data = Models\SiteContent::whereIn('id', $ids)
+            ->get();
+
+        foreach ($data as $row) {
+            if ($useAliasPath && $row->parent > 0) {
+                $parent = $row->parent;
+                $path = $aliases[$parent];
+
+                while (isset($this->aliasListing[$parent]) && (int)$this->aliasListing[$parent]['alias_visible'] === 0) {
+                    $path = $this->aliasListing[$parent]['path'];
+                    $parent = $this->aliasListing[$parent]['parent'];
+                }
+
+                $aliases[$row->getKey()] = $path . '/' . $row->alias;
+            } else {
+                $aliases[$row->getKey()] = $row->alias;
+            }
+            $isFolder[$row->getKey()] = '0';
+        }
+    }
+
+    public function rewriteToNativeUrl(string $content): string
     {
         return preg_replace($this->tagPattern, 'index.php?id=\1', $content);
     }
@@ -190,7 +224,7 @@ class UrlProcessor
      * @param string $text
      * @return string mixed
      */
-    public function toAlias(string $text) : string
+    public function toAlias(string $text): string
     {
         $suffix = $this->core->getConfig('friendly_url_suffix');
         return str_replace(
@@ -216,7 +250,7 @@ class UrlProcessor
         );
     }
 
-    public function getNotFoundPageId() : int
+    public function getNotFoundPageId(): int
     {
         return $this->core->getConfig(
             $this->core->getConfig('error_page') ? 'error_page' : 'site_start',
@@ -224,7 +258,7 @@ class UrlProcessor
         );
     }
 
-    public function getUnAuthorizedPageId() : int
+    public function getUnAuthorizedPageId(): int
     {
         if ($this->core->getConfig('unauthorized_page')) {
             $unauthorizedPage = $this->core->getConfig('unauthorized_page');
@@ -244,7 +278,7 @@ class UrlProcessor
      * @param string $documentMethod
      * @return string
      */
-    public function cleanDocumentIdentifier($qOrig, &$documentMethod) : string
+    public function cleanDocumentIdentifier($qOrig, &$documentMethod): string
     {
         if (!$qOrig) {
             $qOrig = $this->core->getConfig('site_start');
@@ -287,21 +321,21 @@ class UrlProcessor
              */
             if ($this->core->getConfig('use_alias_path')) {
                 if (//(
-                        (
-                            $this->virtualDir !== '' &&
-                            !isset($this->documentListing[$this->virtualDir . '/' . $query])
-                        ) || ((
-                                $this->virtualDir === '' && !isset($this->documentListing[$query])
-                            )
-                            //)
-                            && (
-                                (
-                                    $this->virtualDir !== '' &&
-                                    isset($this->documentListing[$this->virtualDir]) &&
-                                    \in_array($query, $this->core->getChildIds($this->documentListing[$this->virtualDir], 1))
-                                ) ||
-                                ($this->virtualDir === '' && in_array($query, $this->core->getChildIds(0, 1)))
-                            ))
+                    (
+                        $this->virtualDir !== '' &&
+                        !isset($this->documentListing[$this->virtualDir . '/' . $query])
+                    ) || ((
+                            $this->virtualDir === '' && !isset($this->documentListing[$query])
+                        )
+                        //)
+                        && (
+                            (
+                                $this->virtualDir !== '' &&
+                                isset($this->documentListing[$this->virtualDir]) &&
+                                \in_array($query, $this->core->getChildIds($this->documentListing[$this->virtualDir], 1))
+                            ) ||
+                            ($this->virtualDir === '' && in_array($query, $this->core->getChildIds(0, 1)))
+                        ))
                 ) {
                     $documentMethod = 'id';
                 }
@@ -310,14 +344,13 @@ class UrlProcessor
             }
         } else {
             /** we didn't get an ID back, so instead we assume it's an alias */
-            if (! (bool)$this->core->getConfig('friendly_alias_urls')) {
+            if (!(bool)$this->core->getConfig('friendly_alias_urls')) {
                 $query = $qOrig;
             }
         }
 
         return $query;
     }
-
 
 
     /**
@@ -328,7 +361,7 @@ class UrlProcessor
      * @param string|array $query
      * @return string
      */
-    public function cleanQueryString($query) : string
+    public function cleanQueryString($query): string
     {
         $out = '';
 
@@ -355,7 +388,7 @@ class UrlProcessor
      * @param $id
      * @return null|array
      */
-    public function getAliasListing($id) : ?array
+    public function getAliasListing($id): ?array
     {
         if (isset($this->aliasListing[$id])) {
             return $this->aliasListing[$id];
@@ -368,10 +401,10 @@ class UrlProcessor
         }
 
         $this->aliasListing[$id] = array(
-            'id'            => $query->getKey(),
-            'alias'         => $query->alias === '' ? $query->getKey() : $query->alias,
-            'parent'        => $query->parent,
-            'isfolder'      => $query->isfolder,
+            'id' => $query->getKey(),
+            'alias' => $query->alias === '' ? $query->getKey() : $query->alias,
+            'parent' => $query->parent,
+            'isfolder' => $query->isfolder,
             'alias_visible' => $query->alias_visible,
         );
 
@@ -391,10 +424,10 @@ class UrlProcessor
             return $this->aliasListing[$id];
         }
 
-        if ($tmp['parent'] > 0 && $tmp['path'] !== '') {
+        if ($tmp['parent'] > 0 && isset($tmp['path']) && $tmp['path'] !== '') {
             $this->aliasListing[$id]['path'] = $tmp['path'] . '/' . $tmp['alias'];
         } else {
-            $this->aliasListing[$id]['path'] = $tmp['path'] . '' . $tmp['alias'];
+            $this->aliasListing[$id]['path'] = $tmp['alias'];
         }
         return $this->aliasListing[$id];
     }
@@ -465,7 +498,7 @@ class UrlProcessor
      * @param string $alias
      * @return null|int
      */
-    public function getHiddenIdFromAlias(int $parentid, string $alias) : ?int
+    public function getHiddenIdFromAlias(int $parentid, string $alias): ?int
     {
         $out = false;
         if ($alias !== '') {
@@ -511,7 +544,7 @@ class UrlProcessor
      * @param string $scheme With full as valus, the site url configuration is used. Default: ''.
      * @return string Result URL.
      */
-    public function makeUrl(int $id, string $alias = '', string $args = '', string $scheme = '') : string
+    public function makeUrl(int $id, string $alias = '', string $args = '', string $scheme = ''): string
     {
         $virtualDir = $this->core->getConfig('virtual_dir');
         $f_url_prefix = $this->core->getConfig('friendly_url_prefix');
@@ -536,17 +569,17 @@ class UrlProcessor
 
                 if ($this->core->getConfig('friendly_alias_urls')) {
 
-                    if ($this->core->getConfig('aliaslistingfolder')) {
+                    if ($this->core->getConfig('aliaslistingfolder') || $this->core->getConfig('full_aliaslisting') == 1) {
                         $al = $this->getAliasListing($id);
                     } else {
                         $al = $this->aliasListing[$id] ?? null;
                     }
 
-                    if(\is_array($al)) {
+                    if (\is_array($al)) {
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
-                        if (isset($al['path']) && $al['path']!='') {
+                        if (isset($al['path']) && $al['path'] != '') {
                             $alPath = $al['path'] . '/';
                         }
 
@@ -594,18 +627,17 @@ class UrlProcessor
         }
 
         $evtOut = $this->core->invokeEvent('OnMakeDocUrl', array(
-            'id'  => $id,
+            'id' => $id,
             'url' => $url
         ));
 
         if (is_array($evtOut) && $evtOut) {
             $url = array_pop($evtOut);
         }
-
         return $url;
     }
 
-    public function strictURI(string $query, int $id) :? string
+    public function strictURI(string $query, int $id): ?string
     {
         if (!$id) {
             return null;
@@ -620,7 +652,7 @@ class UrlProcessor
 
         // Strip conflicting id/q from query string
         if (Str::contains($_SERVER['REQUEST_URI'], '?')) {
-            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', Str::after($_SERVER['REQUEST_URI'],'?'));
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', Str::after($_SERVER['REQUEST_URI'], '?'));
         } else {
             $qstring = '';
         }
@@ -668,7 +700,7 @@ class UrlProcessor
             );
         }
 
-        if (stripos($_SERVER['REQUEST_URI'], '/?q=' . $strictURL)!==false
+        if (stripos($_SERVER['REQUEST_URI'], '/?q=' . $strictURL) !== false
             ||
             ($url_path != $strictURL && $id !== (int)$this->core->getConfig('error_page'))) {
             if ($qstring) {
@@ -682,9 +714,9 @@ class UrlProcessor
 
     public function makeUrlWithString($id)
     {
-        if(is_numeric($id)){
+        if (is_numeric($id)) {
             return $this->makeUrl($id);
-        }else{
+        } else {
             return $id;
         }
     }
