@@ -40,8 +40,11 @@ To run **Evolution CMS** using docker make **docker-compose up -d** command in y
 Official Website:
 https://evo.im/
 
-Telegram group: (> 642 members)
+Telegram group:
 https://t.me/evolutioncms
+
+English Forum:
+https://forum.evo.im
 
 Slack channel:
 https://evocmf.slack.com
