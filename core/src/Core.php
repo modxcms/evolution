@@ -225,7 +225,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->getService('ExceptionHandler');
-
+        $this->checkAuth();
         $this->getSettings();
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
     }
@@ -304,6 +304,46 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         return $flag;
+    }
+
+
+    /**
+     *
+     */
+    public function checkAuth()
+    {
+        if (evo()->getLoginUserID() !== false) {
+            $result = $this->checkAccess(evo()->getLoginUserID());
+            if ($result === false) {
+                \UserManager::logout();
+                if (IN_MANAGER_MODE) {
+                    evo()->sendRedirect('/'.MGR_DIR);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * @param $userId
+     * @return bool
+     */
+    public function checkAccess($userId): bool
+    {
+        $user = User::query()->find(evo()->getLoginUserID());
+        if (is_null($user)) {
+            return false;
+        }
+        if ($user->attributes->blocked != 0) {
+            return false;
+        }
+        if ($user->attributes->blockeduntil > time()) {
+            return false;
+        }
+        if ($user->attributes->blockedafter < time() && $user->attributes->blockedafter > 0) {
+            return false;
+        }
+        return true;
     }
 
     /**

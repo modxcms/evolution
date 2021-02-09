@@ -109,6 +109,7 @@ class UserLogout implements ServiceInterface
             return false;
         }
         $user = User::query()->find($internalKey);
+        $username = '';
         if (!is_null($user)) {
             $user->refresh_token = '';
             $user->access_token = '';
