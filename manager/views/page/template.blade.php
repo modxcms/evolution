@@ -34,6 +34,36 @@
                 h1help.onclick = function () {
                     document.querySelector('.element-edit-message').classList.toggle('show');
                 };
+
+                var checkContainer = document.getElementById('assigned-blade-file'),
+                    filenameLabel = document.getElementById('blade-filename'),
+                    alias = document.getElementById('templatealias'),
+                    check = document.getElementById('createbladefile');
+
+                var updateFilename = function(value) {
+                    var filename = value;
+                    filename = filename.replace(/\s*/g, '');
+                    filename = filename.replace(/[^a-zA-Z0-9_-]+/g, '');
+
+                    if (filename == value && filename != '') {
+                        filenameLabel.innerText = '/views/' + filename + '.blade.php';
+                        checkContainer.style.display = 'block';
+                        check.disabled = false;
+                    } else {
+                        checkContainer.style.display = 'none';
+                        check.disabled = true;
+                    }
+                };
+
+                alias.addEventListener('change', function(event) {
+                    updateFilename(this.value);
+                });
+
+                alias.addEventListener('input', function(event) {
+                    updateFilename(this.value);
+                });
+
+                updateFilename(alias.value);
             });
 
         </script>
@@ -135,6 +165,24 @@
                             'attributes' => 'onchange="documentDirty=true;" maxlength="45"'
                         ])
 
+                    </div>
+
+                    <div class="form-group" id="assigned-blade-file" style="display: none;">
+                        {{ ManagerTheme::getLexicon('template_assigned_blade_file') }}: <strong id="blade-filename"></strong>
+
+                        <div class="create-check" style="display: hidden;">
+                            <label>
+                                @include('manager::form.inputElement', [
+                                    'name' => 'createbladefile',
+                                    'id' => 'createbladefile',
+                                    'type' => 'checkbox',
+                                    'checked' => false,
+                                    'attributes' => 'onchange="documentDirty=true;"'
+                                ])
+
+                                {{ ManagerTheme::getLexicon('template_create_blade_file') }}
+                            </label>
+                        </div>
                     </div>
 
                     @if($modx->hasPermission('save_role'))

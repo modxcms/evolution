@@ -38,7 +38,6 @@ trait Settings
         'show_picker' => 'bool',
         'show_fullscreen_btn' => 'bool',
         'export_includenoncache' => 'bool',
-        'allow_manager_access' => 'bool',
         'number_of_results' => 'int',
         'manager_theme_mode' => 'int',
         'manager_login_startup' => 'int',

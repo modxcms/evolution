@@ -1010,6 +1010,9 @@ $_lang["template_no_tv"] = 'Цьому шаблону не присвоєно н
 $_lang["template_notassigned_tv"] = 'Ці TV доступні для вибору.';
 $_lang["template_reset_all"] = 'Скинути всі шаблони (буде встановлено шаблон за замовчуванням)';
 $_lang["template_reset_specific"] = 'Скинути тільки сторінки з шаблоном \'%s\'';
+$_lang["template_assigned_blade_file"] = 'Відповідний blade-файл';
+$_lang["template_create_blade_file"] = 'Створити файл шаблону при збереженні
+';
 $_lang["template_selectable"] = 'Шаблон вибирається при створенні або редагуванні ресурсів.';
 $_lang["template_title"] = 'Створити / редагувати шаблон';
 $_lang["template_tv_edit"] = 'Редагувати порядок TV';
@@ -1441,5 +1444,10 @@ $_lang['manager_menu_position_left'] = 'зліва';
 
 $_lang['invalid_event_response'] = 'Подія %s повернула невірний результат';
 $_lang['chunk_processor'] = 'Клас обробки чанків';
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

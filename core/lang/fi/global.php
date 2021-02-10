@@ -935,6 +935,8 @@ $_lang["template_name"] = 'Nimi';
 $_lang["template_no_tv"] = 'Tähän sivupohjaan ei ole määritelty muuttujia.';
 $_lang["template_reset_all"] = 'Aseta kaikki sivut käyttämään oletussivupohjaa';
 $_lang["template_reset_specific"] = 'Aseta vain oletussivupohjaa \'%s\' käyttävät sivut';
+$_lang["template_assigned_blade_file"] = 'Vastaava blade-tiedosto';
+$_lang["template_create_blade_file"] = 'Luo mallitiedosto tallennettaessa';
 $_lang["template_title"] = 'Sivupohja';
 $_lang["template_tv_edit"] = 'Muokkaa muuttujien järjestystä';
 $_lang["template_tv_edit_message"] = 'Muuta sivupohjan muuttujien järjestystä vetämällä.';
@@ -1210,5 +1212,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

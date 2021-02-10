@@ -63,7 +63,11 @@ trait DatabaseRule
         }
 
         if (is_subclass_of($table, Model::class)) {
-            return (new $table)->getTable();
+            $model = new $table;
+
+            return implode('.', array_map(function (string $part) {
+                return trim($part, '.');
+            }, array_filter([$model->getConnectionName(), $model->getTable()])));
         }
 
         return $table;
@@ -73,7 +77,7 @@ trait DatabaseRule
      * Set a "where" constraint on the query.
      *
      * @param  \Closure|string  $column
-     * @param  array|string|null  $value
+     * @param  array|string|int|null  $value
      * @return $this
      */
     public function where($column, $value = null)
@@ -84,6 +88,10 @@ trait DatabaseRule
 
         if ($column instanceof Closure) {
             return $this->using($column);
+        }
+
+        if (is_null($value)) {
+            return $this->whereNull($column);
         }
 
         $this->wheres[] = compact('column', 'value');

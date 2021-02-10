@@ -18,14 +18,14 @@
     <p><?=$_lang['setup_database_create_connection_failed_note']?></p>
 <?php else : ?>
     <p><?=$_lang['setup_database_create_connection']?> <span class="ok"><?=$_lang['ok']?></span></p>
-    <?php if ($selectDatabase === false) : ?>
+    <?php if (isset($selectDatabase) && $selectDatabase === false) : ?>
         <p><?=rtrim($_lang['setup_database_selection'], '`')?> <strong><?=trim($dbase, '`')?></strong>:
             <span class="notok" style='color:#707070'>
                 <?=$_lang['setup_database_selection_failed']?>
             </span>
             <?=$_lang['setup_database_selection_failed_note']?>
         </p>
-        <?php if ($createDatabase === false) : ?>
+        <?php if (isset($createDatabase) && $createDatabase === false) : ?>
             <p>
                 <?=rtrim($_lang['setup_database_creation'], '`')?> <strong><?=trim($dbase, '`')?></strong>:
                 <span class="notok"><?=$_lang['setup_database_creation_failed']?></span>
@@ -51,7 +51,7 @@
 <?php endif; ?>
 
 <?php if ($installLevel >= 1) : ?>
-    <?php if ($checkPrefix === false) : ?>
+    <?php if (isset($checkPrefix) && $checkPrefix === false) : ?>
         <p>
             <?=rtrim($_lang['checking_table_prefix'], '`')?> <strong><?=trim($table_prefix, '`')?></strong>:
             <span class="notok"><?=$_lang['failed']?></span> <?=$_lang['table_prefix_already_inuse']?>
@@ -66,7 +66,7 @@
 <?php endif; ?>
 
 <?php if ($installLevel >=  2 && $moduleSQLBaseFile) : ?>
-    <?php if ($sqlParser->installFailed === false) : ?>
+    <?php if (isset($sqlParser) && $sqlParser->installFailed === false) : ?>
         <p>
             <?=$_lang['setup_database_creating_tables']?>
             <span class="notok"><b><?=$_lang['database_alerts']?></span>
@@ -87,7 +87,7 @@
 <?php endif; ?>
 
 <?php if ($installLevel >= 3) : ?>
-    <?php if ($configFileFailed === true) : ?>
+    <?php if (isset($configFileFailed) && $configFileFailed === true) : ?>
         <p>
             <?=$_lang['writing_config_file']?> <span class="notok"><?=$_lang['failed']?></span>
         </p>
@@ -102,7 +102,7 @@
 <?php endif; ?>
 
 <?php if ($installLevel >= 4 && $installData && $moduleSQLDataFile && $moduleSQLResetFile) : ?>
-    <?php if ($sqlParser->installFailed === true) : ?>
+    <?php if (isset($sqlParser) && $sqlParser->installFailed === true) : ?>
         <p>
             <?=$_lang['resetting_database']?>
             <span class="notok"><b><?=$_lang['database_alerts']?></span>
@@ -297,7 +297,7 @@
     <?php endif; ?>
 <?php endif; ?>
 
-<?php if ($installLevel >= 6): ?>
+<?php if (isset($installDependencyLevel) && $installLevel >= 6): ?>
     <?php foreach ($installDependencyLevel as $itemName => $itemData) : ?>
         <?php if (empty($itemData['error'])) : ?>
             <?php if($itemData['type'] === 'create') : ?>

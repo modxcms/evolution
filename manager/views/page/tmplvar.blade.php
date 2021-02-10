@@ -4,27 +4,27 @@
     @push('scripts.top')
         <script>
 
-          function check_toggle()
+          function check_toggle(target)
           {
-            var el = document.getElementsByName('template[]');
+            var el = document.getElementsByName(target + '[]');
             var count = el.length;
             for (var i = 0; i < count; i++) {
               el[i].checked = !el[i].checked;
             }
           };
 
-          function check_none()
+          function check_none(target)
           {
-            var el = document.getElementsByName('template[]');
+            var el = document.getElementsByName(target + '[]');
             var count = el.length;
             for (var i = 0; i < count; i++) {
               el[i].checked = false;
             }
           };
 
-          function check_all()
+          function check_all(target)
           {
-            var el = document.getElementsByName('template[]');
+            var el = document.getElementsByName(target + '[]');
             var count = el.length;
             for (var i = 0; i < count; i++) {
               el[i].checked = true;
@@ -396,11 +396,11 @@
                     <p>{{ ManagerTheme::getLexicon('tmplvar_tmpl_access_msg') }}</p>
                     <div class="form-group">
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                            onclick="check_all();return false;">{{ ManagerTheme::getLexicon('check_all') }}</a>
+                            onclick="check_all('template');return false;">{{ ManagerTheme::getLexicon('check_all') }}</a>
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                            onclick="check_none();return false;">{{ ManagerTheme::getLexicon('check_none') }}</a>
+                            onclick="check_none('template');return false;">{{ ManagerTheme::getLexicon('check_none') }}</a>
                         <a class="btn btn-secondary btn-sm" href="javascript:;"
-                            onclick="check_toggle(); return false;">{{ ManagerTheme::getLexicon('check_toggle') }}</a>
+                            onclick="check_toggle('template'); return false;">{{ ManagerTheme::getLexicon('check_toggle') }}</a>
                     </div>
 
                     @if(isset($tplOutCategory) && $tplOutCategory->count() > 0)
@@ -424,6 +424,34 @@
                                 </ul>
                             @endcomponent
                         @endforeach
+                    @endif
+                </div>
+            </div>
+
+            <div class="tab-page" id="tabRoles">
+                <h2 class="tab">{{ ManagerTheme::getLexicon('role_management_title') }}</h2>
+                <script>tpTmplvars.addTabPage(document.getElementById('tabRoles'));</script>
+
+                <div class="container container-body">
+                    <p>{{ ManagerTheme::getLexicon('tmplvar_roles_access_msg') }}</p>
+                    <div class="form-group">
+                        <a class="btn btn-secondary btn-sm" href="javascript:;"
+                            onclick="check_all('role');return false;">{{ ManagerTheme::getLexicon('check_all') }}</a>
+                        <a class="btn btn-secondary btn-sm" href="javascript:;"
+                            onclick="check_none('role');return false;">{{ ManagerTheme::getLexicon('check_none') }}</a>
+                        <a class="btn btn-secondary btn-sm" href="javascript:;"
+                            onclick="check_toggle('role'); return false;">{{ ManagerTheme::getLexicon('check_toggle') }}</a>
+                    </div>
+
+                    @if(isset($roles) && $roles->count() > 0)
+                        @component('manager::partials.panelCollapse', ['name' => 'tv_in_roles', 'id' => 0, 'title' => ManagerTheme::getLexicon('role_management_title')])
+                            <ul>
+                                <?php /** @var EvolutionCMS\Models\SiteTemplate $item */ ?>
+                                @foreach($roles as $item)
+                                    @include('manager::page.tmplvar.role', ['item' => $item, 'selected' => $controller->isSelectedRole($item)])
+                                @endforeach
+                            </ul>
+                        @endcomponent
                     @endif
                 </div>
             </div>

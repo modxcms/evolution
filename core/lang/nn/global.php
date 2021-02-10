@@ -903,6 +903,8 @@ $_lang["template_name"] = 'Navn på mal';
 $_lang["template_no_tv"] = 'No Template Variables have been assigned to this Template yet.';
 $_lang["template_reset_all"] = 'Tilbakestill alle sider så de bruker standardmalen';
 $_lang["template_reset_specific"] = 'Tilbakestill bare \'%s\' sider';
+$_lang["template_assigned_blade_file"] = 'Tilsvarende blade-fil';
+$_lang["template_create_blade_file"] = 'Lag malfil ved lagring';
 $_lang["template_title"] = 'Opprett/rediger maler - lei av oversetting';
 $_lang["template_tv_edit"] = 'Edit the TV sort order';
 $_lang["template_tv_edit_message"] = 'Drag to reorder the Template Variables for this template.';
@@ -1178,5 +1180,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

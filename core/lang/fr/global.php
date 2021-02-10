@@ -906,6 +906,8 @@ $_lang["template_name"] = 'Nom du Modèle';
 $_lang["template_no_tv"] = 'Aucune Variable de Modèle n\'a été associée à ce Modèle pour le moment.';
 $_lang["template_reset_all"] = 'Utiliser le Modèle par défaut sur toutes les pages';
 $_lang["template_reset_specific"] = 'Seulement sur les pages \'%s\'';
+$_lang["template_assigned_blade_file"] = 'Fichier blade correspondant';
+$_lang["template_create_blade_file"] = 'Créer un fichier modèle lors de l\'enregistrement';
 $_lang["template_title"] = 'Créer/modifier un Modèle';
 $_lang["template_tv_edit"] = 'Modifier l\'ordre de tri des Variables de Modèle';
 $_lang["template_tv_edit_message"] = 'Glissez et déposez les Variables de Modèle afin de les réordonner pour ce Modèle.';
@@ -1181,5 +1183,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

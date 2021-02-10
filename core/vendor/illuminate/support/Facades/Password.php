@@ -5,8 +5,14 @@ namespace Illuminate\Support\Facades;
 use Illuminate\Contracts\Auth\PasswordBroker;
 
 /**
- * @method static string sendResetLink(array $credentials)
  * @method static mixed reset(array $credentials, \Closure $callback)
+ * @method static string sendResetLink(array $credentials)
+ * @method static \Illuminate\Contracts\Auth\CanResetPassword getUser(array $credentials)
+ * @method static string createToken(\Illuminate\Contracts\Auth\CanResetPassword $user)
+ * @method static void deleteToken(\Illuminate\Contracts\Auth\CanResetPassword $user)
+ * @method static bool tokenExists(\Illuminate\Contracts\Auth\CanResetPassword $user, string $token)
+ * @method static \Illuminate\Auth\Passwords\TokenRepositoryInterface getRepository()
+ * @method static \Illuminate\Contracts\Auth\PasswordBroker broker(string|null $name = null)
  *
  * @see \Illuminate\Auth\Passwords\PasswordBroker
  */

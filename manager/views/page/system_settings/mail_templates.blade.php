@@ -67,7 +67,7 @@
                 'name' => 'smtp_autotls',
                 'label' => ManagerTheme::getLexicon('smtp_autotls_title'),
                 'small' => '[(smtp_autotls)]',
-                'value' => $settings['smtp_autotls'],
+                'value' => $settings['smtp_autotls'] ?? 0,
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')

@@ -167,7 +167,7 @@ class SiteContent extends Eloquent\Model
         'privatemgr' => 'bool',
         'content_dispo' => 'bool',
         'hidemenu' => 'bool',
-        'alias_visible' => 'int'
+        'alias_visible' => 'int',
     ];
 
     public function __construct(array $attributes = [])
@@ -200,19 +200,18 @@ class SiteContent extends Eloquent\Model
         parent::boot();
 
         static::saving(static function (SiteContent $entity) {
+            $entity->editedon = time();
             if ($entity->isDirty($entity->getPositionColumn())) {
                 $latest = static::getLatestPosition($entity);
-
-                if (!$entity->isMoved) {
-                    $latest--;
-                }
-
                 $entity->menuindex = max(0, min($entity->menuindex, $latest));
             } elseif (!$entity->exists) {
                 $entity->menuindex = static::getLatestPosition($entity);
             }
         });
 
+        static::creating(static function (SiteContent $entity) {
+            $entity->createdon = time();
+        });
         // When entity is created, the appropriate
         // data will be put into the closure table.
         static::created(static function (SiteContent $entity) {
@@ -242,6 +241,7 @@ class SiteContent extends Eloquent\Model
             if ($parentIdChanged) {
                 $entity->closure->moveNodeTo($entity->parent);
             }
+
         });
 
         // add in custom deleting
@@ -399,7 +399,7 @@ class SiteContent extends Eloquent\Model
     /**
      * @return Collection
      */
-    public function getTvAttribute(): Collection
+    public function getTvAttribute()
     {
         /** @var Collection $docTv */
         if ($this->tpl->tvs === null) {
@@ -2044,10 +2044,14 @@ class SiteContent extends Eloquent\Model
     }
 
 
-    public function scopeWithTVs($query, $tvList = array(), $sep = ':')
+    public function scopeWithTVs($query, $tvList = array(), $sep = ':', $tree = false)
     {
+        $main_table = 'site_content';
+        if($tree){
+            $main_table = 't2';
+        }
         if (!empty($tvList)) {
-            $query->select('site_content.*');
+            $query->addSelect($main_table.'.*');
             $tvList = array_unique($tvList);
             $tvListWithDefaults = [];
             foreach ($tvList as $v) {
@@ -2056,8 +2060,8 @@ class SiteContent extends Eloquent\Model
             }
             $tvs = SiteTmplvar::whereIn('name', array_keys($tvListWithDefaults))->get()->pluck('id', 'name')->toArray();
             foreach ($tvs as $tvname => $tvid) {
-                $query = $query->leftJoin('site_tmplvar_contentvalues as tv_' . $tvname, function ($join) use ($tvid, $tvname) {
-                    $join->on('site_content.id', '=', 'tv_' . $tvname . '.contentid')->where('tv_' . $tvname . '.tmplvarid', '=', $tvid);
+                $query = $query->leftJoin('site_tmplvar_contentvalues as tv_' . $tvname, function ($join) use ($main_table, $tvid, $tvname) {
+                    $join->on($main_table.'.id', '=', 'tv_' . $tvname . '.contentid')->where('tv_' . $tvname . '.tmplvarid', '=', $tvid);
                 });
                 $query = $query->addSelect('tv_' . $tvname . '.value as ' . $tvname);
                 $query = $query->groupBy('tv_' . $tvname . '.value');
@@ -2068,7 +2072,7 @@ class SiteContent extends Eloquent\Model
 
                 }
             }
-            $query->groupBy('site_content.id');
+            $query->groupBy($main_table.'.id');
         }
         return $query;
     }
@@ -2087,7 +2091,7 @@ class SiteContent extends Eloquent\Model
             $cast = !empty($parts[4]) ? $parts[4] : '';
             $field = 'tv_' . $tvname . '.value';
             if ($type == 'tvd') {
-                $field = DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
+                $field = \DB::Raw("IFNULL(`" . $prefix . "tv_" . $tvname . "`.`value`, `" . $prefix . "tvd_" . $tvname . "`.`default_text`)");
             }
             switch (true) {
                 case ($op == 'in'):
@@ -2179,7 +2183,7 @@ class SiteContent extends Eloquent\Model
                 $join->on('site_content_closure.depth', '<', \DB::raw($depth));
             })
             ->join('site_content as t2', 't2.id', '=', 'site_content_closure.descendant' )
-            ->where('site_content.parent', 0)->get()->toTree();
+            ->where('site_content.parent', 0);
     }
 
     //return tvs array [$docid => tvs array()]

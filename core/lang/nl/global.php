@@ -1004,6 +1004,8 @@ $_lang["template_no_tv"] = 'Er zijn nog geen Template Variabelen aan deze Templa
 $_lang["template_notassigned_tv"] = 'Deze Template variabelen zijn beschikbaar voor het toewijzen.';
 $_lang["template_reset_all"] = 'Geef alle Pagina\'s het standaard Template';
 $_lang["template_reset_specific"] = 'Geef alleen \'%s\' Pagina\'s het standaard Template:';
+$_lang["template_assigned_blade_file"] = 'Overeenkomstig blade-bestand';
+$_lang["template_create_blade_file"] = 'Maak een sjabloonbestand bij het opslaan';
 $_lang["template_selectable"] = 'Template selecteerbaar bij aanmaken of aanpassen van pagina\'s';
 $_lang["template_title"] = 'Maak/wijzig Template';
 $_lang["template_tv_edit"] = 'Wijzig TV sorteer volgorde';
@@ -1410,5 +1412,10 @@ $_lang["viewopts_radio_inline"] = 'Inline';
 $_lang["viewopts_radio_flex"] = 'Flex';
 $_lang["viewopts_fontsize"] = 'Fontgrootte';
 $_lang["viewopts_cb_alltabs"] = 'Alle tabs';
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

@@ -11,7 +11,8 @@
             'value' => $settings['manager_language'],
             'options' => $langKeys,
             'as' => 'values',
-            'ucwords' => true,
+            'ucwords' => false,
+            'str_to_upper' => true,
             'attributes' => 'onChange="documentDirty=true;" size="1"',
             'comment' => ManagerTheme::getLexicon('language_message')
         ])

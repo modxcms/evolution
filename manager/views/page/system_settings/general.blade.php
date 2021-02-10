@@ -388,6 +388,54 @@
             <div class="split my-1"></div>
         @endif
 
+        @if(! isset($fileSetting['disable_chunk_cache']))
+            @include('manager::form.radio', [
+                'name' => 'disable_chunk_cache',
+                'label' => ManagerTheme::getLexicon('disable_chunk_cache_title'),
+                'small' => '[(disable_chunk_cache)]',
+                'value' => $settings['disable_chunk_cache'] ?? 0,
+                'options' => [
+                    1 => ManagerTheme::getLexicon('yes'),
+                    0 => ManagerTheme::getLexicon('no'),
+                ]
+            ])
+
+            <div class="split my-1"></div>
+        @endif
+
+
+        @if(! isset($fileSetting['disable_snippet_cache']))
+            @include('manager::form.radio', [
+                'name' => 'disable_snippet_cache',
+                'label' => ManagerTheme::getLexicon('disable_snippet_cache_title'),
+                'small' => '[(disable_snippet_cache)]',
+                'value' => $settings['disable_snippet_cache'] ?? 0,
+                'options' => [
+                    1 => ManagerTheme::getLexicon('yes'),
+                    0 => ManagerTheme::getLexicon('no'),
+                ]
+            ])
+
+            <div class="split my-1"></div>
+        @endif
+
+
+        @if(! isset($fileSetting['disable_chunk_cache']))
+            @include('manager::form.radio', [
+                'name' => 'disable_plugins_cache',
+                'label' => ManagerTheme::getLexicon('disable_plugins_cache_title'),
+                'small' => '[(disable_plugins_cache)]',
+                'value' => $settings['disable_plugins_cache'] ?? 0,
+                'options' => [
+                    1 => ManagerTheme::getLexicon('yes'),
+                    0 => ManagerTheme::getLexicon('no'),
+                ]
+            ])
+
+            <div class="split my-1"></div>
+        @endif
+
+
         @if(! isset($fileSetting['cache_type']))
             @include('manager::form.radio', [
                 'name' => 'cache_type',

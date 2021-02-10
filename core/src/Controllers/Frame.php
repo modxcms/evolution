@@ -345,7 +345,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->hasAnyPermissions([
                     'edit_user',
                     'edit_role',
-                    'access_permissions',
                     'web_access_permissions'
                 ]
             )

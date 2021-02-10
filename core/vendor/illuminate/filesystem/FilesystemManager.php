@@ -326,7 +326,7 @@ class FilesystemManager implements FactoryContract
      */
     public function getDefaultCloudDriver()
     {
-        return $this->app['config']['filesystems.cloud'];
+        return $this->app['config']['filesystems.cloud'] ?? 's3';
     }
 
     /**
@@ -342,6 +342,19 @@ class FilesystemManager implements FactoryContract
         }
 
         return $this;
+    }
+
+    /**
+     * Disconnect the given disk and remove from local cache.
+     *
+     * @param  string|null  $name
+     * @return void
+     */
+    public function purge($name = null)
+    {
+        $name = $name ?? $this->getDefaultDriver();
+
+        unset($this->disks[$name]);
     }
 
     /**

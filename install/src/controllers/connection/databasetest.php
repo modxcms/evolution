@@ -45,11 +45,12 @@ try {
 
                 if ($data['Value'] != $database_collation) {
 
-
                     echo $output . '<span id="database_fail" style="color:#FF0000;">' . sprintf($_lang['status_failed_database_collation_does_not_match'], $data['1']) . '</span>';
                     exit();
                 }
+
                 $result = $dbh->query("SELECT COUNT(*) FROM {$tableprefix}site_content");
+
                 if ($dbh->errorCode() == 0) {
                     echo $output . '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_table_prefix_already_in_use'] . '</span>';
                     exit();
@@ -62,10 +63,10 @@ try {
             }
             break;
     }
-    echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
-    exit();
+//    echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
+//    exit();
 } catch (PDOException $e) {
-    if (!stristr($e->getMessage(), 'database "' . $_POST['database_name'] . '" does not exist') && !stristr($e->getMessage(), 'Unknown database \'' . $_POST['database_name'] . '\'')) {
+    if (!stristr($e->getMessage(), 'database "' . $_POST['database_name'] . '" does not exist') && !stristr($e->getMessage(), 'Unknown database \'' . $_POST['database_name'] . '\'') && !stristr($e->getMessage(), 'Base table or view not found')) {
         echo $output . '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed'] . ' ' . $e->getMessage() . '</span>';
         exit();
     }
@@ -81,7 +82,9 @@ try {
             try {
                 $dbh->query('CREATE DATABASE "' . $_POST['database_name'] . '" ENCODING \'' . $database_charset . '\';');
                 if ($dbh->errorCode() > 0) {
-                    $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_could_not_create_database'] . ' ' . print_r($dbh->errorInfo(), true) . '</span>';
+                    if (stristr($dbh->errorInfo()[2], 'already exists') === false) {
+                        $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_could_not_create_database'] . ' ' . print_r($dbh->errorInfo(), true) . '</span>';
+                    }
                 }
 
             } catch (Exception $exception) {
@@ -90,7 +93,7 @@ try {
 
             break;
         case 'mysql':
-            $query = 'CREATE DATABASE `' . $_POST['database_name'] . '` CHARACTER SET ' . $database_charset . ' COLLATE ' . $database_collation . ";";
+            $query = 'CREATE DATABASE IF NOT EXISTS `' . $_POST['database_name'] . '` CHARACTER SET ' . $database_charset . ' COLLATE ' . $database_collation . ";";
             if (!$dbh->query($query)) {
                 $output .= '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_could_not_create_database'] . '</span>';
                 echo $output;

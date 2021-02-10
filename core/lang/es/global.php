@@ -1016,6 +1016,8 @@ $_lang["template_no_tv"] = 'Todavía no se han asignado variables de template a 
 $_lang["template_notassigned_tv"] = 'These Template Variables are available for assigning.';
 $_lang["template_reset_all"] = 'Reajusta todas las páginas a usar el template prefijado';
 $_lang["template_reset_specific"] = 'Reajusta solamente \'%s\' páginas';
+$_lang["template_assigned_blade_file"] = 'Blade-archivo correspondiente';
+$_lang["template_create_blade_file"] = 'Crear archivo de plantilla al guardar';
 $_lang["template_selectable"] = 'Template selectable when creating or editing ressources.';
 $_lang["template_title"] = 'Crear/editar template';
 $_lang["template_tv_edit"] = 'Editar el orden de clasificación de las variables de template';
@@ -1449,5 +1451,10 @@ $_lang['invalid_event_response'] = 'The %s event has ivalid output';
 $_lang['chunk_processor'] = 'Clase de procesamiento de Chunks';
 $_lang['enable_mootools'] = 'Habilitar Mootools en el administrador';
 $_lang['enable_mootools_message'] = 'Cargue Mootools.js en el administrador para compatibilidad con versiones anteriores';
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

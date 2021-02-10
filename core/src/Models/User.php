@@ -11,6 +11,9 @@ use Rocky\Eloquent\HasDynamicRelation;
  * @property string $username
  * @property string $password
  * @property string $cachepwd
+ * @property string $refresh_token
+ * @property string $access_token
+ * @property string $valid_to
  *
  * @mixin \Eloquent
  */
@@ -22,13 +25,19 @@ class User extends Eloquent\Model
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password'
+		'password',
+        'cachepwd',
+        'verified_key',
 	];
 
 	protected $fillable = [
 		'username',
 		'password',
-		'cachepwd'
+		'cachepwd',
+		'verified_key',
+		'refresh_token',
+		'access_token',
+		'valid_to'
 	];
 
     public function attributes()
@@ -44,6 +53,11 @@ class User extends Eloquent\Model
     public function settings()
     {
         return $this->hasMany(UserSetting::class,'user','id');
+    }
+
+    public function values()
+    {
+        return $this->hasMany(UserValue::class);
     }
 
     public function delete()

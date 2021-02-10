@@ -3,11 +3,9 @@
 namespace Illuminate\Pipeline;
 
 use Closure;
-use Exception;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Pipeline\Pipeline as PipelineContract;
 use RuntimeException;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 class Pipeline implements PipelineContract
@@ -128,10 +126,8 @@ class Pipeline implements PipelineContract
         return function ($passable) use ($destination) {
             try {
                 return $destination($passable);
-            } catch (Exception $e) {
-                return $this->handleException($passable, $e);
             } catch (Throwable $e) {
-                return $this->handleException($passable, new FatalThrowableError($e));
+                return $this->handleException($passable, $e);
             }
         };
     }
@@ -172,10 +168,8 @@ class Pipeline implements PipelineContract
                                     : $pipe(...$parameters);
 
                     return $this->handleCarry($carry);
-                } catch (Exception $e) {
-                    return $this->handleException($passable, $e);
                 } catch (Throwable $e) {
-                    return $this->handleException($passable, new FatalThrowableError($e));
+                    return $this->handleException($passable, $e);
                 }
             };
         };
@@ -225,6 +219,19 @@ class Pipeline implements PipelineContract
     }
 
     /**
+     * Set the container instance.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
      * Handle the value returned from each pipe before passing it to the next.
      *
      * @param  mixed  $carry
@@ -239,12 +246,12 @@ class Pipeline implements PipelineContract
      * Handle the given exception.
      *
      * @param  mixed  $passable
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
-    protected function handleException($passable, Exception $e)
+    protected function handleException($passable, Throwable $e)
     {
         throw $e;
     }

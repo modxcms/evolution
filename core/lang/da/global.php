@@ -939,6 +939,8 @@ $_lang["template_name"] = 'Skabelon navn';
 $_lang["template_no_tv"] = 'Der er endnu ikke tildelt nogle skabelon variabler til denne skabelon.';
 $_lang["template_reset_all"] = 'Nulstil alle ressourcer så de bruger standard skabelonen';
 $_lang["template_reset_specific"] = 'Nulstil kun ressourcer der bruger: \'%s\' skabelonen';
+$_lang["template_assigned_blade_file"] = 'Tilsvarende blade-fil';
+$_lang["template_create_blade_file"] = 'Opret skabelonfil ved gem';
 $_lang["template_title"] = 'Opret eller rediger skabelon';
 $_lang["template_tv_edit"] = 'Sorter skabelon variabler';
 $_lang["template_tv_edit_message"] = 'Klik-træk for at sortere denne skabelons variabler.';
@@ -1214,5 +1216,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

@@ -72,7 +72,7 @@ if($_SESSION['mgrDocgroups']) {
 }
 
 if(!empty ($id)) {
-    $documentObjectQuery = SiteContent::query()
+    $documentObjectQuery = SiteContent::withTrashed()
         ->select('site_content.*')
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
         ->where('site_content.id', $id);
@@ -128,7 +128,7 @@ if($formRestored == true) {
 if(!isset($_REQUEST['id'])) {
     if ($modx->getConfig('auto_menuindex')) {
         $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
-        $content['menuindex'] = SiteContent::where('parent', $pid)->count();
+        $content['menuindex'] = SiteContent::withTrashed()->where('parent', $pid)->count();
     } else {
         $content['menuindex'] = 0;
     }
@@ -504,7 +504,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
         ?>
         <input type="hidden" name="a" value="5" />
-        <input type="hidden" name="id" value="<?= (int)get_by_key($content, 'id', 0, 'is_scalar') ?>" />
+        <input type="hidden" name="id" id="docid" value="<?= (int)get_by_key($content, 'id', 0, 'is_scalar') ?>" />
         <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?= $modx->getConfig('upload_maxsize') ?>" />
         <input type="hidden" name="refresh_preview" value="0" />
@@ -551,7 +551,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $parents = implode(',', $temp);
 
                     if(!empty($parents)) {
-                        $parentsResult = SiteContent::select('id','pagetitle')->whereIn('id', $temp)->get();
+                        $parentsResult = SiteContent::withTrashed()->select('id','pagetitle')->whereIn('id', $temp)->get();
                         foreach ($parentsResult->toArray() as $row) {
                             $out .= '<li class="breadcrumbs__li">
                                 <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->getConfig('modx_charset')) . '</a>
@@ -579,6 +579,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
                         'id' => $id
                     ));
+                                                        
+                    $group_tvs = $modx->getConfig('group_tvs');
+                    $templateVariables = '';
+                    $templateVariablesOutput = '';
+                                                        
                     if(is_array($evtOut)) {
                         echo implode('', $evtOut);
                     } else {
@@ -765,7 +770,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             $content['parent'] = 0;
                                         }
                                         if($parentlookup !== false && is_numeric($parentlookup)) {
-                                            $parentname = SiteContent::select('pagetitle')->find($parentlookup)->pagetitle;
+                                            $parentname = SiteContent::withTrashed()->select('pagetitle')->find($parentlookup)->pagetitle;
                                             if(!$parentname) {
                                                 $modx->webAlertAndQuit($_lang["error_no_parent"]);
                                             }
@@ -862,12 +867,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             <?php
 
-                            $templateVariables = '';
-                            $templateVariablesOutput = '';
-
                             if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = getDefaultTemplate();
-                                $group_tvs = $modx->getConfig('group_tvs');
                                 if (isset ($_REQUEST['newtemplate'])) {
                                     $template = $_REQUEST['newtemplate'];
                                 } else {
@@ -885,7 +886,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                 if ($group_tvs) {
                                     $tvs = $tvs->select('site_tmplvars.*',
-                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
+                                        'site_tmplvar_contentvalues.value', 'categories.id as category_id', 'categories.category as category_name', 'categories.rank as category_rank', 'site_tmplvar_templates.rank', 'site_tmplvars.id', 'site_tmplvars.rank');
                                     $tvs = $tvs->leftJoin('categories', 'categories.id', '=', 'site_tmplvars.category');
                                     //$sort = 'category_rank,category_id,' . $sort;
                                     $tvs = $tvs->orderBy('category_rank', 'ASC');
@@ -913,6 +914,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     $i = $ii = 0;
                                     $tab = '';
                                     foreach ($tvsArray as $row) {
+                                        $row['category'] = $row['category_name'] ?? '';
                                         if(!isset($row['category_id'])){
                                             $row['category_id'] = 0;
                                             $row['category'] = $_lang['no_category'];
@@ -1207,8 +1209,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                 if(empty($content['contentType'])) {
                                                     $content['contentType'] = 'text/html';
                                                 }
-                                                $custom_contenttype = (isset ($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml");
-                                                $ct = explode(",", $custom_contenttype);
+                                                $custom_content_type = EvolutionCMS()->getConfig('custom_contenttype', 'text/html,text/plain,text/xml');
+                                                $ct = explode(",", $custom_content_type);
                                                 for($i = 0; $i < count($ct); $i++) {
                                                     echo "\t\t\t\t\t" . '<option value="' . $ct[$i] . '"' . ($content['contentType'] == $ct[$i] ? ' selected="selected"' : '') . '>' . $ct[$i] . "</option>\n";
                                                 }

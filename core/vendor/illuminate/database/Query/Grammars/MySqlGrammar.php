@@ -10,9 +10,45 @@ class MySqlGrammar extends Grammar
     /**
      * The grammar specific operators.
      *
-     * @var array
+     * @var string[]
      */
     protected $operators = ['sounds like'];
+
+    /**
+     * Add a "where null" clause to the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereNull(Builder $query, $where)
+    {
+        if ($this->isJsonSelector($where['column'])) {
+            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
+
+            return '(json_extract('.$field.$path.') is null OR json_type(json_extract('.$field.$path.')) = \'NULL\')';
+        }
+
+        return parent::whereNull($query, $where);
+    }
+
+    /**
+     * Add a "where not null" clause to the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereNotNull(Builder $query, $where)
+    {
+        if ($this->isJsonSelector($where['column'])) {
+            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
+
+            return '(json_extract('.$field.$path.') is not null AND json_type(json_extract('.$field.$path.')) != \'NULL\')';
+        }
+
+        return parent::whereNotNull($query, $where);
+    }
 
     /**
      * Compile an insert ignore statement into SQL.
@@ -114,6 +150,28 @@ class MySqlGrammar extends Grammar
 
             return $this->wrap($key).' = '.$this->parameter($value);
         })->implode(', ');
+    }
+
+    /**
+     * Compile an "upsert" statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @param  array  $uniqueBy
+     * @param  array  $update
+     * @return string
+     */
+    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
+    {
+        $sql = $this->compileInsert($query, $values).' on duplicate key update ';
+
+        $columns = collect($update)->map(function ($value, $key) {
+            return is_numeric($key)
+                ? $this->wrap($value).' = values('.$this->wrap($value).')'
+                : $this->wrap($key).' = '.$this->parameter($value);
+        })->implode(', ');
+
+        return $sql.$columns;
     }
 
     /**

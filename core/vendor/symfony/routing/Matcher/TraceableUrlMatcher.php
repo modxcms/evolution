@@ -23,13 +23,13 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class TraceableUrlMatcher extends UrlMatcher
 {
-    const ROUTE_DOES_NOT_MATCH = 0;
-    const ROUTE_ALMOST_MATCHES = 1;
-    const ROUTE_MATCHES = 2;
+    public const ROUTE_DOES_NOT_MATCH = 0;
+    public const ROUTE_ALMOST_MATCHES = 1;
+    public const ROUTE_MATCHES = 2;
 
     protected $traces;
 
-    public function getTraces($pathinfo)
+    public function getTraces(string $pathinfo)
     {
         $this->traces = [];
 
@@ -50,7 +50,7 @@ class TraceableUrlMatcher extends UrlMatcher
         return $traces;
     }
 
-    protected function matchCollection($pathinfo, RouteCollection $routes)
+    protected function matchCollection(string $pathinfo, RouteCollection $routes)
     {
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {

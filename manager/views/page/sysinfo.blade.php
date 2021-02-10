@@ -36,8 +36,8 @@
 
     <!-- database -->
     <?php
-        $totaloverhead = 0;
-        $total = 0;
+    $totaloverhead = 0;
+    $total = 0;
     ?>
     <div class="tab-page">
         <div class="container container-body">
@@ -59,33 +59,49 @@
                         </thead>
                         <tbody>
                         <?php $i = 0; ?>
+
                         @foreach ($tables as $table)
+                            <?php
+                            if (isset($table['Name'])) {
+                                $tableName = $table['Name'];
+                            } else {
+                                $tableName = $table['name'];
+                            }
+                            ?>
                             <tr>
-                                <td class="text-primary"><b>{{ $table['Name'] }}{{ $table['name'] }}</b></td>
+                                @if(isset($tableName))
+                                    <td class="text-primary"><b>{{ $tableName }}</b></td>
+                                @else
+                                    <td class="text-primary"><b>{{ $tableName }}</b></td>
+                                @endif
                                 <td class="text-xs-center">
-                                    @if(!empty($table['Comment']))
-                                        <i class="{{ $_style['icon_question_circle'] }}" data-tooltip="{{ $table['Comment'] }}"></i>
+                                    @if(isset($table['Comment']) && !empty($table['Comment']))
+                                        <i class="{{ $_style['icon_question_circle'] }}"
+                                           data-tooltip="{{ $table['Comment'] ?? 0}}"></i>
                                     @endif
                                 </td>
-                                <td class="text-xs-right">{{ $table['Rows'] }}</td>
+                                <td class="text-xs-right">{{ $table['Rows'] ?? 0 }}</td>
 
-                                @if (evolutionCMS()->hasPermission('settings') && in_array($table['Name'], $truncateable))
+                                @if (evolutionCMS()->hasPermission('settings') && in_array($tableName, $truncateable))
                                     <td class="text-xs-right">
-                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('truncate_table') }}">
-                                            {{ nicesize($table['Data_length'] + $table['Data_free']) }}
+                                        <a class="text-danger" href="index.php?a=54&mode=$action&u={{ $tableName }}"
+                                           title="{{ ManagerTheme::getLexicon('truncate_table') }}">
+                                            {{ nicesize(($table['Data_length']?? 0) + ($table['Data_free']?? 0)) }}
                                         </a>
                                     </td>
                                 @else
                                     <td class="text-xs-right">
-                                        {{ nicesize($table['Data_length'] + $table['Data_free']) }}
+                                        {{ nicesize(($table['Data_length'] ?? 0) + ($table['Data_free']?? 0)) }}
                                     </td>
                                 @endif
 
                                 @if (evolutionCMS()->hasPermission('settings'))
                                     <td class="text-xs-right">
-                                        @if($table['Data_free'] > 0)
-                                            <a class="text-danger" href="index.php?a=54&mode=$action&t={{ $table['Name'] }}" title="{{ ManagerTheme::getLexicon('optimize_table') }}" >
-                                                <span> {{ nicesize($table['Data_free']) }}</span>
+                                        @if(isset($table['Data_free']) && $table['Data_free'] > 0)
+                                            <a class="text-danger"
+                                               href="index.php?a=54&mode=$action&t={{ $tableName }}"
+                                               title="{{ ManagerTheme::getLexicon('optimize_table') }}">
+                                                <span> {{ nicesize($table['Data_free'] ?? 0) }}</span>
                                             </a>
                                         @else
                                             -
@@ -93,7 +109,7 @@
                                     </td>
                                 @else
                                     <td class="text-xs-right">
-                                        @if($table['Data_free'] > 0)
+                                        @if(isset($table['Data_free']) && $table['Data_free'] > 0)
                                             {{ nicesize($table['Data_free']) }}
                                         @else
                                             -
@@ -102,18 +118,18 @@
                                 @endif
 
                                 <td class="text-xs-right">
-                                    {{ nicesize($table['Data_length'] - $table['Data_free']) }}
+                                    {{ nicesize(($table['Data_length'] ?? 0) - ($table['Data_free'] ?? 0)) }}
                                 </td>
                                 <td class="text-xs-right">
-                                    {{ nicesize($table['Index_length']) }}
+                                    {{ nicesize($table['Index_length'] ?? 0) }}
                                 </td>
                                 <td class="text-xs-right">
-                                    {{ nicesize($table['Index_length'] + $table['Data_length'] + $table['Data_free']) }}
+                                    {{ nicesize(($table['Index_length'] ?? 0) + ($table['Data_length'] ?? 0) + ($table['Data_free'] ?? 0)) }}
                                 </td>
                             </tr>
                             <?php
-                                $total = $total + $table['Index_length'] + $table['Data_length'];
-                                $totaloverhead = $totaloverhead + $table['Data_free'];
+                            $total = $total + ($table['Index_length'] ?? 0) + ($table['Data_length'] ?? 0);
+                            $totaloverhead = $totaloverhead + ($table['Data_free'] ?? 0);
                             ?>
                         @endforeach
                         <tr class="unstyled">
@@ -121,13 +137,15 @@
                             <td colspan="3">&nbsp;</td>
                             <td class="text-xs-right">
                                 @if($totaloverhead > 0)
-                                    <b class="text-danger">{{ nicesize($totaloverhead) }}</b><br />({{ number_format($totaloverhead) }} B)
+                                    <b class="text-danger">{{ nicesize($totaloverhead) }}</b><br/>
+                                    ({{ number_format($totaloverhead) }} B)
                                 @else
                                     -
                                 @endif
                             </td>
                             <td colspan="2">&nbsp;</td>
-                            <td class="text-xs-right"><b>{{ nicesize($total) }}</b><br />({{ number_format($total) }} B)</td>
+                            <td class="text-xs-right"><b>{{ nicesize($total) }}</b><br/>({{ number_format($total) }} B)
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -139,6 +157,6 @@
             @endif
         </div>
     </div>
-@push('scripts.bot')
-@endpush
+    @push('scripts.bot')
+    @endpush
 @endsection

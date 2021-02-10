@@ -1,2 +1,3 @@
 <?php
-define('MGR_DIR', 'manager');
+if(!defined('MGR_DIR'))
+    define('MGR_DIR', 'manager');

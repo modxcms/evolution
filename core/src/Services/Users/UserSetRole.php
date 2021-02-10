@@ -77,7 +77,7 @@ class UserSetRole implements ServiceInterface
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -104,7 +104,7 @@ class UserSetRole implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         return true;
     }

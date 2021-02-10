@@ -185,7 +185,7 @@ class ManagerApi implements ManagerApiInterface
     public function getV1UserHashAlgorithm($uid)
     {
         $modx = evolutionCMS();
-        $tbl_manager_users = $modx->getDatabase()->getFullTableName('manager_users');
+        $tbl_manager_users = $modx->getDatabase()->getFullTableName('users');
         $uid = $modx->getDatabase()->escape($uid);
         $rs = $modx->getDatabase()->select('password', $tbl_manager_users, "id='{$uid}'");
         $password = $modx->getDatabase()->getValue($rs);

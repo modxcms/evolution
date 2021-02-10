@@ -3,148 +3,6 @@
 use EvolutionCMS\Models\SiteTmplvarAccess;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 
-if (!function_exists('duplicateDocument')) {
-    /**
-     * @param int $docid
-     * @param null|int $parent
-     * @param int $_toplevel
-     * @return int
-     */
-    function duplicateDocument($docid, $parent = null, $_toplevel = 0)
-    {
-        $modx = evolutionCMS();
-        global $_lang;
-
-        // invoke OnBeforeDocDuplicate event
-        $evtOut = $modx->invokeEvent('OnBeforeDocDuplicate', array(
-            'id' => $docid
-        ));
-
-        // if( !in_array( 'false', array_values( $evtOut ) ) ){}
-        // TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication
-        // [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
-
-        $userID = $modx->getLoginUserID();
-
-        // Grab the original document
-
-        $content = \EvolutionCMS\Models\SiteContent::query()->find($docid)->toArray();
-
-        // Handle incremental ID
-        switch ($modx->getConfig('docid_incrmnt_method')) {
-            case '1':
-                $minId = \EvolutionCMS\Models\SiteContent::query()
-                    ->leftJoin('site_content as T1', \DB::raw('(') . 'site_content.id' . \DB::raw('+1)'), '=', 'T1.id')
-                    ->whereNull('T1.id')->min('site_content.id');
-
-                $content['id'] = $minId + 1;
-                break;
-            case '2':
-                $content['id'] = \EvolutionCMS\Models\SiteContent::query()->max('id') + 1;
-                break;
-
-            default:
-                unset($content['id']); // remove the current id.
-        }
-
-        // Once we've grabbed the document object, start doing some modifications
-        if ($_toplevel == 0) {
-            // count duplicates
-            $pagetitle = \EvolutionCMS\Models\SiteContent::find($docid)->pagetitle;
-
-            $count = \EvolutionCMS\Models\SiteContent::query()->where('pagetitle', 'LIKE', '%'.$pagetitle.' Duplicate%')->count();
-
-            if ($count >= 1) {
-                $count = ' ' . ($count + 1);
-            } else {
-                $count = '';
-            }
-
-            $content['pagetitle'] = sprintf(
-                '%s%s %s'
-                , $_lang['duplicated_el_suffix']
-                , $count, $content['pagetitle']
-            );
-            $content['alias'] = null;
-        } elseif ($modx->getConfig('friendly_urls') == 0 || $modx->getConfig('allow_duplicate_alias') == 0) {
-            $content['alias'] = null;
-        }
-
-        // change the parent accordingly
-        if ($parent !== null) {
-            $content['parent'] = $parent;
-        }
-
-        // Change the author
-        $content['createdby'] = $userID;
-        $content['createdon'] = time();
-        // Remove other modification times
-        $content['editedby'] = $content['editedon'] = $content['deleted'] = $content['deletedby'] = $content['deletedon'] = 0;
-
-        // Set the published status to unpublished by default (see above ... commit #3388)
-        $content['published'] = $content['pub_date'] = 0;
-
-
-        // Duplicate the Document
-        $newparent = \EvolutionCMS\Models\SiteContent::query()->insertGetId($content);
-
-        // duplicate document's TVs
-        duplicateTVs($docid, $newparent);
-        duplicateAccess($docid, $newparent);
-
-        // invoke OnDocDuplicate event
-        $evtOut = $modx->invokeEvent('OnDocDuplicate', array(
-            'id' => $docid,
-            'new_id' => $newparent
-        ));
-
-        // Start duplicating all the child documents that aren't deleted.
-        $_toplevel++;
-        $documents = \EvolutionCMS\Models\SiteContent::where('parent', $docid)->where('deleted', 0)->orderBy('id')->get();
-
-        foreach ($documents as $document) {
-            duplicateDocument($document->id, $newparent, $_toplevel);
-        }
-
-        // return the new doc id
-        return $newparent;
-    }
-}
-
-if (!function_exists('duplicateTVs')) {
-    /**
-     * Duplicate Document TVs
-     *
-     * @param int $oldid
-     * @param int $newid
-     */
-    function duplicateTVs($oldid, $newid)
-    {
-        $oldTvs = \EvolutionCMS\Models\SiteTmplvarContentvalue::query()->where('contentid', $oldid)->get();
-        foreach ($oldTvs->toArray() as $oldTv) {
-            $oldTv['contentid'] = $newid;
-            SiteTmplvarTemplate::query()->insert($oldTv);
-        }
-    }
-}
-
-if (!function_exists('duplicateAccess')) {
-    /**
-     * Duplicate Document Access Permissions
-     *
-     * @param int $oldid
-     * @param int $newid
-     */
-    function duplicateAccess($oldid, $newid)
-    {
-        $modx = evolutionCMS();
-        $oldDocGroups = \EvolutionCMS\Models\DocumentGroup::query()->where('document', $oldid)->get();
-        foreach ($oldDocGroups->toArray() as $oldDocGroup) {
-            $oldDocGroup['document'] = $newid;
-            \EvolutionCMS\Models\DocumentGroup::query()->insert($oldDocGroup);
-        }
-    }
-}
 
 if (!function_exists('evalModule')) {
     /**
@@ -334,41 +192,6 @@ if (!function_exists('updateNewHash')) {
     }
 }
 
-if (!function_exists('incrementFailedLoginCount')) {
-    /**
-     * @param int $internalKey
-     * @param int $failedlogins
-     * @param int $failed_allowed
-     * @param int $blocked_minutes
-     */
-    function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes)
-    {
-        $modx = evolutionCMS();
-
-        $failedlogins += 1;
-
-        $fields = array('failedlogincount' => $failedlogins);
-        if ($failedlogins >= $failed_allowed) //block user for too many fail attempts
-        {
-            $fields['blockeduntil'] = time() + ($blocked_minutes * 60);
-        }
-        \EvolutionCMS\Models\UserAttribute::where('internalKey', (int)$internalKey)->update($fields);
-
-        if ($failedlogins < $failed_allowed) {
-            //sleep to help prevent brute force attacks
-            $sleep = (int)$failedlogins / 2;
-            if ($sleep > 5) {
-                $sleep = 5;
-            }
-            sleep($sleep);
-        }
-        @session_destroy();
-        session_unset();
-
-        return;
-    }
-}
-
 if (!function_exists('saveUserGroupAccessPermissons')) {
     /**
      * saves module user group access
@@ -382,7 +205,7 @@ if (!function_exists('saveUserGroupAccessPermissons')) {
         if ($newid) {
             $id = $newid;
         }
-        $usrgroups = $_POST['usrgroups'];
+        $usrgroups = get_by_key($_POST, 'usrgroups', []);
 
         // check for permission update access
         if ($use_udperms == 1) {
@@ -536,6 +359,34 @@ if (!function_exists('saveTemplateVarAccess')) {
     }
 }
 
+if (!function_exists('saveVarRoles')) {
+    /**
+     * @return void
+     */
+    function saveVarRoles($id)
+    {
+        $modx = evolutionCMS();
+        $roles = isset($_POST['role']) ? $_POST['role'] : [];
+
+        $exists = EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->get();
+
+        $getRankArray = $exists->pluck('rank', 'roleid')->toArray();
+
+        EvolutionCMS\Models\UserRoleVar::where('tmplvarid', '=', $id)->delete();
+        if (!$roles) {
+            return;
+        }
+        foreach ($roles as $i => $iValue) {
+            $field = [
+                'tmplvarid' => $id,
+                'roleid' => $roles[$i],
+                'rank' => get_by_key($getRankArray, $iValue, 0)
+            ];
+            EvolutionCMS\Models\UserRoleVar::create($field);
+        }
+    }
+}
+
 if (!function_exists('saveDocumentAccessPermissons')) {
     function saveDocumentAccessPermissons($id)
     {
@@ -574,10 +425,19 @@ if (!function_exists('sendMailMessageForUser')) {
         global $_lang;
         global $emailsubject, $emailsender;
         $message = sprintf($message, $uid, $pwd); // use old method
+        $last_name = '';
+        $first_name = '';
+        $middle_name = '';
+        $user = \EvolutionCMS\Models\UserAttribute::query()->where('email', $email)->first();
+        if (!is_null($user)) {
+            $last_name = $user->last_name;
+            $first_name = $user->first_name;
+            $middle_name = $user->middle_name;
+        }
         // replace placeholders
         $message = str_replace(
-            array('[+uid+]', '[+pwd+]', '[+ufn+]', '[+sname+]', '[+saddr+]', '[+semail+]', '[+surl+]')
-            , array($uid, $pwd, $ufn, $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $emailsender, $emailsender, $url)
+            array('[+uid+]', '[+pwd+]', '[+ufn+]', '[+sname+]', '[+saddr+]', '[+semail+]', '[+surl+]', '[+u_first_name+]', '[+u_last_name+]', '[+u_middle_name+]')
+            , array($uid, $pwd, $ufn, $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $emailsender, $emailsender, $url, $first_name, $last_name, $middle_name)
             , $message
         );
 
@@ -595,130 +455,6 @@ if (!function_exists('sendMailMessageForUser')) {
     }
 }
 
-if (!function_exists('saveWebUserSettings')) {
-// Save User Settings
-    function saveWebUserSettings($id)
-    {
-        $settings = array(
-            'login_home',
-            'allowed_ip',
-            'allowed_days'
-        );
-
-        \EvolutionCMS\Models\UserSetting::where('webuser', $id)->delete();
-
-        foreach ($settings as $n) {
-            if (!isset($_POST[$n])) {
-                continue;
-            }
-            $vl = $_POST[$n];
-            if (is_array($vl)) {
-                $vl = implode(',', $vl);
-            }
-            if ($vl != '') {
-                $f = array();
-                $f['webuser'] = $id;
-                $f['setting_name'] = $n;
-                $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
-            }
-        }
-    }
-}
-
-if (!function_exists('saveManagerUserSettings')) {
-    /**
-     * Save User Settings
-     *
-     * @param int $id
-     */
-    function saveUserSettings($id)
-    {
-
-        $ignore = array(
-            'a',
-            'id',
-            'oldusername',
-            'oldemail',
-            'newusername',
-            'fullname',
-            'first_name',
-            'middle_name',
-            'last_name',
-            'verified',
-            'newpassword',
-            'newpasswordcheck',
-            'passwordgenmethod',
-            'passwordnotifymethod',
-            'specifiedpassword',
-            'confirmpassword',
-            'email',
-            'phone',
-            'mobilephone',
-            'fax',
-            'dob',
-            'country',
-            'street',
-            'city',
-            'state',
-            'zip',
-            'gender',
-            'photo',
-            'comment',
-            'role',
-            'failedlogincount',
-            'blocked',
-            'blockeduntil',
-            'blockedafter',
-            'user_groups',
-            'mode',
-            'blockedmode',
-            'stay',
-            'save',
-            'theme_refresher'
-        );
-
-        // determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
-        $defaults = array(
-            'upload_images',
-            'upload_media',
-            'upload_flash',
-            'upload_files'
-        );
-
-        // get user setting field names
-        $settings = array();
-        foreach ($_POST as $n => $v) {
-            if (in_array($n, $ignore) || (!in_array($n, $defaults) && is_scalar($v) && trim($v) == '') || (!in_array($n,
-                        $defaults) && is_array($v) && empty($v))) {
-                continue;
-            } // ignore blacklist and empties
-            $settings[$n] = $v; // this value should be saved
-        }
-
-        foreach ($defaults as $k) {
-            if (isset($settings['default_' . $k]) && $settings['default_' . $k] == '1') {
-                unset($settings[$k]);
-            }
-            unset($settings['default_' . $k]);
-        }
-
-        \EvolutionCMS\Models\UserSetting::where('user', $id)->delete();
-
-        foreach ($settings as $n => $vl) {
-            if (is_array($vl)) {
-                $vl = implode(',', $vl);
-            }
-            if ($vl != '') {
-                $f = array();
-                $f['user'] = $id;
-                $f['setting_name'] = $n;
-                $f['setting_value'] = $vl;
-                \EvolutionCMS\Models\UserSetting::create($f);
-            }
-        }
-    }
-}
 
 if (!function_exists('webAlertAndQuit')) {
     /**

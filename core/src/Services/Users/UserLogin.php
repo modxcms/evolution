@@ -5,6 +5,8 @@ use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class UserLogin implements ServiceInterface
 {
@@ -41,7 +43,7 @@ class UserLogin implements ServiceInterface
     /**
      * @var User
      */
-    private $user;
+    public $user;
     /**
      * @var int
      */
@@ -78,7 +80,8 @@ class UserLogin implements ServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return ['username' => ['required'],
+                'password' => ['required']];
     }
 
     /**
@@ -86,7 +89,8 @@ class UserLogin implements ServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return [];
+        return ['username.required' => Lang::get("global.required_field", ['field' => 'username']),
+                'password.required' => Lang::get("global.required_field", ['field' => 'password'])];
     }
 
     /**
@@ -100,7 +104,7 @@ class UserLogin implements ServiceInterface
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -153,9 +157,11 @@ class UserLogin implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
-        return true;
+        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
+        $this->validateErrors = $validator->errors()->toArray();
+        return !$validator->fails();
     }
 
     /**
@@ -176,6 +182,12 @@ class UserLogin implements ServiceInterface
             @session_destroy();
             session_unset();
             throw new ServiceActionException(\Lang::get('global.login_processor_blocked1'));
+        }
+
+        if ($this->user->attributes->verified != 1) {
+            @session_destroy();
+            session_unset();
+            throw new ServiceActionException(\Lang::get('global.login_processor_verified'));
         }
 
         // blockuntil: this user has a block until date
@@ -254,6 +266,10 @@ class UserLogin implements ServiceInterface
         $this->user->attributes->sessionid = $currentsessionid;
         $this->user->attributes->save();
 
+        $this->user->refresh_token = hash('sha256', Str::random(32));
+        $this->user->access_token = hash('sha256', Str::random(32));
+        $this->user->valid_to = Carbon::now()->addHours(11);
+        $this->user->save();
 
         // get user's document groups
         $i = 0;

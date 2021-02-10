@@ -28,6 +28,16 @@ if (!function_exists('evolutionCMS')) {
     }
 }
 
+if (!function_exists('evo')) {
+    /**
+     * @return DocumentParser
+     */
+    function evo()
+    {
+        return evolutionCMS();
+    }
+}
+
 if (!function_exists('genEvoSessionName')) {
     /**
      * @return string
@@ -70,9 +80,22 @@ if (!function_exists('startCMSSession')) {
 
         if (SESSION_STORAGE == 'redis' && class_exists('Redis')) {
             $redis = new Redis();
-            if ($redis->connect(REDIS_HOST, REDIS_PORT) && $redis->select(0)) {
-                $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
-                session_set_save_handler($handler);
+            if ($redis->connect(env('REDIS_HOST', '127.0.0.1'),
+                    env('REDIS_PORT', 6379),
+                    env('REDIS_TIMEOUT', 60),
+                    NULL,
+                    0,
+                    0,
+                    ['auth' => [env('REDIS_USER', null), env('REDIS_PASS', null)]])
+                && $redis->select(env('REDIS_SESSION_DATABASE', 0))) {
+                try {
+                    $handler = new \suffi\RedisSessionHandler\RedisSessionHandler($redis);
+                    session_set_save_handler($handler);
+                } catch (RedisException $exception) {
+
+                } catch (\Exception $exception) {
+
+                }
             }
         }
 

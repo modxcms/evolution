@@ -23,13 +23,6 @@ abstract class HasOneOrMany extends Relation
     protected $localKey;
 
     /**
-     * The count of self joins.
-     *
-     * @var int
-     */
-    protected static $selfJoinCount = 0;
-
-    /**
      * Create a new has one or many relationship instance.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -57,6 +50,23 @@ abstract class HasOneOrMany extends Relation
         return tap($this->related->newInstance($attributes), function ($instance) {
             $this->setForeignAttributesForCreate($instance);
         });
+    }
+
+    /**
+     * Create and return an un-saved instances of the related models.
+     *
+     * @param  iterable  $records
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function makeMany($records)
+    {
+        $instances = $this->related->newCollection();
+
+        foreach ($records as $record) {
+            $instances->push($this->make($record));
+        }
+
+        return $instances;
     }
 
     /**
@@ -196,7 +206,7 @@ abstract class HasOneOrMany extends Relation
      * @param  array  $values
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function firstOrNew(array $attributes, array $values = [])
+    public function firstOrNew(array $attributes = [], array $values = [])
     {
         if (is_null($instance = $this->where($attributes)->first())) {
             $instance = $this->related->newInstance($attributes + $values);
@@ -214,7 +224,7 @@ abstract class HasOneOrMany extends Relation
      * @param  array  $values
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function firstOrCreate(array $attributes, array $values = [])
+    public function firstOrCreate(array $attributes = [], array $values = [])
     {
         if (is_null($instance = $this->where($attributes)->first())) {
             $instance = $this->create($attributes + $values);
@@ -344,16 +354,6 @@ abstract class HasOneOrMany extends Relation
         return $query->select($columns)->whereColumn(
             $this->getQualifiedParentKeyName(), '=', $hash.'.'.$this->getForeignKeyName()
         );
-    }
-
-    /**
-     * Get a relationship join table hash.
-     *
-     * @return string
-     */
-    public function getRelationCountHash()
-    {
-        return 'laravel_reserved_'.static::$selfJoinCount++;
     }
 
     /**

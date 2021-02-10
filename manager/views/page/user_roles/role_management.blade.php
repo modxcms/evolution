@@ -5,7 +5,7 @@
     </h2>
     <script>tpResources.addTabPage(document.getElementById('{{ $tabIndexPageName }}'));</script>
 
-    <div class="container container-body">
+    <div class="">
         <div class="form-group">
             {!! ManagerTheme::getLexicon('role_management_msg') !!}
             <a class="btn btn-secondary btn-sm" href="{{ (new EvolutionCMS\Models\UserRole)->makeUrl('actions.new') }}">

@@ -37,7 +37,6 @@ class EventLog extends Eloquent\Model
 
 	protected $casts = [
 		'eventid' => 'int',
-		'createdon' => 'int',
 		'type' => 'int',
 		'user' => 'int',
 		'usertype' => 'int'

@@ -58,7 +58,7 @@ if(!function_exists('propertiesNameValue')) {
         return $parameter;
     }
 }
-$table_prefix = $modx->db->config['table_prefix'];
+$table_prefix = EvolutionCms()->getDatabase()->getConfig('prefix');
 $setupPath = $modulePath;
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
@@ -71,10 +71,10 @@ if (isset ($_POST['template']) || $installData) {
     foreach ($moduleTemplates as $k=>$moduleTemplate) {
         $installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
         if($installSample || in_array($k, $selTemplates)) {
-            $name = $modx->db->escape($moduleTemplate[0]);
-            $desc = $modx->db->escape($moduleTemplate[1]);
-            $category = $modx->db->escape($moduleTemplate[4]);
-            $locked = $modx->db->escape($moduleTemplate[5]);
+            $name = EvolutionCms()->getDatabase()->escape($moduleTemplate[0]);
+            $desc = EvolutionCms()->getDatabase()->escape($moduleTemplate[1]);
+            $category = EvolutionCms()->getDatabase()->escape($moduleTemplate[4]);
+            $locked = EvolutionCms()->getDatabase()->escape($moduleTemplate[5]);
             $filecontent = $moduleTemplate[3];
             if (!file_exists($filecontent)) {
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -84,20 +84,20 @@ if (isset ($_POST['template']) || $installData) {
 
                 // Strip the first comment up top
                 $template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $template = $modx->db->escape($template);
+                $template = EvolutionCms()->getDatabase()->escape($template);
 
                 // See if the template already exists
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_templates` WHERE templatename='$name'");
+                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_templates` WHERE templatename='$name'");
 
-                if ($modx->db->getRecordCount($rs)) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category_id', locked='$locked'  WHERE templatename='$name';")) {
+                if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
+                    if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category_id', locked='$locked'  WHERE templatename='$name';")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category_id','$locked');")) {
+                    if (!@ EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category_id','$locked');")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -116,28 +116,28 @@ if (isset ($_POST['tv']) || $installData) {
     foreach ($moduleTVs as $k=>$moduleTV) {
         $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
         if($installSample || in_array($k, $selTVs)) {
-            $name = $modx->db->escape($moduleTV[0]);
-            $caption = $modx->db->escape($moduleTV[1]);
-            $desc = $modx->db->escape($moduleTV[2]);
-            $input_type = $modx->db->escape($moduleTV[3]);
-            $input_options = $modx->db->escape($moduleTV[4]);
-            $input_default = $modx->db->escape($moduleTV[5]);
-            $output_widget = $modx->db->escape($moduleTV[6]);
-            $output_widget_params = $modx->db->escape($moduleTV[7]);
+            $name = EvolutionCms()->getDatabase()->escape($moduleTV[0]);
+            $caption = EvolutionCms()->getDatabase()->escape($moduleTV[1]);
+            $desc = EvolutionCms()->getDatabase()->escape($moduleTV[2]);
+            $input_type = EvolutionCms()->getDatabase()->escape($moduleTV[3]);
+            $input_options = EvolutionCms()->getDatabase()->escape($moduleTV[4]);
+            $input_default = EvolutionCms()->getDatabase()->escape($moduleTV[5]);
+            $output_widget = EvolutionCms()->getDatabase()->escape($moduleTV[6]);
+            $output_widget_params = EvolutionCms()->getDatabase()->escape($moduleTV[7]);
             $filecontent = $moduleTV[8];
             $assignments = $moduleTV[9];
-            $category = $modx->db->escape($moduleTV[10]);
-            $locked = $modx->db->escape($moduleTV[11]);
+            $category = EvolutionCms()->getDatabase()->escape($moduleTV[10]);
+            $locked = EvolutionCms()->getDatabase()->escape($moduleTV[11]);
 
 
             // Create the category if it does not already exist
             $category = getCreateDbCategory($category, $sqlParser);
 
-            $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_tmplvars` WHERE name='$name'");
-            if ($modx->db->getRecordCount($rs)) {
+            $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_tmplvars` WHERE name='$name'");
+            if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
                 $insert = true;
-                while($row = $modx->db->getRow($rs,'assoc')) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category='$category', locked='$locked', elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id='{$row['id']}';")) {
+                while($row = EvolutionCms()->getDatabase()->getRow($rs,'assoc')) {
+                    if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category='$category', locked='$locked', elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id='{$row['id']}';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -147,7 +147,7 @@ if (isset ($_POST['tv']) || $installData) {
             } else {
                 //$q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM `" . $table_prefix . "categories` WHERE `category` = '$category'),$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
                 $q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc','$category','$locked','$input_options','$output_widget','$output_widget_params','$input_default');";
-                if (!@ $modx->db->query($q)) {
+                if (!@ EvolutionCms()->getDatabase()->query($q)) {
                     echo "<p>" . mysql_error() . "</p>";
                     return;
                 }
@@ -161,21 +161,21 @@ if (isset ($_POST['tv']) || $installData) {
                 if (count($assignments) > 0) {
 
                     // remove existing tv -> template assignments
-                    $ds=$modx->db->query("SELECT id FROM `".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';" );
-                    $row = $modx->db->getRow($ds,'assoc');
+                    $ds=EvolutionCms()->getDatabase()->query("SELECT id FROM `".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';" );
+                    $row = EvolutionCms()->getDatabase()->getRow($ds,'assoc');
                     $id = $row["id"];
-                    $modx->db->query("DELETE FROM $dbase.`" . $table_prefix . "site_tmplvar_templates` WHERE tmplvarid = '$id';");
+                    EvolutionCms()->getDatabase()->query("DELETE FROM $dbase.`" . $table_prefix . "site_tmplvar_templates` WHERE tmplvarid = '$id';");
 
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
-                        $template = $modx->db->escape($assignment);
+                        $template = EvolutionCms()->getDatabase()->escape($assignment);
                         $where = "WHERE templatename='$template'";
                         if ($template=='*') $where ='';
-                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` $where;" );
+                        $ts = EvolutionCms()->getDatabase()->query("SELECT id FROM `".$table_prefix."site_templates` $where;" );
                         if ($ds && $ts) {
-                            $tRow = $modx->db->getRow($ts,'assoc');
+                            $tRow = EvolutionCms()->getDatabase()->getRow($ts,'assoc');
                             $templateId = $tRow['id'];
-                            $modx->db->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES('$id', '$templateId');");
+                            EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES('$id', '$templateId');");
                        }
                     }
                 }
@@ -192,10 +192,10 @@ if (isset ($_POST['chunk']) || $installData) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
         if($installSample || in_array($k, $selChunks)) {
 
-            $name = $modx->db->escape($moduleChunk[0]);
-            $desc = $modx->db->escape($moduleChunk[1]);
-            $category = $modx->db->escape($moduleChunk[3]);
-            $overwrite = $modx->db->escape($moduleChunk[4]);
+            $name = EvolutionCms()->getDatabase()->escape($moduleChunk[0]);
+            $desc = EvolutionCms()->getDatabase()->escape($moduleChunk[1]);
+            $category = EvolutionCms()->getDatabase()->escape($moduleChunk[3]);
+            $overwrite = EvolutionCms()->getDatabase()->escape($moduleChunk[4]);
             $filecontent = $moduleChunk[2];
 
             if (!file_exists($filecontent))
@@ -206,17 +206,17 @@ if (isset ($_POST['chunk']) || $installData) {
                 $category_id = getCreateDbCategory($category, $sqlParser);
 
                 $chunk = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-                $chunk = $modx->db->escape($chunk);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$name'");
-                $count_original_name = $modx->db->getRecordCount($rs);
+                $chunk = EvolutionCms()->getDatabase()->escape($chunk);
+                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$name'");
+                $count_original_name = EvolutionCms()->getDatabase()->getRecordCount($rs);
                 if($overwrite == 'false') {
                     $newname = $name . '-' . str_replace('.', '_', $modx_version);
-                    $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'");
-                    $count_new_name = $modx->db->getRecordCount($rs);
+                    $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'");
+                    $count_new_name = EvolutionCms()->getDatabase()->getRecordCount($rs);
                 }
                 $update = $count_original_name > 0 && $overwrite == 'true';
                 if ($update) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category='$category_id' WHERE name='$name';")) {
+                    if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category='$category_id' WHERE name='$name';")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -226,7 +226,7 @@ if (isset ($_POST['chunk']) || $installData) {
                     if($count_original_name > 0 && $overwrite == 'false') {
                         $name = $newname;
                     }
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk','$category_id');")) {
+                    if (!@ EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk','$category_id');")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -245,13 +245,13 @@ if (isset ($_POST['module']) || $installData) {
     foreach ($moduleModules as $k=>$moduleModule) {
         $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
         if($installSample || in_array($k, $selModules)) {
-            $name = $modx->db->escape($moduleModule[0]);
-            $desc = $modx->db->escape($moduleModule[1]);
+            $name = EvolutionCms()->getDatabase()->escape($moduleModule[0]);
+            $desc = EvolutionCms()->getDatabase()->escape($moduleModule[1]);
             $filecontent = $moduleModule[2];
             $properties = $moduleModule[3];
-            $guid = $modx->db->escape($moduleModule[4]);
-            $shared = $modx->db->escape($moduleModule[5]);
-            $category = $modx->db->escape($moduleModule[6]);
+            $guid = EvolutionCms()->getDatabase()->escape($moduleModule[4]);
+            $shared = EvolutionCms()->getDatabase()->escape($moduleModule[5]);
+            $category = EvolutionCms()->getDatabase()->escape($moduleModule[6]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
@@ -262,19 +262,19 @@ if (isset ($_POST['module']) || $installData) {
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                 // remove installer docblock
                 $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
-                $module = $modx->db->escape($module);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
-                if ($modx->db->getRecordCount($rs)) {
-                    $row = $modx->db->getRow($rs,'assoc');
-                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
+                $module = EvolutionCms()->getDatabase()->escape($module);
+                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
+                if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
+                    $row = EvolutionCms()->getDatabase()->getRow($rs,'assoc');
+                    $props = EvolutionCms()->getDatabase()->escape(propUpdate($properties,$row['properties']));
+                    if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', '$category');")) {
+                    $properties = EvolutionCms()->getDatabase()->escape(parseProperties($properties, true));
+                    if (!@ EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', '$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -292,18 +292,18 @@ if (isset ($_POST['plugin']) || $installData) {
     foreach ($modulePlugins as $k=>$modulePlugin) {
         $installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
         if($installSample || in_array($k, $selPlugs)) {
-            $name = $modx->db->escape($modulePlugin[0]);
-            $desc = $modx->db->escape($modulePlugin[1]);
+            $name = EvolutionCms()->getDatabase()->escape($modulePlugin[0]);
+            $desc = EvolutionCms()->getDatabase()->escape($modulePlugin[1]);
             $filecontent = $modulePlugin[2];
             $properties = $modulePlugin[3];
             $events = explode(",", $modulePlugin[4]);
-            $guid = $modx->db->escape($modulePlugin[5]);
-            $category = $modx->db->escape($modulePlugin[6]);
+            $guid = EvolutionCms()->getDatabase()->escape($modulePlugin[5]);
+            $category = EvolutionCms()->getDatabase()->escape($modulePlugin[6]);
             $leg_names = '';
             $disabled = $modulePlugin[9];
             if(array_key_exists(7, $modulePlugin)) {
                 // parse comma-separated legacy names and prepare them for sql IN clause
-                $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', $modx->db->escape($modulePlugin[7]))) . "'";
+                $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', EvolutionCms()->getDatabase()->escape($modulePlugin[7]))) . "'";
             }
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -312,7 +312,7 @@ if (isset ($_POST['plugin']) || $installData) {
                 // disable legacy versions based on legacy_names provided
                 if(!empty($leg_names)) {
                     $update_query = "UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);";
-                    $rs = $modx->db->query($update_query);
+                    $rs = EvolutionCms()->getDatabase()->query($update_query);
                 }
 
                 // Create the category if it does not already exist
@@ -321,21 +321,21 @@ if (isset ($_POST['plugin']) || $installData) {
                 $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                 // remove installer docblock
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
-                $plugin = $modx->db->escape($plugin);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name' ORDER BY id");
+                $plugin = EvolutionCms()->getDatabase()->escape($plugin);
+                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name' ORDER BY id");
                 $prev_id = null;
-                if ($modx->db->getRecordCount($rs)) {
+                if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
                     $insert = true;
-                    while($row = $modx->db->getRow($rs,'assoc')) {
-                        $props = $modx->db->escape(propUpdate($properties,$row['properties']));
+                    while($row = EvolutionCms()->getDatabase()->getRow($rs,'assoc')) {
+                        $props = EvolutionCms()->getDatabase()->escape(propUpdate($properties,$row['properties']));
                         if($row['description'] == $desc){
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id='{$row['id']}';")) {
+                            if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id='{$row['id']}';")) {
                                 echo "<p>" . mysql_error() . "</p>";
                                 return;
                             }
                             $insert = false;
                         } else {
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE id='{$row['id']}';")) {
+                            if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE id='{$row['id']}';")) {
                                 echo "<p>".mysql_error()."</p>";
                                 return;
                             }
@@ -343,15 +343,15 @@ if (isset ($_POST['plugin']) || $installData) {
                         $prev_id = $row['id'];
                     }
                     if($insert === true) {
-                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0','$category');" )) {
+                        if(!@EvolutionCms()->getDatabase()->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$props','$guid','0','$category');" )) {
                             echo "<p>".mysql_error()."</p>";
                             return;
                         }
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','$disabled','$category');")) {
+                    $properties = EvolutionCms()->getDatabase()->escape(parseProperties($properties, true));
+                    if (!@ EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','$disabled','$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -360,17 +360,17 @@ if (isset ($_POST['plugin']) || $installData) {
                 }
                 // add system events
                 if (count($events) > 0) {
-                    $ds=$modx->db->query("SELECT id FROM `".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc' ORDER BY id DESC LIMIT 1;" );
+                    $ds=EvolutionCms()->getDatabase()->query("SELECT id FROM `".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc' ORDER BY id DESC LIMIT 1;" );
                     if ($ds) {
-                        $row = $modx->db->getRow($ds,'assoc');
+                        $row = EvolutionCms()->getDatabase()->getRow($ds,'assoc');
                         $id = $row["id"];
                         $_events = implode("','", $events);
 
                         // add new events
                         if ($prev_id) {
-                            $prev_id = $modx->db->escape($prev_id);
+                            $prev_id = EvolutionCms()->getDatabase()->escape($prev_id);
 
-                            $modx->db->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`)
+                            EvolutionCms()->getDatabase()->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`)
                                 SELECT {$id} as 'pluginid', `se`.`id` AS `evtid`, COALESCE(`spe`.`priority`, MAX(`spe2`.`priority`) + 1, 0) AS `priority`
                                 FROM `{$table_prefix}system_eventnames` `se`
                                 LEFT JOIN `{$table_prefix}site_plugin_events` `spe` ON `spe`.`evtid` = `se`.`id` AND `spe`.`pluginid` = {$prev_id}
@@ -379,7 +379,7 @@ if (isset ($_POST['plugin']) || $installData) {
                                 GROUP BY `se`.`id`
                             ");
                         } else {
-                            $modx->db->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`) 
+                            EvolutionCms()->getDatabase()->query("INSERT IGNORE INTO `{$table_prefix}site_plugin_events` (`pluginid`, `evtid`, `priority`) 
                                 SELECT {$id} as `pluginid`, `se`.`id` as `evtid`, COALESCE(MAX(`spe`.`priority`) + 1, 0) as `priority` 
                                 FROM `{$table_prefix}system_eventnames` `se` 
                                 LEFT JOIN `{$table_prefix}site_plugin_events` `spe` ON `spe`.`evtid` = `se`.`id` 
@@ -388,7 +388,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
 
                         // remove existing events
-                        $modx->db->query("DELETE `pe` FROM `{$table_prefix}site_plugin_events` `pe` LEFT JOIN `{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
+                        EvolutionCms()->getDatabase()->query("DELETE `pe` FROM `{$table_prefix}site_plugin_events` `pe` LEFT JOIN `{$table_prefix}system_eventnames` `se` ON `pe`.`evtid`=`se`.`id` AND `name` IN ('{$_events}') WHERE ISNULL(`name`) AND `pluginid` = {$id}");
                     }
                 }
             }
@@ -404,11 +404,11 @@ if (isset ($_POST['snippet']) || $installData) {
         if (!is_array($moduleSnippet) || !isset($moduleSnippet[5]) || !is_array($moduleSnippet[5])) continue;
         $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         if($installSample || in_array($k, $selSnips)) {
-            $name = $modx->db->escape($moduleSnippet[0]);
-            $desc = $modx->db->escape($moduleSnippet[1]);
+            $name = EvolutionCms()->getDatabase()->escape($moduleSnippet[0]);
+            $desc = EvolutionCms()->getDatabase()->escape($moduleSnippet[1]);
             $filecontent = $moduleSnippet[2];
             $properties = $moduleSnippet[3];
-            $category = $modx->db->escape($moduleSnippet[4]);
+            $category = EvolutionCms()->getDatabase()->escape($moduleSnippet[4]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
@@ -419,21 +419,21 @@ if (isset ($_POST['snippet']) || $installData) {
                 $snippet = end($tmp);
                 // remove installer docblock
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
-                $snippet = $modx->db->escape($snippet);
-                $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
+                $snippet = EvolutionCms()->getDatabase()->escape($snippet);
+                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
 
-                if ($modx->db->getRecordCount($rs)) {
+                if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
 
-                    $row = $modx->db->getRow($rs,'assoc');
-                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
-                    if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
+                    $row = EvolutionCms()->getDatabase()->getRow($rs,'assoc');
+                    $props = EvolutionCms()->getDatabase()->escape(propUpdate($properties,$row['properties']));
+                    if (!EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = $modx->db->escape(parseProperties($properties, true));
-                    if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties','$category');")) {
+                    $properties = EvolutionCms()->getDatabase()->escape(parseProperties($properties, true));
+                    if (!EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties','$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -549,20 +549,18 @@ function isJson($string, $returnData=false) {
 
 function getCreateDbCategory($category, $sqlParser) {
 
-    global $modx;
-    $dbase = $modx->db->config['dbase'];
-    $table_prefix = $modx->db->config['table_prefix'];
+    $table_prefix = EvolutionCms()->getDatabase()->getConfig('prefix');
     $category_id = 0;
     if(!empty($category)) {
-        $category = $modx->db->escape($category);
-        $rs = $modx->db->query("SELECT id FROM `".$table_prefix."categories` WHERE category = '".$category."'");
-        if($modx->db->getRecordCount($rs) && ($row = $modx->db->getRow($rs,'assoc'))) {
+        $category = EvolutionCms()->getDatabase()->escape($category);
+        $rs = EvolutionCms()->getDatabase()->query("SELECT id FROM `".$table_prefix."categories` WHERE category = '".$category."'");
+        if(EvolutionCms()->getDatabase()->getRecordCount($rs) && ($row = EvolutionCms()->getDatabase()->getRow($rs,'assoc'))) {
             $category_id = $row['id'];
         } else {
             $q = "INSERT INTO `".$table_prefix."categories` (`category`) VALUES ('{$category}');";
-            $rs = $modx->db->query($q);
+            $rs = EvolutionCms()->getDatabase()->query($q);
             if($rs) {
-                $category_id = $modx->db->getInsertId($sqlParser->conn);
+                $category_id = EvolutionCms()->getDatabase()->getInsertId($sqlParser->conn);
             }
         }
     }

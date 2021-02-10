@@ -1,6 +1,7 @@
 <?php namespace EvolutionCMS\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class BladeServiceProvider extends BaseServiceProvider
 {
@@ -12,5 +13,12 @@ class BladeServiceProvider extends BaseServiceProvider
                 $this->app->get('blade.compiler')->directive($name, $callback);
             }
         }
+        Blade::if('auth', function () {
+            return EvolutionCMS()->getLoginUserID() !== false;
+        });
+
+        Blade::if('guest', function () {
+            return EvolutionCMS()->getLoginUserID() === false;
+        });
     }
 }

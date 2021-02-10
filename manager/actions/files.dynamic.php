@@ -18,8 +18,8 @@ $excludes = array(
     '.idea'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
-$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
+$editablefiles = explode(',', 'txt,php,tpl,less,sass,scss,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,scss,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
 $viewablefiles = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles = add_dot($editablefiles);
@@ -461,7 +461,7 @@ if (substr($webstart_path, 0, 1) == '/') {
 
             <?php
             if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
-                @ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
+                @ini_set("upload_max_filesize", $upload_maxsize ?? 0); // modified by raymond
                 ?>
 
                 <form name="upload" enctype="multipart/form-data" action="index.php" method="post">

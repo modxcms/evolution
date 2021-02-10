@@ -24,7 +24,7 @@ class UserSetGroups extends UserSetRole
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;

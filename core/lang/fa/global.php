@@ -936,6 +936,8 @@ $_lang["template_name"] = 'اسم پوسته یا قالب';
 $_lang["template_no_tv"] = 'هنوز هیچ متغیری از متغیرهای قالبها و پوسته ها در این قالب یا پوسته تعریف و کاربردی نشده';
 $_lang["template_reset_all"] = 'همه ی صفحات از پوسته و قالب پیشفرض مورد نظر استفاده کنند';
 $_lang["template_reset_specific"] = 'صفر یا از نو کردن \'%s\' صفحه';
+$_lang["template_assigned_blade_file"] = 'پرونده blade مربوطه:';
+$_lang["template_create_blade_file"] = 'در ذخیره فایل الگوی ایجاد کنید';
 $_lang["template_title"] = 'ایجاد / ویرایش پوسته یا قالب';
 $_lang["template_tv_edit"] = 'ترتیب قرارگیری متغیرهای قالب یا پوسته را ویرایش کنید';
 $_lang["template_tv_edit_message"] = 'Drag to reorder the Template Variables for this template.';
@@ -1211,5 +1213,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

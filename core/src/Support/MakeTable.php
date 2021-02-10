@@ -557,7 +557,7 @@ class MakeTable implements MakeTableInterface
      * @param string $qs And optional query string to be appended to the link.
      * @return string
      */
-    public function createPageLink($link = '', $pageNum, $displayText, $currentPage = false, $qs = '')
+    public function createPageLink($link = '', $pageNum = 1, $displayText = '', $currentPage = false, $qs = '')
     {
         $modx = evolutionCMS();
         $orderBy = !empty($_GET['orderby']) ? '&orderby=' . $_GET['orderby'] : '';

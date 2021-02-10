@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="[+site_url+]/assets/modules/store/js/fancybox/jquery.fancybox.css" media="screen" />
     <script src="[+site_url+]/assets/modules/store/js/jquery.min.js" type="text/javascript"></script>
-    <script src="[+site_url+]/assets/modules/store/js/store.js" type="text/javascript"></script>
+    <script src="[+site_url+]/assets/modules/store/js/store.js?v=1.0.1" type="text/javascript"></script>
     <script type="text/javascript" src="[+site_url+]/assets/modules/store/js/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
     <script type="text/javascript" src="[+site_url+]/assets/modules/store/js/fancybox/jquery.fancybox.pack.js"></script>
     [+onManagerMainFrameHeaderHTMLBlock+]
@@ -188,7 +188,7 @@
                                 <button class="btn btn-sm btn-secondary pull-right" onclick="window.parent.modx.popup({content:'<h2>%title% %version%</h2><h3>%type%</h3><p>%description%</p><span class=\'fa fa-refresh\'></span> version: <strong>%version%</strong><br/><span class=\'fa fa-clock-o\'></span> Updated: <strong>%date%</strong><br/><span class=\'fa fa-user\'> </span> Author: <strong>%author%</strong><br/><span class=\'fa fa-download\'> </span>  Downloads:  <strong>%downloads%</strong>',type:'default',width:'400px',height:'400px',hide:0,hover:0,overlay:0,overlayclose:1})"><i class="fa fa-info"></i> more</button>
                             </div>
                             <div class="install_extras">
-                                <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a>
+                                <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%" data-dependencies="%dependencies%">[+install+]</a>
                                 <a href="#" class="btn btn-primary item-reinstall" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+reinstall+] <i class="curr">[+installed+]</i></a>
                                 <a href="#" class="btn btn-primary item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+update+] <i class="curr">[+installed+] - %current_version%</i></a>
                                 <select name="link"></select>

@@ -1,6 +1,10 @@
 <?php
+
+use EvolutionCMS\Models\SiteContent;
+
 define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
 define('MODX_API_MODE', true);
+
 if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
     $config = require dirname(__DIR__) . '/config.php';
 } elseif (file_exists(dirname(__DIR__, 4) . '/config.php')) {
@@ -11,7 +15,7 @@ if (file_exists(dirname(__DIR__, 3) . '/config.php')) {
     ];
 }
 
-if (!empty($config['root']) && file_exists($config['root']. '/index.php')) {
+if (!empty($config['root']) && file_exists($config['root'] . '/index.php')) {
     require_once $config['root'] . '/index.php';
 } else {
     echo "<h3>Unable to load configuration settings</h3>";
@@ -37,11 +41,12 @@ $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroup
 
 // set limit sql query
 $limit = $modx->getConfig('number_of_results');
-header('Content-Type: text/html; charset='.$modx->getConfig('modx_charset'), true);
+header('Content-Type: text/html; charset=' . $modx->getConfig('modx_charset'), true);
 
 if (isset($action)) {
     switch ($action) {
-        case '1': {
+        case '1':
+        {
             switch ($frame) {
                 case 'nodes':
 
@@ -93,7 +98,7 @@ if (isset($action)) {
 
                     // check for deleted documents on reload
                     if ($expandAll == 2) {
-                        if (!is_null(\EvolutionCMS\Models\SiteContent::query()->withTrashed()
+                        if (!is_null(SiteContent::query()->withTrashed()
                             ->where('deleted', 1)->first())) {
                             echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
                         }
@@ -104,11 +109,13 @@ if (isset($action)) {
             break;
         }
 
-        case '76': {
+        case '76':
+        {
 
             $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? htmlentities($_REQUEST['elements']) : '';
 
             if ($elements) {
+
                 $output = '';
                 $items = '';
                 $sql = '';
@@ -120,10 +127,9 @@ if (isset($action)) {
                         $a = 16;
                         $sql = \EvolutionCMS\Models\SiteTemplate::query()
                             ->select('id', 'templatename', 'templatename as name', 'locked')
-                            ->orderBy('templatename', 'ASC')
-                            ->take($limit);
-                        if($filter != ''){
-                            $sql = $sql->where('templatename', 'LIKE', '%'.$filter.'%');
+                            ->orderBy('templatename', 'ASC');
+                        if ($filter != '') {
+                            $sql = $sql->where('templatename', 'LIKE', '%' . $filter . '%');
                         }
 
                         if ($modx->hasPermission('new_template')) {
@@ -134,16 +140,21 @@ if (isset($action)) {
 
                     case 'element_tplvars':
                         $a = 301;
+                        $prefix = \DB::getTablePrefix();
                         $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', 'site_tmplvar_templates.tmplvarid as disabled')
                             ->leftJoin('site_tmplvar_templates', function ($join) {
                                 $join->on('site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id');
                                 $join->on('site_tmplvar_templates.templateid', '>', \DB::raw(0));
                             })
+                            ->leftJoin('user_role_vars', function ($join) {
+                                $join->on('user_role_vars.tmplvarid', '=', 'site_tmplvars.id');
+                                $join->on('user_role_vars.roleid', '>', \DB::raw(0));
+                            })
                             ->orderBy('site_tmplvars.name')
-                            ->groupBy(['site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid'])
-                            ->take($limit);
-                        if($filter != ''){
-                            $sql = $sql->where('site_tmplvars.name', 'LIKE', '%'.$filter.'%');
+                            ->groupBy(['site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid']);
+
+                        if ($filter != '') {
+                            $sql = $sql->where('site_tmplvars.name', 'LIKE', '%' . $filter . '%');
                         }
 
                         if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
@@ -155,9 +166,9 @@ if (isset($action)) {
                     case 'element_htmlsnippets':
                         $a = 78;
                         $sql = \EvolutionCMS\Models\SiteHtmlsnippet::select('id', 'name', 'locked', 'disabled')
-                            ->orderBy('name', 'ASC')->take($limit);
-                        if($filter != ''){
-                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                            ->orderBy('name', 'ASC');
+                        if ($filter != '') {
+                            $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
                         if ($modx->hasPermission('new_chunk')) {
@@ -169,9 +180,9 @@ if (isset($action)) {
                     case 'element_snippets':
                         $a = 22;
                         $sql = \EvolutionCMS\Models\SiteSnippet::select('id', 'name', 'locked', 'disabled')
-                            ->orderBy('name', 'ASC')->take($limit);
-                        if($filter != ''){
-                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                            ->orderBy('name', 'ASC');
+                        if ($filter != '') {
+                            $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
                         if ($modx->hasPermission('new_snippet')) {
@@ -183,9 +194,9 @@ if (isset($action)) {
                     case 'element_plugins':
                         $a = 102;
                         $sql = \EvolutionCMS\Models\SitePlugin::select('id', 'name', 'locked', 'disabled')
-                            ->orderBy('name', 'ASC')->take($limit);
-                        if($filter != ''){
-                            $sql = $sql->where('name', 'LIKE', '%'.$filter.'%');
+                            ->orderBy('name', 'ASC');
+                        if ($filter != '') {
+                            $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
                         if ($modx->hasPermission('new_plugin')) {
@@ -195,18 +206,19 @@ if (isset($action)) {
                         break;
                 }
 
-                if ($sql->count()>0) {
-                    if ($sql->count() == $limit) {
+                if ($sql->count() > 0) {
+                    if ($sql->get(['id'])->count() > $limit) {
                         $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
-                    foreach ($sql->get() as $row){
+
+                    foreach ($sql->take($limit)->get() as $row) {
                         $row = $row->toArray();
-                        if($a == 301 && !is_numeric($row['disabled'])) {
+                        if ($a == 301 && !is_numeric($row['disabled'])) {
                             $row['disabled'] = 1;
-                        }else {
+                        } else {
                             $row['disabled'] = 0;
                         }
-                        if(!isset($row['disabled'])) $row['disabled'] = 0;
+                        if (!isset($row['disabled'])) $row['disabled'] = 0;
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
                             continue;
                         }
@@ -227,19 +239,20 @@ if (isset($action)) {
             break;
         }
 
-        case '75': {
+        case '75':
+        {
             $a = 12;
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 
             $sql = \EvolutionCMS\Models\User::select('manager_users.*', 'user_attributes.blocked')
-                ->leftJoin('user_attributes', 'manager_users.id','=','user_attributes.internalKey')
-                ->orderBy('manager_users.username')->take($limit);
-            if($filter != ''){
-                $sql = $sql->where('manager_users.username', 'LIKE', '%'.$filter.'%');
+                ->leftJoin('user_attributes', 'manager_users.id', '=', 'user_attributes.internalKey')
+                ->orderBy('manager_users.username');
+            if ($filter != '') {
+                $sql = $sql->where('manager_users.username', 'LIKE', '%' . $filter . '%');
             }
-            if(!$modx->hasPermission('save_role')) {
+            if (!$modx->hasPermission('save_role')) {
                 $sql = $sql->where('user_attributes.role', '!=', \DB::raw(1));
             }
 
@@ -249,10 +262,10 @@ if (isset($action)) {
             }
 
             if ($count = $sql->count()) {
-                if ($count == $limit) {
+                if ($count > $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                foreach ($sql->get() as $row){
+                foreach ($sql->take($limit)->get() as $row) {
                     $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
@@ -268,17 +281,18 @@ if (isset($action)) {
             break;
         }
 
-        case '99': {
+        case '99':
+        {
             $a = 88;
             $output = '';
             $items = '';
             $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 
             $sql = \EvolutionCMS\Models\User::select('users.*', 'user_attributes.blocked')
-                ->leftJoin('user_attributes', 'users.id','=','user_attributes.internalKey')
-                ->orderBy('users.username')->take($limit);
-            if($filter != ''){
-                $sql = $sql->where('users.username', 'LIKE', '%'.$filter.'%');
+                ->leftJoin('user_attributes', 'users.id', '=', 'user_attributes.internalKey')
+                ->orderBy('users.username');
+            if ($filter != '') {
+                $sql = $sql->where('users.username', 'LIKE', '%' . $filter . '%');
             }
 
             if ($modx->hasPermission('new_user')) {
@@ -286,10 +300,10 @@ if (isset($action)) {
             }
 
             if ($count = $sql->count()) {
-                if ($count == $limit) {
+                if ($count > $limit) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
-                foreach ($sql->get() as $row){
+                foreach ($sql->take($limit)->get() as $row) {
                     $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
@@ -305,7 +319,8 @@ if (isset($action)) {
             break;
         }
 
-        case 'modxTagHelper': {
+        case 'modxTagHelper':
+        {
             $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $_REQUEST['name'] : false;
             $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $_REQUEST['type'] : false;
             $contextmenu = '';
@@ -313,7 +328,8 @@ if (isset($action)) {
             if ($role && $name && $type) {
                 switch ($type) {
                     case 'Snippet':
-                    case 'SnippetNoCache': {
+                    case 'SnippetNoCache':
+                    {
                         $snippet = \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->first();
 
                         if (!is_null($snippet)) {
@@ -347,8 +363,9 @@ if (isset($action)) {
 
                         break;
                     }
-                    case 'Chunk' : {
-                        $chunk  =\EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
+                    case 'Chunk' :
+                    {
+                        $chunk = \EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
 
                         if (!is_null($chunk)) {
                             $row = $chunk->toArray();
@@ -381,8 +398,9 @@ if (isset($action)) {
 
                         break;
                     }
-                    case 'AttributeValue': {
-                        $chunk  =\EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
+                    case 'AttributeValue':
+                    {
+                        $chunk = \EvolutionCMS\Models\SiteHtmlsnippet::query()->where('name', $name)->first();
 
                         if (!is_null($chunk)) {
                             $row = $chunk->toArray();
@@ -442,7 +460,8 @@ if (isset($action)) {
                         break;
                     }
                     case 'Placeholder' :
-                    case 'Tv' : {
+                    case 'Tv' :
+                    {
                         $default_field = array(
                             'id',
                             'type',
@@ -529,7 +548,8 @@ if (isset($action)) {
             break;
         }
 
-        case 'movedocument' : {
+        case 'movedocument' :
+        {
             $json = array();
 
             if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
@@ -541,12 +561,12 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = (int)\EvolutionCMS\Models\SiteContent::query()->find($id)->parent;
+                    $parentOld = (int)SiteContent::find($id)->parent;
 
                     $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
-                        'old_parent'  => $parentOld,
-                        'new_parent'  => $parent,
+                        'old_parent' => $parentOld,
+                        'new_parent' => $parent,
                     ]);
 
                     if (is_array($eventOut) && count($eventOut) > 0) {
@@ -585,39 +605,31 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            $resource = \EvolutionCMS\Models\SiteContent::find($id);
-                            $resource->parent = $parent;
-                            $resource->save();
+                            SiteContent::where('id', $id)->update([
+                                'parent' => $parent,
+                            ]);
 
                             if ($parent > 0) {
                                 // set parent isfolder = 1
-                                $parentResource = \EvolutionCMS\Models\SiteContent::find($parent);
-                                $parentResource->isfolder = 1;
-                                $parentResource->save();
+                                SiteContent::where('id', $parent)->update([
+                                    'isfolder' => 1,
+                                ]);
                             }
 
-                            if ($parent != $parentOld) {
+                            if ($parent != $parentOld && $parentOld > 0) {
                                 // check children docs and set parent isfolder
-                                if (\EvolutionCMS\Models\SiteContent::query()->where('parent', $parentOld)->count() > 0) {
-                                    if ($parentOld > 0) {
-                                        $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
-                                        $parentResource->isfolder = 1;
-                                        $parentResource->save();
-                                    }
-                                } else {
-                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($parentOld);
-                                    $parentResource->isfolder = 0;
-                                    $parentResource->save();
-                                }
+                                SiteContent::where('id', $parentOld)->update([
+                                    'isfolder' => SiteContent::where('parent', $parentOld)->count() > 0 ? 1 : 0,
+                                ]);
                             }
 
                             // set menuindex
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    $parentResource = \EvolutionCMS\Models\SiteContent::find($value);
-                                    $parentResource->menuindex = $key;
-                                    $parentResource->save();
+                                    SiteContent::where('id', $value)->update([
+                                        'menuindex' => $key,
+                                    ]);
                                 }
                             } else {
                                 // TODO: max(*) menuindex
@@ -628,8 +640,8 @@ if (isset($action)) {
 
                                 $modx->invokeEvent('onAfterMoveDocument', [
                                     'id_document' => $id,
-                                    'old_parent'  => $parentOld,
-                                    'new_parent'  => $parent,
+                                    'old_parent' => $parentOld,
+                                    'new_parent' => $parent,
                                 ]);
                             }
                         }
@@ -645,14 +657,15 @@ if (isset($action)) {
             break;
         }
 
-        case 'getLockedElements': {
+        case 'getLockedElements':
+        {
             $type = isset($_REQUEST['type']) ? (int)$_REQUEST['type'] : 0;
             $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
             $output = !!$modx->elementIsLocked($type, $id, true);
 
             if (!$output) {
-                $searchQuery = \EvolutionCMS\Models\SiteContent::query()->where('site_content.id', $id);
+                $searchQuery = SiteContent::query()->where('site_content.id', $id);
                 if ($role != 1) {
                     if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
                         $searchQuery = $searchQuery->join('document_groups', 'site_content.id', '=', 'document_groups.document')

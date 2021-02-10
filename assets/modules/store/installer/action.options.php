@@ -1,6 +1,6 @@
 
 
-<form name="install" id="install_form" action="?action=install" method="post">
+<form name="install" id="install_form" action="/manager/?id=1&a=112&action=install2_step" method="post">
   <div>
     <input type="hidden" value="1" name="options_selected" />
   </div>

@@ -53,13 +53,13 @@ class SqlParser {
 		}
 
 		// replace {} tags
-		$idata = str_replace('{PREFIX}', $modx->db->config['table_prefix'], $idata);
+		$idata = str_replace('{PREFIX}', $modx->db->getConfig('table_prefix'), $idata);
         $idata = str_replace('{TABLEENCODING}', $this->getTableEncoding(), $idata);
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
 		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
 		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
-		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
-		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
+		$idata = str_replace('{IMAGEPATH}', $this->imgPath, $idata);
+		$idata = str_replace('{IMAGEURL}', $this->imgUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);

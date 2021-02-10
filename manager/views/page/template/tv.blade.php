@@ -21,7 +21,7 @@
             <i class="{{ $_style['icon_eye'] }}"></i>
         </span>
     @else
-        <a href="{{ $item->makeUrl('actions.edit') }}&or={{ $action }}&oid={{ $data->getKey() }}">
+        <a href="{{ $item->makeUrl('actions.edit') }}&or={{ $action ?? 0 }}&oid={{ $item->getKey() }}">
             <i class="{{ $_style['icon_edit'] }}"></i> {{ ManagerTheme::getLexicon('edit') }}
         </a>
     @endif

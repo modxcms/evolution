@@ -19,7 +19,7 @@ $link_attributes = $_POST['link_attributes'];
 $isfolder = (int)$_POST['isfolder'];
 $richtext = (int)$_POST['richtext'];
 $published = (int)$_POST['published'];
-$parent = (int)get_by_key($_POST, 'parent', 0, 'is_scalar');
+$parentId = $parent = (int)get_by_key($_POST, 'parent', 0, 'is_scalar');
 $template = (int)$_POST['template'];
 $menuindex = !empty($_POST['menuindex']) ? (int)$_POST['menuindex'] : 0;
 $searchable = (int)$_POST['searchable'];
@@ -67,13 +67,13 @@ if ($modx->getConfig('friendly_urls')) {
         $alias = strtolower($modx->stripAlias(trim($pagetitle)));
         if(!$modx->getConfig('allow_duplicate_alias')) {
 
-            if (\EvolutionCMS\Models\SiteContent::query()
+            if (\EvolutionCMS\Models\SiteContent::withTrashed()
                     ->where('id', '<>', $id)
                     ->where('alias', $alias)->count() > 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
 
-                while (\EvolutionCMS\Models\SiteContent::query()
+                while (\EvolutionCMS\Models\SiteContent::withTrashed()
                     ->where('id', '<>', $id)
                     ->where('alias', $tempAlias)->count() > 0) {
                     $tempAlias = $alias;
@@ -83,13 +83,13 @@ if ($modx->getConfig('friendly_urls')) {
                 $alias = $tempAlias;
             }
         }else{
-            if (\EvolutionCMS\Models\SiteContent::query()
+            if (\EvolutionCMS\Models\SiteContent::withTrashed()
                     ->where('id', '<>', $id)
                     ->where('alias', $alias)
                     ->where('parent', $parent)->count() > 0) {
                 $cnt = 1;
                 $tempAlias = $alias;
-                while (\EvolutionCMS\Models\SiteContent::query()
+                while (\EvolutionCMS\Models\SiteContent::withTrashed()
                         ->where('id', '<>', $id)
                         ->where('alias', $tempAlias)
                         ->where('parent', $parent)->count() > 0) {
@@ -105,7 +105,7 @@ if ($modx->getConfig('friendly_urls')) {
     // check for duplicate alias name if not allowed
     elseif ($alias && !$modx->getConfig('allow_duplicate_alias')) {
         $alias = $modx->stripAlias($alias);
-        $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
+        $docid = \EvolutionCMS\Models\SiteContent::withTrashed()->select('id')
             ->where('id', '<>', $id)
             ->where('alias', $alias);
         if ($modx->getConfig('use_alias_path')) {
@@ -127,7 +127,7 @@ if ($modx->getConfig('friendly_urls')) {
     // strip alias of special characters
     elseif ($alias) {
         $alias = $modx->stripAlias($alias);
-        $docid = \EvolutionCMS\Models\SiteContent::query()->select('id')
+        $docid = \EvolutionCMS\Models\SiteContent::withTrashed()->select('id')
             ->where('id', '<>', $id)
             ->where('alias', $alias)->where('parent', $parent)->first();
         if (!is_null($docid)) {
@@ -256,7 +256,7 @@ foreach ($tvs->toArray() as $row) {
 
 // get the document, but only if it already exists
 if ($actionToTake != "new") {
-    $existingDocument = \EvolutionCMS\Models\SiteContent::query()->find($id);
+    $existingDocument = \EvolutionCMS\Models\SiteContent::withTrashed()->find($id);
     if (is_null($existingDocument)) {
         $modx->webAlertAndQuit($_lang["error_no_results"]);
     }
@@ -321,7 +321,7 @@ switch ($actionToTake) {
             switch($modx->config['docid_incrmnt_method'])
             {
             case '1':
-                $id = \EvolutionCMS\Models\SiteContent::query()
+                $id = \EvolutionCMS\Models\SiteContent::withTrashed()
                     ->leftJoin('site_content as t1', 'site_content.id +1', '=','t1.id')
                     ->whereNull('t1.id')->min('site_content.id');
                 $id++;
@@ -364,7 +364,7 @@ switch ($actionToTake) {
         if ($id != '')
             $resourceArray["id"] = $id;
 
-        $key = \EvolutionCMS\Models\SiteContent::query()->create($resourceArray)->getKey();
+        $key = \EvolutionCMS\Models\SiteContent::withTrashed()->create($resourceArray)->getKey();
 
 
         $tvChanges = array();
@@ -406,7 +406,7 @@ switch ($actionToTake) {
         // update parent folder status
         if ($resourceArray['parent'] != 0) {
             $fields = array('isfolder' => 1);
-            \EvolutionCMS\Models\SiteContent::where('id',$resourceArray['parent'])->update(['isfolder'=>1]);
+            \EvolutionCMS\Models\SiteContent::withTrashed()->where('id',$resourceArray['parent'])->update(['isfolder'=>1]);
         }
 
         // invoke OnDocFormSave event
@@ -418,10 +418,6 @@ switch ($actionToTake) {
         // secure web documents - flag as private
         include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
         secureWebDocument($key);
-
-        // secure manager documents - flag as private
-        include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
-        secureMgrDocument($key);
 
         // Set the item name for logger
         $_SESSION['itemname'] = $no_esc_pagetitle;
@@ -435,10 +431,10 @@ switch ($actionToTake) {
         if ($_POST['stay'] != '') {
             // weblink
             if ($_POST['mode'] == "72")
-                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "72&pid=$parent";
+                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "72&pid=$parentId";
             // document
             if ($_POST['mode'] == "4")
-                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
+                $a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parentId";
             $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
         } else {
             $header = "Location: index.php?a=3&id=$key&r=1";
@@ -478,7 +474,7 @@ switch ($actionToTake) {
             }
 
             // check to see document is a folder
-            $child = \EvolutionCMS\Models\SiteContent::select('id')->where('parent', $id)->first();
+            $child = \EvolutionCMS\Models\SiteContent::withTrashed()->select('id')->where('parent', $id)->first();
             if (!is_null($child)) {
                 $resourceArray['isfolder'] = 1;
             }
@@ -518,7 +514,7 @@ switch ($actionToTake) {
                 "id" => $id
             ));
 
-            $resource = \EvolutionCMS\Models\SiteContent::query()->find($id);
+            $resource = \EvolutionCMS\Models\SiteContent::withTrashed()->find($id);
             foreach($resourceArray as $key=>$value){
                 $resource->{$key} = $value;
             }
@@ -606,16 +602,16 @@ switch ($actionToTake) {
 
             // do the parent stuff
             if ($resourceArray['parent'] != 0) {
-                $parent = \EvolutionCMS\Models\SiteContent::find($_REQUEST['parent']);
+                $parent = \EvolutionCMS\Models\SiteContent::withTrashed()->find($_REQUEST['parent']);
                 $parent->isfolder = 1;
                 $parent->save();
             }
 
             // finished moving the document, now check to see if the old_parent should no longer be a folder
-            $countChildOldParent = \EvolutionCMS\Models\SiteContent::where('parent', $oldparent)->count();
+            $countChildOldParent = \EvolutionCMS\Models\SiteContent::withTrashed()->where('parent', $oldparent)->count();
 
             if ($countChildOldParent == 0) {
-                $oldParent = \EvolutionCMS\Models\SiteContent::find($oldparent);
+                $oldParent = \EvolutionCMS\Models\SiteContent::withTrashed()->find($oldparent);
                 $oldParent->isfolder = 0;
                 $oldParent->save();
             }
@@ -631,9 +627,6 @@ switch ($actionToTake) {
             include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
             secureWebDocument($id);
 
-            // secure manager documents - flag as private
-            include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
-            secureMgrDocument($id);
 
             // Set the item name for logger
             $_SESSION['itemname'] = $no_esc_pagetitle;
@@ -653,10 +646,10 @@ switch ($actionToTake) {
                     $id = $_REQUEST['id'];
                     if ($type == "reference") {
                         // weblink
-                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "72&pid=$parent";
+                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "72&pid=$parentId";
                     } else {
                         // document
-                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
+                        $a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parentId";
                     }
                     $header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
                 } else {

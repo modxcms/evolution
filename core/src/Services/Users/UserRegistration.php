@@ -100,7 +100,7 @@ class UserRegistration implements ServiceInterface
             ));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -109,6 +109,10 @@ class UserRegistration implements ServiceInterface
 
         $this->userData['clearPassword'] = $this->userData['password'];
         $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
+        if (isset($this->userData['dob'])) {
+            if (!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+        }
+
         $user = User::create($this->userData);
         $this->userData['internalKey'] = $user->getKey();
         $user->attributes()->create($this->userData);
@@ -143,7 +147,7 @@ class UserRegistration implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();

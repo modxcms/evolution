@@ -14,17 +14,17 @@ $id = (int)$_POST['id'];
 $name = trim($_POST['name']);
 $description = $_POST['description'];
 $resourcefile = $_POST['resourcefile'];
-$enable_resource = $_POST['enable_resource'] == 'on' ? 1 : 0;
+$enable_resource = (isset($_POST['enable_resource']) && $_POST['enable_resource'] == 'on') ? 1 : 0;
 $icon = $_POST['icon'];
 //$category = (int)$_POST['category'];
-$disabled = $_POST['disabled'] == 'on' ? 1 : 0;
-$wrap = $_POST['wrap'] == 'on' ? 1 : 0;
-$locked = $_POST['locked'] == 'on' ? 1 : 0;
+$disabled = (isset($_POST['disabled']) && $_POST['disabled'] == 'on') == 'on' ? 1 : 0;
+$wrap = (isset($_POST['wrap']) && $_POST['wrap'] == 'on') == 'on' ? 1 : 0;
+$locked = (isset($_POST['locked']) && $_POST['locked'] == 'on') == 'on' ? 1 : 0;
 $modulecode = $_POST['post'];
 $properties = $_POST['properties'];
-$enable_sharedparams = $_POST['enable_sharedparams'] == 'on' ? 1 : 0;
+$enable_sharedparams = (isset($_POST['enable_sharedparams']) && $_POST['enable_sharedparams'] == 'on') == 'on' ? 1 : 0;
 $guid = $_POST['guid'];
-$parse_docblock = $_POST['parse_docblock'] == "1" ? '1' : '0';
+$parse_docblock = (isset($_POST['parse_docblock']) && $_POST['parse_docblock'] == 'on') == "1" ? '1' : '0';
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support

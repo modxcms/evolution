@@ -29,7 +29,9 @@
     "vendor-dir": "vendor"
   },
   "require": {
-    "php": ">=7.2"
+    "php": ">=7.3",
+    "ext-pdo": "*",
+    "ext-json": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true

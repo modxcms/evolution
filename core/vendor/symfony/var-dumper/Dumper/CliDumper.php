@@ -435,7 +435,8 @@ class CliDumper extends AbstractDumper
         }
 
         if (null === $this->handlesHrefGracefully) {
-            $this->handlesHrefGracefully = 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR') && !getenv('KONSOLE_VERSION');
+            $this->handlesHrefGracefully = 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
+                && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100);
         }
 
         if (isset($attr['ellipsis'], $attr['ellipsis-type'])) {
@@ -522,12 +523,14 @@ class CliDumper extends AbstractDumper
                         case '--color=yes':
                         case '--color=force':
                         case '--color=always':
+                        case '--colors=always':
                             return static::$defaultColors = true;
 
                         case '--no-ansi':
                         case '--color=no':
                         case '--color=none':
                         case '--color=never':
+                        case '--colors=never':
                             return static::$defaultColors = false;
                     }
                 }

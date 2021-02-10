@@ -2,7 +2,6 @@
 
 namespace Illuminate\Database\Migrations;
 
-use Illuminate\Console\OutputStyle;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use Illuminate\Database\Events\MigrationEnded;
@@ -14,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Migrator
 {
@@ -62,7 +62,7 @@ class Migrator
     /**
      * The output interface implementation.
      *
-     * @var \Illuminate\Console\OutputStyle
+     * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $output;
 
@@ -199,14 +199,14 @@ class Migrator
 
         $this->runMigration($migration, 'up');
 
-        $runTime = round(microtime(true) - $startTime, 2);
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
 
         // Once we have run a migrations class, we will log that it was run in this
         // repository so that we don't try to run it next time we do a migration
         // in the application. A migration repository keeps the migrate order.
         $this->repository->log($name, $batch);
 
-        $this->note("<info>Migrated:</info>  {$name} ({$runTime} seconds)");
+        $this->note("<info>Migrated:</info>  {$name} ({$runTime}ms)");
     }
 
     /**
@@ -362,14 +362,14 @@ class Migrator
 
         $this->runMigration($instance, 'down');
 
-        $runTime = round(microtime(true) - $startTime, 2);
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
 
         // Once we have successfully run the migration "down" we will remove it from
         // the migration repository so it will be considered to have not been run
         // by the application then will be able to fire by any later operation.
         $this->repository->delete($migration);
 
-        $this->note("<info>Rolled back:</info>  {$name} ({$runTime} seconds)");
+        $this->note("<info>Rolled back:</info>  {$name} ({$runTime}ms)");
     }
 
     /**
@@ -526,6 +526,24 @@ class Migrator
     }
 
     /**
+     * Execute the given callback using the given connection as the default connection.
+     *
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return mixed
+     */
+    public function usingConnection($name, callable $callback)
+    {
+        $previousConnection = $this->resolver->getDefaultConnection();
+
+        $this->setConnection($name);
+
+        return tap($callback(), function () use ($previousConnection) {
+            $this->setConnection($previousConnection);
+        });
+    }
+
+    /**
      * Set the default connection name.
      *
      * @param  string  $name
@@ -591,6 +609,26 @@ class Migrator
     }
 
     /**
+     * Determine if any migrations have been run.
+     *
+     * @return bool
+     */
+    public function hasRunAnyMigrations()
+    {
+        return $this->repositoryExists() && count($this->repository->getRan()) > 0;
+    }
+
+    /**
+     * Delete the migration repository data store.
+     *
+     * @return void
+     */
+    public function deleteRepository()
+    {
+        return $this->repository->deleteRepository();
+    }
+
+    /**
      * Get the file system instance.
      *
      * @return \Illuminate\Filesystem\Filesystem
@@ -603,10 +641,10 @@ class Migrator
     /**
      * Set the output implementation that should be used by the console.
      *
-     * @param  \Illuminate\Console\OutputStyle  $output
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return $this
      */
-    public function setOutput(OutputStyle $output)
+    public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
 

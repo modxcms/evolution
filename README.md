@@ -1,8 +1,9 @@
-## Evolution CMS
+# Evolution CMS
 
-[![CMS Evolution](https://img.shields.io/badge/CMS-Evolution-brightgreen.svg)](https://github.com/evolution-cms/evolution) [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/releases) ![PHP version](https://img.shields.io/badge/PHP->=v7.2-red.svg?php=7.2) [![Issues](https://img.shields.io/github/issues-closed-raw/evolution-cms/evolution.svg?maxAge=2592000)](https://github.com/evolution-cms/evolution/issues) [![Code quality](https://img.shields.io/scrutinizer/g/evolution-cms/evolution.svg?maxAge=2592000&b=develop)](https://scrutinizer-ci.com/g/evolution-cms/evolution/?branch=develop) [![Documentation](https://img.shields.io/badge/Documentation-processed-orange.svg)](https://github.com/evolution-cms/docs/)
+![screenshot_1](https://user-images.githubusercontent.com/523389/105744390-5a720e00-5f3d-11eb-8405-7b0f7e28688a.jpg)
 
-Evolution CMS requires **PHP >= 7.2**
+[![CMS Evolution](https://img.shields.io/badge/CMS-Evolution-brightgreen.svg)](https://github.com/evolution-cms/evolution) [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/releases) ![PHP version](https://img.shields.io/badge/PHP->=v7.3-red.svg?php=7.3) [![Issues](https://img.shields.io/github/issues-closed-raw/evolution-cms/evolution.svg?maxAge=2592000)](https://github.com/evolution-cms/evolution/issues) [![Code quality](https://img.shields.io/scrutinizer/g/evolution-cms/evolution.svg?maxAge=2592000&b=develop)](https://scrutinizer-ci.com/g/evolution-cms/evolution/?branch=develop) [![Documentation](https://img.shields.io/badge/Documentation-processed-orange.svg)](https://github.com/evolution-cms/docs/)
+
 
 ## What is Evolution CMS
 
@@ -27,24 +28,26 @@ For content management, you can easily duplicate documents, folders (and all the
 Most significant, though, is **Evolution CMS's** ability to empower you to quickly and easily create and maintain a rich and dynamic website like never before.
 
 ## Install
-Just use [Evolution CMS Installer](https://github.com/evolution-cms/installer)
+You can use the single click installer: [Evolution CMS Installer](https://github.com/evolution-cms/installer)
+Evolution CMS 3.0 requires **PHP >= 7.3**
 
-###Docker
-    
+## Docker
+
 To run **Evolution CMS** using docker make **docker-compose up -d** command in your terminal. Additional configs and access parameters you can find in **docker-compose.yml** file and **docker** folder 
 
-### Screenshots
-
-![screenshot_1](https://user-images.githubusercontent.com/7342798/30167975-5ec146c0-93e8-11e7-8cf8-b324c2b09477.jpg)
-
-![screenshot_2](https://user-images.githubusercontent.com/7342798/30128635-b34fa2a4-9343-11e7-9d87-13d0e17fb69e.jpg)
-
-![screenshot_3](https://user-images.githubusercontent.com/7342798/30128638-b5b2cdc8-9343-11e7-8c75-0864d00fe28a.jpg)
-
-### References
+## References
 
 Official Website:
 https://evo.im/
+
+Telegram group:
+https://t.me/evolutioncms
+
+English Forum:
+https://forum.evo.im
+
+Slack channel:
+https://evocmf.slack.com
 
 Download:
 https://github.com/evolution-cms/evolution/releases
@@ -58,3 +61,6 @@ https://extras.evo.im
 Documentation:
 https://docs.evo.im
 https://evolution-docs.com
+
+Youtube:
+https://www.youtube.com/channel/UCS7ZUn62Qln_OhHSVaFTTig

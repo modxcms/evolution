@@ -1,4 +1,5 @@
 <?php namespace EvolutionCMS\Interfaces;
+use EvolutionCMS\Database;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 interface CoreInterface extends ApplicationContract
@@ -30,9 +31,9 @@ interface CoreInterface extends ApplicationContract
     public function addChunk($name, $text, $namespace = '#');
 
     /**
-     * @return DatabaseInterface
+     * @return Database
      */
-    public function getDatabase() : DatabaseInterface;
+    public function getDatabase() : Database;
 
     /**
      * Returns an entry from the config

@@ -8,6 +8,11 @@ require __DIR__ . '/bootstrap.php';
 if (! defined('IN_INSTALL_MODE')) {
     define('IN_INSTALL_MODE', false);
 }
+
+if (!defined('IN_MANAGER_MODE')) {
+    define('IN_MANAGER_MODE', true);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Run The Artisan Application

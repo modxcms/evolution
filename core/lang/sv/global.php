@@ -937,6 +937,8 @@ $_lang["template_name"] = 'Mallnamn';
 $_lang["template_no_tv"] = 'Inga mallvariabler har tilldelats den här mallen än.';
 $_lang["template_reset_all"] = 'Återställ alla sidor så de använder standardmallen';
 $_lang["template_reset_specific"] = 'Återställ endast "%s" sidor';
+$_lang["template_assigned_blade_file"] = 'Motsvarande blade-fil';
+$_lang["template_create_blade_file"] = 'Skapa mallfil vid spara';
 $_lang["template_title"] = 'Skapa/redigera mallar';
 $_lang["template_tv_edit"] = 'Redigera mallvariablernas sorteringsordning';
 $_lang["template_tv_edit_message"] = 'Dra för att ändra ordningen på mallvariablerna för denna mall.';
@@ -1211,5 +1213,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Välj alla";
 $_lang["check_none"] = "Välj ingen";
 $_lang["check_toggle"] = "Växla val";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

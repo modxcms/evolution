@@ -940,6 +940,8 @@ $_lang["template_name"] = 'Název šablony';
 $_lang["template_no_tv"] = 'Žádná Template Variables nebyla přiřazena této šabloně.';
 $_lang["template_reset_all"] = 'Vymazat všechny stránky pro použití základní šablony';
 $_lang["template_reset_specific"] = 'Vymazat jen "%s" stránky';
+$_lang["template_assigned_blade_file"] = 'Odpovídající soubor blade';
+$_lang["template_create_blade_file"] = 'Po uložení vytvořte soubor šablony';
 $_lang["template_title"] = 'Vytvořit/upravit šablonu';
 $_lang["template_tv_edit"] = 'Upravit uspořádání Template Variables';
 $_lang["template_tv_edit_message"] = 'Změnu pořadí Template Variables pro tuto šablonu je možné určit přetažením.';
@@ -1215,5 +1217,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

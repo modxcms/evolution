@@ -77,7 +77,8 @@ class UserAttribute extends Eloquent\Model
     ];
 
     protected $attributes = [
-        'role' => 0
+        'role' => 0,
+        'verified' => 1
     ];
 
 	protected $fillable = [

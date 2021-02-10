@@ -2,9 +2,13 @@
 
 namespace Illuminate\Support;
 
+use Closure;
 use Illuminate\Console\Application as Artisan;
+use Illuminate\Contracts\Foundation\CachesConfiguration;
+use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Database\Eloquent\Factory as ModelFactory;
+use Illuminate\View\Compilers\BladeCompiler;
 
 abstract class ServiceProvider
 {
@@ -14,6 +18,20 @@ abstract class ServiceProvider
      * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
+
+    /**
+     * All of the registered booting callbacks.
+     *
+     * @var array
+     */
+    protected $bootingCallbacks = [];
+
+    /**
+     * All of the registered booted callbacks.
+     *
+     * @var array
+     */
+    protected $bootedCallbacks = [];
 
     /**
      * The paths that should be published.
@@ -51,6 +69,52 @@ abstract class ServiceProvider
     }
 
     /**
+     * Register a booting callback to be run before the "boot" method is called.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function booting(Closure $callback)
+    {
+        $this->bootingCallbacks[] = $callback;
+    }
+
+    /**
+     * Register a booted callback to be run after the "boot" method is called.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function booted(Closure $callback)
+    {
+        $this->bootedCallbacks[] = $callback;
+    }
+
+    /**
+     * Call the registered booting callbacks.
+     *
+     * @return void
+     */
+    public function callBootingCallbacks()
+    {
+        foreach ($this->bootingCallbacks as $callback) {
+            $this->app->call($callback);
+        }
+    }
+
+    /**
+     * Call the registered booted callbacks.
+     *
+     * @return void
+     */
+    public function callBootedCallbacks()
+    {
+        foreach ($this->bootedCallbacks as $callback) {
+            $this->app->call($callback);
+        }
+    }
+
+    /**
      * Merge the given configuration with the existing configuration.
      *
      * @param  string  $path
@@ -59,9 +123,11 @@ abstract class ServiceProvider
      */
     protected function mergeConfigFrom($path, $key)
     {
-        if (! $this->app->configurationIsCached()) {
-            $this->app['config']->set($key, array_merge(
-                require $path, $this->app['config']->get($key, [])
+        if (! ($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app->make('config');
+
+            $config->set($key, array_merge(
+                require $path, $config->get($key, [])
             ));
         }
     }
@@ -74,7 +140,7 @@ abstract class ServiceProvider
      */
     protected function loadRoutesFrom($path)
     {
-        if (! $this->app->routesAreCached()) {
+        if (! ($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
             require $path;
         }
     }
@@ -99,6 +165,22 @@ abstract class ServiceProvider
             }
 
             $view->addNamespace($namespace, $path);
+        });
+    }
+
+    /**
+     * Register the given view components with a custom prefix.
+     *
+     * @param  string  $prefix
+     * @param  array  $components
+     * @return void
+     */
+    protected function loadViewComponentsAs($prefix, array $components)
+    {
+        $this->callAfterResolving(BladeCompiler::class, function ($blade) use ($prefix, $components) {
+            foreach ($components as $alias => $component) {
+                $blade->component($component, is_string($alias) ? $alias : null, $prefix);
+            }
         });
     }
 
@@ -146,6 +228,8 @@ abstract class ServiceProvider
 
     /**
      * Register Eloquent model factory paths.
+     *
+     * @deprecated Will be removed in a future Laravel version.
      *
      * @param  array|string  $paths
      * @return void

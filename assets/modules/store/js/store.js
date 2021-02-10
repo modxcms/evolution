@@ -9,7 +9,7 @@ var _GET = decodeURIComponent(window.location.search.slice(1))
           } else {a[b[0]] = b[1];}
           return a;
         }, {});
-		
+
 function link(){
 	mass = location.href.split('?');
 	return mass[0]+'?id='+_GET['id']+'&a='+_GET['a'];
@@ -25,8 +25,8 @@ function store_search(val){
 			$(this).show();
 		}
 	})
-}	
-	
+}
+
 store = {
 	categories:{},
 	types:{},
@@ -59,8 +59,8 @@ store = {
 				if ( data.result ) {
 					store.updateUserCategory( data );
 				};
-				
-				
+
+
 				store.showUserForms( data.result );
 			});
 		}
@@ -74,8 +74,8 @@ store = {
 		}
 	},
 	logout: function(){
-		$.ajax({url:link()+"&action=exituser",type:'POST',data:{res:$('[name="hash"]').val()},success:function(){ 
-		window.location.href = window.location.href 
+		$.ajax({url:link()+"&action=exituser",type:'POST',data:{res:$('[name="hash"]').val()},success:function(){
+		window.location.href = window.location.href
 		}});
 	},
 	login:function(){
@@ -105,19 +105,19 @@ store = {
 			var id = $('.category_list').find('li').first().find('a').attr('data-id');
 			$('[name=parent]').val(id);
 			store.update_list( store.category[id] );
-			
+
 			var version = $('.version').html();
 			if (data.version != version && version != '0.1.3') {
 					$('.new_version').html(data.version);
 					$('#actions').show();
 			}
-			
+
 			if (data.user) {
 				store.showUserForms( data.user.result );
 				store.updateUserCategory( data.user );
 			}
 		});
-		
+
 		store.types =  eval('('+$('[name="types"]').val()+')');
 
 		$('a.item-reinstall,a.item-update').live('click',function(){
@@ -128,37 +128,37 @@ store = {
 			store.install(this);
 			return false;
 		});
-		
+
 		$('.item-install2').live('click',function(){
 			tpl = '<li data-id="'+$(this).attr('data-id')+'">'+$(this).parent().find('.row-category').text()+'<a href="#">X</a></li>';
 			$('.cart_list ul').append(tpl);
 			return false;
 		});
-		
+
 		$('.category_list a').live('click',function(){
 			$('[name=parent]').val($(this).attr('data-id'));
 			//store.get_list({}, store.update_list );
-			
+
 			store.update_list( store.category[$(this).attr('data-id')] , $(this).attr('data-tpl') );
 			return false;
 		});
-		
+
 		$('.category_list2 a').live('click',function(){
 			$('[name=parent]').val($(this).html());
 			store.get_own_list({}, store.updateUserPack );
 			return false;
 		});
-				
+
 		$('.item_header :input').change(function(){
 			store.get_list({}, store.update_list );
 		});
-		
+
 		var file;
 		$('#install_file').on('change', function() {
             file = this.files[0];
 		    console.log(file);
         });
-        
+
         $('#install_file_btn').on('click', function() {
             if($.isEmptyObject( file )) return;
             $('#install_file_resp').html('');
@@ -197,41 +197,48 @@ store = {
         });
 	},
 	install:function(elm){
-			
+
 		var el = $(elm).closest('.catalog_item').find('.informer');
 		var file = $(elm).closest('.catalog_item').find('[name="link"]').val();
 		store.query('download',{id:$(elm).attr('data-id')},function(data){
 			//el.find('.download').html( parseInt(el.find('.download').html())+1 );
 		});
-		
+
 		if ($(elm).attr('data-method') == "package"){
-			var install_url = link() + "&action=install&cid="+$(elm).attr('data-id')+"&name="+$(elm).attr('data-name')+"&file="+file;
+			var install_url = link() + "&action=install&cid="+$(elm).attr('data-id')+"&name="+$(elm).attr('data-name')+"&dependencies="+$(elm).attr('data-dependencies')+"&file="+file;
 			$.fancybox.open({href : install_url, type: 'iframe'});
 		} else {
 			$('.item_list .catalog_item').addClass('blocked');
 			$(elm).closest('.catalog_item').find('.loader').show();
 			$.ajax({
-				url:link()+"&method=fast&action=install&cid="+$(elm).attr('data-id')+"&name="+$(elm).attr('data-name'),
+				url:link()+"&method=fast&action=install&cid="+$(elm).attr('data-id')+"&name="+$(elm).attr('data-name')+"&dependencies="+$(elm).attr('data-dependencies'),
 				type:'POST',
 				data:{method:'fast',file:file},
-				success:function(){
+				success:function(data){
+					console.log(data);
+
 					el.closest('.catalog_item').find('.loader').hide();
-					el.css('display','block').animate({opacity:1},500,function(){
-						el.delay(2000).animate({opacity:0},3000,function(){el.css('display','none')});
-					});
-					
+                    if (data.result == 'error') {
+                        $.fancybox.open(data.data);
+                    } else {
+                        el.css('display', 'block').animate({opacity: 1}, 500, function () {
+                            el.delay(2000).animate({opacity: 0}, 3000, function () {
+                                el.css('display', 'none')
+                            });
+                        });
+                    }
 					el.closest('.catalog_item').removeClass('item-install').removeClass('item-update').addClass('item-reinstall');
 					el.closest('.catalog_item').find('.curr').hide();
-					
+
 					$('.item_list .catalog_item').removeClass('blocked');
 				}
-		
+
 			})
-			
+
 		}
-	
+
 	},
-	
+
 	query:function(action,param,callback){
 		param = store.extend(param);
 		$.ajax({
@@ -252,14 +259,14 @@ store = {
 	get_list: function( param , callback){
 		store.query('get_list',$.extend(param,{parent:$('[name=parent]').val(),sort:$('[name=sort]').val(),dir:$('[name=dir]').val()}),function(data){callback(data)});
 	},
-	
+
 	get_own_list: function( param , callback){
 		$('.item_list >  .loader').show();
 		store.query('get_own_list',$.extend(param,{parent:$('[name=parent]').val(),sort:$('[name=sort]').val(),dir:$('[name=dir]').val()}),function(data){
 		callback(data)
 		});
 	},
-	
+
 	update_category: function(data){
 		$('.category_list').html( '<ul>' +store.parse_list1( data , $('.tpl #tpl_category').html() ) + '</ul>' );
 	},
@@ -311,7 +318,7 @@ store = {
 
 		if ($.isPlainObject(array.url)){
 			options =[];
-			
+
 			versions = array.url.fieldValue;
 			$.each(versions,function(key,value){
 				options.push('<option value="'+value.file+'">'+value.version+'</option>');
@@ -319,22 +326,22 @@ store = {
 				if (!array.date) array.date = value.date;
 				$str = $(str);
 				$str.find('[name=link]').append( options.join(''));
-				
+
 			});
 			$str.find('option').first().prop('selected',true);
 			if (versions.length == 1){
 				$str.find('[name=link]').hide();
 			}
-			
+
 			str = $str.wrapAll('<div></div>').parent().html();
-			
+
 		}
-			
+
 		if ( array.type ) {
 			array.type = array.type == 'snippet'?'snippets':array.type;
 			array.type = array.type == 'module'?'modules':array.type;
 			array.type = array.type == 'plugin'?'plugins':array.type;
-			
+
 			if ( store.types[ array.type ]) {
 				if ( store.types[ array.type ][ array.name_in_modx ]) {
 					array.current_version = store.types[ array.type ][ array.name_in_modx ];
@@ -343,24 +350,24 @@ store = {
 					}
 					if ( store.types[ array.type ][ array.name_in_modx ] ==  array.version){
 						array.cls = 'pack_reinstall';
-					} 
+					}
 				}
 			}
 		}
-		
+
 		out = str.replace(/%\w+%/g, function(placeholder) {
 			return array[ placeholder.split('%').join('') ] || '';
 		});
 		img = array.image;
 		if (tpl =='cart') img = array.cartimage;
-		if (array.image) out = $('<div id="tmpl">'+out+'</div>').find('img').attr('src', img).closest('#tmpl').html(); 
+		if (array.image) out = $('<div id="tmpl">'+out+'</div>').find('img').attr('src', img).closest('#tmpl').html();
 		return out;
 	},
 	parse: function(str,array){
 		var out = str.replace(/%\w+%/g, function(placeholder) {
 			return array[ placeholder.split('%').join('') ] || '';
 		});
-		if (array.image) out = $('<div id="tmpl">'+out+'</div>').find('img').attr('src',array.image).closest('#tmpl').html(); 
+		if (array.image) out = $('<div id="tmpl">'+out+'</div>').find('img').attr('src',array.image).closest('#tmpl').html();
 		return out;
 	},
 	is_array: function(inputArray) {

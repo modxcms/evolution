@@ -76,7 +76,7 @@ class Parser
      *
      * @return void
      */
-    private function __wakeup ()
+    public function __wakeup ()
     {
     }
 
@@ -557,24 +557,31 @@ class Parser
         if (!is_object($modx)) {
             $modx = $this->modx;
         }
-        $minPasses = empty($modx->minParserPasses) ? 2 : $modx->minParserPasses;
-        $maxPasses = empty($modx->maxParserPasses) ? 10 : $modx->maxParserPasses;
+
+        $modx->minParserPasses = 2;
+        $modx->maxParserPasses = 10;
+
         $site_status = $modx->getConfig('site_status');
         $modx->config['site_status'] = 0;
-        for ($i = 1; $i <= $maxPasses; $i++) {
+
+        for ($i = 1; $i <= $modx->maxParserPasses; $i++) {
             $html = $out;
             if (preg_match('/\[\!(.*)\!\]/us', $out)) {
                 $out = str_replace(array('[!', '!]'), array('[[', ']]'), $out);
             }
-            if ($i <= $minPasses || $out != $html) {
+            if ($i <= $modx->minParserPasses || $out != $html) {
                 $out = $modx->parseDocumentSource($out);
             } else {
                 break;
             }
         }
+        
         $out = $modx->rewriteUrls($out);
         $out = $this->cleanPHx($out);
+
         $modx->config['site_status'] = $site_status;
+        $modx->minParserPasses = -1;
+        $modx->maxParserPasses = -1;
 
         return $out;
     }

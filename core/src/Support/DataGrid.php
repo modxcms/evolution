@@ -156,7 +156,7 @@ class DataGrid implements DataGridInterface
         $tblColHdr = "<thead><tr>";
         for ($c = 0; $c < $this->_colcount; $c++) {
             $name = $this->_colnames[$c];
-            $width = $this->_colwidths[$c];
+            $width = $this->_colwidths[$c] ?? null;
             $tblColHdr .= "<td $columnHeaderStyle $columnHeaderClass" . ($width ? " width='$width'" : "") . ">$name</td>";
         }
         $tblColHdr .= "</tr></thead>\n";

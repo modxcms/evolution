@@ -60,9 +60,10 @@ class UserEdit implements ServiceInterface
     public function getValidationRules(): array
     {
         return [
-            'username' => ['required', Rule::unique('users')->ignore($this->userData['id'])],
+            'id' => ['required'],
+            'username' => [Rule::unique('users')->ignore($this->userData['id'])],
             'password' => ['min:6', 'confirmed'],
-            'email' => ['required', Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
+            'email' => [Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
         ];
     }
 
@@ -72,8 +73,7 @@ class UserEdit implements ServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'username.required' => Lang::get("global.required_field", ['field' => 'username']),
-            'password.required' => Lang::get("global.required_field", ['field' => 'password']),
+            'id.required' => Lang::get("global.required_field", ['field' => 'username']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
             'password.min' => Lang::get("global.password_gen_length"),
             'username.unique' => Lang::get('global.username_unique'),
@@ -100,24 +100,27 @@ class UserEdit implements ServiceInterface
             ));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
         }
-
-        if (isset($this->userData['password'])) {
-            $this->userData['clearPassword'] = $this->userData['password'];
-            $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
-        }
         $user = User::find($this->userData['id']);
+        if (isset($this->userData['username']) && $this->userData['username'] != '') {
+            $user->username = $this->userData['username'];
+            $user->save();
+        }
         $this->userData['internalKey'] = $user->getKey();
+        if (isset($this->userData['dob'])) {
+            $this->userData['dob'] = strtotime($this->userData['dob']);
+        }
         foreach ($this->userData as $attribute => $value) {
-            if (isset($user->attributes->{$attribute}) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
+            if (in_array($attribute, $user->attributes->getFillable()) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
                 $user->attributes->{$attribute} = $value;
             }
         }
         $user->attributes->save();
+
         // invoke OnWebSaveUser event
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnUserFormSave", array(
@@ -148,7 +151,7 @@ class UserEdit implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         $validator = \Validator::make($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();

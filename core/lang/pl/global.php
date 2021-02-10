@@ -1018,6 +1018,8 @@ $_lang["template_no_tv"] = 'Do tego szablonu nie zostały jeszcze przypisane ża
 $_lang["template_notassigned_tv"] = 'Zmienne możliwe do przydzielenia.';
 $_lang["template_reset_all"] = 'Zresetuj wszystkie strony i przypisz je do szablonu domyślnego';
 $_lang["template_reset_specific"] = 'Zresetuj tylko \'%s\' stron';
+$_lang["template_assigned_blade_file"] = 'Odpowiedni plik blade';
+$_lang["template_create_blade_file"] = 'Utwórz plik szablonu przy zapisywaniu';
 $_lang["template_selectable"] = 'Szablon dostępny podczas tworzenia lub edycji zasobu.';
 $_lang["template_title"] = 'Utwórz/ edytuj szablon';
 $_lang["template_tv_edit"] = 'Edytuj kolejność zmiennych szablonu';
@@ -1445,5 +1447,10 @@ $_lang['manager_menu_position_title'] = 'Położenie głównej nawigacji';
 $_lang['manager_menu_position_top'] = 'Góra';
 $_lang['manager_menu_position_left'] = 'Lewa';
 $_lang['invalid_event_response'] = 'Zdarzenie %s ma nieprawidłowy wynik';
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

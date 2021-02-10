@@ -937,6 +937,8 @@ $_lang["template_name"] = '模板名';
 $_lang["template_no_tv"] = 'No Template Variables have been assigned to this Template yet.';
 $_lang["template_reset_all"] = '设置所有的文档使用默认的模板';
 $_lang["template_reset_specific"] = '只设置 \'%s\' 页面';
+$_lang["template_assigned_blade_file"] = '对应的BLADE文件';
+$_lang["template_create_blade_file"] = '保存时创建模板文件';
 $_lang["template_title"] = '建立编辑模板';
 $_lang["template_tv_edit"] = 'Edit the TV sort order';
 $_lang["template_tv_edit_message"] = 'Drag to reorder the Template Variables for this template.';
@@ -1212,5 +1214,10 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Select all";
 $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

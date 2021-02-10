@@ -2,6 +2,7 @@
 
 class BladeDirective
 {
+
     public static function evoParser($content) : string
     {
         return '<?php echo evo_parser(' . $content . ');?>';
@@ -37,9 +38,13 @@ class BladeDirective
         return '<?php echo ManagerTheme::getTheme();?>';
     }
    
-   public static function makeUrl($id) : string
+    public static function makeUrl($id) : string
     {
-        return '<?php echo app("UrlProcessor")->makeUrl(' . $id . ');?>';
+        return '<?php echo app("UrlProcessor")->makeUrlWithString(' . $id . ');?>';
+    }
+    public static function csrf() : string
+    {
+        return '<?php echo csrf_field();?>';
     }
 
 }

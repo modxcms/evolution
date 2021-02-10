@@ -49,13 +49,15 @@ class SeedCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      */
     public function handle()
     {
         if (! $this->confirmToProceed()) {
-            return;
+            return 1;
         }
+
+        $previousConnection = $this->resolver->getDefaultConnection();
 
         $this->resolver->setDefaultConnection($this->getDatabase());
 
@@ -63,7 +65,13 @@ class SeedCommand extends Command
             $this->getSeeder()->__invoke();
         });
 
+        if ($previousConnection) {
+            $this->resolver->setDefaultConnection($previousConnection);
+        }
+
         $this->info('Database seeding completed successfully.');
+
+        return 0;
     }
 
     /**
@@ -73,9 +81,20 @@ class SeedCommand extends Command
      */
     protected function getSeeder()
     {
-        $class = $this->laravel->make($this->input->getOption('class'));
+        $class = $this->input->getOption('class');
 
-        return $class->setContainer($this->laravel)->setCommand($this);
+        if (strpos($class, '\\') === false) {
+            $class = 'Database\\Seeders\\'.$class;
+        }
+
+        if ($class === 'Database\\Seeders\\DatabaseSeeder' &&
+            ! class_exists($class)) {
+            $class = 'DatabaseSeeder';
+        }
+
+        return $this->laravel->make($class)
+                        ->setContainer($this->laravel)
+                        ->setCommand($this);
     }
 
     /**
@@ -98,10 +117,8 @@ class SeedCommand extends Command
     protected function getOptions()
     {
         return [
-            ['class', null, InputOption::VALUE_OPTIONAL, 'The class name of the root seeder', 'DatabaseSeeder'],
-
+            ['class', null, InputOption::VALUE_OPTIONAL, 'The class name of the root seeder', 'Database\\Seeders\\DatabaseSeeder'],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to seed'],
-
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production'],
         ];
     }

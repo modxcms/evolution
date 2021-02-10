@@ -217,6 +217,7 @@ class InstallEvo
 
     public function checkRemoveInstall()
     {
+        ob_end_clean();
         if ($this->removeInstall != 'y' && $this->removeInstall != 'n') {
             $this->removeInstall = $this->read_line("Do you want remove install directory (y/n)? ");
         }
@@ -302,12 +303,15 @@ class InstallEvo
 
     public function checkIssetTablePrefix()
     {
-        $result = $this->dbh->query("SELECT COUNT(*) FROM {$this->tablePrefix}site_content");
-        if ($this->dbh->errorCode() == 0) {
-            echo 'table prefix already exists';
-            $this->tablePrefix = '';
-            $this->checkTablePrefix();
-            $this->checkIssetTablePrefix();
+        try {
+            $result = $this->dbh->query("SELECT COUNT(*) FROM {$this->tablePrefix}site_content");
+            if ($result !== false) {
+                echo 'table prefix already exists';
+                $this->tablePrefix = '';
+                $this->checkTablePrefix();
+                $this->checkIssetTablePrefix();
+            }
+        } catch (\PDOException $exception) {
         }
     }
 
@@ -357,10 +361,9 @@ class InstallEvo
 
         @chmod($filename, 0777);
 
-        if (@ !$handle = fopen($filename, 'w')) {
+        if (!$handle = fopen($filename, 'w')) {
             $configFileFailed = true;
         }
-
         // write $somecontent to our opened file.
         if (@ fwrite($handle, $configString) === false) {
             $configFileFailed = true;
@@ -386,7 +389,7 @@ class InstallEvo
                 $count = count($classes) - 2;
                 $class = $classes[$count];
             }
-            Console::call('db:seed', ['--class' => $class]);
+            Console::call('db:seed', ['--class' => '\\' . $class]);
         }
         $field = array();
         $field['password'] = $this->evo->getPasswordHash()->HashPassword($this->cmsPassword);
@@ -394,8 +397,10 @@ class InstallEvo
         $managerUser = EvolutionCMS\Models\User::create($field);
         $internalKey = $managerUser->getKey();
         $role = \EvolutionCMS\Models\UserRole::where('name', 'Administrator')->first()->getKey();
-        $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role];
+        $field = ['internalKey' => $internalKey, 'email' => $this->cmsAdminEmail, 'role' => $role, 'verified' => 1];
         $managerUser->attributes()->create($field);
+        $managerUser->attributes->role = $role;
+        $managerUser->attributes->save();
         $systemSettings[] = ['setting_name' => 'manager_language', 'setting_value' => $this->language];
         $systemSettings[] = ['setting_name' => 'auto_template_logic', 'setting_value' => 1];
         $systemSettings[] = ['setting_name' => 'emailsender', 'setting_value' => $this->cmsAdminEmail];
@@ -406,8 +411,8 @@ class InstallEvo
 
     public function installModulesAndPlugins()
     {
-        $pluginPath =  'assets/plugins';
-        $modulePath =  'assets/modules';
+        $pluginPath = 'assets/plugins';
+        $modulePath = 'assets/modules';
         $modulePlugins = [];
         // setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
         $mp = &$modulePlugins;
@@ -426,19 +431,19 @@ class InstallEvo
                         "$pluginPath/{$params['filename']}",
                         $params['properties'],
                         $params['events'],
-                        $params['guid'],
+                        $params['guid'] ?? "",
                         $params['modx_category'],
-                        $params['legacy_names'],
+                        $params['legacy_names'] ?? "",
                         array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-                        (int)$params['disabled']
+                        $params['disabled'] ?? 0
                     );
                 }
             }
             $d->close();
         }
-        if (count($modulePlugins )>0) {
+        if (count($modulePlugins) > 0) {
 
-            foreach ($modulePlugins as $k=>$modulePlugin) {
+            foreach ($modulePlugins as $k => $modulePlugin) {
 
                 $name = $modulePlugin[0];
                 $desc = $modulePlugin[1];
@@ -449,20 +454,21 @@ class InstallEvo
                 $category = $modulePlugin[6];
                 $leg_names = [];
                 $disabled = $modulePlugin[9];
-                if(array_key_exists(7, $modulePlugin)) {
+                if (array_key_exists(7, $modulePlugin)) {
                     // parse comma-separated legacy names and prepare them for sql IN clause
                     $leg_names = preg_split('/\s*,\s*/', $modulePlugin[7]);
                 }
                 if (!file_exists($filecontent))
-                    echo $name." ".$filecontent." not found ";
+                    echo $name . " " . $filecontent . " not found ";
                 else {
                     // disable legacy versions based on legacy_names provided
-                    if(count($leg_names)) {
-                        \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $leg_names)->update(['disabled'=>1]);
+                    if (count($leg_names)) {
+                        \EvolutionCMS\Models\SitePlugin::query()->whereIn('name', $leg_names)->update(['disabled' => 1]);
                     }
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
-                    $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array1 = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $plugin = end($array1);
                     // remove installer docblock
                     $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                     $pluginDbRecord = \EvolutionCMS\Models\SitePlugin::where('name', $name)->orderBy('id');
@@ -470,8 +476,8 @@ class InstallEvo
                     if ($pluginDbRecord->count() > 0) {
                         $insert = true;
                         foreach ($pluginDbRecord->get()->toArray() as $row) {
-                            $props = propUpdate($properties,$row['properties']);
-                            if($row['description'] == $desc){
+                            $props = propUpdate($properties, $row['properties']);
+                            if ($row['description'] == $desc) {
                                 \EvolutionCMS\Models\SitePlugin::query()->where('id', $row['id'])->update(['plugincode' => $plugin, 'description' => $desc, 'properties' => $props]);
 
                                 $insert = false;
@@ -480,13 +486,13 @@ class InstallEvo
                             }
                             $prev_id = $row['id'];
                         }
-                        if($insert === true) {
-                            $props = propUpdate($properties,$row['properties']);
-                            \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid'=>$guid, 'disabled'=>0, 'category'=>$category]);
+                        if ($insert === true) {
+                            $props = propUpdate($properties, $row['properties']);
+                            \EvolutionCMS\Models\SitePlugin::query()->create(['name' => $name, 'plugincode' => $plugin, 'description' => $desc, 'properties' => $props, 'moduleguid' => $guid, 'disabled' => 0, 'category' => $category]);
                         }
                     } else {
                         $properties = parseProperties($properties, true);
-                        \EvolutionCMS\Models\SitePlugin::query()->create(['name'=>$name,'plugincode' => $plugin, 'description' => $desc, 'properties' => $properties, 'moduleguid'=>$guid, 'disabled'=>$disabled, 'category'=>$category]);
+                        \EvolutionCMS\Models\SitePlugin::query()->create(['name' => $name, 'plugincode' => $plugin, 'description' => $desc, 'properties' => $properties, 'moduleguid' => $guid, 'disabled' => $disabled, 'category' => $category]);
                     }
                     // add system events
                     if (count($events) > 0) {
@@ -558,10 +564,10 @@ class InstallEvo
                         $params['name'],
                         $description,
                         "$modulePath/{$params['filename']}",
-                        $params['properties'],
-                        $params['guid'],
-                        (int)$params['shareparams'],
-                        $params['modx_category'],
+                        $params['properties'] ?? "",
+                        $params['guid'] ?? "",
+                        $params['shareparams'] ?? 0,
+                        $params['modx_category'] ?? "",
                         array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
                     );
                 }
@@ -633,8 +639,8 @@ class InstallEvo
             $d->close();
         }
         // Install Modules
-        if (count($moduleModules )>0) {
-            foreach ($moduleModules as $k=>$moduleModule) {
+        if (count($moduleModules) > 0) {
+            foreach ($moduleModules as $k => $moduleModule) {
                 $name = $moduleModule[0];
                 $desc = $moduleModule[1];
                 $filecontent = $moduleModule[2];
@@ -643,22 +649,23 @@ class InstallEvo
                 $shared = $moduleModule[5];
                 $category = $moduleModule[6];
                 if (!file_exists($filecontent))
-                    echo $name." ".$filecontent." not found ";
+                    echo $name . " " . $filecontent . " not found ";
                 else {
 
                     // Create the category if it does not already exist
                     $category = getCreateDbCategory($category);
 
-                    $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                    $array = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                    $module = end($array);
                     // remove installer docblock
                     $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
                     $moduleDb = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->first();
                     if (!is_null($moduleDb)) {
-                        $props = propUpdate($properties,$moduleDb->properties);
-                        \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode'=>$module, 'description'=>$desc,'properties'=>$props, 'enable_sharedparams'=>$shared]);
+                        $props = propUpdate($properties, $moduleDb->properties);
+                        \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode' => $module, 'description' => $desc, 'properties' => $props, 'enable_sharedparams' => $shared]);
 
                     } else {
-                        $properties = parseProperties($properties, true);
+                        $props = parseProperties($properties, true);
                         \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $props, 'enable_sharedparams' => $shared]);
                     }
                 }
@@ -670,20 +677,23 @@ class InstallEvo
 
     public function clearCacheAfterInstall()
     {
-        if (file_exists(MODX_BASE_PATH.'assets/cache/installProc.inc.php')) {
-            @chmod(MODX_BASE_PATH.'assets/cache/installProc.inc.php', 0755);
-            unlink(MODX_BASE_PATH.'assets/cache/installProc.inc.php');
+        if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
+            @chmod(MODX_BASE_PATH . 'assets/cache/installProc.inc.php', 0755);
+            unlink(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
         }
         file_put_contents(EVO_CORE_PATH . '.install', time());
         $this->evo->clearCache('full');
     }
 
-    public function removeInstall(){
+    public function removeInstall()
+    {
         if ($this->removeInstall == 'y') {
             $path = __DIR__ . '/';
             removeFolder($path);
-            removeFolder(MODX_BASE_PATH . '.tx');
-            unlink(MODX_BASE_PATH . 'README.md');
+            if (file_exists(MODX_BASE_PATH . '.tx'))
+                removeFolder(MODX_BASE_PATH . '.tx');
+            if (file_exists(MODX_BASE_PATH . 'README.md'))
+                unlink(MODX_BASE_PATH . 'README.md');
             echo 'Install folder deleted!' . PHP_EOL . PHP_EOL;
         }
     }

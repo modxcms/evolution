@@ -4,7 +4,6 @@ use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
 use EvolutionCMS\Interfaces\ServiceInterface;
 use \EvolutionCMS\Models\User;
-use Illuminate\Support\Facades\Lang;
 
 class UserLogout implements ServiceInterface
 {
@@ -98,7 +97,7 @@ class UserLogout implements ServiceInterface
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validation()) {
+        if (!$this->validate()) {
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
@@ -106,15 +105,26 @@ class UserLogout implements ServiceInterface
 
 
         $internalKey = EvolutionCMS()->getLoginUserID();
-        $username = $_SESSION['mgrShortname'];
-        $sid = EvolutionCMS()->sid;
-        if ($this->events) {
-            // invoke OnBeforeManagerLogout event
-            EvolutionCMS()->invokeEvent("OnBeforeManagerLogout",
-                array(
-                    "userid" => $internalKey,
-                    "username" => $username
-                ));
+        if (!$internalKey) {
+            return false;
+        }
+        $user = User::query()->find($internalKey);
+        $username = '';
+        if (!is_null($user)) {
+            $user->refresh_token = '';
+            $user->access_token = '';
+            $user->valid_to = NULL;
+            $user->save();
+            $username = $_SESSION['mgrShortname'];
+            $sid = EvolutionCMS()->sid;
+            if ($this->events) {
+                // invoke OnBeforeManagerLogout event
+                EvolutionCMS()->invokeEvent("OnBeforeManagerLogout",
+                    array(
+                        "userid" => $internalKey,
+                        "username" => $username
+                    ));
+            }
         }
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', 0, MODX_BASE_URL);
@@ -126,7 +136,7 @@ class UserLogout implements ServiceInterface
         \EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
 
         if ($this->events) {
-        // invoke OnManagerLogout event
+            // invoke OnManagerLogout event
             EvolutionCMS()->invokeEvent("OnManagerLogout",
                 array(
                     "userid" => $internalKey,
@@ -147,7 +157,7 @@ class UserLogout implements ServiceInterface
     /**
      * @return bool
      */
-    public function validation(): bool
+    public function validate(): bool
     {
         return true;
     }

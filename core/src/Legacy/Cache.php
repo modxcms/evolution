@@ -256,99 +256,104 @@ class Cache
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
         }
+        if (!isset($config['full_aliaslisting']) || $config['full_aliaslisting'] != 1) {
+            $resources = Models\SiteContent::query()->select('site_content.id', 'site_content.alias', 'site_content.parent', 'site_content.isfolder', 'site_content.alias_visible')
+                ->where('site_content.deleted', 0)
+                ->orderBy('site_content.parent', 'ASC')
+                ->orderBy('site_content.menuindex', 'ASC');
 
-        $resources = Models\SiteContent::query()->select('site_content.id', 'site_content.alias', 'site_content.parent', 'site_content.isfolder', 'site_content.alias_visible')
-            ->where('site_content.deleted', 0)
-            ->orderBy('site_content.parent', 'ASC')
-            ->orderBy('site_content.menuindex', 'ASC');
+            if (isset($config['aliaslistingfolder']) && $config['aliaslistingfolder'] == 1) {
+                $resources = $resources->where(function ($query) {
+                    $query->where('site_content.isfolder', 1)
+                        ->orWhere('site_content.alias_visible', 1);
+                });
 
-        if ($config['aliaslistingfolder'] == 1) {
-            $resources = $resources->where(function ($query) {
-                $query->where('site_content.isfolder', 1)
-                    ->orWhere('site_content.alias_visible', 1);
-            });
-
-        }
-
-        $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
-        $tmpPath = '';
-        $content .= '$this->aliasListing=array();';
-        $content .= '$a=&$this->aliasListing;';
-        $content .= '$d=&$this->documentListing;';
-        $content .= '$m=&$this->documentMap;';
-        foreach ($resources->get()->toArray() as $doc) {
-            if ($doc['alias'] == '') $doc['alias'] = $doc['id'];
-            if ($use_alias_path) {
-                $tmpPath = $this->getParents($doc['parent']);
-                $alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '') . $doc['alias'];
-                $key = $alias;
-            } else {
-                $key = $doc['alias'];
             }
 
-            $doc['path'] = $tmpPath;
-            $content .= '$a[' . $doc['id'] . ']=array(\'id\'=>' . $doc['id'] . ',\'alias\'=>\'' . $doc['alias'] . '\',\'path\'=>\'' . $doc['path'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
-            $content .= '$d[\'' . $key . '\']=' . $doc['id'] . ';';
-            $content .= '$m[]=array(' . $doc['parent'] . '=>' . $doc['id'] . ');';
+            $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
+            $tmpPath = '';
+            $content .= '$this->aliasListing=array();';
+            $content .= '$a=&$this->aliasListing;';
+            $content .= '$d=&$this->documentListing;';
+            $content .= '$m=&$this->documentMap;';
+            foreach ($resources->get()->toArray() as $doc) {
+                if ($doc['alias'] == '') $doc['alias'] = $doc['id'];
+                if ($use_alias_path) {
+                    $tmpPath = $this->getParents($doc['parent']);
+                    $alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '') . $doc['alias'];
+                    $key = $alias;
+                } else {
+                    $key = $doc['alias'];
+                }
+
+                $doc['path'] = $tmpPath;
+                $content .= '$a[' . $doc['id'] . ']=array(\'id\'=>' . $doc['id'] . ',\'alias\'=>\'' . $doc['alias'] . '\',\'path\'=>\'' . $doc['path'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
+                $content .= '$d[\'' . $key . '\']=' . $doc['id'] . ';';
+                $content .= '$m[]=array(' . $doc['parent'] . '=>' . $doc['id'] . ');';
+            }
+
+            // get content types
+            $contentTypes = Models\SiteContent::query()
+                ->select('id', 'contentType')
+                ->where('contentType', '!=', 'text/html')->get();
+
+            $content .= '$c=&$this->contentTypes;';
+            foreach ($contentTypes->toArray() as $doc) {
+                $content .= '$c[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
+            }
+        }
+        if (!isset($config['disable_chunk_cache']) || $config['disable_chunk_cache'] != 1) {
+            // WRITE Chunks to cache file
+            $chunks = Models\SiteHtmlsnippet::all();
+            $content .= '$c=&$this->chunkCache;';
+            foreach ($chunks->toArray() as $doc) {
+                $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+            }
         }
 
-        // get content types
-        $contentTypes = Models\SiteContent::query()
-            ->select('id', 'contentType')
-            ->where('contentType', '!=', 'text/html')->get();
-
-        $content .= '$c=&$this->contentTypes;';
-        foreach ($contentTypes->toArray() as $doc) {
-            $content .= '$c[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
+        if (!isset($config['disable_snippet_cache']) || $config['disable_snippet_cache'] != 1) {
+            // WRITE snippets to cache file
+            $snippets = Models\SiteSnippet::query()->select('site_snippets.*', 'site_modules.properties as sharedproperties')
+                ->leftJoin('site_modules', 'site_snippets.moduleguid', '=', 'site_modules.guid')->get();
+            $content .= '$s=&$this->snippetCache;';
+            foreach ($snippets->toArray() as $row) {
+                if ($row['disabled']) {
+                    $content .= '$s[\'' . $row['name'] . '\']=\'return false;\';';
+                } else {
+                    $value = trim($row['snippet']);
+                    if ($modx->getConfig('minifyphp_incache')) {
+                        $value = $this->php_strip_whitespace($value);
+                    }
+                    $content .= '$s[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+                    $properties = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties, $properties);
+                    if (0 < count($properties)) {
+                        $content .= '$s[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    }
+                }
+            }
         }
 
-        // WRITE Chunks to cache file
-        $chunks = Models\SiteHtmlsnippet::all();
-        $content .= '$c=&$this->chunkCache;';
-        foreach ($chunks->toArray() as $doc) {
-            $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
-        }
-
-
-        // WRITE snippets to cache file
-        $snippets = Models\SiteSnippet::query()->select('site_snippets.*', 'site_modules.properties as sharedproperties')
-            ->leftJoin('site_modules', 'site_snippets.moduleguid', '=', 'site_modules.guid')->get();
-        $content .= '$s=&$this->snippetCache;';
-        foreach ($snippets->toArray() as $row) {
-            if ($row['disabled']) {
-                $content .= '$s[\'' . $row['name'] . '\']=\'return false;\';';
-            } else {
-                $value = trim($row['snippet']);
+        if (!isset($config['disable_plugins_cache']) || $config['disable_plugins_cache'] != 1) {
+            // WRITE plugins to cache file
+            $plugins = Models\SitePlugin::query()->select('site_plugins.*', 'site_modules.properties as sharedproperties')
+                ->leftJoin('site_modules', 'site_plugins.moduleguid', '=', 'site_modules.guid')
+                ->where('site_plugins.disabled', 0)->get();
+            $content .= '$p=&$this->pluginCache;';
+            foreach ($plugins->toArray() as $row) {
+                $value = trim($row['plugincode']);
                 if ($modx->getConfig('minifyphp_incache')) {
                     $value = $this->php_strip_whitespace($value);
                 }
-                $content .= '$s[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
-                $properties = $modx->parseProperties($row['properties']);
-                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
-                $properties = array_merge($sharedproperties, $properties);
-                if (0 < count($properties)) {
-                    $content .= '$s[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
-                }
-            }
-        }
-
-        // WRITE plugins to cache file
-        $plugins = Models\SitePlugin::query()->select('site_plugins.*', 'site_modules.properties as sharedproperties')
-            ->leftJoin('site_modules', 'site_plugins.moduleguid', '=', 'site_modules.guid')
-            ->where('site_plugins.disabled', 0)->get();
-        $content .= '$p=&$this->pluginCache;';
-        foreach ($plugins->toArray() as $row) {
-            $value = trim($row['plugincode']);
-            if ($modx->getConfig('minifyphp_incache')) {
-                $value = $this->php_strip_whitespace($value);
-            }
-            $content .= '$p[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
-            if ($row['properties'] != '' || $row['sharedproperties'] != '') {
-                $properties = $modx->parseProperties($row['properties']);
-                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
-                $properties = array_merge($sharedproperties, $properties);
-                if (0 < count($properties)) {
-                    $content .= '$p[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                $content .= '$p[\'' . $row['name'] . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
+                if ($row['properties'] != '' || $row['sharedproperties'] != '') {
+                    $properties = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties, $properties);
+                    if (0 < count($properties)) {
+                        $content .= '$p[\'' . $row['name'] . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
+                    }
                 }
             }
         }

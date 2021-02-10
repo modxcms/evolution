@@ -1014,6 +1014,8 @@ $_lang["template_no_tv"] = 'Diesem Template wurden noch keine Template-Variablen
 $_lang["template_notassigned_tv"] = 'Diese Template-Variablen können zugewiesen werden.';
 $_lang["template_reset_all"] = 'Alle Ressourcen auf das Standard-Template zurücksetzen';
 $_lang["template_reset_specific"] = 'Template nur bei Ressourcen mit dem aktuellen Template „%s“ setzen';
+$_lang["template_assigned_blade_file"] = 'Entsprechende blade-datei';
+$_lang["template_create_blade_file"] = 'Erstellen Sie beim Speichern eine Vorlagendatei';
 $_lang["template_selectable"] = 'Template ist auswählbar, wenn eine Resource erstellt oder bearbeitet wird.';
 $_lang["template_title"] = 'Template erstellen/bearbeiten';
 $_lang["template_tv_edit"] = 'Reihenfolge der Template-Variablen bearbeiten';
@@ -1440,5 +1442,10 @@ $_lang['manager_menu_position_title'] = 'Position des Hauptmenüs';
 $_lang['manager_menu_position_top'] = 'Oben';
 $_lang['manager_menu_position_left'] = 'links';
 $_lang['invalid_event_response'] = 'Der Event "%s" verursachte eine invalide Ausgabe.';
+
+$_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
+$_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
+$_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
+$_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
 
 return $_lang;

@@ -70,8 +70,8 @@ if (! function_exists('ProcessTVCommand')) {
     {
         $modx = evolutionCMS();
         $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
-        $nvalue = trim($value);
-        if (substr($nvalue, 0, 1) != '@') {
+        $nvalue = is_array($value) ? $value : trim($value);
+        if (is_array($nvalue) || substr($nvalue, 0, 1) != '@') {
             return $value;
         } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
             return '@Bindings is disabled.';
@@ -858,7 +858,7 @@ if (! function_exists('renderFormElement')) {
                     global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
-                    if (!$ResourceManagerLoaded && !(($content['richtext'] == 1 || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
+                    if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
                     $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />';

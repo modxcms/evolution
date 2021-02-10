@@ -3,6 +3,7 @@
 namespace Illuminate\Container;
 
 use Closure;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use InvalidArgumentException;
 use ReflectionFunction;
 use ReflectionMethod;
@@ -23,14 +24,16 @@ class BoundMethod
      */
     public static function call($container, $callback, array $parameters = [], $defaultMethod = null)
     {
+        if (is_string($callback) && ! $defaultMethod && method_exists($callback, '__invoke')) {
+            $defaultMethod = '__invoke';
+        }
+
         if (static::isCallableWithAtSign($callback) || $defaultMethod) {
             return static::callClass($container, $callback, $parameters, $defaultMethod);
         }
 
         return static::callBoundMethod($container, $callback, function () use ($container, $callback, $parameters) {
-            return call_user_func_array(
-                $callback, static::getMethodDependencies($container, $callback, $parameters)
-            );
+            return $callback(...array_values(static::getMethodDependencies($container, $callback, $parameters)));
         });
     }
 
@@ -121,7 +124,7 @@ class BoundMethod
             static::addDependencyForCallParameter($container, $parameter, $parameters, $dependencies);
         }
 
-        return array_merge($dependencies, $parameters);
+        return array_merge($dependencies, array_values($parameters));
     }
 
     /**
@@ -171,6 +174,10 @@ class BoundMethod
             }
         } elseif ($parameter->isDefaultValueAvailable()) {
             $dependencies[] = $parameter->getDefaultValue();
+        } elseif (! $parameter->isOptional() && ! array_key_exists($paramName, $parameters)) {
+            $message = "Unable to resolve dependency [{$parameter}] in class {$parameter->getDeclaringClass()->getName()}";
+
+            throw new BindingResolutionException($message);
         }
     }
 
