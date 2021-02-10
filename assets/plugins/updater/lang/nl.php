@@ -22,3 +22,5 @@ $_lang['error_curl'] = 'Het is noodzakelijk om de CURL in PHP in te schakelen';
 $_lang['error_zip'] = 'Het is noodzakelijk om de ZIP in PHP in te schakelen';
 $_lang['error_openssl'] = 'De OpenSSL functie in PHP moet worden ingeschakelend';
 $_lang['error_overwrite'] = 'Bestanden kunnen niet worden overschreven';
+
+$_lang['artisan_update'] = 'Om bij te werken, moet u de console-opdracht vanuit de map uitvoeren <b>core</b>: <b>php artisan make:site update</b>';

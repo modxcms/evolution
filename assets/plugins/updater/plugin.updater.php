@@ -38,7 +38,7 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
     //lang
     $_lang = array();
     $plugin_path = MODX_BASE_PATH . "assets/plugins/updater/";
-    include($plugin_path . 'lang/english.php');
+    include($plugin_path . 'lang/en.php');
     if (file_exists($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php')) {
         include($plugin_path . 'lang/' . $modx->config['manager_language'] . '.php');
     }
@@ -202,15 +202,21 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
                 }
             }
             if(isset($git['version']))
-            $_SESSION['updateversion'] = $git['version'];
+                $_SESSION['updateversion'] = $git['version'];
             else
                 $git['version'] = $currentVersion['version'];
 
             if (version_compare($git['version'], $currentVersion['version'], '>') && $git['version'] != '') {
                 // get manager role
                 $role = $_SESSION['mgrRole'];
-                if (($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
-                    $updateButton = '';
+                if (file_exists(MODX_BASE_PATH.'core/custom/composer.json') OR ($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
+
+                    if (file_exists(MODX_BASE_PATH.'core/custom/composer.json')) {
+                        $updateButton = '<div class="alert alert-danger" role="alert">'.$_lang['artisan_update'].'</div>';
+                    }else{
+                        $updateButton = '';
+                    }
+
                 } else {
                     $updateButton = '<a target="_parent" onclick="return confirm(\'' . $_lang['are_you_sure_update'] . '\')" href="' . MODX_SITE_URL . $_SESSION['updatelink'] . '" class="btn btn-sm btn-danger">' . $_lang['updateButton_txt'] . ' ' . $git['version'] . '</a><br><br>';
                 }

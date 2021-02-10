@@ -22,3 +22,5 @@ $_lang['error_curl'] = 'Musisz włączyć funkcję CURL w PHP';
 $_lang['error_zip'] = 'Wymagane jest włączenie ZIP w PHP';
 $_lang['error_openssl'] = 'Musisz włączyć funkcję OpenSSL w PHP';
 $_lang['error_overwrite'] = 'Nie udało się nadpisać plików systemu';
+
+$_lang['artisan_update'] = 'Aby zaktualizować, musisz uruchomić polecenie konsoli z folderu  <b>core</b>: <b>php artisan make:site update</b>';

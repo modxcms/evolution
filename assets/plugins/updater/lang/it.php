@@ -23,3 +23,4 @@ $_lang['error_zip'] = 'È necessario abilitare la funzione ZIP in PHP';
 $_lang['error_openssl'] = 'È necessario abilitare la funzione OpenSSL in PHP';
 $_lang['error_overwrite'] = 'I file di EVO non sono disponibili per la sovrascrittura';
 
+$_lang['artisan_update'] = 'Per aggiornare, è necessario eseguire il comando della console dalla cartella  <b>core</b>: <b>php artisan make:site update</b>';
