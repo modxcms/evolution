@@ -21,6 +21,7 @@ use Composer\Package\RootPackage;
 use Composer\Package\Version\VersionParser;
 use Composer\Repository\RepositoryInterface;
 use Composer\Repository\InstalledRepository;
+use Composer\Repository\RootPackageRepository;
 use Composer\Package\PackageInterface;
 use Composer\Package\Link;
 use Composer\Semver\Constraint\Constraint;
@@ -174,7 +175,9 @@ class PluginManager
         $localRepo = $this->composer->getRepositoryManager()->getLocalRepository();
         $globalRepo = $this->globalComposer ? $this->globalComposer->getRepositoryManager()->getLocalRepository() : null;
 
-        $installedRepo = new InstalledRepository(array($localRepo));
+        $rootPackage = clone $this->composer->getPackage();
+        $rootPackageRepo = new RootPackageRepository($rootPackage);
+        $installedRepo = new InstalledRepository(array($localRepo, $rootPackageRepo));
         if ($globalRepo) {
             $installedRepo->addRepository($globalRepo);
         }
@@ -183,13 +186,17 @@ class PluginManager
         $autoloadPackages = $this->collectDependencies($installedRepo, $autoloadPackages, $package);
 
         $generator = $this->composer->getAutoloadGenerator();
-        $autoloads = array();
+        $autoloads = array(array($rootPackage, ''));
         foreach ($autoloadPackages as $autoloadPackage) {
+            if ($autoloadPackage === $rootPackage) {
+                continue;
+            }
+
             $downloadPath = $this->getInstallPath($autoloadPackage, $globalRepo && $globalRepo->hasPackage($autoloadPackage));
             $autoloads[] = array($autoloadPackage, $downloadPath);
         }
 
-        $map = $generator->parseAutoloads($autoloads, new RootPackage('dummy/root-package', '1.0.0.0', '1.0.0'));
+        $map = $generator->parseAutoloads($autoloads, $rootPackage);
         $classLoader = $generator->createLoader($map);
         $classLoader->register();
 

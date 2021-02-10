@@ -20,8 +20,6 @@ use Composer\EventDispatcher\Event as BaseEvent;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Factory;
 use Composer\Installer;
-use Composer\Installer\InstallerEvent;
-use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
@@ -111,16 +109,23 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     /**
      * Files that have already been fully processed
      *
-     * @var string[] $loaded
+     * @var array<string, bool> $loaded
      */
     protected $loaded = array();
 
     /**
      * Files that have already been partially processed
      *
-     * @var string[] $loadedNoDev
+     * @var array<string, bool> $loadedNoDev
      */
     protected $loadedNoDev = array();
+
+    /**
+     * Nested packages to restrict update operations.
+     *
+     * @var array<string, bool> $updateAllowList
+     */
+    protected $updateAllowList = array();
 
     /**
      * {@inheritdoc}
@@ -167,6 +172,17 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             ScriptEvents::PRE_UPDATE_CMD =>
                 array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
         );
+    }
+
+    /**
+     * Get list of packages to restrict update operations.
+     *
+     * @return string[]
+     * @see \Composer\Installer::setUpdateAllowList()
+     */
+    public function getUpdateAllowList()
+    {
+        return array_keys($this->updateAllowList);
     }
 
     /**
@@ -268,6 +284,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             $package->mergeInto($root, $this->state);
         }
 
+        $requirements = $package->getMergedRequirements();
+        if (!empty($requirements)) {
+            $this->updateAllowList = array_replace(
+                $this->updateAllowList,
+                array_fill_keys($requirements, true)
+            );
+        }
+
         if ($this->state->isDevMode()) {
             $this->loaded[$path] = true;
         } else {
@@ -294,13 +318,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             if ($package === self::PACKAGE_NAME) {
                 $this->logger->info('composer-merge-plugin installed');
                 $this->state->setFirstInstall(true);
-                if ($this->state->isComposer1()) {
-                    $this->state->setLocked(
-                        $event->getComposer()->getLocker()->isLocked()
-                    );
-                } else {
-                    $this->state->setLocked(false);
-                }
+                $this->state->setLocked(
+                    $event->getComposer()->getLocker()->isLocked()
+                );
             }
         }
     }
@@ -317,6 +337,12 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         // @codeCoverageIgnoreStart
         if ($this->state->isFirstInstall()) {
             $this->state->setFirstInstall(false);
+
+            $requirements = $this->getUpdateAllowList();
+            if (empty($requirements)) {
+                return;
+            }
+
             $this->logger->log("\n".'<info>Running composer update to apply merge settings</info>');
 
             if (!$this->state->isComposer1()) {
@@ -344,11 +370,12 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 $this->state->shouldOptimizeAutoloader()
             );
 
-            if ($this->state->forceUpdate()) {
-                // Force update mode so that new packages are processed rather
-                // than just telling the user that composer.json and
-                // composer.lock don't match.
-                $installer->setUpdate(true);
+            $installer->setUpdate(true);
+
+            if ($this->state->isComposer1()) {
+                $installer->setUpdateWhitelist($requirements);
+            } else {
+                $installer->setUpdateAllowList($requirements);
             }
 
             $status = $installer->run();
