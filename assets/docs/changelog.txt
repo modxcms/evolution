@@ -1,6 +1,21 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.0.2 (Feb 10, 2021)
+* [GitHub:#52aea613d] - composer update (Dmi3yy)
+* [GitHub:#77a37990d] - fix updater plugin (Dmi3yy)
+* [GitHub:#b69ac3dc2] - install (fix) changed minimum required version php (Ser1ous)
+* [GitHub:#37a3a4378] - core (add) add check user and check before delete user (aleksandrpaskevic)
+* [GitHub:#4e88f6c85] - core (add) add truncate Active Users table when remove all locks (aleksandrpaskevic)
+* [GitHub:#f7082a76d] - core (add) add new index for site_content table (aleksandrpaskevic)
+* [GitHub:#0c4fec450] - Added the new English Forum to the References links (Marc)
+* [GitHub:#673d03bdc] - core (add) add new option for disabled cache chunk, snippets, plugins (aleksandrpaskevic)
+* [GitHub:#6a78c7780] - core (add) add new option for disabled aliaslisting to all site (aleksandrpaskevic)
+* [GitHub:#f055dfab4] - core (fix) change redirect type for url to 302 (aleksandrpaskevic)
+* [GitHub:#41df52e8f] - extras (refactor) fixed incorrect eloquent queries (aleksandrpaskevic)
+* [GitHub:#62f6f780c] - extras (refactor) fix package installation and fix language (aleksandrpaskevic)
+
+
 Evolution CMS 3.0.1 (Feb 01, 2021)
 * [GitHub:#6e9aa7b65] - extras (refactor) add version for store.js (Serious)
 * [GitHub:#121c40ea7] - extras (refactor) add check for plugins and snippet installed (Serious)

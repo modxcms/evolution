@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '77a37990d07b955c77319946dedb4747b80c0a4b',
+    'reference' => '52aea613d1babe5b99723ffa71edcdd7e3288978',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -139,7 +139,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '77a37990d07b955c77319946dedb4747b80c0a4b',
+      'reference' => '52aea613d1babe5b99723ffa71edcdd7e3288978',
     ),
     'graham-campbell/result-type' => 
     array (
@@ -533,8 +533,8 @@ private static $installed = array (
     array (
       'provided' => 
       array (
-        0 => '1.0.0',
-        1 => '1.0',
+        0 => '1.0',
+        1 => '1.0.0',
       ),
     ),
     'psr/simple-cache' => 
