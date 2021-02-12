@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
 use PDOStatement;
 
 class Database extends Manager
@@ -801,5 +802,20 @@ class Database extends Manager
     {
         $this->config = $this->getConfig();
         $this->config['table_prefix'] = $this->getConfig('prefix');
+    }
+
+    public function begin()
+    {
+        DB::beginTransaction();
+    }
+
+    public function commit()
+    {
+        DB::commit();
+    }
+
+    public function rollback()
+    {
+        DB::rollBack();
     }
 }
