@@ -182,6 +182,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     private $dataForView = [];
 
     /**
+     * @var string
+     */
+    private $context = '';
+
+    /**
      * @throws \Exception
      */
     public function __construct()
@@ -310,10 +315,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      *
      */
-    public function checkAuth()
+    public function checkAuth($context = '')
     {
-        if (evo()->getLoginUserID() !== false) {
-            $result = $this->checkAccess(evo()->getLoginUserID());
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
+        if (evo()->getLoginUserID($context) !== false) {
+            $result = $this->checkAccess(evo()->getLoginUserID($context));
             if ($result === false) {
                 \UserManager::logout();
                 if (IN_MANAGER_MODE) {
@@ -330,7 +338,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function checkAccess($userId): bool
     {
-        $user = User::query()->find(evo()->getLoginUserID());
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
+        $user = User::query()->find(evo()->getLoginUserID($context));
         if (is_null($user)) {
             return false;
         }
@@ -391,7 +402,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getMicroTime()
     {
-        list ($usec, $sec) = explode(' ', microtime());
+        [$usec, $sec] = explode(' ', microtime());
 
         return ((float)$usec + (float)$sec);
     }
@@ -899,7 +910,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function RecoveryEscapedTags($contents)
     {
-        list($sTags, $rTags) = $this->getTagsForEscape();
+        [$sTags, $rTags] = $this->getTagsForEscape();
 
         return str_replace($rTags, $sTags, $contents);
     }
@@ -1220,9 +1231,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $key = substr($key, 1);
             } // remove # for QuickEdit format
 
-            list($key, $modifiers) = $this->splitKeyAndFilter($key);
+            [$key, $modifiers] = $this->splitKeyAndFilter($key);
             if (Str::contains($key, '@')) {
-                list($key, $context) = explode('@', $key, 2);
+                [$key, $context] = explode('@', $key, 2);
             } else {
                 $context = false;
             }
@@ -1263,12 +1274,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (preg_match('/@\d+\/u/', $key)) {
             $key = str_replace(array('@', '/u'), array('@u(', ')'), $key);
         }
-        list($key, $str) = explode('@', $key, 2);
+        [$key, $str] = explode('@', $key, 2);
 
         if (Str::contains($str, '(')) {
-            list($context, $option) = explode('(', $str, 2);
+            [$context, $option] = explode('(', $str, 2);
         } else {
-            list($context, $option) = array($str, false);
+            [$context, $option] = array($str, false);
         }
 
         if ($option) {
@@ -1309,7 +1320,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 } elseif (!Str::contains($option, ',')) {
                     $option .= ',ASC';
                 }
-                list($by, $dir) = explode(',', $option, 2);
+                [$by, $dir] = explode(',', $option, 2);
                 $children = $this->getActiveChildren($parent, $by, $dir);
                 $find = false;
                 $prev = false;
@@ -1335,7 +1346,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 } elseif (!Str::contains($option, ',')) {
                     $option .= ',ASC';
                 }
-                list($by, $dir) = explode(',', $option, 2);
+                [$by, $dir] = explode(',', $option, 2);
                 $children = $this->getActiveChildren($parent, $by, $dir);
                 $find = false;
                 $next = false;
@@ -1409,7 +1420,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         foreach ($matches[1] as $i => $key) {
-            list($key, $modifiers) = $this->splitKeyAndFilter($key);
+            [$key, $modifiers] = $this->splitKeyAndFilter($key);
 
             if (isset($ph[$key])) {
                 $value = $ph[$key];
@@ -1466,7 +1477,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $key = $snip_call['name'];
             $params = $this->getParamsFromString($snip_call['params']);
 
-            list($key, $modifiers) = $this->splitKeyAndFilter($key);
+            [$key, $modifiers] = $this->splitKeyAndFilter($key);
 
             if (!isset($ph[$key])) {
                 $ph[$key] = $this->getChunk($key);
@@ -1536,7 +1547,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         foreach ($matches[1] as $i => $key) {
 
-            list($key, $modifiers) = $this->splitKeyAndFilter($key);
+            [$key, $modifiers] = $this->splitKeyAndFilter($key);
 
             if (isset($ph[$key])) {
                 $value = $ph[$key];
@@ -1595,7 +1606,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = $split;
                 continue;
             }
-            list($cmd, $text) = explode('>', $split, 2);
+            [$cmd, $text] = explode('>', $split, 2);
             $cmd = str_replace("'", "\'", $cmd);
             $content .= "<?php if(\$this->_parseCTagCMD('" . $cmd . "')): ?>";
             $content .= $text;
@@ -1606,7 +1617,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $content = $split;
                 continue;
             }
-            list($cmd, $text) = explode('>', $split, 2);
+            [$cmd, $text] = explode('>', $split, 2);
             $cmd = str_replace("'", "\'", $cmd);
             $content .= "<?php elseif(\$this->_parseCTagCMD('" . $cmd . "')): ?>";
             $content .= $text;
@@ -1775,7 +1786,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $content;
         }
 
-        list($sTags, $rTags) = $this->getTagsForEscape();
+        [$sTags, $rTags] = $this->getTagsForEscape();
         foreach ($matches[1] as $i => $v) {
             $v = str_ireplace($sTags, $rTags, $v);
             $s = &$matches[0][$i];
@@ -2006,7 +2017,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $key = $value;
         $_ = $this->getConfig('enable_filter');
         $this->setConfig('enable_filter', 1);
-        list($key, $modifiers) = $this->splitKeyAndFilter($key);
+        [$key, $modifiers] = $this->splitKeyAndFilter($key);
         $this->setConfig('enable_filter', $_);
         $key = str_replace(array('(', ')'), array("['", "']"), $key);
         $key = rtrim($key, ';');
@@ -2049,7 +2060,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
 
-        list($key, $modifiers) = $this->splitKeyAndFilter($key);
+        [$key, $modifiers] = $this->splitKeyAndFilter($key);
         $snip_call['name'] = $key;
         $snippetObject = $this->getSnippetObject($key);
         if ($snippetObject['content'] === null) {
@@ -2134,7 +2145,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (in_array($delim, array('"', "'", '`'))) {
                     $null = null;
                     //list(, $value, $_tmp)
-                    list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
+                    [$null, $value, $_tmp] = explode($delim, $_tmp, 3);
                     unset($null);
 
                     if (strpos(trim($_tmp), '//') === 0) {
@@ -2142,7 +2153,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     }
                     $i = 0;
                     while ($delim === '`' && substr(trim($_tmp), 0, 1) !== '&' && 1 < substr_count($_tmp, '`')) {
-                        list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
+                        [$inner, $outer, $_tmp] = explode('`', $_tmp, 3);
                         $value .= "`{$inner}`{$outer}";
                         $i++;
                         if (100 < $i) {
@@ -2153,7 +2164,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                         $value = rtrim($value, '`');
                     }
                 } elseif (Str::contains($_tmp, '&')) {
-                    list($value, $_tmp) = explode('&', $_tmp, 2);
+                    [$value, $_tmp] = explode('&', $_tmp, 2);
                     $value = trim($value);
                 } else {
                     $value = $_tmp;
@@ -2214,7 +2225,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $k = substr($k, 0, -2);
                 $params[$k][] = current($p);
             } elseif (Str::contains($k, '[') && substr($k, -1) === ']') {
-                list($k, $subk) = explode('[', $k, 2);
+                [$k, $subk] = explode('[', $k, 2);
                 $subk = substr($subk, 0, -1);
                 $params[$k][$subk] = current($p);
             } else {
@@ -3249,10 +3260,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $pm Permission name
      * @return int Why not bool?
      */
-    public function hasPermission($pm)
+    public function hasPermission($pm, $context = '')
     {
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
         $state = 0;
-        $pms = get_by_key($_SESSION, 'mgrPermissions', [], 'is_array');
+        $pms = get_by_key($_SESSION, $context . 'Permissions', [], 'is_array');
         if ($pms) {
             $state = (isset($pms[$pm]) && (bool)$pms[$pm] === true);
         }
@@ -3676,25 +3690,25 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $sendto = explode(',', $sendto);
         $mail = $this->getMail();
         foreach ($sendto as $address) {
-            list($name, $address) = $mail->address_split($address);
+            [$name, $address] = $mail->address_split($address);
             $mail->AddAddress($address, $name);
         }
         if (isset($p['cc'])) {
             $p['cc'] = explode(',', $p['cc']);
             foreach ($p['cc'] as $address) {
-                list($name, $address) = $mail->address_split($address);
+                [$name, $address] = $mail->address_split($address);
                 $mail->AddCC($address, $name);
             }
         }
         if (isset($p['bcc'])) {
             $p['bcc'] = explode(',', $p['bcc']);
             foreach ($p['bcc'] as $address) {
-                list($name, $address) = $mail->address_split($address);
+                [$name, $address] = $mail->address_split($address);
                 $mail->AddBCC($address, $name);
             }
         }
         if (isset($p['from']) && Str::contains($p['from'], '<') && substr($p['from'], -1) === '>') {
-            list($p['fromname'], $p['from']) = $mail->address_split($p['from']);
+            [$p['fromname'], $p['from']] = $mail->address_split($p['from']);
         }
         $mail->setFrom(
             isset($p['from']) ? $p['from'] : $this->getConfig('emailsender'),
@@ -4515,7 +4529,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         foreach ($matches[1] as $i => $key) {
             if (strpos($key, ':') !== false && $execModifier) {
-                list($key, $modifiers) = $this->splitKeyAndFilter($key);
+                [$key, $modifiers] = $this->splitKeyAndFilter($key);
             } else {
                 $modifiers = false;
             }
@@ -4673,19 +4687,19 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (!preg_match('/^\d{4}\/\d{2}\/\d{2}[\d :]*$/', $str)) {
                     return '';
                 }
-                list ($Y, $m, $d, $H, $M, $S) = sscanf($str, '%4d/%2d/%2d %2d:%2d:%2d');
+                [$Y, $m, $d, $H, $M, $S] = sscanf($str, '%4d/%2d/%2d %2d:%2d:%2d');
                 break;
             case 'dd-mm-YYYY':
                 if (!preg_match('/^\d{2}-\d{2}-\d{4}[\d :]*$/', $str)) {
                     return '';
                 }
-                list ($d, $m, $Y, $H, $M, $S) = sscanf($str, '%2d-%2d-%4d %2d:%2d:%2d');
+                [$d, $m, $Y, $H, $M, $S] = sscanf($str, '%2d-%2d-%4d %2d:%2d:%2d');
                 break;
             case 'mm/dd/YYYY':
                 if (!preg_match('/^\d{2}\/\d{2}\/\d{4}[\d :]*$/', $str)) {
                     return '';
                 }
-                list ($m, $d, $Y, $H, $M, $S) = sscanf($str, '%2d/%2d/%4d %2d:%2d:%2d');
+                [$m, $d, $Y, $H, $M, $S] = sscanf($str, '%2d/%2d/%4d %2d:%2d:%2d');
                 break;
             /*
             case 'dd-mmm-YYYY':
@@ -5109,9 +5123,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getLoginUserID($context = '')
     {
         $out = false;
-        if (isset ($_SESSION['mgrValidated'])) {
-            $out = $_SESSION['mgrInternalKey'];
+        if (empty($context)) {
+            $context = $this->getContext();
         }
+        if (isset ($_SESSION[$context . 'Validated'])) {
+            $out = $_SESSION[$context . 'InternalKey'];
+        }
+
         return $out;
     }
 
@@ -5124,9 +5142,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function getLoginUserName($context = '')
     {
         $out = false;
-
-        if (isset ($_SESSION['mgrValidated'])) {
-            $out = $_SESSION['mgrShortname'];
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
+        if (isset ($_SESSION[$context . 'Validated'])) {
+            $out = $_SESSION[$context . 'InternalKey'];
         }
         return $out;
     }
@@ -5136,19 +5156,42 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @return string
      */
-    public function getLoginUserType()
+    public function getLoginUserType($context = '')
     {
-
-        if (isset ($_SESSION['mgrValidated'])) {
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
+        if ($context == 'mgr' && isset ($_SESSION['mgrValidated'])) {
             return 'manager';
+        } elseif ($context == 'web' && isset($_SESSION['webValidated'])) {
+            return 'web';
         }
 
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getContext(): string
     {
-        return $this->isFrontend() ? 'web' : 'mgr';
+        if (empty($this->context)) {
+            $out = $this->isFrontend() ? 'web' : 'mgr';
+        } else {
+            $out = $this->context;
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param $context
+     */
+    public function setContext($context)
+    {
+        if (is_scalar($context)) {
+            $this->context = $context;
+        }
     }
 
     /**
@@ -5214,12 +5257,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getUserDocGroups($resolveIds = false)
     {
-        if ($this->isFrontend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
-            $dg = $_SESSION['mgrDocgroups'];
-            $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
-        } else if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
-            $dg = $_SESSION['mgrDocgroups'];
-            $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
+        $context = $this->getContext();
+        if (isset($_SESSION[$context . 'Docgroups']) && isset($_SESSION[$context . 'Validated'])) {
+            $dg = $_SESSION[$context . 'Docgroups'];
+            $dgn = isset($_SESSION[$context . 'DocgrpNames']) ? $_SESSION[$context . 'DocgrpNames'] : false;
         } else {
             $dg = '';
         }
@@ -5242,7 +5283,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $dgn[] = $row->name;
             }
             // cache docgroup names to session
-            $_SESSION[$this->getContext() . 'DocgrpNames'] = $dgn;
+            $_SESSION[$context . 'DocgrpNames'] = $dgn;
+
             return $dgn;
         }
     }
@@ -5836,7 +5878,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->setConfig('enable_filter', 1);
         $_ = array('[* *]', '[( )]', '{{ }}', '[[ ]]', '[+ +]');
         foreach ($_ as $brackets) {
-            list($left, $right) = explode(' ', $brackets);
+            [$left, $right] = explode(' ', $brackets);
             if (strpos($content, $left) !== false) {
                 if ($left === '[*') {
                     $content = $this->mergeDocumentContent($content);
@@ -5850,7 +5892,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         foreach ($_ as $brackets) {
-            list($left, $right) = explode(' ', $brackets);
+            [$left, $right] = explode(' ', $brackets);
             if (strpos($content, $left) !== false) {
                 $matches = $this->getTagsFromContent($content, $left, $right);
                 $content = isset($matches[0]) ? str_replace($matches[0], '', $content) : $content;
@@ -6448,7 +6490,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function splitKeyAndFilter($key)
     {
         if ($this->getConfig('enable_filter') && strpos($key, ':') !== false && stripos($key, '@FILE') !== 0) {
-            list($key, $modifiers) = explode(':', $key, 2);
+            [$key, $modifiers] = explode(':', $key, 2);
         } else {
             $modifiers = false;
         }
