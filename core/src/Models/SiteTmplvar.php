@@ -56,7 +56,7 @@ class SiteTmplvar extends Eloquent\Model
 		'rank' => 'int',
 		'createdon' => 'int',
 		'editedon' => 'int',
-        'properties' => 'array'
+		'properties' => 'array'
 	];
 
 	protected $fillable = [
@@ -72,7 +72,7 @@ class SiteTmplvar extends Eloquent\Model
 		'display',
 		'display_params',
 		'default_text',
-        'properties'
+		'properties'
 	];
 
     protected $managerActionsMap = [
