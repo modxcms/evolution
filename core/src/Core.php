@@ -3278,10 +3278,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param array $permissions
      * @return bool
      */
-    public function hasAnyPermissions(array $permissions)
+    public function hasAnyPermissions(array $permissions, $context = '')
     {
+        if (empty($context)) {
+            $context = $this->getContext();
+        }
         foreach ($permissions as $p) {
-            if ($this->hasPermission($p)) {
+            if ($this->hasPermission($p, $context)) {
                 return true;
             }
         }
