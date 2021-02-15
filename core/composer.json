@@ -64,7 +64,8 @@
     "i-rocky/eloquent-dynamic-relation": "^1.0",
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
-    "predis/predis": "*"
+    "predis/predis": "*",
+    "evolutioncms-services/user-manager": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

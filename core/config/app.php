@@ -61,7 +61,7 @@ return [
         'Evolution_TemplateProcessor' => EvolutionCMS\Providers\TemplateProcessorServiceProvider::class,
         'Evolution_HelperProcessor' => EvolutionCMS\Providers\HelperProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
-        'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
+        'Evolution_UserManager' => EvolutionCMS\Users\Providers\UserManagerServiceProvider::class,
         'Evolution_DocumentManager' => EvolutionCMS\Providers\DocumentManagerServiceProvider::class,
         'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
         'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
@@ -110,23 +110,7 @@ return [
         'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class,
         'TemplateProcessor' => EvolutionCMS\Facades\TemplateProcessor::class,
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
-        'UserManager' => EvolutionCMS\Facades\UserManager::class,
+        'UserManager' => EvolutionCMS\Users\Facades\UserManager::class,
         'DocumentManager' => EvolutionCMS\Facades\DocumentManager::class,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | The application's global HTTP middleware stack
-    |--------------------------------------------------------------------------
-    |
-    | These core middleware are run during every request to your application.
-    | You should not edit this list,
-    | for custom middleware see file core/custom/config/middleware.php.
-    |
-    */
-
-    'middleware' => [
-        Illuminate\Session\Middleware\StartSession::class,
-    ],
-
+    ]
 ];
