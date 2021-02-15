@@ -199,7 +199,7 @@ class Store{
 		if (file_exists( __DIR__ .  '/lang/'.$lang.'.php')){
 			include_once(__DIR__ .  '/lang/'.$lang.'.php');
 		} else {
-			include_once(__DIR__ .  '/lang/english.php');
+			include_once(__DIR__ .  '/lang/en.php');
 		}
 		$this->lang = $_Lang;
 		$this->language = substr($lang,0,2);

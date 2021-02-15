@@ -14,7 +14,7 @@ class SqlParser {
 		$adminemail='';
 		$adminpass='';
 		$connection_charset= 'utf8';
-		$managerlanguage='english';
+		$managerlanguage='en';
 		$connection_method = 'SET CHARACTER SET';
 		$auto_template_logic = 'sibling';
 		$this->adminname = $adminname;
