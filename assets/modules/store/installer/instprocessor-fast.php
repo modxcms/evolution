@@ -11,7 +11,7 @@ $self = $modulePath . '/index.php';
 require_once($modulePath . "/functions.php");
 $_lang = array();
 $_params = array();
-require_once($modulePath . "/lang/russian-UTF8.inc.php");
+require_once($modulePath . "/lang/en.inc.php");
 if (!isset($modx_branch)) $modx_branch = '';
 if (!isset($modx_version)) $modx_version = '';
 if (!isset($modx_release_date)) $modx_release_date = '';
