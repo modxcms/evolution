@@ -1,6 +1,22 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.0 (Feb 16, 2021)
+* [GitHub:#53a3b815d] - core (fix) fix select default package (Ser1ous)
+* [GitHub:#4eb046ddf] - core (fix) fix incorrect Content Type (Ser1ous)
+* [GitHub:#067b32616] - fixed Uploadable Flash Types (System Config.) #1858 (Dmi3yy)
+* [GitHub:#8569b71cb] - fix Module Extras install packages error (Dmi3yy)
+* [GitHub:#aa1e20876] - composer (refactor) set version to services package (Ser1ous)
+* [GitHub:#8c2ec2eda] - core (refactor) remove DocumentManager from core (Ser1ous)
+* [GitHub:#a8a38beae] - core (refactor) remove UserManager from core (Ser1ous)
+* [GitHub:#8985df747] - Add properties for TV with type "number" (milkamil93)
+* [GitHub:#43f60406d] - check context for permissions (Pathologic)
+* [GitHub:#a043ee3f5] - fix langs in extras (Dmi3yy)
+* [GitHub:#266435480] - users refactor (Pathologic)
+* [GitHub:#cb2090f06] - core (add) add work with transactions (Ser1ous)
+* [GitHub:#8626710e3] - Add properties for TV with type "number" (milkamil93)
+
+
 Evolution CMS 3.0.2 (Feb 10, 2021)
 * [GitHub:#52aea613d] - composer update (Dmi3yy)
 * [GitHub:#77a37990d] - fix updater plugin (Dmi3yy)
