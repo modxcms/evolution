@@ -126,6 +126,19 @@ class SiteUpdateCommand extends Command
 
             SELF::moveFiles($temp_dir . '/' . $dir, MODX_BASE_PATH);
             SELF::rmdirs($temp_dir);
+
+            $delete_file = MODX_BASE_PATH . 'install/stubs/file_for_delete.txt';
+            if (file_exists($delete_file)) {
+                $files = explode("\n", file_get_contents($delete_file));
+                foreach ($files as $file) {
+                    $file = str_replace('{core}', EVO_CORE_PATH, $file);
+                    if (is_dir($file)) {
+                        SELF::rmdirs($file);
+                    } else {
+                        unlink($file);
+                    }
+                }
+            }
             putenv('COMPOSER_HOME=' . EVO_CORE_PATH . 'composer');
             $input = new ArrayInput(array('command' => 'update'));
             $application = new Application();
