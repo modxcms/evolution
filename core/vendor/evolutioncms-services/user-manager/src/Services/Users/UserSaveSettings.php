@@ -94,7 +94,6 @@ class UserSaveSettings implements ServiceInterface
         $defaults = array(
             'upload_images',
             'upload_media',
-            'upload_flash',
             'upload_files'
         );
 

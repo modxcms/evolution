@@ -64,17 +64,6 @@
         <div class="split my-1"></div>
 
         @include('manager::form.input', [
-            'name' => 'upload_flash',
-            'label' => ManagerTheme::getLexicon('uploadable_flash_title'),
-            'small' => '[(upload_flash)]',
-            'value' => $settings['upload_flash'],
-            'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('uploadable_flash_message')
-        ])
-
-        <div class="split my-1"></div>
-
-        @include('manager::form.input', [
             'name' => 'upload_maxsize',
             'label' => ManagerTheme::getLexicon('upload_maxsize_title'),
             'small' => '[(upload_maxsize)]',

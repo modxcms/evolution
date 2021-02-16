@@ -788,18 +788,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <td class='comment'><?php echo $_lang["uploadable_media_message"] . $_lang["user_upload_message"] ?></td>
                     </tr>
                     <tr>
-                        <th><?php echo $_lang["uploadable_flash_title"] ?></th>
-                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : ""; ?>">
-                            &nbsp;&nbsp;
-                            <input onChange="documentDirty=true;" type="checkbox" name="default_upload_flash" value="1" <?php echo isset($usersettings['upload_flash']) && $usersettings['upload_flash'] != '' ? '' : 'checked'; ?> />
-                            <?php echo $_lang["user_use_config"]; ?>
-                            <br /></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td class='comment'><?php echo $_lang["uploadable_flash_message"] . $_lang["user_upload_message"] ?></td>
-                    </tr>
-                    <tr>
                         <th><?php echo $_lang["uploadable_files_title"] ?></th>
                         <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : ""; ?>">
                             &nbsp;&nbsp;

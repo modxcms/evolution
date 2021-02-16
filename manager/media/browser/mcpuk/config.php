@@ -55,7 +55,6 @@ $_CONFIG = array(
 
         // CKEditor & FCKEditor types
         'files'  => str_replace(',', ' ', $modx->getConfig('upload_files')),
-        'flash'  => str_replace(',', ' ', $modx->getConfig('upload_flash')),
         'images' => str_replace(',', ' ', $modx->getConfig('upload_images')),
 
         // TinyMCE types

@@ -72,9 +72,8 @@ $new_file_permissions = octdec(evolutionCMS()->getConfig('new_file_permissions',
 $upload_files = explode(',', evolutionCMS()->getConfig('upload_files', ''));
 $upload_images = explode(',', evolutionCMS()->getConfig('upload_images', ''));
 $upload_media = explode(',', evolutionCMS()->getConfig('upload_media', ''));
-$upload_flash = explode(',', evolutionCMS()->getConfig('upload_flash', ''));
 // now merge them
-$uploadablefiles = array_merge($upload_files, $upload_images, $upload_media, $upload_flash);
+$uploadablefiles = array_merge($upload_files, $upload_images, $upload_media);
 $uploadablefiles = add_dot($uploadablefiles);
 $filemanager_path = evolutionCMS()->getConfig('filemanager_path', MODX_BASE_PATH);
 
