@@ -378,6 +378,18 @@ class InstallEvo
     public function migrationAndSeed()
     {
 
+        $delete_file = 'stubs/file_for_delete.txt';
+        if (file_exists($delete_file)) {
+            $files = explode("\n", file_get_contents($delete_file));
+            foreach ($files as $file) {
+                $file = str_replace('{core}', EVO_CORE_PATH, $file);
+                if (is_dir($file)) {
+                    removeFolder($file);
+                } else {
+                    unlink($file);
+                }
+            }
+        }
         $_POST['database_type'] = $this->databaseType; //костыль для адекватной миграции
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
 

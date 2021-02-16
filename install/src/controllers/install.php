@@ -141,7 +141,6 @@ try {
 
         // try to chmod the config file go-rwx (for suexeced php)
         @chmod($filename, 0404);
-
         if ($configFileFailed === true) {
             $errors += 1;
         } else {
@@ -168,6 +167,18 @@ try {
 
     if ($installLevel === 3) {
 
+        $delete_file = dirname(__DIR__, 2) . '/stubs/file_for_delete.txt';
+        if (file_exists($delete_file)) {
+            $files = explode("\n", file_get_contents($delete_file));
+            foreach ($files as $file) {
+                $file = str_replace('{core}', EVO_CORE_PATH, $file);
+                if (is_dir($file)) {
+                    removeFolder($file);
+                } else {
+                    unlink($file);
+                }
+            }
+        }
         define('MODX_API_MODE', true);
         define('IN_MANAGER_MODE', true);
         define('IN_INSTALL_MODE', true);
