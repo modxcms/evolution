@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '24a40d166b23d54daf35e8e9bae5e140d9b23976',
+    'reference' => 'bd62f946959066db9663c077d37e001e5825f9d2',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -121,21 +121,21 @@
     ),
     'evolutioncms-services/document-manager' => 
     array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
+      'pretty_version' => '1.0.4',
+      'version' => '1.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b330a4b7777ae517baf73eb35fc61fc5a960cb4c',
+      'reference' => 'bc8750493a507ab1372668d4992f3368da52f875',
     ),
     'evolutioncms-services/user-manager' => 
     array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
+      'pretty_version' => '1.0.2',
+      'version' => '1.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '429f3dcbf9b1dc318803d90eadb32aa39eeadb91',
+      'reference' => '131651c595a6475cb849bc6df3b418c8e920d54b',
     ),
     'evolutioncms/core' => 
     array (
@@ -144,7 +144,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '24a40d166b23d54daf35e8e9bae5e140d9b23976',
+      'reference' => 'bd62f946959066db9663c077d37e001e5825f9d2',
     ),
     'graham-campbell/result-type' => 
     array (
@@ -193,8 +193,8 @@
     ),
     'illuminate/bus' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -202,8 +202,8 @@
     ),
     'illuminate/cache' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -211,17 +211,17 @@
     ),
     'illuminate/collections' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '904b28a184a8e3570e5312e6d0438d7df4b641ce',
+      'reference' => '7153004582fb4ab8809a9e491960e250e12a4e7b',
     ),
     'illuminate/config' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -229,8 +229,8 @@
     ),
     'illuminate/console' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -238,17 +238,17 @@
     ),
     'illuminate/container' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '657cac2aa601aa0223afe0ed8627d0cb443f6a22',
+      'reference' => '3d6ce613f455093fdf8bd3c81b30104aef0b11e0',
     ),
     'illuminate/contracts' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -256,17 +256,17 @@
     ),
     'illuminate/database' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '61d7fd9083f76b49a51126fb8bfc3d17d02e84a5',
+      'reference' => '5772eab7f07939c2777cf8e7868c7ec0dd08419f',
     ),
     'illuminate/events' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -274,8 +274,8 @@
     ),
     'illuminate/filesystem' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -283,17 +283,17 @@
     ),
     'illuminate/http' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd23973ee0e14b40b12b5e47f143c20366568ba6a',
+      'reference' => '36ab5185620657c49075193a0ceff968500d705f',
     ),
     'illuminate/log' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -301,8 +301,8 @@
     ),
     'illuminate/macroable' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -310,8 +310,8 @@
     ),
     'illuminate/pagination' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -319,8 +319,8 @@
     ),
     'illuminate/pipeline' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -328,8 +328,8 @@
     ),
     'illuminate/redis' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -337,17 +337,17 @@
     ),
     'illuminate/routing' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '446d6c4f91eedfb98a8d1e56b97f8c0d406ddd4c',
+      'reference' => 'd116964bb409b3486ef0d4dacffd4cc6b85a9eb4',
     ),
     'illuminate/session' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -355,17 +355,17 @@
     ),
     'illuminate/support' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6894f5ec754e875274e7628d4959ad69e6b7b27d',
+      'reference' => 'b2f3711b8790de772703e003deb04d5766092b20',
     ),
     'illuminate/translation' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -373,8 +373,8 @@
     ),
     'illuminate/validation' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -382,8 +382,8 @@
     ),
     'illuminate/view' => 
     array (
-      'pretty_version' => 'v8.27.0',
-      'version' => '8.27.0.0',
+      'pretty_version' => 'v8.28.1',
+      'version' => '8.28.1.0',
       'aliases' => 
       array (
       ),
@@ -576,7 +576,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '5f40d4d577a71466f9723122251b46bdaf634709',
+      'reference' => '1e48e1beacb6122df93aa61a6cc291254984be2a',
     ),
     'rosell-dk/image-mime-type-guesser' => 
     array (

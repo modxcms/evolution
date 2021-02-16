@@ -1,4 +1,4 @@
-<?php namespace EvolutionCMS\Services\Users;
+<?php namespace EvolutionCMS\UserManager\Services\Users;
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
@@ -94,6 +94,7 @@ class UserSaveSettings implements ServiceInterface
         $defaults = array(
             'upload_images',
             'upload_media',
+            'upload_flash',
             'upload_files'
         );
 

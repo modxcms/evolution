@@ -1,6 +1,6 @@
-<?php namespace EvolutionCMS\Providers;
+<?php namespace EvolutionCMS\UserManager\Providers;
 
-use \EvolutionCMS\Services\UserManager;
+use \EvolutionCMS\UserManager\Services\UserManager;
 use Illuminate\Support\ServiceProvider;
 
 class UserManagerServiceProvider extends ServiceProvider

@@ -12,15 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "EvolutionCMS\\": "src"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "EvolutionCMS\\Users\\Providers\\UserManagerServiceProvider"
-      ]
-
+      "EvolutionCMS\\UserManager\\": "src"
     }
   }
 }

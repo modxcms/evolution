@@ -1,6 +1,6 @@
-<?php namespace EvolutionCMS\Providers;
+<?php namespace EvolutionCMS\DocumentManager\Providers;
 
-use EvolutionCMS\Services\DocumentManager;
+use EvolutionCMS\DocumentManager\Services\DocumentManager;
 use Illuminate\Support\ServiceProvider;
 
 class DocumentManagerServiceProvider extends ServiceProvider

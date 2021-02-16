@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
+class ComposerStaticInit823070f5cc91f221d3fa32425e3cae58
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -152,6 +152,8 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         ),
         'E' => 
         array (
+            'EvolutionCMS\\UserManager\\' => 25,
+            'EvolutionCMS\\DocumentManager\\' => 29,
             'EvolutionCMS\\' => 13,
             'Egulias\\EmailValidator\\' => 23,
         ),
@@ -462,11 +464,17 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
         ),
+        'EvolutionCMS\\UserManager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src',
+        ),
+        'EvolutionCMS\\DocumentManager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src',
+        ),
         'EvolutionCMS\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
-            1 => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src',
-            2 => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -1417,6 +1425,18 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'EvolutionCMS\\Controllers\\WebAccessPermissions' => __DIR__ . '/../..' . '/src/Controllers/WebAccessPermissions.php',
         'EvolutionCMS\\Core' => __DIR__ . '/../..' . '/src/Core.php',
         'EvolutionCMS\\Database' => __DIR__ . '/../..' . '/src/Database.php',
+        'EvolutionCMS\\DocumentManager\\Facades\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Facades/DocumentManager.php',
+        'EvolutionCMS\\DocumentManager\\Providers\\DocumentManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Providers/DocumentManagerServiceProvider.php',
+        'EvolutionCMS\\DocumentManager\\Services\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/DocumentManager.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentClearCart' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentClearCart.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentCreate' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentCreate.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentDelete' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentDelete.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentDuplicate' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentDuplicate.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentEdit' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentEdit.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentPublish' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentPublish.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentSetGroups' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentSetGroups.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentUndelete' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentUndelete.php',
+        'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentUnpublish' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentUnpublish.php',
         'EvolutionCMS\\Event' => __DIR__ . '/../..' . '/src/Event.php',
         'EvolutionCMS\\ExceptionHandler' => __DIR__ . '/../..' . '/src/ExceptionHandler.php',
         'EvolutionCMS\\Exceptions\\ServiceActionException' => __DIR__ . '/../..' . '/src/Exceptions/ServiceActionException.php',
@@ -1427,12 +1447,10 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'EvolutionCMS\\Facades\\ConfigService' => __DIR__ . '/../..' . '/src/Facades/ConfigService.php',
         'EvolutionCMS\\Facades\\Console' => __DIR__ . '/../..' . '/src/Facades/Console.php',
         'EvolutionCMS\\Facades\\DocBlock' => __DIR__ . '/../..' . '/src/Facades/DocBlock.php',
-        'EvolutionCMS\\Facades\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Facades/DocumentManager.php',
         'EvolutionCMS\\Facades\\HelperProcessor' => __DIR__ . '/../..' . '/src/Facades/HelperProcessor.php',
         'EvolutionCMS\\Facades\\ManagerTheme' => __DIR__ . '/../..' . '/src/Facades/ManagerTheme.php',
         'EvolutionCMS\\Facades\\TemplateProcessor' => __DIR__ . '/../..' . '/src/Facades/TemplateProcessor.php',
         'EvolutionCMS\\Facades\\UrlProcessor' => __DIR__ . '/../..' . '/src/Facades/UrlProcessor.php',
-        'EvolutionCMS\\Facades\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Facades/UserManager.php',
         'EvolutionCMS\\HelperProcessor' => __DIR__ . '/../..' . '/src/HelperProcessor.php',
         'EvolutionCMS\\Interfaces\\CaptchaInterface' => __DIR__ . '/../..' . '/src/Interfaces/CaptchaInterface.php',
         'EvolutionCMS\\Interfaces\\ContextMenuInterface' => __DIR__ . '/../..' . '/src/Interfaces/ContextMenuInterface.php',
@@ -1527,7 +1545,6 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'EvolutionCMS\\Providers\\DatabaseServiceProvider' => __DIR__ . '/../..' . '/src/Providers/DatabaseServiceProvider.php',
         'EvolutionCMS\\Providers\\DeprecatedCoreServiceProvider' => __DIR__ . '/../..' . '/src/Providers/DeprecatedCoreServiceProvider.php',
         'EvolutionCMS\\Providers\\DocBlockServiceProvider' => __DIR__ . '/../..' . '/src/Providers/DocBlockServiceProvider.php',
-        'EvolutionCMS\\Providers\\DocumentManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Providers/DocumentManagerServiceProvider.php',
         'EvolutionCMS\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/src/Providers/EventServiceProvider.php',
         'EvolutionCMS\\Providers\\ExceptionHandlerServiceProvider' => __DIR__ . '/../..' . '/src/Providers/ExceptionHandlerServiceProvider.php',
         'EvolutionCMS\\Providers\\FsServiceProvider' => __DIR__ . '/../..' . '/src/Providers/FsServiceProvider.php',
@@ -1549,43 +1566,9 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'EvolutionCMS\\Providers\\TemplateProcessorServiceProvider' => __DIR__ . '/../..' . '/src/Providers/TemplateProcessorServiceProvider.php',
         'EvolutionCMS\\Providers\\TracyServiceProvider' => __DIR__ . '/../..' . '/src/Providers/TracyServiceProvider.php',
         'EvolutionCMS\\Providers\\UrlProcessorServiceProvider' => __DIR__ . '/../..' . '/src/Providers/UrlProcessorServiceProvider.php',
-        'EvolutionCMS\\Providers\\UserManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Providers/UserManagerServiceProvider.php',
         'EvolutionCMS\\ServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider.php',
         'EvolutionCMS\\Services\\AuthServices' => __DIR__ . '/../..' . '/src/Services/AuthServices.php',
         'EvolutionCMS\\Services\\ConfigService' => __DIR__ . '/../..' . '/src/Services/ConfigService.php',
-        'EvolutionCMS\\Services\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/DocumentManager.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentClearCart' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentClearCart.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentCreate' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentCreate.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentDelete' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentDelete.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentDuplicate' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentDuplicate.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentEdit' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentEdit.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentPublish' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentPublish.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentSetGroups' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentSetGroups.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentUndelete' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentUndelete.php',
-        'EvolutionCMS\\Services\\Documents\\DocumentUnpublish' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentUnpublish.php',
-        'EvolutionCMS\\Services\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/UserManager.php',
-        'EvolutionCMS\\Services\\Users\\ExcludeStandardFieldsTrait' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/ExcludeStandardFieldsTrait.php',
-        'EvolutionCMS\\Services\\Users\\UserChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserChangePassword.php',
-        'EvolutionCMS\\Services\\Users\\UserClearSettings' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserClearSettings.php',
-        'EvolutionCMS\\Services\\Users\\UserDelete' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserDelete.php',
-        'EvolutionCMS\\Services\\Users\\UserEdit' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserEdit.php',
-        'EvolutionCMS\\Services\\Users\\UserGeneratePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGeneratePassword.php',
-        'EvolutionCMS\\Services\\Users\\UserGetValues' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGetValues.php',
-        'EvolutionCMS\\Services\\Users\\UserGetVerifiedKey' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGetVerifiedKey.php',
-        'EvolutionCMS\\Services\\Users\\UserHashChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserHashChangePassword.php',
-        'EvolutionCMS\\Services\\Users\\UserHashLogin' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserHashLogin.php',
-        'EvolutionCMS\\Services\\Users\\UserLogin' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLogin.php',
-        'EvolutionCMS\\Services\\Users\\UserLoginById' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLoginById.php',
-        'EvolutionCMS\\Services\\Users\\UserLogout' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLogout.php',
-        'EvolutionCMS\\Services\\Users\\UserManagerChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserManagerChangePassword.php',
-        'EvolutionCMS\\Services\\Users\\UserRefreshToken' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRefreshToken.php',
-        'EvolutionCMS\\Services\\Users\\UserRegistration' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRegistration.php',
-        'EvolutionCMS\\Services\\Users\\UserRepairPassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRepairPassword.php',
-        'EvolutionCMS\\Services\\Users\\UserSaveSettings' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSaveSettings.php',
-        'EvolutionCMS\\Services\\Users\\UserSaveValues' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSaveValues.php',
-        'EvolutionCMS\\Services\\Users\\UserSetGroups' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSetGroups.php',
-        'EvolutionCMS\\Services\\Users\\UserSetRole' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSetRole.php',
-        'EvolutionCMS\\Services\\Users\\UserVerified' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserVerified.php',
         'EvolutionCMS\\Shit\\SoftDeletingScope' => __DIR__ . '/../..' . '/src/Shit/SoftDeletingScope.php',
         'EvolutionCMS\\Support\\BladeDirective' => __DIR__ . '/../..' . '/src/Support/BladeDirective.php',
         'EvolutionCMS\\Support\\Captcha' => __DIR__ . '/../..' . '/src/Support/Captcha.php',
@@ -1618,6 +1601,31 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'EvolutionCMS\\Traits\\Path' => __DIR__ . '/../..' . '/src/Traits/Path.php',
         'EvolutionCMS\\Traits\\Settings' => __DIR__ . '/../..' . '/src/Traits/Settings.php',
         'EvolutionCMS\\UrlProcessor' => __DIR__ . '/../..' . '/src/UrlProcessor.php',
+        'EvolutionCMS\\UserManager\\Facades\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Facades/UserManager.php',
+        'EvolutionCMS\\UserManager\\Providers\\UserManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Providers/UserManagerServiceProvider.php',
+        'EvolutionCMS\\UserManager\\Services\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/UserManager.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\ExcludeStandardFieldsTrait' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/ExcludeStandardFieldsTrait.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserChangePassword.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserClearSettings' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserClearSettings.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserDelete' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserDelete.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserEdit' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserEdit.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserGeneratePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGeneratePassword.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserGetValues' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGetValues.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserGetVerifiedKey' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserGetVerifiedKey.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserHashChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserHashChangePassword.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserHashLogin' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserHashLogin.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserLogin' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLogin.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserLoginById' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLoginById.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserLogout' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserLogout.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserManagerChangePassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserManagerChangePassword.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserRefreshToken' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRefreshToken.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserRegistration' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRegistration.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserRepairPassword' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserRepairPassword.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserSaveSettings' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSaveSettings.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserSaveValues' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSaveValues.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserSetGroups' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSetGroups.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserSetRole' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserSetRole.php',
+        'EvolutionCMS\\UserManager\\Services\\Users\\UserVerified' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/UserVerified.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
         'GrahamCampbell\\ResultType\\Result' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Result.php',
         'GrahamCampbell\\ResultType\\Success' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Success.php',
@@ -1942,6 +1950,11 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
         'Illuminate\\Database\\DetectsConcurrencyErrors' => __DIR__ . '/..' . '/illuminate/database/DetectsConcurrencyErrors.php',
         'Illuminate\\Database\\DetectsLostConnections' => __DIR__ . '/..' . '/illuminate/database/DetectsLostConnections.php',
         'Illuminate\\Database\\Eloquent\\Builder' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Builder.php',
+        'Illuminate\\Database\\Eloquent\\Casts\\ArrayObject' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/ArrayObject.php',
+        'Illuminate\\Database\\Eloquent\\Casts\\AsArrayObject' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/AsArrayObject.php',
+        'Illuminate\\Database\\Eloquent\\Casts\\AsCollection' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/AsCollection.php',
+        'Illuminate\\Database\\Eloquent\\Casts\\AsEncryptedArrayObject' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/AsEncryptedArrayObject.php',
+        'Illuminate\\Database\\Eloquent\\Casts\\AsEncryptedCollection' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/AsEncryptedCollection.php',
         'Illuminate\\Database\\Eloquent\\Collection' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Collection.php',
         'Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Concerns/GuardsAttributes.php',
         'Illuminate\\Database\\Eloquent\\Concerns\\HasAttributes' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Concerns/HasAttributes.php',
@@ -3709,9 +3722,9 @@ class ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1e0d755f7b7511af2fef29e3efbd4895::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit823070f5cc91f221d3fa32425e3cae58::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit823070f5cc91f221d3fa32425e3cae58::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit823070f5cc91f221d3fa32425e3cae58::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -1,4 +1,4 @@
-<?php namespace EvolutionCMS\Services\Documents;
+<?php namespace EvolutionCMS\DocumentManager\Services\Documents;
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;

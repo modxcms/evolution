@@ -1,15 +1,15 @@
-<?php namespace EvolutionCMS\Services;
+<?php namespace EvolutionCMS\DocumentManager\Services;
 
 use EvolutionCMS\Models\SiteContent;
-use EvolutionCMS\Services\Documents\DocumentClearCart;
-use EvolutionCMS\Services\Documents\DocumentCreate;
-use EvolutionCMS\Services\Documents\DocumentDelete;
-use EvolutionCMS\Services\Documents\DocumentDuplicate;
-use EvolutionCMS\Services\Documents\DocumentEdit;
-use EvolutionCMS\Services\Documents\DocumentPublish;
-use EvolutionCMS\Services\Documents\DocumentSetGroups;
-use EvolutionCMS\Services\Documents\DocumentUndelete;
-use EvolutionCMS\Services\Documents\DocumentUnpublish;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentClearCart;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentCreate;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentDelete;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentDuplicate;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentEdit;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentPublish;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentSetGroups;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentUndelete;
+use EvolutionCMS\DocumentManager\Services\Documents\DocumentUnpublish;
 
 class DocumentManager
 {
@@ -62,7 +62,7 @@ class DocumentManager
         return $user->process();
     }
 
-    public function unpublished(array $userData, bool $events = true, bool $cache = true)
+    public function unpublish(array $userData, bool $events = true, bool $cache = true)
     {
         $user = new DocumentUnpublish($userData, $events, $cache);
         return $user->process();

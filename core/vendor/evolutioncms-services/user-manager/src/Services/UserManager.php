@@ -1,27 +1,27 @@
-<?php namespace EvolutionCMS\Services;
+<?php namespace EvolutionCMS\UserManager\Services;
 
 use \EvolutionCMS\Models\User;
-use EvolutionCMS\Services\Users\UserClearSettings;
-use EvolutionCMS\Services\Users\UserGeneratePassword;
-use EvolutionCMS\Services\Users\UserGetVerifiedKey;
-use EvolutionCMS\Services\Users\UserGetValues;
-use EvolutionCMS\Services\Users\UserHashChangePassword;
-use EvolutionCMS\Services\Users\UserLoginById;
-use EvolutionCMS\Services\Users\UserManagerChangePassword;
-use EvolutionCMS\Services\Users\UserChangePassword;
-use EvolutionCMS\Services\Users\UserDelete;
-use EvolutionCMS\Services\Users\UserEdit;
-use EvolutionCMS\Services\Users\UserHashLogin;
-use EvolutionCMS\Services\Users\UserLogin;
-use EvolutionCMS\Services\Users\UserLogout;
-use EvolutionCMS\Services\Users\UserRefreshToken;
-use EvolutionCMS\Services\Users\UserRegistration;
-use EvolutionCMS\Services\Users\UserRepairPassword;
-use EvolutionCMS\Services\Users\UserSaveSettings;
-use EvolutionCMS\Services\Users\UserSaveValues;
-use EvolutionCMS\Services\Users\UserSetGroups;
-use EvolutionCMS\Services\Users\UserSetRole;
-use EvolutionCMS\Services\Users\UserVerified;
+use EvolutionCMS\UserManager\Services\Users\UserClearSettings;
+use EvolutionCMS\UserManager\Services\Users\UserGeneratePassword;
+use EvolutionCMS\UserManager\Services\Users\UserGetVerifiedKey;
+use EvolutionCMS\UserManager\Services\Users\UserGetValues;
+use EvolutionCMS\UserManager\Services\Users\UserHashChangePassword;
+use EvolutionCMS\UserManager\Services\Users\UserLoginById;
+use EvolutionCMS\UserManager\Services\Users\UserManagerChangePassword;
+use EvolutionCMS\UserManager\Services\Users\UserChangePassword;
+use EvolutionCMS\UserManager\Services\Users\UserDelete;
+use EvolutionCMS\UserManager\Services\Users\UserEdit;
+use EvolutionCMS\UserManager\Services\Users\UserHashLogin;
+use EvolutionCMS\UserManager\Services\Users\UserLogin;
+use EvolutionCMS\UserManager\Services\Users\UserLogout;
+use EvolutionCMS\UserManager\Services\Users\UserRefreshToken;
+use EvolutionCMS\UserManager\Services\Users\UserRegistration;
+use EvolutionCMS\UserManager\Services\Users\UserRepairPassword;
+use EvolutionCMS\UserManager\Services\Users\UserSaveSettings;
+use EvolutionCMS\UserManager\Services\Users\UserSaveValues;
+use EvolutionCMS\UserManager\Services\Users\UserSetGroups;
+use EvolutionCMS\UserManager\Services\Users\UserSetRole;
+use EvolutionCMS\UserManager\Services\Users\UserVerified;
 
 class UserManager
 {
