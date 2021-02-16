@@ -65,7 +65,8 @@
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
     "predis/predis": "*",
-    "evolutioncms-services/user-manager": "*"
+    "evolutioncms-services/user-manager": "1.*",
+    "evolutioncms-services/document-manager": "1.*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

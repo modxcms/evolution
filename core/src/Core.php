@@ -2695,7 +2695,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         Route::fallbackToParser();
 
         $middleware = array_merge(
-            config('app.middleware'),
+            config('app.middleware', []),
             config('middleware.global', [])
         );
 
