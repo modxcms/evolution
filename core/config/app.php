@@ -61,8 +61,8 @@ return [
         'Evolution_TemplateProcessor' => EvolutionCMS\Providers\TemplateProcessorServiceProvider::class,
         'Evolution_HelperProcessor' => EvolutionCMS\Providers\HelperProcessorServiceProvider::class,
         'Evolution_Blade' => EvolutionCMS\Providers\BladeServiceProvider::class,
-        'Evolution_UserManager' => EvolutionCMS\Providers\UserManagerServiceProvider::class,
-        'Evolution_DocumentManager' => EvolutionCMS\Providers\DocumentManagerServiceProvider::class,
+        'Evolution_UserManager' => EvolutionCMS\UserManager\Providers\UserManagerServiceProvider::class,
+        'Evolution_DocumentManager' => EvolutionCMS\DocumentManager\Providers\DocumentManagerServiceProvider::class,
         'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
         'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
         'Evolution_Session' => EvolutionCMS\Providers\SessionServiceProvider::class,
@@ -110,7 +110,7 @@ return [
         'UrlProcessor' => EvolutionCMS\Facades\UrlProcessor::class,
         'TemplateProcessor' => EvolutionCMS\Facades\TemplateProcessor::class,
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
-        'UserManager' => EvolutionCMS\Facades\UserManager::class,
-        'DocumentManager' => EvolutionCMS\Facades\DocumentManager::class,
+        'UserManager' => EvolutionCMS\UserManager\Facades\UserManager::class,
+        'DocumentManager' => EvolutionCMS\DocumentManager\Facades\DocumentManager::class,
     ]
 ];
