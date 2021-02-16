@@ -20,6 +20,7 @@ $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
 $originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
 $currentdate = time() + $modx->config['server_offset_time'];
+$properties = getProperties($type);
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -72,7 +73,8 @@ switch ($_POST['mode']) {
             'locked' => $locked,
             'category' => $categoryid,
             'createdon' => $currentdate,
-            'editedon' => $currentdate
+            'editedon' => $currentdate,
+            'properties' => $properties
         );
         $tmplVar= EvolutionCMS\Models\SiteTmplvar::create($field);
         $newid = $tmplVar->getKey();
@@ -135,7 +137,8 @@ switch ($_POST['mode']) {
             'rank' => $rank,
             'locked' => $locked,
             'category' => $categoryid,
-            'editedon' => $currentdate
+            'editedon' => $currentdate,
+            'properties' => $properties
         );
         $tmplVar = EvolutionCMS\Models\SiteTmplvar::findOrFail($id);
         $tmplVar->update($field);
@@ -171,4 +174,46 @@ switch ($_POST['mode']) {
         break;
     default:
         $modx->webAlertAndQuit("No operation set in request.");
+}
+
+function getProperties($type) {
+    // default properties for TV with number type
+    $current = isset($_POST['properties']) ? json_decode($_POST['properties'], true) : null;
+    switch ($type) {
+        case 'number':
+            $properties = $current ?? [
+                'step' => [
+                    [
+                        'label' => 'step',
+                        'type' => 'text',
+                        'value' => '1',
+                        'default' => '1',
+                        'desc' => ''
+                    ]
+                ],
+                'min' => [
+                    [
+                        'label' => 'min',
+                        'type' => 'text',
+                        'value' => '',
+                        'default' => '',
+                        'desc' => ''
+                    ]
+                ],
+                'max' => [
+                    [
+                        'label' => 'max',
+                        'type' => 'text',
+                        'value' => '',
+                        'default' => '',
+                        'desc' => ''
+                    ]
+                ]
+            ];
+            break;
+        default:
+            $properties = [];
+    }
+
+    return $properties;
 }

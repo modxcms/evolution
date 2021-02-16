@@ -700,7 +700,9 @@ if (! function_exists('renderFormElement')) {
         $field_value = '',
         $field_style = '',
         $row = array(),
-        $tvsArray = array()
+        $tvsArray = array(),
+        $content = null,
+        $properties = []
     ) {
         $modx = evolutionCMS();
         global $_style;
@@ -726,7 +728,16 @@ if (! function_exists('renderFormElement')) {
                     $field_html .= '<input type="email" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%"/>';
                     break;
                 case "number": // handles the input of numbers
-                    $field_html .= '<input type="number" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
+                    if (empty($properties)) {
+                        $step = '';
+                        $min = '';
+                        $max = '';
+                    } else {
+                        $step = isset($properties['step']) ? $properties['step'][0]['value'] : '';
+                        $min = isset($properties['min']) ? $properties['min'][0]['value'] : '';
+                        $max = isset($properties['max']) ? $properties['max'][0]['value'] : '';
+                    }
+                    $field_html .= '<input type="number"' . ($step ? '" step="'.$step.'"' : '') . ($min ? ' min="'.$min.'"' : '') . ($max ? ' min="'.$max.'"' : '') . ' id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
                     break;
                 case "textareamini": // handler for textarea mini boxes
                     $field_html .= '<textarea id="tv' . $field_id . '" name="tv' . $field_id . '" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '</textarea>';
