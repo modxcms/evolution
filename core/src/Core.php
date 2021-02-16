@@ -2708,10 +2708,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 });
         } catch (NotFoundHttpException $exception) {
             EvolutionCMS()->executeParser();
+            exit();
         } catch (MethodNotAllowedException $exception) {
             EvolutionCMS()->executeParser();
+            exit();
         } catch (\Exception $exception) {
             EvolutionCMS()->executeParser();
+            exit();
         }
 
         $response->send();
@@ -2991,7 +2994,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             'postProcess'
         )); // tell PHP to call postProcess when it shuts down
         $this->outputContent();
-        //$this->postProcess();
+        $this->postProcess();
     }
 
     public function _sendErrorForUnpubPage()
