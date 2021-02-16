@@ -162,7 +162,7 @@ class ExtrasCommand extends Command
                 if (count($this->tags) > 2) {
                     $this->version = $this->tags[2];
                 } else {
-                    $this->version = $this->tags[0];
+                    $this->version = $this->tags[1];
                 }
                 break;
             default:
