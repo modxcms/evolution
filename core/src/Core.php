@@ -2916,7 +2916,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentName = &$this->documentObject['pagetitle'];
 
             // check if we should not hit this document
-            if ($this->documentObject['donthit'] == 1) {
+            if ($this->documentObject['hide_from_tree'] == 1) {
                 $this->setConfig('track_visitors', 0);
             }
 

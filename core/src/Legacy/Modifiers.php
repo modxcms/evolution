@@ -954,7 +954,7 @@ class Modifiers implements ModifiersInterface
             case 'publishedon':
             case 'publishedby':
             case 'menutitle':
-            case 'donthit':
+            case 'hide_from_tree':
             case 'haskeywords':
             case 'privateweb':
             case 'privatemgr':
