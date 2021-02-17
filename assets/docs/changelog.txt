@@ -20,6 +20,8 @@ Evolution CMS 3.1.0 (Feb 17, 2021)
 * [GitHub:#38dc4771a] - core (add) add NO_SESSION constant (Ser1ous)
 * [GitHub:#314e7ea6e] - install (add) add remove not used files (Ser1ous)
 * [GitHub:#cfa452baa] - core (fix) change namespace for Evolution Services (Ser1ous)
+* [GitHub:#862e756c6] - fix roletmplvars in headmenu (mnoskov)
+
 
 
 Evolution CMS 3.0.2 (Feb 10, 2021)
