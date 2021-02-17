@@ -80,6 +80,8 @@ class LogInOut extends AbstractController implements ManagerTheme\PageController
                 exit();
             }
         }
+        $log = new \EvolutionCMS\Legacy\LogHandler();
+        $log->initAndWriteLog('Logged in', EvolutionCMS()->getLoginUserID('mgr'), $_SESSION['mgrShortname'], '58', '-', 'EVO');
 
         $id = 0;
 // check if we should redirect user to a web page
