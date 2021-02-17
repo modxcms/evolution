@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'bd62f946959066db9663c077d37e001e5825f9d2',
+    'reference' => '56c2a52cec3fdc8818fbc09c42509a9cf34144e9',
     'name' => 'evolutioncms/core',
   ),
   'versions' => 
@@ -130,12 +130,12 @@
     ),
     'evolutioncms-services/user-manager' => 
     array (
-      'pretty_version' => '1.0.2',
-      'version' => '1.0.2.0',
+      'pretty_version' => '1.0.4',
+      'version' => '1.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '131651c595a6475cb849bc6df3b418c8e920d54b',
+      'reference' => '2c3085f5306f989d014fce6c83dccb9f728061fe',
     ),
     'evolutioncms/core' => 
     array (
@@ -144,7 +144,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'bd62f946959066db9663c077d37e001e5825f9d2',
+      'reference' => '56c2a52cec3fdc8818fbc09c42509a9cf34144e9',
     ),
     'graham-campbell/result-type' => 
     array (

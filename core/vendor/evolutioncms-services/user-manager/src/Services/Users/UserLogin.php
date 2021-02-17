@@ -131,7 +131,6 @@ class UserLogin implements ServiceInterface
         $this->authProcess();
         $this->checkRemember();
         $this->clearActiveUsers();
-        $this->writeLog();
 
         if ($this->events) {
             // invoke OnManagerLogin event
@@ -179,28 +178,36 @@ class UserLogin implements ServiceInterface
 
         // this user has been blocked by an admin, so no way he's loggin in!
         if ($this->user->attributes->blocked == '1') {
-            @session_destroy();
-            session_unset();
+            if(!defined('NO_SESSION')) {
+                @session_destroy();
+                session_unset();
+            }
             throw new ServiceActionException(\Lang::get('global.login_processor_blocked1'));
         }
 
         if ($this->user->attributes->verified != 1) {
-            @session_destroy();
-            session_unset();
+            if(!defined('NO_SESSION')) {
+                @session_destroy();
+                session_unset();
+            }
             throw new ServiceActionException(\Lang::get('global.login_processor_verified'));
         }
 
         // blockuntil: this user has a block until date
         if ($this->user->attributes->blockeduntil > time()) {
-            @session_destroy();
-            session_unset();
+            if(!defined('NO_SESSION')) {
+                @session_destroy();
+                session_unset();
+            }
             throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
         }
 
         // blockafter: this user has a block after date
         if ($this->user->attributes->blockedafter > 0 && $this->user->attributes->blockedafter < time()) {
-            @session_destroy();
-            session_unset();
+            if(!defined('NO_SESSION')) {
+                @session_destroy();
+                session_unset();
+            }
             throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
         }
 
@@ -233,7 +240,29 @@ class UserLogin implements ServiceInterface
 
         EvolutionCMS()->cleanupExpiredLocks();
         EvolutionCMS()->cleanupMultipleActiveUsers();
+        if(!defined('NO_SESSION')) {
+            $this->writeSession();
+        }
+        // successful login so reset fail count and update key values
+        $this->user->attributes->failedlogincount = 0;
+        $this->user->attributes->logincount += 1;
+        $this->user->attributes->thislogin = time();
+        $this->user->attributes->lastlogin = time();
+        $this->user->attributes->save();
 
+        $this->user->refresh_token = hash('sha256', Str::random(32));
+        $this->user->access_token = hash('sha256', Str::random(32));
+        $this->user->valid_to = Carbon::now()->addHours(11);
+        $this->user->save();
+
+        // get user's document groups
+        $i = 0;
+
+
+    }
+
+    public function writeSession()
+    {
         $currentsessionid = session_regenerate_id();
 
         $_SESSION['usertype'] = 'manager'; // user is a backend user
@@ -258,21 +287,7 @@ class UserLogin implements ServiceInterface
             }
             $_SESSION['mgrPermissions'] = $permissionsRole;
         }
-        // successful login so reset fail count and update key values
-        $this->user->attributes->failedlogincount = 0;
-        $this->user->attributes->logincount += 1;
-        $this->user->attributes->thislogin = time();
-        $this->user->attributes->lastlogin = time();
         $this->user->attributes->sessionid = $currentsessionid;
-        $this->user->attributes->save();
-
-        $this->user->refresh_token = hash('sha256', Str::random(32));
-        $this->user->access_token = hash('sha256', Str::random(32));
-        $this->user->valid_to = Carbon::now()->addHours(11);
-        $this->user->save();
-
-        // get user's document groups
-        $i = 0;
 
         $_SESSION['mgrDocgroups'] = \EvolutionCMS\Models\MemberGroup::query()
             ->join('membergroup_access', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
@@ -322,11 +337,6 @@ class UserLogin implements ServiceInterface
         }
     }
 
-    public function writeLog()
-    {
-        $log = new \EvolutionCMS\Legacy\LogHandler();
-        $log->initAndWriteLog('Logged in', EvolutionCMS()->getLoginUserID('mgr'), $_SESSION['mgrShortname'], '58', '-', 'EVO');
-    }
 
     public function incrementFailedLoginCount(): void
     {
