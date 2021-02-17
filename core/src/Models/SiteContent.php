@@ -41,7 +41,7 @@ use Rocky\Eloquent\HasDynamicRelation;
  * @property int $publishedon
  * @property int $publishedby
  * @property string $menutitle
- * @property bool $donthit
+ * @property bool $hide_from_tree
  * @property bool $privateweb
  * @property bool $privatemgr
  * @property bool $content_dispo
@@ -162,7 +162,7 @@ class SiteContent extends Eloquent\Model
         'deletedby' => 'int',
         'publishedon' => 'int',
         'publishedby' => 'int',
-        'donthit' => 'bool',
+        'hide_from_tree' => 'bool',
         'privateweb' => 'bool',
         'privatemgr' => 'bool',
         'content_dispo' => 'bool',
@@ -287,7 +287,7 @@ class SiteContent extends Eloquent\Model
         'publishedon',
         'publishedby',
         'menutitle',
-        'donthit',
+        'hide_from_tree',
         'privateweb',
         'privatemgr',
         'content_dispo',

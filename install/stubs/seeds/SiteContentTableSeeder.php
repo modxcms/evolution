@@ -52,7 +52,7 @@ class SiteContentTableSeeder extends Seeder
                 'publishedon' => 1130304721,
                 'publishedby' => 1,
                 'menutitle' => 'Base Install',
-                'donthit' => 0,
+                'hide_from_tree' => 0,
                 'privateweb' => 0,
                 'privatemgr' => 0,
                 'content_dispo' => 0,

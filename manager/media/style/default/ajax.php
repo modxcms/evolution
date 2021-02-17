@@ -493,7 +493,7 @@ if (isset($action)) {
                             'publishedon',
                             'publishedby',
                             'menutitle',
-                            'donthit',
+                            'hide_from_tree',
                             'haskeywords',
                             'hasmetatags',
                             'privateweb',

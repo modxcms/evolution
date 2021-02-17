@@ -172,10 +172,12 @@ try {
             $files = explode("\n", file_get_contents($delete_file));
             foreach ($files as $file) {
                 $file = str_replace('{core}', EVO_CORE_PATH, $file);
-                if (is_dir($file)) {
-                    removeFolder($file);
-                } else {
-                    unlink($file);
+                if (file_exists($file)) {
+                    if (is_dir($file)) {
+                        removeFolder($file);
+                    } else {
+                        unlink($file);
+                    }
                 }
             }
         }

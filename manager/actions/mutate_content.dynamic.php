@@ -1292,7 +1292,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_trackvisit_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="donthitcheck" type="checkbox" class="checkbox" <?= empty($content['donthit']) ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?= empty($content['donthit']) ? 0 : 1 ?>" onchange="documentDirty=true;" />
+                                        <input name="hide_from_treecheck" type="checkbox" class="checkbox" <?= empty($content['hide_from_tree']) ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.hide_from_tree);" /><input type="hidden" name="hide_from_tree" value="<?= empty($content['hide_from_tree']) ? 0 : 1 ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>

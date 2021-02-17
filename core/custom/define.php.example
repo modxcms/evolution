@@ -16,5 +16,6 @@
  *      - MODX_SITE_URL
  *      - MODX_MANAGER_URL
  *      - MODX_SANITIZE_SEED
+ *      - NO_SESSION
  *  - custom
  */

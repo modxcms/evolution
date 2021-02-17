@@ -75,7 +75,7 @@ if (!function_exists('makeHTML')) {
         $result = \EvolutionCMS\Models\SiteContent::query()->withTrashed()->select('site_content.id', 'site_content.pagetitle', 'longtitle',
             'menutitle', 'parent', 'isfolder'
             , 'published', 'pub_date', 'unpub_date', 'richtext', 'searchable', 'cacheable'
-            , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'donthit', 'hidemenu', 'alias'
+            , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'hide_from_tree', 'hidemenu', 'alias'
             , 'contentType', 'privateweb', 'privatemgr'
         )
             ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
@@ -101,7 +101,7 @@ if (!function_exists('makeHTML')) {
         $result->groupBy(['site_content.id', 'site_content.pagetitle', 'longtitle',
             'menutitle', 'parent', 'isfolder'
             , 'published', 'pub_date', 'unpub_date', 'richtext', 'searchable', 'cacheable'
-            , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'donthit', 'hidemenu', 'alias'
+            , 'deleted', 'type', 'template', 'templatename', 'menuindex', 'hide_from_tree', 'hidemenu', 'alias'
             , 'contentType', 'privateweb', 'privatemgr']);
         $result = $result->get();
 
@@ -221,7 +221,7 @@ if (!function_exists('makeHTML')) {
                 'deleted' => $row['deleted'],
                 'type' => $row['type'],
                 'menuindex' => $row['menuindex'],
-                'donthit' => $row['donthit'],
+                'hide_from_tree' => $row['hide_from_tree'],
                 'hidemenu' => $row['hidemenu'],
                 'alias' => $row['alias'],
                 'contenttype' => $row['contentType'],
@@ -416,7 +416,7 @@ if (!function_exists('makeHTML')) {
                         $ph['node_toggle'] = 1;
                         $ph['subMenuState'] = ' open';
 
-                        if ($ph['donthit'] == 1) {
+                        if ($ph['hide_from_tree'] == 1) {
                             $ph['tree_page_click'] = 3;
                             $ph['icon_node_toggle'] = '';
                             $ph['icon'] = $ph['icon_folder_close'];
@@ -446,7 +446,7 @@ if (!function_exists('makeHTML')) {
 
                         if ($ph['showChildren'] == 0) {
                             $ph['icon_node_toggle'] = '';
-                            $ph['donthit'] = 1;
+                            $ph['hide_from_tree'] = 1;
                             $ph['icon'] = $ph['icon_folder_close'];
                             $tpl = getTplFolderNodeNotChildren();
                         }
@@ -456,7 +456,7 @@ if (!function_exists('makeHTML')) {
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
-                        if ($ph['donthit'] == 0) {
+                        if ($ph['hide_from_tree'] == 0) {
                             $node .= makeHTML($indent + 1, $row['id'], $expandAll, $hereid);
                         }
                         $node .= '</div></div>';
@@ -466,7 +466,7 @@ if (!function_exists('makeHTML')) {
                         $ph['icon_node_toggle'] = $ph['tree_plusnode'];
                         $ph['node_toggle'] = 0;
 
-                        if ($ph['donthit'] == 1) {
+                        if ($ph['hide_from_tree'] == 1) {
                             $ph['tree_page_click'] = 3;
                             $ph['icon_node_toggle'] = '';
                             $ph['icon'] = $ph['icon_folder_close'];
@@ -491,7 +491,7 @@ if (!function_exists('makeHTML')) {
 
                         if ($ph['showChildren'] == 0) {
                             $ph['icon_node_toggle'] = '';
-                            $ph['donthit'] = 1;
+                            $ph['hide_from_tree'] = 1;
                             $ph['icon'] = $ph['icon_folder_close'];
                             $tpl = getTplFolderNodeNotChildren();
                         }
