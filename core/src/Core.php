@@ -1484,10 +1484,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             $value = $ph[$key];
 
-            if ($value === null) {
-                continue;
-            }
-
             $value = $this->parseText($value, $params); // parse local scope placeholers for ConditionalTags
             $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
             if ($this->getConfig('enable_at_syntax')) {
