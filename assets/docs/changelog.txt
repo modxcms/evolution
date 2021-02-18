@@ -1,6 +1,13 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.1 (Feb 18, 2021)
+* [GitHub:#38cb480f8] - install (add) add new file for delete (Ser1ous)
+* [GitHub:#9428c6612] - fix snippet share params (Dmi3yy)
+* [GitHub:#d100720aa] - fix plugin share params (Dmi3yy)
+* [GitHub:#b25dcf6a3] - core (fix) show chunk (Ser1ous)
+
+
 Evolution CMS 3.1.0 (Feb 17, 2021)
 * [GitHub:#53a3b815d] - core (fix) fix select default package (Ser1ous)
 * [GitHub:#4eb046ddf] - core (fix) fix incorrect Content Type (Ser1ous)
