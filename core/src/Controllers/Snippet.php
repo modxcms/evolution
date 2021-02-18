@@ -119,7 +119,7 @@ class Snippet extends AbstractController implements ManagerTheme\PageControllerI
             $join->on('site_module_depobj.type', '=', \DB::raw(40));
         })->join('site_snippets', 'site_snippets.id', '=', 'site_module_depobj.resource')
             ->where('site_module_depobj.resource', $this->object->getKey())
-            ->where('site_modules.enable_resource', 1)->orderBy('site_modules.name', 'ASC')->get()
+            ->where('site_modules.enable_sharedparams', 1)->orderBy('site_modules.name', 'ASC')->get()
             ->pluck('name', 'guid')->toArray();
     }
 
