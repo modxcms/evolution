@@ -274,30 +274,28 @@ if ($dbh->errorCode() == 0 && $installMode == 0) {
 }
 
 // check mysql version
-if (!is_null($dbh)) {
-
-    $serverVersion = $dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
-    switch ($database_type) {
-        case 'pgsql':
-            echo '<p>' . $_lang['checking_pgsql_version'];
-            if (version_compare($serverVersion, '10.0', '<')) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
-            } else {
-                echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
-            }
-            break;
-        case 'mysql':
-            echo '<p>' . $_lang['checking_mysql_version'];
-            if (version_compare($serverVersion, '5.7.6', '<')) {
-                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong><br> <span class="notok">' . $_lang['mysql_old_version'] . '</span></p>';
-            } else {
-                echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
-            }
-            break;
-    }
-
-
-}
+//if (!is_null($dbh)) {
+//
+//    $serverVersion = $dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
+//    switch ($database_type) {
+//        case 'pgsql':
+//            echo '<p>' . $_lang['checking_pgsql_version'];
+//            if (version_compare($serverVersion, '10.0', '<')) {
+//                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
+//            } else {
+//                echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['pgsql_version_is'] . $serverVersion . '</strong></p>';
+//            }
+//            break;
+//        case 'mysql':
+//            echo '<p>' . $_lang['checking_mysql_version'];
+//            if (version_compare($serverVersion, '5.7.6', '<')) {
+//                echo '<span class="notok">' . $_lang['warning'] . '</span></b>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong><br> <span class="notok">' . $_lang['mysql_old_version'] . '</span></p>';
+//            } else {
+//                echo '<span class="ok">' . $_lang['ok'] . '</span>&nbsp;&nbsp;<strong>' . $_lang['mysql_version_is'] . $serverVersion . '</strong></p>';
+//            }
+//            break;
+//    }
+//}
 
 // check for strict mode
 //if ($conn) {
