@@ -120,10 +120,10 @@ class Plugin extends AbstractController implements ManagerTheme\PageControllerIn
 
         return Models\SiteModule::query()->join('site_module_depobj', function ($join) {
             $join->on('site_module_depobj.module', '=', 'site_modules.id');
-            $join->on('site_module_depobj.type', '=', \DB::raw(38));
+            $join->on('site_module_depobj.type', '=', \DB::raw(30));
         })->join('site_plugins', 'site_plugins.id', '=', 'site_module_depobj.resource')
             ->where('site_module_depobj.resource', $this->object->getKey())
-            ->where('site_modules.enable_resource', 1)->orderBy('site_modules.name', 'ASC')->get()
+            ->where('site_modules.enable_sharedparams', 1)->orderBy('site_modules.name', 'ASC')->get()
             ->pluck('name', 'guid')->toArray();
     }
 
