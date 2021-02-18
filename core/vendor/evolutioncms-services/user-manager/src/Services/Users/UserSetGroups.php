@@ -2,7 +2,7 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use \EvolutionCMS\Models\User;
 
 class UserSetGroups extends UserSetRole

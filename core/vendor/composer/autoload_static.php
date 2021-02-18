@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3
+class ComposerStaticInit1bc83fa1be2dd97e8cdd1f24d2a977f1
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -1426,6 +1426,7 @@ class ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3
         'EvolutionCMS\\Core' => __DIR__ . '/../..' . '/src/Core.php',
         'EvolutionCMS\\Database' => __DIR__ . '/../..' . '/src/Database.php',
         'EvolutionCMS\\DocumentManager\\Facades\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Facades/DocumentManager.php',
+        'EvolutionCMS\\DocumentManager\\Interfaces\\DocumentServiceInterface' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Interfaces/DocumentServiceInterface.php',
         'EvolutionCMS\\DocumentManager\\Providers\\DocumentManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Providers/DocumentManagerServiceProvider.php',
         'EvolutionCMS\\DocumentManager\\Services\\DocumentManager' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/DocumentManager.php',
         'EvolutionCMS\\DocumentManager\\Services\\Documents\\DocumentClearCart' => __DIR__ . '/..' . '/evolutioncms-services/document-manager/src/Services/Documents/DocumentClearCart.php',
@@ -1475,7 +1476,6 @@ class ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3
         'EvolutionCMS\\Interfaces\\PaginginateInterface' => __DIR__ . '/../..' . '/src/Interfaces/PaginginateInterface.php',
         'EvolutionCMS\\Interfaces\\PasswordHashInterface' => __DIR__ . '/../..' . '/src/Interfaces/PasswordHashInterface.php',
         'EvolutionCMS\\Interfaces\\PhpCompatInterface' => __DIR__ . '/../..' . '/src/Interfaces/PhpCompatInterface.php',
-        'EvolutionCMS\\Interfaces\\ServiceInterface' => __DIR__ . '/../..' . '/src/Interfaces/ServiceInterface.php',
         'EvolutionCMS\\Interfaces\\ServiceProviderInterface' => __DIR__ . '/../..' . '/src/Interfaces/ServiceProviderInterface.php',
         'EvolutionCMS\\Interfaces\\TracyPanel' => __DIR__ . '/../..' . '/src/Interfaces/TracyPanel.php',
         'EvolutionCMS\\Legacy\\Cache' => __DIR__ . '/../..' . '/src/Legacy/Cache.php',
@@ -1602,6 +1602,7 @@ class ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3
         'EvolutionCMS\\Traits\\Settings' => __DIR__ . '/../..' . '/src/Traits/Settings.php',
         'EvolutionCMS\\UrlProcessor' => __DIR__ . '/../..' . '/src/UrlProcessor.php',
         'EvolutionCMS\\UserManager\\Facades\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Facades/UserManager.php',
+        'EvolutionCMS\\UserManager\\Interfaces\\UserServiceInterface' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Interfaces/UserServiceInterface.php',
         'EvolutionCMS\\UserManager\\Providers\\UserManagerServiceProvider' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Providers/UserManagerServiceProvider.php',
         'EvolutionCMS\\UserManager\\Services\\UserManager' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/UserManager.php',
         'EvolutionCMS\\UserManager\\Services\\Users\\ExcludeStandardFieldsTrait' => __DIR__ . '/..' . '/evolutioncms-services/user-manager/src/Services/Users/ExcludeStandardFieldsTrait.php',
@@ -3722,9 +3723,9 @@ class ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6dbb3d30635d64b67fa86b81d651d4e3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1bc83fa1be2dd97e8cdd1f24d2a977f1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1bc83fa1be2dd97e8cdd1f24d2a977f1::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1bc83fa1be2dd97e8cdd1f24d2a977f1::$classMap;
 
         }, null, ClassLoader::class);
     }

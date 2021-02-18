@@ -1,14 +1,14 @@
 <?php namespace EvolutionCMS\DocumentManager\Services\Documents;
 
+use EvolutionCMS\DocumentManager\Interfaces\DocumentServiceInterface;
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
 
-class DocumentCreate implements ServiceInterface
+class DocumentCreate implements DocumentServiceInterface
 {
     /**
      * @var \string[][]

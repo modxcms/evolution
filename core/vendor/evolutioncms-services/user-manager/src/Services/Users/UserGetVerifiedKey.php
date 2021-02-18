@@ -2,10 +2,10 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use \EvolutionCMS\Models\User;
 
-class UserGetVerifiedKey implements ServiceInterface
+class UserGetVerifiedKey implements UserServiceInterface
 {
     /**
      * @var \string[][]

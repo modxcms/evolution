@@ -1018,20 +1018,20 @@
         },
         {
             "name": "evolutioncms-services/document-manager",
-            "version": "1.0.4",
-            "version_normalized": "1.0.4.0",
+            "version": "1.0.5",
+            "version_normalized": "1.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/evolution-cms/DocumentManager.git",
-                "reference": "bc8750493a507ab1372668d4992f3368da52f875"
+                "reference": "7dcb2a0016618880abeb6e015c39d5b86c434521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/evolution-cms/DocumentManager/zipball/bc8750493a507ab1372668d4992f3368da52f875",
-                "reference": "bc8750493a507ab1372668d4992f3368da52f875",
+                "url": "https://api.github.com/repos/evolution-cms/DocumentManager/zipball/7dcb2a0016618880abeb6e015c39d5b86c434521",
+                "reference": "7dcb2a0016618880abeb6e015c39d5b86c434521",
                 "shasum": ""
             },
-            "time": "2021-02-16T18:00:50+00:00",
+            "time": "2021-02-18T08:42:56+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1051,26 +1051,26 @@
             ],
             "support": {
                 "issues": "https://github.com/evolution-cms/DocumentManager/issues",
-                "source": "https://github.com/evolution-cms/DocumentManager/tree/1.0.4"
+                "source": "https://github.com/evolution-cms/DocumentManager/tree/1.0.5"
             },
             "install-path": "../evolutioncms-services/document-manager"
         },
         {
             "name": "evolutioncms-services/user-manager",
-            "version": "1.0.4",
-            "version_normalized": "1.0.4.0",
+            "version": "1.0.5",
+            "version_normalized": "1.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/evolution-cms/UserManager.git",
-                "reference": "2c3085f5306f989d014fce6c83dccb9f728061fe"
+                "reference": "64ed549ddf6dd7157432cf652cc3aa68798e7992"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/evolution-cms/UserManager/zipball/2c3085f5306f989d014fce6c83dccb9f728061fe",
-                "reference": "2c3085f5306f989d014fce6c83dccb9f728061fe",
+                "url": "https://api.github.com/repos/evolution-cms/UserManager/zipball/64ed549ddf6dd7157432cf652cc3aa68798e7992",
+                "reference": "64ed549ddf6dd7157432cf652cc3aa68798e7992",
                 "shasum": ""
             },
-            "time": "2021-02-17T12:36:04+00:00",
+            "time": "2021-02-18T08:40:14+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1090,7 +1090,7 @@
             ],
             "support": {
                 "issues": "https://github.com/evolution-cms/UserManager/issues",
-                "source": "https://github.com/evolution-cms/UserManager/tree/1.0.4"
+                "source": "https://github.com/evolution-cms/UserManager/tree/1.0.5"
             },
             "install-path": "../evolutioncms-services/user-manager"
         },

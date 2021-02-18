@@ -2,11 +2,11 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
 
-class UserDelete implements ServiceInterface
+class UserDelete implements UserServiceInterface
 {
     /**
      * @var \string[][]

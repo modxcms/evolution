@@ -2,12 +2,12 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
-class UserSaveSettings implements ServiceInterface
+class UserSaveSettings implements UserServiceInterface
 {
     use ExcludeStandardFieldsTrait;
 

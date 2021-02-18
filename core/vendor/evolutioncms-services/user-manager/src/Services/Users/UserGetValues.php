@@ -2,11 +2,11 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use EvolutionCMS\Models\UserValue;
 use Illuminate\Support\Facades\Lang;
 
-class UserGetValues implements ServiceInterface
+class UserGetValues implements UserServiceInterface
 {
     /**
      * @var \string[][]

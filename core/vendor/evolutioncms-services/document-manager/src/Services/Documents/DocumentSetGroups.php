@@ -2,7 +2,6 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 use \EvolutionCMS\Models\User;

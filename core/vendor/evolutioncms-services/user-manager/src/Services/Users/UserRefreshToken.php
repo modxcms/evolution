@@ -2,13 +2,13 @@
 
 use EvolutionCMS\Exceptions\ServiceActionException;
 use EvolutionCMS\Exceptions\ServiceValidationException;
-use EvolutionCMS\Interfaces\ServiceInterface;
+use EvolutionCMS\UserManager\Interfaces\UserServiceInterface;
 use \EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class UserRefreshToken implements ServiceInterface
+class UserRefreshToken implements UserServiceInterface
 {
     /**
      * @var \string[][]
