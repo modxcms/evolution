@@ -66,6 +66,7 @@ class UserLogin implements UserServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
+        $this->context = evo()->getContext();
         $this->validate = $this->getValidationRules();
         $this->messages = $this->getValidationMessages();
         $this->blockedMinutes = EvolutionCMS()->getConfig('blocked_minutes');
@@ -81,7 +82,7 @@ class UserLogin implements UserServiceInterface
     public function getValidationRules(): array
     {
         return ['username' => ['required'],
-                'password' => ['required']];
+            'password' => ['required']];
     }
 
     /**
@@ -90,7 +91,7 @@ class UserLogin implements UserServiceInterface
     public function getValidationMessages(): array
     {
         return ['username.required' => Lang::get("global.required_field", ['field' => 'username']),
-                'password.required' => Lang::get("global.required_field", ['field' => 'password'])];
+            'password.required' => Lang::get("global.required_field", ['field' => 'password'])];
     }
 
     /**
@@ -266,18 +267,17 @@ class UserLogin implements UserServiceInterface
         $currentsessionid = session_regenerate_id();
 
         $_SESSION['usertype'] = 'manager'; // user is a backend user
-
         // get permissions
-        $_SESSION['mgrShortname'] = $this->user->username;
-        $_SESSION['mgrFullname'] = $this->user->attributes->fullname;
-        $_SESSION['mgrEmail'] = $this->user->attributes->email;
-        $_SESSION['mgrValidated'] = 1;
-        $_SESSION['mgrInternalKey'] = $this->user->getKey();
-        $_SESSION['mgrFailedlogins'] = $this->user->attributes->failedlogincount;
-        $_SESSION['mgrLastlogin'] = $this->user->attributes->lastlogin;
-        $_SESSION['mgrLogincount'] = $this->user->attributes->logincount; // login count
-        $_SESSION['mgrRole'] = $this->user->attributes->role;
-        $_SESSION['mgrPermissions'] = [];
+        $_SESSION[$this->context . 'Shortname'] = $this->user->username;
+        $_SESSION[$this->context . 'Fullname'] = $this->user->attributes->fullname;
+        $_SESSION[$this->context . 'Email'] = $this->user->attributes->email;
+        $_SESSION[$this->context . 'Validated'] = 1;
+        $_SESSION[$this->context . 'InternalKey'] = $this->user->getKey();
+        $_SESSION[$this->context . 'Failedlogins'] = $this->user->attributes->failedlogincount;
+        $_SESSION[$this->context . 'Lastlogin'] = $this->user->attributes->lastlogin;
+        $_SESSION[$this->context . 'Logincount'] = $this->user->attributes->logincount; // login count
+        $_SESSION[$this->context . 'Role'] = $this->user->attributes->role;
+        $_SESSION[$this->context . 'Permissions'] = [];
         $mgrPermissions = \EvolutionCMS\Models\UserRole::find($this->user->attributes->role);
         if (!is_null($mgrPermissions)) {
             $permissionsRole = $mgrPermissions->toArray();
@@ -285,16 +285,16 @@ class UserLogin implements UserServiceInterface
             foreach ($roleArray as $role) {
                 $permissionsRole[$role] = 1;
             }
-            $_SESSION['mgrPermissions'] = $permissionsRole;
+            $_SESSION[$this->context . 'Permissions'] = $permissionsRole;
         }
         $this->user->attributes->sessionid = $currentsessionid;
 
-        $_SESSION['mgrDocgroups'] = \EvolutionCMS\Models\MemberGroup::query()
+        $_SESSION[$this->context . 'Docgroups'] = \EvolutionCMS\Models\MemberGroup::query()
             ->join('membergroup_access', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
             ->where('member_groups.member', $this->user->getKey())->pluck('documentgroup')->toArray();
 
 
-        $_SESSION['mgrToken'] = md5($currentsessionid);
+        $_SESSION[$this->context . 'Token'] = md5($currentsessionid);
 
     }
 
@@ -302,7 +302,7 @@ class UserLogin implements UserServiceInterface
     {
 
         if ($this->userData['rememberme'] == 1) {
-            $_SESSION['modx.mgr.session.cookie.lifetime'] = (int)EvolutionCMS()->getConfig('session.cookie.lifetime');
+            $_SESSION['modx.' . $this->context . '.session.cookie.lifetime'] = (int)EvolutionCMS()->getConfig('session.cookie.lifetime');
 
             // Set a cookie separate from the session cookie with the username in it.
             // Are we using secure connection? If so, make sure the cookie is secure
@@ -310,12 +310,12 @@ class UserLogin implements UserServiceInterface
 
             $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
             if (version_compare(PHP_VERSION, '5.2', '<')) {
-                setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, '; HttpOnly', $secure);
+                setcookie('modx_remember_manager', $_SESSION[$this->context . 'Shortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, '; HttpOnly', $secure);
             } else {
-                setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, NULL, $secure, true);
+                setcookie('modx_remember_manager', $_SESSION[$this->context . 'Shortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, NULL, $secure, true);
             }
         } else {
-            $_SESSION['modx.mgr.session.cookie.lifetime'] = 0;
+            $_SESSION['modx.' .$this->context . '.session.cookie.lifetime'] = 0;
 
             // Remove the Remember Me cookie
             setcookie('modx_remember_manager', '', time() - 3600, MODX_BASE_URL);

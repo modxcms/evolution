@@ -115,7 +115,7 @@ class UserLogout implements UserServiceInterface
             $user->access_token = '';
             $user->valid_to = NULL;
             $user->save();
-            $username = $_SESSION['mgrShortname'];
+            $username = $_SESSION[evo()->getContext() . 'Shortname'];
             $sid = EvolutionCMS()->sid;
             if ($this->events) {
                 // invoke OnBeforeManagerLogout event
