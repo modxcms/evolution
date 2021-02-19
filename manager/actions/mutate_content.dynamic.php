@@ -802,7 +802,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                 if(is_array($evtOut)) {
                                                     for($i = 0; $i < count($evtOut); $i++) {
                                                         $editor = $evtOut[$i];
-                                                        echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+                                                        echo "\t\t\t", '<option value="', $editor, '"', ($modx->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
                                                     }
                                                 }
                                                 ?>

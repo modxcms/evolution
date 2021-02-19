@@ -51,7 +51,7 @@ if (!empty($_COOKIE['MODX_themeMode'])) {
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
 $prte = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
-$srte = ($modx->config['use_editor'] ? $modx->config['which_editor'] : 'none');
+$srte = ($modx->config['use_editor'] ? $modx->getConfig('which_editor') : 'none');
 $xrte = isset($content['richtext']) ? $content['richtext'] : '';
 $tvMode = false;
 $limitedHeight = false;
