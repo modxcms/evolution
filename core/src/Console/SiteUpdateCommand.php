@@ -134,7 +134,7 @@ class SiteUpdateCommand extends Command
                     $file = str_replace('{core}', EVO_CORE_PATH, $file);
                     if (file_exists($file)) {
                         if (is_dir($file)) {
-                            removeFolder($file);
+                            SELF::rmdirs($file);
                         } else {
                             unlink($file);
                         }
