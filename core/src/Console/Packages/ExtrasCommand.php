@@ -143,7 +143,10 @@ class ExtrasCommand extends Command
         }
         $url = 'https://raw.githubusercontent.com/' . $this->fullPackage[$this->selectPackage]['full_name'] . '/' . $this->fullPackage[$this->selectPackage]['default_branch'] . '/composer.json';
         $gitInfo = $this->getGithubInfo($url);
-
+        if(!is_array($gitInfo)){
+            echo 'The limit that is provided for free use of github has been exceeded. Please try later.';
+            exit();
+        }
         if (isset($gitInfo['name'])) {
             $this->call("package:installrequire", ['key' => $gitInfo['name'], 'value' => $this->version]);
         } else {
@@ -178,6 +181,10 @@ class ExtrasCommand extends Command
     {
         $packageForChose = [];
         $fullPackage = $this->getGithubInfo($url);
+        if(!is_array($fullPackage)){
+            echo 'The limit that is provided for free use of github has been exceeded. Please try later.';
+            exit();
+        }
         foreach ($fullPackage as $key => $package) {
             $packageForChose[$key] = $package['name'];
             $this->fullPackage[$package['name']] = $package;
@@ -190,6 +197,10 @@ class ExtrasCommand extends Command
         $tagsUrl = $this->fullPackage[$this->selectPackage]['tags_url'];
 
         $tagsInfo = $this->getGithubInfo($tagsUrl);
+        if(!is_array($tagsInfo)){
+            echo 'The limit that is provided for free use of github has been exceeded. Please try later.';
+            exit();
+        }
         $getTags[] = 'Current and updated';
         foreach ($tagsInfo as $tag) {
             $getTags[] = $tag['name'];
