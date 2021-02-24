@@ -141,7 +141,7 @@ if (isset($action)) {
                     case 'element_tplvars':
                         $a = 301;
                         $prefix = \DB::getTablePrefix();
-                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', \DB::raw('IFNULL(templateid, roleid) AS `disabled`'))
+                        $sql = \EvolutionCMS\Models\SiteTmplvar::query()->select('site_tmplvars.id', 'site_tmplvars.name', 'site_tmplvars.locked', 'site_tmplvar_templates.tmplvarid', 'templateid', 'roleid')
                             ->leftJoin('site_tmplvar_templates', function ($join) {
                                 $join->on('site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id');
                                 $join->on('site_tmplvar_templates.templateid', '>', \DB::raw(0));
@@ -213,10 +213,8 @@ if (isset($action)) {
 
                     foreach ($sql->take($limit)->get() as $row) {
                         $row = $row->toArray();
-                        if ($a == 301 && !is_numeric($row['disabled'])) {
-                            $row['disabled'] = 1;
-                        } else {
-                            $row['disabled'] = 0;
+                        if ($a == 301) {
+                            $row['disabled'] = !$row['templateid'] && !$row['roleid'];
                         }
                         if (!isset($row['disabled'])) $row['disabled'] = 0;
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
