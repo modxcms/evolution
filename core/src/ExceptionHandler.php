@@ -374,7 +374,10 @@ class ExceptionHandler
                  ' . $str . '</body></html>';
 
         } else {
-            echo 'Error';
+            if (file_exists(EVO_CORE_PATH . 'custom/error_page.html')) {
+                echo file_get_contents(EVO_CORE_PATH . 'custom/error_page.html');
+            } else
+                echo 'Error';
         }
         if (!is_cli()) {
             ob_end_flush();
