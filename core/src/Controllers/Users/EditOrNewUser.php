@@ -146,6 +146,8 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
 
         if (isset($userData['user_groups']) && is_array($userData['user_groups'])) {
             \UserManager::setGroups(['id' => $user->getKey(), 'groups' => $userData['user_groups']]);
+        } else {
+            \UserManager::setGroups(['id' => $user->getKey(), 'groups' => []]);
         }
 
         if ($userData['stay'] != '') {
