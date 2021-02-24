@@ -55,16 +55,23 @@ try {
                     echo $output . '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed_table_prefix_already_in_use'] . '</span>';
                     exit();
                 }
-
+                $result = $dbh->query("SELECT SCHEMA_NAME
+                      FROM INFORMATION_SCHEMA.SCHEMATA
+                     WHERE SCHEMA_NAME = '" . $_POST['database_name'] . "'");
+                if ($dbh->errorCode() == 0) {
+                    $data = $result->fetch();
+                    if (isset($data['SCHEMA_NAME']) && $data['SCHEMA_NAME'] == $_POST['database_name']) {
+                        echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
+                        exit();
+                    }
+                }
             } else {
-
                 echo $output . '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed'] . ' ' . print_r($result->errorInfo(), true) . '</span>';
                 exit();
             }
             break;
     }
-//    echo $output . '<span id="database_pass" style="color:#80c000;"> ' . $_lang['status_passed'] . '</span>';
-//    exit();
+
 } catch (PDOException $e) {
     if (!stristr($e->getMessage(), 'database "' . $_POST['database_name'] . '" does not exist') && !stristr($e->getMessage(), 'Unknown database \'' . $_POST['database_name'] . '\'') && !stristr($e->getMessage(), 'Base table or view not found')) {
         echo $output . '<span id="database_fail" style="color:#FF0000;">' . $_lang['status_failed'] . ' ' . $e->getMessage() . '</span>';
