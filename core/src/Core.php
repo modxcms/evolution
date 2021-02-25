@@ -4930,7 +4930,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-// get document record
+        // get document record
         if (empty($docid)) {
             $docid = $this->documentIdentifier;
             $docRow = $this->documentObject;
@@ -4942,7 +4942,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 return false;
             }
         }
-
+        $table = $this->getDatabase()->getFullTableName('site_tmplvars');
         // get user defined template variables
         if (!empty($fields) && (is_scalar($fields) || \is_array($fields))) {
             if (\is_scalar($fields)) {
@@ -4951,16 +4951,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $fields = array_filter(array_map('trim', $fields), function ($value) {
                 return $value !== 'value';
             });
-            $fields = 'site_tmplvars.' . implode(',site_tmplvars.', $fields);
         } else {
-            $fields = 'site_tmplvars.*';
+            $fields = ['*'];
         }
-        $sort = ($sort == '') ? '' : 'site_tmplvars.' . implode(',site_tmplvars.', array_filter(array_map('trim', explode(',', $sort))));
+        $sort = ($sort == '') ? '' : $table . '.' . implode(',' . $table . '.', array_filter(array_map('trim', explode(',', $sort))));
 
         if ($idnames === '*') {
-            $query = '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.id<>0';
+            $query = '' . $table . '.id<>0';
         } else {
-            $query = (is_numeric($idnames[0]) ? '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.id' : '' . $this->getDatabase()->getConfig('prefix') . 'site_tmplvars.name') . " IN ('" . implode("','", $idnames) . "')";
+            $query = (is_numeric($idnames[0]) ? '' . $table . '.id' : '' . $table . '.name') . " IN ('" . implode("','", $idnames) . "')";
         }
 
         $rs = SiteTmplvar::query()
@@ -4973,7 +4972,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             })
             ->whereRaw($query . " AND " . $this->getDatabase()->getConfig('prefix') . "site_tmplvar_templates.templateid = '" . $docRow['template'] . "'");
         if ($sort != '') {
-            $rs = $rs->orderBy($sort);
+            $rs = $rs->orderByRaw($sort);
         }
         $rs = $rs->get();
 
