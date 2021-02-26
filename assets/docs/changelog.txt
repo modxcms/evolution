@@ -1,6 +1,23 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.2 (Feb 26, 2021)
+* [GitHub:#1cea0f175] - composer update (Dmi3yy)
+* [GitHub:#05da0b0e4] - fix query errors (Pathologic)
+* [GitHub:#f45eca69c] - fix(manager): Save user without groups (Serg)
+* [GitHub:#8d81e78fb] - lang (fix) delete error word (Ser1ous)
+* [GitHub:#0c75c1796] - install (fix) fix check database EXISTS (Ser1ous)
+* [GitHub:#72262db72] - core (add) add custom error file (Ser1ous)
+* [GitHub:#8da8d7586] - fix disabled elements in headmenu (mnoskov)
+* [GitHub:#cbacb5816] - core (fix) add user fields to exclude tvs name (Ser1ous)
+* [GitHub:#2bbd37a4e] - fic getConfig for which_editor (Dmi3yy)
+* [GitHub:#5f73258cc] - core (fix) add exception for github limits (Ser1ous)
+* [GitHub:#20473423b] - core (fix) change cli check (Ser1ous)
+* [GitHub:#18bc86e8e] - remove package.json (Dmi3yy)
+* [GitHub:#8f01a3476] - install (fix) fix delete folder when use console update (Ser1ous)
+* [GitHub:#bfca1888e] - hide mysql and postgree warning on install (Dmi3yy)
+
+
 Evolution CMS 3.1.1 (Feb 18, 2021)
 * [GitHub:#38cb480f8] - install (add) add new file for delete (Ser1ous)
 * [GitHub:#9428c6612] - fix snippet share params (Dmi3yy)
