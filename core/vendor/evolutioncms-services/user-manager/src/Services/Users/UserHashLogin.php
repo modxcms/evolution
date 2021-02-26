@@ -60,12 +60,6 @@ class UserHashLogin extends UserLogin
             throw new ServiceActionException(\Lang::get('global.error_no_privileges'));
         }
 
-        if (!$this->validate()) {
-            $exception = new ServiceValidationException();
-            $exception->setValidationErrors($this->validateErrors);
-            throw $exception;
-        }
-
 
         $this->user = \EvolutionCMS\Models\User::query()
             ->where('cachepwd', $this->userData['hash'])->first();
@@ -80,7 +74,6 @@ class UserHashLogin extends UserLogin
         $this->authProcess();
         $this->checkRemember();
         $this->clearActiveUsers();
-        $this->writeLog();
 
         if ($this->events) {
             // invoke OnManagerLogin event

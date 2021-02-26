@@ -48,15 +48,14 @@ trait ExcludeStandardFieldsTrait
             'blockedmode',
             'stay',
             'save',
-            'theme_refresher'
+            'theme_refresher',
+            'username'
         );
-
         foreach ($userData as $key => $value) {
-            if (!isset($ignore[$key])) {
+            if (!in_array($key, $ignore)) {
                 $result[$key] = $value;
             }
         }
-
         return $result;
     }
 }

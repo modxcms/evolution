@@ -101,7 +101,7 @@ class Git
             $errorMsg = $this->process->getErrorOutput();
             // private github repository without ssh key access, try https with auth
             if (preg_match('{^git@' . self::getGitHubDomainsRegex($this->config) . ':(.+?)\.git$}i', $url, $match)
-                || preg_match('{^https?://' . self::getGitHubDomainsRegex($this->config) . '/(.*?)(?:\.git)?$}', $url, $match)
+                || preg_match('{^https?://' . self::getGitHubDomainsRegex($this->config) . '/(.*?)(?:\.git)?$}i', $url, $match)
             ) {
                 if (!$this->io->hasAuthentication($match[1])) {
                     $gitHubUtil = new GitHub($this->io, $this->config, $this->process);
@@ -122,7 +122,7 @@ class Git
 
                     $errorMsg = $this->process->getErrorOutput();
                 }
-            } elseif (preg_match('{^https://(bitbucket\.org)/(.*?)(?:\.git)?$}U', $url, $match)) { //bitbucket oauth
+            } elseif (preg_match('{^https://(bitbucket\.org)/(.*?)(?:\.git)?$}i', $url, $match)) { //bitbucket oauth
                 $bitbucketUtil = new Bitbucket($this->io, $this->config, $this->process);
 
                 if (!$this->io->hasAuthentication($match[1])) {
@@ -167,7 +167,7 @@ class Git
                 }
             } elseif (
                 preg_match('{^(git)@' . self::getGitLabDomainsRegex($this->config) . ':(.+?\.git)$}i', $url, $match)
-                || preg_match('{^(https?)://' . self::getGitLabDomainsRegex($this->config) . '/(.*)}', $url, $match)
+                || preg_match('{^(https?)://' . self::getGitLabDomainsRegex($this->config) . '/(.*)}i', $url, $match)
             ) {
                 if ($match[1] === 'git') {
                     $match[1] = 'https';
@@ -403,15 +403,12 @@ class Git
     /**
      * Retrieves the current git version.
      *
-     * @return string|null The git version number.
+     * @return string|null The git version number, if present.
      */
     public static function getVersion(ProcessExecutor $process)
     {
         if (false === self::$version) {
             self::$version = null;
-            if (!$process) {
-                $process = new ProcessExecutor;
-            }
             if (0 === $process->execute('git --version', $output) && preg_match('/^git version (\d+(?:\.\d+)+)/m', $output, $matches)) {
                 self::$version = $matches[1];
             }

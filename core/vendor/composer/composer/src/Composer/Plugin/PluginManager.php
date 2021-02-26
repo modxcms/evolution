@@ -23,6 +23,7 @@ use Composer\Repository\RepositoryInterface;
 use Composer\Repository\InstalledRepository;
 use Composer\Repository\RootPackageRepository;
 use Composer\Package\PackageInterface;
+use Composer\Package\RootPackageInterface;
 use Composer\Package\Link;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Plugin\Capability\Capability;
@@ -197,8 +198,8 @@ class PluginManager
         }
 
         $map = $generator->parseAutoloads($autoloads, $rootPackage);
-        $classLoader = $generator->createLoader($map);
-        $classLoader->register();
+        $classLoader = $generator->createLoader($map, $this->composer->getConfig()->get('vendor-dir'));
+        $classLoader->register(false);
 
         foreach ($classes as $class) {
             if (class_exists($class, false)) {
@@ -410,12 +411,7 @@ class PluginManager
      */
     private function collectDependencies(InstalledRepository $installedRepo, array $collected, PackageInterface $package)
     {
-        $requires = array_merge(
-            $package->getRequires(),
-            $package->getDevRequires()
-        );
-
-        foreach ($requires as $requireLink) {
+        foreach ($package->getRequires() as $requireLink) {
             foreach ($installedRepo->findPackagesWithReplacersAndProviders($requireLink->getTarget()) as $requiredPackage) {
                 if (!isset($collected[$requiredPackage->getName()])) {
                     $collected[$requiredPackage->getName()] = $requiredPackage;
