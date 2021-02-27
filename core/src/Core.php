@@ -5147,7 +5147,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $context = $this->getContext();
         }
         if (isset ($_SESSION[$context . 'Validated'])) {
-            $out = $_SESSION[$context . 'InternalKey'];
+            $out = $_SESSION[$context . 'Shortname'];
         }
         return $out;
     }
