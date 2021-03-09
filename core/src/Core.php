@@ -2475,7 +2475,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // get document
         if (!$docgrp) {
-            if (isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] != 1) {
+            if (!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1) {
                 $documentObjectQuery->where('privatemgr', 0);
             }
 
