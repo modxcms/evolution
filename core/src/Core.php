@@ -2545,6 +2545,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 foreach ($docgrp as $group) {
                     if(in_array($group, $documentObject['__user_groups'])) {
                         $checkRole  = true;
+                        break;
                     }
                 }
             }
