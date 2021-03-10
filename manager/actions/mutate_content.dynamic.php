@@ -673,7 +673,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             <option value="0">(blank)</option>
                                             <?php
                                             $templates = \EvolutionCMS\Models\SiteTemplate::query()
-                                                ->select('site_templates.templatename', 'site_templates.selectable', 'site_templates.id', 'categories.category')
+                                                ->select('site_templates.templatename',
+                                                    'site_templates.selectable',
+                                                    'site_templates.category',
+                                                    'site_templates.id', 'categories.category AS category_name')
                                                 ->leftJoin('categories','site_templates.category','=','categories.id')
                                                 ->orderBy('categories.category', 'ASC')
                                                 ->orderBy('site_templates.templatename', 'ASC')->get();
@@ -686,7 +689,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                     continue;
                                                 };
                                                 // Skip if not selectable but show if selected!
-                                                $thisCategory = $row['category'];
+                                                $thisCategory = $row['category_name'];
                                                 if($thisCategory == null) {
                                                     $thisCategory = $_lang["no_category"];
                                                 }
