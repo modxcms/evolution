@@ -2438,35 +2438,35 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
+        $documentObject = false;
         $cacheKey = $this->makePageCacheKey($identifier);
 
-        $cachedData = Cache::get($cacheKey);
-        if (!is_null($cachedData)) {
-            $documentObject = $cachedData;
+        // allow alias to be full path
+        if ($method === 'alias') {
+            $identifier = $this->cleanDocumentIdentifier($identifier);
+            $method = $this->documentMethod;
+        }
+        if ($method === 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
+                UrlProcessor::getFacadeRoot()->documentListing)) {
+            $method = 'id';
+            $identifier = UrlProcessor::getFacadeRoot()->documentListing[$identifier];
+        }
+
+        $out = $this->invokeEvent(
+            'OnBeforeLoadDocumentObject'
+            , compact('method', 'identifier')
+        );
+
+        if (is_array($out) && is_array($out[0])) {
+            $documentObject = $out[0];
         } else {
-
-            // allow alias to be full path
-            if ($method === 'alias') {
-                $identifier = $this->cleanDocumentIdentifier($identifier);
-                $method = $this->documentMethod;
+            $cachedData = Cache::get($cacheKey);
+            if (!is_null($cachedData)) {
+                $documentObject = $cachedData;
             }
-            if ($method === 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
-                    UrlProcessor::getFacadeRoot()->documentListing)) {
-                $method = 'id';
-                $identifier = UrlProcessor::getFacadeRoot()->documentListing[$identifier];
-            }
+        }
 
-            $out = $this->invokeEvent(
-                'OnBeforeLoadDocumentObject'
-                , compact('method', 'identifier')
-            );
-
-            if (is_array($out) && is_array($out[0])) {
-                $documentObject = $out[0];
-                return $documentObject;
-            }
-
-            // get document groups for current user
+        if ($documentObject === false) {
             $documentObject = SiteContent::query()
                 ->where('site_content.' . $method, $identifier)->first();
 
@@ -2543,8 +2543,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
             if (is_array($docgrp)) {
                 foreach ($docgrp as $group) {
-                    if(in_array($group, $documentObject['__user_groups'])) {
-                        $checkRole  = true;
+                    if (in_array($group, $documentObject['__user_groups'])) {
+                        $checkRole = true;
                         break;
                     }
                 }
