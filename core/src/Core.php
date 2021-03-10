@@ -1372,6 +1372,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $docid = $str;
         }
         if (preg_match('@^[1-9]\d*$@', $docid)) {
+            unset($this->systemCacheKey);
             $value = $this->getField($key, $docid);
         } else {
             $value = '';
