@@ -594,7 +594,11 @@ class ManagerTheme implements ManagerThemeInterface
         // set login logo image
         $logo = $this->getCore()->getConfig('login_logo', '');
         if ($logo !== '') {
-            $plh['login_logo'] = MODX_SITE_URL . $logo;
+            if (substr( $logo, 0, 4 ) === "http" ){
+                $plh['login_logo'] = $logo;
+            }else{
+                $plh['login_logo'] = MODX_SITE_URL . $logo;
+            }
         } else {
             $plh['login_logo'] = $this->getThemeUrl() . 'images/login/default/login-logo.png';
         }
@@ -602,6 +606,12 @@ class ManagerTheme implements ManagerThemeInterface
         // set login background image
         $background = $this->getCore()->getConfig('login_bg', '');
         if ($background !== '') {
+            if (substr( $background, 0, 4 ) === "http" ){
+                $plh['login_bg'] = $background;
+            }else{
+                $plh['login_bg'] = MODX_SITE_URL . $background;
+            }
+            
             $plh['login_bg'] = MODX_SITE_URL . $background;
         } else {
             $plh['login_bg'] = $this->getThemeUrl() . 'images/login/default/login-background.jpg';
