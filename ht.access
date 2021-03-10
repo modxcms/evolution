@@ -25,6 +25,9 @@ RewriteRule .* - [F,L]
 #or
 #RewriteCond %{HTTPS} off
 #RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
+#work for litespeed
+#RewriteCond %{HTTPS}  !=on
+#RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
 
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
