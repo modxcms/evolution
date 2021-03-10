@@ -2438,12 +2438,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
+        $documentObject = false;
         $cacheKey = $this->makePageCacheKey($identifier);
-
-        $cachedData = Cache::get($cacheKey);
-        if (!is_null($cachedData)) {
-            return $cachedData;
-        }
 
         // allow alias to be full path
         if ($method === 'alias') {
@@ -2463,110 +2459,108 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
-            return $documentObject;
-        }
-
-        // get document groups for current user
-        $docgrp = $this->getUserDocGroups();
-        $documentObjectQuery = SiteContent::query()
-            ->select('site_content.*')
-            ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
-            ->where('site_content.' . $method, $identifier);
-
-
-        // get document
-        if (!$docgrp) {
-                $documentObjectQuery->where('privatemgr', 0);
-        } else if ($this->isFrontend()) {
-            $documentObjectQuery->where(function ($query) use ($docgrp) {
-                $query->where('privatemgr', 0)
-                    ->orWhereIn('document_groups.document_group', $docgrp);
-            });
-
         } else {
-            if ($_SESSION['mgrRole'] != 1) {
-                $documentObjectQuery->where(function ($query) use ($docgrp) {
-                    $query->where('privatemgr', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
+            $cachedData = Cache::get($cacheKey);
+            if (!is_null($cachedData)) {
+                $documentObject = $cachedData;
             }
-
         }
 
-        $rs = $documentObjectQuery->first();
-        if (is_null($rs)) {
-            // method may still be alias, while identifier is not full path alias, e.g. id not found above
-            if ($this->getConfig('unauthorized_page')) {
+        if ($documentObject === false) {
+            $documentObject = SiteContent::query()
+                ->where('site_content.' . $method, $identifier)->first();
+
+
+            if (is_null($documentObject)) {
+                $this->sendErrorPage();
+                exit;
+            }
+
+            # this is now the document :) #
+            $documentObject = $documentObject->toArray();
+
+            if ($isPrepareResponse === 'prepareResponse') {
+                $this->documentObject = &$documentObject;
+            }
+
+            $out = $this->invokeEvent(
+                'OnLoadDocumentObject'
+                , compact('method', 'identifier', 'documentObject')
+            );
+
+            if (is_array($out) && is_array($out[0])) {
+                $documentObject = $out[0];
+            }
+
+            if ($documentObject['template']) {
+                // load TVs and merge with document - Orig by Apodigm - Docvars
+                $tvs = SiteTmplvar::query()->select('site_tmplvars.*', 'site_tmplvar_contentvalues.value')
+                    ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
+                    ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($documentObject) {
+                        $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
+                        $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw((int)$documentObject['id']));
+                    })->where('site_tmplvar_templates.templateid', $documentObject['template'])->get();
+
+                $tmplvars = array();
+                foreach ($tvs as $tv) {
+                    $row = $tv->toArray();
+                    if ($row['value'] == '') $row['value'] = $row['default_text'];
+                    $tmplvars[$row['name']] = array(
+                        $row['name'],
+                        $row['value'],
+                        $row['display'],
+                        $row['display_params'],
+                        $row['type']
+                    );
+                }
+                $documentObject = array_merge($documentObject, $tmplvars);
+
+                $documentObject['templatealias'] = SiteTemplate::select('templatealias')->where('id', $documentObject['template'])->first()->templatealias;
+            }
+            $out = $this->invokeEvent(
+                'OnAfterLoadDocumentObject'
+                , compact('method', 'identifier', 'documentObject')
+            );
+
+            if (is_array($out) && array_key_exists(0, $out) !== false && is_array($out[0])) {
+                $documentObject = $out[0];
+            }
+        }
+        if ($documentObject['privatemgr'] == 1 && (!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1)) {
+            $checkRole = false;
+            if (!isset($documentObject['__user_groups'])) {
                 if ($method !== 'alias') {
-                    $count = \EvolutionCMS\Models\DocumentGroup::where('document', $identifier)->exists();
+                    $documentObject['__user_groups'] = \EvolutionCMS\Models\DocumentGroup::where('document', $identifier)->pluck('document_group')->toArray();
                 } else {
-                    $count = \EvolutionCMS\Models\DocumentGroup::query()->join('site_content', function ($join) use ($identifier) {
-                        $join->on('document_groups.document', '=', 'site_content.id');
-                        $join->on('site_content.alias', '=', $identifier);
-                    })->exists();
-                }
-                // check if file is not public
-                if ($count) {
-                    // match found but not publicly accessible, send the visitor to the unauthorized_page
-                    $this->sendUnauthorizedPage();
-                    exit; // stop here
+                    $documentObject['__user_groups'] = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.document_group')
+                        ->join('site_content', function ($join) use ($identifier) {
+                            $join->on('document_groups.document', '=', 'site_content.id');
+                            $join->on('site_content.alias', '=', $identifier);
+                        })->pluck('document_group')->toArray();
                 }
             }
+            $docgrp = $this->getUserDocGroups();
 
-            $this->sendErrorPage();
-            exit;
-        }
-
-        # this is now the document :) #
-        $documentObject = $rs->toArray();
-
-        if ($isPrepareResponse === 'prepareResponse') {
-            $this->documentObject = &$documentObject;
-        }
-
-        $out = $this->invokeEvent(
-            'OnLoadDocumentObject'
-            , compact('method', 'identifier', 'documentObject')
-        );
-
-        if (is_array($out) && is_array($out[0])) {
-            $documentObject = $out[0];
-        }
-
-        if ($documentObject['template']) {
-            // load TVs and merge with document - Orig by Apodigm - Docvars
-            $tvs = SiteTmplvar::query()->select('site_tmplvars.*', 'site_tmplvar_contentvalues.value')
-                ->join('site_tmplvar_templates', 'site_tmplvar_templates.tmplvarid', '=', 'site_tmplvars.id')
-                ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($documentObject) {
-                    $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
-                    $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw((int)$documentObject['id']));
-                })->where('site_tmplvar_templates.templateid', $documentObject['template'])->get();
-
-            $tmplvars = array();
-            foreach ($tvs as $tv) {
-                $row = $tv->toArray();
-                if ($row['value'] == '') $row['value'] = $row['default_text'];
-                $tmplvars[$row['name']] = array(
-                    $row['name'],
-                    $row['value'],
-                    $row['display'],
-                    $row['display_params'],
-                    $row['type']
-                );
+            if (is_array($docgrp)) {
+                foreach ($docgrp as $group) {
+                    if (in_array($group, $documentObject['__user_groups'])) {
+                        $checkRole = true;
+                        break;
+                    }
+                }
             }
-            $documentObject = array_merge($documentObject, $tmplvars);
-
-            $documentObject['templatealias'] = SiteTemplate::select('templatealias')->where('id', $documentObject['template'])->first()->templatealias;
+            // method may still be alias, while identifier is not full path alias, e.g. id not found above
+            if ($this->getConfig('unauthorized_page') && $checkRole === false) {
+                // match found but not publicly accessible, send the visitor to the unauthorized_page
+                $this->sendUnauthorizedPage();
+                exit; // stop here
+            }
+            if ($checkRole === false) {
+                $this->sendErrorPage();
+                exit;
+            }
         }
 
-        $out = $this->invokeEvent(
-            'OnAfterLoadDocumentObject'
-            , compact('method', 'identifier', 'documentObject')
-        );
-
-        if (is_array($out) && array_key_exists(0, $out) !== false && is_array($out[0])) {
-            $documentObject = $out[0];
-        }
         Cache::forever($cacheKey, $documentObject);
 
         return $documentObject;
