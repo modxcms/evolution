@@ -2476,10 +2476,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // get document
         if (!$docgrp) {
-            if (!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1) {
                 $documentObjectQuery->where('privatemgr', 0);
-            }
-
         } else if ($this->isFrontend()) {
             $documentObjectQuery->where(function ($query) use ($docgrp) {
                 $query->where('privatemgr', 0)
