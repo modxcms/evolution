@@ -658,7 +658,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param bool $loading
      * @return string
      */
-    public function getDocumentObjectFromCache($id, $loading = false)
+     public function getDocumentObjectFromCache($id, $loading = false)
     {
         $key = ($this->getConfig('cache_type') == 2) ? $this->makePageCacheKey($id) : $id;
         if ($loading) {
@@ -683,37 +683,39 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         else {
             $docObj = unserialize($a[0]); // rebuild document object
             // check page security
-            if ($docObj['privatemgr'] && isset ($docObj['__MODxDocGroups__'])) {
-                $pass = false;
-                $usrGrps = $this->getUserDocGroups();
-                $docGrps = explode(',', $docObj['__MODxDocGroups__']);
-                // check is user has access to doc groups
-                if (is_array($usrGrps)) {
-                    foreach ($usrGrps as $k => $v) {
-                        if (!in_array($v, $docGrps)) {
-                            continue;
+            if ((!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1)) {
+                if ($docObj['privatemgr'] && isset ($docObj['__MODxDocGroups__'])) {
+                    $pass = false;
+                    $usrGrps = $this->getUserDocGroups();
+                    $docGrps = explode(',', $docObj['__MODxDocGroups__']);
+                    // check is user has access to doc groups
+                    if (is_array($usrGrps)) {
+                        foreach ($usrGrps as $k => $v) {
+                            if (!in_array($v, $docGrps)) {
+                                continue;
+                            }
+                            $pass = true;
+                            break;
                         }
-                        $pass = true;
-                        break;
                     }
-                }
-                // diplay error pages if user has no access to cached doc
-                if (!$pass) {
-                    if ($this->getConfig('unauthorized_page')) {
-                        // check if file is not public
-                        $documentGroups = DocumentGroup::where('document', $id);
-                        $total = $documentGroups->count();
-                    } else {
-                        $total = 0;
-                    }
+                    // diplay error pages if user has no access to cached doc
+                    if (!$pass) {
+                        if ($this->getConfig('unauthorized_page')) {
+                            // check if file is not public
+                            $documentGroups = DocumentGroup::where('document', $id);
+                            $total = $documentGroups->count();
+                        } else {
+                            $total = 0;
+                        }
 
-                    if ($total > 0) {
-                        $this->sendUnauthorizedPage();
-                    } else {
-                        $this->sendErrorPage();
-                    }
+                        if ($total > 0) {
+                            $this->sendUnauthorizedPage();
+                        } else {
+                            $this->sendErrorPage();
+                        }
 
-                    exit; // stop here
+                        exit; // stop here
+                    }
                 }
             }
             // Grab the Scripts
