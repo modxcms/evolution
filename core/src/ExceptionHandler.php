@@ -28,7 +28,7 @@ class ExceptionHandler
 
     protected function registerHanlders()
     {
-        if (!defined('MODX_CLI') || !MODX_CLI) {
+        if (!defined('MODX_CLI') || MODX_CLI) {
             return;
         }
 
