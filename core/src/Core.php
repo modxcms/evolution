@@ -2693,15 +2693,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 ->then(function ($request) {
                     return $this->router->dispatch($request);
                 });
-        } catch (NotFoundHttpException $exception) {
-            EvolutionCMS()->executeParser();
-            exit();
-        } catch (MethodNotAllowedException $exception) {
-            EvolutionCMS()->executeParser();
-            exit();
-        } catch (\Exception $exception) {
-            EvolutionCMS()->executeParser();
-            exit();
+        } catch (NotFoundHttpException | MethodNotAllowedException $exception) {
+            $this->executeParser();
+            exit;
         }
 
         $response->send();
