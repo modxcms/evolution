@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -2681,12 +2680,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $request = Request::createFromGlobals();
         $this->instance(Request::class, $request);
         $this->alias(Request::class, 'request');
-
-        if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
-            include EVO_CORE_PATH . 'custom/routes.php';
-        }
-
-        Route::fallbackToParser();
 
         $middleware = array_merge(
             config('app.middleware', []),

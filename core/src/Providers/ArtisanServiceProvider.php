@@ -60,6 +60,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'UpdateTree' => 'command.updatetree',
         'SiteUpdate' => 'command.siteupdate',
         'Extras' => 'command.extras',
+        'RouteList' => 'command.route.list',
     ];
 
     /**
@@ -416,6 +417,18 @@ class ArtisanServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerRouteListCommand()
+    {
+        $this->app->singleton('command.route.list', function ($app) {
+            return new Console\RouteListCommand($app->router);
+        });
+    }
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array
@@ -424,6 +437,4 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         return array_merge(array_values($this->commands), array_values($this->devCommands));
     }
-
-
 }
