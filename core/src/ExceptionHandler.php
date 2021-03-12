@@ -28,6 +28,10 @@ class ExceptionHandler
 
     protected function registerHanlders()
     {
+        if (!defined('MODX_CLI') || MODX_CLI) {
+            return;
+        }
+
         register_shutdown_function([$this, 'handleShutdown']);
         set_exception_handler([$this, 'handleException']);
         set_error_handler([$this, 'phpError']);
