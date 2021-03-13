@@ -320,7 +320,7 @@ class ExceptionHandler
             $backtrace = debug_backtrace();
         }
         $backtrace = $this->prepareBacktrace($backtrace);
-        $str .= $this->getBacktrace($backtrace);
+        $str .= $this->renderBacktrace($backtrace);
 
         // Log error
         if (!empty($this->container->currentSnippet)) {
@@ -408,7 +408,7 @@ class ExceptionHandler
                 echo 'Current Plugin: ', $this->event->activePlugin . '(' . $this->event->name . ')', "\n";
             }
 
-            echo "\n", $this->getConsoleBacktrace($backtrace);
+            echo "\n", $this->renderConsoleBacktrace($backtrace);
         } else if ($this->shouldDisplay()) {
             $version = isset($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
             $release_date = isset($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
@@ -529,6 +529,15 @@ class ExceptionHandler
      */
     public function getBacktrace($backtrace)
     {
+        return $this->renderBacktrace($this->prepareBacktrace($backtrace));
+    }
+
+    /**
+     * @param $backtrace
+     * @return string
+     */
+    public function renderBacktrace($backtrace)
+    {
         $MakeTable = $this->container->getService('makeTable');
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');
@@ -549,7 +558,7 @@ class ExceptionHandler
      * @param $backtrace
      * @return string
      */
-    public function getConsoleBacktrace($backtrace)
+    public function renderConsoleBacktrace($backtrace)
     {
         $result = '';
 
