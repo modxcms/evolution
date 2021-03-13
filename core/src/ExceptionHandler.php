@@ -2,6 +2,10 @@
 
 use Illuminate\Contracts\Container\Container;
 use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Exception\InvalidOptionException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\ErrorHandler\Error\FatalError as FatalErrorException;
 use EvolutionCMS\Providers\TracyServiceProvider;
@@ -22,16 +26,12 @@ class ExceptionHandler
         $this->container = $container;
         $this->container->register(TracyServiceProvider::class);
         if (!$this->container['config']->get('tracy.active')) {
-            $this->registerHanlders();
+            $this->registerHandlers();
         }
     }
 
-    protected function registerHanlders()
+    protected function registerHandlers()
     {
-        if (!defined('MODX_CLI') || MODX_CLI) {
-            return;
-        }
-
         register_shutdown_function([$this, 'handleShutdown']);
         set_exception_handler([$this, 'handleException']);
         set_error_handler([$this, 'phpError']);
@@ -175,8 +175,6 @@ class ExceptionHandler
 
         $table = array();
 
-        $version = isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
-        $release_date = isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         if (isset($_SERVER['HTTP_HOST'])) {
             $request_uri = "http://" . $_SERVER['HTTP_HOST'] . ($_SERVER["SERVER_PORT"] == 80 ? "" : (":" . $_SERVER["SERVER_PORT"])) . $_SERVER['REQUEST_URI'];
             $request_uri = $this->container->getPhpCompat()->htmlspecialchars($request_uri, ENT_QUOTES,
@@ -317,7 +315,13 @@ class ExceptionHandler
         if (!empty($php_errormsg) && isset($php_errormsg['message'])) {
             $str = '<b>' . $php_errormsg['message'] . '</b><br />' . PHP_EOL . $str;
         }
-        $str .= $this->getBacktrace(empty($backtrace) ? debug_backtrace() : $backtrace);
+
+        if (empty($backtrace)) {
+            $backtrace = debug_backtrace();
+        }
+        $backtrace = $this->prepareBacktrace($backtrace);
+        $str .= $this->renderBacktrace($backtrace);
+
         // Log error
         if (!empty($this->container->currentSnippet)) {
             $source = 'Snippet - ' . $this->container->currentSnippet;
@@ -367,7 +371,47 @@ class ExceptionHandler
         }
 
         // Display error
-        if ($this->shouldDisplay()) {
+        if (is_cli()) {
+            echo $msg, "\n\n";
+
+            if (!empty ($query)) {
+                echo 'SQL: ', $query, "\n";
+            }
+
+            if (!empty($nr) || !empty($file)) {
+                if ($text != '') {
+                    echo 'Error: ', $text, "\n";
+                }
+                if ($output != '') {
+                    echo $output, "\n";
+                }
+                if ($nr !== '') {
+                    echo 'ErrorType[num]: ', $errortype [$nr] . "[$nr]", "\n";
+                }
+                if ($file) {
+                    echo 'File: ', $file, "\n";
+                }
+                if ($line) {
+                    echo 'Line: ', $line, "\n";
+                }
+            }
+
+            if ($source != '') {
+                echo 'Source: ', $source, "\n";
+            }
+
+            if (!empty($this->currentSnippet)) {
+                echo 'Current Snippet: ', $this->currentSnippet, "\n";
+            }
+
+            if (!empty($this->event->activePlugin)) {
+                echo 'Current Plugin: ', $this->event->activePlugin . '(' . $this->event->name . ')', "\n";
+            }
+
+            echo "\n", $this->renderConsoleBacktrace($backtrace);
+        } else if ($this->shouldDisplay()) {
+            $version = isset($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
+            $release_date = isset($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
 
             echo '<!DOCTYPE html><html><head><title>Evolution CMS Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -376,7 +420,6 @@ class ExceptionHandler
                  <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
                  </head><body>
                  ' . $str . '</body></html>';
-
         } else {
             if (file_exists(EVO_CORE_PATH . 'custom/error_page.html')) {
                 echo file_get_contents(EVO_CORE_PATH . 'custom/error_page.html');
@@ -394,18 +437,11 @@ class ExceptionHandler
         return isset($_SESSION['mgrValidated']) || $this->container['config']->get('app.debug');
     }
 
-    /**
-     * @param $backtrace
-     * @return string
-     */
-    public function getBacktrace($backtrace)
+    protected function prepareBacktrace($backtrace)
     {
-        $MakeTable = $this->container->getService('makeTable');
-        $MakeTable->setTableClass('grid');
-        $MakeTable->setRowRegularClass('gridItem');
-        $MakeTable->setRowAlternateClass('gridAltItem');
-        $table = array();
+        $result = [];
         $backtrace = array_reverse($backtrace);
+
         foreach ($backtrace as $key => $val) {
             $key++;
             if (substr($val['function'], 0, 11) === 'messageQuit') {
@@ -475,14 +511,62 @@ class ExceptionHandler
 
                 return $out;
             }, $args);
-            $line = array(
-                "<strong>" . $functionName . "</strong>(" . $args . ")",
-                $path . " on line " . $val['line']
-            );
-            $table[] = array(implode("<br />", $line));
+
+            $result[] = [
+                'func' => $functionName,
+                'args' => $args,
+                'path' => $path,
+                'line' => $val['line'],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $backtrace
+     * @return string
+     */
+    public function getBacktrace($backtrace)
+    {
+        return $this->renderBacktrace($this->prepareBacktrace($backtrace));
+    }
+
+    /**
+     * @param $backtrace
+     * @return string
+     */
+    public function renderBacktrace($backtrace)
+    {
+        $MakeTable = $this->container->getService('makeTable');
+        $MakeTable->setTableClass('grid');
+        $MakeTable->setRowRegularClass('gridItem');
+        $MakeTable->setRowAlternateClass('gridAltItem');
+        $table = array();
+
+        foreach ($backtrace as $line) {
+            $table[] = array(implode("<br />", [
+                "<strong>" . $line['func'] . "</strong>(" . $line['args'] . ")",
+                $line['path'] . " on line " . $line['line'],
+            ]));
         }
 
         return $MakeTable->create($table, array('Backtrace'));
+    }
+
+    /**
+     * @param $backtrace
+     * @return string
+     */
+    public function renderConsoleBacktrace($backtrace)
+    {
+        $result = '';
+
+        foreach ($backtrace as $i => $line) {
+            $result .= '#' . ($i + 1) . '. ' . $line['func'] . '(' . $line['args'] . '), ' . $line['path'] . ' on line ' . $line['line'] . "\n";
+        }
+
+        return $result;
     }
 
     /**
@@ -502,12 +586,21 @@ class ExceptionHandler
      */
     public function handleException(\Throwable $exception)
     {
-
         if (
             $exception instanceof ConnectException ||
             ($exception instanceof \PDOException && $exception->getCode() === 1045)
         ) {
             $this->container->getDatabase()->disconnect();
+        }
+
+        if (is_cli() && (
+            $exception instanceof RuntimeException ||
+            $exception instanceof InvalidArgumentException ||
+            $exception instanceof InvalidOptionException ||
+            $exception instanceof CommandNotFoundException
+        )) {
+            echo $exception->getMessage();
+            exit;
         }
 
         $this->messageQuit(
