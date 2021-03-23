@@ -335,7 +335,7 @@ class Stringable implements JsonSerializable
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
-     * @return static|null
+     * @return static
      */
     public function match($pattern)
     {
@@ -363,6 +363,17 @@ class Stringable implements JsonSerializable
         }
 
         return collect($matches[1] ?? $matches[0]);
+    }
+
+    /**
+     * Determine if the string matches the given pattern.
+     *
+     * @param  string  $pattern
+     * @return bool
+     */
+    public function test($pattern)
+    {
+        return $this->match($pattern)->isNotEmpty();
     }
 
     /**
