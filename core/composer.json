@@ -97,7 +97,8 @@
       "EvolutionCMS\\": "src/"
     },
     "classmap": [
-      "database/migrations/"
+      "database/migrations/",
+      "database/seeders/"
     ],
     "files": [
       "functions/actions/bkmanager.php",
