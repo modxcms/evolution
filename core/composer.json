@@ -65,6 +65,7 @@
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
     "predis/predis": "*",
+    "james-heinrich/phpthumb": "1.*",
     "evolutioncms-services/user-manager": "1.*",
     "evolutioncms-services/document-manager": "1.*"
   },
