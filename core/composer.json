@@ -94,11 +94,11 @@
   },
   "autoload": {
     "psr-4": {
-      "EvolutionCMS\\": "src/"
+      "EvolutionCMS\\": "src/",
+      "Database\\Seeders\\": "database/seeders/"
     },
     "classmap": [
-      "database/migrations/",
-      "database/seeders/"
+      "database/migrations/"
     ],
     "files": [
       "functions/actions/bkmanager.php",
