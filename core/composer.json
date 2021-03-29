@@ -95,7 +95,8 @@
   },
   "autoload": {
     "psr-4": {
-      "EvolutionCMS\\": "src/"
+      "EvolutionCMS\\": "src/",
+      "Database\\Seeders\\": "database/seeders/"
     },
     "classmap": [
       "database/migrations/"
