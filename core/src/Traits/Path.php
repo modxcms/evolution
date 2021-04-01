@@ -348,16 +348,6 @@ trait Path
     }
 
     /**
-     * Load and boot all of the remaining deferred providers.
-     *
-     * @return void
-     */
-    public function loadDeferredProviders()
-    {
-
-    }
-
-    /**
      * Set the environment file to be loaded during bootstrapping.
      *
      * @param string $file
