@@ -133,33 +133,6 @@ $modx->sid = session_id();
 //$settings = $modx->allConfig();
 //extract($settings, EXTR_OVERWRITE);
 
-// attempt to foil some simple types of CSRF attacks
-if ((int)$modx->getConfig('validate_referer') !== 0) {
-    if (isset($_SERVER['HTTP_REFERER'])) {
-        $referer = $_SERVER['HTTP_REFERER'];
-
-        if (!empty($referer)) {
-            if (!preg_match('/^' . preg_quote(MODX_SITE_URL, '/') . '/i', $referer)) {
-                $modx->webAlertAndQuit(
-                    "A possible CSRF attempt was detected from referer: {$referer}.",
-                    "index.php"
-                );
-            }
-        } else {
-            $modx->webAlertAndQuit(
-                "A possible CSRF attempt was detected. No referer was provided by the client.",
-                "index.php"
-            );
-        }
-    } else {
-        if (! $isGet) {
-            $modx->webAlertAndQuit(
-                "A possible CSRF attempt was detected. No referer was provided by the server.",
-                "index.php"
-            );
-        }
-    }
-}
 
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) {

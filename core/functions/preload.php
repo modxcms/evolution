@@ -24,6 +24,40 @@ if (!function_exists('evolutionCMS')) {
             }
         }
 
+        if (IN_MANAGER_MODE) {
+            // attempt to foil some simple types of CSRF attacks
+            if ((int)$modx->getConfig('validate_referer') !== 0) {
+                if (isset($_SERVER['HTTP_REFERER'])) {
+
+                    $referer = $_SERVER['HTTP_REFERER'];
+
+                    if (!empty($referer)) {
+                        if (!preg_match('/^' . preg_quote(MODX_SITE_URL, '/') . '/i', $referer)) {
+                            $modx->webAlertAndQuit(
+                                "A possible CSRF attempt was detected from referer: {$referer}.",
+                                "/" . MGR_DIR . "/index.php"
+                            );
+                        }
+                    } else {
+                        $modx->webAlertAndQuit(
+                            "A possible CSRF attempt was detected. No referer was provided by the client.",
+                            "/" . MGR_DIR . "/index.php"
+                        );
+                    }
+                } else {
+
+                    if (mb_strtoupper($_SERVER['REQUEST_METHOD']) !== 'GET') {
+                        $modx->webAlertAndQuit(
+                            "A possible CSRF attempt was detected. No referer was provided by the server.",
+                            "/" . MGR_DIR . "/index.php"
+                        );
+                    }
+                    var_dump(mb_strtoupper($_SERVER['REQUEST_METHOD']));
+                    exit();
+                }
+            }
+        }
+
         return $modx;
     }
 }
