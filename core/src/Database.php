@@ -244,6 +244,11 @@ class Database extends Manager
     public function getValue($result)
     {
         $out = false;
+
+        if(is_string($result)){
+            $result = $this->query($result);
+        }
+
         if ($this->isResult($result)) {
             $result = $this->getRow($result, 'num');
             $out = is_array($result) && array_key_exists(0, $result) ? $result[0] : false;
