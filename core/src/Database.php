@@ -818,4 +818,9 @@ class Database extends Manager
     {
         DB::rollBack();
     }
+
+    public function optimize($table_name)
+    {
+        DB::statement('OPTIMIZE TABLE '.$table_name);
+    }
 }
