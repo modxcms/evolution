@@ -24,7 +24,7 @@ if (!function_exists('evolutionCMS')) {
             }
         }
 
-        if (IN_MANAGER_MODE) {
+        if (IN_MANAGER_MODE == true && IN_INSTALL_MODE == false) {
             // attempt to foil some simple types of CSRF attacks
             if ((int)$modx->getConfig('validate_referer') !== 0) {
                 if (isset($_SERVER['HTTP_REFERER'])) {
@@ -52,8 +52,7 @@ if (!function_exists('evolutionCMS')) {
                             "/" . MGR_DIR . "/index.php"
                         );
                     }
-                    var_dump(mb_strtoupper($_SERVER['REQUEST_METHOD']));
-                    exit();
+
                 }
             }
         }
