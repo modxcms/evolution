@@ -322,7 +322,9 @@ switch ($actionToTake) {
             {
             case '1':
                 $id = \EvolutionCMS\Models\SiteContent::withTrashed()
-                    ->leftJoin('site_content as t1', 'site_content.id +1', '=','t1.id')
+                    ->leftJoin('site_content as t1', function ($join) {
+                        $join->on(\DB::raw(evo()->getDatabase()->getFullTableName('site_content').'.id +1'), '=', 't1.id');
+                    })
                     ->whereNull('t1.id')->min('site_content.id');
                 $id++;
 
