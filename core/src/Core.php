@@ -2978,7 +2978,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function _sendErrorForUnpubPage()
     {
         // Can't view unpublished pages !$this->checkPreview()
-        if (!$this->hasPermission('view_unpublished')) {
+        if (!$this->hasPermission('view_unpublished', 'mgr') && !$this->hasPermission('view_unpublished')) {
             $this->sendErrorPage();
             return;
         }
