@@ -65,6 +65,10 @@ if (! defined('IN_INSTALL_MODE')) {
     define('IN_INSTALL_MODE', false);
 }
 
+if (! defined('MODX_API_MODE')) {
+    define('MODX_API_MODE', false);
+}
+
 if (file_exists(__DIR__ . '/config.php')) {
     $config = require __DIR__ . '/config.php';
 } elseif (file_exists(dirname(__DIR__) . '/config.php')) {
