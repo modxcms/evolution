@@ -727,7 +727,15 @@
           return true;
         } else {
           var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
-          var draggable = roles && modx.user.role !== 1 ? roles.split(',').map(Number).indexOf(modx.user.role) > -1 : true;
+          var checked_group = false;
+          if(roles != '') {
+            checked_group = roles.split(',').map(Number).filter(function(role) {
+              return ~modx.user.groups.indexOf(parseInt(role));
+            }).length;
+          }else {
+            checked_group = true;
+          }
+          var draggable = roles && modx.user.role !== 1 ? checked_group : true;
           modx.tree.itemToChange = this.dataset.id || this.parentNode.id.replace('node', '');
           modx.tree.selectedObjectName = this.dataset.titleEsc;
           if (draggable) {
@@ -864,7 +872,15 @@
       },
       ondragupdate: function(a, id, parent, menuindex) {
         var roles = a.dataset.roles + (a.parentNode.parentNode.id !== 'treeRoot' ? a.parentNode.parentNode.previousSibling.dataset.roles : '');
-        if (!(roles && modx.user.role !== 1 ? roles.split(',').map(Number).indexOf(modx.user.role) > -1 : true)) {
+        var checked_group = false;
+        if(roles != '') {
+          checked_group = roles.split(',').map(Number).filter(function(role) {
+            return ~modx.user.groups.indexOf(parseInt(role));
+          }).length;
+        }else {
+          var checked_group = true;
+        }
+        if (!(roles && modx.user.role !== 1 ? checked_group : true)) {
           alert(modx.lang.error_no_privileges);
           modx.tree.restoreTree();
           return;

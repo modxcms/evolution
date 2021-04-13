@@ -31,7 +31,8 @@
             MODX_MANAGER_URL: '{{ MODX_MANAGER_URL }}',
             user: {
                 role: {{ (int)$user['role'] }},
-                username: '{{ $user['username'] }}'
+                username: '{{ $user['username'] }}',
+                groups: {{json_encode($modx->getUserDocGroups())}}
             },
             config: {
                 mail_check_timeperiod: {{ $modx->getConfig('mail_check_timeperiod') }},
