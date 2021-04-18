@@ -331,7 +331,8 @@ if (isset($action)) {
                         $snippet = \EvolutionCMS\Models\SiteSnippet::query()->where('name', $name)->first();
 
                         if (!is_null($snippet)) {
-                            $row = $snippets->toArray();
+                            $row = $snippet->toArray();
+                            
                             $contextmenu = array(
                                 'header' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
