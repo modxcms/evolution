@@ -31,6 +31,9 @@ class Parser
     protected $twig;
 
     protected $twigEnabled = false;
+
+    public $blade;
+
     protected $bladeEnabled = true;
 
     protected $templateData = array();
@@ -104,10 +107,10 @@ class Parser
 
         if (!empty($path)) {
             $this->templatePath = $path;
-            if ($this->twigEnabled) {
+            if ($this->twig) {
                 $this->twig->setLoader(new Twig_Loader_Filesystem(MODX_BASE_PATH . $path));
             }
-            if ($this->bladeEnabled) {
+            if ($this->blade) {
                 $filesystem = new Filesystem;
                 $viewFinder = new FileViewFinder($filesystem, [MODX_BASE_PATH . $path]);
                 $this->blade->setFinder($viewFinder);
