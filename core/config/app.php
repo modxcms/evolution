@@ -112,5 +112,20 @@ return [
         'Helper' => EvolutionCMS\Facades\HelperProcessor::class,
         'UserManager' => EvolutionCMS\UserManager\Facades\UserManager::class,
         'DocumentManager' => EvolutionCMS\DocumentManager\Facades\DocumentManager::class,
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The application's global HTTP middleware stack
+    |--------------------------------------------------------------------------
+    |
+    | These core middleware are run during every request to your application.
+    | You should not edit this list,
+    | for custom middleware see file core/custom/config/middleware.php.
+    |
+    */
+
+    'middleware' => [
+        Illuminate\Session\Middleware\StartSession::class,
+    ],
 ];
