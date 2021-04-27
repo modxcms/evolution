@@ -1,4 +1,9 @@
 <?php
+
+use Illuminate\Contracts\Cookie\Factory as CookieFactory; 
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+
 if (! function_exists('app_path')) {
     /**
      * Get the path to the application folder.
