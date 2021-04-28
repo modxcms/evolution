@@ -120,7 +120,7 @@ class Cache
             $modx->getService('ExceptionHandler')->messageQuit("Cache path not set.");
         }
         \Illuminate\Support\Facades\Cache::flush();
-
+        Models\UserSetting::query()->whereIn('setting_name', ['password', 'password_confirmation', 'clearPassword'])->delete();
         $files = glob(realpath($this->cachePath) . '/*.pageCache.php');
         $filesincache = count($files);
         $deletedfiles = array();
