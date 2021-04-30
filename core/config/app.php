@@ -127,7 +127,7 @@ return [
         |
         */
 
-        'stack' => [
+        'global' => [
             Illuminate\Session\Middleware\StartSession::class,
             Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
