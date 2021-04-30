@@ -3,6 +3,7 @@
 namespace EvolutionCMS\Providers;
 
 use EvolutionCMS\Extensions\Router;
+use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\RoutingServiceProvider as IlluminateRoutingServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ class RoutingServiceProvider extends IlluminateRoutingServiceProvider
         parent::register();
 
         if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
-            include EVO_CORE_PATH . 'custom/routes.php';
+            Route::middleware('web')->group(EVO_CORE_PATH . 'custom/routes.php');
         }
 
         Route::fallbackToParser();
@@ -31,5 +32,7 @@ class RoutingServiceProvider extends IlluminateRoutingServiceProvider
         $this->app->singleton('router', function ($app) {
             return new Router($app['events'], $app);
         });
+
+        $this->app->alias('router', Registrar::class);
     }
 }

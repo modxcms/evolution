@@ -15,7 +15,6 @@ use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -2672,24 +2671,41 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return $source;
     }
 
+    public function setRouterMiddleware()
+    {
+        $middleware = array_merge(
+            config('app.middleware.stack', []),
+            config('middleware.global', [])
+        );
+
+        $priority = config('middleware.priority');
+
+        if (is_array($priority) && count($priority)) {
+            $this->router->middlewarePriority = $priority;
+        }
+
+        $this->router->middlewareGroup('web', $middleware);
+
+        $aliases = array_merge(
+            config('app.middleware.aliases', []),
+            config('middleware.aliases', [])
+        );
+
+        foreach ($aliases as $key => $class) {
+            $this->router->aliasMiddleware($key, $class);
+        }
+    }
+
     public function processRoutes()
     {
         $request = Request::createFromGlobals();
         $this->instance(Request::class, $request);
         $this->alias(Request::class, 'request');
 
-        $middleware = array_merge(
-            config('app.middleware', []),
-            config('middleware.global', [])
-        );
+        $this->setRouterMiddleware();
 
         try {
-            $response = (new Pipeline($this))
-                ->send($request)
-                ->through($middleware)
-                ->then(function ($request) {
-                    return $this->router->dispatch($request);
-                });
+            $response = $this->router->dispatch($request);
         } catch (NotFoundHttpException | MethodNotAllowedException $exception) {
             $this->executeParser();
             exit;
