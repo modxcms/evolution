@@ -144,9 +144,9 @@ return [
         */
 
         'aliases' => [
-            'csrf' => EvolutionCMS\App\Middleware\VerifyCsrfToken::class,
-            'authtoken' => EvolutionCMS\App\Middleware\CheckAuthToken::class,
-            'managerauth' => EvolutionCMS\App\Middleware\CheckManagerAuth::class,
+            'csrf' => EvolutionCMS\Middleware\VerifyCsrfToken::class,
+            'authtoken' => EvolutionCMS\Middleware\CheckAuthToken::class,
+            'managerauth' => EvolutionCMS\Middleware\CheckManagerAuth::class,
             'bindings' => Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ],
