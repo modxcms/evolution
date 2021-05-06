@@ -451,10 +451,16 @@ class ExceptionHandler
             if (substr($val['function'], 0, 8) === 'phpError') {
                 break;
             }
-            $path = str_replace('\\', '/', $val['file']);
-            if (strpos($path, MODX_BASE_PATH) === 0) {
-                $path = substr($path, strlen(MODX_BASE_PATH));
+
+            if (isset($val['file'])) {
+                $path = str_replace('\\', '/', $val['file']);
+                if (strpos($path, MODX_BASE_PATH) === 0) {
+                    $path = substr($path, strlen(MODX_BASE_PATH));
+                }
+            } else {
+                $path ='';
             }
+
             switch (get_by_key($val, 'type')) {
                 case '->':
                 case '::':
@@ -516,7 +522,7 @@ class ExceptionHandler
                 'func' => $functionName,
                 'args' => $args,
                 'path' => $path,
-                'line' => $val['line'],
+                'line' => $val['line'] ?? '',
             ];
         }
 
