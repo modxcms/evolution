@@ -232,6 +232,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $this->checkAuth();
         $this->getSettings();
         $this->q = UrlProcessor::cleanQueryString(is_cli() ? '' : get_by_key($_GET, 'q', ''));
+
+        $routes = $this->router->getRoutes();
+        $routes->refreshNameLookups();
+        $routes->refreshActionLookups();
     }
 
     final public function __clone()
