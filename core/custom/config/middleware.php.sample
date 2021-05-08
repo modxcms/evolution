@@ -13,4 +13,32 @@ return [
         // EvolutionCMS\Middleware\Example::class,
         // ...
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Route middleware
+    |--------------------------------------------------------------------------
+    |
+    | These middleware may be assigned to groups or used individually.
+    |
+    */
+
+    'aliases' => [
+        // 'example' => EvolutionCMS\Middleware\Example::class,
+        // ...
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The priority-sorted list of middleware
+    |--------------------------------------------------------------------------
+    |
+    | This forces middleware to always be in the given order.
+    |
+    */
+
+    'priority' => [
+        // EvolutionCMS\Middleware\Example::class,
+        // ...
+    ],
 ];
