@@ -17,6 +17,7 @@ use EvolutionCMS\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -6571,6 +6572,43 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function registerModule($name, $file, $icon = 'fa fa-cube', $params = [])
     {
-        $this->modulesFromFile[md5($name)] = ['id' => md5($name), 'name' => $name, 'file' => $file, 'icon' => $icon, 'properties' => $params];
+        if (!$this->isBackend()) {
+            return false;
+        }
+
+        $module_id = md5($name);
+
+        $this->modulesFromFile[$module_id] = [
+            'id' => $module_id,
+            'name' => $name,
+            'file' => $file,
+            'icon' => $icon,
+            'properties' => $params,
+        ];
+
+        return $module_id;
+    }
+
+    /**
+     * @param string $name
+     * @param string $file
+     * @param string $icon
+     * @param array $params
+     */
+    public function registerRoutingModule($name, $file, $icon = 'fa fa-cube')
+    {
+        $params = [
+            'routes' => $file,
+        ];
+
+        if ($module_id = $this->registerModule($name, $file, $icon, $params)) {
+            Route::middleware('mgr')
+                ->prefix('modules/' . $module_id)
+                ->group($file);
+
+            return $module_id;
+        }
+
+        return false;
     }
 }

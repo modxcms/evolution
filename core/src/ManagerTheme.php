@@ -10,6 +10,8 @@ use EvolutionCMS\Interfaces\ManagerThemeInterface;
 use EvolutionCMS\Interfaces\CoreInterface;
 use EvolutionCMS\Models\ActiveUser;
 use EvolutionCMS\Models\UserAttribute;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use View;
 
 class ManagerTheme implements ManagerThemeInterface
@@ -371,6 +373,35 @@ class ManagerTheme implements ManagerThemeInterface
         return $action === null ? null : get_by_key($this->actions, $action, $action);
     }
 
+    public function handleRoute()
+    {
+        $evo = $this->getCore();
+
+        $request = Request::createFromGlobals();
+        $evo->instance(Request::class, $request);
+        $evo->alias(Request::class, 'request');
+
+        $middleware = config('app.middleware.mgr', []);
+        $evo->router->middlewareGroup('mgr', $middleware);
+
+        $aliases = config('app.middleware.aliases', []);
+
+        foreach ($aliases as $key => $class) {
+            $evo->router->aliasMiddleware($key, $class);
+        }
+
+        Route::middleware('mgr')
+            ->namespace('\\EvolutionCMS\\Controllers')
+            ->group(MODX_MANAGER_PATH . '/routes.php');
+
+        $routes = $evo->router->getRoutes();
+        $routes->refreshNameLookups();
+        $routes->refreshActionLookups();
+
+        $response = $evo->router->dispatch($request);
+        $response->send();
+    }
+
     public function handle($action, array $data = [])
     {
         $this->saveAction($action);
@@ -611,7 +642,7 @@ class ManagerTheme implements ManagerThemeInterface
             }else{
                 $plh['login_bg'] = MODX_SITE_URL . $background;
             }
-            
+
             $plh['login_bg'] = MODX_SITE_URL . $background;
         } else {
             $plh['login_bg'] = $this->getThemeUrl() . 'images/login/default/login-background.jpg';

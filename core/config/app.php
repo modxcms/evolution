@@ -116,6 +116,11 @@ return [
 
     'middleware' => [
 
+        'mgr' => [
+            EvolutionCMS\Middleware\VerifyCsrfToken::class,
+            EvolutionCMS\Middleware\Manager::class,
+        ],
+
         /*
         |--------------------------------------------------------------------------
         | The application's global HTTP middleware stack

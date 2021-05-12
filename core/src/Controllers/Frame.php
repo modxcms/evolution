@@ -634,7 +634,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                     'module' . $module['id'],
                     'modules',
                     ($module['icon'] != '' ? '<i class="' . $module['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $module['name'],
-                    'index.php?a=112&id=' . $module['id'],
+                    !empty($module['properties']['routes']) ? 'modules/' . $module['id'] . '/' : 'index.php?a=112&id=' . $module['id'],
                     $module['name'],
                     '',
                     '',
