@@ -119,6 +119,9 @@ return [
         'mgr' => [
             EvolutionCMS\Middleware\VerifyCsrfToken::class,
             EvolutionCMS\Middleware\Manager::class,
+            Illuminate\Session\Middleware\StartSession::class,
+            Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ],
 
         /*
@@ -135,6 +138,7 @@ return [
         'global' => [
             Illuminate\Session\Middleware\StartSession::class,
             Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ],
 
         /*
