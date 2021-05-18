@@ -6572,7 +6572,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function registerModule($name, $file, $icon = 'fa fa-cube', $params = [])
     {
-        if (!$this->isBackend()) {
+        if (!$this->isBackend() || is_cli()) {
             return false;
         }
 
