@@ -2,7 +2,6 @@
 
 use Illuminate\Contracts\Cookie\Factory as CookieFactory;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 
 if (! function_exists('app_path')) {
@@ -431,7 +430,7 @@ if (! function_exists('validator')) {
      */
     function validator(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {
-        $factory = app(ValidationFactory::class);
+        $factory = app('validator');
 
         if (func_num_args() === 0) {
             return $factory;
