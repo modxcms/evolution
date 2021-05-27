@@ -1046,10 +1046,11 @@
                     }
                 }
                 if (tree.ca === 'open' || tree.ca === '') {
+                    var href;
                     if (id === 0) {
                         href = '?a=2';
                     } else {
-                        var href = '';
+                        href = '';
                         if (!isNaN(treepageclick) && isFinite(treepageclick)) {
                             href = '?a=' + treepageclick + '&r=1&id=' + id + (openfolder === 0 ? this.getFolderState() : '');
                         } else {
@@ -1068,7 +1069,10 @@
                             modx.openWindow(href);
                             this.restoreTree();
                         } else {
-                            modx.tabs({url: modx.MODX_MANAGER_URL + href, title: title + '<small>(' + id + ')</small>'});
+                            if (!href.startsWith(modx.MODX_MANAGER_URL)) {
+                                href = modx.MODX_MANAGER_URL + href;
+                            }
+                            modx.tabs({url: href, title: title + '<small>(' + id + ')</small>'});
                             if (modx.isMobile && w.innerWidth < modx.minWidth) modx.resizer.toggle();
                         }
                     }

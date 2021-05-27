@@ -2,7 +2,7 @@
 <html lang="{{ ManagerTheme::getLang() }}" dir="{{ ManagerTheme::getTextDir() }}">
 <head>
     <title>Evolution CMS</title>
-    <base href="{{ $modx->getConfig('base_url') }}{{ MGR_DIR }}/">
+    <base href="{{ MODX_MANAGER_URL }}">
     <meta http-equiv="Content-Type" content="text/html; charset={{ ManagerTheme::getCharset() }}"/>
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
     <meta name="theme-color" content="#1d2023"/>

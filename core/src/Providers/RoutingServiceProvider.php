@@ -23,6 +23,12 @@ class RoutingServiceProvider extends IlluminateRoutingServiceProvider
 
             Route::fallbackToParser();
         }
+
+        if ($this->app->isBackend()) {
+            $this->app->resolving('url', function($urlGenerator, $app) {
+                $urlGenerator->forceRootUrl(MODX_MANAGER_URL);
+            });
+        }
     }
 
     /**

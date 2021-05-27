@@ -373,13 +373,19 @@ class ManagerTheme implements ManagerThemeInterface
         return $action === null ? null : get_by_key($this->actions, $action, $action);
     }
 
+    public function setRequest()
+    {
+        $request = Request::createFromGlobals();
+        $this->core->instance(Request::class, $request);
+        $this->core->alias(Request::class, 'request');
+
+        return $request;
+    }
+
     public function handleRoute()
     {
         $evo = $this->getCore();
-
-        $request = Request::createFromGlobals();
-        $evo->instance(Request::class, $request);
-        $evo->alias(Request::class, 'request');
+        $request = $this->setRequest();
 
         $middleware = config('app.middleware.mgr', []);
         $evo->router->middlewareGroup('mgr', $middleware);
@@ -478,12 +484,12 @@ class ManagerTheme implements ManagerThemeInterface
         $out = null;
 
         if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype'] !== 'manager') {
-            //		if (isset($_COOKIE[session_name()])) {
-            //			setcookie(session_name(), '', 0, MODX_BASE_URL);
-            //		}
+            //      if (isset($_COOKIE[session_name()])) {
+            //          setcookie(session_name(), '', 0, MODX_BASE_URL);
+            //      }
             @session_destroy();
             // start session
-            //	    startCMSSession();
+            //      startCMSSession();
         }
 
         // andrazk 20070416 - if installer is running, destroy active sessions
@@ -499,7 +505,7 @@ class ManagerTheme implements ManagerThemeInterface
                         if (isset($_COOKIE[session_name()])) {
                             session_unset();
                             @session_destroy();
-                            //					setcookie(session_name(), '', 0, MODX_BASE_URL);
+                            //                  setcookie(session_name(), '', 0, MODX_BASE_URL);
                         }
                     }
                 }
