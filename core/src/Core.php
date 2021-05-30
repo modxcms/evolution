@@ -6593,12 +6593,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $name
      * @param string $file
      * @param string $icon
-     * @param array $params
+     * @param string $hidden
      */
-    public function registerRoutingModule($name, $file, $icon = 'fa fa-cube')
+    public function registerRoutingModule($name, $file, $icon = 'fa fa-cube', $hidden = false)
     {
         $params = [
             'routes' => $file,
+            'hidden' => $hidden,
         ];
 
         if ($module_id = $this->registerModule($name, $file, $icon, $params)) {
