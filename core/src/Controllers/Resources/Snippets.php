@@ -17,7 +17,7 @@ class Snippets extends AbstractResources implements TabControllerInterface
     public function getTabName($withIndex = true): string
     {
         if ($withIndex) {
-            return sprintf('tabSnippets-%s', $this->getIndex());
+            return 'tabPlugins-' . $this->getIndex();
         }
 
         return 'tabSnippets';
