@@ -130,11 +130,7 @@ if (!function_exists('nicesize')) {
         $precisions = count($sizes) - 1;
         foreach ($sizes as $unit => $bytes) {
             if ($size >= $bytes) {
-                return sprintf(
-                    '%s %s'
-                    , number_format($size / $bytes, $precisions)
-                    , $unit
-                );
+                return number_format($size / $bytes, $precisions).' '.$unit;
             }
             $precisions--;
         }
