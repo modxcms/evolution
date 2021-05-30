@@ -5,7 +5,8 @@ use ManagerTheme;
 /**
  * @deprecated
  */
-class mgrResources {
+class mgrResources
+{
     /**
      * @var array
      */
@@ -26,7 +27,8 @@ class mgrResources {
     /**
      * mgrResources constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->setTypes();
         $this->queryItemsFromDB();
         $this->prepareCategoryArrays();
@@ -35,46 +37,48 @@ class mgrResources {
     /**
      * @return void
      */
-    public function setTypes() {
-        $this->types['site_templates']    = array(
+    public function setTypes()
+    {
+        $this->types['site_templates'] = array(
             'title' => ManagerTheme::getLexicon('manage_templates'),
-            'actions'=>array( 'edit'=>array(16,'edit_template'), 'duplicate'=>array(96,'new_template'), 'remove'=>array(21,'delete_template') ),
-            'permissions'=>array('new_template','edit_template'),
-            'name'=>'templatename'
+            'actions' => array('edit' => array(16, 'edit_template'), 'duplicate' => array(96, 'new_template'), 'remove' => array(21, 'delete_template')),
+            'permissions' => array('new_template', 'edit_template'),
+            'name' => 'templatename'
         );
-        $this->types['site_tmplvars']     = array(
-            'title'=> ManagerTheme::getLexicon('tmplvars'),
-            'actions'=>array('edit'=>array(301,'edit_template'), 'duplicate'=>array(304,'edit_template'), 'remove'=>array(303,'edit_template')),
-            'permissions'=>array('new_template','edit_template'),
+        $this->types['site_tmplvars'] = array(
+            'title' => ManagerTheme::getLexicon('tmplvars'),
+            'actions' => array('edit' => array(301, 'edit_template'), 'duplicate' => array(304, 'edit_template'), 'remove' => array(303, 'edit_template')),
+            'permissions' => array('new_template', 'edit_template'),
         );
         $this->types['site_htmlsnippets'] = array(
-            'title'=> ManagerTheme::getLexicon('manage_htmlsnippets'),
-            'actions'=>array('edit'=>array(78,'edit_chunk'), 'duplicate'=>array(97,'new_chunk'), 'remove'=>array(80,'delete_chunk')),
-            'permissions'=>array('new_chunk','edit_chunk'),
+            'title' => ManagerTheme::getLexicon('manage_htmlsnippets'),
+            'actions' => array('edit' => array(78, 'edit_chunk'), 'duplicate' => array(97, 'new_chunk'), 'remove' => array(80, 'delete_chunk')),
+            'permissions' => array('new_chunk', 'edit_chunk'),
         );
-        $this->types['site_snippets']     = array(
-            'title'=> ManagerTheme::getLexicon('manage_snippets'),
-            'actions'=>array('edit'=>array(22,'edit_snippet'), 'duplicate'=>array(98,'new_snippet'), 'remove'=>array(25,'delete_snippet')),
-            'permissions'=>array('new_snippet','edit_snippet'),
+        $this->types['site_snippets'] = array(
+            'title' => ManagerTheme::getLexicon('manage_snippets'),
+            'actions' => array('edit' => array(22, 'edit_snippet'), 'duplicate' => array(98, 'new_snippet'), 'remove' => array(25, 'delete_snippet')),
+            'permissions' => array('new_snippet', 'edit_snippet'),
         );
-        $this->types['site_plugins']      = array(
-            'title'=> ManagerTheme::getLexicon('manage_plugins'),
-            'actions'=>array('edit'=>array(102,'edit_plugin'), 'duplicate'=>array(105,'new_plugin'), 'remove'=>array(104,'delete_plugin')),
-            'permissions'=>array('new_plugin','edit_plugin'),
+        $this->types['site_plugins'] = array(
+            'title' => ManagerTheme::getLexicon('manage_plugins'),
+            'actions' => array('edit' => array(102, 'edit_plugin'), 'duplicate' => array(105, 'new_plugin'), 'remove' => array(104, 'delete_plugin')),
+            'permissions' => array('new_plugin', 'edit_plugin'),
         );
-        $this->types['site_modules']      = array(
-            'title'=> ManagerTheme::getLexicon('manage_modules'),
-            'actions'=>array('edit'=>array(108,'edit_module'), 'duplicate'=>array(111,'new_module'), 'remove'=>array(110,'delete_module')),
-            'permissions'=>array('new_module','edit_module'),
+        $this->types['site_modules'] = array(
+            'title' => ManagerTheme::getLexicon('manage_modules'),
+            'actions' => array('edit' => array(108, 'edit_module'), 'duplicate' => array(111, 'new_module'), 'remove' => array(110, 'delete_module')),
+            'permissions' => array('new_module', 'edit_module'),
         );
     }
 
     /**
      * @return void
      */
-    public function queryItemsFromDB() {
-        foreach($this->types as $resourceTable=>$type) {
-            if(evolutionCMS()->hasAnyPermissions($type['permissions'])) {
+    public function queryItemsFromDB()
+    {
+        foreach ($this->types as $resourceTable => $type) {
+            if (evolutionCMS()->hasAnyPermissions($type['permissions'])) {
                 $nameField = isset($type['name']) ? $type['name'] : 'name';
                 $this->items[$resourceTable] = $this->queryResources($resourceTable, $nameField);
             }
@@ -86,8 +90,10 @@ class mgrResources {
      * @param string $nameField
      * @return array|bool
      */
-    public function queryResources($resourceTable, $nameField = 'name') {
-        $modx = evolutionCMS(); global $_lang;
+    public function queryResources($resourceTable, $nameField = 'name')
+    {
+        $modx = evolutionCMS();
+        global $_lang;
 
         $allowed = array(
             'site_htmlsnippets',
@@ -97,14 +103,13 @@ class mgrResources {
         );
         $pluginsql = !empty($resourceTable) && in_array($resourceTable, $allowed) ? $resourceTable . '.disabled, ' : '';
 
-        $tvsql  = '';
+        $tvsql = '';
         $tvjoin = '';
         if ($resourceTable === 'site_tmplvars') {
-            $tvsql    = 'site_tmplvars.caption, ';
-            $tvjoin   = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getDatabase()->getFullTableName('site_tmplvar_templates'));
+            $tvsql = 'site_tmplvars.caption, ';
+            $tvjoin = 'LEFT JOIN ' . $modx->getDatabase()->getFullTableName('site_tmplvar_templates') . ' AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl';
             $sttfield = 'IF(stt.templateid,1,0) AS reltpl,';
-        }
-        else $sttfield = '';
+        } else $sttfield = '';
 
         $selectableTemplates = $resourceTable === 'site_templates' ? "{$resourceTable}.selectable, " : "";
 
@@ -117,7 +122,7 @@ class mgrResources {
         );
         $limit = $modx->getDatabase()->getRecordCount($rs);
 
-        if($limit < 1) return false;
+        if ($limit < 1) return false;
 
         $result = array();
         while ($row = $modx->getDatabase()->getRow($rs)) {
@@ -129,9 +134,10 @@ class mgrResources {
     /**
      * @return void
      */
-    public function prepareCategoryArrays() {
-        foreach($this->items as $type=>$items) {
-            foreach((array)$items as $item) {
+    public function prepareCategoryArrays()
+    {
+        foreach ($this->items as $type => $items) {
+            foreach ((array)$items as $item) {
                 $catid = $item['catid'] ? $item['catid'] : 0;
                 $this->categories[$catid] = $item['category'];
 
@@ -144,7 +150,7 @@ class mgrResources {
         natcasesort($this->categories);
 
         // Now sort by name
-        foreach($this->itemsPerCategory as $catid=>$items) {
+        foreach ($this->itemsPerCategory as $catid => $items) {
             usort($this->itemsPerCategory[$catid], function ($a, $b) {
                 return strcasecmp($a['name'], $b['name']);
             });
