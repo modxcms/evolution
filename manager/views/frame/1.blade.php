@@ -306,7 +306,7 @@
                                 <?php
                                 $style = $modx->getConfig('settings_version') !== $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
                                 $version = 'Evolution CMS';
-                                echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $modx->getPhpCompat()->entities($modx->getConfig('site_name')), $modx->getVersionData('full_appname'), $style, $modx->getConfig('settings_version'));
+                                    echo '<li><span class="dropdown-item" title="' . $modx->getPhpCompat()->entities($modx->getConfig('site_name')) . ' &ndash; ' . $modx->getVersionData('full_appname') . '" ' . $style . '>' . $version . ' ' . $modx->getConfig('settings_version') . '</span></li>';
                                 ?>
                             </ul>
                         </li>
@@ -421,9 +421,8 @@ if(!function_exists('constructLink')) {
     function constructLink($action, $img, $text, $allowed)
     {
         if ((bool)$allowed) {
-            echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action,
-                $action);
-            echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+            echo '<div class="menuLink" id="item'.$action.'" onclick="modx.tree.menuHandler('.$action.');">';
+            echo '<i class="'.$img.'"></i> '.$text.'</div>';
         }
     }
 }
