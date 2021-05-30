@@ -327,7 +327,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($result === false) {
                 \UserManager::logout();
                 if (IN_MANAGER_MODE) {
-                    evo()->sendRedirect('/'.MGR_DIR);
+                    evo()->sendRedirect('/' . MGR_DIR);
                 }
             }
         }
@@ -660,7 +660,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param bool $loading
      * @return string
      */
-     public function getDocumentObjectFromCache($id, $loading = false)
+    public function getDocumentObjectFromCache($id, $loading = false)
     {
         $key = ($this->getConfig('cache_type') == 2) ? $this->makePageCacheKey($id) : $id;
         if ($loading) {
@@ -971,7 +971,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         header('Last-Modified: ' . $last_modified);
-        header(sprintf("ETag: '%s'", $etag));
+        header("ETag: '" . $etag . "'");
     }
 
     /**
@@ -1099,16 +1099,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $spacer = md5('<<<EVO>>>');
         if ($left === '{{' && Str::contains($content, ';}}')) {
-            $content = str_replace(';}}', sprintf(';}%s}', $spacer), $content);
+            $content = str_replace(';}}', ';}' . $spacer . '}', $content);
         }
         if ($left === '{{' && Str::contains($content, '{{}}')) {
             $content = str_replace('{{}}', sprintf('{%$1s{}%$1s}', $spacer), $content);
         }
         if ($left === '[[' && Str::contains($content, ']]]]')) {
-            $content = str_replace(']]]]', sprintf(']]%s]]', $spacer), $content);
+            $content = str_replace(']]]]', ']]' . $spacer . ']]', $content);
         }
         if ($left === '[[' && Str::contains($content, ']]]')) {
-            $content = str_replace(']]]', sprintf(']%s]]', $spacer), $content);
+            $content = str_replace(']]]', ']' . $spacer . ']]', $content);
         }
 
         $pos['<![CDATA['] = strpos($content, '<![CDATA[');
@@ -1486,7 +1486,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             $value = $ph[$key];
 
-            if ($value === null && !stripos('[',$key)) {
+            if ($value === null && !stripos('[', $key)) {
                 continue;
             }
 
@@ -1874,12 +1874,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $msg
             );
             if ($this->isBackend()) {
-                $this->event->alert(
-                    sprintf(
-                        'An error occurred while loading. Please see the event log for more information.<p>%s</p>'
-                        , $msg
-                    )
-                );
+                $this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
             }
         } else {
             echo $msg;
@@ -1975,8 +1970,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->snipLapCount++;
         if ($this->dumpSnippets) {
-            $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>',
-                $this->snipLapCount);
+            $this->snippetsCode .= '<fieldset><legend><b style="color: #821517;">PARSE PASS ' . $this->snipLapCount . '</b></legend><p>The following snippets (if any) were parsed during this pass.</p>';
         }
 
         foreach ($matches[1] as $i => $call) {
@@ -2093,14 +2087,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $piece = str_replace("\t", '  ', $this->getPhpCompat()->htmlspecialchars($piece));
             $print_r_params = str_replace("\t", '  ',
                 $this->getPhpCompat()->htmlspecialchars('$modx->event->params = ' . print_r($params, true)));
-            $this->snippetsCode .= sprintf(
-                '<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>'
-                , $snippetObject['name']
-                , $eventtime
-                , $piece
-                , $print_r_params
-                , $code
-            );
+            $this->snippetsCode .= '<fieldset style="margin:1em;"><legend><b>' . $snippetObject['name'] . '</b>(' . $eventtime . ')</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[' . $piece . ']]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">' . $print_r_params . '</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">' . $code . '</pre></fieldset>';
+
             $this->snippetsTime[] = array('sname' => $key, 'time' => $eventtime);
         }
 
@@ -2344,10 +2332,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         } elseif (strpos($snip_name, '@') === 0 && isset($this->pluginEvent[substr($snip_name, 1)])) {
             $snippetObject['name'] = substr($snip_name, 1);
-            $snippetObject['content'] = sprintf(
-                '$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));'
-                , $snippetObject['name']
-            );
+            $snippetObject['content'] = '$rs=$this->invokeEvent("' . $snippetObject['name'] . '",$params);echo trim(implode("",$rs));';
+
             $snippetObject['properties'] = '';
         } else {
             $snippetObject = $this->getSnippetFromDatabase($snip_name);
@@ -2640,9 +2626,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $st = md5($source);
             }
             if ($this->dumpSnippets == 1) {
-                $this->snippetsCode .= sprintf(
-                    "<fieldset><legend><b style='color: #821517;'>PARSE PASS %d</b></legend><p>The following snippets (if any) were parsed during this pass.</p>"
-                    , $i + 1);
+                $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS '.($i + 1).'</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
             }
 
             // invoke OnParseDocument event
@@ -2781,11 +2765,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($this->getConfig('use_alias_path') == 1) {
 
             $virtualDir = UrlProcessor::getFacadeRoot()->virtualDir;
-            $alias = sprintf(
-                '%s%s'
-                , $virtualDir != '' ? $virtualDir . '/' : ''
-                , $this->documentIdentifier
-            );
+            $alias = ($virtualDir != '' ? $virtualDir . '/' : '') . $this->documentIdentifier;
             if (isset(UrlProcessor::getFacadeRoot()->documentListing[$alias])) {
                 $this->documentIdentifier = UrlProcessor::getFacadeRoot()->documentListing[$alias];
             } else {
@@ -3163,11 +3143,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $depth--;
             foreach ($documentMap_cache[$id] as $childId) {
                 if (strlen(UrlProcessor::getFacadeRoot()->aliasListing[$childId]['path'])) {
-                    $pkey = sprintf(
-                        "{UrlProcessor::getFacadeRoot()->aliasListing[%s]['path']}/%s"
-                        , $childId
-                        , UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias']
-                    );
+                    $pkey = "{UrlProcessor::getFacadeRoot()->aliasListing[" . $childId . "]['path']}/" . UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
                 } else {
                     $pkey = UrlProcessor::getFacadeRoot()->aliasListing[$childId]['alias'];
                 }
@@ -3216,19 +3192,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $style = '';
         if (IN_MANAGER_MODE) {
-            $path = sprintf('media/style/%s/', $this->getConfig('manager_theme'));
+            $path = 'media/style/' . $this->getConfig('manager_theme') . '/';
             if (is_file(MODX_MANAGER_PATH . $path . '/css/styles.min.css')) {
                 $file_name = '/css/styles.min.css';
             } else {
                 $file_name = 'style.css';
             }
-            $style = sprintf(
-                '<link rel="stylesheet" type="text/css" href="%s%s%s?v=%s"/>'
-                , MODX_MANAGER_URL
-                , $path
-                , $file_name
-                , Arr::get($GLOBALS, 'lastInstallTime', time())
-            );
+            $style = '<link rel="stylesheet" type="text/css" href="' . MODX_MANAGER_URL . $path . $file_name . '?v=' . Arr::get($GLOBALS, 'lastInstallTime', time()) . '"/>';
         }
 
         ob_get_clean();
@@ -3815,7 +3785,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $query->where('site_content.privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
-            }elseif($_SESSION['mgrRole'] != 1) {
+            } elseif ($_SESSION['mgrRole'] != 1) {
                 $content = $content->where('site_content.privatemgr', 0);
             }
         }
@@ -3866,7 +3836,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     $query->where('site_content.privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
-            }elseif($_SESSION['mgrRole'] != 1) {
+            } elseif ($_SESSION['mgrRole'] != 1) {
                 $content = $content->where('site_content.privatemgr', 0);
             }
         }
@@ -4044,7 +4014,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             foreach ($arr as $item) {
                 if (stristr($item, '.') === false) {
                     $new_arr[] = 'site_content.' . $item;
-                }else
+                } else
                     $new_arr[] = $item;
 
             }
@@ -5395,11 +5365,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (stripos($src, '<style') !== false || stripos($src, '<link') !== false) {
             $this->sjscripts[$nextpos] = $src;
         } else {
-            $this->sjscripts[$nextpos] = sprintf(
-                "\t" . '<link rel="stylesheet" type="text/css" href="%s" %s/>'
-                , $src
-                , $media ? sprintf('media="%s" ', $media) : ''
-            );
+            $this->sjscripts[$nextpos] = "\t" . '<link rel="stylesheet" type="text/css" href="' . $src . '" ' . ($media ? 'media="' . $media . '" ' : '') . '/>';
         }
     }
 
@@ -5674,14 +5640,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                     , $eventtime * 1000
                 );
                 foreach ($parameter as $k => $v) {
-                    $this->pluginsCode .= sprintf(
-                        '%d => %s<br>'
-                        , $k
-                        , print_r($v, true)
-                    );
+                    $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
                 }
                 $this->pluginsCode .= '</fieldset><br />';
-                $this->pluginsTime[sprintf('%s / %s', $evtName, $pluginName)] += $eventtime;
+                $this->pluginsTime[$evtName . ' / ' . $pluginName] += $eventtime;
             }
             if ($this->event->getOutput() != '') {
                 $results[] = $this->event->getOutput();
@@ -6013,10 +5975,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if (!$isSafe) {
             $msg = $phpcode . "\n" . $this->currentSnippet . "\n" . print_r($_SERVER, true);
-            $title = sprintf(
-                'Unknown eval was executed (%s)'
-                , $this->getPhpCompat()->htmlspecialchars(substr(trim($phpcode), 0, 50))
-            );
+            $title = 'Unknown eval was executed (' . ($this->getPhpCompat()->htmlspecialchars(substr(trim($phpcode), 0, 50))) . ')';
+
             $this->getService('ExceptionHandler')
                 ->messageQuit($title, '', true, '', '', 'Parser', $msg);
             return;
@@ -6103,7 +6063,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         $str = ltrim($str, '/');
 
-        $errorMsg = sprintf("Could not retrieve string '%s'.", $str);
+        $errorMsg = "Could not retrieve string '" . $str . "'.";
 
         $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->getConfig('rb_base_url') . 'files/', '');
         foreach ($search_path as $path) {
