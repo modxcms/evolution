@@ -16,7 +16,7 @@ class Modules extends AbstractResources implements TabControllerInterface
     public function getTabName($withIndex = true): string
     {
         if ($withIndex) {
-            return sprintf('tabModules-%s', $this->getIndex());
+            return 'tabModules-' . $this->getIndex();
         }
 
         return 'tabModules';
