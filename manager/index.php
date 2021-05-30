@@ -53,7 +53,7 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 $mstart = memory_get_usage();
 $isGet = mb_strtoupper($_SERVER['REQUEST_METHOD']) === 'GET';
 
-if($isGet && count($_GET) === 1 && !empty($_GET['time'])) {
+if ($isGet && count($_GET) === 1 && !empty($_GET['time'])) {
     die();
 }
 // we use this to make sure files are accessed through
@@ -61,11 +61,11 @@ if($isGet && count($_GET) === 1 && !empty($_GET['time'])) {
 if (!defined('IN_MANAGER_MODE')) {
     define('IN_MANAGER_MODE', true);
 }
-if (! defined('IN_INSTALL_MODE')) {
+if (!defined('IN_INSTALL_MODE')) {
     define('IN_INSTALL_MODE', false);
 }
 
-if (! defined('MODX_API_MODE')) {
+if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
 
@@ -92,7 +92,7 @@ if (!empty($config['core']) && file_exists($config['core'] . '/.install')) {
     exit;
 }
 
-if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     header('HTTP/1.0 404 Not Found');
     exit;
 }
@@ -110,7 +110,7 @@ header('X-XSS-Protection: 0');
 $php_ver_comp = version_compare(phpversion(), "7.1.3");
 // -1 if left is less, 0 if equal, +1 if left is higher
 if ($php_ver_comp < 0) {
-    echo sprintf('Evolution CMS is compatible with PHP version 7.1.3 and higher. This server is using version %s%. Please upgrade your PHP installation!', phpversion());
+    echo 'Evolution CMS is compatible with PHP version 7.1.3 and higher. This server is using version ' . phpversion() . '. Please upgrade your PHP installation!';
     exit;
 }
 
