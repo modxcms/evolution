@@ -503,22 +503,16 @@ class UrlProcessor
         $out = false;
         if ($alias !== '') {
             $query = $this->core->getDatabase()->query(
-                sprintf(
-                    "SELECT 
+                "SELECT 
                     `sc`.`id` AS `hidden_id`,
                     `children`.`id` AS `child_id`,
                     children.alias AS `child_alias`,
                     COUNT(`grandsons`.`id`) AS `grandsons_count`
-                    FROM %s AS `sc`
-                    JOIN %s AS `children` ON `children`.`parent` = `sc`.`id`
-                    LEFT JOIN %s AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
-                    WHERE `sc`.`parent` = '%d' AND `sc`.`alias_visible` = '0'
+                    FROM ".$this->core->getDatabase()->getFullTableName('site_content')." AS `sc`
+                    JOIN ".$this->core->getDatabase()->getFullTableName('site_content')." AS `children` ON `children`.`parent` = `sc`.`id`
+                    LEFT JOIN ".$this->core->getDatabase()->getFullTableName('site_content')." AS `grandsons` ON `grandsons`.`parent` = `children`.`id`
+                    WHERE `sc`.`parent` = ".$parentid." AND `sc`.`alias_visible` = '0'
                     GROUP BY `children`.`id`"
-                    , $this->core->getDatabase()->getFullTableName('site_content')
-                    , $this->core->getDatabase()->getFullTableName('site_content')
-                    , $this->core->getDatabase()->getFullTableName('site_content')
-                    , (int)$parentid
-                )
             );
             while ($child = $this->core->getDatabase()->getRow($query)) {
                 if ($child['child_alias'] == $alias || $child['child_id'] == $alias) {
@@ -658,12 +652,8 @@ class UrlProcessor
         }
 
         if ($id === (int)$this->core->getConfig('site_start')) {
-            $requestedURL = sprintf(
-                '%s://%s/%s'
-                , isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'
-                , $_SERVER['HTTP_HOST']
-                , $query
-            ); //LANG
+            $requestedURL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].'/'.$query;
+
             if ($requestedURL === $this->core->getConfig('site_url')) {
                 return null;
             }
