@@ -37,11 +37,8 @@ if (!function_exists('makeHTML')) {
             case 'publishedon':
             case 'pub_date':
             case 'unpub_date':
-                $sortby = sprintf(
-                    'CASE WHEN sc.%s IS NULL THEN 1 ELSE 0 END, sc.%s'
-                    , $_SESSION['tree_sortby']
-                    , $_SESSION['tree_sortby']
-                );
+                $sortby = 'CASE WHEN sc.' . $_SESSION['tree_sortby'] . ' IS NULL THEN 1 ELSE 0 END, sc.' . $_SESSION['tree_sortby'];
+
                 break;
             default:
                 $sortby = 'sc.' . $_SESSION['tree_sortby'];
@@ -68,7 +65,7 @@ if (!function_exists('makeHTML')) {
         }
         $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
 
-        $docgrp_cond = $docgrp ? sprintf('OR dg.document_group IN (%s)', $docgrp) : '';
+        $docgrp_cond = $docgrp ? 'OR dg.document_group IN (' . $docgrp . ')' : '';
         $mgrRole = (int)$mgrRole;
         $docgrp_cond = $docgrp_cond;
 
@@ -106,13 +103,8 @@ if (!function_exists('makeHTML')) {
         $result = $result->get();
 
 
-
         if ($result->count() == 0) {
-            $output .= sprintf(
-                '<div><a class="empty">%s<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">%s</span></a></div>'
-                , $spacer
-                , $_lang['empty_folder']
-            );
+            $output .= '<div><a class="empty">' . $spacer . '<i class="' . $_style['icon_ban'] . '"></i>&nbsp;<span class="empty">' . $_lang['empty_folder'] . '</span></a></div>';
         }
 
         if ($_SESSION['tree_nodename'] === 'default') {
@@ -148,14 +140,14 @@ if (!function_exists('makeHTML')) {
             }
 
             if ($row['type'] === 'reference') {
-                $weblinkDisplay = sprintf('&nbsp;%s', '<i class="' . $_style['icon_chain'] . '"></i>');
+                $weblinkDisplay = '&nbsp;<i class="' . $_style['icon_chain'] . '"></i>';
             } else {
                 $weblinkDisplay = '';
             }
             if ($modx_textdir) {
-                $pageIdDisplay = sprintf('<small>(&rlm;%s)</small>', $row['id']);
+                $pageIdDisplay = '<small>(&rlm;' . $row['id'] . ')</small>';
             } else {
-                $pageIdDisplay = sprintf('<small>(%s)</small>', $row['id']);
+                $pageIdDisplay = '<small>(' . $row['id'] . ')</small>';
             }
 
             // Prepare displaying user-locks
@@ -170,11 +162,7 @@ if (!function_exists('makeHTML')) {
                             'lasthit_df' => $rowLock['lasthit_df']
                         )
                     );
-                    $lockedByUser = sprintf(
-                        '<span title="%s" class="editResource">%s</span>'
-                        , $title
-                        , '<i class="' . $_style['icon_eye'] . '"></i>'
-                    );
+                    $lockedByUser = '<span title="' . $title . '" class="editResource"><i class="' . $_style['icon_eye'] . '"></i></span>';
                 } else {
                     $title = $modx->parseText($_lang['lock_element_locked_by'], array(
                         'element_type' => $_lang['lock_element_type_7'],
@@ -297,7 +285,7 @@ if (!function_exists('makeHTML')) {
                 }
 
                 if ($ph['contextmenu']) {
-                    $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
+                    $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
                 }
 
                 if ($_SESSION['tree_show_only_folders']) {
@@ -357,7 +345,7 @@ if (!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
+                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -398,7 +386,7 @@ if (!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
+                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -452,7 +440,7 @@ if (!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
+                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -497,7 +485,7 @@ if (!function_exists('makeHTML')) {
                         }
 
                         if ($ph['contextmenu']) {
-                            $ph['contextmenu'] = sprintf(' data-contextmenu="%s"', _htmlentities($ph['contextmenu']));
+                            $ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
                         }
 
                         $node .= $modx->parseText($tpl, $ph);
@@ -630,7 +618,7 @@ if (!function_exists('checkIsFolder')) {
      */
     function checkIsFolder($parent = 0, $isfolder = 1)
     {
-        return (int)\EvolutionCMS\Models\SiteContent::query()->where('parent', $parent)->where('isfolder',$isfolder)->count();
+        return (int)\EvolutionCMS\Models\SiteContent::query()->where('parent', $parent)->where('isfolder', $isfolder)->count();
     }
 }
 
