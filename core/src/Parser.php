@@ -412,11 +412,7 @@ class Parser
         $id = (int)$id;
         if ($id > 0) {
             $tpl = $this->modx->db->getValue(
-                sprintf(
-                    'SELECT `content` FROM %s WHERE `id` = %d'
-                    , $this->modx->getFullTableName('site_templates')
-                    , (int)$id
-                )
+                    'SELECT `content` FROM '.$this->modx->getFullTableName('site_templates').' WHERE `id` = '.$id
             );
         }
         if ($tpl === null) {

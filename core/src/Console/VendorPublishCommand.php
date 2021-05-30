@@ -260,12 +260,7 @@ class VendorPublishCommand extends Command
     protected function status($from, $to, $type)
     {
         $this->line(
-            sprintf(
-                '<info>Copied %s</info> <comment>[%s]</comment> <info>To</info> <comment>[%s]</comment>'
-                , $type
-                , str_replace(base_path(), '', realpath($from))
-                , str_replace(base_path(), '', realpath($to))
-            )
+            '<info>Copied '.$type.'</info> <comment>['.str_replace(base_path(), '', realpath($from)).']</comment> <info>To</info> <comment>['.str_replace(base_path(), '', realpath($to)).']</comment>'
         );
     }
 }

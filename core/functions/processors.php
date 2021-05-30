@@ -45,16 +45,13 @@ if (!function_exists('evalModule')) {
                     , true
                     , $error_info['type']
                     , $error_info['file']
-                    , sprintf('%s - Module', $_SESSION['itemname'])
+                    , $_SESSION['itemname'] . ' - Module'
                     , $error_info['message']
                     , $error_info['line']
                     , $msg
                 );
                 $modx->event->alert(
-                    sprintf(
-                        'An error occurred while loading. Please see the event log for more information<p>%s</p>'
-                        , $msg
-                    )
+                    'An error occurred while loading. Please see the event log for more information<p>' . $msg . '</p>'
                 );
             }
         }
@@ -97,10 +94,7 @@ if (!function_exists('jsAlert')) {
     function jsAlert($msg)
     {
         if ((int)get_by_key($_POST, 'ajax', 0) !== 1) {
-            echo sprintf(
-                '<script>window.setTimeout("alert(\'%s\')",10);history.go(-1)</script>'
-                , addslashes($msg)
-            );
+            echo '<script>window.setTimeout("alert(\'' . addslashes($msg) . '\')",10);history.go(-1)</script>';
         } else {
             echo $msg . "\n";
         }
@@ -442,7 +436,7 @@ if (!function_exists('sendMailMessageForUser')) {
         );
 
         $param = array();
-        $param['from'] = sprintf('%s<%s>', $modx->getConfig('site_name'), $emailsender);
+        $param['from'] = $modx->getConfig('site_name') . '<' . $emailsender . '>';
         $param['subject'] = $emailsubject;
         $param['body'] = $message;
         $param['to'] = $email;
@@ -451,7 +445,7 @@ if (!function_exists('sendMailMessageForUser')) {
             return;
         }
         $modx->getManagerApi()->saveFormValues();
-        $modx->messageQuit(sprintf('%s - %s', $email, $_lang['error_sending_email']));
+        $modx->messageQuit($email . ' - ' . $_lang['error_sending_email']);
     }
 }
 

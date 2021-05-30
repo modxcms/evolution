@@ -769,18 +769,11 @@ try {
             $errorData = true;
         } else {
             $installLevel = 6;
-            $sql = sprintf(
-                "SELECT id FROM `%s` WHERE templatename='Evolution CMS startup - Bootstrap'"
-                , table_prefix('site_templates')
-            );
+            $sql = "SELECT id FROM `" . table_prefix('site_templates') . "` WHERE templatename='Evolution CMS startup - Bootstrap'";
             $rs = mysqli_query($sqlParser->conn, $sql);
             if (mysqli_num_rows($rs)) {
                 $row = mysqli_fetch_assoc($rs);
-                $sql = sprintf(
-                    "UPDATE `%s` SET template=%s WHERE template=4"
-                    , table_prefix('site_content')
-                    , (int)$row['id']
-                );
+                $sql = "UPDATE `" . table_prefix('site_content') . "` SET template=" . (int)$row['id'] . " WHERE template=4";
                 mysqli_query($sqlParser->conn, $sql);
             }
         }

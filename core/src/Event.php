@@ -54,17 +54,9 @@ class Event implements Interfaces\EventInterface
         if (is_array($SystemAlertMsgQueque)) {
             $title = '';
             if ($this->name && $this->activePlugin) {
-                $title = sprintf(
-                    '<div><b>%s</b> - <span style="color:maroon;">%s</span></div>'
-                    , $this->activePlugin
-                    , $this->name
-                );
+                $title = '<div><b>'.$this->activePlugin.'</b> - <span style="color:maroon;">'.$this->name.'</span></div>';
             }
-            $SystemAlertMsgQueque[] = sprintf(
-                '%s<div style="margin-left:10px;margin-top:3px;">%s</div>'
-                , $title
-                , $msg
-            );
+            $SystemAlertMsgQueque[] = $title.'<div style="margin-left:10px;margin-top:3px;">'.$msg.'</div>';
         }
     }
 

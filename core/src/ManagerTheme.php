@@ -594,9 +594,9 @@ class ManagerTheme implements ManagerThemeInterface
         // set login logo image
         $logo = $this->getCore()->getConfig('login_logo', '');
         if ($logo !== '') {
-            if (substr( $logo, 0, 4 ) === "http" ){
+            if (substr($logo, 0, 4) === "http") {
                 $plh['login_logo'] = $logo;
-            }else{
+            } else {
                 $plh['login_logo'] = MODX_SITE_URL . $logo;
             }
         } else {
@@ -606,12 +606,12 @@ class ManagerTheme implements ManagerThemeInterface
         // set login background image
         $background = $this->getCore()->getConfig('login_bg', '');
         if ($background !== '') {
-            if (substr( $background, 0, 4 ) === "http" ){
+            if (substr($background, 0, 4) === "http") {
                 $plh['login_bg'] = $background;
-            }else{
+            } else {
                 $plh['login_bg'] = MODX_SITE_URL . $background;
             }
-            
+
             $plh['login_bg'] = MODX_SITE_URL . $background;
         } else {
             $plh['login_bg'] = $this->getThemeUrl() . 'images/login/default/login-background.jpg';
@@ -654,17 +654,8 @@ class ManagerTheme implements ManagerThemeInterface
 
         if ($this->getCore()->getConfig('use_captcha')) {
             $plh['login_captcha_message'] = $this->getLexicon("login_captcha_message");
-            $plh['captcha_image'] = sprintf(
-                '<a href="%s" class="loginCaptcha"><img id="captcha_image" src="%scaptcha.php?rand=%s" alt="%s" /></a>'
-                , MODX_MANAGER_URL
-                , MODX_MANAGER_URL
-                , rand()
-                , $this->getLexicon('login_captcha_message')
-            );
-            $plh['captcha_input'] = sprintf(
-                '<label>%s</label><input type="text" name="captcha_code" tabindex="3" value="" />'
-                , $this->getLexicon('captcha_code')
-            );
+            $plh['captcha_image'] = '<a href="' . MODX_MANAGER_URL . '" class="loginCaptcha"><img id="captcha_image" src="' . MODX_MANAGER_URL . 'captcha.php?rand=' . rand() . '" alt="' . $this->getLexicon('login_captcha_message') . '" /></a>';
+            $plh['captcha_input'] = '<label>' . $this->getLexicon('captcha_code') . '</label><input type="text" name="captcha_code" tabindex="3" value="" />';
         }
 
         // login info
@@ -676,19 +667,11 @@ class ManagerTheme implements ManagerThemeInterface
 
         // invoke OnManagerLoginFormRender event
         $evtOut = $this->getCore()->invokeEvent('OnManagerLoginFormRender');
-        $html = is_array($evtOut) ? sprintf(
-            '<div id="onManagerLoginFormRender">%s</div>'
-            , implode('', $evtOut)) : '';
+        $html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">' . implode('', $evtOut) . '</div>' : '';
         $plh['OnManagerLoginFormRender'] = $html;
 
-        $plh['login_form_position_class'] = sprintf(
-            'loginbox-%s'
-            , $this->getCore()->getConfig('login_form_position')
-        );
-        $plh['login_form_style_class'] = sprintf(
-            'loginbox-%s'
-            , $this->getCore()->getConfig('login_form_style')
-        );
+        $plh['login_form_position_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_position');
+        $plh['login_form_style_class'] = 'loginbox-' . $this->getCore()->getConfig('login_form_style');
 
         $plh['repair_password'] = $this->repairPassword($plh);
 

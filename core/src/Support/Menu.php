@@ -116,13 +116,11 @@ class Menu implements MenuInterface
                         $optionalButton = '';
                         if (is_array($value[11])) {
                             foreach ($value[11] as $opt) {
-                                $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
-                                    $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                                $optionalButton .= '<' . $opt[0] . ' href="' . $opt[1] . '" class="' . $opt[2] . '" onclick="' . $opt[3] . '" title="' . $opt[4] . '">' . $opt[5] . '</' . $opt[0] . '>';
                             }
                         } else {
                             $opt = $value[11];
-                            $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
-                                $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                            $optionalButton .= '<' . $opt[0] . ' href="' . $opt[1] . '" class="' . $opt[2] . '" onclick="' . $opt[3] . '" title="' . $opt[4] . '">' . $opt[5] . '</' . $opt[0] . '>';
                         }
                         $ph['DrawSub'] = $optionalButton;
                     }

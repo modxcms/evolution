@@ -40,20 +40,12 @@ class TemplateCommand extends Command
     protected function process(SiteTemplate $item)
     {
         $this->getOutput()->write(
-            sprintf(
-                '[ %d ] <info>%s</info>',
-                $item->getKey(),
-                $item->name
-            )
+            '[ ' . $item->getKey() . ' ] <info>' . $item->name . '</info>'
         );
 
         if ($item->categoryId() !== null) {
             $this->getOutput()->write(
-                sprintf(
-                    ' / <comment>%s</comment> (%d)',
-                    $item->categoryName('-'),
-                    $item->categoryId()
-                )
+                ' / <comment>' . $item->categoryName('-') . '</comment> (' . $item->categoryId() . ')'
             );
         }
 

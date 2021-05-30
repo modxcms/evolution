@@ -20,8 +20,7 @@ if (! function_exists('getLangOptions')) {
         foreach ($langs as $language) {
             $abrv_language = explode('-', $language);
             $selected = ($language === $install_language) ? 'selected' : '';
-            $_[] = sprintf('<option value="%s" %s>%s</option>', $language, $selected,
-                    ucwords($abrv_language[0])) . "\n";
+            $_[] = '<option value="' . $language . '" ' . $selected . '>' . ucwords($abrv_language[0]) . '</option>' . "\n";
         }
 
         return implode("\n", $_);
@@ -179,7 +178,7 @@ if (!function_exists('getLangs')) {
     function getLangs($install_language)
     {
         if ($install_language !== 'en' &&
-            is_dir(sprintf('../core/lang/'.$install_language))
+            is_dir('../core/lang/'.$install_language)
         ) {
             $manager_language = $install_language;
         } else {
@@ -200,8 +199,7 @@ if (!function_exists('getLangs')) {
         foreach ($langs as $language) {
             $abrv_language = explode('.', $language);
             $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
-            $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected,
-                strtoupper($abrv_language[0]));
+            $_[] = '<option value="' . $abrv_language[0] . '" ' . $selected . '>' . strtoupper($abrv_language[0]) . '</option>';
         }
 
         return implode("\n", $_);

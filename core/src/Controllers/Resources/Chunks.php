@@ -17,7 +17,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
     public function getTabName($withIndex = true): string
     {
         if ($withIndex) {
-            return sprintf('tabChunks-%s', $this->getIndex());
+            return 'tabChunks-' . $this->getIndex();
         }
 
         return 'tabChunks';
@@ -39,7 +39,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
         return array_merge(
             parent::getParameters(),
             [
-                'tabPageName'      => $this->getTabName(false),
+                'tabPageName' => $this->getTabName(false),
                 'tabIndexPageName' => $this->getTabName()
             ]
         );
@@ -48,7 +48,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
     /**
      * {@inheritdoc}
      */
-    public function getParameters(array $params = []) : array
+    public function getParameters(array $params = []): array
     {
         $params = array_merge($this->getBaseParams(), $params);
 
@@ -62,7 +62,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
         ], $params);
     }
 
-    protected function parameterOutCategory() : Collection
+    protected function parameterOutCategory(): Collection
     {
         return Models\SiteHtmlsnippet::where('category', '=', 0)
             ->orderBy('name', 'ASC')
@@ -70,7 +70,7 @@ class Chunks extends AbstractResources implements TabControllerInterface
             ->get();
     }
 
-    protected function parameterCategories() : Collection
+    protected function parameterCategories(): Collection
     {
         return Models\Category::with('chunks')
             ->whereHas('chunks', function (Eloquent\Builder $builder) {

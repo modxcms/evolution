@@ -17,7 +17,7 @@ class Tv extends AbstractResources implements TabControllerInterface
     public function getTabName($withIndex = true): string
     {
         if ($withIndex) {
-            return sprintf('tabVariables-%s', $this->getIndex());
+            return 'tabVariables-' . $this->getIndex();
         }
 
         return 'tabVariables';

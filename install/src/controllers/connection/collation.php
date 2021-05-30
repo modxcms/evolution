@@ -51,7 +51,7 @@ try {
                 } elseif ($collation == 'unrecommend') {
                     $output .= '</optgroup><optgroup label="unrecommend">';
                 } else {
-                    $output .= sprintf('<option value="%s" %s>%s</option>', $collation, $selected, $collation);
+                    $output .= '<option value="' . $collation . '" ' . $selected . '>' . $collation . '</option>';
                 }
             }
             $output .= '</optgroup></select>';

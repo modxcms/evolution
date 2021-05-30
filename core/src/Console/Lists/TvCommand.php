@@ -20,6 +20,7 @@ class TvCommand extends Command
      * @var string
      */
     protected $description = 'TV lists';
+
     /**
      * Execute the console command.
      *
@@ -40,20 +41,14 @@ class TvCommand extends Command
     protected function process(SiteTmplvar $item)
     {
         $this->getOutput()->writeLn(
-            sprintf(
-                '[ %d ] <info>%s</info>',
-                $item->getKey(),
-                $item->name
-            )
+            '[ ' . $item->getKey() . ' ] <info>' . $item->name . '</info>'
         );
 
-        $this->getOutput()->writeln(
-            sprintf(
-                '<comment>%s</comment>: %s',
-                $item->type,
-                $item->default_text
-            )
+
+        $this->getOutput()->writeLn(
+            ' / <comment>' . $item->type . '</comment> (' . $item->default_text . ')'
         );
+
 
         if ($item->templates->count() > 0) {
             $this->table(

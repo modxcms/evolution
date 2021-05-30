@@ -13,9 +13,9 @@ class DocCommand extends Command
      * @var string
      */
     protected $signature = 'doc:list ' .
-                        '{--parent-id=* : Parents ID}' .
-                        '{--P|published : Only published}' .
-                        '{--D|deleted : With deleted}';
+    '{--parent-id=* : Parents ID}' .
+    '{--P|published : Only published}' .
+    '{--D|deleted : With deleted}';
 
     /**
      * The console command description.
@@ -23,6 +23,7 @@ class DocCommand extends Command
      * @var string
      */
     protected $description = 'Documents from the site_content table';
+
     /**
      * Execute the console command.
      *
@@ -55,20 +56,12 @@ class DocCommand extends Command
     protected function process(SiteContent $item)
     {
         $this->getOutput()->write(
-            sprintf(
-                '[ %d ] <info>%s</info>',
-                $item->getKey(),
-                $item->pagetitle
-            )
+            '[ ' . $item->getKey() . ' ] <info>' . $item->pagetitle . '</info>'
         );
 
         if ($item->tpl->exists) {
             $this->getOutput()->write(
-                sprintf(
-                    ' / <comment>%s</comment> (%d)',
-                    $item->tpl->name,
-                    $item->template
-                )
+                ' / <comment>' . $item->tpl->name . '</comment> (' . $item->template . ')'
             );
         }
 

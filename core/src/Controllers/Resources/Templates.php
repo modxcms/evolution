@@ -17,7 +17,7 @@ class Templates extends AbstractResources implements TabControllerInterface
     public function getTabName($withIndex = true): string
     {
         if ($withIndex) {
-            return sprintf('tabTemplates-%s', $this->getIndex());
+            return 'tabPlugins-' . $this->getIndex();
         }
 
         return 'tabTemplates';

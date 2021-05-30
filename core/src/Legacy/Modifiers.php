@@ -264,7 +264,7 @@ class Modifiers implements ModifiersInterface
     {
         $modx = evolutionCMS();
         $lastKey = '';
-        $cacheKey = md5(sprintf('parsePhx#%s#%s#%s', $key, $value, print_r($modifiers, true)));
+        $cacheKey = md5('parsePhx#' . $key . '#' . $value . '#' . print_r($modifiers, true));
         if (isset($this->tmpCache[$cacheKey])) {
             return $this->tmpCache[$cacheKey];
         }
@@ -978,9 +978,9 @@ class Modifiers implements ModifiersInterface
             case 'templatename':
                 $template = SiteTemplate::query()->select('templatename')->find($value);
 
-                if(!is_null($template)){
+                if (!is_null($template)) {
                     return $template->templatename;
-                }else {
+                } else {
                     return '(blank)';
                 }
 
