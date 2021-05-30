@@ -78,12 +78,8 @@ if (! function_exists('rel2abs')) {
             , preg_replace(
                 "/(\/\.?\/)/"
                 , '/'
-                , sprintf(
-                    '%s%s/%s'
-                    , $tmp['host']
-                    , $path
-                    , $rel
-                )
+                , $tmp['host'].$path.'/'.$rel
+
             )
         );
 
