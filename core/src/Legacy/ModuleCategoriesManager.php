@@ -26,9 +26,9 @@ class ModuleCategoriesManager extends Categories
     /**
      * Set a paramter key and its value
      *
-     * @return null
      * @param string $key paramter key
      * @param mixed $value parameter value - could be mixed value-types
+     * @return null
      */
     public function set($key, $value)
     {
@@ -41,8 +41,8 @@ class ModuleCategoriesManager extends Categories
     /**
      * Get a parameter value
      *
+     * @param string $key Paramter-key
      * @return  string           return the parameter value if exists, otherwise false
-     * @param   string $key Paramter-key
      */
     public function get($key)
     {
@@ -100,11 +100,7 @@ class ModuleCategoriesManager extends Categories
             && is_readable($file)) {
             include $file;
         } else {
-            echo sprintf(
-                'View "%s<strong>%s</strong>" not found.',
-                self::get('views_dir'),
-                $filename
-            );
+            echo 'View "' . self::get('views_dir') . '<strong>' . $filename . '</strong>" not found.';
         }
     }
 
