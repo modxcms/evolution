@@ -170,24 +170,20 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
         $themeDir = $this->managerTheme->getThemeDir();
 
-        if (file_exists($themeDir . 'CSSMinify.php'))
-        {
-            if (!file_exists($themeDir . 'css/styles.min.css') && is_writable($themeDir . 'css'))
-            {
+        if (file_exists($themeDir . 'CSSMinify.php')) {
+            if (!file_exists($themeDir . 'css/styles.min.css') && is_writable($themeDir . 'css')) {
                 $cssFiles = include_once $themeDir . 'CSSMinify.php';
-                if (is_array($cssFiles) && count($cssFiles))
-                {
-                        $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify();
-                        foreach ($cssFiles as $item) {
-                            $minifier->addFile($item);
-                        }
-                        file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
+                if (is_array($cssFiles) && count($cssFiles)) {
+                    $minifier = new \EvolutionCMS\Support\Formatter\CSSMinify();
+                    foreach ($cssFiles as $item) {
+                        $minifier->addFile($item);
+                    }
+                    file_put_contents($themeDir . 'css/styles.min.css', $minifier->minify());
 
                 }
             }
 
-            if (file_exists($themeDir . 'css/styles.min.css'))
-            {
+            if (file_exists($themeDir . 'css/styles.min.css')) {
                 $this->parameters['css'] = $this->managerTheme->getThemeDir(false) . 'css/styles.min.css?v=' . EVO_INSTALL_TIME;
             }
         }
@@ -299,10 +295,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['elements'] = [
             'elements',
             'main',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_elements') . '"></i><span class="menu-item-text">%s</span>'
-                , $this->managerTheme->getLexicon('elements')
-            ),
+            '<i class="' . $this->managerTheme->getStyle('icon_elements') . '"></i><span class="menu-item-text">' . $this->managerTheme->getLexicon('elements') . '</span>',
             'javascript:;',
             $this->managerTheme->getLexicon('elements'),
             ' return false;',
@@ -656,10 +649,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             $this->sitemenu['web_user_management_title'] = [
                 'web_user_management_title',
                 'users',
-                sprintf(
-                    '<i class="' . $this->managerTheme->getStyle('icon_web_user') . '"></i>%s<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>'
-                    , $this->managerTheme->getLexicon('web_user_management_title')
-                ),
+                '<i class="' . $this->managerTheme->getStyle('icon_web_user') . '"></i>' . $this->managerTheme->getLexicon('web_user_management_title') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
                 'index.php?a=99',
                 $this->managerTheme->getLexicon('web_user_management_title'),
                 '',
@@ -680,10 +670,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             $this->sitemenu['role_management_title'] = [
                 'role_management_title',
                 'users',
-                sprintf(
-                    '<i class="' . $this->managerTheme->getStyle('icon_role') . '"></i>%s'
-                    , $this->managerTheme->getLexicon('role_management_title')
-                ),
+                '<i class="' . $this->managerTheme->getStyle('icon_role') . '"></i>' . $this->managerTheme->getLexicon('role_management_title'),
                 'index.php?a=86',
                 $this->managerTheme->getLexicon('role_management_title'),
                 '',
@@ -744,10 +731,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                     // href
                     'btn btn-secondary',
                     // class or btn-success
-                    sprintf(
-                        "modx.popup({url:'index.php?a=26', title:'%s', icon: 'fa-recycle', iframe: 'ajax', selector: '.tab-page>.container', position: 'right top', width: 'auto', maxheight: '50%%', wrap: 'body' })"
-                        , $this->managerTheme->getLexicon('refresh_site')
-                    ),
+                    "modx.popup({url:'index.php?a=26', title:'" . $this->managerTheme->getLexicon('refresh_site') . "', icon: 'fa-recycle', iframe: 'ajax', selector: '.tab-page>.container', position: 'right top', width: 'auto', maxheight: '50%%', wrap: 'body' })",
                     // onclick
                     $this->managerTheme->getLexicon('refresh_site'),
                     // title
@@ -765,10 +749,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['search'] = [
             'search',
             'tools',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_search') . '"></i>%s'
-                , $this->managerTheme->getLexicon('search')
-            ),
+            '<i class="' . $this->managerTheme->getStyle('icon_search') . '"></i>' . $this->managerTheme->getLexicon('search'),
             'index.php?a=71',
             $this->managerTheme->getLexicon('search'),
             '',
@@ -791,10 +772,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['bk_manager'] = [
             'bk_manager',
             'tools',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_database') . '"></i>%s'
-                , $this->managerTheme->getLexicon('bk_manager')
-            ),
+            '<i class="' . $this->managerTheme->getStyle('icon_database') . '"></i>' . $this->managerTheme->getLexicon('bk_manager'),
             'index.php?a=93',
             $this->managerTheme->getLexicon('bk_manager'),
             '',
@@ -817,10 +795,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['remove_locks'] = [
             'remove_locks',
             'tools',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_hourglass') . '"></i>%s'
-                , $this->managerTheme->getLexicon('remove_locks')
-            ),
+            '<i class="' . $this->managerTheme->getStyle('icon_hourglass') . '"></i>' . $this->managerTheme->getLexicon('remove_locks'),
             'javascript:modx.removeLocks();',
             $this->managerTheme->getLexicon('remove_locks'),
             '',
@@ -839,10 +814,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $this->sitemenu['update_tree'] = [
             'update_tree',
             'tools',
-            sprintf(
-                '<i class="' . $this->managerTheme->getStyle('icon_sitemap') . '"></i>%s'
-                , $this->managerTheme->getLexicon('update_tree')
-            ),
+            '<i class="' . $this->managerTheme->getStyle('icon_sitemap') . '"></i>' . $this->managerTheme->getLexicon('update_tree'),
             'index.php?a=95',
             $this->managerTheme->getLexicon('update_tree'),
             '',
