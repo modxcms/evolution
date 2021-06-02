@@ -376,7 +376,7 @@ trait Path
      */
     public function setLocale($locale)
     {
-        $this->config['app.locale'] = $locale;
+        $this['config']->set('app.locale', $locale);
         $this['translator']->setLocale($locale);
     }
 
