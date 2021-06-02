@@ -311,7 +311,7 @@ trait Path
      */
     public function getLocale()
     {
-        return '';
+        return $this->config['app.locale'];
     }
 
     /**
@@ -376,7 +376,8 @@ trait Path
      */
     public function setLocale($locale)
     {
-        //return $locale;
+        $this->config['app.locale'] = $locale;
+        $this['translator']->setLocale($locale);
     }
 
     /**
