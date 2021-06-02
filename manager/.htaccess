@@ -12,3 +12,11 @@ RewriteRule ^(.*)$ index.php [L,QSA]
 # Turn the filtering engine Off
 SecFilterEngine Off
 </IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive off
+</IfModule>
+
+<ifModule mod_gzip.c>
+    mod_gzip_on No
+</ifModule>
