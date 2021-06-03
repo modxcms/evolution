@@ -311,7 +311,7 @@ trait Path
      */
     public function getLocale()
     {
-        return $this->config['app.locale'];
+        return $this['config']->get('app.locale');
     }
 
     /**
