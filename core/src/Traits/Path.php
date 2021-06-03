@@ -71,17 +71,6 @@ trait Path
     }
 
     /**
-     * Get or check the current application environment.
-     *
-     * @param string|array $environments
-     * @return string|bool
-     */
-    public function environment(...$environments)
-    {
-
-    }
-
-    /**
      * Get the path to the public / web directory.
      *
      * @return string
