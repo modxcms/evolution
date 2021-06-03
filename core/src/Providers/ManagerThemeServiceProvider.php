@@ -2,6 +2,7 @@
 
 use EvolutionCMS\ServiceProvider;
 use EvolutionCMS\ManagerTheme;
+use EvolutionCMS\Interfaces\ManagerThemeInterface;
 
 class ManagerThemeServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,9 @@ class ManagerThemeServiceProvider extends ServiceProvider
             );
             return new ManagerTheme($app, $theme);
         });
+
+        $this->app->alias('ManagerTheme', ManagerThemeInterface::class);
+        $this->app->alias('ManagerTheme', ManagerTheme::class);
     }
 
     /**

@@ -116,6 +116,14 @@ return [
 
     'middleware' => [
 
+        'mgr' => [
+            EvolutionCMS\Middleware\VerifyCsrfToken::class,
+            EvolutionCMS\Middleware\Manager::class,
+            Illuminate\Session\Middleware\StartSession::class,
+            Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        ],
+
         /*
         |--------------------------------------------------------------------------
         | The application's global HTTP middleware stack
@@ -130,6 +138,7 @@ return [
         'global' => [
             Illuminate\Session\Middleware\StartSession::class,
             Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ],
 
         /*

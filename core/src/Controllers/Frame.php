@@ -623,11 +623,15 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 }
             }
             foreach ($this->managerTheme->getCore()->modulesFromFile as $module) {
+                if (!empty($module['properties']['hidden'])) {
+                    continue;
+                }
+
                 $this->sitemenu['module' . $module['id']] = [
                     'module' . $module['id'],
                     'modules',
                     ($module['icon'] != '' ? '<i class="' . $module['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $module['name'],
-                    'index.php?a=112&id=' . $module['id'],
+                    !empty($module['properties']['routes']) ? 'modules/' . $module['id'] : 'index.php?a=112&id=' . $module['id'],
                     $module['name'],
                     '',
                     '',

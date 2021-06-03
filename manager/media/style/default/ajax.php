@@ -29,6 +29,8 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
     $modx->sendErrorPage();
 }
 
+$modx->ManagerTheme->setRequest();
+
 $modx->sid = session_id();
 
 $_lang = ManagerTheme::getLexicon();

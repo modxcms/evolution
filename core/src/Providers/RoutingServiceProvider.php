@@ -16,11 +16,19 @@ class RoutingServiceProvider extends IlluminateRoutingServiceProvider
     {
         parent::register();
 
-        if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
-            Route::middleware('web')->group(EVO_CORE_PATH . 'custom/routes.php');
+        if ($this->app->isFrontend() || is_cli()) {
+            if (is_readable(EVO_CORE_PATH . 'custom/routes.php')) {
+                Route::middleware('web')->group(EVO_CORE_PATH . 'custom/routes.php');
+            }
+
+            Route::fallbackToParser();
         }
 
-        Route::fallbackToParser();
+        if ($this->app->isBackend()) {
+            $this->app->resolving('url', function($urlGenerator, $app) {
+                $urlGenerator->forceRootUrl(MODX_MANAGER_URL);
+            });
+        }
     }
 
     /**

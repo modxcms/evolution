@@ -69,6 +69,10 @@ if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
 
+if (! defined('IN_PARSER_MODE')) {
+    define('IN_PARSER_MODE', false);
+}
+
 if (file_exists(__DIR__ . '/config.php')) {
     $config = require __DIR__ . '/config.php';
 } elseif (file_exists(dirname(__DIR__) . '/config.php')) {
@@ -150,36 +154,9 @@ $_lang = ManagerTheme::getLexicon();
 // send the charset header
 header('Content-Type: text/html; charset=' . ManagerTheme::getCharset());
 
-// Update last action in table active_users
-$action = ManagerTheme::getActionId();
-
-// accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-if (0 !== $action && ManagerTheme::isAuthManager() === false) {
-    echo ManagerTheme::renderLoginPage();
-    exit;
-}
-
-/** Ignore Logout and LogIn action */
-if (8 !== $action && 0 !== $action && ManagerTheme::hasManagerAccess() === false) {
-    echo ManagerTheme::renderAccessPage();
-    exit;
-}
+$action = 0;
 
 // Update table active_user_sessions
 $modx->updateValidatedUserSession();
 
-$output = '';
-
-if ($action === null) {
-    $_style = ManagerTheme::getStyle();
-    // first we check to see if this is a frameset request
-    if (!isset($_POST['updateMsgCount'])) {
-        EvolutionCMS\Tracy\Debugger::$showBar = false;
-        // this looks to be a top-level frameset request, so let's serve up a frameset
-        $output = ManagerTheme::handle(1, ['frame' => 1]);
-    }
-} else {
-    $output = ManagerTheme::handle($action);
-}
-
-echo $output;
+ManagerTheme::handleRoute();
