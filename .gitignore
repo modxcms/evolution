@@ -54,7 +54,7 @@
 
 # Composer
 /composer.phar
-/vendor/*
+
 !/vendor/.htaccess
 !/vendor/index.html
 
