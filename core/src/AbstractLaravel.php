@@ -150,7 +150,11 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
             throw new \Exception('Unable to load the "app" configuration file.');
         }
 
-        $this['env'] = $this['config']->get('app.env', 'production');
+        if (defined('IN_INSTALL_MODE')) {
+            $this['env'] = 'install';
+        } else {
+            $this['env'] = $this['config']->get('app.env',  'production');
+        }
 
         date_default_timezone_set($config->get('app.timezone', 'UTC'));
         mb_internal_encoding('UTF-8');
